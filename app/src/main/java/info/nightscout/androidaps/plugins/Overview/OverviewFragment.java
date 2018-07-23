@@ -85,6 +85,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -1384,9 +1385,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // Sensitivity
         if (sensitivityView != null) {
-            AutosensResult lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.getPlugin().oldestDataAvailable(), System.currentTimeMillis());
-            if (lastAutosensResult != null)
-                sensitivityView.setText(String.format("%.0f%%", lastAutosensResult.ratio * 100));
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("Overview");
+            if (autosensData != null)
+                sensitivityView.setText(String.format("%.0f%%", autosensData.autosensResult.ratio * 100));
             else
                 sensitivityView.setText("");
         }

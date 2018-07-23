@@ -8,6 +8,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -21,10 +22,10 @@ public abstract class AbstractSensitivityPlugin extends PluginBase implements Se
     }
 
     @Override
-    public abstract AutosensResult detectSensitivity(long fromTime, long toTime);
+    public abstract AutosensResult detectSensitivity(IobCobCalculatorPlugin plugin, long fromTime, long toTime);
 
-    public AutosensResult fillResult(double ratio, double carbsAbsorbed, String pastSensitivity,
-                                     String ratioLimit, String sensResult, int deviationsArraySize) {
+    AutosensResult fillResult(double ratio, double carbsAbsorbed, String pastSensitivity,
+                              String ratioLimit, String sensResult, int deviationsArraySize) {
         return this.fillResult(ratio, carbsAbsorbed, pastSensitivity, ratioLimit, sensResult,
                 deviationsArraySize,
                 SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")),
@@ -32,8 +33,8 @@ public abstract class AbstractSensitivityPlugin extends PluginBase implements Se
     }
 
     public AutosensResult fillResult(double ratio, double carbsAbsorbed, String pastSensitivity,
-                                      String ratioLimit, String sensResult, int deviationsArraySize,
-                                      double ratioMin, double ratioMax) {
+                                     String ratioLimit, String sensResult, int deviationsArraySize,
+                                     double ratioMin, double ratioMax) {
         double rawRatio = ratio;
         ratio = Math.max(ratio, ratioMin);
         ratio = Math.min(ratio, ratioMax);
@@ -62,7 +63,6 @@ public abstract class AbstractSensitivityPlugin extends PluginBase implements Se
         output.sensResult = sensResult;
         return output;
     }
-
 
 
 }

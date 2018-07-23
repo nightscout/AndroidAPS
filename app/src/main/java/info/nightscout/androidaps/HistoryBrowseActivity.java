@@ -1,7 +1,7 @@
 package info.nightscout.androidaps;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -17,11 +17,13 @@ import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,11 +35,12 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 
 public class HistoryBrowseActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);
@@ -61,9 +64,11 @@ public class HistoryBrowseActivity extends AppCompatActivity {
     SeekBar seekBar;
     @BindView(R.id.historybrowse_noprofile)
     TextView noProfile;
+    @BindView(R.id.overview_iobcalculationprogess)
+    TextView iobCalculationProgressView;
 
     private int rangeToDisplay = 24; // for graph
-    private long start;
+    private long start = 0;
 
     IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
@@ -90,7 +95,19 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
         setupChartMenu();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+        iobCobCalculatorPlugin.stopCalculation("onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
         // set start of current day
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -99,33 +116,23 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         start = calendar.getTimeInMillis();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        runCalculation("onResume");
+        SystemClock.sleep(1000);
         updateGUI("onResume");
-    }
-
-
-    @OnClick(R.id.historybrowse_start)
-    void onClickStart() {
     }
 
     @OnClick(R.id.historybrowse_left)
     void onClickLeft() {
-        start -= rangeToDisplay * 60 * 60 * 1000L;
-        updateGUI("left");
-        iobCobCalculatorPlugin.clearCache();
-        iobCobCalculatorPlugin.runCalculation("onClickLeft", start, true, eventCustomCalculationFinished);
+        start -= T.hours(rangeToDisplay).msecs();
+        updateGUI("onClickLeft");
+        runCalculation("onClickLeft");
     }
 
     @OnClick(R.id.historybrowse_right)
     void onClickRight() {
-        start += rangeToDisplay * 60 * 60 * 1000L;
-        updateGUI("right");
-        iobCobCalculatorPlugin.clearCache();
-        iobCobCalculatorPlugin.runCalculation("onClickRight", start, true, eventCustomCalculationFinished);
+        start += T.hours(rangeToDisplay).msecs();
+        updateGUI("onClickRight");
+        runCalculation("onClickRight");
     }
 
     @OnClick(R.id.historybrowse_end)
@@ -137,9 +144,8 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         start = calendar.getTimeInMillis();
-        updateGUI("resetToMidnight");
-        iobCobCalculatorPlugin.clearCache();
-        iobCobCalculatorPlugin.runCalculation("onClickEnd", start, true, eventCustomCalculationFinished);
+        updateGUI("onClickEnd");
+        runCalculation("onClickEnd");
     }
 
     @OnClick(R.id.historybrowse_zoom)
@@ -159,32 +165,63 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         start = calendar.getTimeInMillis();
         updateGUI("resetToMidnight");
-        iobCobCalculatorPlugin.clearCache();
-        iobCobCalculatorPlugin.runCalculation("onLongClickZoom", start, true, eventCustomCalculationFinished);
+        runCalculation("onLongClickZoom");
         return true;
     }
 
     @OnClick(R.id.historybrowse_date)
     void onClickDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(start));
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    Date date = new Date(0);
+                    date.setYear(year - 1900);
+                    date.setMonth(monthOfYear);
+                    date.setDate(dayOfMonth);
+                    date.setHours(0);
+                    start = date.getTime();
+                    updateGUI("onClickDate");
+                    runCalculation("onClickDate");
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.setThemeDark(true);
+        dpd.dismissOnPause(true);
+        dpd.show(getFragmentManager(), "Datepickerdialog");
+    }
+
+    private void runCalculation(String from) {
+        long end = start + T.hours(rangeToDisplay).msecs();
+        iobCobCalculatorPlugin.stopCalculation(from);
+        iobCobCalculatorPlugin.clearCache();
+        iobCobCalculatorPlugin.runCalculation(from, end, true, false, eventCustomCalculationFinished);
     }
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished e) {
-        Activity activity = this;
-        if (activity != null && e.cause == eventCustomCalculationFinished) {
+        if (e.cause == eventCustomCalculationFinished) {
             log.debug("EventAutosensCalculationFinished");
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (HistoryBrowseActivity.this) {
-                        updateGUI("EventAutosensCalculationFinished");
-                    }
+            runOnUiThread(() -> {
+                synchronized (HistoryBrowseActivity.this) {
+                    updateGUI("EventAutosensCalculationFinished");
                 }
             });
         }
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventIobCalculationProgress e) {
+        runOnUiThread(() -> {
+            if (iobCalculationProgressView != null)
+                iobCalculationProgressView.setText(e.progress);
+        });
+    }
+
     void updateGUI(String from) {
+        log.debug("updateGUI from: " + from);
 
         if (noProfile == null || buttonDate == null || buttonZoom == null || bgGraph == null || iobGraph == null || seekBar == null)
             return;
@@ -200,17 +237,11 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         }
 
         final String units = profile.getUnits();
+        final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
+        final double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
 
-        double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
-        double highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
-
-        if (lowLineSetting < 1)
-            lowLineSetting = Profile.fromMgdlToUnits(76d, units);
-        if (highLineSetting < 1)
-            highLineSetting = Profile.fromMgdlToUnits(180d, units);
-
-        final double lowLine = lowLineSetting;
-        final double highLine = highLineSetting;
+        buttonDate.setText(DateUtil.dateAndTimeString(start));
+        buttonZoom.setText(String.valueOf(rangeToDisplay));
 
         final boolean showPrediction = false;
 
@@ -226,12 +257,9 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         //fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
         //endTime = toTime + predHours * 60 * 60 * 1000L;
         //} else {
-        fromTime = start + 100000;
-        toTime = start + rangeToDisplay * 60 * 60 * 1000L;
+        fromTime = start + T.secs(100).msecs();
+        toTime = start + T.hours(rangeToDisplay).msecs();
         //}
-
-        buttonDate.setText(DateUtil.dateAndTimeString(start));
-        buttonZoom.setText(String.valueOf(rangeToDisplay));
 
         log.debug("Period: " + DateUtil.dateAndTimeString(fromTime) + " - " + DateUtil.dateAndTimeString(toTime));
 
@@ -239,7 +267,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         //  ------------------ 1st graph
 
-        final GraphData graphData = new GraphData(bgGraph, IobCobCalculatorPlugin.getPlugin());
+        final GraphData graphData = new GraphData(bgGraph, iobCobCalculatorPlugin);
 
         // **** In range Area ****
         graphData.addInRangeArea(fromTime, toTime, lowLine, highLine);
@@ -267,143 +295,137 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
         // ------------------ 2nd graph
 
-        final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
+        new Thread(() -> {
+            final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
 
-        boolean useIobForScale = false;
-        boolean useCobForScale = false;
-        boolean useDevForScale = false;
-        boolean useRatioForScale = false;
-        boolean useDevSlopeForScale = false;
+            boolean useIobForScale = false;
+            boolean useCobForScale = false;
+            boolean useDevForScale = false;
+            boolean useRatioForScale = false;
+            boolean useDSForScale = false;
 
-        if (showIob) {
-            useIobForScale = true;
-        } else if (showCob) {
-            useCobForScale = true;
-        } else if (showDev) {
-            useDevForScale = true;
-        } else if (showRat) {
-            useRatioForScale = true;
-        } else if (showDevslope) {
-            useDevSlopeForScale = true;
-        }
+            if (showIob) {
+                useIobForScale = true;
+            } else if (showCob) {
+                useCobForScale = true;
+            } else if (showDev) {
+                useDevForScale = true;
+            } else if (showRat) {
+                useRatioForScale = true;
+            } else if (showDevslope) {
+                useDSForScale = true;
+            }
 
-        if (showIob)
-            secondGraphData.addIob(fromTime, toTime, useIobForScale, 1d);
-        if (showCob)
-            secondGraphData.addCob(fromTime, toTime, useCobForScale, useCobForScale ? 1d : 0.5d);
-        if (showDev)
-            secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1d);
-        if (showRat)
-            secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1d);
-        if (showDevslope)
-            secondGraphData.addDeviationSlope(fromTime, toTime, useDevSlopeForScale, 1d);
+            if (showIob)
+                secondGraphData.addIob(fromTime, toTime, useIobForScale, 1d);
+            if (showCob)
+                secondGraphData.addCob(fromTime, toTime, useCobForScale, useCobForScale ? 1d : 0.5d);
+            if (showDev)
+                secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1d);
+            if (showRat)
+                secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1d);
+            if (showDevslope)
+                secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1d);
 
-        // **** NOW line ****
-        // set manual x bounds to have nice steps
-        secondGraphData.formatAxis(fromTime, toTime);
-        secondGraphData.addNowLine(pointer);
+            // **** NOW line ****
+            // set manual x bounds to have nice steps
+            secondGraphData.formatAxis(fromTime, toTime);
+            secondGraphData.addNowLine(pointer);
 
-        // do GUI update
-        if (showIob || showCob || showDev || showRat || showDevslope) {
-            iobGraph.setVisibility(View.VISIBLE);
-        } else {
-            iobGraph.setVisibility(View.GONE);
-        }
-        // finally enforce drawing of graphs
-        graphData.performUpdate();
-        secondGraphData.performUpdate();
+            // do GUI update
+            runOnUiThread(() -> {
+                if (showIob || showCob || showDev || showRat || showDevslope) {
+                    iobGraph.setVisibility(View.VISIBLE);
+                } else {
+                    iobGraph.setVisibility(View.GONE);
+                }
+                // finally enforce drawing of graphs
+                graphData.performUpdate();
+                if (showIob || showCob || showDev || showRat || showDevslope)
+                    secondGraphData.performUpdate();
+            });
+        }).start();
     }
 
     private void setupChartMenu() {
         chartButton = (ImageButton) findViewById(R.id.overview_chartMenuButton);
-        chartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MenuItem item;
-                CharSequence title;
-                SpannableString s;
-                PopupMenu popup = new PopupMenu(v.getContext(), v);
+        chartButton.setOnClickListener(v -> {
+            MenuItem item;
+            CharSequence title;
+            SpannableString s;
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
 
 
-                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(showBasal);
+
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(showIob);
+
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(showCob);
+
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(showDev);
+
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(showRat);
+
+            if (MainApp.devBranch) {
+                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
                 title = item.getTitle();
                 s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
                 item.setTitle(s);
                 item.setCheckable(true);
-                item.setChecked(showBasal);
-
-                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(showIob);
-
-                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(showCob);
-
-                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(showDev);
-
-                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(showRat);
-
-                if (MainApp.devBranch) {
-                    item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(showDevslope);
-                }
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                         if (item.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
-                            showBasal =  !item.isChecked();
-                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
-                             showIob =  !item.isChecked();
-                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
-                             showCob =  !item.isChecked();
-                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
-                             showDev =  !item.isChecked();
-                        } else if (item.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
-                             showRat =  !item.isChecked();
-                         } else if (item.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
-                             showDevslope = !item.isChecked();
-                        }
-                        updateGUI("onGraphCheckboxesCheckedChanged");
-                        return true;
-                    }
-                });
-                chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
-                popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                    @Override
-                    public void onDismiss(PopupMenu menu) {
-                        chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
-                    }
-                });
-                popup.show();
+                item.setChecked(showDevslope);
             }
+
+            popup.setOnMenuItemClickListener(item1 -> {
+                if (item1.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
+                    showBasal = !item1.isChecked();
+                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
+                    showIob = !item1.isChecked();
+                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
+                    showCob = !item1.isChecked();
+                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
+                    showDev = !item1.isChecked();
+                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
+                    showRat = !item1.isChecked();
+                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
+                    showDevslope = !item1.isChecked();
+                }
+                updateGUI("onGraphCheckboxesCheckedChanged");
+                return true;
+            });
+            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+            popup.setOnDismissListener(menu -> chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp));
+            popup.show();
         });
     }
 
