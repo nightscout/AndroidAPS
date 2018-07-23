@@ -151,7 +151,7 @@ public class BLEComm {
         isConnecting = false;
     }
 
-    public void disconnect(String from) {
+    public synchronized void disconnect(String from) {
         log.debug("disconnect from: " + from);
 
         // cancel previous scheduled disconnection to prevent closing upcomming connection
