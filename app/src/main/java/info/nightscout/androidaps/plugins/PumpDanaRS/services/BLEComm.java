@@ -187,17 +187,7 @@ public class BLEComm {
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            log.debug("onConnectionStateChange");
-
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                mBluetoothGatt.discoverServices();
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                close();
-                isConnected = false;
-                isConnecting = false;
-                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
-                log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
-            }
+            onConnectionStateChangeSynchronized(gatt, status, newState); // call it synchronized
         }
 
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -322,6 +312,20 @@ public class BLEComm {
                     UART_Write = gattCharacteristic;
                 }
             }
+        }
+    }
+
+    public synchronized void onConnectionStateChangeSynchronized(BluetoothGatt gatt, int status, int newState) {
+        log.debug("onConnectionStateChange");
+
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+            mBluetoothGatt.discoverServices();
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            close();
+            isConnected = false;
+            isConnecting = false;
+            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+            log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
         }
     }
 
