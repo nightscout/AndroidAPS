@@ -35,6 +35,10 @@
         app:showAsAction="never"
         android:title="@string/nav_show_logcat" />
     <item
+        android:id="@+id/nav_export_log"
+        app:showAsAction="never"
+        android:title="@string/nav_export_log" />
+    <item
         android:id="@+id/nav_about"
         app:showAsAction="never"
         android:title="@string/nav_about" />

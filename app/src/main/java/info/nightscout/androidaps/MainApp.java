@@ -78,6 +78,7 @@ import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.LoggerUtils;
 import info.nightscout.utils.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
@@ -127,7 +128,7 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
-        String extFilesDir = this.getLogDirectory();
+        String extFilesDir = LoggerUtils.getLogDirectory();
         File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
@@ -386,11 +387,6 @@ public class MainApp extends Application {
 
     public static boolean isDev() {
         return devBranch;
-    }
-
-    public String getLogDirectory() {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        return lc.getProperty("EXT_FILES_DIR");
     }
 
     @Override

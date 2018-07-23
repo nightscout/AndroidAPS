@@ -500,6 +500,7 @@
     <string name="copy_to_clipboard">Copy To Clipboard</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="nav_show_logcat">Show log</string>
+    <string name="nav_export_log">Export Logs</string>
     <string name="overview_calibration">Calibration</string>
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>

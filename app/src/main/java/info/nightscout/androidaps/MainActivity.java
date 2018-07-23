@@ -38,6 +38,9 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.List;
+
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventFeatureRunning;
@@ -53,6 +56,7 @@ import info.nightscout.utils.AndroidPermission;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.LogDialog;
+import info.nightscout.utils.LoggerUtils;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
@@ -391,6 +395,17 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.nav_show_logcat:
                 LogDialog.showLogcat(this);
+                return true;
+            case R.id.nav_export_log:
+                String recipient = "mmay@gmx.net";
+
+                String logDirectory = LoggerUtils.getLogDirectory();
+                List<File> logs = LoggerUtils.getLogfiles(logDirectory, 2);
+                String zipName = LoggerUtils.constructName();
+                File zip = LoggerUtils.zipLogs(zipName, logDirectory, logs);
+                Intent emailIntent = LoggerUtils.sendMail(zip, recipient, "Log Export");
+                startActivity(Intent.createChooser(emailIntent , "Send email..."));
+
                 return true;
             case R.id.nav_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
