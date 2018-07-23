@@ -17,26 +17,23 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
+                android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_bolus" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingTop="10dp"
-                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="@string/overview_insulin_label"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/colorInsulinButton" />
@@ -59,7 +56,7 @@
                     android:id="@+id/newinsulin_record_only"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/don_t_bolus_record_only" />
+                    android:text="@string/do_not_bolus_record_only" />
 
             </LinearLayout>
 
@@ -124,6 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
                     android:text="@string/insulin_unit_shortname" />
             </LinearLayout>
 

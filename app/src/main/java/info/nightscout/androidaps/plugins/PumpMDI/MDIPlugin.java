@@ -42,6 +42,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         super(new PluginDescription()
                 .mainType(PluginType.PUMP)
                 .pluginName(R.string.mdi)
+                .description(R.string.description_pump_mdi)
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;
@@ -135,7 +136,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         return result;
     }
 

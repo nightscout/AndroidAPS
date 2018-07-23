@@ -43,6 +43,8 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
+import static info.nightscout.utils.DateUtil.now;
+
 public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsBolusFragment.class);
 
@@ -52,6 +54,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
     TextView iobTotal;
     TextView activityTotal;
     Button refreshFromNS;
+    Button deleteFutureTreatments;
 
     Context context;
 
@@ -89,7 +92,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
                 holder.iob.setTextColor(holder.carbs.getCurrentTextColor());
-            if (t.date > DateUtil.now())
+            if (t.date > now())
                 holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorScheduled));
             else
                 holder.date.setTextColor(holder.carbs.getCurrentTextColor());
@@ -189,6 +192,9 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
         refreshFromNS = (Button) view.findViewById(R.id.treatments_reshreshfromnightscout);
         refreshFromNS.setOnClickListener(this);
 
+        deleteFutureTreatments = (Button) view.findViewById(R.id.treatments_delete_future_treatments);
+        deleteFutureTreatments.setOnClickListener(this);
+
         boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
@@ -201,17 +207,37 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
 
     @Override
     public void onClick(View view) {
+        AlertDialog.Builder builder;
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle(MainApp.gs(R.string.confirmation));
                 builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?");
-                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        TreatmentsPlugin.getPlugin().getService().resetTreatments();
-                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                    TreatmentsPlugin.getPlugin().getService().resetTreatments();
+                    Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                    MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                });
+                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
+                builder.show();
+                break;
+            case R.id.treatments_delete_future_treatments:
+                builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle(MainApp.gs(R.string.confirmation));
+                builder.setMessage(MainApp.gs(R.string.deletefuturetreatments) + "?");
+                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                    final List<Treatment> futureTreatments = TreatmentsPlugin.getPlugin().getService()
+                            .getTreatmentDataFromTime(now() + 1000, true);
+                    for (Treatment treatment : futureTreatments) {
+                        final String _id = treatment._id;
+                        if (NSUpload.isIdValid(_id)) {
+                            NSUpload.removeCareportalEntryFromNS(_id);
+                        } else {
+                            UploadQueue.removeID("dbAdd", _id);
+                        }
+                        TreatmentsPlugin.getPlugin().getService().delete(treatment);
                     }
+                    updateGUI();
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
@@ -233,14 +259,16 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
-                    if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
-                        iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " U");
-                        activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " U");
-                    }
+            activity.runOnUiThread(() -> {
+                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
+                if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
+                    iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " " + MainApp.gs(R.string.insulin_unit_shortname));
+                    activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " " + MainApp.gs(R.string.insulin_unit_shortname));
+                }
+                if (!TreatmentsPlugin.getPlugin().getService().getTreatmentDataFromTime(now() + 1000, true).isEmpty()) {
+                    deleteFutureTreatments.setVisibility(View.VISIBLE);
+                } else {
+                    deleteFutureTreatments.setVisibility(View.GONE);
                 }
             });
     }

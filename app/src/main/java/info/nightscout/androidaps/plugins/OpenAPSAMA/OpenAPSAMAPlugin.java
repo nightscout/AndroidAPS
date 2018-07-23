@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                 .pluginName(R.string.openapsama)
                 .shortName(R.string.oaps_shortname)
                 .preferencesId(R.xml.pref_openapsama)
+                .description(R.string.description_ama)
         );
     }
 
@@ -172,9 +174,14 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         startPart = new Date();
         if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
-            lastAutosensResult = IobCobCalculatorPlugin.getPlugin().detectSensitivityWithLock(IobCobCalculatorPlugin.getPlugin().oldestDataAvailable(), System.currentTimeMillis());
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
+            if (autosensData == null) {
+                MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openaps_noasdata)));
+                return;
+            }
         } else {
             lastAutosensResult = new AutosensResult();
+            lastAutosensResult.sensResult = "autosens disabled";
         }
         Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "AMA data gathering", start);

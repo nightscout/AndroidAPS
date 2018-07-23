@@ -79,11 +79,14 @@ public class NSProfileFragment extends SubscriberFragment {
     public void onStatusEvent(final EventNSProfileUpdateGUI ev) {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> updateGUI());
+            activity.runOnUiThread(() -> { synchronized (NSProfileFragment.this) { updateGUI(); } });
     }
 
     @Override
     protected void updateGUI() {
+        if (noProfile == null || profileSpinner == null)
+            return;
+
         ProfileStore profileStore = NSProfilePlugin.getPlugin().getProfile();
         if (profileStore != null) {
             ArrayList<CharSequence> profileList = profileStore.getProfileList();

@@ -4,7 +4,6 @@ package info.nightscout.androidaps.plugins.ProfileLocal;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -109,41 +107,32 @@ public class LocalProfileFragment extends SubscriberFragment {
             mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
             mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
 
-            mgdlView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LocalProfilePlugin.getPlugin().mgdl = mgdlView.isChecked();
-                    LocalProfilePlugin.getPlugin().mmol = !LocalProfilePlugin.getPlugin().mgdl;
-                    mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
-                    doEdit();
-                }
+            mgdlView.setOnClickListener(v -> {
+                LocalProfilePlugin.getPlugin().mgdl = mgdlView.isChecked();
+                LocalProfilePlugin.getPlugin().mmol = !LocalProfilePlugin.getPlugin().mgdl;
+                mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
+                doEdit();
             });
-            mmolView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LocalProfilePlugin.getPlugin().mmol = mmolView.isChecked();
-                    LocalProfilePlugin.getPlugin().mgdl = !LocalProfilePlugin.getPlugin().mmol;
-                    mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
-                    doEdit();
-                }
+            mmolView.setOnClickListener(v -> {
+                LocalProfilePlugin.getPlugin().mmol = mmolView.isChecked();
+                LocalProfilePlugin.getPlugin().mgdl = !LocalProfilePlugin.getPlugin().mmol;
+                mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
+                doEdit();
             });
 
-            profileswitchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                    final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
-                    profileswitch.executeProfileSwitch = true;
-                    newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
-                    newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-                }
+            profileswitchButton.setOnClickListener(view -> {
+                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
+                profileswitch.executeProfileSwitch = true;
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
+                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
             });
 
             resetButton.setOnClickListener(view -> {
                 LocalProfilePlugin.getPlugin().loadSettings();
                 mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
                 mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
-                diaView.setParams(LocalProfilePlugin.getPlugin().dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
+                diaView.setParams(LocalProfilePlugin.getPlugin().dia, 5d, 12d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
                 icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.getPlugin().ic, null, 0.5, 50d, 0.1d, new DecimalFormat("0.0"), save);
                 isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.getPlugin().isf, null, 0.5, 500d, 0.1d, new DecimalFormat("0.0"), save);
                 basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), LocalProfilePlugin.getPlugin().basal, null, pumpDescription.basalMinimumRate, 10, 0.01d, new DecimalFormat("0.00"), save);

@@ -14,6 +14,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -51,6 +52,7 @@ public class SimpleProfilePlugin extends PluginBase implements ProfileInterface 
                 .fragmentClass(SimpleProfileFragment.class.getName())
                 .pluginName(R.string.simpleprofile)
                 .shortName(R.string.simpleprofile_shortname)
+                .description(R.string.description_profile_simple)
         );
         loadSettings();
     }
@@ -73,6 +75,7 @@ public class SimpleProfilePlugin extends PluginBase implements ProfileInterface 
         createConvertedProfile();
         if (Config.logPrefsChange)
             log.debug("Storing settings: " + getRawProfile().getData().toString());
+        MainApp.bus().post(new EventProfileStoreChanged());
     }
 
     private void loadSettings() {

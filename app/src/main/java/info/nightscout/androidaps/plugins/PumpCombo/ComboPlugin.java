@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpCombo;
 
+import android.content.DialogInterface;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
 import com.crashlytics.android.answers.CustomEvent;
 
@@ -28,6 +31,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -57,8 +61,6 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHi
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
@@ -166,6 +168,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 .fragmentClass(ComboFragment.class.getName())
                 .pluginName(R.string.combopump)
                 .shortName(R.string.combopump_shortname)
+                .description(R.string.description_pump_combo)
         );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
     }
@@ -191,6 +194,32 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         }
         return MainApp.gs(R.string.combo_pump_state_running);
     }
+
+    @Override
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
+        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
+        if (allowHardwarePump || context == null){
+            pluginSwitcher.invoke();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage(R.string.allow_hardware_pump_text)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            pluginSwitcher.invoke();
+                            SP.putBoolean("allow_hardware_pump", true);
+                            log.debug("First time HW pump allowed!");
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            pluginSwitcher.cancel();
+                            log.debug("User does not allow switching to HW pump!");
+                        }
+                    });
+            builder.create().show();
+        }
+    }
+
 
     @Override
     public boolean isInitialized() {
@@ -352,6 +381,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
         // trigger a connect, which will update state and check history
         CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
+        if (stateResult.invalidSetup) {
+            MainApp.bus().post(new EventNewNotification(
+                    new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_invalid_setup), Notification.URGENT)));
+            return;
+        }
         if (!stateResult.success) {
             return;
         }
@@ -421,9 +455,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return pump.basalProfile.hourlyRates[currentHour];
     }
 
-    private static BolusProgressReporter nullBolusProgressReporter = (state, percent, delivered) -> {
-    };
-
     private static BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
         switch (state) {
@@ -464,7 +495,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 return deliverBolus(detailedBolusInfo);
             } else {
                 // no bolus required, carb only treatment
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 bolusingEvent.t = new Treatment();
@@ -549,12 +580,14 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 return new PumpEnactResult().success(true).enacted(false);
             }
 
-            BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter : bolusProgressReporter;
+            Treatment treatment = new Treatment();
+            treatment.isSMB = detailedBolusInfo.isSMB;
+            EventOverviewBolusProgress.getInstance().t = treatment;
 
             // start bolus delivery
             scripterIsBolusing = true;
             runCommand(null, 0,
-                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
+                    () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, bolusProgressReporter));
             scripterIsBolusing = false;
 
             // Note that the result of the issued bolus command is not checked. If there was
@@ -653,7 +686,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
-            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi);
+            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
             if (!treatmentCreated) {
                 log.error("Adding treatment record overrode an existing record: " + dbi);
                 if (dbi.isSMB) {
@@ -1152,7 +1185,8 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-            if (TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi)) {
+            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) == null) {
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
                 updated = true;
             }
         }
@@ -1356,7 +1390,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Override
-    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
             value.set(false, MainApp.gs(R.string.novalidbasalrate), this);
         return value;

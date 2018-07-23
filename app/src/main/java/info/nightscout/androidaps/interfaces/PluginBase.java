@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.interfaces;
 
 import android.os.SystemClock;
+import android.support.v4.app.FragmentActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
@@ -32,6 +34,12 @@ public abstract class PluginBase {
         this.pluginDescription = pluginDescription;
     }
 
+    // Default always calls invoke
+    // Plugins that have special constraints if they get switched to may override this method
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        pluginSwitcher.invoke();
+    }
+
 //    public PluginType getType() {
 //        return mainType;
 //    }
@@ -55,6 +63,11 @@ public abstract class PluginBase {
             return name;
         // use long name as fallback
         return getName();
+    }
+
+    public String getDescription() {
+        if (pluginDescription.description == -1) return null;
+        else return MainApp.gs(pluginDescription.description);
     }
 
     public PluginType getType() {

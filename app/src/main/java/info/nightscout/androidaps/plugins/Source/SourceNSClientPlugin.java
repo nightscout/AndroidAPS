@@ -20,6 +20,9 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
         return plugin;
     }
 
+    private long lastBGTimeStamp = 0;
+    private boolean isAdvancedFilteringEnabled = false;
+
     private SourceNSClientPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.BGSOURCE)
@@ -27,11 +30,22 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                 .pluginName(R.string.nsclientbg)
                 .showInList(!Config.NSCLIENT)
                 .alwaysEnabled(Config.NSCLIENT)
+                .description(R.string.description_source_ns_client)
         );
     }
 
     @Override
     public boolean advancedFilteringSupported() {
-        return true;
+        return isAdvancedFilteringEnabled;
+    }
+
+    public void detectSource(String source, long timeStamp) {
+        if (timeStamp > lastBGTimeStamp) {
+            if (source.contains("G5 Native") || source.contains("AndroidAPS-DexcomG5"))
+                isAdvancedFilteringEnabled = true;
+            else
+                isAdvancedFilteringEnabled = false;
+            lastBGTimeStamp = timeStamp;
+        }
     }
 }

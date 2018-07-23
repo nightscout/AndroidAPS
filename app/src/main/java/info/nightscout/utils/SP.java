@@ -16,6 +16,10 @@ public class SP {
         return sharedPreferences.contains(key);
     }
 
+    static public boolean contains(int resourceId) {
+        return sharedPreferences.contains(MainApp.gs(resourceId));
+    }
+
     static public String getString(int resourceID, String defaultValue) {
         return sharedPreferences.getString(MainApp.gs(resourceID), defaultValue);
     }

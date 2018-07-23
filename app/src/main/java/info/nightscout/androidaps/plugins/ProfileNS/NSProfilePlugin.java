@@ -16,6 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -43,11 +44,12 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
         super(new PluginDescription()
                 .mainType(PluginType.PROFILE)
                 .fragmentClass(NSProfileFragment.class.getName())
-                .pluginName(R.string.profileviewer)
+                .pluginName(R.string.nsprofile)
                 .shortName(R.string.profileviewer_shortname)
                 .alwaysEnabled(Config.NSCLIENT)
                 .alwayVisible(Config.NSCLIENT)
                 .showInList(!Config.NSCLIENT)
+                .description(R.string.description_profile_nightscout)
         );
         loadNSProfile();
     }
@@ -68,6 +70,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
         profile = new ProfileStore(newProfile.getData());
         storeNSProfile();
         MainApp.bus().post(new EventNSProfileUpdateGUI());
+        MainApp.bus().post(new EventProfileStoreChanged());
     }
 
     private void storeNSProfile() {

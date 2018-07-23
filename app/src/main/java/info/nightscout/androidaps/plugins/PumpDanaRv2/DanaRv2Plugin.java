@@ -2,9 +2,12 @@ package info.nightscout.androidaps.plugins.PumpDanaRv2;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
@@ -20,6 +23,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStartWithSpeed;
@@ -29,6 +33,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 
 /**
  * Created by mike on 05.08.2016.
@@ -44,6 +49,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     private DanaRv2Plugin() {
+        pluginDescription.description(R.string.description_pump_dana_r_v2);
+
         log = LoggerFactory.getLogger(DanaRv2Plugin.class);
         useExtendedBoluses = false;
 
@@ -138,6 +145,31 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return pump.lastConnection > 0 && pump.maxBasal > 0;
     }
 
+    @Override
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
+        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
+        if (allowHardwarePump || context == null){
+            pluginSwitcher.invoke();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage(R.string.allow_hardware_pump_text)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            pluginSwitcher.invoke();
+                            SP.putBoolean("allow_hardware_pump", true);
+                            log.debug("First time HW pump allowed!");
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            pluginSwitcher.cancel();
+                            log.debug("User does not allow switching to HW pump!");
+                        }
+                    });
+            builder.create().show();
+        }
+    }
+
     // Pump interface
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
@@ -164,6 +196,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             double carbs = detailedBolusInfo.carbs;
             detailedBolusInfo.carbs = 0;
             int carbTime = detailedBolusInfo.carbTime;
+            if (carbTime == 0) carbTime--; // better set 1 man back to prevent clash with insulin
             detailedBolusInfo.carbTime = 0;
 
             DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
@@ -172,7 +205,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             t.isSMB = detailedBolusInfo.isSMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + carbTime * 60 * 1000, t);
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
@@ -266,8 +299,12 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            // use special APS temp basal call ... 100+/15min .... 100-/30min
-            result = setHighTempBasalPercent(percentRate);
+            if (percentRate == 0 && durationInMinutes > 30) {
+                result = setTempBasalPercent(percentRate, durationInMinutes, profile, false);
+            } else {
+                // use special APS temp basal call ... 100+/15min .... 100-/30min
+                result = setHighTempBasalPercent(percentRate);
+            }
             if (!result.success) {
                 log.error("setTempBasalAbsolute: Failed to set hightemp basal");
                 return result;
@@ -389,4 +426,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return sExecutionService.loadEvents();
     }
 
+    @Override
+    public PumpEnactResult setUserOptions() {
+        return sExecutionService.setUserOptions();
+    }
 }

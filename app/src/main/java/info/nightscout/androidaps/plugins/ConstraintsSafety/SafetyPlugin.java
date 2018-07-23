@@ -49,7 +49,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
      * Constraints interface
      **/
     @Override
-    public Constraint<Boolean> isLoopInvokationAllowed(Constraint<Boolean> value) {
+    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
         if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
             value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable), this);
         return value;

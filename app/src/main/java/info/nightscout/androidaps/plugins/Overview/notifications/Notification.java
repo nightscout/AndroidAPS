@@ -42,6 +42,8 @@ public class Notification {
     public static final int APPROACHING_DAILY_LIMIT = 11;
     public static final int NSCLIENT_NO_WRITE_PERMISSION = 12;
     public static final int MISSING_SMS_PERMISSION = 13;
+    public static final int PUMPERROR = 14;
+    public static final int WRONGSERIALNUMBER = 15;
 
     public static final int NSANNOUNCEMENT = 18;
     public static final int NSALARM = 19;
@@ -59,6 +61,13 @@ public class Notification {
     public static final int ZERO_VALUE_IN_PROFILE = 31;
     public static final int PROFILE_SWITCH_MISSING = 32;
     public static final int NOT_ENG_MODE_OR_RELEASE = 33;
+    public static final int WRONG_PUMP_PASSWORD = 34;
+    public static final int PERMISSION_STORAGE = 35;
+    public static final int PERMISSION_LOCATION = 36;
+    public static final int PERMISSION_BATTERY = 37;
+    public static final int PERMISSION_SMS = 38;
+    public static final int MAXIMUM_BASAL_VALUE_REPLACED = 39;
+
 
     public int id;
     public Date date;
