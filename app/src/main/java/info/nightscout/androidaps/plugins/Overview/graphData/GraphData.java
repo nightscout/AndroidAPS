@@ -611,8 +611,10 @@ public class GraphData {
             }
         }
 
-        graph.getViewport().setMaxY(Round.ceilTo(maxY, 1d));
-        graph.getViewport().setMinY(Round.floorTo(minY, 1d));
+        double step = 1d;
+        if (maxY < 1) step = 0.1d;
+        graph.getViewport().setMaxY(Round.ceilTo(maxY, step));
+        graph.getViewport().setMinY(Round.floorTo(minY, step));
         graph.getViewport().setYAxisBoundsManual(true);
 
         // draw it
