@@ -45,6 +45,10 @@ public class DanaRUserOptionsActivity extends Activity {
     NumberPicker shutdown;
     NumberPicker lowReservoir;
     Button saveToPumpButton;
+    // This is for Dana pumps only
+    boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
+    boolean isDanaR = MainApp.getSpecificPlugin(DanaRPlugin.class) != null && MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PUMP);
+    boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
 
     @Override
     protected void onResume() {
@@ -125,8 +129,8 @@ public class DanaRUserOptionsActivity extends Activity {
 
     public void setData() {
         DanaRPump pump = DanaRPump.getInstance();
-
-        timeFormat.setChecked(pump.timeDisplayType != 0);
+        // in DanaRS timeDisplay values are reversed
+        timeFormat.setChecked((!isRS && pump.timeDisplayType != 0) || (isRS && pump.timeDisplayType == 0));
         buttonScroll.setChecked(pump.buttonScrollOnOff != 0);
         beep.setChecked(pump.beepAndAlarm > 4);
         screenTimeout.setValue((double) pump.lcdOnTimeSec);
@@ -142,19 +146,22 @@ public class DanaRUserOptionsActivity extends Activity {
     }
 
     public void onSaveClick() {
-        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
-        boolean isDanaR = MainApp.getSpecificPlugin(DanaRPlugin.class) != null && MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PUMP);
-        boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
         if (!isRS && !isDanaR && !isDanaRv2) {
             //exit if pump is not DanaRS, Dana!, or DanaR with upgraded firmware
             return;
         }
         DanaRPump pump = DanaRPump.getInstance();
-
         if (timeFormat.isChecked())
             pump.timeDisplayType = 1;
         else
             pump.timeDisplayType = 0;
+        // displayTime on RS is reversed
+        if (isRS) {
+            if (timeFormat.isChecked())
+                pump.timeDisplayType = 0;
+            else
+                pump.timeDisplayType = 1;
+        }
         if (buttonScroll.isChecked())
             pump.buttonScrollOnOff = 1;
         else
