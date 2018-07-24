@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Sensitivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -52,7 +53,8 @@ public abstract class AbstractSensitivityPlugin extends PluginBase implements Se
 
         if (ratio != rawRatio) {
             ratioLimit += "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
+            if (Config.logAutosensData)
+                log.debug(ratioLimit);
         }
 
         AutosensResult output = new AutosensResult();
