@@ -511,11 +511,11 @@ public class GraphData {
         ratioSeries.setThickness(3);
 
         if (useForScale) {
-            maxY = maxRatioValueFound;
-            minY = minRatioValueFound;
+            maxY = Math.max(maxRatioValueFound, Math.abs(minRatioValueFound));
+            minY = -maxY;
         }
 
-        ratioScale.setMultiplier(maxY * scale / maxRatioValueFound);
+        ratioScale.setMultiplier(maxY * scale / Math.max(maxRatioValueFound, Math.abs(minRatioValueFound)));
 
         addSeries(ratioSeries);
     }
