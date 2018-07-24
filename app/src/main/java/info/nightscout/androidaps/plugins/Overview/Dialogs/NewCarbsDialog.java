@@ -160,7 +160,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             startHypoTTCheckbox.setOnCheckedChangeListener(null);
             startHypoTTCheckbox.setChecked(true);
         }
-        startHypoTTCheckbox.setOnClickListener(this);
+        startHypoTTCheckbox.setOnCheckedChangeListener(this);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
