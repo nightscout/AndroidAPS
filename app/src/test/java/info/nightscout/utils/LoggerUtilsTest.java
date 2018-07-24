@@ -31,7 +31,8 @@ public class LoggerUtilsTest {
 
         String name = "AndroidAPS.log.zip";
 
-        File zipFile = LoggerUtils.zipLogs(name, "build", logs);
+        File zipFile = new File("build/" + name);
+        zipFile = LoggerUtils.zipLogs(zipFile, logs);
 
         assertTrue(zipFile.exists());
         assertTrue(zipFile.isFile());

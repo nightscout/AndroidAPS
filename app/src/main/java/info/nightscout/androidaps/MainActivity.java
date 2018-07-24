@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Profile;
@@ -401,10 +405,17 @@ public class MainActivity extends AppCompatActivity {
 
                 String logDirectory = LoggerUtils.getLogDirectory();
                 List<File> logs = LoggerUtils.getLogfiles(logDirectory, 2);
-                String zipName = LoggerUtils.constructName();
-                File zip = LoggerUtils.zipLogs(zipName, logDirectory, logs);
-                Intent emailIntent = LoggerUtils.sendMail(zip, recipient, "Log Export");
-                startActivity(Intent.createChooser(emailIntent , "Send email..."));
+
+                File zipDir = this.getExternalFilesDir("exports");
+                File zipFile = new File(zipDir, LoggerUtils.constructName());
+
+                log.debug("zipFile: {}", zipFile.getAbsolutePath());
+                File zip = LoggerUtils.zipLogs(zipFile, logs);
+
+                Uri attachementUri = FileProvider.getUriForFile(this, "info.nightscout.androidaps.fileprovider", zip);
+                Intent emailIntent = LoggerUtils.sendMail(attachementUri, recipient, "Log Export");
+                log.debug("sending emailIntent");
+                startActivity(emailIntent);
 
                 return true;
             case R.id.nav_about:

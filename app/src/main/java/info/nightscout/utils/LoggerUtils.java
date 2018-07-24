@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import android.content.Intent;
 import android.net.Uri;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
@@ -25,6 +26,8 @@ import ch.qos.logback.classic.LoggerContext;
  * This class provides serveral methods for log-handling (eg. sending logs as emails).
  */
 public class LoggerUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggerUtils.class);
 
     private static String SUFFIX = ".log.zip";
 
@@ -49,6 +52,7 @@ public class LoggerUtils {
      * @return
      */
     public static List<File> getLogfiles(String directory, int amount) {
+        LOGGER.debug("getting {} logs from directory {}", amount, directory);
         File logDir = new File(directory);
 
         File[] files = logDir.listFiles(new FilenameFilter() {
@@ -69,33 +73,32 @@ public class LoggerUtils {
         List<File> result = Arrays.asList(files);
         int toIndex = amount++;
 
-
         if (toIndex > result.size()) {
             toIndex = result.size();
         }
 
+        LOGGER.debug("returning sublist 0 to {}", toIndex);
         return result.subList(0, toIndex);
     }
 
     /**
-     * Zips the given files in a zipfile which is stored in the given directory using the givven
+     * Zips the given files in a zipfile which is stored in the given zipDir using the givven
      * name.
      *
-     * @param name
-     * @param directory
+     * @param zipFile
      * @param files
      * @return
      */
-    public static File zipLogs(String name, String directory, List<File> files) {
-        File zip = new File(directory, name);
+    public static File zipLogs(File zipFile, List<File> files) {
+        LOGGER.debug("creating zip {}", zipFile.getAbsolutePath());
 
         try {
-            zip(zip, files);
+            zip(zipFile, files);
         } catch (IOException e) {
-            System.out.print("REmomve this one sooner or later....");
+            LOGGER.error("Cannot retrieve zip", e);
         }
 
-        return zip;
+        return zipFile;
     }
 
     /**
@@ -150,20 +153,23 @@ public class LoggerUtils {
      *
      * startActivity(Intent.createChooser(emailIntent , "Send email..."));
      *
-     * @param file
+     * @param attachementUri
      * @param recipient
      * @param subject
      * @return
      */
-    public static Intent sendMail(File file, String recipient, String subject) {
+    public static Intent sendMail(Uri attachementUri, String recipient, String subject) {
+        LOGGER.debug("sending email to {} with subject {}", recipient, subject);
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-        emailIntent .setType("vnd.android.cursor.dir/email");
+        emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{recipient});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
 
-        Uri path = Uri.fromFile(file);
-        emailIntent .putExtra(Intent.EXTRA_STREAM, path);
+        LOGGER.debug("put path {}", attachementUri.toString());
+        emailIntent.putExtra(Intent.EXTRA_STREAM, attachementUri);
+        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         return emailIntent;
     }
