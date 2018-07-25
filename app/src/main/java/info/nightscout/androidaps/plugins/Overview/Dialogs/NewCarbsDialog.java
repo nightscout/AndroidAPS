@@ -157,10 +157,12 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
         BgReading bgReading = DatabaseHelper.actualBg();
         if (bgReading != null && bgReading.value < 72) {
-            startHypoTTCheckbox.setOnCheckedChangeListener(null);
             startHypoTTCheckbox.setChecked(true);
+            // see #onCheckedChanged why listeners are registered like this
+            startHypoTTCheckbox.setOnClickListener(this);
+        } else {
+            startHypoTTCheckbox.setOnCheckedChangeListener(this);
         }
-        startHypoTTCheckbox.setOnCheckedChangeListener(this);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
