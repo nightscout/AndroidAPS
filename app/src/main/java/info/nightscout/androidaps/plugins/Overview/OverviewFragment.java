@@ -765,6 +765,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         }
                     });
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+                    // dismiss notifications
+                    NotificationManager notificationManager =
+                            (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(Constants.notificationID);
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
