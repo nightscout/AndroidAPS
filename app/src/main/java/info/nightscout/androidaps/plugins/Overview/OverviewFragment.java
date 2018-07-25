@@ -109,6 +109,7 @@ import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
+import info.nightscout.androidaps.plugins.Wear.events.EventWearAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -965,6 +966,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
         scheduleUpdateGUI("EventNewOpenLoopNotification");
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventWearAcceptOpenLoopChange ev) {
+        scheduleUpdateGUI("EventWearAcceptOpenLoopChange");
     }
 
     @Subscribe

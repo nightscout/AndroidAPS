@@ -61,6 +61,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
     private static final String ACTION_CANCELBOLUS = "com.dexdrip.stephenblack.nightwatch.CANCELBOLUS";
     private static final String ACTION_CONFIRMATION = "com.dexdrip.stephenblack.nightwatch.CONFIRMACTION";
+    private static final String ACTION_CONFIRMCHANGE = "com.dexdrip.stephenblack.nightwatch.CONFIRMCHANGE";
     private static final String ACTION_INITIATE_ACTION = "com.dexdrip.stephenblack.nightwatch.INITIATE_ACTION";
 
 
@@ -223,6 +224,17 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(ListenerService.this);
             notificationManager.cancel(CONFIRM_NOTIF_ID);
+
+            String actionstring = intent.getStringExtra("actionstring");
+            sendConfirmActionstring(actionstring);
+
+        } else if(intent != null && ACTION_CONFIRMCHANGE.equals(intent.getAction())){
+            googleApiConnect();
+
+            //dismiss notification
+            NotificationManagerCompat notificationManager =
+                    NotificationManagerCompat.from(ListenerService.this);
+            notificationManager.cancel(CHANGE_NOTIF_ID);
 
             String actionstring = intent.getStringExtra("actionstring");
             sendConfirmActionstring(actionstring);
@@ -447,7 +459,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public static void confirmAction(Context context, String actionstring) {
         Intent intent = new Intent(context, ListenerService.class);
         intent.putExtra("actionstring", actionstring);
-        intent.setAction(ACTION_CONFIRMATION);
+
+        if (actionstring.equals("changeRequest")) {
+            intent.setAction(ACTION_CONFIRMCHANGE);
+        } else {
+            intent.setAction(ACTION_CONFIRMATION);
+        }
         context.startService(intent);
     }
 

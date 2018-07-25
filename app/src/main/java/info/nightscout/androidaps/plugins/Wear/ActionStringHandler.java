@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.answers.CustomEvent;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -34,6 +36,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
@@ -47,11 +50,14 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.Treatments.CarbsGenerator;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.Wear.events.EventWearAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.HardLimits;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -638,6 +644,35 @@ public class ActionStringHandler {
             doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
+        } else if ("changeRequest".equals(act[0])) {
+            // accept change request
+            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+
+            MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
+                @Override
+                public void run() {
+                    if (result.enacted) {
+                        finalLastRun.tbrSetByPump = result;
+                        finalLastRun.lastEnact = new Date();
+                        finalLastRun.lastOpenModeAccept = new Date();
+                        NSUpload.uploadDeviceStatus();
+                        ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                        if (objectivesPlugin != null) {
+                            ObjectivesPlugin.manualEnacts++;
+                            ObjectivesPlugin.saveProgress();
+                        }
+                    }
+                    MainApp.bus().post(new EventWearAcceptOpenLoopChange());
+                }
+            });
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+
+            NotificationManager notificationManager =
+                    (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.notificationID);
+
+
         }
         lastBolusWizard = null;
     }
