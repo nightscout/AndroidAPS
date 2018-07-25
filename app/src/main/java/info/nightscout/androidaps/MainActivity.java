@@ -400,24 +400,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_show_logcat:
                 LogDialog.showLogcat(this);
                 return true;
-            case R.id.nav_export_log:
-                String recipient = "mmay@gmx.net";
-
-                String logDirectory = LoggerUtils.getLogDirectory();
-                List<File> logs = LoggerUtils.getLogfiles(logDirectory, 2);
-
-                File zipDir = this.getExternalFilesDir("exports");
-                File zipFile = new File(zipDir, LoggerUtils.constructName());
-
-                log.debug("zipFile: {}", zipFile.getAbsolutePath());
-                File zip = LoggerUtils.zipLogs(zipFile, logs);
-
-                Uri attachementUri = FileProvider.getUriForFile(this, "info.nightscout.androidaps.fileprovider", zip);
-                Intent emailIntent = LoggerUtils.sendMail(attachementUri, recipient, "Log Export");
-                log.debug("sending emailIntent");
-                startActivity(emailIntent);
-
-                return true;
             case R.id.nav_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);

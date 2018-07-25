@@ -1165,6 +1165,18 @@
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
+    <string name="logshipper_settings">Log Shipment Settings</string>
+    <string name="logshipper_email">Email</string>
+    <string name="key_logshipper_email" translatable="false">email</string>
+    <string name="invalid_email_message">Invalid Email</string>
+    <string name="key_logshipper_amount" translatable="false">amount of logs to send</string>
+    <string name="logshipper_amount">No of Logs to send</string>
+    <string name="logshipper">Log Shipment</string>
+    <string name="logship_shortname">LOG</string>
+    <string name="description_logship">Send Logs via Email for support requests. Delete logs if wanted.</string>
+    <string name="send_all_logs">Send Logs by Email</string>
+    <string name="delete_logs">Delete Logs</string>
+
     <!-- TODO convert to proper style -->
     <string name="error_adding_treatment_message" formatted="false">A treatment (insulin: %.2f, carbs: %d, at: %s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">Generated eCarbs with amount: %1$dg, duration: %2$dh, delay: %3$dm</string>
