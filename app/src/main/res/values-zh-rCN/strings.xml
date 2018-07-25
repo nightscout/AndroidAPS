@@ -249,8 +249,8 @@
     <string name="waitingforpumpresult">等待结果</string>
     <string name="smscommunicator_allowednumbers">允许的电话号码</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">要输入大剂量胰岛素 %.2fU 请回复 %s</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">要发送校准值 %.2f 请回复 %s</string>
+    <string name="smscommunicator_bolusreplywithcode">要输入大剂量胰岛素 %1$.2fU 请回复 %2$s</string>
+    <string name="smscommunicator_calibrationreplywithcode">要发送校准值 %1$.2f 请回复 %2$s</string>
     <string name="smscommunicator_bolusfailed">大剂量输注失败</string>
     <string name="bolusdelivered" formatted="false">大剂量 %.2fU 输注成功了</string>
     <string name="bolusrequested" formatted="false">将要输注 %.2fU</string>
@@ -321,13 +321,13 @@
     <string name="smscommunicator_loophasbeenenabled">闭环已经被启用</string>
     <string name="smscommunicator_loopisdisabled">禁用闭环</string>
     <string name="smscommunicator_loopisenabled">启用闭环</string>
-    <string name="openapsma_valuelimitedto" formatted="false">%.2f 仅限于 %.2f</string>
+    <string name="openapsma_valuelimitedto">%1$.2f 仅限于 %2$.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">数值 %s 超出限制</string>
     <string name="smscommunicator_remotebasalnotallowed">远程基础率设置没有被允许</string>
     <string name="smscommunicator_remotecommandnotallowed">远程命令没有被允许</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">开始基础率 %.2fU/h 请回复如下代码 %s</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">暂停闭环 %d 分钟，请回复 %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">临时基础率 %.2fU/h for %d 分钟，启用成功</string>
+    <string name="smscommunicator_basalreplywithcode">开始基础率 %1$.2fU/h 请回复如下代码 %2$s</string>
+    <string name="smscommunicator_suspendreplywithcode">暂停闭环 %1$d 分钟，请回复 %2$s</string>
+    <string name="smscommunicator_tempbasalset">临时基础率 %1$.2fU/h for %2$d 分钟，启用成功</string>
     <string name="smscommunicator_tempbasalfailed">临时基础率启用失败</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">为了停止现在的临时基础率请回复 %s</string>
     <string name="smscommunicator_tempbasalcanceled">临时基础率取消了</string>
@@ -447,7 +447,7 @@
     <string name="always_use_shortavg">总是使用短时间的平均增量代替简单增量</string>
     <string name="always_use_shortavg_summary">当数据来自没有过滤的源头时，例如 xDrip 偶尔出现噪音数据.</string>
     <string name="advancedsettings_title">高级设置</string>
-    <string name="danar_model" formatted="false">模块: %02X 协议: %02X 代码: %02X</string>
+    <string name="danar_model">模块: %1$02X 协议: %2$02X 代码: %3$02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
@@ -694,7 +694,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short" formatted="false">DIA of %s too short - using %s instead!</string>
+    <string name="dia_too_short">DIA of %1$s too short - using %2$s instead!</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="date">日期</string>
     <string name="invalid">不合规</string>
@@ -813,15 +813,15 @@
     <string name="combo_pump_state_label">状态</string>
     <string name="combo_pump_activity_label">活动</string>
     <string name="combo_no_pump_connection">%d 分钟无连接</string>
-    <string name="combo_tbr_remaining">%d%% (剩余 %d 分钟)</string>
-    <string name="combo_last_bolus" translatable="false">%.1f %s (%s)</string>
+    <string name="combo_tbr_remaining">%1$d%% (剩余 %2$d 分钟)</string>
+    <string name="combo_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="combo_pump_state_initializing">正在初始化</string>
     <string name="combo_pump_state_disconnected">断开连接</string>
     <string name="combo_pump_state_suspended_due_to_error">由于错误导致泵暂停了</string>
     <string name="combo_pump_state_suspended_by_user">被用户暂停(Suspended)</string>
     <string name="combo_pump_state_running">正在运行</string>
     <string name="combo_pump_action_cancelling_tbr">正在取消临时基础率(TBR)</string>
-    <string name="combo_pump_action_setting_tbr">正在设置临时基础率(TBR) (%d%% / %d 分钟)</string>
+    <string name="combo_pump_action_setting_tbr">正在设置临时基础率(TBR) (%1$d%% / %2$d 分钟)</string>
     <string name="combo_pump_action_bolusing">正在输注大剂量 (%.1f U)</string>
     <string name="combo_pump_action_refreshing">正在刷新中</string>
     <string name="combo_pump_never_connected">Never</string>
@@ -836,7 +836,7 @@
     <string name="combo_activity_setting_basal_profile">正在设置基础率配置文件</string>
     <string name="combo_pump_cartridge_low_warrning">泵储药器快没胰岛素了</string>
     <string name="combo_pump_battery_low_warrning">泵电池电量低</string>
-    <string name="combo_is_in_error_state">泵上正在显示这个错误 E%d: %s</string>
+    <string name="combo_is_in_error_state">泵上正在显示这个错误 E%1$d: %2$s</string>
     <string name="combo_no_alert_data_note">长按这个按钮，读取泵的错误历史</string>
     <string name="combo_no_tdd_data_note">长按这个按钮，读取泵的TDD历史</string>
     <string name="combo_tdd_minimum">最小值: %3.1f U</string>
@@ -855,7 +855,7 @@
     <string name="combo_pump_tbr_cancelled_warrning">临时基础率取消告警被确认了</string>
     <string name="combo_error_no_connection_no_bolus_delivered">找不到泵，大剂量输注失败</string>
     <string name="combo_error_no_bolus_delivered">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
-    <string name="combo_error_partial_bolus_delivered">由于遇到一个错误，只有 %.2f U of the requested bolus of %.2f U 输注成功了. 请在泵上检查并核实，看是否需要采取适当的措施.</string>
+    <string name="combo_error_partial_bolus_delivered">由于遇到一个错误，只有 %1$.2f U of the requested bolus of %2$.2f U 输注成功了. 请在泵上检查并核实，看是否需要采取适当的措施.</string>
     <string name="combo_error_bolus_verification_failed">输注大剂量和核实泵的历史失败，请检查泵，如果大剂量已经输注成功，请在记录Tab里手动创建一个大剂量记录.</string>
     <string name="combo_error_bolus_recovery_progress">正在从连接中断中恢复</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">储药器里没有足够的胰岛素可用于大剂量输注了</string>
