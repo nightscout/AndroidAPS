@@ -52,6 +52,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
     public static final String NEW_CHANGECONFIRMATIONREQUEST_PATH = "/nightscout_watch_changeconfirmationrequest";
+    public static final String ACTION_CANCELNOTIFICATION_REQUEST_PATH = "/nightscout_watch_cancelnotificationrequest";
 
 
     public static final int BOLUS_PROGRESS_NOTIF_ID = 001;
@@ -315,6 +316,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
                     String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
                     notifyChangeRequest(title, message, actionstring);
+                } else if (path.equals(ACTION_CANCELNOTIFICATION_REQUEST_PATH)) {
+                    String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
+                    cancelNotificationRequest(actionstring);
                 } else {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
@@ -353,6 +357,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         mNotificationManager.notify(CHANGE_NOTIF_ID, builder.build());
+    }
+
+    private void cancelNotificationRequest(String actionstring) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(CHANGE_NOTIF_ID);
     }
 
     private void showBolusProgress(int progresspercent, String progresstatus) {

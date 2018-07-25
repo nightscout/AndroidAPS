@@ -371,6 +371,12 @@ public class ActionStringHandler {
             lastSentTimestamp = System.currentTimeMillis();
             lastConfirmActionString = rAction;
             return;
+        } else if ("cancelChangeRequest".equals(act[0])) {
+            ////////////////////////////////////////////// CANCEL CHANGE REQUEST NOTIFICATION
+            rAction = "cancelChangeRequest";
+
+            WearPlugin.getPlugin().requestNotificationCancel(rAction);
+            return;
         } else return;
 
 
