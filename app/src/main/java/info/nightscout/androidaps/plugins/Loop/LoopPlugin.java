@@ -407,6 +407,10 @@ public class LoopPlugin extends PluginBase {
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
                     MainApp.bus().post(new EventNewOpenLoopNotification());
+                    // dismiss notifications
+                    NotificationManager notificationManager =
+                            (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(Constants.notificationID);
                 }
             }
 
