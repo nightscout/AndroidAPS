@@ -45,6 +45,7 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
@@ -385,7 +386,8 @@ public class LoopPlugin extends PluginBase {
                             .setAutoCancel(true)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
-                            .setVisibility(Notification.VISIBILITY_PUBLIC);
+                            .setVisibility(Notification.VISIBILITY_PUBLIC)
+                            .setLocalOnly(true);
 
                     // Creates an explicit intent for an Activity in your app
                     Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
@@ -407,10 +409,15 @@ public class LoopPlugin extends PluginBase {
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
                     MainApp.bus().post(new EventNewOpenLoopNotification());
+
+                    // Send to Wear
+                    ActionStringHandler.handleInitiate("changeRequest");
+                } else if (allowNotification) {
                     // dismiss notifications
                     NotificationManager notificationManager =
                             (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(Constants.notificationID);
+                    ActionStringHandler.handleInitiate("cancelChangeRequest");
                 }
             }
 

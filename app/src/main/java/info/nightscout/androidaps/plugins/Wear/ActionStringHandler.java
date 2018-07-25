@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.content.Context;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.answers.CustomEvent;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -352,6 +354,17 @@ public class ActionStringHandler {
             }
             rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
 
+        } else if ("changeRequest".equals(act[0])) {
+            ////////////////////////////////////////////// CHANGE REQUEST
+            rTitle = MainApp.gs(R.string.openloop_newsuggestion);
+            rAction = "changeRequest";
+            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+            rMessage += finalLastRun.constraintsProcessed;
+
+            WearPlugin.getPlugin().requestChangeConfirmation(rTitle, rMessage, rAction);
+            lastSentTimestamp = System.currentTimeMillis();
+            lastConfirmActionString = rAction;
+            return;
         } else return;
 
 

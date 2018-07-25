@@ -192,6 +192,15 @@ public class WearPlugin extends PluginBase {
         ctx.startService(intent);
     }
 
+    public void requestChangeConfirmation(String title, String message, String actionstring) {
+
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_CHANGECONFIRMATIONREQUEST);
+        intent.putExtra("title", title);
+        intent.putExtra("message", message);
+        intent.putExtra("actionstring", actionstring);
+        ctx.startService(intent);
+    }
+
     public static void registerWatchUpdaterService(WatchUpdaterService wus) {
         watchUS = wus;
     }

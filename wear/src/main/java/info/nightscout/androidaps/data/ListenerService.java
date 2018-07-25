@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.data;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -49,10 +51,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
+    public static final String NEW_CHANGECONFIRMATIONREQUEST_PATH = "/nightscout_watch_changeconfirmationrequest";
 
 
     public static final int BOLUS_PROGRESS_NOTIF_ID = 001;
     public static final int CONFIRM_NOTIF_ID = 002;
+    public static final int CHANGE_NOTIF_ID = 556677;
 
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
     private static final String ACTION_CANCELBOLUS = "com.dexdrip.stephenblack.nightwatch.CANCELBOLUS";
@@ -273,7 +277,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         showConfirmationDialog(title, message, actionstring);
                     }
 
-                }else if (path.equals(NEW_STATUS_PATH)) {
+                } else if (path.equals(NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
@@ -294,6 +298,11 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         editor.putBoolean("wearcontrol", wearcontrol);
                         editor.commit();
                     }
+                } else if (path.equals(NEW_CHANGECONFIRMATIONREQUEST_PATH)) {
+                    String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
+                    String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
+                    String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
+                    notifyChangeRequest(title, message, actionstring);
                 } else {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
@@ -303,6 +312,35 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 }
             }
         }
+    }
+
+    private void notifyChangeRequest(String title, String message, String actionstring) {
+
+        Notification.Builder builder =
+                new Notification.Builder(this); //,"AndroidAPS-Openloop");
+        builder.setSmallIcon(R.drawable.notif_icon)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(Notification.PRIORITY_HIGH);
+
+        // Creates an explicit intent for an Activity in your app
+        Intent intent = new Intent(this, AcceptActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle params = new Bundle();
+        params.putString("title", title);
+        params.putString("message", message);
+        params.putString("actionstring", actionstring);
+        intent.putExtras(params);
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+        builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(CHANGE_NOTIF_ID, builder.build());
     }
 
     private void showBolusProgress(int progresspercent, String progresstatus) {
