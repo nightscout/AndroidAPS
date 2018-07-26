@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -644,6 +646,9 @@ public class ActionStringHandler {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         } else if ("changeRequest".equals(act[0])) {
             LoopPlugin.getPlugin().acceptChangeRequest();
+            NotificationManager notificationManager =
+                    (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.notificationID);
         }
         lastBolusWizard = null;
     }
