@@ -7,12 +7,24 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
  */
 public class DiscoverGattServicesTask extends ServiceTask {
 
+    public boolean needToConnect = false;
+
+
     public DiscoverGattServicesTask() {
+    }
+
+
+    public DiscoverGattServicesTask(boolean needToConnect) {
+        this.needToConnect = needToConnect;
     }
 
 
     @Override
     public void run() {
+
+        if (needToConnect)
+            RileyLinkUtil.getRileyLinkBLE().connectGatt();
+
         RileyLinkUtil.getRileyLinkBLE().discoverServices();
     }
 }

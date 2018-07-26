@@ -19,6 +19,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
@@ -196,11 +197,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         }
     }
 
-    @Override
-    public void loadPumpCommunicationManager() {
-
-    }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -246,21 +242,19 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
 
-        // init rileyLinkCommunicationManager
-        pumpCommunicationManager = new MedtronicCommunicationManager(context, rfspy, rileyLinkTargetFrequency);
-        medtronicCommunicationManager = (MedtronicCommunicationManager) pumpCommunicationManager;
 
+        // init rileyLinkCommunicationManager
+        medtronicCommunicationManager = new MedtronicCommunicationManager(context, rfspy, rileyLinkTargetFrequency);
 
         // FIXME remove
         //pumpHistoryManager = new PumpHistoryManager(getApplicationContext());
 
     }
 
-
-    public MedtronicCommunicationManager getMedtronicCommunicationManager() {
+    @Override
+    public RileyLinkCommunicationManager getDeviceCommunicationManager() {
         return this.medtronicCommunicationManager;
     }
-
 
     public void setPumpIDString(String pumpID) {
         if (pumpID.length() != 6) {

@@ -12,9 +12,10 @@ public class RileyLinkConst {
 
         public static final String RileyLinkReady = Prefix + "RileyLink_Ready";
         public static final String RileyLinkGattFailed = Prefix + "RileyLink_Gatt_Failed";
-        public static final String RileyLinkError = Prefix + "RileyLink_Ready";
+        //public static final String RileyLinkError = Prefix + "RileyLink_Ready";
 
         public static final String BluetoothConnected = Prefix + "Bluetooth_Connected";
+        public static final String BluetoothReconnected = Prefix + "Bluetooth_Reconnected";
         public static final String BluetoothDisconnected = Prefix + "Bluetooth_Disconnected";
         public static final String RileyLinkDisconnected = Prefix + "RileyLink_Disconnected";
 
@@ -22,6 +23,15 @@ public class RileyLinkConst {
 
         public static final String INTENT_NEW_rileylinkAddressKey = Prefix + "INTENT_NEW_rileylinkAddressKey";
         public static final String INTENT_NEW_pumpIDKey = Prefix + "INTENT_NEW_pumpIDKey";
+    }
+
+    public class Prefs {
+
+        public static final String PrefPrefix = "pref_rileylink_";
+        public static final String RileyLinkAddress = PrefPrefix + "mac_address";
+
+        public static final String LastGoodDeviceCommunicationTime = Prefix + "lastGoodDeviceCommunicationTime";
+        public static final String LastGoodDeviceFrequency = Prefix + "LastGoodDeviceFrequency";
     }
 
     public class IPC {
@@ -34,9 +44,4 @@ public class RileyLinkConst {
         public static final String MSG_ServiceCommand = Prefix + "MSG_ServiceCommand";
     }
 
-    public class Prefs {
-        public static final String PrefPrefix = "pref_rileylink_";
-
-        public static final String RileyLinkAddress = PrefPrefix + "mac_address";
-    }
 }

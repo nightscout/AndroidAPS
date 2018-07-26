@@ -120,17 +120,17 @@ public class MedtronicPumpStatus extends PumpStatus {
     private void createMedtronicPumpMap() {
 
         medtronicPumpMap = new HashMap<>();
-        medtronicPumpMap.put("512", PumpType.Minimed_512_712);
-        medtronicPumpMap.put("712", PumpType.Minimed_512_712);
-        medtronicPumpMap.put("515", PumpType.Minimed_515_715);
-        medtronicPumpMap.put("715", PumpType.Minimed_515_715);
+        medtronicPumpMap.put("512", PumpType.Medtronic_512_712);
+        medtronicPumpMap.put("712", PumpType.Medtronic_512_712);
+        medtronicPumpMap.put("515", PumpType.Medtronic_515_715);
+        medtronicPumpMap.put("715", PumpType.Medtronic_515_715);
 
-        medtronicPumpMap.put("522", PumpType.Minimed_522_722);
-        medtronicPumpMap.put("722", PumpType.Minimed_522_722);
-        medtronicPumpMap.put("523", PumpType.Minimed_523_723);
-        medtronicPumpMap.put("723", PumpType.Minimed_523_723);
-        medtronicPumpMap.put("554", PumpType.Minimed_554_754_Veo);
-        medtronicPumpMap.put("754", PumpType.Minimed_554_754_Veo);
+        medtronicPumpMap.put("522", PumpType.Medtronic_522_722);
+        medtronicPumpMap.put("722", PumpType.Medtronic_522_722);
+        medtronicPumpMap.put("523", PumpType.Medtronic_523_723_Revel);
+        medtronicPumpMap.put("723", PumpType.Medtronic_523_723_Revel);
+        medtronicPumpMap.put("554", PumpType.Medtronic_554_754_Veo);
+        medtronicPumpMap.put("754", PumpType.Medtronic_554_754_Veo);
 
         frequencies = new String[2];
         frequencies[0] = MainApp.gs(R.string.medtronic_pump_frequency_us);

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class GattAttributes {
 
     // NOTE: these uuid strings must be lower case!
-    private static Map<String, String> attributes;
+   
     public static String PREFIX = "0000";
     public static String SUFFIX = "-0000-1000-8000-00805f9b34fb";
     public static String SERVICE_GAP = PREFIX + "1800" + SUFFIX;
@@ -30,6 +30,8 @@ public class GattAttributes {
     public static String CHARA_RADIO_VERSION = "30d99dc9-7c91-4295-a051-0a104d238cf2";
     public static String CHARA_RADIO_LED_MODE = "c6d84241-f1a7-4f9c-a25f-fce16732f14e";
 
+    private static Map<String, String> attributes;
+    private static Map<String, String> attributesRileyLinkSpecific;
 
     // table of names for uuids
     static {
@@ -49,6 +51,16 @@ public class GattAttributes {
         attributes.put(CHARA_RADIO_TIMER_TICK, "Timer Tick");
         attributes.put(CHARA_RADIO_VERSION, "Version"); // firmwareVersion
         attributes.put(CHARA_RADIO_LED_MODE, "Led Mode");
+
+        attributesRileyLinkSpecific = new HashMap<>();
+
+        attributesRileyLinkSpecific.put(SERVICE_RADIO, "Radio Interface"); // a
+        attributesRileyLinkSpecific.put(CHARA_RADIO_CUSTOM_NAME, "Custom Name");
+        attributesRileyLinkSpecific.put(CHARA_RADIO_DATA, "Data");
+        attributesRileyLinkSpecific.put(CHARA_RADIO_RESPONSE_COUNT, "Response Count");
+        attributesRileyLinkSpecific.put(CHARA_RADIO_TIMER_TICK, "Timer Tick");
+        attributesRileyLinkSpecific.put(CHARA_RADIO_VERSION, "Version"); // firmwareVersion
+        attributesRileyLinkSpecific.put(CHARA_RADIO_LED_MODE, "Led Mode");
     }
 
 
@@ -68,10 +80,9 @@ public class GattAttributes {
     }
 
 
-    // TODO check if service is rileylink
+    // we check for specific UUID (Radio ones, because thoose seem to be unique
     public static boolean isRileyLink(UUID uuid) {
-        return attributes.containsKey(uuid.toString());
-        //return true;
+        return attributesRileyLinkSpecific.containsKey(uuid.toString());
     }
 
 

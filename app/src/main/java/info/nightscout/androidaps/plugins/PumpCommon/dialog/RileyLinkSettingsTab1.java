@@ -9,9 +9,10 @@ import android.widget.TextView;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
  * Created by andy on 5/19/18.
@@ -92,7 +93,7 @@ public class RileyLinkSettingsTab1 extends Fragment implements RefreshableInterf
 
         this.connectionError.setText(rileyLinkServiceData.errorCode == null ? "-" : rileyLinkServiceData.errorCode.name());
 
-        this.medtronicPumpStatus = RileyLinkUtil.getPumpStatus();
+        this.medtronicPumpStatus = MedtronicUtil.getPumpStatus();
 
         if (medtronicPumpStatus != null) {
             this.deviceType.setText(RileyLinkTargetDevice.MedtronicPump.name());

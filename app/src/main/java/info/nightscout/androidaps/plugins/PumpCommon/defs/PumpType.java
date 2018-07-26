@@ -84,25 +84,24 @@ public enum PumpType {
             0.05f, 0.05f, null, PumpCapability.VirtualPump),
 
     // Medtronic
-    Minimed_512_712("Medtronic 512/712", 0.05f, null, //
+    Medtronic_512_712("Medtronic 512/712", 0.05f, null, //
             new DoseSettings(0.05f, 30, 8 * 60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 24 * 60, 0f, 35f), //
             0.05f, 0.05f, null, PumpCapability.VirtualPump), // TODO
 
-    Minimed_515_715("Medtronic 515/715", Minimed_512_712),
-    Minimed_522_722("Medtronic 522/722", Minimed_512_712),
-    Minimed_523_723("Medtronic 523/723", Minimed_512_712),
+    Medtronic_515_715("Medtronic 515/715", Medtronic_512_712),
+    Medtronic_522_722("Medtronic 522/722", Medtronic_512_712),
 
-    Minimed_553_753_Revel("Medtronic 553/753 (Revel)", 0.05f, null, //
+    Medtronic_523_723_Revel("Medtronic 553/753 (Revel)", 0.05f, null, //
             new DoseSettings(0.05f, 30, 8 * 60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 24 * 60, 0f, 35f), //
             0.025f, 0.025f, DoseStepSize.MedtronicVeoBasal, PumpCapability.VirtualPump), //
 
-    Minimed_554_754_Veo("Medtronic 554/754 (Veo)", Minimed_553_753_Revel), // TODO
+    Medtronic_554_754_Veo("Medtronic 554/754 (Veo)", Medtronic_523_723_Revel), // TODO
 
-    Minimed_640G("Medtronic 640G", 0.025f, null, //
+    Medtronic_640G("Medtronic 640G", 0.025f, null, //
             new DoseSettings(0.05f, 30, 8 * 60, 0.05f), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05f, 30, 24 * 60, 0f, 35f), //

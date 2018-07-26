@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.ThreadUtil;
 
 /**
  * Created by geoff on 5/26/16.
- * Added: State handling, configuration of RF for different configuration ranges, connection handling - Andy
+ * Added: State handling, configuration of RF for different configuration ranges, connection handling
  */
 public class RileyLinkBLE {
 
@@ -134,8 +134,13 @@ public class RileyLinkBLE {
                     LOG.warn("onConnectionStateChange " + getGattStatusMessage(status) + " " + stateMessage);
                 }
 
-                if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
-                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected);
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected);
+                    } else {
+                        LOG.debug("BT State connected, GATT status {} ({})", status, getGattStatusMessage(status));
+                    }
+
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
                         (newState == BluetoothProfile.STATE_DISCONNECTING)) {
                     //LOG.debug("We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" : "Disconnecting");
@@ -227,7 +232,7 @@ public class RileyLinkBLE {
                     if (rileyLinkFound) {
                         mIsConnected = true;
                         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady);
-                        //RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_BLE_RileyLinkReady), null);
+                        //RileyLinkUtil.sendNotification(new ServiceNotification(RileyLinkConst.Intents.RileyLinkReady), null);
                     } else {
                         mIsConnected = false;
                         RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkError, RileyLinkError.DeviceIsNotRileyLink);

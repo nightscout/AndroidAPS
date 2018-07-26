@@ -22,7 +22,7 @@ public enum RileyLinkServiceState {
     RileyLinkReady(R.string.rileylink_state_connected), // (OK) if tunning was already done we go to PumpConnectorReady
 
     // Tunning
-    TuneUpPump(R.string.rileylink_state_pc_tune_up), // (S)
+    TuneUpDevice(R.string.rileylink_state_pc_tune_up), // (S)
     PumpConnectorError(R.string.rileylink_state_pc_error), // either TuneUp Error or pump couldn't not be contacted error
     PumpConnectorReady(R.string.rileylink_state_connected), // (OK) RileyLink Ready for Pump Communication
 

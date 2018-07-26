@@ -23,24 +23,8 @@ public class RFTools {
      to communicate with a Medtronic pump.
 
      */
-    public static byte[] CodeSymbols = {
-            0x15,
-            0x31,
-            0x32,
-            0x23,
-            0x34,
-            0x25,
-            0x26,
-            0x16,
-            0x1a,
-            0x19,
-            0x2a,
-            0x0b,
-            0x2c,
-            0x0d,
-            0x0e,
-            0x1c
-    };
+    public static byte[] CodeSymbols = {0x15, 0x31, 0x32, 0x23, 0x34, 0x25, 0x26, 0x16, 0x1a, 0x19, 0x2a, 0x0b, 0x2c, 0x0d, 0x0e, 0x1c};
+
 
     public static byte[] appendChecksum(final byte[] input) {
         if (input == null) {
@@ -285,15 +269,15 @@ public class RFTools {
         return toHexString(array, 0, array.length);
     }
 
-    private final static char[] HEX_DIGITS = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
-    };
+
+    private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
 
     public static String toHexString(byte[] array, int offset, int length) {
         char[] buf = new char[length * 2];
 
         int bufIndex = 0;
-        for (int i = offset; i < offset + length; i++) {
+        for(int i = offset; i < offset + length; i++) {
             byte b = array[i];
             buf[bufIndex++] = HEX_DIGITS[(b >>> 4) & 0x0F];
             buf[bufIndex++] = HEX_DIGITS[b & 0x0F];

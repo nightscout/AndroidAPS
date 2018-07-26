@@ -20,6 +20,10 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
         instance = new ServiceTaskExecutor();
     }
 
+    public static ServiceTaskExecutor getInstance() {
+        return instance;
+    }
+
     private ServiceTaskExecutor() {
         super(1, 1, 10000, TimeUnit.MILLISECONDS, taskQueue);
     }

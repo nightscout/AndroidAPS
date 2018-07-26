@@ -466,6 +466,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                 bolusingEvent.percent = 100;
                 MainApp.bus().post(bolusingEvent);
 
+                LOG.debug("deliverTreatment: Carb only treatment.");
+
                 return new PumpEnactResult().success(true).enacted(true)
                         .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
                         .comment(MainApp.gs(R.string.virtualpump_resultok));
@@ -481,6 +483,12 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     protected abstract void triggerUIChange();
+
+
+    public PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
+        return new PumpEnactResult()
+                .success(false).enacted(false).comment(MainApp.gs(resourceId));
+    }
 
 
     // Profile interface

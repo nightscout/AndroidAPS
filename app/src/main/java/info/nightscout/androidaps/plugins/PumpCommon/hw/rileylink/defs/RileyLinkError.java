@@ -20,7 +20,7 @@ public enum RileyLinkError {
     DeviceIsNotRileyLink(R.string.rileylink_error_not_rl), //
 
     // Device
-    TuneUpOfPumpFailed(R.string.rileylink_error_tuneup_failed), //
+    TuneUpOfDeviceFailed(R.string.rileylink_error_tuneup_failed), //
     NoContactWithDevice(R.string.rileylink_error_pump_unreachable, R.string.rileylink_error_pod_unreachable), //
     ;
 

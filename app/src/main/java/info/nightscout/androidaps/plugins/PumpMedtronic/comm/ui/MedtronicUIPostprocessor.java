@@ -65,8 +65,6 @@ public class MedtronicUIPostprocessor {
 
             case RealTimeClock: {
                 processTime(uiTask);
-
-
             }
             break;
 
@@ -83,8 +81,8 @@ public class MedtronicUIPostprocessor {
 
             case PumpModel: {
                 if (pumpStatus.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
-                    // TODO error
-                    LOG.error("Configured pump is different then pump detected !!");
+                    LOG.warn("Configured pump is different then pump detected !");
+                    sendNotification(R.string.medtronic_error_pump_type_set_differs_from_detected, Notification.NORMAL);
                 }
             }
             break;
@@ -122,15 +120,20 @@ public class MedtronicUIPostprocessor {
 
         if (diff >= 10 * 60 * 1000) {
             LOG.debug("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
-            Notification notification = new Notification(Notification.MEDTRONIC_PUMP_ALARM, MainApp.gs(R.string.combo_notification_check_time_date), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            sendNotification(R.string.combo_notification_check_time_date, Notification.URGENT);
         } else if (diff >= 4 * 60 * 1000) {
             LOG.debug("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
-            Notification notification = new Notification(Notification.MEDTRONIC_PUMP_ALARM, MainApp.gs(R.string.combo_notification_check_time_date), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            sendNotification(R.string.combo_notification_check_time_date, Notification.NORMAL);
         }
 
     }
+
+
+    private void sendNotification(int resourceId, int notificationUrgencyType) {
+        Notification notification = new Notification(Notification.MEDTRONIC_PUMP_ALARM, MainApp.gs(resourceId), notificationUrgencyType);
+        MainApp.bus().post(new EventNewNotification(notification));
+    }
+
 
     private void postProcessSettings(MedtronicUITask uiTask) {
         Map<String, PumpSettingDTO> settings = (Map<String, PumpSettingDTO>) uiTask.returnData;
@@ -141,18 +144,15 @@ public class MedtronicUIPostprocessor {
 
         // check profile
         if (!"Yes".equals(settings.get("PCFG_BASAL_PROFILES_ENABLED").value)) {
-
-            //Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
-            //MainApp.bus().post(new EventNewNotification(notification));
-            // TODO profile not enabled
             LOG.error("Basal profiles are not enabled on pump.");
+            sendNotification(R.string.medtronic_error_pump_basal_profiles_not_enabled, Notification.URGENT);
+
         } else {
             checkValue = settings.get("PCFG_ACTIVE_BASAL_PROFILE");
 
             if (!"STD".equals(checkValue.value)) {
-                // TODO wrong profile
                 LOG.error("Basal profile set on pump is incorrect (must be STD).");
-
+                sendNotification(R.string.medtronic_error_pump_incorrect_basal_profile_selected, Notification.URGENT);
             }
         }
 
@@ -161,8 +161,8 @@ public class MedtronicUIPostprocessor {
         checkValue = settings.get("PCFG_TEMP_BASAL_TYPE");
 
         if (!"Units".equals(checkValue.value)) {
-            // TODO wrong TBR type
             LOG.error("Wrong TBR type set on pump (must be Absolute).");
+            sendNotification(R.string.medtronic_error_pump_wrong_tbr_type_set, Notification.URGENT);
         }
 
         // MAXes
@@ -170,25 +170,16 @@ public class MedtronicUIPostprocessor {
         checkValue = settings.get("PCFG_MAX_BOLUS");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBolus)) {
-            // TODO wrong max Bolus type
             LOG.error("Wrong Max Bolus set on Pump (must be {}).", pumpStatus.maxBolus);
+            sendNotification(R.string.medtronic_error_pump_wrong_max_bolus_set, Notification.NORMAL);
         }
 
         checkValue = settings.get("PCFG_MAX_BASAL");
 
-        double maxSet = Double.parseDouble(checkValue.value);
-
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBasal)) {
-            // TODO wrong max Bolus type
             LOG.error("Wrong Max Basal set on Pump (must be {}).", pumpStatus.maxBasal);
+            sendNotification(R.string.medtronic_error_pump_wrong_max_basal_set, Notification.NORMAL);
         }
-
-
-        //addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map);
-        //addSettingToMap("PCFG_MAX_BASAL", "" + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[getSettingIndexMaxBasal()], rd[getSettingIndexMaxBasal() + 1])), PumpConfigurationGroup.Basal, map);
-        //addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10]), PumpConfigurationGroup.Basal, map);
-        //addSettingToMap("PCFG_ACTIVE_BASAL_PROFILE", patt, PumpConfigurationGroup.Basal, map);
-        //addSettingToMap("PCFG_TEMP_BASAL_TYPE", rd[14] != 0 ? "Percent" : "Units", PumpConfigurationGroup.Basal, map);
 
     }
 

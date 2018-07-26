@@ -27,9 +27,8 @@ public class MedtronicUITask {
     boolean invalid = false;
 
     public MedtronicUITask(MedtronicCommandType commandType) {
-        this(commandType, null);
+        this.commandType = commandType;
     }
-
 
     public MedtronicUITask(MedtronicCommandType commandType, Object... parameters) {
         this.commandType = commandType;

@@ -20,11 +20,11 @@ public class MedtronicConst {
 
     public class Statistics {
 
-        public static final String StatsPrefix = "medtronic_";
+        static final String StatsPrefix = "medtronic_";
 
-        static final String TBRsSet = StatsPrefix + "tbrs_set";
-        static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
-        static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
+        public static final String TBRsSet = StatsPrefix + "tbrs_set";
+        public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
+        public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
 
         public static final String FirstPumpStart = Prefix + "first_pump_use";
         public static final String LastGoodPumpCommunicationTime = Prefix + "lastGoodPumpCommunicationTime";

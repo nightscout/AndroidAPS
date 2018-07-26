@@ -7,7 +7,6 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtron
  * Created by geoff on 7/16/16.
  */
 public class WakeAndTuneTask extends PumpTask {
-    private static final String TAG = "WakeAndTuneTask";
 
 
     public WakeAndTuneTask() {
@@ -21,8 +20,7 @@ public class WakeAndTuneTask extends PumpTask {
 
     @Override
     public void run() {
-        //RileyLinkMedtronicService.getInstance().pumpCommunicationManager.wakeup(6);
-        RileyLinkMedtronicService.getInstance().pumpCommunicationManager.tuneForPump();
+        RileyLinkMedtronicService.getInstance().doTuneUpDevice();
     }
 
 }

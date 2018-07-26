@@ -1,11 +1,16 @@
 package info.nightscout.androidaps;
 
 import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -47,13 +52,13 @@ import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
@@ -100,6 +105,7 @@ public class MainApp extends Application {
     private static NSAlarmReceiver alarmReciever = new NSAlarmReceiver();
     private static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
     private LocalBroadcastManager lbm;
+    private BroadcastReceiver btReceiver; // used for RileyLink (Medtronic and Omnipod)
 
     public static boolean devBranch;
     public static boolean engineeringMode;
@@ -136,6 +142,8 @@ public class MainApp extends Application {
         sBus = Config.logEvents ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         registerLocalBroadcastReceiver();
+
+        setBTReceiver();
 
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
@@ -238,6 +246,37 @@ public class MainApp extends Application {
 
         //register ack alarm
         lbm.registerReceiver(ackAlarmReciever, new IntentFilter(Intents.ACTION_ACK_ALARM));
+    }
+
+    private void setBTReceiver() {
+
+        // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device
+        btReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String action = intent.getAction();
+
+                if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                    switch (state) {
+                        case BluetoothAdapter.STATE_OFF:
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                        case BluetoothAdapter.STATE_TURNING_ON:
+                            break;
+
+                        case BluetoothAdapter.STATE_ON:
+                            Log.v("MainApp", "Bluetooth on");
+                            RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
+                            break;
+                    }
+                }
+            }
+        };
+
+        // Register for broadcasts on BluetoothAdapter state change
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(btReceiver, filter);
+
     }
 
     private void startKeepAliveService() {
@@ -404,5 +443,10 @@ public class MainApp extends Application {
             sDatabaseHelper.close();
             sDatabaseHelper = null;
         }
+
+        if (btReceiver != null) {
+            unregisterReceiver(btReceiver);
+        }
     }
+
 }

@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,8 +39,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
-import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
@@ -48,6 +46,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDev
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -105,6 +104,9 @@ public class MedtronicFragment extends SubscriberFragment {
     @BindView(R.id.medtronic_pump_status)
     IconTextView pumpStatusIconView;
 
+    @BindView(R.id.medtronic_refresh)
+    Button refreshButton;
+
 
     public MedtronicFragment() {
     }
@@ -148,14 +150,20 @@ public class MedtronicFragment extends SubscriberFragment {
 
     @OnClick(R.id.medtronic_history)
     void onHistoryClick() {
-        startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
+        //startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
     }
 
-    @OnClick(R.id.medtronic_viewprofile)
-    void onViewProfileClick() {
-        FragmentManager manager = getFragmentManager();
-        ProfileViewDialog profileViewDialog = new ProfileViewDialog();
-        profileViewDialog.show(manager, "ProfileViewDialog");
+    @OnClick(R.id.medtronic_refresh)
+    void onRefreshClick() {
+        refreshButton.setEnabled(false);
+        MedtronicPumpPlugin.getPlugin().resetStatusState();
+
+        ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked refresh", new Callback() {
+            @Override
+            public void run() {
+                refreshButton.setEnabled(true);
+            }
+        });
     }
 
     @OnClick(R.id.medtronic_stats)
@@ -163,12 +171,6 @@ public class MedtronicFragment extends SubscriberFragment {
         startActivity(new Intent(getContext(), RileylinkSettingsActivity.class));
     }
 
-    /*@OnClick(R.id.medtronic_btconnection)
-    void onBtConnectionClick() {
-        log.debug("Clicked connect to pump");
-        DanaRPump.getInstance().lastConnection = 0;
-        ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);
-    }*/
 
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged c) {
@@ -188,20 +190,7 @@ public class MedtronicFragment extends SubscriberFragment {
                         public void run() {
 
                             MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
-
-//                            if (eventStatusChange.rileyLinkServiceState != null)
-//                                pumpStatus.rileyLinkServiceState = eventStatusChange.rileyLinkServiceState;
-//
-//                            if (eventStatusChange.rileyLinkError != null)
-//                                pumpStatus.rileyLinkError = eventStatusChange.rileyLinkError;
-//
-//                            if (eventStatusChange.pumpDeviceState != null)
-//                                pumpStatus.pumpDeviceState = eventStatusChange.pumpDeviceState;
-
                             setDeviceStatus(pumpStatus);
-                            //pumpStatusIconView.setTextColor(Color.WHITE);
-                            //pumpStatusIconView.setTextSize(20);
-                            //pumpStatusIconView.setText("{fa-bed}");
                         }
                     }
             );

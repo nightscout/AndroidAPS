@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.S
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
-import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
 
 
@@ -46,7 +45,7 @@ public class RileyLinkUtil {
     //private static RileyLinkIPCConnection rileyLinkIPCConnection;
     private static MedtronicDeviceType medtronicPumpModel;
     private static RileyLinkTargetFrequency rileyLinkTargetFrequency;
-    private static MedtronicPumpStatus pumpStatus;
+    //private static MedtronicPumpStatus pumpStatus;
     // BAD dependencies in Classes: RileyLinkService
 
     // Broadcasts: RileyLinkBLE, RileyLinkService,
@@ -109,29 +108,8 @@ public class RileyLinkUtil {
     }
 
 
-//    public static void setMedtronicPumpStatus(MedtronicPumpStatus medtronicPumpStatus) {
-//
-//        RileyLinkUtil.medtronicPumpStatus = medtronicPumpStatus;
-//    }
-
-    //    public static void addHistoryEntry(RLHistoryItem rlHistoryItem) {
-    //        historyRileyLink.add(rlHistoryItem);
-    //    }
-
-
-//    public static MedtronicPumpStatus getMedtronicPumpStatus() {
-//
-//        return RileyLinkUtil.medtronicPumpStatus;
-//    }
-
-
     public static boolean hasPumpBeenTunned() {
         return RileyLinkUtil.rileyLinkServiceData.tuneUpDone;
-    }
-
-
-    public static void tuneUpPump() {
-        RileyLinkUtil.rileyLinkService.doTunePump(); // FIXME thread
     }
 
 
@@ -156,7 +134,7 @@ public class RileyLinkUtil {
 
 
     public static boolean sendNotification(ServiceNotification notification, Integer clientHashcode) {
-        return rileyLinkService.sendNotification(notification, clientHashcode);
+        return RileyLinkUtil.rileyLinkService.sendNotification(notification, clientHashcode);
     }
 
 
@@ -211,7 +189,11 @@ public class RileyLinkUtil {
         return RileyLinkUtil.rileyLinkTargetFrequency;
     }
 
-    public static MedtronicPumpStatus getPumpStatus() {
-        return RileyLinkUtil.pumpStatus;
+
+    public static boolean isSame(Double d1, Double d2) {
+        double diff = d1 - d2;
+
+        return (Math.abs(diff) <= 0.000001);
     }
+
 }

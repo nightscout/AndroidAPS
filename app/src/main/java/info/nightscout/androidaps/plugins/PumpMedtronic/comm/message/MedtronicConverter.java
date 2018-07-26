@@ -171,11 +171,17 @@ public class MedtronicConverter {
 
 
     protected Float decodeRemainingInsulin(byte[] rawData) {
-        //float value = MedtronicUtil.makeUnsignedShort(rawData[0], rawData[1]) / 10.0f;
+        int startIdx = 0;
 
-        float value = ByteUtil.toInt(rawData[0], rawData[1]) / 10.0f;
+        int strokes = pumpModel.getBolusStrokes();
 
-        System.out.println("Remaining insulin: " + value);
+        if (strokes == 40) {
+            startIdx = 2;
+        }
+
+        float value = ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0f * strokes);
+
+        LOG.debug("Remaining insulin: " + value);
         return value;
     }
 

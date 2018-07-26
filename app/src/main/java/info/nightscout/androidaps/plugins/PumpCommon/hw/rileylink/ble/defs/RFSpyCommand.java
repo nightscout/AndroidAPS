@@ -7,7 +7,7 @@ package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs;
 public enum RFSpyCommand {
 
     GetState(1), //
-    GetVersion(2), //
+    GetVersion(2, false), //
     GetPacket(3), // aka Listen, receive
     Send(4), //
     SendAndListen(5), //
@@ -17,10 +17,26 @@ public enum RFSpyCommand {
     ;
 
     public byte code;
+    private boolean encoded = true;
 
 
     RFSpyCommand(int code) {
         this.code = (byte) code;
     }
 
+
+    RFSpyCommand(int code, boolean encoded) {
+        this.code = (byte) code;
+        this.encoded = encoded;
+    }
+
+
+    public boolean isEncoded() {
+        return encoded;
+    }
+
+
+    public void setEncoded(boolean encoded) {
+        this.encoded = encoded;
+    }
 }

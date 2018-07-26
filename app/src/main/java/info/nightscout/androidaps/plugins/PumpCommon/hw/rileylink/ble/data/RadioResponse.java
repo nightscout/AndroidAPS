@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFTools;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RFSpyCommand;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
 
@@ -19,6 +20,7 @@ public class RadioResponse {
     public int responseNumber;
     public byte[] decodedPayload = new byte[0];
     public byte receivedCRC;
+    private RFSpyCommand command;
 
 
     public RadioResponse() {
@@ -29,8 +31,21 @@ public class RadioResponse {
         init(rxData);
     }
 
+    public RadioResponse(RFSpyCommand command, byte[] raw) {
+
+        this.command = command;
+        init(raw);
+    }
+
 
     public boolean isValid() {
+
+        if (command!=null && !command.isEncoded())
+        {
+            return true;
+        }
+
+
         if (!decodedOK) {
             return false;
         }
@@ -55,14 +70,25 @@ public class RadioResponse {
         responseNumber = rxData[1];
         byte[] encodedPayload = ByteUtil.substring(rxData, 2, rxData.length - 2);
         try {
-            byte[] decodeThis = RFTools.decode4b6b(encodedPayload);
-            decodedOK = true;
-            decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
-            byte calculatedCRC = CRC.crc8(decodedPayload);
-            receivedCRC = decodeThis[decodeThis.length - 1];
-            if (receivedCRC != calculatedCRC) {
-                LOG.error("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x", calculatedCRC, receivedCRC);
+
+            boolean isEncoded = command==null || command.isEncoded();
+
+            if (isEncoded) {
+                byte[] decodeThis = RFTools.decode4b6b(encodedPayload);
+                decodedOK = true;
+                decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
+                byte calculatedCRC = CRC.crc8(decodedPayload);
+                receivedCRC = decodeThis[decodeThis.length - 1];
+                if (receivedCRC != calculatedCRC) {
+                    LOG.error(String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x", calculatedCRC, receivedCRC));
+                }
             }
+            else {
+                decodedOK = true;
+                decodedPayload = encodedPayload;
+            }
+
+            //byte[] decodeThis = RFTools.decode4b6b(encodedPayload);
         } catch (NumberFormatException e) {
             decodedOK = false;
             LOG.error("Failed to decode radio data: " + ByteUtil.shortHexString(encodedPayload));

@@ -4,6 +4,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLink
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 
+
 /**
  * Created by andy on 16/05/2018.
  */
@@ -16,6 +17,11 @@ public class RileyLinkServiceData {
     public String rileylinkAddress;
     public long lastTuneUpTime = 0L;
     public Double lastGoodFrequency;
+
+    // bt version
+    public String versionBLE113;
+    // radio version
+    public String versionCC110;
 
     public RileyLinkTargetDevice targetDevice;
 

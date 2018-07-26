@@ -5,7 +5,18 @@ package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs;
  */
 
 public enum RileyLinkTargetDevice {
-    MedtronicPump, //
-    Omnipod, //
+    MedtronicPump(true), //
+    Omnipod(false), //
     ;
+
+    private boolean tuneUpEnabled;
+
+    RileyLinkTargetDevice(boolean tuneUpEnabled) {
+
+        this.tuneUpEnabled = tuneUpEnabled;
+    }
+
+    public boolean isTuneUpEnabled() {
+        return tuneUpEnabled;
+    }
 }

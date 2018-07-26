@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.message;
 
 import android.util.Log;
 
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RLMessage;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
@@ -111,7 +111,7 @@ public class PumpMessage implements RLMessage {
 
         // check Old Way
         boolean oldWay = false;
-        for(int i = (length + 1); i < data.length; i++) {
+        for (int i = (length + 1); i < data.length; i++) {
             if (data[i] != 0x00) {
                 oldWay = true;
             }
