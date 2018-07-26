@@ -186,7 +186,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
             LOG.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         pumpStatusData.setLastCommunicationToNow();
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
         return result;
     }
 

@@ -470,7 +470,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             if (response) {
                 // FIXME this needs to be fixed to read info from history
-                boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 getMDTPumpStatus().reservoirRemainingUnits -= detailedBolusInfo.insulin; // we subtract insulin, exact amount will be visible with next remainingInsulin update.
 
