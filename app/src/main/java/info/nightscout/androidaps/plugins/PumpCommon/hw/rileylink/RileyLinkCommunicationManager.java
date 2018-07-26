@@ -217,7 +217,7 @@ public abstract class RileyLinkCommunicationManager {
             for (int j = 0; j < tries; j++) {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
-                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0, (byte) 0, (byte) 0, rfspy.EXPECTED_MAX_BLUETOOTH_LATENCY_MS, (byte) 0);
+                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0, (byte) 0, (byte) 0, 1500, (byte) 0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
@@ -245,14 +245,11 @@ public abstract class RileyLinkCommunicationManager {
             FrequencyTrial one = results.trials.get(k);
 
             stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, "" + one.frequencyMHz, "" + one.averageRSSI));
-
-            //LOG.debug("Scan Result[{}]: Freq={}, avg RSSI = {}", k, one.frequencyMHz, one.averageRSSI);
         }
 
         LOG.debug(stringBuilder.toString());
 
         results.sort(); // sorts in ascending order
-
 
         FrequencyTrial bestTrial = results.trials.get(results.trials.size() - 1);
         results.bestFrequencyMHz = bestTrial.frequencyMHz;

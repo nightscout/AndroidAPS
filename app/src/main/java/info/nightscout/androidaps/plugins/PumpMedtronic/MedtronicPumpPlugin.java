@@ -483,7 +483,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return new PumpEnactResult().success(response).enacted(response);
 
 
-            //            pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
+//            pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
 //            MainApp.bus().post(new EventComboPumpUpdateGUI());
 //
 //            // check pump is ready and all pump bolus records are known
