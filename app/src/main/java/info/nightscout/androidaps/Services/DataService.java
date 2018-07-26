@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.utils.BundleLogger;
@@ -54,6 +56,7 @@ public class DataService extends IntentService {
     boolean mm640gEnabled = false;
     boolean glimpEnabled = false;
     boolean dexcomG5Enabled = false;
+    boolean poctechEnabled = false;
 
     public DataService() {
         super("DataService");
@@ -70,36 +73,49 @@ public class DataService extends IntentService {
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
+            poctechEnabled = false;
         } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
+            poctechEnabled = false;
         } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = false;
+            poctechEnabled = false;
         } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
             glimpEnabled = false;
             dexcomG5Enabled = false;
+            poctechEnabled = false;
         } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = true;
             dexcomG5Enabled = false;
+            poctechEnabled = false;
         } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourceDexcomG5Plugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = false;
             glimpEnabled = false;
             dexcomG5Enabled = true;
+            poctechEnabled = false;
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().equals(SourcePoctechPlugin.class)) {
+            xDripEnabled = false;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = false;
+            dexcomG5Enabled = false;
+            poctechEnabled = true;
         }
 
         boolean isNSProfile = MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
@@ -128,6 +144,10 @@ public class DataService extends IntentService {
             } else if (Intents.DEXCOMG5_BG.equals(action)) {
                 if (dexcomG5Enabled) {
                     handleNewDataFromDexcomG5(intent);
+                }
+            } else if (Intents.POCTECH_BG.equals(action)) {
+                if (poctechEnabled) {
+                    handleNewDataFromPoctech(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
                 if (nsClientEnabled || SP.getBoolean(R.string.key_ns_autobackfill, true))
@@ -237,6 +257,41 @@ public class DataService extends IntentService {
                 bgReading.date = json.getLong("m_time") * 1000L;
                 bgReading.raw = 0;
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                    NSUpload.uploadBg(bgReading);
+                }
+                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                    NSUpload.sendToXdrip(bgReading);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleNewDataFromPoctech(Intent intent) {
+
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        String data = bundle.getString("data");
+        log.debug("Received Poctech Data", data);
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            log.debug("Received Poctech Data size:" + jsonArray.length());
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject json = jsonArray.getJSONObject(i);
+                bgReading.value = json.getDouble("current");
+                bgReading.direction = json.getString("direction");
+                bgReading.date = json.getLong("date");
+                bgReading.raw = json.getDouble("raw");
+                if (JsonHelper.safeGetString(json, "units", Constants.MGDL).equals("mmol/L"))
+                    bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                     NSUpload.uploadBg(bgReading);
                 }
@@ -427,9 +482,7 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("sgv")) {
                     String sgvstring = bundles.getString("sgv");
                     JSONObject sgvJson = new JSONObject(sgvstring);
-                    NSSgv nsSgv = new NSSgv(sgvJson);
-                    BgReading bgReading = new BgReading(nsSgv);
-                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                    storeSgv(sgvJson);
                 }
 
                 if (bundles.containsKey("sgvs")) {
@@ -437,9 +490,7 @@ public class DataService extends IntentService {
                     JSONArray jsonArray = new JSONArray(sgvstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
-                        NSSgv nsSgv = new NSSgv(sgvJson);
-                        BgReading bgReading = new BgReading(nsSgv);
-                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+                        storeSgv(sgvJson);
                     }
                 }
             } catch (Exception e) {
@@ -452,11 +503,7 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("mbg")) {
                     String mbgstring = bundles.getString("mbg");
                     JSONObject mbgJson = new JSONObject(mbgstring);
-                    NSMbg nsMbg = new NSMbg(mbgJson);
-                    CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-                    MainApp.getDbHelper().createOrUpdate(careportalEvent);
-                    if (Config.logIncommingData)
-                        log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+                    storeMbg(mbgJson);
                 }
 
                 if (bundles.containsKey("mbgs")) {
@@ -464,11 +511,7 @@ public class DataService extends IntentService {
                     JSONArray jsonArray = new JSONArray(sgvstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject mbgJson = jsonArray.getJSONObject(i);
-                        NSMbg nsMbg = new NSMbg(mbgJson);
-                        CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-                        MainApp.getDbHelper().createOrUpdate(careportalEvent);
-                        if (Config.logIncommingData)
-                            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+                        storeMbg(mbgJson);
                     }
                 }
             } catch (Exception e) {
@@ -547,6 +590,21 @@ public class DataService extends IntentService {
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
         }
+    }
+
+    private void storeMbg(JSONObject mbgJson) {
+        NSMbg nsMbg = new NSMbg(mbgJson);
+        CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
+        MainApp.getDbHelper().createOrUpdate(careportalEvent);
+        if (Config.logIncommingData)
+            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+    }
+
+    private void storeSgv(JSONObject sgvJson) {
+        NSSgv nsSgv = new NSSgv(sgvJson);
+        BgReading bgReading = new BgReading(nsSgv);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
+        SourceNSClientPlugin.getPlugin().detectSource(JsonHelper.safeGetString(sgvJson, "device"), JsonHelper.safeGetLong(sgvJson, "mills"));
     }
 
     private void handleNewSMS(Intent intent) {

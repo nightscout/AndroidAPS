@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperAc
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
@@ -37,6 +38,7 @@ import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
 import info.nightscout.androidaps.queue.commands.CommandReadStatus;
 import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
+import info.nightscout.androidaps.queue.commands.CommandSetUserSettings;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
@@ -176,6 +178,18 @@ public class CommandQueue {
     public synchronized boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
 
+        if (type == Command.CommandType.SMB_BOLUS) {
+            if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
+                log.debug("Rejecting SMB since a bolus is queue/running");
+                return false;
+            }
+            if (detailedBolusInfo.lastKnownBolusTime < TreatmentsPlugin.getPlugin().getLastBolusTime()) {
+                log.debug("Rejecting bolus, another bolus was issued since request time");
+                return false;
+            }
+        }
+
+
         if(type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0){
             type = Command.CommandType.CARBS_ONLY_TREATMENT;
             //Carbs only can be added in parallel as they can be "in the future".
@@ -211,6 +225,12 @@ public class CommandQueue {
         notifyAboutNewCommand();
 
         return true;
+    }
+
+    public synchronized void cancelAllBoluses() {
+        removeAll(Command.CommandType.BOLUS);
+        removeAll(Command.CommandType.SMB_BOLUS);
+        ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
     }
 
     // returns true if command is queued
@@ -391,6 +411,25 @@ public class CommandQueue {
 
         // add new command to queue
         add(new CommandLoadHistory(type, callback));
+
+        notifyAboutNewCommand();
+
+        return true;
+    }
+
+    // returns true if command is queued
+    public boolean setUserOptions(Callback callback) {
+        if (isRunning(Command.CommandType.SETUSERSETTINGS)) {
+            if (callback != null)
+                callback.result(executingNowError()).run();
+            return false;
+        }
+
+        // remove all unfinished
+        removeAll(Command.CommandType.SETUSERSETTINGS);
+
+        // add new command to queue
+        add(new CommandSetUserSettings(callback));
 
         notifyAboutNewCommand();
 

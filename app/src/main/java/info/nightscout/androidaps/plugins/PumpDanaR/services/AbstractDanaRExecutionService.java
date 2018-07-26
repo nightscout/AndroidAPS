@@ -65,6 +65,11 @@ public abstract class AbstractDanaRExecutionService extends Service {
 
     protected final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
+    protected long lastWrongPumpPassword = 0;
+
+    protected long lastApproachingDailyLimit = 0;
+
+
     public abstract boolean updateBasalsInPump(final Profile profile);
 
     public abstract void connect();
@@ -87,6 +92,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
 
     public abstract boolean extendedBolusStop();
 
+    public abstract PumpEnactResult setUserOptions();
 
     protected BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override

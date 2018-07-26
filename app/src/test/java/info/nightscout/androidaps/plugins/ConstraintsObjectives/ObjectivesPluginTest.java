@@ -13,7 +13,6 @@ import java.util.Date;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.SP;
 
@@ -28,19 +27,19 @@ public class ObjectivesPluginTest {
     ObjectivesPlugin objectivesPlugin;
 
     @Test
-    public void notStartedObjectivesShouldLimitLoopInvokation() throws Exception {
-        objectivesPlugin.objectives.get(0).setStarted(new Date(0));
+    public void notStartedObjectivesShouldLimitLoopInvocation() throws Exception {
+        objectivesPlugin.objectives.get(0).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
-        c = objectivesPlugin.isLoopInvokationAllowed(c);
+        c = objectivesPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
-        objectivesPlugin.objectives.get(0).setStarted(new Date());
+        objectivesPlugin.objectives.get(0).setStartedOn(new Date());
     }
 
     @Test
     public void notStartedObjective4ShouldLimitClosedLoop() throws Exception {
-        objectivesPlugin.objectives.get(3).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(3).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isClosedLoopAllowed(c);
@@ -50,7 +49,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective6ShouldLimitAutosensMode() throws Exception {
-        objectivesPlugin.objectives.get(5).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(5).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isAutosensModeEnabled(c);
@@ -60,7 +59,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective7ShouldLimitAMAMode() throws Exception {
-        objectivesPlugin.objectives.get(6).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(6).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isAMAModeEnabled(c);
@@ -70,7 +69,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective8ShouldLimitSMBMode() throws Exception {
-        objectivesPlugin.objectives.get(7).setStarted(new Date(0));
+        objectivesPlugin.objectives.get(7).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isSMBModeEnabled(c);

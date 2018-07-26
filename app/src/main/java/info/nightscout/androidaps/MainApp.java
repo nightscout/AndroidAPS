@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.annotation.PluralsRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -67,14 +68,16 @@ import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
-import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
@@ -157,6 +160,7 @@ public class MainApp extends Application {
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
+            pluginsList.add(SensitivityOref1Plugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRPlugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.HWPUMPS) pluginsList.add(DanaRv2Plugin.getPlugin());
@@ -188,30 +192,22 @@ public class MainApp extends Application {
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
             if (!Config.NSCLIENT)
                 pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourcePoctechPlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 
             pluginsList.add(WearPlugin.initPlugin(this));
             pluginsList.add(StatuslinePlugin.initPlugin(this));
-            pluginsList.add(new PersistentNotificationPlugin(this));
+            pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
 
             pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());
 
             MainApp.getConfigBuilder().initialize();
         }
-        NSUpload.uploadAppStart();
 
-        if (Config.NSCLIENT)
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-NSClient"));
-        else if (Config.G5UPLOADER)
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-G5Uploader"));
-        else if (Config.PUMPCONTROL)
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-PumpControl"));
-        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
-        else
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("AppStart-OpenLoop"));
+        NSUpload.uploadAppStart();
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         if (pump != null) {
@@ -317,6 +313,10 @@ public class MainApp extends Application {
 
     public static String gs(int id, Object... args) {
         return sResources.getString(id, args);
+    }
+
+    public static String gq(@PluralsRes int id, int quantity, Object... args) {
+        return sResources.getQuantityString(id, quantity, args);
     }
 
     public static int gc(int id) {

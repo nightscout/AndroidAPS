@@ -26,6 +26,7 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.xdrip)
+                .description(R.string.description_source_xdrip)
         );
     }
 

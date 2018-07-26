@@ -50,6 +50,7 @@ public class OverviewPlugin extends PluginBase {
                 .pluginName(R.string.overview)
                 .shortName(R.string.overview_shortname)
                 .preferencesId(R.xml.pref_overview)
+                .description(R.string.description_overview)
         );
         String storedData = SP.getString("QuickWizard", "[]");
         try {

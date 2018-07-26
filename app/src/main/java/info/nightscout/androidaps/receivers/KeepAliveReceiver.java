@@ -1,9 +1,5 @@
 package info.nightscout.androidaps.receivers;
 
-/**
- * Created by mike on 07.07.2016.
- */
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -11,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
+import info.nightscout.utils.FabricPrivacy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +22,10 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.LocalAlertUtils;
 
+
+/**
+ * Created by mike on 07.07.2016.
+ */
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
     public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
@@ -45,6 +46,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         LocalAlertUtils.shortenSnoozeInterval();
         LocalAlertUtils.checkStaleBGAlert();
         checkPump();
+        FabricPrivacy.uploadDailyStats();
 
         log.debug("KeepAlive received");
         wl.release();

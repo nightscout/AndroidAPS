@@ -7,5 +7,10 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
  */
 
 public interface SensitivityInterface {
+
+    double MIN_HOURS = 1;
+    double MIN_HOURS_FULL_AUTOSENS = 4;
+
     AutosensResult detectSensitivity(long fromTime, long toTime);
+
 }

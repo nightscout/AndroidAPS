@@ -148,12 +148,28 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+        if (savedInstanceState != null) {
+//            log.debug("savedInstanceState in onCreate is:" + savedInstanceState.toString());
+            editInsulin.setValue(savedInstanceState.getDouble("editInsulin"));
+            editTime.setValue(savedInstanceState.getDouble("editTime"));
+        }
         return view;
     }
 
     private String toSignedString(double value) {
         String formatted = DecimalFormatter.toPumpSupportedBolus(value);
         return value > 0 ? "+" + formatted : formatted;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle insulinDialogState) {
+        insulinDialogState.putBoolean("startEatingSoonTTCheckbox", startEatingSoonTTCheckbox.isChecked());
+        insulinDialogState.putBoolean("recordOnlyCheckbox", recordOnlyCheckbox.isChecked());
+        insulinDialogState.putDouble("editTime", editTime.getValue());
+        insulinDialogState.putDouble("editInsulin", editInsulin.getValue());
+        insulinDialogState.putString("notesEdit",notesEdit.getText().toString());
+        log.debug("Instance state saved:"+insulinDialogState.toString());
+        super.onSaveInstanceState(insulinDialogState);
     }
 
     @Override
@@ -217,9 +233,9 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
             if (startEatingSoonTTCheckbox.isChecked()) {
                 if (currentProfile.getUnits().equals(Constants.MMOL)) {
-                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " mmol/l (" + eatingSoonTTDuration + " min)</font>");
+                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " mmol/l (" + eatingSoonTTDuration + " min)</font>");
                 } else
-                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.high) + "'>" + DecimalFormatter.to0Decimal(eatingSoonTT) + " mg/dl (" + eatingSoonTTDuration + " min)</font>");
+                    actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to0Decimal(eatingSoonTT) + " mg/dl (" + eatingSoonTTDuration + " min)</font>");
             }
 
             int timeOffset = editTime.getValue().intValue();
@@ -270,7 +286,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                             detailedBolusInfo.notes = notes;
                             if (recordOnlyCheckbox.isChecked()) {
                                 detailedBolusInfo.date = time;
-                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                             } else {
                                 detailedBolusInfo.date = now();
                                 ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {

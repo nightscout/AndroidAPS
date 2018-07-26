@@ -3,6 +3,13 @@ package info.nightscout.utils;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PluginBase;
+
+import java.util.Date;
 
 /**
  * Created by jamorham on 21/02/2018.
@@ -78,6 +85,53 @@ public class FabricPrivacy {
         } catch (NullPointerException | IllegalStateException e) {
             android.util.Log.d(TAG, "Ignoring opted-out non-initialized event: " + event.toString());
         }
+    }
+
+    public static void uploadDailyStats() {
+        if (!fabricEnabled()) return;
+
+        long lastUploadDay = SP.getLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), 0L);
+
+        Date date = new Date();
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        long today = date.getTime() - date.getTime() % 1000;
+
+        if (today > lastUploadDay) {
+            uploadAppUsageType();
+            uploadPluginStats();
+
+            SP.putLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), today);
+        }
+    }
+
+    private static void uploadPluginStats() {
+        CustomEvent pluginStats = new CustomEvent("PluginStats");
+        pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
+        for (PluginBase plugin : MainApp.getPluginsList()) {
+            if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
+                pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
+            }
+        }
+
+        getInstance().logCustom(pluginStats);
+    }
+
+    private static void uploadAppUsageType() {
+        CustomEvent type = new CustomEvent("AppUsageType");
+        if (Config.NSCLIENT)
+            type.putCustomAttribute("type", "NSClient");
+        else if (Config.G5UPLOADER)
+            type.putCustomAttribute("type", "G5Uploader");
+        else if (Config.PUMPCONTROL)
+            type.putCustomAttribute("type", "PumpControl");
+        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
+            type.putCustomAttribute("type", "ClosedLoop");
+        else
+            type.putCustomAttribute("type", "OpenLoop");
+
+        getInstance().logCustom(type);
     }
 
 }

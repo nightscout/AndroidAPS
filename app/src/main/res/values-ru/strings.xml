@@ -20,7 +20,6 @@
     <string name="basal_step">шаг базала</string>
     <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
     <string name="batterydischarged">батарея помпы разряжена</string>
-    <string name="batteryoptimalizationerror">по-видимому устройство не поддерживается белым списком оптимизации батареи</string>
     <string name="bg_lang">болгарский</string>
     <string name="bolus">болюс</string>
     <string name="bolus_step">шаг болюса</string>
@@ -131,7 +130,7 @@
     <string name="danar_invalidinput">введенные данные неверны</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
     <string name="pump_lastbolus_label">предыдущий болюс</string>
-    <string name="danar_model" formatted="false">модель: %02X протокол: %02X код: %02X</string>
+    <string name="danar_model">модель: %1$02X протокол: %2$02X код: %3$02X</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="danar_pump_settings">настройки помпы DanaR</string>
     <string name="danar_refill">дозаправка</string>
@@ -200,7 +199,6 @@
     <string name="failedupdatebasalprofile">не удалось обновить базальный профиль</string>
     <string name="fastactinginsulin">быстродействующий инсулин</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="fastactinginsulinprolonged">пролонгированный инсулин быстрого действия</string>
     <string name="filenotfound">файл не найден</string>
     <string name="fillbolus_title">заполнить стандартное количество инсулина</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
@@ -245,7 +243,6 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="nav_show_logcat">показать лог</string>
     <string name="needwhitelisting" formatted="false">%s необходимо включить в белый список для корректной работы</string>
-    <string name="nightscout">Nightscout</string>
     <string name="noapsselected">APS не выбрана или не выдала результат</string>
     <string name="nobtadapter">адаптер блутус не найден</string>
     <string name="nochangerequested">изменения не запрошены</string>
@@ -282,7 +279,7 @@
     <string name="objectives">Цели</string>
     <string name="objectives_0_gate">убедитесь что СК и данные помпы передаются в NS</string>
     <string name="objectives_0_objective">настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
-    <string name="objectives_1_gate">работа в режиме незамкнутого цикла и ручной подстройки величины временного базала</string>
+    <string name="objectives_1_gate">работа в режиме незамкнутого цикла и ручной подстройки величины временного базала. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_1_objective">старт незамкнутого цикла</string>
     <string name="objectives_2_gate">на основе полученного опыта определите макс величину базала и введите ее в помпу и настройки</string>
     <string name="objectives_2_objective">анализ вашего незамкнутого цикла включая рекомендации по врем базалу</string>
@@ -296,10 +293,7 @@
     <string name="objectives_bgavailableinns">гликемия доступна в NS</string>
     <string name="objectives_button_start">старт</string>
     <string name="objectives_button_verify">проверка</string>
-    <string name="objectives_gate_label_string">действие</string>
     <string name="objectives_manualenacts">ввод вручную</string>
-    <string name="objectives_minimalduration">минимальная продолжительность</string>
-    <string name="objectives_objective_label_string">Цель:</string>
     <string name="objectives_pumpstatusavailableinns">статус помпы доступен в NS</string>
     <string name="objectives_shortname">ЦЕЛИ</string>
     <string name="occlusion">закупорка</string>
@@ -337,7 +331,7 @@
     <string name="result">результат</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
-    <string name="valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
+    <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
     <string name="valueoutofrange" formatted="false">величина %s недопустима</string>
     <string name="openloop">открытый цикл</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
@@ -351,7 +345,6 @@
     <string name="overview_bolusprogress_stoppressed">нажат стоп</string>
     <string name="overview_calculator_label">калькулятор</string>
     <string name="overview_calibration">калибровка</string>
-    <string name="overview_calibration_bg_label">калибровка СК</string>
     <string name="overview_editquickwizard_buttontext">текст на кнопке</string>
     <string name="overview_editquickwizard_carbs">углеводы:</string>
     <string name="overview_editquickwizard_valid">использовать до:</string>
@@ -367,14 +360,13 @@
     <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
     <string name="paused">на паузе</string>
     <string name="percent">процент</string>
-    <string name="pleaseallowpermission">предоставьте разрешение</string>
     <string name="prefs_range_summary">нижняя и верхняя граница диаграммы в отчетах и Smartwatch (mmol/l)</string>
     <string name="prefs_range_title">диапазон для визуализации</string>
     <string name="primefill">прайм/заполнение</string>
     <string name="profile">профиль</string>
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="profile_set_ok">базальный профиль помпы обновлен</string>
-    <string name="profileviewer">профиль NS</string>
+    <string name="nsprofile">профиль NS</string>
     <string name="profileviewer_shortname">профильNS</string>
     <string name="pumpNotInitialized">помпа не инициализирована</string>
     <string name="pumpNotInitializedProfileNotSet">помпа не инициализирована, профиль не установлен</string>
@@ -418,13 +410,13 @@
     <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">чтобы начать базал %.2fU/h ответьте кодом %s</string>
+    <string name="smscommunicator_basalreplywithcode">чтобы начать базал %1$.2fU/h ответьте кодом %2$s</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">чтобы прекратить врем базал ответьте кодом %s</string>
     <string name="smscommunicator_bolusdelivered" formatted="false">болюс %.2fU доставлен успешно</string>
     <string name="smscommunicator_bolusfailed">доставка болюса не состоялась</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">чтобы доставить болюс %.2fU ответьте кодом %s</string>
+    <string name="smscommunicator_bolusreplywithcode">чтобы доставить болюс %1$.2fU ответьте кодом %2$s</string>
     <string name="smscommunicator_calibrationfailed">xdrip не получает калибровок</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">чтобы отправить калибровку %.2f ответьте кодом %s</string>
+    <string name="smscommunicator_calibrationreplywithcode">чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
     <string name="smscommunicator_calibrationsent">калибровка отправлена. в xdrip должен быть активирован прием</string>
     <string name="smscommunicator_invalidphonennumber">неверный номер телефона для смс</string>
     <string name="smscommunicator_loophasbeendisabled">зцикл был деактивирован</string>
@@ -440,11 +432,11 @@
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
     <string name="smscommunicator_remotecommandsallowed">разрешить команды через смс</string>
     <string name="smscommunicator_shortname">SMS</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">для приостановки цикла на %d мин ответьте кодом %s</string>
+    <string name="smscommunicator_suspendreplywithcode">для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_tempbasalcanceled">врем базал отменен</string>
     <string name="smscommunicator_tempbasalcancelfailed">отмена врем базала не состоялась</string>
     <string name="smscommunicator_tempbasalfailed">неуспех старта врем базала</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">врем базал %.2fU/h на %d мин начат успешно</string>
+    <string name="smscommunicator_tempbasalset">врем базал %1$.2fU/h на %2$d мин начат успешно</string>
     <string name="smscommunicator_unknowncommand">неизвестная команда или неверный ответ</string>
     <string name="smscommunicator_wrongduration">неверное значение длительности</string>
     <string name="status">состояние:</string>
@@ -546,7 +538,7 @@
     <string name="danar_visualizeextendedaspercentage_title">Просмотреть расширенный болюс %</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="date">дата</string>
-    <string name="dia_too_short" formatted="false">pначение длительности работы инс %f слишком мало - применено %f</string>
+    <string name="dia_too_short">pначение длительности работы инс %1$f слишком мало - применено %2$f</string>
     <string name="extendedbolus">расширенный болюс</string>
     <string name="free_peak_oref">Акуу-Зуфл Щкуа</string>
     <string name="hours">час</string>
@@ -554,8 +546,6 @@
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
-    <string name="lock_screen">блокировка экрана</string>
-    <string name="lock_screen_short">блок</string>
     <string name="mdtp_cancel">отмена</string>
     <string name="mdtp_ok">OK</string>
     <string name="nl_lang">Голландский</string>

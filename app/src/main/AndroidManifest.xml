@@ -30,9 +30,10 @@
         android:name=".MainApp"
         android:allowBackup="true"
         android:icon="${appIcon}"
+        android:roundIcon="${appIconRound}"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,6 +50,7 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />
         <activity android:name=".TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
@@ -90,6 +92,8 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from DexcomG5 -->
                 <action android:name="com.dexcom.cgm.DATA" />
+                <!-- Receiver from Poctech -->
+                <action android:name="com.china.poctech.data" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->
@@ -169,7 +173,11 @@
         <service
             android:name=".plugins.Overview.notifications.DismissNotificationService"
             android:exported="false" />
-        <service
+
+        <service android:name=".plugins.Persistentnotification.DummyService" />
+
+
+ 	<service
             android:name=".plugins.PumpMedtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
             android:exported="true" />
@@ -177,12 +185,20 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
+ 
+        <activity
+            android:name=".setupwizard.SetupWizardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_activity_setup_wizard" />
 
         <activity
             android:name=".plugins.PumpCommon.dialog.RileylinkSettingsActivity"
             android:label="@string/title_activity_rileylink_settings"
             android:theme="@style/AppTheme"></activity>
 
+        <activity android:name=".SingleFragmentActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

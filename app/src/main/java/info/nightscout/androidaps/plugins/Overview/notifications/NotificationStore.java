@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
@@ -61,7 +62,7 @@ public class NotificationStore {
         }
         store.add(n);
 
-        if (SP.getBoolean(MainApp.gs(R.string.key_raise_notifications_as_android_notifications), false)) {
+        if (SP.getBoolean(MainApp.gs(R.string.key_raise_notifications_as_android_notifications), false) && !(n instanceof NotificationWithAction)) {
             raiseSystemNotification(n);
             if (usesChannels && n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
@@ -123,10 +124,15 @@ public class NotificationStore {
         Context context = MainApp.instance().getApplicationContext();
         NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.blueowl);
+        int smallIcon = R.drawable.ic_notification;
+        if (Config.NSCLIENT || Config.G5UPLOADER){
+            largeIcon = BitmapFactory.decodeResource(MainApp.instance().getResources(), R.mipmap.yellowowl);
+            smallIcon = R.drawable.nsclient_smallicon;
+        }
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_notification)
+                        .setSmallIcon(smallIcon)
                         .setLargeIcon(largeIcon)
                         .setContentText(n.text)
                         .setPriority(NotificationCompat.PRIORITY_MAX)

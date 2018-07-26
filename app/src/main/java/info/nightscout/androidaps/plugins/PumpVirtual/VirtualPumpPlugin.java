@@ -82,6 +82,8 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 .pluginName(R.string.virtualpump)
                 .shortName(R.string.virtualpump_shortname)
                 .preferencesId(R.xml.pref_virtualpump)
+                .neverVisible(BuildConfig.NSCLIENTOLNY || BuildConfig.G5UPLOADER)
+                .description(R.string.description_pump_virtual)
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
@@ -229,7 +231,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         return result;
     }
 

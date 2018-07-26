@@ -58,13 +58,8 @@ class HistoryIntentAdapter {
 
         final long record_unique_id = getRecordUniqueID(pump_serial_number, pump_record_id);
 
-        // other sanity checks
-        if ((pump_tbr_percent == 90) && (pump_tbr_duration <= 1)) {
-            log("Not creating TBR record for faux cancel");
-        } else {
-            log("Creating TBR record: " + pump_tbr_percent + "% " + pump_tbr_duration + "m" + " id:" + record_unique_id);
-            logAdapter.createTBRrecord(start_time, pump_tbr_percent, pump_tbr_duration, record_unique_id);
-        }
+        log("Creating TBR record: " + pump_tbr_percent + "% " + pump_tbr_duration + "m" + " id:" + record_unique_id);
+        logAdapter.createTBRrecord(start_time, pump_tbr_percent, pump_tbr_duration, record_unique_id);
     }
 
     void processDeliveredBolusIntent(Intent intent) {
@@ -160,8 +155,10 @@ class HistoryIntentAdapter {
         if (SP.getBoolean("insight_automatic_careportal_events", false)) {
             Date date = getDateExtra(intent, HistoryBroadcast.EXTRA_EVENT_TIME);
             String alertType = intent.getStringExtra(HistoryBroadcast.EXTRA_ALERT_TYPE);
+            int alertText = getAlertText(alertType);
+            if (alertText == 0) return;
             if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
-            logNote(date, MainApp.gs(getAlertText(alertType)));
+            logNote(date, MainApp.gs(alertText));
         }
     }
 
@@ -231,8 +228,8 @@ class HistoryIntentAdapter {
         if (type.equals("Warning32BatteryLow")) return R.string.alert_w32;
         if (type.equals("Warning33InvalidDateTime")) return R.string.alert_w33;
         if (type.equals("Warning34EndOfWarranty")) return R.string.alert_w34;
-        if (type.equals("Warning36TBRCancelled")) return R.string.alert_w36;
-        if (type.equals("Warning38BolusCancelled")) return R.string.alert_w38;
+        if (type.equals("Warning36TBRCancelled")) return 0;
+        if (type.equals("Warning38BolusCancelled")) return 0;
         if (type.equals("Warning39LoantimeWarning")) return R.string.alert_w39;
         return 0;
     }

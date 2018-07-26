@@ -1,28 +1,45 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
     <item
         android:id="@+id/nav_preferences"
+        app:showAsAction="never"
         android:title="@string/nav_preferences" />
     <item
+        android:id="@+id/nav_plugin_preferences"
+        app:showAsAction="never"
+        android:title="@string/nav_plugin_preferences" />
+    <item
         android:id="@+id/nav_historybrowser"
+        app:showAsAction="never"
         android:title="@string/nav_historybrowser" />
     <item
+        android:id="@+id/nav_setupwizard"
+        app:showAsAction="never"
+        android:title="@string/nav_setupwizard" />
+    <item
         android:id="@+id/nav_resetdb"
+        app:showAsAction="never"
         android:title="@string/nav_resetdb" />
     <item
         android:id="@+id/nav_export"
+        app:showAsAction="never"
         android:title="@string/nav_export" />
     <item
         android:id="@+id/nav_import"
+        app:showAsAction="never"
         android:title="@string/nav_import" />
     <item
         android:id="@+id/nav_show_logcat"
+        app:showAsAction="never"
         android:title="@string/nav_show_logcat" />
     <item
         android:id="@+id/nav_about"
+        app:showAsAction="never"
         android:title="@string/nav_about" />
     <item
         android:id="@+id/nav_exit"
+        app:showAsAction="never"
         android:title="@string/nav_exit" />
 </menu>

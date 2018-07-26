@@ -42,6 +42,8 @@ public class Notification {
     public static final int APPROACHING_DAILY_LIMIT = 11;
     public static final int NSCLIENT_NO_WRITE_PERMISSION = 12;
     public static final int MISSING_SMS_PERMISSION = 13;
+    public static final int PUMPERROR = 14;
+    public static final int WRONGSERIALNUMBER = 15;
 
     public static final int NSANNOUNCEMENT = 18;
     public static final int NSALARM = 19;
@@ -59,7 +61,13 @@ public class Notification {
     public static final int ZERO_VALUE_IN_PROFILE = 31;
     public static final int PROFILE_SWITCH_MISSING = 32;
     public static final int NOT_ENG_MODE_OR_RELEASE = 33;
-    public static final int MEDTRONIC_PUMP_ALARM = 34;
+    public static final int WRONG_PUMP_PASSWORD = 34;
+    public static final int PERMISSION_STORAGE = 35;
+    public static final int PERMISSION_LOCATION = 36;
+    public static final int PERMISSION_BATTERY = 37;
+    public static final int PERMISSION_SMS = 38;
+    public static final int MAXIMUM_BASAL_VALUE_REPLACED = 39;
+    public static final int MEDTRONIC_PUMP_ALARM = 40;
 
     public int id;
     public Date date;
@@ -69,7 +77,6 @@ public class Notification {
 
     public NSAlarm nsAlarm = null;
     public Integer soundId = null;
-
     public Notification() {
     }
 
@@ -183,10 +190,10 @@ public class Notification {
         return false;
     }
 
-    public static boolean isAlarmForStaleData() {
+    public static boolean isAlarmForStaleData(){
         long snoozedTo = SP.getLong("snoozedTo", 0L);
-        if (snoozedTo != 0L) {
-            if (System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
+        if(snoozedTo != 0L){
+            if(System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
                 //log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
                 return false;
             }
@@ -202,12 +209,12 @@ public class Notification {
         //log.debug("bgReadingAgoMin value is:"+bgReadingAgoMin);
         //log.debug("Stale alarm snoozed to: "+(System.currentTimeMillis() - snoozedTo)/60000L);
         Double threshold = NSSettingsStatus.getInstance().getThreshold("alarmTimeagoWarnMins");
-        //log.debug("OpenAPS Alerts enabled: "+openAPSEnabledAlerts);
-        // if no thresshold from Ns get it loccally
-        if (threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue, 15D);
-        // No threshold of OpenAPS Alarm so using the one for BG
-        // Added OpenAPSEnabledAlerts to alarm check
-        if ((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false)) || (bgReadingAgoMin > threshold && openAPSEnabledAlerts)) {
+	//log.debug("OpenAPS Alerts enabled: "+openAPSEnabledAlerts);
+	// if no thresshold from Ns get it loccally
+        if(threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue,15D);
+	// No threshold of OpenAPS Alarm so using the one for BG
+	// Added OpenAPSEnabledAlerts to alarm check
+        if((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false))||(bgReadingAgoMin > threshold && openAPSEnabledAlerts)){
             return true;
         }
         //snoozing for threshold

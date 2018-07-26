@@ -35,6 +35,7 @@ public class PumpDescription {
     public boolean isSetBasalProfileCapable = true;
     public double basalStep = 0.01d;
     public double basalMinimumRate = 0.04d;
+    public double basalMaximumRate = 25d;
 
     public boolean isRefillingCapable = false;
 

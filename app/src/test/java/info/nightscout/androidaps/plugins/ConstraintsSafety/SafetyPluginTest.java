@@ -19,7 +19,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.utils.SP;
@@ -42,7 +41,7 @@ public class SafetyPluginTest {
         pump.getPumpDescription().isTempBasalCapable = false;
 
         Constraint<Boolean> c = new Constraint<>(true);
-        c = safetyPlugin.isLoopInvokationAllowed(c);
+        c = safetyPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Safety: Pump is not temp basal capable", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
     }

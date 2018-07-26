@@ -23,6 +23,7 @@ public class SourceMM640gPlugin extends PluginBase implements BgSourceInterface 
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.MM640g)
+                .description(R.string.description_source_mm640g)
         );
     }
 

@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
 
@@ -345,45 +346,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private void showConfirmationDialog(String title, String message, String actionstring) {
 
-        if(confirmThread != null){
-            confirmThread.invalidate();
-        }
-
-        Intent actionIntent = new Intent(this, ListenerService.class);
-        actionIntent.setAction(ACTION_CONFIRMATION);
-        actionIntent.putExtra("actionstring", actionstring);
-        PendingIntent actionPendingIntent = PendingIntent.getService(this, 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);;
-
-        long[] vibratePattern = new long[]{0, 100, 50, 100, 50};
-
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle(title)
-                        .setContentText(message)
-                        .setContentIntent(actionPendingIntent)
-                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setVibrate(vibratePattern)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                        .extend(new NotificationCompat.WearableExtender())
-                        .addAction(R.drawable.ic_confirm, title, actionPendingIntent);
-
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(this);
-
-        notificationManager.notify(CONFIRM_NOTIF_ID, notificationBuilder.build());
-
-        // keep the confirmation dialog open for one minute.
-        scheduleDismissConfirm(60);
-
-    }
-
-    private void scheduleDismissConfirm(final int seconds) {
-        if(confirmThread != null){
-            confirmThread.invalidate();
-        }
-        confirmThread = new DismissThread(CONFIRM_NOTIF_ID, seconds);
-        confirmThread.start();
+        Intent intent = new Intent(this, AcceptActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle params = new Bundle();
+        params.putString("title", title);
+        params.putString("message", message);
+        params.putString("actionstring", actionstring);
+        intent.putExtras(params);
+        startActivity(intent);
     }
 
     private void scheduleDismissBolusprogress(final int seconds) {
@@ -433,6 +403,13 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         Intent intent = new Intent(context, ListenerService.class);
         intent.putExtra("actionstring", actionstring);
         intent.setAction(ACTION_INITIATE_ACTION);
+        context.startService(intent);
+    }
+
+    public static void confirmAction(Context context, String actionstring) {
+        Intent intent = new Intent(context, ListenerService.class);
+        intent.putExtra("actionstring", actionstring);
+        intent.setAction(ACTION_CONFIRMATION);
         context.startService(intent);
     }
 

@@ -16,6 +16,7 @@
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
         <item>@string/fr_lang</item>
+        <item>@string/ga_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
@@ -24,6 +25,7 @@
         <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
         <item>@string/sv_lang</item>
+        <item>@string/pl_lang</item>
         <item>@string/zh_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
@@ -32,6 +34,7 @@
         <item>cs</item>
         <item>de</item>
         <item>fr</item>
+        <item>ga</item>
         <item>nl</item>
         <item>es</item>
         <item>el</item>
@@ -40,6 +43,7 @@
         <item>ro</item>
         <item>ru</item>
         <item>sv</item>
+        <item>pl</item>
         <item>zh-rCN</item>
     </string-array>
 

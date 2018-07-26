@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
@@ -675,7 +676,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     .source(Source.NIGHTSCOUT);
             createOrUpdate(tempTarget);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -761,7 +762,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
             }
         } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -966,7 +967,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 createOrUpdate(tempBasal);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -1242,6 +1243,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             where.ge("date", mills);
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1249,13 +1251,41 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
-    public List<CareportalEvent> getCareportalEventsFromTime(boolean ascending) {
+    public void preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
+        OverlappingIntervals offlineEvents = new OverlappingIntervals();
+        for (int i = 0; i < list.size(); i++) {
+            CareportalEvent event = list.get(i);
+            if (!event.eventType.equals(CareportalEvent.OPENAPSOFFLINE)) continue;
+            offlineEvents.add(event);
+        }
+
+    }
+
+    public List<CareportalEvent> getCareportalEventsFromTime(long mills, String type, boolean ascending) {
+        try {
+            List<CareportalEvent> careportalEvents;
+            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.ge("date", mills).and().eq("eventType", type);
+            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
+            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
+            return careportalEvents;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
+    public List<CareportalEvent> getCareportalEvents(boolean ascending) {
         try {
             List<CareportalEvent> careportalEvents;
             QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
             queryBuilder.orderBy("date", ascending);
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1315,7 +1345,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvent._id = trJson.getString("_id");
             createOrUpdate(careportalEvent);
         } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 
@@ -1470,14 +1500,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
                 ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
-                Profile profile = store.getSpecificProfile(profileSwitch.profileName);
-                if (profile != null) {
-                    profileSwitch.profileJson = profile.getData().toString();
-                    log.debug("Profile switch prefilled with JSON from local store");
-                    // Update data in NS
-                    NSUpload.updateProfileSwitch(profileSwitch);
+                if (store != null) {
+                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null) {
+                        profileSwitch.profileJson = profile.getData().toString();
+                        log.debug("Profile switch prefilled with JSON from local store");
+                        // Update data in NS
+                        NSUpload.updateProfileSwitch(profileSwitch);
+                    } else {
+                        log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                        return;
+                    }
                 } else {
-                    log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                    log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
             }
@@ -1485,7 +1520,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 profileSwitch.profilePlugin = trJson.getString("profilePlugin");
             createOrUpdate(profileSwitch);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
 

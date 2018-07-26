@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="5dp"
     tools:context="info.nightscout.androidaps.plugins.Careportal.CareportalFragment">
 
 

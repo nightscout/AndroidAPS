@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.SmsCommunicator;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.os.SystemClock;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
@@ -47,6 +48,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.T;
 import info.nightscout.utils.XdripCalibrations;
 
 /**
@@ -124,6 +126,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 .pluginName(R.string.smscommunicator)
                 .shortName(R.string.smscommunicator_shortname)
                 .preferencesId(R.xml.pref_smscommunicator)
+                .description(R.string.description_sms_communicator)
         );
         processSettings(null);
     }
@@ -449,12 +452,14 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             public void run() {
                                 PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                                 if (result.success) {
+                                    SystemClock.sleep(T.secs(15).msecs()); // wait some time to get history
                                     String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
                                     if (pump != null)
                                         reply += "\n" + pump.shortStatus(true);
                                     lastRemoteBolusTime = new Date();
                                     sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 } else {
+                                    SystemClock.sleep(T.secs(60).msecs()); // wait some time to get history
                                     String reply = MainApp.gs(R.string.smscommunicator_bolusfailed);
                                     if (pump != null)
                                         reply += "\n" + pump.shortStatus(true);

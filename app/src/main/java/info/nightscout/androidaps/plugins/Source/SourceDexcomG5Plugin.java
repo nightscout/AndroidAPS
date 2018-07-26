@@ -29,6 +29,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 .shortName(R.string.dexcomG5_shortname)
                 .showInList(!Config.NSCLIENT)
                 .preferencesId(R.xml.pref_dexcomg5)
+                .description(R.string.description_source_dexcom_g5)
         );
     }
 

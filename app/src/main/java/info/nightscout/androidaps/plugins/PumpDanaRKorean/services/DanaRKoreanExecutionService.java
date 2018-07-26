@@ -18,11 +18,12 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetSingleBasalProfil
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTime;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingGlucose;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMaxValues;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMeal;
@@ -53,9 +55,10 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.SerialIOThread;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgCheckValue_k;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal_k;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic_k;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
 
 public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
@@ -105,7 +108,11 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
     public void connect() {
         if (mDanaRPump.password != -1 && mDanaRPump.password != SP.getInt(R.string.key_danar_password, -1)) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.wrongpumppassword), R.raw.error);
+            if(System.currentTimeMillis() > lastWrongPumpPassword + 30 * 1000) {
+                Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
+                notification.soundId = R.raw.error;
+                lastWrongPumpPassword = System.currentTimeMillis();
+            }
             return;
         }
 
@@ -169,7 +176,19 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingbolusstatus)));
 
             long now = System.currentTimeMillis();
-            if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isInitialized()) {
+            mDanaRPump.lastConnection = now;
+
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
+                mSerialIOThread.sendMessage(new MsgSettingBasal());
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                    MainApp.bus().post(new EventProfileSwitchChange());
+                }
+            }
+
+            if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
@@ -191,15 +210,17 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 mDanaRPump.lastSettingsRead = now;
             }
 
-            mDanaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
             if (mDanaRPump.dailyTotalUnits > mDanaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 log.debug("Approaching daily limit: " + mDanaRPump.dailyTotalUnits + "/" + mDanaRPump.maxDailyTotalUnits);
-                Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(reportFail));
-                NSUpload.uploadError(MainApp.gs(R.string.approachingdailylimit) + ": " + mDanaRPump.dailyTotalUnits + "/" + mDanaRPump.maxDailyTotalUnits + "U");
+                if(System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
+                    Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(reportFail));
+                    NSUpload.uploadError(MainApp.gs(R.string.approachingdailylimit) + ": " + mDanaRPump.dailyTotalUnits + "/" + mDanaRPump.maxDailyTotalUnits + "U");
+                    lastApproachingDailyLimit = System.currentTimeMillis();
+                }
             }
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -318,6 +339,11 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
+    }
+
+    @Override
+    public PumpEnactResult setUserOptions() {
+        return null;
     }
 
 }

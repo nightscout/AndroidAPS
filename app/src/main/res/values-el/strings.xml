@@ -12,8 +12,6 @@
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
     <string name="ns_sync_use_absolute_title">"Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού "</string>
     <string name="alert_dialog_storage_permission_text">"Παρακαλώ κάντε reboot στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, αλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)! "</string>
-    <string name="objectives_objective_label_string">Στόχοι:</string>
-    <string name="objectives_gate_label_string">Δράση:</string>
     <string name="objectives_button_start">Έναρξη</string>
     <string name="objectives_button_verify">Επικύρωση</string>
     <string name="nsprofileview_units_label">Μονάδες</string>
@@ -72,7 +70,7 @@
     <string name="objectives">Στόχοι</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Επισκόπηση</string>
-    <string name="profileviewer">Προφίλ NS</string>
+    <string name="nsprofile">Προφίλ NS</string>
     <string name="simpleprofile">Απλό Προφίλ</string>
     <string name="tempbasal">Προσ.Ρυθμός</string>
     <string name="treatments">Θεραπείες</string>
@@ -84,7 +82,6 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">Γενικά</string>
     <string name="days">ημέρες</string>
-    <string name="objectives_minimalduration">Ελάχ.Διάρκεια</string>
     <string name="constraints">Περιορισμοί</string>
     <string name="loop">Κύκλωμα</string>
     <string name="configbuilder_loop">Κύκλωμα</string>
@@ -193,7 +190,6 @@
     <string name="connected">Συνδέθηκε</string>
     <string name="disconnected">Αποσύνδεση</string>
     <string name="danar_pump_settings">Ρυθμίσεις αντλίας DanaR</string>
-    <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Άδεια χρήσης τελικού χρήστη</string>
     <string name="end_user_license_agreement_text">ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΝΑ ΚΑΝΕΤΕ ΙΑΤΡΙΚΗ ΑΠΟΦΑΣΗ ΔΕΝ ΥΠΑΡΧΕΙ ΕΓΓΥΗΣΗ ΓΙΑ ΤΟ ΠΡΟΓΡΑΜΜΑ, ΣΤΟ ΒΑΘΜΟ ΠΟΥ ΕΠΙΤΡΕΠΕΤΑΙ ΑΠΟ ΤΟ ΕΦΑΡΜΟΣΤΕΟ ΔΙΚΑΙΟ. ΕΚΤΟΣ ΟΠΟΙΑΣΔΗΠΟΤΕ ΔΙΑΒΑΘΜΙΣΜΕΝΗ ΚΑΤΑ ΤΗΝ ΕΓΓΡΑΦΗ ΤΩΝ ΚΑΤΟΧΟΙ ΠΝΕΥΜΑΤΙΚΩΝ ΔΙΚΑΙΩΜΑΤΩΝ ΚΑΙ / Η ΑΛΛΑ ΜΕΡΗ ΠΑΡΕΧΟΝΤΑΙ ΤΟ ΠΡΟΓΡΑΜΜΑ \"ΩΣ ΕΧΕΙ\" ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ, ΕΞΑΙΡΟΥΜΕΝΕΣ Ή ΣΙΩΠΗΡΕΣ, ΣΥΜΠΕΡΙΛΑΜΒΑΝΟΜΕΝΩΝ, ΕΝΔΕΙΚΤΙΚΑ, ΤΩΝ ΣΙΩΠΗΡΩΝ ΕΓΓΥΗΣΕΩΝ ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ΚΑΙ ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ . Ο ΟΛΟΚΛΗΡΩΜΕΝΟΣ ΚΙΝΔΥΝΟΣ ΟΣΟΝ ΑΦΟΡΑ ΤΗΝ ΠΟΙΟΤΗΤΑ ΚΑΙ ΤΗΝ ΑΠΟΔΟΣΗ ΤΟΥ ΠΡΟΓΡΑΜΜΑΤΟΣ ΕΙΝΑΙ ΔΙΚΟ ΣΑΣ. ΕΑΝ ΤΟ ΠΡΟΓΡΑΜΜΑ ΔΕΝ ΕΙΝΑΙ ΕΛΑΤΤΩΜΑΤΙΚΟ, ΠΡΕΠΕΙ ΝΑ ΕΞΕΤΑΣΤΕ ΤΟ ΚΟΣΤΟΣ ΟΛΩΝ ΤΩΝ ΑΠΑΡΑΙΤΗΤΩΝ ΣΥΝΤΗΡΗΣΕΩΝ, ΕΠΙΣΚΕΥΩΝ Ή ΔΙΟΡΘΩΣΕΩΝ</string>
     <string name="end_user_license_agreement_i_understand">ΚΑΤΑΛΑΒΑ ΚΑΙ ΣΥΜΦΩΝΩ</string>
@@ -218,8 +214,8 @@
     <string name="waitingforpumpresult">Περιμέντε για αποτέλεσμα</string>
     <string name="smscommunicator_allowednumbers">Επιτρεπτά τηλεφωνικά νούμερα</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">"Για έγχυση bolus %.2fU SMS με κώδικα %s  "</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">"Για αποστολή βαθμονόμησης %.2f SMS με κώδικο %s "</string>
+    <string name="smscommunicator_bolusreplywithcode">"Για έγχυση bolus %1$.2fU SMS με κώδικα %2$s  "</string>
+    <string name="smscommunicator_calibrationreplywithcode">"Για αποστολή βαθμονόμησης %1$.2f SMS με κώδικο %2$s "</string>
     <string name="smscommunicator_bolusfailed">Αποτυχία Bolus</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU παραδόθηκε επιτυχώς</string>
     <string name="bolusrequested" formatted="false">Πάει να παραδόσει %.2fU</string>
@@ -273,7 +269,7 @@
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της DanaR φορτώθηκαν</string>
     <string name="objectives_1_objective">Ξεκινήστε σε ανοιχτό κύκλωμα</string>
-    <string name="objectives_1_gate">Τρέξτε σε ανοιχτό κύκλωμα για λίγες ημέρες και χειροκίνητα κάντε πολλούς Προσ.Ρυθμ.</string>
+    <string name="objectives_1_gate">Τρέξτε σε ανοιχτό κύκλωμα για λίγες ημέρες και χειροκίνητα κάντε πολλούς Προσ.Ρυθμ. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_2_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσ.Ρυθμ.</string>
     <string name="objectives_2_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
     <string name="objectives_3_objective">"Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend) "</string>
@@ -289,13 +285,13 @@
     <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
     <string name="smscommunicator_loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="valuelimitedto" formatted="false">%.2f limited to %.2f</string>
+    <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Τιμή %s είναι έξω από τα όρια</string>
     <string name="smscommunicator_remotebasalnotallowed">"Δεν επιτρέπεται η απομακρυσμένη ρύθμιση βασικού ρυθμού "</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">Για έναρξη βασικού %.2fU/h SMS με κωσικό %s</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Για αναστολή κυκλκώματος για %d λεπτών SMS με κωδικό %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Προσ.Ρυθμ.%.2fU/h για %d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_basalreplywithcode">Για έναρξη βασικού %1$.2fU/h SMS με κωσικό %2$s</string>
+    <string name="smscommunicator_suspendreplywithcode">Για αναστολή κυκλκώματος για %1$d λεπτών SMS με κωδικό %2$s</string>
+    <string name="smscommunicator_tempbasalset">Προσ.Ρυθμ.%1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
     <string name="smscommunicator_tempbasalfailed">"Προσ.Ρυθμ.απέτυχε "</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Για να σταματήσετε Προσ.Ρυθμ.SMS με κωδικό %s</string>
     <string name="smscommunicator_tempbasalcanceled">Προσ.Ρυθμ.ακυρώθηκε</string>
@@ -403,7 +399,7 @@
     <string name="always_use_shortavg">Χρησιμοποιείτε πάντα τη βραχυπρόθεσμη μέση γλυκεμική διαφορά αντί της διαφοράς των δύο τελευταίων τιμών</string>
     <string name="always_use_shortavg_summary">Χρήσιμο όταν δεδομένα από μη φιλτραρισμένες πηγές όπως το xDrip αποκτούν θόρυβο</string>
     <string name="advancedsettings_title">Ρυθμίσεις για Προχωρημένους</string>
-    <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="danar_model">Model: %1$02X Protocol: %2$02X Code: %3$02X</string>
     <string name="profile">Προφίλ</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">"Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα κλειδί ασφαλείας OpenAPS.Αυτό περιορίζει την αύξηση του βασικού x3 από την μεγαλύτερη τιμή του.Δεν χρειάζεται να το αλλάξετε "</string>
     <string name="error_only_numeric_digits_allowed">Μόνο αριθμητικά ψηφία επιτρέπονται.</string>
@@ -415,7 +411,6 @@
     <string name="copied_to_clipboard">Αντιγράφτηκε στο Πρόχειρο</string>
     <string name="nav_show_logcat">Εμφάνιση αρχείου καταγραφής</string>
     <string name="overview_calibration">Βαθμονόμηση</string>
-    <string name="overview_calibration_bg_label">Βαθμονόμηση</string>
     <string name="send_calibration" formatted="false">"Να στείλω την βαθμονόμηση %.1f στο xDrip? "</string>
     <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
     <string name="calibrationsent">Η βαθμονόμηση εστάλει στο xDrip</string>
@@ -467,8 +462,6 @@
     <string name="adult">Ενήλικας</string>
     <string name="patientage_summary">Παρακαλώ επιλέξτε ηλικία χρήστη για να ορισθούν όρια ασφαλείας</string>
     <string name="Glimp">Glimp</string>
-    <string name="batteryoptimalizationerror">Η συσκευή πιθανώς δεν υποστηρίζει αποκλεισμό από τη βελτιστοποίηση της μπαταρίας!</string>
-    <string name="pleaseallowpermission">Παρακαλώ Επιτρέψτε Άδεια</string>
     <string name="needwhitelisting" formatted="false">Το %s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
     <string name="loopsuspended">Κύκλωμα σε παύση</string>
     <string name="loopsuspendedfor" formatted="false">Παύση (%d m)</string>
@@ -497,7 +490,6 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Ταχείας Δράσης Ινσουλίνη Παρατεταμένη</string>
     <string name="enablesuperbolus">Ενεργοποίηση superbolus</string>
     <string name="enablesuperbolus_summary">"Ενεργοποιήστε το superbolus.Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ! "</string>
     <string name="iob">IOB</string>
@@ -558,8 +550,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
-    <string name="lock_screen">Κλείδωμα οθόνης</string>
-    <string name="lock_screen_short">Κλείδωμα</string>
     <string name="sensitivity_warning">Ενεργοποιώντας το autosense θυμιθείτε να εισάγετε όλους τους υδατ. Διαφορετικά, οι αποκλίσεις των υδατανθράκων θα εντοπιστούν λανθασμένα ως αλλαγή ευαισθησίας</string>
     <string name="sensitivityweightedaverage">Σταθμισμένος μέσος όρος ευαισθησίας</string>
     <string name="mdtp_ok">OK</string>
@@ -579,7 +569,7 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
     <string name="ultrarapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
-    <string name="dia_too_short" formatted="false">"DIA για %f πολύ μικρή - χρησιμοποιήστε %f! "</string>
+    <string name="dia_too_short">"DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! "</string>
     <string name="activate_profile">ΕΝΕΡΓΟΠΟΙΗΣΗ ΠΡΟΦΙΛ</string>
     <string name="date">Ημερομηνία</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
