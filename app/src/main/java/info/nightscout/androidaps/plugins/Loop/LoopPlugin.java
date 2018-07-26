@@ -40,12 +40,14 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
+import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
@@ -426,6 +428,29 @@ public class LoopPlugin extends PluginBase {
             if (Config.logFunctionCalls)
                 log.debug("invoke end");
         }
+    }
+
+    public void acceptChangeRequest() {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        MainApp.getConfigBuilder().applyTBRRequest(lastRun.constraintsProcessed, profile, new Callback() {
+            @Override
+            public void run() {
+                if (result.enacted) {
+                    lastRun.tbrSetByPump = result;
+                    lastRun.lastEnact = new Date();
+                    lastRun.lastOpenModeAccept = new Date();
+                    NSUpload.uploadDeviceStatus();
+                    ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                    if (objectivesPlugin != null) {
+                        ObjectivesPlugin.manualEnacts++;
+                        ObjectivesPlugin.saveProgress();
+                    }
+                }
+                MainApp.bus().post(new EventAcceptOpenLoopChange());
+            }
+        });
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
     }
 
 }

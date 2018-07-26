@@ -84,7 +84,6 @@ import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
@@ -110,7 +109,7 @@ import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
-import info.nightscout.androidaps.plugins.Wear.events.EventWearAcceptOpenLoopChange;
+import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -749,29 +748,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     hideTempRecommendation();
                     clearNotification();
-                    MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
-                        @Override
-                        public void run() {
-                            if (result.enacted) {
-                                finalLastRun.tbrSetByPump = result;
-                                finalLastRun.lastEnact = new Date();
-                                finalLastRun.lastOpenModeAccept = new Date();
-                                NSUpload.uploadDeviceStatus();
-                                ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                                if (objectivesPlugin != null) {
-                                    ObjectivesPlugin.manualEnacts++;
-                                    ObjectivesPlugin.saveProgress();
-                                }
-                            }
-                            scheduleUpdateGUI("onClickAcceptTemp");
-                        }
-                    });
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
-                    // dismiss notifications
-                    NotificationManager notificationManager =
-                            (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(Constants.notificationID);
-                    ActionStringHandler.handleInitiate("cancelChangeRequest");
+                    LoopPlugin.getPlugin().acceptChangeRequest();
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
@@ -971,8 +948,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventWearAcceptOpenLoopChange ev) {
-        scheduleUpdateGUI("EventWearAcceptOpenLoopChange");
+    public void onStatusEvent(final EventAcceptOpenLoopChange ev) {
+        scheduleUpdateGUI("EventAcceptOpenLoopChange");
     }
 
     @Subscribe
@@ -1015,6 +992,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         NotificationManager notificationManager =
                 (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Constants.notificationID);
+
+        ActionStringHandler.handleInitiate("cancelChangeRequest");
     }
 
     private void updatePumpStatus(String status) {
