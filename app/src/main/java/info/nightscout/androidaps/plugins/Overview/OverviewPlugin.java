@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -24,7 +25,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class OverviewPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(OverviewPlugin.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.OVERVIEW);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
 

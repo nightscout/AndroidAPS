@@ -73,4 +73,6 @@ public class Constants {
     public static final String EVENTS = "EVENTS";
     public static final String QUEUE = "QUEUE";
     public static final String BGSOURCE = "BGSOURCE";
+    public static final String OVERVIEW = "OVERVIEW";
+    public static final String NOTIFICATION = "NOTIFICATION";
 }
