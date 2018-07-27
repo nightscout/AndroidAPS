@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -27,7 +28,7 @@ import info.nightscout.utils.DateUtil;
  */
 
 public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static Logger log = LoggerFactory.getLogger(Constants.AUTOSENS);
 
     static SensitivityOref0Plugin plugin = null;
 

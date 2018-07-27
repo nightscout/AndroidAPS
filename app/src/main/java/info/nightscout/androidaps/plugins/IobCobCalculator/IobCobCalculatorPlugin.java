@@ -49,7 +49,7 @@ import static info.nightscout.utils.DateUtil.now;
  */
 
 public class IobCobCalculatorPlugin extends PluginBase {
-    private Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private Logger log = LoggerFactory.getLogger(Constants.AUTOSENS);
 
     private static IobCobCalculatorPlugin plugin = null;
 
