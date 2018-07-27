@@ -35,7 +35,10 @@ public class Config {
     public static final boolean logCongigBuilderActions = true;
     public static final boolean logAutosensData = false;
     public static final boolean logEvents = false;
-    public static final boolean logProfile = false;
+    public static final boolean logQueue = true;
+    public static final boolean logBgSource = true;
+    public static final boolean logOverview = true;
+    public static final boolean logNotification = true;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

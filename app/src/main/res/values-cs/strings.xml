@@ -226,7 +226,7 @@
     <string name="danar_history_basalhours">Hodinové bazály</string>
     <string name="danar_history_bolus">Bolusy</string>
     <string name="danar_history_carbohydrates">Sacharidy</string>
-    <string name="danar_history_connectingfor" formatted="false">Připojování %d sec</string>
+    <string name="danar_history_connectingfor">Připojování %1$d sec</string>
     <string name="danar_history_dailyinsulin">Denní inzulín</string>
     <string name="danar_history_errors">Chyby</string>
     <string name="danar_history_glucose">Glykémie</string>
@@ -235,7 +235,7 @@
     <string name="danar_historyreload">Načíst</string>
     <string name="danar_refill">plnění</string>
     <string name="danar_sbolus">S bolus</string>
-    <string name="danar_totaluploaded" formatted="false">Celkem nahráno %d záznamů</string>
+    <string name="danar_totaluploaded">Celkem nahráno %1$d záznamů</string>
     <string name="uploading">Nahrávám</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="wrongpumppassword">Špatné heslo k pumpě</string>
@@ -330,18 +330,18 @@
     <string name="mdi">Pera</string>
     <string name="sms_actualbg">Glykémie:</string>
     <string name="sms_lastbg">Poslední glykémie:</string>
-    <string name="minago" formatted="false">před %d min</string>
+    <string name="minago">před %1$d min</string>
     <string name="sms_basal">Bazál:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_delta">Rozdíl:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="sms_minago" formatted="false">před %d min</string>
+    <string name="sms_minago">před %1$d min</string>
     <string name="smscommunicator_bolusdelivered">Bolus %.2fU aplikován úspěšně</string>
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
     <string name="localprofile">Místní profil</string>
     <string name="activity">Aktivita</string>
-    <string name="array_of_elements">Pole %d prvků. Aktuální hodnota:</string>
+    <string name="array_of_elements">Pole %1$d prvků. Aktuální hodnota:</string>
     <string name="eatingsoon">Před jídlem</string>
     <string name="el_lang">Greek</string>
     <string name="initializing">Inicializuji ...</string>
@@ -464,7 +464,7 @@
     <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
     <string name="enableloop">Povolit smyčku</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
-    <string name="loopsuspendedfor" formatted="false">Pozastaveno (%d min)</string>
+    <string name="loopsuspendedfor">Pozastaveno (%1$d min)</string>
     <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
     <string name="resume">Uvolnit</string>
     <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
@@ -482,7 +482,7 @@
     <string name="configbuilder_insulin">Inzulín</string>
     <string name="fastactinginsulin">Rychlý inzulín</string>
     <string name="insulin_shortname">INZ</string>
-    <string name="loopsuperbolusfor">Superbolus (%d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
@@ -612,7 +612,7 @@
     <string name="startingbolus">Spouštím bolus</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="ultrarapid_oref">Ultra rychlý - Oref</string>
-    <string name="waitingforestimatedbolusend" formatted="false">Čekání na konec bolusu. Zbývá %d sek.</string>
+    <string name="waitingforestimatedbolusend">Čekání na konec bolusu. Zbývá %1$d sek.</string>
     <string name="objectives_7_objective">Povolit další funkce pro běžné používání jako SMB</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3 Toto je klíčová hodnota zabezpečení. Říká, že maximánlní nastavitelný bazál je trojnásobkem maximálního denního bazálu. Patrně to nebudete muset měnit, případně si přečtete o tématu \"3x max denní; 4x aktuální\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4 Toto je druhá klíčová hodnota. Říká, že maximální hodnota dočasného bazálu nikdy nebude větší, než čtyřnásobek aktuálního bazálu. Je to proto, aby se lidé nedostali do hodnot nebezpečných bazálu dříve, než pochpí jak OpenAPS pracuje. Znovy vychozí hodnota je 4 a většina lidí ji nidky nebude muset změnit. Pokud nestačí, obvykle je problém někde jinde.</string>
@@ -678,7 +678,7 @@
     <string name="combo_refresh">Obnovit</string>
     <string name="combo_pump_state_label">Stav</string>
     <string name="combo_pump_activity_label">Aktivita</string>
-    <string name="combo_no_pump_connection" formatted="false">Žádné spojení %d min</string>
+    <string name="combo_no_pump_connection">Žádné spojení %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min zbývá)</string>
     <string name="combo_pump_state_initializing">Inicializace</string>
     <string name="combo_pump_state_suspended_due_to_error">Vypnuto díky chybě</string>
@@ -857,9 +857,9 @@
     <string name="hypo_target">Cílová glykémie při hypoglykémii</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
-    <string name="objectivenotstarted">Výukový cíl %d nespuštěn</string>
+    <string name="objectivenotstarted">Výukový cíl %1$d nespuštěn</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="objectivenotfinished">Výukový cíl %d nedokončen</string>
+    <string name="objectivenotfinished">Výukový cíl %1$d nedokončen</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="novalidbasalrate">Z pumpy nepřečten žádný platný bazál</string>
     <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
@@ -887,8 +887,8 @@
     <string name="smbnotallowedinopenloopmode">SBM není povoleno v otevřené smyčce</string>
     <string name="food_short">Jídlo</string>
     <string name="reset">reset</string>
-    <string name="waitingfortimesynchronization">Čekání na synchronizaci času (%d s)</string>
-    <string name="loopdisconnectedfor">Odpojeno (%d m)</string>
+    <string name="waitingfortimesynchronization">Čekání na synchronizaci času (%1$d s)</string>
+    <string name="loopdisconnectedfor">Odpojeno (%1$d m)</string>
     <string name="automatic_careportal_events">Automatické vkládání péče</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automaticky vloží výměnu inzulínu, setu, baterie a alarmů pumpy do NS</string>
     <string name="openapssmb_maxiob_title">Maximální celkové IOB, které OpenAPS nemůže překročit [U]</string>

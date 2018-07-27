@@ -147,6 +147,23 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         MainApp.bus().unregister(this);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("bgCheckbox", bgCheckbox.isChecked());
+        savedInstanceState.putBoolean("ttCheckbox", ttCheckbox.isChecked());
+        savedInstanceState.putBoolean("bolusIobCheckbox", bolusIobCheckbox.isChecked());
+        savedInstanceState.putBoolean("basalIobCheckbox", basalIobCheckbox.isChecked());
+        savedInstanceState.putBoolean("bgtrendCheckbox", bgtrendCheckbox.isChecked());
+        savedInstanceState.putBoolean("cobCheckbox", cobCheckbox.isChecked());
+        savedInstanceState.putDouble("editBg", editBg.getValue());
+        savedInstanceState.putDouble("editCarbs", editCarbs.getValue());
+        savedInstanceState.putDouble("editCorr", editCorr.getValue());
+        savedInstanceState.putDouble("editCarbTime", editCarbTime.getValue());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
+
     @Subscribe
     public void onStatusEvent(final EventNewBG e) {
         Activity activity = getActivity();
@@ -259,6 +276,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+        //recovering state if there is something
+        if (savedInstanceState != null) {
+            editCarbs.setValue(savedInstanceState.getDouble("editCarbs"));
+            editBg.setValue(savedInstanceState.getDouble("editBg"));
+            editCarbTime.setValue(savedInstanceState.getDouble("editCarbTime"));
+            editCorr.setValue(savedInstanceState.getDouble("editCorr"));
+        }
         return view;
     }
 

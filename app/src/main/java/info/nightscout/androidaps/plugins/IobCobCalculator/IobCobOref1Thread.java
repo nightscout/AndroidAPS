@@ -43,24 +43,26 @@ import static java.util.Calendar.MINUTE;
  */
 
 public class IobCobOref1Thread extends Thread {
-    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static Logger log = LoggerFactory.getLogger(Constants.AUTOSENS);
     private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private boolean bgDataReload;
+    private boolean limitDataToOldestAvailable;
     private String from;
-    private long start;
+    private long end;
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobOref1Thread(IobCobCalculatorPlugin plugin, String from, long start, boolean bgDataReload, Event cause) {
+    public IobCobOref1Thread(IobCobCalculatorPlugin plugin, String from, long end, boolean bgDataReload, boolean limitDataToOldestAvailable, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
         this.bgDataReload = bgDataReload;
+        this.limitDataToOldestAvailable = limitDataToOldestAvailable;
         this.from = from;
         this.cause = cause;
-        this.start = start;
+        this.end = end;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
@@ -81,15 +83,15 @@ public class IobCobOref1Thread extends Thread {
             }
             //log.debug("Locking calculateSensitivityData");
 
-            long oldestTimeWithData = iobCobCalculatorPlugin.oldestDataAvailable();
+            long oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable);
 
             synchronized (iobCobCalculatorPlugin.dataLock) {
                 if (bgDataReload) {
-                    iobCobCalculatorPlugin.loadBgData(start);
+                    iobCobCalculatorPlugin.loadBgData(end);
                     iobCobCalculatorPlugin.createBucketedData();
                 }
                 List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();
-                LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
+                LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
                 if (bucketed_data == null || bucketed_data.size() < 3) {
                     log.debug("Aborting calculation thread (No bucketed data available): " + from);
@@ -166,7 +168,7 @@ public class IobCobOref1Thread extends Thread {
                     // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
                     if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
                         long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
-                        AutosensData hourAgoData = IobCobCalculatorPlugin.getPlugin().getAutosensData(hourago);
+                        AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
                         if (hourAgoData != null) {
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
                             if (Config.logAutosensData)
@@ -339,7 +341,7 @@ public class IobCobOref1Thread extends Thread {
                     if (bgTime < now())
                         autosensDataTable.put(bgTime, autosensData);
                     if (Config.logAutosensData)
-                        log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + IobCobCalculatorPlugin.getPlugin().lastDataTime());
+                        log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime());
                     AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime);
                     if (Config.logAutosensData)
                         log.debug("Sensitivity result: " + sensitivity.toString());

@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.ProfileNS;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,12 +64,24 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
         MainApp.bus().unregister(this);
     }
 
-    @Subscribe
-    public void storeNewProfile(ProfileStore newProfile) {
-        profile = new ProfileStore(newProfile.getData());
-        storeNSProfile();
-        MainApp.bus().post(new EventNSProfileUpdateGUI());
-        MainApp.bus().post(new EventProfileStoreChanged());
+    public void handleNewData(Intent intent) {
+        try {
+            Bundle bundles = intent.getExtras();
+            if (bundles == null) return;
+
+            String activeProfile = bundles.getString("activeprofile");
+            String profileString = bundles.getString("profile");
+            profile = new ProfileStore(new JSONObject(profileString));
+            storeNSProfile();
+            if (isEnabled(PluginType.PROFILE)) {
+                MainApp.bus().post(new EventProfileStoreChanged());
+                MainApp.bus().post(new EventNSProfileUpdateGUI());
+            }
+            if (Config.logIncommingData)
+                log.debug("Received profileStore: " + activeProfile + " " + profile);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
     }
 
     private void storeNSProfile() {

@@ -311,9 +311,9 @@
     <string name="ok">Ok</string>
     <string name="danar_stats_basalrate">Basaal</string>
     <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="loopsuspended">Loop pauzeren</string>
-    <string name="loopsuspendedfor" formatted="false">Pauzeer (%d m)</string>
+    <string name="loopsuspendedfor">Pauzeer (%1$d m)</string>
     <string name="lowbattery">Batterij bijna leeg</string>
     <string name="manual">Manueel</string>
     <string name="mdi">MDI</string>
@@ -383,7 +383,7 @@
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="overview_calibration">Kalibratie</string>
     <string name="danar_stats_olddata_Message">Oude gegevens druk \"VERNIEUW\" a.u.b.</string>
-    <string name="minago">%d min geleden</string>
+    <string name="minago">%1$d min geleden</string>
     <string name="reason">Berekening</string>
     <string name="rate">Dosis</string>
     <string name="duration">Periode</string>
@@ -459,7 +459,7 @@
     <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
     <string name="ru_lang">русский</string>
     <string name="always_use_shortavg">Gebruik altijd kleine gemiddelde verschillen ipv gewone verschillen</string>
-    <string name="array_of_elements">Tabel met %d elementen. Actuele waarde:</string>
+    <string name="array_of_elements">Tabel met %1$d elementen. Actuele waarde:</string>
     <string name="overview_quickwizard_item_remove_button">Verwijder</string>
     <string name="overview_quickwizard_item_edit_button">Wijzig</string>
     <string name="overview_shortname">Home</string>
@@ -565,8 +565,8 @@
     <string name="objectives_5_gate">Gedurende 1 week succesvol closed loop met KH ingave</string>
     <string name="careportal_activity_label">ACTIVITIJD &amp; FEEDBACK</string>
     <string name="danar_model">Model: %1$02X Protokoll: %2$02X Code: %3$02X</string>
-    <string name="danar_history_connectingfor">Verbonden gedurende %d s</string>
-    <string name="danar_totaluploaded">Totaal %d gegevens geupload</string>
+    <string name="danar_history_connectingfor">Verbonden gedurende %1$d s</string>
+    <string name="danar_totaluploaded">Totaal %1$d gegevens geupload</string>
     <string name="valuelimitedto">%1$.2f gelimitteerd tot %2$.2f</string>
     <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
     <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
@@ -640,7 +640,7 @@
     <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
     <string name="startingbolus">Bolus toediening gestart</string>
     <string name="wear_detailed_delta_summary">Toon delta met eenextra decimaal punt</string>
-    <string name="waitingforestimatedbolusend">Wacht op complete bolus toediening Resterend %d sec.</string>
+    <string name="waitingforestimatedbolusend">Wacht op complete bolus toediening Resterend %1$d sec.</string>
     <string name="urgent_alarm">Dringend alarm</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notficaties voor waarchuwingen en notificaties</string>
@@ -675,7 +675,7 @@
     <string name="combo_programming_bolus">"Bolus in pomp programmeren "</string>
 	<string name="combo_refresh">Vernieuw</string>
 	<string name="combo_pump_state_label">Status</string>
-    <string name="combo_no_pump_connection">Geen verbinding gedurende %d minuten</string>
+    <string name="combo_no_pump_connection">Geen verbinding gedurende %1$d minuten</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min resterend)</string>
     <string name="combo_warning">Waarschuwing</string>
 	<string name="combo_notification_check_time_date">Pomp klok moet bijgesteld worden</string>
@@ -827,7 +827,7 @@
     <string name="cgm">CGM</string>
     <string name="food_short">Voeding</string>
     <string name="reset">Reset</string>
-    <string name="waitingfortimesynchronization">Wachttijd voor syncronisatie (%d sec)</string>
+    <string name="waitingfortimesynchronization">Wachttijd voor syncronisatie (%1$d sec)</string>
     <string name="ago">Voorbij</string>
     <string name="with">met</string>
     <string name="insight_active_tbr">Actieve TBR</string>
@@ -848,7 +848,7 @@
     <string name="temptargetshort">TT</string>
     <string name="combo_bolus_count">Aantal bolussen</string>
     <string name="combo_tbr_count">Aantal TBR</string>
-    <string name="objectivenotstarted">Doel %d niet gestart</string>
+    <string name="objectivenotstarted">Doel %1$d niet gestart</string>
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
     <string name="wear_predictions_summary">Toon de voorspellingen op het horloge</string>
     <string name="data_choices">Data Keuzes</string>
@@ -878,7 +878,7 @@
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
     <string name="not_eng_mode_or_release">Engineering modus is niet geactiveerd en dit is niet de relaese branche</string>
-    <string name="objectivenotfinished" formatted="false">Doel %d niet afgewerkt</string>
+    <string name="objectivenotfinished">Doel %1$d niet afgewerkt</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="novalidbasalrate">Geen plausibel basale snelheid van pomp kunnen lezen</string>
     <string name="autosensdisabledinpreferences">Autosens gedeactiveerd in de voorkeuren</string>
@@ -892,7 +892,7 @@
     <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% want de %2$s</string>
     <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
-    <string name="loopdisconnectedfor">Niet verbonden (%d m)</string>
+    <string name="loopdisconnectedfor">Niet verbonden (%1$d m)</string>
     <string name="hardlimit">max limiet (SC)</string>
     <string name="unsafeusage">Onveilig gebruik</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev cersie actief. Closed loop gedeactiveerd</string>

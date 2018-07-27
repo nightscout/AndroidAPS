@@ -7,7 +7,6 @@ import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.Event;
 
 public class EventOverviewBolusProgress extends Event {
-    private static Logger log = LoggerFactory.getLogger(EventOverviewBolusProgress.class);
     public String status = "";
     public Treatment t = null;
     public int percent = 0;

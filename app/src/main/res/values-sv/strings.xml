@@ -114,7 +114,7 @@
     <string name="danar_history_basalhours">Basaltimmar</string>
     <string name="danar_history_bolus">Bolusar</string>
     <string name="danar_history_carbohydrates">Kolhydrater</string>
-    <string name="danar_history_connectingfor" formatted="false">Ansluter (%d s)</string>
+    <string name="danar_history_connectingfor">Ansluter (%1$d s)</string>
     <string name="danar_history_dailyinsulin">Daglig insulinmängd</string>
     <string name="danar_history_errors">Fel</string>
     <string name="danar_history_glucose">Glukos</string>
@@ -198,7 +198,7 @@
     <string name="loop_constraintsprocessed_label">Efter begränsningar</string>
     <string name="loop_shortname">Loop</string>
     <string name="loopdisabled">LOOP STOPPAD PGA BEGRÄNSNINGAR</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d min)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d min)</string>
     <string name="loopsuspended">Loop pausad</string>
     <string name="low_mark">LÅG-markering</string>
     <string name="lowbattery">Svagt batteri</string>
@@ -488,7 +488,7 @@
     <string name="danar_stats_warning_Message">Kan visa fel om man använder bolus för priming/fyllning!</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="mmol">mmol/l</string>
-    <string name="minago" formatted="false">%d&#160;m</string>
+    <string name="minago">%1$d&#160;m</string>
     <string name="mgdl">mg/dl</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdi">MDI</string>
@@ -508,7 +508,7 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="sms_minago" formatted="false">%d min</string>
+    <string name="sms_minago">%1$d min</string>
     <string name="nsalarm_staledatavalue_label">Första varning efter [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
     <string name="nsalarm_urgenthigh">Akut hög</string>
@@ -519,7 +519,7 @@
     <string name="overview_newtempbasal_basalpercent">Basal [%]</string>
     <string name="careportal_newnstreatment_glucosetype">BG-källa</string>
     <string name="sv_lang">Svenska</string>
-    <string name="danar_totaluploaded">Laddade upp totalt %d värden</string>
+    <string name="danar_totaluploaded">Laddade upp totalt %1$d värden</string>
     <string name="objectives_7_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB.</string>
     <string name="smscommunicator_remotecommandnotallowed">Otillåtet fjärrkommando</string>
     <string name="danar_switchtouhmode">Ändra inställningen från E/d till E/tim i pumpen</string>
@@ -533,7 +533,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">"Standardvärde: 4  Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina tempbasaler till maximalt 4x din nuvarande basal, oberoende av din max basalhastighet. Detta för att undvika att man av misstag gör farliga inställningar. Om man når taket i denna inställning så kanske ändringar i andra inställningar behövs. De flesta behöver inte ändra denna inställning. "</string>
     <string name="openapsama_autosens_min_summary">Standardvärde: 0.7  Med standardvärdet 0.7 kan autosens justera ner dina basaler, kvoter etc med upp till 30% för att kompensera för t ex tillfällig hög insulinkänslighet.</string>
     <string name="needwhitelisting">%s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
-    <string name="loopsuspendedfor">Pausad (%d min)</string>
+    <string name="loopsuspendedfor">Pausad (%1$d min)</string>
     <string name="uploader">Uppladdare</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="overview_newtempbasal_basalabsolute">Basal [E/tim]</string>
@@ -579,7 +579,7 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fett</string>
-    <string name="waitingforestimatedbolusend">Väntar på att bolus ska slutföras (%d sek)</string>
+    <string name="waitingforestimatedbolusend">Väntar på att bolus ska slutföras (%1$d sek)</string>
     <string name="processinghistory">Behandlar</string>
     <string name="startingbolus">Påbörjar bolus</string>
     <string name="executingrightnow">Kommandot kör just nu</string>
@@ -625,7 +625,7 @@
     <string name="combo_refresh">Uppdatera</string>
     <string name="combo_pump_state_label">Läge</string>
     <string name="combo_pump_activity_label">Aktivitet</string>
-    <string name="combo_no_pump_connection">Ingen anslutning på %d min</string>
+    <string name="combo_no_pump_connection">Ingen anslutning på %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min återstår)</string>
     <string name="combo_pump_state_suspended_due_to_error">Pausad pga fel</string>
     <string name="combo_pump_state_suspended_by_user">Pausad av användaren</string>
@@ -764,8 +764,8 @@
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="combo_bolus_count">Antal bolus</string>
     <string name="combo_tbr_count">Antal temp basaler</string>
-    <string name="objectivenotstarted">Mål %d inte startat</string>
-    <string name="objectivenotfinished">Mål %d inte nått</string>
+    <string name="objectivenotstarted">Mål %1$d inte startat</string>
+    <string name="objectivenotfinished">Mål %1$d inte nått</string>
     <string name="pumpisnottempbasalcapable">Pumpen är inte kapabel till temp basal</string>
     <string name="novalidbasalrate">Ingen giltig data om temp basaler fanns i pumpen</string>
     <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
@@ -793,8 +793,8 @@
     <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i Open Loop</string>
     <string name="food_short">Mat</string>
     <string name="reset">Återställ</string>
-    <string name="waitingfortimesynchronization">Väntar på tidssynkronisering (%d sek)</string>
-    <string name="loopdisconnectedfor">Frånkopplad (%d min)</string>
+    <string name="waitingfortimesynchronization">Väntar på tidssynkronisering (%1$d sek)</string>
+    <string name="loopdisconnectedfor">Frånkopplad (%1$d min)</string>
     <string name="automatic_careportal_events">Automatisk loggning i Careportal</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Ladda upp insulin-, kanyl- och batteribyten samt pumplarm till Nightscout</string>
     <string name="openapssmb_maxiob_title">Max IOB som OpenAPS inte kan överstiga [E]</string>

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -15,7 +16,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandTempBasalAbsolute extends Command {
-    private static Logger log = LoggerFactory.getLogger(CommandTempBasalAbsolute.class);
+    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
 
     int durationInMinutes;
     double absoluteRate;
@@ -34,8 +35,8 @@ public class CommandTempBasalAbsolute extends Command {
     @Override
     public void execute() {
         PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
-        if (Config.logCongigBuilderActions)
-            log.debug("setTempBasalAbsolute rate: " + absoluteRate + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
+        if (Config.logQueue)
+            log.debug("Result rate: " + absoluteRate + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)
             callback.result(r).run();
     }

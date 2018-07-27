@@ -14,7 +14,7 @@
     <string name="always_use_shortavg_summary">полезно когда данные из нефильтруемых источников вроде Xdrip зашумляются</string>
     <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
     <string name="apsmode_title">режим APS</string>
-    <string name="array_of_elements" formatted="false">массив %d элементов. актуальная величина:</string>
+    <string name="array_of_elements">массив %1$d элементов. актуальная величина:</string>
     <string name="basal">базал</string>
     <string name="basal_rate">скорость усвоения базала:</string>
     <string name="basal_step">шаг базала</string>
@@ -120,7 +120,7 @@
     <string name="danar_history_basalhours">почасовые базалы</string>
     <string name="danar_history_bolus">болюсы</string>
     <string name="danar_history_carbohydrates">углеводы</string>
-    <string name="danar_history_connectingfor" formatted="false">связь установлена за %d сек.</string>
+    <string name="danar_history_connectingfor">связь установлена за %1$d сек.</string>
     <string name="danar_history_dailyinsulin">суточный инсулин</string>
     <string name="danar_history_errors">ошибки</string>
     <string name="danar_history_glucose">гликемия</string>
@@ -150,7 +150,7 @@
     <string name="danar_stats_warning_Message">возможны неточности если болюсы использовались для заполнения</string>
     <string name="danar_stats_weight">вес</string>
     <string name="danar_switchtouhmode">замена режима с U/d на U/h на помпе</string>
-    <string name="danar_totaluploaded" formatted="false">всего передано %d записей</string>
+    <string name="danar_totaluploaded">всего передано %1$d записей</string>
     <string name="danar_useextended_title">для величин >200% пользуйтесь увеличенным болюсом</string>
     <string name="danar_valuenotsetproperly">величина не задана должным образом</string>
     <string name="danar_viewprofile">просмотр профиля</string>
@@ -222,16 +222,16 @@
     <string name="loop_constraintsprocessed_label">после наложенных ограничений</string>
     <string name="loop_shortname">ЗЦ</string>
     <string name="loopdisabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
-    <string name="loopsuperbolusfor" formatted="false">суперболюс(%d m)</string>
+    <string name="loopsuperbolusfor">суперболюс(%1$d m)</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
-    <string name="loopsuspendedfor" formatted="false">остановлен на(%d m)</string>
+    <string name="loopsuspendedfor">остановлен на(%1$d m)</string>
     <string name="low_mark">отметка НИЗКИЙ</string>
     <string name="lowbattery">низкий заряд батареи</string>
     <string name="manual">вручную</string>
     <string name="mdi">MDI</string>
     <string name="mealbolus">болюс на еду</string>
     <string name="mgdl">mg/dl</string>
-    <string name="minago" formatted="false">%d м. назад</string>
+    <string name="minago">%1$d м. назад</string>
     <string name="missing">отсутствует</string>
     <string name="mmol">mmol/l</string>
     <string name="nav_about">о приложении</string>
@@ -406,7 +406,7 @@
     <string name="sms_delta">дельта:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_lastbg">прошлый СК:</string>
-    <string name="sms_minago" formatted="false">%d мин назад</string>
+    <string name="sms_minago">%1$d мин назад</string>
     <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
