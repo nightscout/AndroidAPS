@@ -278,7 +278,7 @@
     <string name="danar_glucose">血糖</string>
     <string name="danar_carbohydrate">碳水化合物</string>
     <string name="danar_alarm">报警</string>
-    <string name="danar_totaluploaded" formatted="false">总计 %d 个记录已经上传了</string>
+    <string name="danar_totaluploaded">总计 %1$d 个记录已经上传了</string>
     <string name="danar_sbolus">S 大剂量</string>
     <string name="danar_history_alarm">报警</string>
     <string name="danar_history_basalhours">基础 小时</string>
@@ -289,7 +289,7 @@
     <string name="danar_history_glucose">血糖</string>
     <string name="danar_history_refill">重新充盈</string>
     <string name="danar_history_syspend">中止</string>
-    <string name="danar_history_connectingfor" formatted="false">正在连接中 %d s</string>
+    <string name="danar_history_connectingfor">正在连接中 %1$d s</string>
     <string name="danar_password_title">胰岛素泵密码</string>
     <string name="wrongpumppassword">错误的胰岛素泵密码!</string>
     <string name="pumpbusy">胰岛素泵忙碌中</string>
@@ -401,7 +401,7 @@
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">短 平均增量</string>
     <string name="long_avgdelta">长 平均增量</string>
-    <string name="array_of_elements">Array of %d elements.\nActual value:</string>
+    <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">autosens</string>
     <string name="openapsma_scriptdebugdata_label">脚本调试</string>
     <string name="openapsama_useautosens">使用 AMA autosens功能</string>
@@ -549,8 +549,8 @@
     <string name="pleaseallowpermission">请允许权限</string>
     <string name="needwhitelisting">%s 为了达到适当的性能请将android APS加入电池优化白名单</string>
     <string name="loopsuspended">闭环暂停</string>
-    <string name="loopsuspendedfor" formatted="false">暂停 (%d m)</string>
-    <string name="loopsuperbolusfor" formatted="false">超级大剂量 (%d m)</string>
+    <string name="loopsuspendedfor">暂停 (%1$d m)</string>
+    <string name="loopsuperbolusfor">超级大剂量 (%1$d m)</string>
     <string name="loopmenu">闭环菜单</string>
     <string name="suspendloopfor1h">暂停闭环 1小时</string>
     <string name="suspendloopfor2h">暂停闭环 2小时</string>
@@ -751,7 +751,7 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend" formatted="false">正在等待大剂量输注结束. 剩余 %d 秒.</string>
+    <string name="waitingforestimatedbolusend">正在等待大剂量输注结束. 剩余 %1$d 秒.</string>
     <string name="processinghistory">正在处理事件</string>
     <string name="startingbolus">正在开始大剂量输注</string>
     <string name="executingrightnow">命令正在执行</string>
@@ -812,9 +812,9 @@
     <string name="combo_tdds">TDDS</string>
     <string name="combo_pump_state_label">状态</string>
     <string name="combo_pump_activity_label">活动</string>
-    <string name="combo_no_pump_connection">%d 分钟无连接</string>
+    <string name="combo_no_pump_connection">%1$d 分钟无连接</string>
     <string name="combo_tbr_remaining">%1$d%% (剩余 %2$d 分钟)</string>
-    <string name="combo_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
+    <string name="combo_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combo_pump_state_initializing">正在初始化</string>
     <string name="combo_pump_state_disconnected">断开连接</string>
     <string name="combo_pump_state_suspended_due_to_error">由于错误导致泵暂停了</string>

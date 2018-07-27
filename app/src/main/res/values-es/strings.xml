@@ -247,7 +247,7 @@
     <string name="danar_glucose">glucosa</string>
     <string name="danar_carbohydrate">carbohidratos</string>
     <string name="danar_alarm">alarma</string>
-    <string formatted="false" name="danar_totaluploaded">Total %d registros subidos</string>
+    <string name="danar_totaluploaded">Total %1$d registros subidos</string>
     <string name="danar_sbolus">S bolo</string>
     <string name="danar_history_alarm">alarmas</string>
     <string name="danar_history_basalhours">Basal Horas</string>
@@ -258,7 +258,7 @@
     <string name="danar_history_glucose">Glucosa</string>
     <string name="danar_history_refill">Rellenar</string>
     <string name="danar_history_syspend">Suspender</string>
-    <string formatted="false" name="danar_history_connectingfor">Conexión de %d s</string>
+    <string name="danar_history_connectingfor">Conexión de %1$d s</string>
     <string name="danar_password_title">Contraseña de la bomba</string>
     <string name="wrongpumppassword">Contraseña de la bomba incorrecta!</string>
     <string name="pumpbusy">Bomba ocupada</string>
@@ -290,7 +290,7 @@
     <string name="smscommunicator_loophasbeenenabled">Loop se ha activado</string>
     <string name="smscommunicator_loopisdisabled">Loop inactivo</string>
     <string name="smscommunicator_loopisenabled">loop activo</string>
-    <string name="valueoutofrange" formatted="false">Valor %s fuera de limites</string>
+    <string name="valueoutofrange">Valor %1$s fuera de limites</string>
     <string name="overview_editquickwizard_buttontext">Botón Texto:</string>
     <string name="overview_editquickwizard_carbs">Carbs:</string>
     <string name="overview_editquickwizard_valid">Validar:</string>
@@ -300,8 +300,8 @@
     <string name="quickwizard">Asistente</string>
     <string name="quickwizardsettings">Asistente configuración</string>
     <string name="smscommunicator_remotebasalnotallowed">No permitidos ajustes basales remotos</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false" >Para iniciar basal %.2fU/h responder con código %s</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">Basal temporal %.2fU/h para %d min iniciada correctamente</string>
+    <string name="smscommunicator_basalreplywithcode">Para iniciar basal %1$.2fU/h responder con código %2$s</string>
+    <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con código %s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temporal cancelada</string>
@@ -339,7 +339,7 @@
     <string name="danarprofile_dia_summary">Duración de acitividad de insulina</string>
     <string name="valuelimitedto" formatted="false">%.2f limitado a %.2f</string>
     <string name="smscommunicator_remotecommandnotallowed">no permitido el mando remoto</string>
-    <string name="smscommunicator_suspendreplywithcode" formatted="false">Para cancelar loop por %d minutos responde con código %s</string>
+    <string name="smscommunicator_suspendreplywithcode">Para cancelar loop por %1$d minutos responde con código %2$s</string>
     <string name="primefill">Rellenar/Llenar</string>
     <string name="fillbolus_title">Llenar/Rellenar cantidad de insulina estándar</string>
     <string name="mgdl">mg/dl</string>
@@ -377,7 +377,7 @@
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Delta media corta</string>
     <string name="long_avgdelta">Delta media larga</string>
-    <string name="array_of_elements">Matriz de %d elementos. Valor actual:</string>
+    <string name="array_of_elements">Matriz de %1$d elementos. Valor actual:</string>
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usar característica AMA autosens</string>
@@ -489,10 +489,10 @@
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Aparato parece no soportar optimización de bateria whitelisting!</string>
     <string name="pleaseallowpermission">Por favor conceda permiso</string>
-    <string name="needwhitelisting" formatted="false">%s necesita optimización de bateria whitelisting para funcionar bien</string>
+    <string name="needwhitelisting">%1$s necesita optimización de bateria whitelisting para funcionar bien</string>
     <string name="loopsuspended">Loop desactivado</string>
-    <string name="loopsuspendedfor" formatted="false">desactivado (%d m)</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopsuspendedfor">desactivado (%1$d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloopfor1h">Desactivar loop por 1h</string>
     <string name="suspendloopfor2h">Desactivar loop por 2h</string>
     <string name="suspendloopfor3h">Desactivar loop por 3h</string>
@@ -642,7 +642,7 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grasa</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend" formatted="false">Esperando terminar bolo. Faltan %d seg.</string>
+    <string name="waitingforestimatedbolusend">Esperando terminar bolo. Faltan %1$d seg.</string>
     <string name="processinghistory">Processando</string>
     <string name="startingbolus">"Iniciando emisión bolo "</string>
     <string name="executingrightnow">Orden se esta efectuando en este momento</string>
@@ -685,20 +685,20 @@
     <string name="closedmodeenabled">Modo cerrado activado</string>
     <string name="maxiobset">Máximo IOB puesto correctamente</string>
     <string name="hasbgdata">BG adquirible del origen seleccionado</string>
-    <string name="basalprofilenotaligned" formatted="false">Valores base no asignados a las horas: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Perfil invalido: %s</string>
+    <string name="basalprofilenotaligned">Valores base no asignados a las horas: %1$s</string>
+    <string name="zerovalueinprofile">Perfil invalido: %1$s</string>
     <string name="combo_programming_bolus">Programando bomba para emitir bolo</string>
     <string name="combo_refresh">Actualizar</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividad</string>
-    <string name="combo_no_pump_connection" formatted="false">Ninguna conexión por %d min</string>
-    <string name="combo_tbr_remaining" formatted="false">%d%% (%d min restan)</string>
+    <string name="combo_no_pump_connection">Ninguna conexión por %1$d min</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min restan)</string>
     <string name="combo_pump_state_suspended_due_to_error">Apagado por error</string>
     <string name="combo_pump_state_suspended_by_user">Apagado por usario</string>
     <string name="combo_pump_state_running">Funcionando</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelando TBR</string>
-    <string name="combo_pump_action_setting_tbr" formatted="false">Poniendo TBR (%d%% / %d min)</string>
-    <string name="combo_pump_action_bolusing" formatted="false">Emitiendo bolo (%.1f U)</string>
+    <string name="combo_pump_action_setting_tbr">Poniendo TBR (%1$d%% / %2$d min)</string>
+    <string name="combo_pump_action_bolusing">Emitiendo bolo (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualizando</string>
     <string name="combo_pump_unsupported_operation">"Acción no disponible en la bomba "</string>
     <string name="combo_low_suspend_forced_notification">Uso inseguro: bolo prolongado o multiwave activo. Modo Loop ha sido puesto a baja emisión para solo 6 horas. Solo bolo normal se puede emitir en modo loop.</string>
@@ -709,7 +709,7 @@
     <string name="combo_activity_setting_basal_profile">" Activando perfil base "</string>
     <string name="combo_pump_cartridge_low_warrning">"Nivel del deposito bajo "</string>
     <string name="combo_pump_battery_low_warrning">Bateria casi agotada</string>
-    <string name="combo_is_in_error_state" formatted="false">La bomba muesta el error E%d: %s</string>
+    <string name="combo_is_in_error_state">La bomba muesta el error E%1$d: %2$s</string>
     <string name="combo_reservoir_low">Bajo</string>
     <string name="combo_reservoir_empty">Vacio</string>
     <string name="danar_history">Historial</string>
@@ -849,8 +849,8 @@
     <string name="hypo_target">Objetivo Hipo</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
-    <string name="objectivenotstarted">Objetivo %d no iniciado</string>
-    <string name="objectivenotfinished">Objetivo %d no finalizado</string>
+    <string name="objectivenotstarted">Objetivo %1$d no iniciado</string>
+    <string name="objectivenotfinished">Objetivo %1$d no finalizado</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
     <string name="novalidbasalrate">Tasa Basal no valida en la bomba</string>
     <string name="closedmodedisabledinpreferences">Loop cerrado desabilitado en preferencias</string>
@@ -863,10 +863,10 @@
     <string name="maxdailybasalmultiplier">Multiplicador diario basal máximo</string>
     <string name="smb_frequency_exceeded">Un Bolo entregado en los últimos 3 minutos</string>
     <string name="basal_set_correctly">Basal establecida correctamente</string>
-    <string name="limitingpercentrate">Limitando porcentaje máximo de tasa a  %d%% debido a %s</string>
+    <string name="limitingpercentrate">Limitando porcentaje máximo de tasa a  %1$d%% debido a %2$s</string>
     <string name="limitingbolus">"Limitando el bolo a %.1f U debido a %s "</string>
     <string name="limitingmaxiob">Limitando max IOB to %.1f U debido a %s</string>
-    <string name="limitingcarbs">Limitando carbs to %d g debido a %s</string>
+    <string name="limitingcarbs">Limitando carbs to %1$d g debido a %2$s</string>
     <string name="limitingiob">Limitando IOB to %.1f U debido a %s</string>
     <string name="maxvalueinpreferences">Valor máximo en preferencias</string>
     <string name="hardlimit">Limite estricto</string>
@@ -878,8 +878,8 @@
     <string name="smbnotallowedinopenloopmode">"SMB no permitido en modo de Loop abierto "</string>
     <string name="food_short">Comida</string>
     <string name="reset">reset</string>
-    <string name="waitingfortimesynchronization">Esperando para sincronización de tiempo  (%d sec)</string>
-    <string name="loopdisconnectedfor">Desconectado (%d m)</string>
+    <string name="waitingfortimesynchronization">Esperando para sincronización de tiempo  (%1$d sec)</string>
+    <string name="loopdisconnectedfor">Desconectado (%1$d m)</string>
     <string name="automatic_careportal_events">Eventos Careportal automáticos</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">"Subi automáticamente la insulina, la cánula y los cambios de batería y las alarmas de bombeo a Nightscout "</string>
     <string name="openapssmb_maxiob_summary">Este valor se denomina IOB máx. En el contexto de OpenAPS. OpenAPS no agregará más insulina si el IOB actual es mayor que este valor.</string>
@@ -887,7 +887,7 @@
     <string name="absorption_cutoff_summary">"Tiempo en el que cualquier comida se considera absorbida. Los carbohidratos restantes serán cortados. "</string>
     <string name="time">Tiempo</string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar el campo notas en dialogos de tratamientos</string>
-    <string name="boluserrorcode">Solicitado: %.2fU Entregado: %.2fU Codigo de error: %d</string>
+    <string name="boluserrorcode">Solicitado: %1$.2fU Entregado: %2$.2fU Codigo de error: %3$d</string>
     <string name="firstinsulinincrement">Primer incremento insulina</string>
     <string name="secondinsulinincrement">Segundo incremento insulina</string>
     <string name="thirdinsulinincrement">Tercer incremento insulina</string>
@@ -966,7 +966,7 @@
     <string name="description_pump_insight">Integración de la bomba para las bombas Accu-Chek Insight requiere la instalación de SightRemote</string>
     <string name="description_pump_mdi">Integración de bomba para personas que realizan múltiples inyecciones diarias (MDI) para su terapia de diabetes</string>
     <string name="description_pump_virtual">Integración de bomba para bombas que aún no tienen ningún controlador (Open Loop)</string>
-    <string name="description_sensitivity_aaps">" 179/5000 La sensibilidad se calcula de la misma manera que Oref0, pero puede especificar un lapso de tiempo para el pasado. La absorción mínima de carbohidratos se calcula a partir del tiempo máximo de absorción de carbohidratos en las preferencias."</string>
+    <string name="description_sensitivity_aaps">"La sensibilidad se calcula de la misma manera que Oref0, pero puede especificar un lapso de tiempo para el pasado. La absorción mínima de carbohidratos se calcula a partir del tiempo máximo de absorción de carbohidratos en las preferencias."</string>
     <string name="description_sensitivity_oref0">La sensibilidad se calcula a partir de datos de 24 horas en el pasado y los carbohidratos (si no se absorben) se cortan después del tiempo especificado en las preferencias.</string>
     <string name="description_sensitivity_oref1">La sensibilidad se calcula a partir de datos de 8 h en el pasado y los carbohidratos (si no se absorben) se cortan después del tiempo especificado en las preferencias. El complemento también calcula UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilidad se calcula como un promedio ponderado de las desviaciones. Las desviaciones más nuevas tienen un mayor peso. La absorción mínima de carbohidratos se calcula a partir del tiempo máximo de absorción de carbohidratos de las preferencias. Este algoritmo es el más rápido en los siguientes cambios de sensibilidad.</string>
@@ -1067,6 +1067,6 @@
     <string name="storedsettingsfound">Configuraciones almacenadas encontradas</string>
     <string name="allow_hardware_pump_text">Atención: si activa y conecta una bomba de hardware, AndroidAPS copiará las configuraciones basales del perfil a la bomba, sobrescribiendo la tasa basal existente almacenada en la bomba. Asegúrate de tener la configuración basal correcta en AndroidAPS. Si no está seguro o no desea sobrescribir la configuración básica de su bomba, presione cancelar y repita el cambio a la bomba más adelante.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
-    <string name="error_adding_treatment_message">o se pudo agregar un tratamiento (insulina: %.2f, carbs: %d, en: %s) a los tratamientos. Verifique y añada manualmente un registro según corresponda.</string>
+    <string name="error_adding_treatment_message">o se pudo agregar un tratamiento (insulina: %1$.2f, carbs: %2$d, en: %3$s) a los tratamientos. Verifique y añada manualmente un registro según corresponda.</string>
     <string name="generated_ecarbs_note">ECarbs generados con cantidad: %1$dg, duración: %2$dh, demora: %3$dm</string>
 </resources>

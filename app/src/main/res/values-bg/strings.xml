@@ -248,7 +248,7 @@
     <string name="danar_glucose">КЗ</string>
     <string name="danar_carbohydrate">въглехидрати</string>
     <string name="danar_alarm">аларма</string>
-    <string name="danar_totaluploaded" formatted="false">Общо %d записа качени</string>
+    <string name="danar_totaluploaded">Общо %1$d записа качени</string>
     <string name="danar_sbolus">S болус</string>
     <string name="danar_history_alarm">Аларми</string>
     <string name="danar_history_basalhours">Базален по часове</string>
@@ -259,7 +259,7 @@
     <string name="danar_history_glucose">КЗ</string>
     <string name="danar_history_refill">Презареждане</string>
     <string name="danar_history_syspend">Спиране</string>
-    <string name="danar_history_connectingfor" formatted="false">Свързва се с помпата за %d сек.</string>
+    <string name="danar_history_connectingfor">Свързва се с помпата за %1$d сек.</string>
     <string name="danar_password_title">Парола за помпата</string>
     <string name="wrongpumppassword">Грешна парола за помпата!</string>
     <string name="pumpbusy">Помпата е заета</string>
@@ -354,13 +354,13 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Текущи известия</string>
     <string name="old_data">СТАРИ ДАННИ</string>
-    <string name="minago">преди %d мин</string>
+    <string name="minago">преди %1$d мин</string>
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Локален профил</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Краткоср. Δ:</string>
     <string name="long_avgdelta">Дългоср. Δ:</string>
-    <string name="array_of_elements">Масив от %d елемента.Актуална стойност:</string>
+    <string name="array_of_elements">Масив от %1$d елемента.Актуална стойност:</string>
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Разреши AMA autosens</string>
@@ -465,10 +465,10 @@
     <string name="adult">Възрастен</string>
     <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting" formatted="false">%s се нуждае от зключване на оптимизиране на батерията за пълна функционалност</string>
+    <string name="needwhitelisting">%1$s се нуждае от зключване на оптимизиране на батерията за пълна функционалност</string>
     <string name="loopsuspended">Loop изключен</string>
-    <string name="loopsuspendedfor" formatted="false">Изключен (%d мин)</string>
-    <string name="loopsuperbolusfor" formatted="false">Суперболус (%d мин)</string>
+    <string name="loopsuspendedfor">Изключен (%1$d мин)</string>
+    <string name="loopsuperbolusfor">Суперболус (%1$d мин)</string>
     <string name="suspendloopfor1h">Изключи Loop за 1ч</string>
     <string name="suspendloopfor2h">Изключи Loop за 2ч</string>
     <string name="suspendloopfor3h">Изключи Loop за 3ч</string>
@@ -656,11 +656,11 @@
     <string name="startingbolus">Стартира доставка на болус</string>
     <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
     <string name="urgent_alarm">Спешна аларма</string>
-    <string name="waitingforestimatedbolusend" formatted="false">Очаква края на болуса. Остават %d сек.</string>
+    <string name="waitingforestimatedbolusend">Очаква края на болуса. Остават %1$d сек.</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="yes">Да</string>
-    <string name="zerovalueinprofile" formatted="false">Невалиден профил: %s</string>
+    <string name="zerovalueinprofile">Невалиден профил: %1$s</string>
     <string name="shortenergy">En</string>
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
     <string name="combo_warning">Внимание</string>
@@ -698,7 +698,7 @@
     <string name="combo_programming_bolus">Програмиране на помпа за болус</string>
     <string name="combo_pump_state_label">Състояние</string>
     <string name="combo_pump_activity_label">Активност</string>
-    <string name="combo_no_pump_connection" formatted="false">Няма връзка от %d мин.</string>
+    <string name="combo_no_pump_connection">Няма връзка от %1$d мин.</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d мин. остават)</string>
     <string name="combo_pump_state_initializing">Инициализация</string>
     <string name="combo_pump_state_suspended_due_to_error">Прекратен поради грешка</string>
@@ -818,8 +818,8 @@
     <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
     <string name="temptargetshort">Вр.цел</string>
     <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
-    <string name="objectivenotstarted" formatted="false">ЦЕЛ %d не е стартирана</string>
-    <string name="objectivenotfinished" formatted="false">ЦЕЛ %d не е завършена</string>
+    <string name="objectivenotstarted">ЦЕЛ %1$d не е стартирана</string>
+    <string name="objectivenotfinished">ЦЕЛ %1$d не е завършена</string>
     <string name="pumpisnottempbasalcapable">Помпата не може да подава временен базал</string>
     <string name="novalidbasalrate">Няма валидна базална прочетена от помпата</string>
     <string name="closedmodedisabledinpreferences">Closed loop е забранен в настройките</string>
@@ -845,8 +845,8 @@
     <string name="smbalwaysdisabled">SMB \"винаги\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
     <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим open loop</string>
     <string name="food_short">Храна</string>
-    <string name="waitingfortimesynchronization" formatted="false">Очаква синхронизация (%d sec)</string>
-    <string name="loopdisconnectedfor" formatted="false">Прекъснат (%d m)</string>
+    <string name="waitingfortimesynchronization">Очаква синхронизация (%1$d sec)</string>
+    <string name="loopdisconnectedfor">Прекъснат (%1$d m)</string>
     <string name="automatic_careportal_events">Автоматично careportal събитие</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Автоматично изпраща смяна на резервоар, сет и аларми на помпата към Nightscout</string>
     <string name="openapssmb_maxiob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>

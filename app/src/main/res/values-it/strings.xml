@@ -103,7 +103,7 @@
     <string name="danar_history_basalhours">Basale oraria</string>
     <string name="danar_history_bolus">Boli</string>
     <string name="danar_history_carbohydrates">Carboidrati</string>
-    <string name="danar_history_connectingfor" formatted="false">Connessione %d s</string>
+    <string name="danar_history_connectingfor">Connessione %1$d s</string>
     <string name="danar_history_dailyinsulin">Insulina Giornaliea</string>
     <string name="danar_history_errors">Errore</string>
     <string name="danar_history_glucose">Glucosio</string>
@@ -182,9 +182,9 @@
     <string name="loop_aps_label">APS</string>
     <string name="loop_shortname">Loop</string>
     <string name="loopdisabled">Loop disabilitato da vincolo</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolo (%d m)</string>
+    <string name="loopsuperbolusfor">Superbolo (%1$d m)</string>
     <string name="loopsuspended">Sospensione Loop</string>
-    <string name="loopsuspendedfor" formatted="false">Sospendi (%d m)</string>
+    <string name="loopsuspendedfor">Sospendi (%1$d m)</string>
     <string name="lowbattery">Batteria scarica</string>
     <string name="manual">Manuale</string>
     <string name="mdi">MDI</string>
