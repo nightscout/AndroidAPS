@@ -72,4 +72,5 @@ public class Constants {
     public static final String AUTOSENS = "AUTOSENS";
     public static final String EVENTS = "EVENTS";
     public static final String QUEUE = "QUEUE";
+    public static final String BGSOURCE = "BGSOURCE";
 }

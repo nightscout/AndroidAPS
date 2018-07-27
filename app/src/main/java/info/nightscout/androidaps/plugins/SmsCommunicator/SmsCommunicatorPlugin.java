@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.SmsCommunicator;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -39,7 +40,6 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -165,10 +165,11 @@ public class SmsCommunicatorPlugin extends PluginBase {
         return false;
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewSMS ev) {
+    public void handleNewData(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
 
-        Object[] pdus = (Object[]) ev.bundle.get("pdus");
+        Object[] pdus = (Object[]) bundle.get("pdus");
         if (pdus != null) {
             // For every SMS message received
             for (Object pdu : pdus) {
