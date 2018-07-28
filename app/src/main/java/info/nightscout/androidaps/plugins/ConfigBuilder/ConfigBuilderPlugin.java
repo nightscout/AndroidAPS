@@ -70,14 +70,8 @@ public class ConfigBuilderPlugin extends PluginBase {
     private static ProfileInterface activeProfile;
     private static TreatmentsInterface activeTreatments;
     private static APSInterface activeAPS;
-    private static LoopPlugin activeLoop;
     private static InsulinInterface activeInsulin;
     private static SensitivityInterface activeSensitivity;
-
-    static public String nightscoutVersionName = "";
-    static public Integer nightscoutVersionCode = 0;
-    static public String nsClientVersionName = "";
-    static public Integer nsClientVersionCode = 0;
 
     private static ArrayList<PluginBase> pluginList;
 
@@ -336,9 +330,6 @@ public class ConfigBuilderPlugin extends PluginBase {
             VirtualPumpPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
         }
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
-
-        // PluginType.LOOP
-        activeLoop = this.determineActivePlugin(PluginType.LOOP);
 
         // PluginType.TREATMENT
         activeTreatments = this.determineActivePlugin(PluginType.TREATMENT);

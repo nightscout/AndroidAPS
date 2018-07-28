@@ -40,6 +40,10 @@ public class Config {
     public static final boolean logOverview = true;
     public static final boolean logNotification = true;
     public static final boolean logAlarm = false;
+    public static final boolean logDataService = true;
+    public static final boolean logDataNS = true;
+    public static final boolean logDataFood = true;
+    public static final boolean logDataTreatments = true;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

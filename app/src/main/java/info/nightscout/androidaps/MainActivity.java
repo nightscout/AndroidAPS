@@ -44,8 +44,8 @@ import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setIcon(R.mipmap.blueowl);
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
-                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + NSSettingsStatus.getInstance().nightscoutVersionName;
                 if (MainApp.engineeringMode)
                     message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
                 message += MainApp.gs(R.string.about_link_urls);

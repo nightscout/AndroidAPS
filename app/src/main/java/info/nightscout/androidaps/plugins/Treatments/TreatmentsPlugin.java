@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -55,7 +56,7 @@ import info.nightscout.utils.T;
  * Created by mike on 05.08.2016.
  */
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsPlugin.class);
+    private Logger log = LoggerFactory.getLogger(Constants.DATATREATMENTS);
 
     private static TreatmentsPlugin treatmentsPlugin;
 
@@ -109,6 +110,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeTreatmentData() {
+        if (Config.logDataTreatments)
+            log.debug("initializeTreatmentData");
         double dia = Constants.defaultDIA;
         if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
             dia = MainApp.getConfigBuilder().getProfile().getDia();
@@ -120,6 +123,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeTempBasalData() {
+        if (Config.logDataTreatments)
+            log.debug("initializeTempBasalData");
         double dia = Constants.defaultDIA;
         if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
             dia = MainApp.getConfigBuilder().getProfile().getDia();
@@ -132,6 +137,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeExtendedBolusData() {
+        if (Config.logDataTreatments)
+            log.debug("initializeExtendedBolusData");
         double dia = Constants.defaultDIA;
         if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
             dia = MainApp.getConfigBuilder().getProfile().getDia();
@@ -144,6 +151,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeTempTargetData() {
+        if (Config.logDataTreatments)
+            log.debug("initializeTempTargetData");
         synchronized (tempTargets) {
             long fromMills = System.currentTimeMillis() - 60 * 60 * 1000L * 24;
             tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(fromMills, false));
@@ -151,6 +160,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeProfileSwitchData() {
+        if (Config.logDataTreatments)
+            log.debug("initializeProfileSwitchData");
         synchronized (profiles) {
             profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(false));
         }
@@ -294,6 +305,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
+        if (Config.logDataTreatments)
         log.debug("Last bolus time: " + new Date(last).toLocaleString());
         return last;
     }
@@ -322,6 +334,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Subscribe
     public void onStatusEvent(final EventReloadTreatmentData ev) {
+        if (Config.logDataTreatments)
         log.debug("EventReloadTreatmentData");
         initializeTreatmentData();
         initializeExtendedBolusData();
@@ -332,6 +345,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Subscribe
     @SuppressWarnings("unused")
     public void onStatusEvent(final EventReloadTempBasalData ev) {
+        if (Config.logDataTreatments)
         log.debug("EventReloadTempBasalData");
         initializeTempBasalData();
         updateTotalIOBTempBasals();

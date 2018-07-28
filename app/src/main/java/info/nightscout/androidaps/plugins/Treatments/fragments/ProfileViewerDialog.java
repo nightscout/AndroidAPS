@@ -31,8 +31,6 @@ public class ProfileViewerDialog extends DialogFragment {
 
     private long time;
 
-    private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
-
     @BindView(R.id.profileview_noprofile)
     TextView noProfile;
     @BindView(R.id.profileview_invalidprofile)

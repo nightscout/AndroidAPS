@@ -39,8 +39,6 @@ import info.nightscout.utils.NSUpload;
 
 
 public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsExtendedBolusesFragment.class);
-
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 

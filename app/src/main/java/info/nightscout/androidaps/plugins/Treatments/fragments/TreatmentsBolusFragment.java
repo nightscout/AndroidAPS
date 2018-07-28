@@ -46,8 +46,6 @@ import info.nightscout.utils.SP;
 import static info.nightscout.utils.DateUtil.now;
 
 public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsBolusFragment.class);
-
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
