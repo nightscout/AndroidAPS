@@ -22,8 +22,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 20.02.2016.
  */
 public class BroadcastProfile {
-    private static Logger log = LoggerFactory.getLogger(BroadcastProfile.class);
-
     public static void handleNewTreatment(ProfileStore profile, Context context, boolean isDelta) {
 
         Bundle bundle = new Bundle();

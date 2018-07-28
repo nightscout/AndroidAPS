@@ -22,29 +22,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 22.02.2016.
  */
 public class BroadcastSgvs {
-    private static Logger log = LoggerFactory.getLogger(BroadcastSgvs.class);
-
-    public static void handleNewSgv(JSONObject sgv, Context context, boolean isDelta) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString("sgv", sgv.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_SGV);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
-
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
-            bundle = new Bundle();
-            bundle.putString("sgv", sgv.toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_NEW_SGV);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-        }
-    }
-
     public static void handleNewSgv(JSONArray sgvs, Context context, boolean isDelta) {
 
         List<JSONArray> splitted = BroadcastTreatment.splitArray(sgvs);

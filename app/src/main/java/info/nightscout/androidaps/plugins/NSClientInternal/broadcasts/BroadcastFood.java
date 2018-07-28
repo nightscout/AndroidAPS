@@ -24,8 +24,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 20.02.2016.
  */
 public class BroadcastFood {
-    private static Logger log = LoggerFactory.getLogger(BroadcastFood.class);
-
     public static void handleNewFood(JSONArray foods, Context context, boolean isDelta) {
 
         List<JSONArray> splitted = BroadcastTreatment.splitArray(foods);

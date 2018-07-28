@@ -37,7 +37,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 public class NSClientPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(NSClientPlugin.class);
+    private Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     static NSClientPlugin nsClientPlugin;
 
@@ -53,8 +53,8 @@ public class NSClientPlugin extends PluginBase {
     private final List<EventNSClientNewLog> listLog = new ArrayList<>();
     Spanned textLog = Html.fromHtml("");
 
-    public boolean paused = false;
-    boolean autoscroll = true;
+    public boolean paused;
+    boolean autoscroll;
 
     public String status = "";
 
@@ -132,12 +132,14 @@ public class NSClientPlugin extends PluginBase {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            log.debug("Service is disconnected");
+            if (Config.logNsclient)
+                log.debug("Service is disconnected");
             nsClientService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            log.debug("Service is connected");
+            if (Config.logNsclient)
+                log.debug("Service is connected");
             NSClientService.LocalBinder mLocalBinder = (NSClientService.LocalBinder) service;
             if (mLocalBinder != null) // is null when running in roboelectric
                 nsClientService = mLocalBinder.getServiceInstance();
@@ -155,7 +157,8 @@ public class NSClientPlugin extends PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNSClientNewLog ev) {
         addToLog(ev);
-        log.debug(ev.action + " " + ev.logText);
+        if (Config.logNsclient)
+            log.debug(ev.action + " " + ev.logText);
     }
 
     @Subscribe
@@ -165,30 +168,24 @@ public class NSClientPlugin extends PluginBase {
     }
 
     synchronized void clearLog() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (listLog) {
-                    listLog.clear();
-                }
-                MainApp.bus().post(new EventNSClientUpdateGUI());
+        handler.post(() -> {
+            synchronized (listLog) {
+                listLog.clear();
             }
+            MainApp.bus().post(new EventNSClientUpdateGUI());
         });
     }
 
     private synchronized void addToLog(final EventNSClientNewLog ev) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (listLog) {
-                    listLog.add(ev);
-                    // remove the first line if log is too large
-                    if (listLog.size() >= Constants.MAX_LOG_LINES) {
-                        listLog.remove(0);
-                    }
+        handler.post(() -> {
+            synchronized (listLog) {
+                listLog.add(ev);
+                // remove the first line if log is too large
+                if (listLog.size() >= Constants.MAX_LOG_LINES) {
+                    listLog.remove(0);
                 }
-                MainApp.bus().post(new EventNSClientUpdateGUI());
             }
+            MainApp.bus().post(new EventNSClientUpdateGUI());
         });
     }
 

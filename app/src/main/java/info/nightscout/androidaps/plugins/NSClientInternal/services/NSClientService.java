@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -70,7 +71,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class NSClientService extends Service {
-    private static Logger log = LoggerFactory.getLogger(NSClientService.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     static public PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new NSClientService.LocalBinder();
@@ -156,13 +157,13 @@ public class NSClientService extends Service {
 
     @Subscribe
     public void onStatusEvent(EventAppExit event) {
-        if (Config.logFunctionCalls)
+        if (Config.logNsclient)
             log.debug("EventAppExit received");
 
         destroy();
 
         stopSelf();
-        if (Config.logFunctionCalls)
+        if (Config.logNsclient)
             log.debug("EventAppExit finished");
     }
 
@@ -250,7 +251,8 @@ public class NSClientService extends Service {
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            log.debug("disconnect reason: {}", args);
+            if (Config.logNsclient)
+                log.debug("disconnect reason: {}", args);
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
     };
@@ -326,8 +328,7 @@ public class NSClientService extends Service {
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("PING", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("PING", "received"));
             // send data if there is something waiting
             resend("Ping received");
         }
@@ -352,6 +353,7 @@ public class NSClientService extends Service {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong Announcement from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
             if (Config.detailedLog)
@@ -359,9 +361,11 @@ public class NSClientService extends Service {
                     MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
                 } catch (Exception e) {
                     FabricPrivacy.logException(e);
+                    log.error("Unhandled exception", e);
                 }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
-            log.debug(data.toString());
+            if (Config.logNsclient)
+                log.debug(data.toString());
         }
     };
 
@@ -381,17 +385,18 @@ public class NSClientService extends Service {
          */
         @Override
         public void call(final Object... args) {
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("ALARM", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("ALARM", "received"));
             JSONObject data;
             try {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong alarm from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
             BroadcastAlarm.handleAlarm(data, getApplicationContext());
-            log.debug(data.toString());
+            if (Config.logNsclient)
+                log.debug(data.toString());
         }
     };
 
@@ -416,12 +421,13 @@ public class NSClientService extends Service {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong Urgent alarm from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
             BroadcastUrgentAlarm.handleUrgentAlarm(data, getApplicationContext());
-            log.debug(data.toString());
+            if (Config.logNsclient)
+                log.debug(data.toString());
         }
     };
 
@@ -441,12 +447,13 @@ public class NSClientService extends Service {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong Urgent alarm from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
             BroadcastClearAlarm.handleClearAlarm(data, getApplicationContext());
-            log.debug(data.toString());
+            if (Config.logNsclient)
+                log.debug(data.toString());
         }
     };
 
@@ -743,17 +750,6 @@ public class NSClientService extends Service {
         }
     }
 
-    private boolean isCurrent(NSTreatment treatment) {
-        long now = (new Date()).getTime();
-        long minPast = now - nsHours * 60L * 60 * 1000;
-        if (treatment.getMills() == null) {
-            log.debug("treatment.getMills() == null " + treatment.getData().toString());
-            return false;
-        }
-        if (treatment.getMills() > minPast) return true;
-        return false;
-    }
-
     public void resend(final String reason) {
         if (UploadQueue.size() == 0)
             return;
@@ -766,7 +762,8 @@ public class NSClientService extends Service {
                 if (mSocket == null || !mSocket.connected()) return;
 
                 if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                    log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
+                    if (Config.logNsclient)
+                        log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                     return;
                 }
                 lastResendTime = System.currentTimeMillis();

@@ -21,8 +21,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 26.06.2016.
  */
 public class BroadcastUrgentAlarm {
-    private static Logger log = LoggerFactory.getLogger(BroadcastUrgentAlarm.class);
-
     public static void handleUrgentAlarm(JSONObject urgentalarm, Context context) {
         Bundle bundle = new Bundle();
         bundle.putString("data", urgentalarm.toString());

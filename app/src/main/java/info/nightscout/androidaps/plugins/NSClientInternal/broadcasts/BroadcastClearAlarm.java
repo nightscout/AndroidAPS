@@ -21,8 +21,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 26.06.2016.
  */
 public class BroadcastClearAlarm {
-    private static Logger log = LoggerFactory.getLogger(BroadcastClearAlarm.class);
-
     public static void handleClearAlarm(JSONObject clearalarm, Context context) {
         Bundle bundle = new Bundle();
         bundle.putString("data", clearalarm.toString());

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
@@ -23,7 +24,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 24.02.2016.
  */
 public class BroadcastStatus {
-    private static Logger log = LoggerFactory.getLogger(BroadcastStatus.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     public static void handleNewStatus(NSSettingsStatus status, Context context, boolean isDelta) {
         LocalBroadcastManager.getInstance(MainApp.instance())

@@ -22,8 +22,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 26.06.2016.
  */
 public class BroadcastAnnouncement {
-    private static Logger log = LoggerFactory.getLogger(BroadcastAnnouncement.class);
-
     public static void handleAnnouncement(JSONObject announcement, Context context) {
         Bundle bundle = new Bundle();
         bundle.putString("data", announcement.toString());

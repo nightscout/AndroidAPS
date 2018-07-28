@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
@@ -22,7 +23,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 20.02.2016.
  */
 public class BroadcastTreatment {
-    private static Logger log = LoggerFactory.getLogger(BroadcastTreatment.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     public static void handleNewTreatment(JSONObject treatment, boolean isDelta, boolean isLocalBypass) {
 
@@ -73,28 +74,6 @@ public class BroadcastTreatment {
         }
     }
 
-    public void handleChangedTreatment(JSONObject treatment, boolean isDelta) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString("treatment", treatment.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
-
-
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
-            bundle = new Bundle();
-            bundle.putString("treatment", treatment.toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            MainApp.instance().getApplicationContext().sendBroadcast(intent);
-        }
-    }
-
     public static void handleChangedTreatment(JSONArray treatments, boolean isDelta) {
 
         List<JSONArray> splitted = splitArray(treatments);
@@ -119,28 +98,6 @@ public class BroadcastTreatment {
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 MainApp.instance().getApplicationContext().sendBroadcast(intent);
             }
-        }
-    }
-
-    public static void handleRemovedTreatment(JSONObject treatment, boolean isDelta) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString("treatment", treatment.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
-
-
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
-            bundle = new Bundle();
-            bundle.putString("treatment", treatment.toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            MainApp.instance().getApplicationContext().sendBroadcast(intent);
         }
     }
 

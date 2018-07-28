@@ -1,11 +1,12 @@
 package info.nightscout.androidaps.plugins.NSClientInternal.acks;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
@@ -15,17 +16,18 @@ import io.socket.client.Ack;
  * Created by mike on 29.12.2015.
  */
 public class NSAddAck extends Event implements Ack {
-    private static Logger log = LoggerFactory.getLogger(NSAddAck.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
     public String _id = null;
     public String nsClientID = null;
     public JSONObject json = null;
-    public void call(Object...args) {
+
+    public void call(Object... args) {
         // Regular response
         try {
             JSONArray responsearray = (JSONArray) (args[0]);
             JSONObject response = null;
-            if (responsearray.length()>0) {
-                    response = responsearray.getJSONObject(0);
+            if (responsearray.length() > 0) {
+                response = responsearray.getJSONObject(0);
                 _id = response.getString("_id");
                 json = response;
                 if (response.has("NSCLIENT_ID")) {
@@ -35,6 +37,7 @@ public class NSAddAck extends Event implements Ack {
             MainApp.bus().post(this);
             return;
         } catch (Exception e) {
+            log.error("Unhandled exception", e);
         }
         // Check for not authorized
         try {
@@ -45,7 +48,8 @@ public class NSAddAck extends Event implements Ack {
                     MainApp.bus().post(new EventNSClientRestart());
                     return;
                 }
-                log.debug("DBACCESS " + response.getString("result"));
+                if (Config.logNsclient)
+                    log.debug("DBACCESS " + response.getString("result"));
             }
             return;
         } catch (Exception e) {

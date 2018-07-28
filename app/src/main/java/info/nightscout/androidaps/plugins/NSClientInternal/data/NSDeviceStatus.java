@@ -80,7 +80,7 @@ import info.nightscout.utils.SP;
 }
  */
 public class NSDeviceStatus {
-    private Logger log = LoggerFactory.getLogger(Constants.DATANS);
+    private Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     private static NSDeviceStatus instance = null;
 
@@ -99,7 +99,7 @@ public class NSDeviceStatus {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
 
-        if (Config.logDataNS)
+        if (Config.logNsclient)
             log.debug("Got NS devicestatus: " + BundleLogger.log(bundle));
 
         try {

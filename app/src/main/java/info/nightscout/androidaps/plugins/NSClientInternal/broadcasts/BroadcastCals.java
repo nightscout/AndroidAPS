@@ -21,8 +21,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 26.06.2016.
  */
 public class BroadcastCals {
-    private static Logger log = LoggerFactory.getLogger(BroadcastCals.class);
-
     public static void handleNewCal(JSONArray cals, Context context, boolean isDelta) {
 
         Bundle bundle = new Bundle();

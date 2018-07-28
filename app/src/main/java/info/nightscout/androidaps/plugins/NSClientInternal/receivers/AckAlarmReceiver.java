@@ -9,6 +9,8 @@ import android.os.PowerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -19,7 +21,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientServ
 import info.nightscout.utils.SP;
 
 public class AckAlarmReceiver extends BroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(AckAlarmReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
 
     @Override
@@ -32,7 +34,8 @@ public class AckAlarmReceiver extends BroadcastReceiver {
             return;
         }
         if (SP.getBoolean(R.string.key_ns_noupload, false)) {
-            log.debug("Upload disabled. Message dropped");
+            if (Config.logNsclient)
+                log.debug("Upload disabled. Message dropped");
             return;
         }
         wakeLock.acquire();

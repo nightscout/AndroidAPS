@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.Constants;
+
 public class NSTreatment {
-    private static Logger log = LoggerFactory.getLogger(NSTreatment.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     private JSONObject data;
     private String action = null; // "update", "remove" or null (add)

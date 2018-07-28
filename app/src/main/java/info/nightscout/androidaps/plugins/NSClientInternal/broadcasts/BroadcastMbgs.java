@@ -21,8 +21,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 26.06.2016.
  */
 public class BroadcastMbgs {
-    private static Logger log = LoggerFactory.getLogger(BroadcastMbgs.class);
-
     public static void handleNewMbg(JSONArray mbgs, Context context, boolean isDelta) {
 
         Bundle bundle = new Bundle();

@@ -22,7 +22,6 @@ import info.nightscout.utils.SP;
  */
 
 public class BroadcastAckAlarm {
-    private static Logger log = LoggerFactory.getLogger(BroadcastAckAlarm.class);
 
     public static void handleClearAlarm(NSAlarm originalAlarm, Context context, long silenceTimeInMsec) {
 

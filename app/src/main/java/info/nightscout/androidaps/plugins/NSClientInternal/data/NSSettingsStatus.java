@@ -114,7 +114,7 @@ import info.nightscout.utils.BundleLogger;
  }
  */
 public class NSSettingsStatus {
-    private Logger log = LoggerFactory.getLogger(Constants.DATANS);
+    private Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
     private static NSSettingsStatus instance = null;
 
@@ -140,7 +140,7 @@ public class NSSettingsStatus {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
 
-        if (Config.logDataNS)
+        if (Config.logNsclient)
             log.debug("Got NS status: " + BundleLogger.log(bundle));
 
         if (bundle.containsKey("nsclientversioncode")) {
@@ -149,7 +149,7 @@ public class NSSettingsStatus {
             nightscoutVersionName = bundle.getString("nightscoutversionname");
             Integer nsClientVersionCode = bundle.getInt("nsclientversioncode");
             String nsClientVersionName = bundle.getString("nsclientversionname");
-            if (Config.logDataNS)
+            if (Config.logNsclient)
                 log.debug("Got versions: NSClient: " + nsClientVersionName + " Nightscout: " + nightscoutVersionName);
             try {
                 if (nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
@@ -175,7 +175,7 @@ public class NSSettingsStatus {
             try {
                 JSONObject statusJson = new JSONObject(bundle.getString("status"));
                 setData(statusJson);
-                if (Config.logDataNS)
+                if (Config.logNsclient)
                     log.debug("Received status: " + statusJson.toString());
                 Double targetHigh = getThreshold("bgTargetTop");
                 Double targetlow = getThreshold("bgTargetBottom");

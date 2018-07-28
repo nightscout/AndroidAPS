@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
@@ -22,7 +23,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(DBAccessReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
 
 
     @Override
@@ -43,18 +44,21 @@ public class DBAccessReceiver extends BroadcastReceiver {
             try {
                 collection = bundles.getString("collection");
             } catch (Exception e) {
+                log.error("Unhandled exception", e);
             }
             try {
                 _id = bundles.getString("_id");
             } catch (Exception e) {
+                log.error("Unhandled exception", e);
             }
             try {
                 data = new JSONObject(bundles.getString("data"));
             } catch (Exception e) {
+                log.error("Unhandled exception", e);
             }
 
             if (data == null && !action.equals("dbRemove") || _id == null && action.equals("dbRemove")) {
-                log.debug("DBACCESS no data inside record");
+                log.error("DBACCESS no data inside record");
                 return;
             }
 
@@ -70,7 +74,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
             }
 
             if (!isAllowedCollection(collection)) {
-                log.debug("DBACCESS wrong collection specified");
+                log.error("DBACCESS wrong collection specified");
                 return;
             }
 
