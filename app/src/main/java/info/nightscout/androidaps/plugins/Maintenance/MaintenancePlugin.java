@@ -1,9 +1,10 @@
-package info.nightscout.androidaps.plugins.LogShipper;
+package info.nightscout.androidaps.plugins.Maintenance;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,50 +23,54 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.Food.FoodPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LoggerUtils;
 import info.nightscout.utils.SP;
 
-public class LogShipperPlugin extends PluginBase {
+public class MaintenancePlugin extends PluginBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogShipperPlugin.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MaintenancePlugin.class);
 
     private final Context ctx;
 
-    private static LogShipperPlugin logShipperPlugin;
+    private static MaintenancePlugin maintenancePlugin;
 
-    public static LogShipperPlugin getPlugin() {
-        return logShipperPlugin;
+    public static MaintenancePlugin getPlugin() {
+        return maintenancePlugin;
     }
 
-    public static LogShipperPlugin initPlugin(Context ctx) {
+    public static MaintenancePlugin initPlugin(Context ctx) {
 
-        if (logShipperPlugin == null) {
-            logShipperPlugin = new LogShipperPlugin(ctx);
+        if (maintenancePlugin == null) {
+            maintenancePlugin = new MaintenancePlugin(ctx);
         }
 
-        return logShipperPlugin;
+        return maintenancePlugin;
     }
 
-    public LogShipperPlugin() {
+    public MaintenancePlugin() {
         // required for testing
         super(null);
         this.ctx = null;
     }
 
-    LogShipperPlugin(Context ctx) {
+    MaintenancePlugin(Context ctx) {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
-                .fragmentClass(LogShipperFragment.class.getName())
+                .fragmentClass(MaintenanceFragment.class.getName())
                 .alwayVisible(true)
                 .alwaysEnabled(true)
-                .pluginName(R.string.logshipper)
-                .shortName(R.string.logship_shortname)
-                .preferencesId(R.xml.pref_logshipper)
-                .description(R.string.description_logship)
+                .pluginName(R.string.maintenance)
+                .shortName(R.string.maintenance_shortname)
+                .preferencesId(R.xml.pref_maintenance)
+                .description(R.string.description_maintenance)
         );
         this.ctx = ctx;
     }
@@ -81,8 +86,8 @@ public class LogShipperPlugin extends PluginBase {
     }
 
     public void sendLogs() {
-        String recipient = SP.getString("key_logshipper_email", "logs@androidaps.org");
-        int amount = SP.getInt("key_logshipper_amount", 2);
+        String recipient = SP.getString("key_maintenance_logs_email", "logs@androidaps.org");
+        int amount = SP.getInt("key_maintenance_logs_amount", 2);
 
         String logDirectory = LoggerUtils.getLogDirectory();
         List<File> logs = this.getLogfiles(logDirectory, amount);
@@ -139,6 +144,32 @@ public class LogShipperPlugin extends PluginBase {
             }
             exportDir.delete();
         }
+    }
+
+    public void resetDb() {
+//        new AlertDialog.Builder(this)
+//                .setTitle(R.string.nav_resetdb)
+//                .setMessage(R.string.reset_db_confirm)
+//                .setNegativeButton(android.R.string.cancel, null)
+//                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+//                    MainApp.getDbHelper().resetDatabases();
+//                    // should be handled by Plugin-Interface and
+//                    // additional service interface and plugin registry
+//                    FoodPlugin.getPlugin().getService().resetFood();
+//                    TreatmentsPlugin.getPlugin().getService().resetTreatments();
+//                })
+//                .create()
+//                .show();
+    }
+
+    public void exportSettings() {
+//        ImportExportPrefs.verifyStoragePermissions(this);
+//        ImportExportPrefs.exportSharedPreferences(this);
+    }
+
+    public void importSettings() {
+//        ImportExportPrefs.verifyStoragePermissions(this);
+//        ImportExportPrefs.importSharedPreferences(this);
     }
 
     /**

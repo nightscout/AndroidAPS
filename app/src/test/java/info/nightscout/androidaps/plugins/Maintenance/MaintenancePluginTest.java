@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.LogShipper;
+package info.nightscout.androidaps.plugins.Maintenance;
 
 import org.junit.Test;
 
@@ -8,9 +8,9 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class LogShipperPluginTest {
+public class MaintenancePluginTest {
 
-    private LogShipperPlugin sut = new LogShipperPlugin();
+    private MaintenancePlugin sut = new MaintenancePlugin();
 
     @Test
     public void getLogfilesTest() {

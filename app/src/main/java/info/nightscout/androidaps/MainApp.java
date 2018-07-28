@@ -10,7 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
@@ -24,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 
-import ch.qos.logback.classic.LoggerContext;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -41,7 +39,7 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.LogShipper.LogShipperPlugin;
+import info.nightscout.androidaps.plugins.Maintenance.MaintenancePlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
@@ -191,7 +189,7 @@ public class MainApp extends Application {
             pluginsList.add(StatuslinePlugin.initPlugin(this));
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
-            pluginsList.add(LogShipperPlugin.initPlugin(this));
+            pluginsList.add(MaintenancePlugin.initPlugin(this));
 
             pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());
 
