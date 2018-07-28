@@ -44,6 +44,7 @@ public class Config {
     public static final boolean logDataFood = true;
     public static final boolean logDataTreatments = true;
     public static final boolean logNsclient = true;
+    public static final boolean logObjectives = false;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

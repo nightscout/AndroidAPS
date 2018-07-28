@@ -80,4 +80,5 @@ public class Constants {
     public static final String DATAFOOD = "DATAFOOD";
     public static final String DATATREATMENTS = "DATATREATMENTS";
     public static final String NSCLIENT = "NSCLIENT";
+    public static final String OBJECTIVES = "OBJECTIVES";
 }
