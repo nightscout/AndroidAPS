@@ -9,7 +9,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 
 public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);

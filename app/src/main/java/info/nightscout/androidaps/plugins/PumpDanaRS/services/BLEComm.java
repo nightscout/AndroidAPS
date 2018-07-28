@@ -36,7 +36,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPairingSuccess;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 /**

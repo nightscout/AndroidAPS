@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 

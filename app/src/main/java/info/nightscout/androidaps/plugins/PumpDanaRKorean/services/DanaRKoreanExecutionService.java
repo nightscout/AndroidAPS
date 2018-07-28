@@ -54,7 +54,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal_k
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic_k;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {

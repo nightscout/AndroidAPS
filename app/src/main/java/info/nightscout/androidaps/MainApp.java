@@ -10,7 +10,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
@@ -78,7 +77,7 @@ import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
 

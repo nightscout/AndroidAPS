@@ -51,7 +51,7 @@ import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolus;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
