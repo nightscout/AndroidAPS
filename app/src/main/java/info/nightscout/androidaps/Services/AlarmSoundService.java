@@ -13,11 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 public class AlarmSoundService extends Service {
-    private static Logger log = LoggerFactory.getLogger(AlarmSoundService.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.ALARM);
 
     MediaPlayer player;
     int resourceId = R.raw.error;
@@ -34,13 +36,15 @@ public class AlarmSoundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        log.debug("onCreate");
+        if (Config.logAlarm)
+            log.debug("onCreate");
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (player != null && player.isPlaying())
             player.stop();
-        log.debug("onStartCommand");
+        if (Config.logAlarm)
+            log.debug("onStartCommand");
         if (intent != null && intent.hasExtra("soundid"))
             resourceId = intent.getIntExtra("soundid", R.raw.error);
 
@@ -55,7 +59,7 @@ public class AlarmSoundService extends Service {
             log.error("Unhandled exception", e);
         }
         player.setLooping(true); // Set looping
-        AudioManager manager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager manager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         if (manager == null || !manager.isMusicActive()) {
             player.setVolume(100, 100);
         }
@@ -74,5 +78,7 @@ public class AlarmSoundService extends Service {
     public void onDestroy() {
         player.stop();
         player.release();
+        if (Config.logAlarm)
+            log.debug("onDestroy");
     }
 }

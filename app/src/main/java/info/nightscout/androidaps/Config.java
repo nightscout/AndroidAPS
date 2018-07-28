@@ -39,6 +39,7 @@ public class Config {
     public static final boolean logBgSource = true;
     public static final boolean logOverview = true;
     public static final boolean logNotification = true;
+    public static final boolean logAlarm = false;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;
