@@ -142,7 +142,7 @@ public class BgReading implements DataPointWithLabelInterface {
             return false;
         if (raw != other.raw)
             return false;
-        if (!direction.equals(other.direction))
+        if (!Objects.equals(direction, other.direction))
             return false;
         if (!Objects.equals(_id, other._id))
             return false;
