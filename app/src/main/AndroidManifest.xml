@@ -40,17 +40,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PreferencesActivity" />
+        <activity android:name=".activities.PreferencesActivity" />
         <activity
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".AgreementActivity" />
+        <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />
-        <activity android:name=".TDDStatsActivity" />
+        <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
@@ -66,7 +66,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
-        <activity android:name=".HistoryBrowseActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"
@@ -178,7 +178,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_setup_wizard" />
 
-        <activity android:name=".SingleFragmentActivity"
+        <activity android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
     </application>
 

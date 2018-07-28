@@ -14,10 +14,10 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.HistoryBrowseActivity;
+import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.TDDStatsActivity;
+import info.nightscout.androidaps.activities.TDDStatsActivity;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;

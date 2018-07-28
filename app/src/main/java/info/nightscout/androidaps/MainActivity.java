@@ -38,6 +38,10 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.activities.AgreementActivity;
+import info.nightscout.androidaps.activities.HistoryBrowseActivity;
+import info.nightscout.androidaps.activities.PreferencesActivity;
+import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventFeatureRunning;
