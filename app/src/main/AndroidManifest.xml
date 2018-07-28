@@ -129,7 +129,7 @@
 
         <!-- Service processing incomming data -->
         <service
-            android:name=".Services.DataService"
+            android:name=".services.DataService"
             android:exported="false" />
         <service
             android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
@@ -159,7 +159,7 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".Services.AlarmSoundService"
+            android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service

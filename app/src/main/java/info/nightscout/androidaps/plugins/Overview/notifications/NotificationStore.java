@@ -25,7 +25,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.utils.SP;
 
 /**

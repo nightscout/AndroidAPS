@@ -21,7 +21,7 @@ import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;

@@ -6,18 +6,12 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.SP;
 
 /**

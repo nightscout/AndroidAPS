@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.Services;
+package info.nightscout.androidaps.services;
 
 import android.app.IntentService;
 import android.content.Intent;

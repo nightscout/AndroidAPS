@@ -7,7 +7,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Services.DataService;
+import info.nightscout.androidaps.services.DataService;
 import info.nightscout.androidaps.Config;
 
 public class DataReceiver extends WakefulBroadcastReceiver {

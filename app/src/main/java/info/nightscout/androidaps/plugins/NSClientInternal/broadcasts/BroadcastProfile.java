@@ -2,18 +2,12 @@ package info.nightscout.androidaps.plugins.NSClientInternal.broadcasts;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
