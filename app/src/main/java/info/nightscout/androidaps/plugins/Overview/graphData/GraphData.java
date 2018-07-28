@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -50,7 +51,7 @@ import info.nightscout.utils.Round;
  */
 
 public class GraphData {
-    private static Logger log = LoggerFactory.getLogger(GraphData.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.OVERVIEW);
 
     private GraphView graph;
     public double maxY = Double.MIN_VALUE;
@@ -74,7 +75,8 @@ public class GraphData {
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
         if (bgReadingsArray == null || bgReadingsArray.size() == 0) {
-            log.debug("No BG data.");
+            if (Config.logOverview)
+                log.debug("No BG data.");
             return;
         }
 

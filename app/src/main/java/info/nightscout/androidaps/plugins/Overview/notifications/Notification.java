@@ -20,8 +20,6 @@ import info.nightscout.utils.SP;
  */
 
 public class Notification {
-    private static Logger log = LoggerFactory.getLogger(Notification.class);
-
     public static final int URGENT = 0;
     public static final int NORMAL = 1;
     public static final int LOW = 2;

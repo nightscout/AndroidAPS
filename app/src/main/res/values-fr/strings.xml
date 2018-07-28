@@ -243,7 +243,7 @@
     <string name="danar_glucose">Glucose</string>
     <string name="danar_carbohydrate">Glucides</string>
     <string name="danar_alarm">Alarme</string>
-    <string name="danar_totaluploaded" formatted="false">Total %d des enregistrements téléchargés</string>
+    <string name="danar_totaluploaded">Total %1$d des enregistrements téléchargés</string>
     <string name="danar_sbolus">Bolus S</string>
     <string name="danar_history_alarm">Alarmes</string>
     <string name="danar_history_basalhours">Heures Basal</string>
@@ -351,13 +351,13 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notification En Cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
-    <string name="minago" formatted="false">%d min passées</string>
-    <string name="sms_minago" formatted="false">%dmin passées</string>
+    <string name="minago">%1$d min passées</string>
+    <string name="sms_minago">%1$dmin passées</string>
     <string name="localprofile">Profil Local</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Courte moyenne delta</string>
     <string name="long_avgdelta">Longue moyenne delta</string>
-    <string name="array_of_elements" formatted="false">Panoplie de %d d\'élements. Valeur réelle</string>
+    <string name="array_of_elements">Panoplie de %1$d d\'élements. Valeur réelle</string>
     <string name="openapsma_autosensdata_label">Données autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script de débogage</string>
     <string name="openapsama_useautosens">Utiliser la fonction AMA autosens</string>
@@ -463,8 +463,8 @@
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%s a besoin de la liste blanche de l\’optimisation batterie  pour une bonne performance</string>
     <string name="loopsuspended">Loop suspendu</string>
-    <string name="loopsuspendedfor" formatted="false">Suspendu (%d m)</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopsuspendedfor">Suspendu (%1$d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloopfor1h">Suspendre Loop pour 1h</string>
     <string name="suspendloopfor2h">Suspendre Loop pour 2h</string>
     <string name="suspendloopfor3h">Suspendre Loop pour 3h</string>
@@ -559,7 +559,7 @@
     <string name="careportal_activity_label">ACTIVITÉ et FEEDBACK</string>
     <string name="careportal_question">Question</string>
     <string name="success">Succès</string>
-    <string name="danar_history_connectingfor" formatted="false">Se connecter pour %d s</string>
+    <string name="danar_history_connectingfor">Se connecter pour %1$d s</string>
     <string name="careportal_pump_label">POMPE</string>
     <string name="overview_newtempbasal_basalabsolute">"Valeur Basal [U/h] "</string>
     <string name="careportal_newnstreatment_duration_min_label">Durée [min]</string>
@@ -605,7 +605,7 @@
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre</string>
     <string name="connectiontimedout">Connexion interrompue</string>
     <string name="food">Aliments</string>
-    <string name="waitingforestimatedbolusend" formatted="false">Attendre la fin du bolus. %d sec. restants</string>
+    <string name="waitingforestimatedbolusend">Attendre la fin du bolus. %1$d sec. restants</string>
     <string name="processinghistory">Traitement d\'événement</string>
     <string name="startingbolus">Administration du bolus lancée</string>
     <string name="executingrightnow">Commande exécutée à l\'instant</string>
@@ -675,7 +675,7 @@
     <string name="combo_refresh">Actualiser</string>
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
-    <string name="combo_no_pump_connection" formatted="false">Pas de connexion depuis %d min</string>
+    <string name="combo_no_pump_connection">Pas de connexion depuis %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min restantes)</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspendu pour cause d\'erreur</string>
     <string name="combo_pump_state_suspended_by_user">Suspendu par l\'utilisateur</string>

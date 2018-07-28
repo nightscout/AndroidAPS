@@ -313,7 +313,7 @@
     <string name="danar_glucose">glucose</string>
     <string name="danar_carbohydrate">carbohydrate</string>
     <string name="danar_alarm">alarm</string>
-    <string name="danar_totaluploaded" formatted="false">Total %d records uploaded</string>
+    <string name="danar_totaluploaded">Total %1$d records uploaded</string>
     <string name="danar_sbolus">S bolus</string>
     <string name="danar_history_alarm">Alarms</string>
     <string name="danar_history_basalhours">Basal Hours</string>
@@ -324,7 +324,7 @@
     <string name="danar_history_glucose">Glucose</string>
     <string name="danar_history_refill">Refill</string>
     <string name="danar_history_syspend">Suspend</string>
-    <string name="danar_history_connectingfor" formatted="false">Connecting for %d s</string>
+    <string name="danar_history_connectingfor">Connecting for %1$d s</string>
     <string name="danar_password_title">Pump password</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="pumpbusy">Pump is busy</string>
@@ -425,13 +425,13 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
-    <string name="minago">%d min ago</string>
-    <string name="sms_minago">%dmin ago</string>
+    <string name="minago">%1$d min ago</string>
+    <string name="sms_minago">%1$dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Short avg. delta</string>
     <string name="long_avgdelta">Long avg. delta</string>
-    <string name="array_of_elements">Array of %d elements.\nActual value:</string>
+    <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
@@ -572,8 +572,8 @@
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
-    <string name="loopsuspendedfor" formatted="false">Suspended (%d m)</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopsuspendedfor">Suspended (%1$d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
@@ -771,7 +771,7 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend" formatted="false">Waiting for bolus end. Remaining %d sec.</string>
+    <string name="waitingforestimatedbolusend">Waiting for bolus end. Remaining %1$d sec.</string>
     <string name="processinghistory">Processing event</string>
     <string name="startingbolus">Starting bolus delivery</string>
     <string name="executingrightnow">Command is executed right now</string>
@@ -834,7 +834,7 @@
     <string name="combo_refresh">Refresh</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity_label">Activity</string>
-    <string name="combo_no_pump_connection">No connection for %d min</string>
+    <string name="combo_no_pump_connection">No connection for %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min remaining)</string>
     <string name="combo_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="combo_pump_state_initializing">Initializing</string>
@@ -1000,8 +1000,8 @@
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="combo_bolus_count">Bolus count</string>
     <string name="combo_tbr_count">TBR count</string>
-    <string name="objectivenotstarted" formatted="false">Objective %d not started</string>
-    <string name="objectivenotfinished" formatted="false">Objective %d not finished</string>
+    <string name="objectivenotstarted">Objective %1$d not started</string>
+    <string name="objectivenotfinished">Objective %1$d not finished</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
@@ -1037,8 +1037,8 @@
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="reset">reset</string>
-    <string name="waitingfortimesynchronization">Waiting for time synchronization (%d sec)</string>
-    <string name="loopdisconnectedfor">Disconnected (%d m)</string>
+    <string name="waitingfortimesynchronization">Waiting for time synchronization (%1$d sec)</string>
+    <string name="loopdisconnectedfor">Disconnected (%1$d m)</string>
     <string name="automatic_careportal_events">Automatic careportal events</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatically upload insulin, cannula and battery changes and pump alarms to Nightscout</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
@@ -1164,22 +1164,21 @@
     <string name="storedsettingsfound">Stored settings found</string>
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
-    <!-- TODO convert to proper style -->
-    <string name="error_adding_treatment_message" formatted="false">A treatment (insulin: %.2f, carbs: %d, at: %s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
+    <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">Generated eCarbs with amount: %1$dg, duration: %2$dh, delay: %3$dm</string>
     <string name="key_plugin_stats_report_timestamp" translatable="false">key_plugin_stats_report_timestamp</string>
     <string name="openaps_noasdata">No autosens data available</string>
 
     <plurals name="objective_days">
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
     </plurals>
     <plurals name="objective_hours">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
     </plurals>
     <plurals name="objective_minutes">
-        <item quantity="one">%d minute</item>
-        <item quantity="other">%d minutes</item>
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
     </plurals>
 </resources>

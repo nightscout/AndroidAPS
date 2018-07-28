@@ -244,7 +244,7 @@
     <string name="danar_glucose">γλυκόζη</string>
     <string name="danar_carbohydrate">υδατάνθρακες</string>
     <string name="danar_alarm">συναγερμός</string>
-    <string name="danar_totaluploaded" formatted="false">"Σύνολο %d εγγραφών φορτώθηκαν "</string>
+    <string name="danar_totaluploaded">"Σύνολο %1$d εγγραφών φορτώθηκαν "</string>
     <string name="danar_sbolus">S bolus</string>
     <string name="danar_history_alarm">Συναγερμοί</string>
     <string name="danar_history_basalhours">Ώρες Βασικού</string>
@@ -255,7 +255,7 @@
     <string name="danar_history_glucose">Γλυκόζη</string>
     <string name="danar_history_refill">Ξαναγέμισμα</string>
     <string name="danar_history_syspend">Κλείσιμο</string>
-    <string name="danar_history_connectingfor" formatted="false">Σύνδεση με %d s</string>
+    <string name="danar_history_connectingfor">Σύνδεση με %1$d s</string>
     <string name="danar_password_title">Κωδικός αντλίας</string>
     <string name="wrongpumppassword">Λάθος κωδικός αντλίας!</string>
     <string name="pumpbusy">Αντλία απασχολημένη</string>
@@ -357,7 +357,7 @@
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Βραχυπρόθεσμος Μέσος Όρος</string>
     <string name="long_avgdelta">ΜΑκροπρόθεσμος Μέσος Όρος</string>
-    <string name="array_of_elements" formatted="false">Πίνακας στοιχείων %d.Τρέχουσα Τιμή</string>
+    <string name="array_of_elements">Πίνακας στοιχείων %1$d.Τρέχουσα Τιμή</string>
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Πληροφορίες συντονισμού</string>
     <string name="openapsama_useautosens">Χρήση τοy AMA autosense</string>
@@ -464,8 +464,8 @@
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting" formatted="false">Το %s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
     <string name="loopsuspended">Κύκλωμα σε παύση</string>
-    <string name="loopsuspendedfor" formatted="false">Παύση (%d m)</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopsuspendedfor">Παύση (%1$d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloopfor1h">Κύκλωμα σε παύση για 1h</string>
     <string name="suspendloopfor2h">Κύκλωμα σε παύση για 2h</string>
     <string name="suspendloopfor3h">Κύκλωμα σε παύση για 3h</string>
@@ -605,7 +605,7 @@
     <string name="wearcontrol_title">Έλεγχος από ρολόι</string>
     <string name="wearcontrol_summary">Ρυθμίστε Στόχους-Προσ. και βάλτε Θεραπείες από το ρολόι</string>
     <string name="connectiontimedout">Ο χρόνος σύνδεσης έληξε</string>
-    <string name="waitingforestimatedbolusend" formatted="false">Περιμένετε το τέλος του bolus. Απομένουν %d sec</string>
+    <string name="waitingforestimatedbolusend">Περιμένετε το τέλος του bolus. Απομένουν %1$d sec</string>
     <string name="processinghistory">Επεξεργασία</string>
     <string name="startingbolus">Έναρξη bolus</string>
     <string name="executingrightnow">Η εντολή εκτελείται τώρα</string>

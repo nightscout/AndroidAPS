@@ -26,7 +26,7 @@ import info.nightscout.utils.SP;
  */
 
 public class AutosensData implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static Logger log = LoggerFactory.getLogger(Constants.AUTOSENS);
 
     public void setChartTime(long chartTime) {
         this.chartTime = chartTime;

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -16,7 +17,7 @@ import info.nightscout.utils.SafeParse;
 
 public abstract class AbstractSensitivityPlugin extends PluginBase implements SensitivityInterface {
 
-    private static final Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static final Logger log = LoggerFactory.getLogger(Constants.AUTOSENS);
 
     public AbstractSensitivityPlugin(PluginDescription pluginDescription) {
         super(pluginDescription);

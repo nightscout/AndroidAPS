@@ -52,6 +52,14 @@ public class Profile {
     protected Profile() {
     }
 
+    @Override
+    public String toString() {
+        if (json != null)
+            return json.toString();
+        else
+            return "Profile has no JSON";
+    }
+
     // Constructor from profileStore JSON
     public Profile(JSONObject json, String units) {
         init(json, 100, 0);
@@ -295,8 +303,6 @@ public class Profile {
     Integer getShitfTimeSecs(Integer originalTime) {
         Integer shiftedTime = originalTime + timeshift * 60 * 60;
         shiftedTime = (shiftedTime + 24 * 60 * 60) % (24 * 60 * 60);
-        if (timeshift != 0 && Config.logProfile)
-            log.debug("(Sec) Original time: " + originalTime + " ShiftedTime: " + shiftedTime);
         return shiftedTime;
     }
 

@@ -218,7 +218,7 @@
     <string name="danar_glucose">glicemie</string>
     <string name="danar_carbohydrate">carbohidrați</string>
     <string name="danar_alarm">alarmă</string>
-    <string name="danar_totaluploaded" formatted="false">S-au transmis %d înregistrări</string>
+    <string name="danar_totaluploaded" formatted="false">S-au transmis %1$d înregistrări</string>
     <string name="danar_sbolus">S bolus</string>
     <string name="danar_history_alarm">Alarme</string>
     <string name="danar_history_basalhours">Ore bazale</string>
@@ -229,7 +229,7 @@
     <string name="danar_history_glucose">Glicemie</string>
     <string name="danar_history_refill">Reumplere</string>
     <string name="danar_history_syspend">Suspendare</string>
-    <string name="danar_history_connectingfor" formatted="false">Conectare de %d s</string>
+    <string name="danar_history_connectingfor">Conectare de %1$d s</string>
     <string name="danar_password_title">Parola pompei</string>
     <string name="wrongpumppassword">Parola pompei greșită!</string>
     <string name="pumpbusy">Pompa face altă acțiune</string>
@@ -330,7 +330,7 @@
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Media scurtă a deviației</string>
     <string name="long_avgdelta">Media lungă a deviației</string>
-    <string name="array_of_elements">Matrice cu %d elemente.\nValorea efectivă:</string>
+    <string name="array_of_elements">Matrice cu %1$d elemente.\nValorea efectivă:</string>
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Folosește opțiunea autosens AMA</string>
@@ -443,8 +443,8 @@
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%s necesită excluderea din lista de optimizare a bateriei pentru funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
-    <string name="loopsuspendedfor" formatted="false">Suspendată (%d m)</string>
-    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopsuspendedfor">Suspendată (%1$d m)</string>
+    <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
@@ -651,7 +651,7 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grăsime</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend" formatted="false">Se așteaptă finalul bolusării. Mai sunt %d sec.</string>
+    <string name="waitingforestimatedbolusend">Se așteaptă finalul bolusării. Mai sunt %1$d sec.</string>
     <string name="processinghistory">Se procesează activitatea</string>
     <string name="startingbolus">Pornire livrare bolus</string>
     <string name="executingrightnow">Se execută comanda chiar acum</string>
@@ -702,7 +702,7 @@
     <string name="combo_refresh">Reîncarcă</string>
     <string name="combo_pump_state_label">Stare</string>
     <string name="combo_pump_activity_label">Activitate</string>
-    <string name="combo_no_pump_connection" formatted="false">Fără conexiune de %d min</string>
+    <string name="combo_no_pump_connection">Fără conexiune de %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min rămase)</string>
     <string name="combo_pump_state_initializing">Inițializare</string>
     <string name="combo_pump_state_suspended_due_to_error">Suspendat din cauza unei erori</string>
@@ -860,8 +860,8 @@
     <string name="alert_e13">Eroare E13: Eroare de limbaj</string>
     <string name="ns_wifionly">Folosește doar conexiune WiFi</string>
     <string name="cgm">CGM</string>
-    <string name="objectivenotstarted" formatted="false">Obiectivul %d nu este pornit</string>
-    <string name="objectivenotfinished" formatted="false">Obiectivul %d nu este atins</string>
+    <string name="objectivenotstarted">Obiectivul %1$d nu este pornit</string>
+    <string name="objectivenotfinished">Obiectivul %1$d nu este atins</string>
     <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
     <string name="novalidbasalrate">Nu s-a citit o rată bazală validă din pompă</string>
     <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
@@ -887,8 +887,8 @@
     <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbo deoarece sursa glicemiei nu suportă filtrare avansată</string>
     <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
     <string name="food_short">Mâncare</string>
-    <string name="waitingfortimesynchronization" formatted="false">Se așteaptă sincronizarea (%d s)</string>
-    <string name="loopdisconnectedfor" formatted="false">Deconectat (%d min)</string>
+    <string name="waitingfortimesynchronization">Se așteaptă sincronizarea (%1$d s)</string>
+    <string name="loopdisconnectedfor">Deconectat (%1$d min)</string>
     <string name="automatic_careportal_events">Evenimente Careportal automate</string>
     <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Încărcare automată a schimbărilor de insulină, rezervor, baterie și alarme de pompă în Nightscout</string>
     <string name="openapssmb_maxiob_title">Maximul total IOB peste care OpenAPS nu poate trece [U]</string>

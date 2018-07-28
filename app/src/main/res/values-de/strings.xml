@@ -272,7 +272,7 @@
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
     <string name="configbuilder">Konfiguration</string>
-    <string name="minago">vor %d min</string>
+    <string name="minago">vor %1$d min</string>
     <string name="actions_shortname">AKT</string>
     <string name="wear_shortname">WEAR</string>
     <string name="virtualpump_shortname">VP</string>
@@ -356,7 +356,7 @@
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="superbolus">Superbolus</string>
     <string name="suspendloopfor10h">Pausiere Loop für 10 h</string>
-    <string name="array_of_elements">Insgesamt %d Einträge. Aktueller Wert:</string>
+    <string name="array_of_elements">Insgesamt %1$d Einträge. Aktueller Wert:</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_pbage_label">Batteriealter</string>
     <string name="careportal_pump_label">PUMP</string>
@@ -715,9 +715,9 @@
     <string name="mute">Alarm stoppen</string>
     <string name="bolusstopped">Bolus gestoppt</string>
     <string name="bolusstopping">Bolus wird gestoppt</string>
-    <string formatted="false" name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %s</string>
-    <string formatted="false" name="zerovalueinprofile">Ungültiges Profil: %s</string>
-    <string formatted="false" name="hoursago">vor %.1f h</string>
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
+    <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
+    <string name="hoursago">vor %1$.1f h</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Es wurde keine hohe TBR gesetzt, da nach der Berechnung Boluseinträge in der Pumpenhistorik gefunden wurden.</string>
     <string name="combo_check_date">Der letzte Bolus liegt mehr als 24 Stunden zurück oder liegt in der Zukunft. Prüfe bitte das Datum auf der Pumpe.</string>
     <string name="combo_suspious_bolus_time">Zeit/Datum des abgegebenen Boluses auf der Pumpe erscheint falsch, IOB ist wahrscheinlich nicht korrekt. Bitte prüfe Zeit/Datum der Pumpe.</string>
@@ -729,7 +729,7 @@
     <string name="with">mit</string>
     <string name="ns_wifi_ssids">Wlan SSID</string>
     <string name="week">Woche</string>
-    <string formatted="false" name="waitingfortimesynchronization">Warte auf Zeitsynchronisierung (%d Sek.)</string>
+    <string name="waitingfortimesynchronization">Warte auf Zeitsynchronisierung (%1$d Sek.)</string>
     <string name="insight_waiting_for_code">Warte auf Code-Bestätigung</string>
     <string name="ns_wifionly">Benutze nur WLAN Verbindung</string>
     <string name="enablesmb_summary">Benutze Super Micro Bolus anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
@@ -784,8 +784,8 @@
     <string name="firstcarbsincrement">Erste KH-Erhöhung</string>
     <string name="ns_chargingonly">Nur wenn geladen wird</string>
     <string name="connectionsettings_title">Verbindungs-Einstellungen</string>
-    <string formatted="false" name="objectivenotstarted">Zielsetzung %d nicht gestartet.</string>
-    <string formatted="false" name="objectivenotfinished">Zielsetzung %d nicht abgeschlossen.</string>
+    <string name="objectivenotstarted">Zielsetzung %1$d nicht gestartet.</string>
+    <string name="objectivenotfinished">Zielsetzung %1$d nicht abgeschlossen.</string>
     <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
     <string name="bolusrecordedonly">Bolus wird nur erfasst.</string>
 </resources>

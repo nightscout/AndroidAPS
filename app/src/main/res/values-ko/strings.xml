@@ -249,7 +249,7 @@
     <string name="danar_glucose">혈당</string>
     <string name="danar_carbohydrate">탄수화물</string>
     <string name="danar_alarm">알람</string>
-    <string name="danar_totaluploaded" formatted="false">총 %d 기록들이 업로드되었습니다.</string>
+    <string name="danar_totaluploaded">총 %1$d 기록들이 업로드되었습니다.</string>
     <string name="danar_sbolus">S bolus</string>
     <string name="danar_history_alarm">알람</string>
     <string name="danar_history_basalhours">기초주입 시간</string>
@@ -260,7 +260,7 @@
     <string name="danar_history_glucose">혈당</string>
     <string name="danar_history_refill">교체</string>
     <string name="danar_history_syspend">중지</string>
-    <string name="danar_history_connectingfor" formatted="false">%d 초 동안 연결중</string>
+    <string name="danar_history_connectingfor">%1$d 초 동안 연결중</string>
     <string name="danar_password_title">펌프 비밀번호</string>
     <string name="wrongpumppassword">펌프 비밀번호가 잘못되었습니다!</string>
     <string name="pumpbusy">펌프가 바쁩니다</string>
@@ -363,7 +363,7 @@
     <string name="openapsama">OpenAPS AMA</string>
     <string name="short_avgdelta">Short avg. delta</string>
     <string name="long_avgdelta">Long avg. delta</string>
-    <string name="array_of_elements" formatted="false">Array of %d elements.\nActual value:</string>
+    <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">AMA autosens 기능 사용하기</string>

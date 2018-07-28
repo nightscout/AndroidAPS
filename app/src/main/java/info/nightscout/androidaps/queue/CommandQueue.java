@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -75,7 +77,7 @@ import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
  */
 
 public class CommandQueue {
-    private static Logger log = LoggerFactory.getLogger(CommandQueue.class);
+    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
 
     private final LinkedList<Command> queue = new LinkedList<>();
     protected Command performing;
@@ -109,12 +111,14 @@ public class CommandQueue {
 
     private synchronized void inject(Command command) {
         // inject as a first command
-        log.debug("QUEUE: Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
+        if (Config.logQueue)
+            log.debug("Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.addFirst(command);
     }
 
     private synchronized void add(Command command) {
-        log.debug("QUEUE: Adding: " + command.getClass().getSimpleName() + " - " + command.status());
+        if (Config.logQueue)
+            log.debug("Adding: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.add(command);
     }
 
@@ -147,15 +151,18 @@ public class CommandQueue {
     // start thread again if not already running
     protected synchronized void notifyAboutNewCommand() {
         while (thread != null && thread.getState() != Thread.State.TERMINATED && thread.waitingForDisconnect) {
-            log.debug("QUEUE: Waiting for previous thread finish");
+            if (Config.logQueue)
+                log.debug("Waiting for previous thread finish");
             SystemClock.sleep(500);
         }
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
-            log.debug("QUEUE: Starting new thread");
+            if (Config.logQueue)
+                log.debug("Starting new thread");
         } else {
-            log.debug("QUEUE: Thread is already running");
+            if (Config.logQueue)
+                log.debug("Thread is already running");
         }
     }
 
@@ -164,8 +171,8 @@ public class CommandQueue {
         tempCommandQueue.readStatus(reason, callback);
     }
 
-    public synchronized boolean bolusInQueue(){
-        if(isRunning(Command.CommandType.BOLUS)) return true;
+    public synchronized boolean bolusInQueue() {
+        if (isRunning(Command.CommandType.BOLUS)) return true;
         for (int i = 0; i < queue.size(); i++) {
             if (queue.get(i).commandType == Command.CommandType.BOLUS) {
                 return true;
@@ -180,17 +187,19 @@ public class CommandQueue {
 
         if (type == Command.CommandType.SMB_BOLUS) {
             if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
-                log.debug("Rejecting SMB since a bolus is queue/running");
+                if (Config.logQueue)
+                    log.debug("Rejecting SMB since a bolus is queue/running");
                 return false;
             }
             if (detailedBolusInfo.lastKnownBolusTime < TreatmentsPlugin.getPlugin().getLastBolusTime()) {
-                log.debug("Rejecting bolus, another bolus was issued since request time");
+                if (Config.logQueue)
+                    log.debug("Rejecting bolus, another bolus was issued since request time");
                 return false;
             }
         }
 
 
-        if(type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0){
+        if (type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0) {
             type = Command.CommandType.CARBS_ONLY_TREATMENT;
             //Carbs only can be added in parallel as they can be "in the future".
         } else {
@@ -213,7 +222,7 @@ public class CommandQueue {
             add(new CommandSMBBolus(detailedBolusInfo, callback));
         } else {
             add(new CommandBolus(detailedBolusInfo, callback, type));
-            if(type.equals(Command.CommandType.BOLUS)) {
+            if (type.equals(Command.CommandType.BOLUS)) {
                 // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
@@ -337,7 +346,8 @@ public class CommandQueue {
     // returns true if command is queued
     public boolean setProfile(Profile profile, Callback callback) {
         if (isThisProfileSet(profile)) {
-            log.debug("QUEUE: Correct profile already set");
+            if (Config.logQueue)
+                log.debug("Correct profile already set");
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).enacted(false)).run();
             return false;
@@ -381,7 +391,8 @@ public class CommandQueue {
     // returns true if command is queued
     public boolean readStatus(String reason, Callback callback) {
         if (isLastScheduled(Command.CommandType.READSTATUS)) {
-            log.debug("QUEUE: READSTATUS " + reason + " ignored as duplicated");
+            if (Config.logQueue)
+                log.debug("READSTATUS " + reason + " ignored as duplicated");
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -496,8 +507,10 @@ public class CommandQueue {
         if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);
             if (!result) {
-                log.debug("Current profile: " + current.getData().toString());
-                log.debug("New profile: " + profile.getData().toString());
+                if (Config.logQueue) {
+                    log.debug("Current profile: " + current.toString());
+                    log.debug("New profile: " + profile.toString());
+                }
             }
             return result;
         } else return true;
