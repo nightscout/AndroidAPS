@@ -16,7 +16,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandSetUserSettings extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
     public CommandSetUserSettings(Callback callback) {
         commandType = CommandType.SETUSERSETTINGS;

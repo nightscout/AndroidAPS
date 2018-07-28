@@ -1,19 +1,19 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-
-import com.cozmo.danar.util.BleCommandUtil;
-
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Notify_Delivery_Complete.class);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     private static Treatment t;
     private static double amount;
@@ -30,6 +30,8 @@ public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {
         this.amount = amount;
         this.t = t;
         done = false;
+        if (Config.logPumpComm)
+            log.debug("New message: amount: " + amount + " treatment: " + t.toString());
     }
 
     @Override
@@ -46,7 +48,7 @@ public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {
             MainApp.bus().post(bolusingEvent);
         }
 
-        if (Config.logDanaMessageDetail)
+        if (Config.logPumpComm)
             log.debug("Delivered insulin: " + deliveredInsulin);
     }
 

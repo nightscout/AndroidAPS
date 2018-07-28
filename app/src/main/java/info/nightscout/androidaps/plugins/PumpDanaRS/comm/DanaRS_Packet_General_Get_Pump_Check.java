@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -13,11 +14,13 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_General_Get_Pump_Check.class);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public DanaRS_Packet_General_Get_Pump_Check() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK;
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     @Override
@@ -36,7 +39,7 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
         dataSize = 1;
         pump.productCode = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
-        if (Config.logDanaMessageDetail) {
+        if (Config.logPumpComm) {
             log.debug("Model: " + String.format("%02X ", pump.model));
             log.debug("Protocol: " + String.format("%02X ", pump.protocol));
             log.debug("Product Code: " + String.format("%02X ", pump.productCode));

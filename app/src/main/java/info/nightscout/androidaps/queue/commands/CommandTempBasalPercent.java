@@ -15,12 +15,12 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandTempBasalPercent extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
-    int durationInMinutes;
-    int percent;
-    boolean enforceNew;
-    Profile profile;
+    private int durationInMinutes;
+    private int percent;
+    private boolean enforceNew;
+    private Profile profile;
 
     public CommandTempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         commandType = CommandType.TEMPBASAL;

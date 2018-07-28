@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.utils.HardLimits;
 
 public class MsgBolusStartWithSpeed extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgBolusStartWithSpeed.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public static int errorCode;
 
@@ -26,7 +26,7 @@ public class MsgBolusStartWithSpeed extends MessageBase {
         AddParamInt((int) (amount * 100));
         AddParamByte((byte) speed);
 
-        if (Config.logDanaMessageDetail)
+        if (Config.logPumpComm)
             log.debug("Bolus start : " + amount + " speed: " + speed);
     }
 
@@ -35,9 +35,10 @@ public class MsgBolusStartWithSpeed extends MessageBase {
         errorCode = intFromBuff(bytes, 0, 1);
         if (errorCode != 2) {
             failed = true;
-            log.debug("Messsage response: " + errorCode + " FAILED!!");
+            if (Config.logPumpComm)
+                log.debug("Messsage response: " + errorCode + " FAILED!!");
         } else {
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("Messsage response: " + errorCode + " OK");
         }
     }

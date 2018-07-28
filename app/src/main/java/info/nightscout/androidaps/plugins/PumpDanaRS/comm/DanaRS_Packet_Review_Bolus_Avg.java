@@ -1,18 +1,21 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-
-import com.cozmo.danar.util.BleCommandUtil;
+import info.nightscout.androidaps.Constants;
 
 public class DanaRS_Packet_Review_Bolus_Avg extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Review_Bolus_Avg.class);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public DanaRS_Packet_Review_Bolus_Avg() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__BOLUS_AVG;
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     @Override
@@ -36,7 +39,7 @@ public class DanaRS_Packet_Review_Bolus_Avg extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 2;
         double bolusAvg28 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
-        if (Config.logDanaMessageDetail) {
+        if (Config.logPumpComm) {
             log.debug("Bolus average 3d: " + bolusAvg03 + " U");
             log.debug("Bolus average 7d: " + bolusAvg07 + " U");
             log.debug("Bolus average 14d: " + bolusAvg14 + " U");

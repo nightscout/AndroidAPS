@@ -15,7 +15,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandLoadTDDs extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
 
     public CommandLoadTDDs(Callback callback) {

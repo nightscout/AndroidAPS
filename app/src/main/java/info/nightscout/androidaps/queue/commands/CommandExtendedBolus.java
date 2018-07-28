@@ -14,7 +14,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandExtendedBolus extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
     private double insulin;
     private int durationInMinutes;

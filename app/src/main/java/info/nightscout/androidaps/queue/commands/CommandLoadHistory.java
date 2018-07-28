@@ -16,9 +16,9 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandLoadHistory extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
-    byte type;
+    private byte type;
 
     public CommandLoadHistory(byte type, Callback callback) {
         commandType = CommandType.LOADHISTORY;

@@ -6,9 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 
 public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_APS_Basal_Set_Temporary_Basal.class);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     int temporaryBasalRatio;
     int temporaryBasalDuration;
@@ -25,6 +26,8 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
     public DanaRS_Packet_APS_Basal_Set_Temporary_Basal(int percent) {
         this();
         setParams(percent);
+        if (Config.logPumpComm)
+            log.debug("New message: percent: " + percent);
     }
 
     protected void setParams(int percent) {
@@ -35,16 +38,16 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
         temporaryBasalRatio = percent;
         if (percent < 100) {
             temporaryBasalDuration = PARAM30MIN;
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("APS Temp basal start percent: " + percent + " duration 30 min");
         } else {
             temporaryBasalDuration = PARAM15MIN;
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("APS Temp basal start percent: " + percent + " duration 15 min");
         }
     }
 
-    public DanaRS_Packet_APS_Basal_Set_Temporary_Basal(int percent, boolean fifteenMinutes, boolean thirtyMinutes ) {
+    public DanaRS_Packet_APS_Basal_Set_Temporary_Basal(int percent, boolean fifteenMinutes, boolean thirtyMinutes) {
         this();
         setParams(percent, fifteenMinutes, thirtyMinutes);
     }
@@ -57,11 +60,11 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
         temporaryBasalRatio = percent;
         if (thirtyMinutes && percent <= 200) { // 30 min is allowed up to 200%
             temporaryBasalDuration = PARAM30MIN;
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("APS Temp basal start percent: " + percent + " duration 30 min");
         } else {
             temporaryBasalDuration = PARAM15MIN;
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("APS Temp basal start percent: " + percent + " duration 15 min");
         }
     }
@@ -80,10 +83,11 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_Basal extends DanaRS_Packet {
         int result = byteArrayToInt(getBytes(data, DATA_START, 1));
         if (result != 0) {
             failed = true;
-            log.error("Set APS temp basal start result: " + result + " FAILED!!!");
+            if (Config.logPumpComm)
+                log.debug("Set APS temp basal start result: " + result + " FAILED!!!");
         } else {
             failed = false;
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("Set APS temp basal start result: " + result);
         }
     }

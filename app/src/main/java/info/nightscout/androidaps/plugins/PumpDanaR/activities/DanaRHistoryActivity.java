@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -42,12 +43,9 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
 public class DanaRHistoryActivity extends Activity {
-    private static Logger log = LoggerFactory.getLogger(DanaRHistoryActivity.class);
-
-    private boolean mBounded;
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
 
     private Handler mHandler;
-    private static HandlerThread mHandlerThread;
 
     static Profile profile = null;
 
@@ -65,7 +63,7 @@ public class DanaRHistoryActivity extends Activity {
         public byte type;
         String name;
 
-        public TypeList(byte type, String name) {
+        TypeList(byte type, String name) {
             this.type = type;
             this.name = name;
         }
@@ -78,7 +76,7 @@ public class DanaRHistoryActivity extends Activity {
 
     public DanaRHistoryActivity() {
         super();
-        mHandlerThread = new HandlerThread(DanaRHistoryActivity.class.getSimpleName());
+        HandlerThread mHandlerThread = new HandlerThread(DanaRHistoryActivity.class.getSimpleName());
         mHandlerThread.start();
         this.mHandler = new Handler(mHandlerThread.getLooper());
     }
@@ -116,8 +114,8 @@ public class DanaRHistoryActivity extends Activity {
 
         statusView.setVisibility(View.GONE);
 
-        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class) != null && MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PUMP);
-        boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
+        boolean isKorean = DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PUMP);
+        boolean isRS = DanaRSPlugin.getPlugin().isEnabled(PluginType.PUMP);
 
         // Types
 
@@ -141,10 +139,30 @@ public class DanaRHistoryActivity extends Activity {
                 R.layout.spinner_centered, typeList);
         historyTypeSpinner.setAdapter(spinnerAdapter);
 
-        reloadButton.setOnClickListener(new View.OnClickListener() {
+        reloadButton.setOnClickListener(v -> {
+            final TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
+            runOnUiThread(() -> {
+                reloadButton.setVisibility(View.GONE);
+                syncButton.setVisibility(View.GONE);
+                statusView.setVisibility(View.VISIBLE);
+            });
+            clearCardView();
+            ConfigBuilderPlugin.getCommandQueue().loadHistory(selected.type, new Callback() {
+                @Override
+                public void run() {
+                    loadDataFromDB(selected.type);
+                    runOnUiThread(() -> {
+                        reloadButton.setVisibility(View.VISIBLE);
+                        syncButton.setVisibility(View.VISIBLE);
+                        statusView.setVisibility(View.GONE);
+                    });
+                }
+            });
+        });
+
+        syncButton.setOnClickListener(v -> mHandler.post(new Runnable() {
             @Override
-            public void onClick(View v) {
-                final TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
+            public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -153,52 +171,18 @@ public class DanaRHistoryActivity extends Activity {
                         statusView.setVisibility(View.VISIBLE);
                     }
                 });
-                clearCardView();
-                ConfigBuilderPlugin.getCommandQueue().loadHistory(selected.type, new Callback() {
+                DanaRNSHistorySync sync = new DanaRNSHistorySync(historyList);
+                sync.sync(DanaRNSHistorySync.SYNC_ALL);
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        loadDataFromDB(selected.type);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                reloadButton.setVisibility(View.VISIBLE);
-                                syncButton.setVisibility(View.VISIBLE);
-                                statusView.setVisibility(View.GONE);
-                            }
-                        });
+                        reloadButton.setVisibility(View.VISIBLE);
+                        syncButton.setVisibility(View.VISIBLE);
+                        statusView.setVisibility(View.GONE);
                     }
                 });
             }
-        });
-
-        syncButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                reloadButton.setVisibility(View.GONE);
-                                syncButton.setVisibility(View.GONE);
-                                statusView.setVisibility(View.VISIBLE);
-                            }
-                        });
-                        DanaRNSHistorySync sync = new DanaRNSHistorySync(historyList);
-                        sync.sync(DanaRNSHistorySync.SYNC_ALL);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                reloadButton.setVisibility(View.VISIBLE);
-                                syncButton.setVisibility(View.VISIBLE);
-                                statusView.setVisibility(View.GONE);
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        }));
 
         historyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -324,7 +308,7 @@ public class DanaRHistoryActivity extends Activity {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public static class HistoryViewHolder extends RecyclerView.ViewHolder {
+        static class HistoryViewHolder extends RecyclerView.ViewHolder {
             CardView cv;
             TextView time;
             TextView value;
@@ -355,45 +339,26 @@ public class DanaRHistoryActivity extends Activity {
     private void loadDataFromDB(byte type) {
         historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(type);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false);
-            }
-        });
+        runOnUiThread(() -> recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false));
     }
 
     private void clearCardView() {
         historyList = new ArrayList<>();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false);
-            }
-        });
+        runOnUiThread(() -> recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false));
     }
 
     @Subscribe
     public void onStatusEvent(final EventDanaRSyncStatus s) {
-        log.debug("EventDanaRSyncStatus: " + s.message);
+        if (Config.logPump)
+            log.debug("EventDanaRSyncStatus: " + s.message);
         runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(s.message);
-                    }
-                });
+                () -> statusView.setText(s.message));
     }
 
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged s) {
         runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(s.textStatus());
-                    }
-                }
+                () -> statusView.setText(s.textStatus())
         );
     }
 

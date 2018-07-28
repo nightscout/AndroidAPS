@@ -19,9 +19,9 @@ import info.nightscout.utils.DecimalFormatter;
  */
 
 public class CommandBolus extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
-    DetailedBolusInfo detailedBolusInfo;
+    private DetailedBolusInfo detailedBolusInfo;
 
     public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback, CommandType type) {
         commandType = type;

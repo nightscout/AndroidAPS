@@ -6,12 +6,15 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 
 public class MsgSetCarbsEntry extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSetCarbsEntry.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public MsgSetCarbsEntry() {
         SetCommand(0x0402);
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     public MsgSetCarbsEntry(long time, int amount) {
@@ -27,7 +30,7 @@ public class MsgSetCarbsEntry extends MessageBase {
         AddParamByte((byte) (calendar.get(Calendar.SECOND)));
         AddParamByte((byte) 0x43); //??
         AddParamInt(amount);
-        if (Config.logDanaMessageDetail)
+        if (Config.logPumpComm)
             log.debug("Set carb entry: " + amount + " date " + calendar.getTime().toString());
     }
 
@@ -36,9 +39,10 @@ public class MsgSetCarbsEntry extends MessageBase {
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
-            log.debug("Set carb entry result: " + result + " FAILED!!!");
+            if (Config.logPumpComm)
+                log.debug("Set carb entry result: " + result + " FAILED!!!");
         } else {
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("Set carb entry result: " + result);
         }
     }

@@ -27,11 +27,9 @@ public class Config {
     public static final boolean logFunctionCalls = true;
     public static final boolean logIncommingData = true;
     public static final boolean logAPSResult = true;
-    public static final boolean logPumpComm = true;
     public static final boolean logPrefsChange = true;
     public static final boolean logConfigBuilder = true;
     public static final boolean logNSUpload = true;
-    public static final boolean logPumpActions = true;
     public static final boolean logCongigBuilderActions = true;
     public static final boolean logAutosensData = false;
     public static final boolean logEvents = false;
@@ -45,9 +43,8 @@ public class Config {
     public static final boolean logDataTreatments = true;
     public static final boolean logNsclient = true;
     public static final boolean logObjectives = false;
+    public static final boolean logPump = true;
+    public static boolean logPumpComm = true;
+    public static final boolean logPumpBtComm = false;
 
-    // DanaR specific
-    public static final boolean logDanaBTComm = true;
-    public static boolean logDanaMessageDetail = true;
-    public static final boolean logDanaSerialEngine = true;
 }

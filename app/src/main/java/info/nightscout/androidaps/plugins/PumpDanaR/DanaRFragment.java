@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.TDDStatsActivity;
@@ -46,7 +48,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SetWarnColor;
 
 public class DanaRFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
 
     private Handler loopHandler = new Handler();
     private Runnable refreshLoop = new Runnable() {
@@ -113,18 +115,12 @@ public class DanaRFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
-            View view = inflater.inflate(R.layout.danar_fragment, container, false);
-            unbinder = ButterKnife.bind(this, view);
+        View view = inflater.inflate(R.layout.danar_fragment, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-            pumpStatusView.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder));
+        pumpStatusView.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder));
 
-            return view;
-        } catch (Exception e) {
-            FabricPrivacy.logException(e);
-        }
-
-        return null;
+        return view;
     }
 
     @OnClick(R.id.danar_history)
@@ -145,11 +141,14 @@ public class DanaRFragment extends SubscriberFragment {
     }
 
     @OnClick(R.id.danar_user_options)
-    void onUserOptionsClick() {        startActivity(new Intent(getContext(), DanaRUserOptionsActivity.class));  }
+    void onUserOptionsClick() {
+        startActivity(new Intent(getContext(), DanaRUserOptionsActivity.class));
+    }
 
     @OnClick(R.id.danar_btconnection)
     void onBtConnectionClick() {
-        log.debug("Clicked connect to pump");
+        if (Config.logPump)
+            log.debug("Clicked connect to pump");
         DanaRPump.getInstance().lastConnection = 0;
         ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);
     }
@@ -162,10 +161,11 @@ public class DanaRFragment extends SubscriberFragment {
             activity.runOnUiThread(
                     new Runnable() {
                         @Override
-                        public  void run() {
-                            synchronized(DanaRFragment.this){
+                        public void run() {
+                            synchronized (DanaRFragment.this) {
 
-                                if(btConnectionView == null || pumpStatusView == null || pumpStatusLayout == null ) return;
+                                if (btConnectionView == null || pumpStatusView == null || pumpStatusLayout == null)
+                                    return;
 
                                 if (c.sStatus == EventPumpStatusChanged.CONNECTING)
                                     btConnectionView.setText("{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s");
@@ -216,7 +216,7 @@ public class DanaRFragment extends SubscriberFragment {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
-                    synchronized(DanaRFragment.this) {
+                    synchronized (DanaRFragment.this) {
                         if (!isBound()) return;
 
                         DanaRPump pump = DanaRPump.getInstance();

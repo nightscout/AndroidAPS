@@ -14,9 +14,9 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandCancelTempBasal extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
-    boolean enforceNew;
+    private boolean enforceNew;
 
     public CommandCancelTempBasal(boolean enforceNew, Callback callback) {
         commandType = CommandType.TEMPBASAL;

@@ -77,10 +77,10 @@ import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
  */
 
 public class CommandQueue {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
     private final LinkedList<Command> queue = new LinkedList<>();
-    protected Command performing;
+    Command performing;
 
     private QueueThread thread = null;
 

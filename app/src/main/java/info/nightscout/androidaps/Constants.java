@@ -71,7 +71,6 @@ public class Constants {
     // logging
     public static final String AUTOSENS = "AUTOSENS";
     public static final String EVENTS = "EVENTS";
-    public static final String QUEUE = "QUEUE";
     public static final String BGSOURCE = "BGSOURCE";
     public static final String OVERVIEW = "OVERVIEW";
     public static final String NOTIFICATION = "NOTIFICATION";
@@ -81,4 +80,8 @@ public class Constants {
     public static final String DATATREATMENTS = "DATATREATMENTS";
     public static final String NSCLIENT = "NSCLIENT";
     public static final String OBJECTIVES = "OBJECTIVES";
+    public static final String PUMP = "PUMP";
+    public static final String PUMPQUEUE = "PUMPQUEUE";
+    public static final String PUMPCOMM = "PUMPCOMM";
+    public static final String PUMPBTCOMM = "PUMPBTCOMM";
 }

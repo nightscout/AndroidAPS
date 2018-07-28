@@ -11,8 +11,6 @@ import android.support.v7.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.LoggerFactory;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -51,7 +49,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private DanaRv2Plugin() {
         pluginDescription.description(R.string.description_pump_dana_r_v2);
 
-        log = LoggerFactory.getLogger(DanaRv2Plugin.class);
         useExtendedBoluses = false;
 
         pumpDescription.isBolusCapable = true;
@@ -107,12 +104,14 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            log.debug("Service is disconnected");
+            if (Config.logPump)
+                log.debug("Service is disconnected");
             sExecutionService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            log.debug("Service is connected");
+            if (Config.logPump)
+                log.debug("Service is connected");
             DanaRv2ExecutionService.LocalBinder mLocalBinder = (DanaRv2ExecutionService.LocalBinder) service;
             sExecutionService = mLocalBinder.getServiceInstance();
         }
@@ -157,13 +156,15 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                         public void onClick(DialogInterface dialog, int id) {
                             pluginSwitcher.invoke();
                             SP.putBoolean("allow_hardware_pump", true);
-                            log.debug("First time HW pump allowed!");
+                            if (Config.logPump)
+                                log.debug("First time HW pump allowed!");
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             pluginSwitcher.cancel();
-                            log.debug("User does not allow switching to HW pump!");
+                            if (Config.logPump)
+                                log.debug("User does not allow switching to HW pump!");
                         }
                     });
             builder.create().show();
@@ -214,7 +215,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                 result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, MsgBolusStartWithSpeed.errorCode);
             else
                 result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
             // remove carbs because it's get from history seprately
             return result;
@@ -258,7 +259,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (doTempOff) {
             // If temp in progress
             if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
-                if (Config.logPumpActions)
+                if (Config.logPump)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelTempBasal(false);
             }
@@ -267,7 +268,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.percent = 100;
             result.isPercent = true;
             result.isTempCancel = true;
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("setTempBasalAbsolute: doTempOff OK");
             return result;
         }
@@ -290,14 +291,14 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                         result.duration = activeTemp.getPlannedRemainingMinutes();
                         result.isPercent = true;
                         result.isTempCancel = false;
-                        if (Config.logPumpActions)
+                        if (Config.logPump)
                             log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                         return result;
                     }
                 }
             }
             // Convert duration from minutes to hours
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
             if (percentRate == 0 && durationInMinutes > 30) {
                 result = setTempBasalPercent(percentRate, durationInMinutes, profile, false);
@@ -309,7 +310,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                 log.error("setTempBasalAbsolute: Failed to set hightemp basal");
                 return result;
             }
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("setTempBasalAbsolute: hightemp basal set ok");
             return result;
         }
@@ -344,7 +345,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("setTempBasalPercent: Correct value already set");
             return result;
         }
@@ -363,7 +364,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("setTempBasalPercent: OK");
             return result;
         }
@@ -385,7 +386,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("setHighTempBasalPercent: OK");
             return result;
         }
@@ -409,7 +410,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.success = true;
             result.isTempCancel = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            if (Config.logPumpActions)
+            if (Config.logPump)
                 log.debug("cancelRealTempBasal: OK");
             return result;
         } else {

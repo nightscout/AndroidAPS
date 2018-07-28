@@ -11,14 +11,12 @@ import info.nightscout.androidaps.Config;
  * Created by mike on 28.05.2016.
  */
 public class DanaRSMessageHashTable {
-    private static Logger log = LoggerFactory.getLogger(DanaRSMessageHashTable.class);
-
     public static HashMap<Integer, DanaRS_Packet> messages = null;
 
     static {
         if (messages == null) {
-            boolean savedState = Config.logDanaMessageDetail;
-            Config.logDanaMessageDetail = false;
+            boolean savedState = Config.logPumpComm;
+            Config.logPumpComm = false;
 
             messages = new HashMap<>();
             put(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
@@ -89,7 +87,7 @@ public class DanaRSMessageHashTable {
             put(new DanaRS_Packet_APS_History_Events());
             put(new DanaRS_Packet_APS_Set_Event_History());
 
-            Config.logDanaMessageDetail = savedState;
+            Config.logPumpComm = savedState;
         }
     }
 

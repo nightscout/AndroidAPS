@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -30,7 +31,7 @@ import info.nightscout.utils.NumberPicker;
  */
 
 public class DanaRUserOptionsActivity extends Activity {
-    private static Logger log = LoggerFactory.getLogger(DanaRUserOptionsActivity.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
 
     Switch timeFormat;
     Switch buttonScroll;
@@ -85,14 +86,15 @@ public class DanaRUserOptionsActivity extends Activity {
 
         DanaRPump pump = DanaRPump.getInstance();
         //used for debugging
-        log.debug("UserOptionsLoaded:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
-                + "\ntimeDisplayType:" + pump.timeDisplayType
-                + "\nbuttonScroll:" + pump.buttonScrollOnOff
-                + "\ntimeDisplayType:" + pump.timeDisplayType
-                + "\nlcdOnTimeSec:" + pump.lcdOnTimeSec
-                + "\nbacklight:" + pump.backlightOnTimeSec
-                + "\npumpUnits:" + pump.units
-                + "\nlowReservoir:" + pump.lowReservoirRate);
+        if (Config.logPump)
+            log.debug("UserOptionsLoaded:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
+                    + "\ntimeDisplayType:" + pump.timeDisplayType
+                    + "\nbuttonScroll:" + pump.buttonScrollOnOff
+                    + "\ntimeDisplayType:" + pump.timeDisplayType
+                    + "\nlcdOnTimeSec:" + pump.lcdOnTimeSec
+                    + "\nbacklight:" + pump.backlightOnTimeSec
+                    + "\npumpUnits:" + pump.units
+                    + "\nlowReservoir:" + pump.lowReservoirRate);
 
         screenTimeout.setParams((double) pump.lcdOnTimeSec, 5d, 240d, 5d, new DecimalFormat("1"), false);
         backlightTimeout.setParams((double) pump.backlightOnTimeSec, 1d, 60d, 1d, new DecimalFormat("1"), false);
@@ -122,7 +124,7 @@ public class DanaRUserOptionsActivity extends Activity {
                 break;
         }
         if (pump.lastSettingsRead == 0)
-            log.debug("No settings loaded from pump!");
+            log.error("No settings loaded from pump!");
         else
             setData();
     }
@@ -175,13 +177,13 @@ public class DanaRUserOptionsActivity extends Activity {
 
 
         // step is 5 seconds
-        int screenTimeoutValue = !screenTimeout.getText().isEmpty() ? (Integer.parseInt(screenTimeout.getText().toString()) / 5) * 5: 5;
+        int screenTimeoutValue = !screenTimeout.getText().isEmpty() ? (Integer.parseInt(screenTimeout.getText().toString()) / 5) * 5 : 5;
         if (screenTimeoutValue > 4 && screenTimeoutValue < 241) {
             pump.lcdOnTimeSec = screenTimeoutValue;
         } else {
             pump.lcdOnTimeSec = 5;
         }
-        int backlightTimeoutValue = !backlightTimeout.getText().isEmpty() ? Integer.parseInt(backlightTimeout.getText().toString()): 1;
+        int backlightTimeoutValue = !backlightTimeout.getText().isEmpty() ? Integer.parseInt(backlightTimeout.getText().toString()) : 1;
         if (backlightTimeoutValue > 0 && backlightTimeoutValue < 61) {
             pump.backlightOnTimeSec = backlightTimeoutValue;
         }

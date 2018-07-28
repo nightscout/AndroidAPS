@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -18,10 +19,12 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
  */
 
 public class MsgSettingMeal extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSettingMeal.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public MsgSettingMeal() {
         SetCommand(0x3203);
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -33,7 +36,7 @@ public class MsgSettingMeal extends MessageBase {
         int blockTime = intFromBuff(bytes, 4, 1);
         pump.isConfigUD = intFromBuff(bytes, 5, 1) == 1;
 
-        if (Config.logDanaMessageDetail) {
+        if (Config.logPumpComm) {
             log.debug("Basal step: " + pump.basalStep);
             log.debug("Bolus step: " + pump.bolusStep);
             log.debug("Bolus enabled: " + bolusEnabled);

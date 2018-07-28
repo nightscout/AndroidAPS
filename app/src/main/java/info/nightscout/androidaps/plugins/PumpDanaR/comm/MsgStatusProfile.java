@@ -4,16 +4,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 05.07.2016.
  */
 public class MsgStatusProfile extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusProfile.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public MsgStatusProfile() {
         SetCommand(0x0204);
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -30,7 +33,7 @@ public class MsgStatusProfile extends MessageBase {
             pump.currentTarget = intFromBuff(bytes, 6, 2) / 100d;
         }
 
-        if (Config.logDanaMessageDetail) {
+        if (Config.logPumpComm) {
             log.debug("Pump units (saved): " + (pump.units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));
             log.debug("Current pump CIR: " + pump.currentCIR);
             log.debug("Current pump CF: " + pump.currentCF);

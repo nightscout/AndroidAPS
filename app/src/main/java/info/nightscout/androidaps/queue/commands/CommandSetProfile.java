@@ -22,7 +22,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandSetProfile extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
     private Profile profile;
 

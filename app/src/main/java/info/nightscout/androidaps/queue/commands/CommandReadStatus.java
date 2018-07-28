@@ -14,9 +14,9 @@ import info.nightscout.utils.LocalAlertUtils;
  */
 
 public class CommandReadStatus extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
-    String reason;
+    private String reason;
 
     public CommandReadStatus(String reason, Callback callback) {
         commandType = CommandType.READSTATUS;

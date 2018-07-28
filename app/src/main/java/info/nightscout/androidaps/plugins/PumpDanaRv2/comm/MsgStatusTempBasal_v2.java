@@ -8,17 +8,17 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 public class MsgStatusTempBasal_v2 extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusTempBasal_v2.class);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public MsgStatusTempBasal_v2() {
         SetCommand(0x0205);
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -41,7 +41,7 @@ public class MsgStatusTempBasal_v2 extends MessageBase {
         pump.tempBasalTotalSec = tempBasalTotalSec;
         pump.tempBasalStart = tempBasalStart;
 
-        if (Config.logDanaMessageDetail) {
+        if (Config.logPumpComm) {
             log.debug("Is temp basal running: " + isTempBasalInProgress);
             log.debug("Is APS temp basal running: " + isAPSTempBasalInProgress);
             log.debug("Current temp basal percent: " + tempBasalPercent);

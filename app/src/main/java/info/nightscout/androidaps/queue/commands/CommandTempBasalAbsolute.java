@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -16,12 +15,12 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandTempBasalAbsolute extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
-    int durationInMinutes;
-    double absoluteRate;
-    boolean enforceNew;
-    Profile profile;
+    private int durationInMinutes;
+    private double absoluteRate;
+    private boolean enforceNew;
+    private Profile profile;
 
     public CommandTempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         commandType = CommandType.TEMPBASAL;

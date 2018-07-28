@@ -14,7 +14,7 @@ import info.nightscout.androidaps.queue.Callback;
  * Created by mike on 09.11.2017.
  */
 public abstract class Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
     public enum CommandType {
         BOLUS,

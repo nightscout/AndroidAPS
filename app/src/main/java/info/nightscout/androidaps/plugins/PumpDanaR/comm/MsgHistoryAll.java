@@ -5,16 +5,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DateUtil;
 
 public class MsgHistoryAll extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgHistoryAll.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public MsgHistoryAll() {
         SetCommand(0x41F2);
+        if (Config.logPumpComm)
+            log.debug("New message");
     }
 
     @Override

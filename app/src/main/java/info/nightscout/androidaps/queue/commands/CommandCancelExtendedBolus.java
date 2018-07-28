@@ -14,7 +14,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandCancelExtendedBolus extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
 
     public CommandCancelExtendedBolus(Callback callback) {
         commandType = CommandType.EXTENDEDBOLUS;

@@ -7,10 +7,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 public class MsgSetHistoryEntry_v2 extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSetHistoryEntry_v2.class);
+    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
 
     public MsgSetHistoryEntry_v2() {
         SetCommand(0xE004);
@@ -25,7 +26,7 @@ public class MsgSetHistoryEntry_v2 extends MessageBase {
         AddParamDateTime(gtime);
         AddParamInt(param1);
         AddParamInt(param2);
-        if (Config.logDanaMessageDetail)
+        if (Config.logPumpComm)
             log.debug("Set history entry: type: " + type + " date: " + new Date(time).toString() + " param1: " + param1 + " param2: " + param2);
     }
 
@@ -34,9 +35,10 @@ public class MsgSetHistoryEntry_v2 extends MessageBase {
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
-            log.debug("Set history entry result: " + result + " FAILED!!!");
+            if (Config.logPumpComm)
+                log.debug("Set history entry result: " + result + " FAILED!!!");
         } else {
-            if (Config.logDanaMessageDetail)
+            if (Config.logPumpComm)
                 log.debug("Set history entry result: " + result);
         }
     }
