@@ -25,7 +25,7 @@ public class DbLogger {
         if (q.size() < 1) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.nsclientnotinstalled));
             log.error("DBADD No receivers");
-        } else if (Config.logNSUpload) {
+        } else if (Config.logNsclient) {
             if (Config.logNsclient)
                 log.debug("DBADD dbAdd " + q.size() + " receivers " + data);
         }
@@ -36,7 +36,7 @@ public class DbLogger {
         if (q.size() < 1) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.nsclientnotinstalled));
             log.error("DBREMOVE No receivers");
-        } else if (Config.logNSUpload) {
+        } else if (Config.logNsclient) {
             if (Config.logNsclient)
                 log.debug("DBREMOVE dbRemove " + q.size() + " receivers " + data);
         }

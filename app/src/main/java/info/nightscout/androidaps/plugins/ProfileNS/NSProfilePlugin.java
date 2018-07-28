@@ -77,7 +77,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
                 MainApp.bus().post(new EventProfileStoreChanged());
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
             }
-            if (Config.logIncommingData)
+            if (Config.logNsclient)
                 log.debug("Received profileStore: " + activeProfile + " " + profile);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);

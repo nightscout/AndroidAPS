@@ -9,7 +9,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -23,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -356,13 +354,12 @@ public class NSClientService extends Service {
                 log.error("Unhandled exception", e);
                 return;
             }
-            if (Config.detailedLog)
-                try {
-                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
-                } catch (Exception e) {
-                    FabricPrivacy.logException(e);
-                    log.error("Unhandled exception", e);
-                }
+            try {
+                MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
+            } catch (Exception e) {
+                FabricPrivacy.logException(e);
+                log.error("Unhandled exception", e);
+            }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
             if (Config.logNsclient)
                 log.debug(data.toString());

@@ -124,7 +124,7 @@ public class DataService extends IntentService {
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
-        if (Config.logIncommingData)
+        if (Config.logDataService)
             log.debug("Got intent: " + intent.getAction());
 
 
@@ -254,7 +254,7 @@ public class DataService extends IntentService {
         NSMbg nsMbg = new NSMbg(mbgJson);
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
-        if (Config.logIncommingData)
+        if (Config.logDataService)
             log.debug("Adding/Updating new MBG: " + careportalEvent.log());
     }
 

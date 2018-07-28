@@ -769,7 +769,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             } else if (list.size() == 1) {
                 DanaRHistoryRecord record = list.get(0);
                 if (record._id == null || !record._id.equals(trJson.getString("_id"))) {
-                    if (Config.logIncommingData)
+                    if (Config.logDatabase)
                         log.debug("Updating _id in DanaR history database: " + trJson.getString("_id"));
                     record._id = trJson.getString("_id");
                     getDaoDanaRHistory().update(record);
@@ -1320,11 +1320,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (list.size() == 1) {
                 CareportalEvent record = list.get(0);
-                if (Config.logIncommingData)
+                if (Config.logDatabase)
                     log.debug("Removing CareportalEvent record from database: " + record.log());
                 delete(record);
             } else {
-                if (Config.logIncommingData)
+                if (Config.logDatabase)
                     log.debug("CareportalEvent not found database: " + _id);
             }
         } catch (SQLException e) {
@@ -1344,12 +1344,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (list.size() == 0) {
                 careportalEvent = new CareportalEvent();
                 careportalEvent.source = Source.NIGHTSCOUT;
-                if (Config.logIncommingData)
+                if (Config.logDatabase)
                     log.debug("Adding CareportalEvent record to database: " + trJson.toString());
                 // Record does not exists. add
             } else if (list.size() == 1) {
                 careportalEvent = list.get(0);
-                if (Config.logIncommingData)
+                if (Config.logDatabase)
                     log.debug("Updating CareportalEvent record in database: " + trJson.toString());
             } else {
                 log.error("Something went wrong");

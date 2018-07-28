@@ -23,28 +23,26 @@ public class Config {
     public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
 
 
-    public static final boolean detailedLog = true;
-    public static final boolean logFunctionCalls = true;
-    public static final boolean logIncommingData = true;
-    public static final boolean logAPSResult = true;
-    public static final boolean logPrefsChange = true;
-    public static final boolean logConfigBuilder = true;
-    public static final boolean logNSUpload = true;
-    public static final boolean logCongigBuilderActions = true;
-    public static final boolean logAutosensData = false;
-    public static final boolean logEvents = false;
-    public static final boolean logQueue = true;
-    public static final boolean logBgSource = true;
-    public static final boolean logOverview = true;
-    public static final boolean logNotification = true;
-    public static final boolean logAlarm = false;
-    public static final boolean logDataService = true;
-    public static final boolean logDataFood = true;
-    public static final boolean logDataTreatments = true;
-    public static final boolean logNsclient = true;
-    public static final boolean logObjectives = false;
-    public static final boolean logPump = true;
+    public static boolean logFunctionCalls = true;
+    public static boolean logAPSResult = true;
+    public static boolean logPrefsChange = true;
+    public static boolean logConfigBuilder = true;
+    public static boolean logCongigBuilderActions = true;
+    public static boolean logAutosensData = false;
+    public static boolean logEvents = false;
+    public static boolean logQueue = true;
+    public static boolean logBgSource = true;
+    public static boolean logOverview = true;
+    public static boolean logNotification = true;
+    public static boolean logAlarm = false;
+    public static boolean logDataService = true;
+    public static boolean logDataFood = true;
+    public static boolean logDataTreatments = true;
+    public static boolean logDatabase = true;
+    public static boolean logNsclient = true;
+    public static boolean logObjectives = false;
+    public static boolean logPump = true;
     public static boolean logPumpComm = true;
-    public static final boolean logPumpBtComm = false;
+    public static boolean logPumpBtComm = false;
 
 }
