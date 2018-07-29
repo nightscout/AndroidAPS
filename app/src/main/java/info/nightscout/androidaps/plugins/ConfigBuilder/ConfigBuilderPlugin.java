@@ -120,7 +120,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     public void storeSettings(String from) {
         if (pluginList != null) {
-            if (Config.logPrefsChange)
+            if (Config.logConfigBuilder)
                 log.debug("Storing settings from: " + from);
 
             for (PluginBase p : pluginList) {
@@ -152,7 +152,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     }
 
     private void loadSettings() {
-        if (Config.logPrefsChange)
+        if (Config.logConfigBuilder)
             log.debug("Loading stored settings");
         for (PluginBase p : pluginList) {
             PluginType type = p.getType();
@@ -189,7 +189,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     private void upgradeSettings() {
         if (!SP.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
-        if (Config.logPrefsChange)
+        if (Config.logConfigBuilder)
             log.debug("Upgrading stored settings");
         for (PluginBase p : pluginList) {
             log.debug("Processing " + p.getName());

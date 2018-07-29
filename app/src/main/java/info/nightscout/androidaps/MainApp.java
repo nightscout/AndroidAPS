@@ -24,13 +24,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ch.qos.logback.classic.LoggerContext;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -43,6 +42,7 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlu
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
@@ -77,13 +77,13 @@ import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
 
 public class MainApp extends Application {
-    private static Logger log = LoggerFactory.getLogger(MainApp.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
     private static KeepAliveReceiver keepAliveReceiver;
 
     private static Bus sBus;
@@ -107,6 +107,8 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (L.isEnabled(L.CORE))
+            log.debug("onCreate");
         sInstance = this;
         sResources = getResources();
         sConstraintsChecker = new ConstraintChecker(this);
@@ -119,7 +121,7 @@ public class MainApp extends Application {
                 Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
             }
         } catch (Exception e) {
-            android.util.Log.e("ANDROIDAPS", "Error with Fabric init! " + e);
+            log.error("Error with Fabric init! " + e);
         }
 
         JodaTimeAndroid.init(this);
@@ -395,6 +397,8 @@ public class MainApp extends Application {
 
     @Override
     public void onTerminate() {
+        if (L.isEnabled(L.CORE))
+            log.debug("onTerminate");
         super.onTerminate();
         if (sDatabaseHelper != null) {
             sDatabaseHelper.close();
