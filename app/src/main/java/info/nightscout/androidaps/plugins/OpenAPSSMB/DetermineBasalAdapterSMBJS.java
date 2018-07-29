@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -26,6 +25,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
@@ -34,7 +34,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class DetermineBasalAdapterSMBJS {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
 
     private ScriptReader mScriptReader;
@@ -71,7 +71,7 @@ public class DetermineBasalAdapterSMBJS {
     public DetermineBasalResultSMB invoke() {
 
 
-        if (Config.logAps) {
+        if (L.isEnabled(L.APS)) {
             log.debug(">>> Invoking detemine_basal <<<");
             log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
             log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
@@ -136,7 +136,7 @@ public class DetermineBasalAdapterSMBJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (Config.logAps)
+                if (L.isEnabled(L.APS))
                     log.debug("Result: " + result);
                 try {
                     determineBasalResultSMB = new DetermineBasalResultSMB(new JSONObject(result));

@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -16,6 +15,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
@@ -25,7 +25,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class OverviewPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.OVERVIEW);
+    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
 

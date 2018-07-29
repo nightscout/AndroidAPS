@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.AbstractSerialIOThread;
@@ -22,7 +21,7 @@ import info.nightscout.utils.CRC;
  * Created by mike on 17.07.2016.
  */
 public class SerialIOThread extends AbstractSerialIOThread {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPBTCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
     private InputStream mInputStream = null;
     private OutputStream mOutputStream = null;
@@ -73,7 +72,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
                         message = MessageHashTable_v2.findMessage(command);
                     }
 
-                    if (Config.logPumpBtComm)
+                    if (L.isEnabled(L.PUMPBTCOMM))
                         log.debug("<<<<< " + message.getMessageName() + " " + message.toHexString(extractedBuff));
 
                     // process the message content
@@ -149,7 +148,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
         processedMessage = message;
 
         byte[] messageBytes = message.getRawMessageBytes();
-        if (Config.logPumpBtComm)
+        if (L.isEnabled(L.PUMPBTCOMM))
             log.debug(">>>>> " + message.getMessageName() + " " + message.toHexString(messageBytes));
 
         try {
@@ -182,28 +181,28 @@ public class SerialIOThread extends AbstractSerialIOThread {
         try {
             mInputStream.close();
         } catch (Exception e) {
-            if (Config.logPumpBtComm)
+            if (L.isEnabled(L.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
         try {
             mOutputStream.close();
         } catch (Exception e) {
-            if (Config.logPumpBtComm)
+            if (L.isEnabled(L.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
         try {
             mRfCommSocket.close();
         } catch (Exception e) {
-            if (Config.logPumpBtComm)
+            if (L.isEnabled(L.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
         try {
             System.runFinalization();
         } catch (Exception e) {
-            if (Config.logPumpBtComm)
+            if (L.isEnabled(L.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
-        if (Config.logPumpBtComm)
+        if (L.isEnabled(L.PUMPBTCOMM))
             log.debug("Disconnected: " + reason);
     }
 

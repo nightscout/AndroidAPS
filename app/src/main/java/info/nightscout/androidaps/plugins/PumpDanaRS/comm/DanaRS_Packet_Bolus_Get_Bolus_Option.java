@@ -5,22 +5,21 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_Bolus_Get_Bolus_Option() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BOLUS__GET_BOLUS_OPTION;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -111,7 +110,7 @@ public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
             MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Extended bolus enabled: " + pump.isExtendedBolusEnabled);
             log.debug("Missed bolus config: " + pump.missedBolusConfig);
             log.debug("missedBolus01StartHour: " + missedBolus01StartHour);

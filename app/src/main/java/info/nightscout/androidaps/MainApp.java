@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ch.qos.logback.classic.LoggerContext;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -132,7 +133,7 @@ public class MainApp extends Application {
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
         devBranch = BuildConfig.VERSION.contains("dev");
 
-        sBus = Config.logEvents ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
+        sBus = L.isEnabled(L.EVENTS) ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         registerLocalBroadcastReceiver();
 

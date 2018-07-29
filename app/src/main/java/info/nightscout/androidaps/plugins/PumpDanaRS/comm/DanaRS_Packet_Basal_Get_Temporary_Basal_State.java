@@ -9,17 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_Basal_Get_Temporary_Basal_State() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__TEMPORARY_BASAL_STATE;
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Requesting temporary basal status");
         }
     }
@@ -55,7 +54,7 @@ public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet
         int tempBasalRemainingMin = (pump.tempBasalTotalSec - runningMin * 60) / 60;
         Date tempBasalStart = pump.isTempBasalInProgress ? getDateFromTempBasalSecAgo(runningMin * 60) : new Date(0);
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Error code: " + error);
             log.debug("Is temp basal running: " + pump.isTempBasalInProgress);
             log.debug("Is APS temp basal running: " + isAPSTempBasalInProgress);

@@ -3,17 +3,16 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.logging.L;
 
 public class MsgSetExtendedBolusStart extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSetExtendedBolusStart() {
         SetCommand(0x0407);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -27,7 +26,7 @@ public class MsgSetExtendedBolusStart extends MessageBase {
 
         AddParamInt((int) (amount * 100));
         AddParamByte(halfhours);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Set extended bolus start: " + (((int) (amount * 100)) / 100d) + "U halfhours: " + (int) halfhours);
     }
 
@@ -36,10 +35,10 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Set extended bolus start result: " + result + " FAILED!!!");
         } else {
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Set extended bolus start result: " + result);
         }
     }

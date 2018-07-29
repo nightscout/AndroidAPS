@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
@@ -43,7 +43,7 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
 public class DanaRHistoryActivity extends Activity {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
+    private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
     private Handler mHandler;
 
@@ -349,7 +349,7 @@ public class DanaRHistoryActivity extends Activity {
 
     @Subscribe
     public void onStatusEvent(final EventDanaRSyncStatus s) {
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("EventDanaRSyncStatus: " + s.message);
         runOnUiThread(
                 () -> statusView.setText(s.message));

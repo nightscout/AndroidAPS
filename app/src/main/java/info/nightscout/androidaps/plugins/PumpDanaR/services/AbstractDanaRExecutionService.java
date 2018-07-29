@@ -17,13 +17,12 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStop;
@@ -49,7 +48,7 @@ import info.nightscout.utils.ToastUtils;
  */
 
 public abstract class AbstractDanaRExecutionService extends Service {
-    protected Logger log = LoggerFactory.getLogger(Constants.PUMP);
+    protected Logger log = LoggerFactory.getLogger(L.PUMP);
 
     protected String mDevName;
 
@@ -102,7 +101,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                if (Config.logPump)
+                if (L.isEnabled(L.PUMP))
                     log.debug("Device was disconnected " + device.getName());//Device was disconnected
                 if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
                     if (mSerialIOThread != null) {
@@ -169,7 +168,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
     }
 
     public void bolusStop() {
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("bolusStop >>>>> @ " + (mBolusingTreatment == null ? "" : mBolusingTreatment.insulin));
         MsgBolusStop stop = new MsgBolusStop();
         stop.forced = true;

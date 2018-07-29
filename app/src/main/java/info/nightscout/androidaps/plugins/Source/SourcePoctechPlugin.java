@@ -18,6 +18,7 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
@@ -26,7 +27,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface {
-    private static Logger log = LoggerFactory.getLogger(Constants.BGSOURCE);
+    private static Logger log = LoggerFactory.getLogger(L.BGSOURCE);
 
     private static SourcePoctechPlugin plugin = null;
 
@@ -63,12 +64,12 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
         BgReading bgReading = new BgReading();
 
         String data = bundle.getString("data");
-        if (Config.logBgSource)
+        if (L.isEnabled(L.BGSOURCE))
             log.debug("Received Poctech Data", data);
 
         try {
             JSONArray jsonArray = new JSONArray(data);
-            if (Config.logBgSource)
+            if (L.isEnabled(L.BGSOURCE))
                 log.debug("Received Poctech Data size:" + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);

@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
@@ -69,7 +69,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class NSClientService extends Service {
-    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     static public PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new NSClientService.LocalBinder();
@@ -155,13 +155,13 @@ public class NSClientService extends Service {
 
     @Subscribe
     public void onStatusEvent(EventAppExit event) {
-        if (Config.logNsclient)
+        if (L.isEnabled(L.NSCLIENT))
             log.debug("EventAppExit received");
 
         destroy();
 
         stopSelf();
-        if (Config.logNsclient)
+        if (L.isEnabled(L.NSCLIENT))
             log.debug("EventAppExit finished");
     }
 
@@ -249,7 +249,7 @@ public class NSClientService extends Service {
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug("disconnect reason: {}", args);
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
@@ -361,7 +361,7 @@ public class NSClientService extends Service {
                 log.error("Unhandled exception", e);
             }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug(data.toString());
         }
     };
@@ -392,7 +392,7 @@ public class NSClientService extends Service {
                 return;
             }
             BroadcastAlarm.handleAlarm(data, getApplicationContext());
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug(data.toString());
         }
     };
@@ -423,7 +423,7 @@ public class NSClientService extends Service {
             }
             MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
             BroadcastUrgentAlarm.handleUrgentAlarm(data, getApplicationContext());
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug(data.toString());
         }
     };
@@ -449,7 +449,7 @@ public class NSClientService extends Service {
             }
             MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
             BroadcastClearAlarm.handleClearAlarm(data, getApplicationContext());
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug(data.toString());
         }
     };
@@ -759,7 +759,7 @@ public class NSClientService extends Service {
                 if (mSocket == null || !mSocket.connected()) return;
 
                 if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                    if (Config.logNsclient)
+                    if (L.isEnabled(L.NSCLIENT))
                         log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                     return;
                 }

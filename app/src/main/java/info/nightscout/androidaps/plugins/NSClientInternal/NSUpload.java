@@ -21,10 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -48,7 +47,7 @@ import info.nightscout.utils.SP;
  */
 
 public class NSUpload {
-    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
@@ -237,7 +236,7 @@ public class NSUpload {
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
-                if (Config.logNsclient)
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug("OpenAPS data too old to upload");
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;

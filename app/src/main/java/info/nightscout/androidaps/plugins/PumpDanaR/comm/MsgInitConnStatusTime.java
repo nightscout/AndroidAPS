@@ -5,12 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -19,11 +18,11 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 
 public class MsgInitConnStatusTime extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgInitConnStatusTime() {
         SetCommand(0x0301);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -56,7 +55,7 @@ public class MsgInitConnStatusTime extends MessageBase {
         Date time = dateTimeSecFromBuff(bytes, 0);
         int versionCode = intFromBuff(bytes, 6, 1);
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Pump time: " + time);
             log.debug("Version code: " + versionCode);
         }

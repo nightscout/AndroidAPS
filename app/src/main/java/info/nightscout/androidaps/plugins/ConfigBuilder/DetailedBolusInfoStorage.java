@@ -6,19 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by mike on 08.08.2017.
  */
 
 public class DetailedBolusInfoStorage {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
+    private static Logger log = LoggerFactory.getLogger(L.PUMP);
     private static List<DetailedBolusInfo> store = new ArrayList<>();
 
     public static synchronized void add(DetailedBolusInfo detailedBolusInfo) {
@@ -31,7 +29,7 @@ public class DetailedBolusInfoStorage {
         DetailedBolusInfo found = null;
         for (int i = 0; i < store.size(); i++) {
             long infoTime = store.get(i).date;
-            if (Config.logPump)
+            if (L.isEnabled(L.PUMP))
                 log.debug("Existing bolus info: " + store.get(i));
             if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {
                 found = store.get(i);
@@ -45,7 +43,7 @@ public class DetailedBolusInfoStorage {
         for (int i = 0; i < store.size(); i++) {
             long infoTime = store.get(i).date;
             if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {
-                if (Config.logPump)
+                if (L.isEnabled(L.PUMP))
                     log.debug("Removing bolus info: " + store.get(i));
                 store.remove(i);
                 break;

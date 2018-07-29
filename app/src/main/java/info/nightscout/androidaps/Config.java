@@ -27,22 +27,5 @@ public class Config {
     public static boolean logPrefsChange = true;
     public static boolean logConfigBuilder = true;
     public static boolean logCongigBuilderActions = true;
-    public static boolean logAutosensData = false;
-    public static boolean logEvents = false;
-    public static boolean logQueue = true;
-    public static boolean logBgSource = true;
-    public static boolean logOverview = true;
-    public static boolean logNotification = true;
-    public static boolean logAlarm = false;
-    public static boolean logDataService = true;
-    public static boolean logDataFood = true;
-    public static boolean logDataTreatments = true;
-    public static boolean logDatabase = true;
-    public static boolean logNsclient = true;
-    public static boolean logObjectives = false;
-    public static boolean logPump = true;
-    public static boolean logPumpComm = true;
-    public static boolean logPumpBtComm = false;
-    public static boolean logAps = true;
 
 }

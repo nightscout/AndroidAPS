@@ -31,6 +31,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -460,7 +461,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             log.debug("Failure to deliver treatment");
         }
 
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
 
         updateGui();
@@ -556,7 +557,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     .source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
             updateGui();
-            if (Config.logPumpComm) log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
+            if (L.isEnabled(L.PUMPCOMM)) log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
             connector.requestHistorySync(5000);
             connector.tryToGetPumpStatusAgain();
             return new PumpEnactResult().success(true).enacted(true).percent(percent);
@@ -574,7 +575,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             cancelExtendedBolus();
             realTBRCancel();
             updateGui();
-            if (Config.logPumpComm) log.debug("Canceling temp basal");
+            if (L.isEnabled(L.PUMPCOMM)) log.debug("Canceling temp basal");
             connector.requestHistorySync(5000);
             connector.tryToGetPumpStatusAgain();
             return new PumpEnactResult().success(true).enacted(true).isTempCancel(true);
@@ -611,7 +612,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             updateGui();
             connector.requestHistorySync(30000);
             connector.tryToGetPumpStatusAgain();
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes);
             return new PumpEnactResult().success(true).enacted(true).duration(durationInMinutes).bolusDelivered(insulin);
         } catch (Exception e) {
@@ -632,7 +633,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 exStop.source = Source.USER;
                 TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(exStop);
             }
-            if (Config.logPumpComm) log.debug("Cancel extended bolus:");
+            if (L.isEnabled(L.PUMPCOMM)) log.debug("Cancel extended bolus:");
             if (bolusId != null) connector.requestHistorySync(5000);
             connector.tryToGetPumpStatusAgain();
             updateGui();

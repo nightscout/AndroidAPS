@@ -3,19 +3,18 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 28.05.2016.
  */
 public class MsgInitConnStatusOption extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgInitConnStatusOption() {
         SetCommand(0x0304);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -32,7 +31,7 @@ public class MsgInitConnStatusOption extends MessageBase {
         //int none = intFromBuff(bytes, 8, 1);
         if (bytes.length >= 21) {
             DanaRPump.getInstance().password = intFromBuff(bytes, 9, 2) ^ 0x3463;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump password: " + DanaRPump.getInstance().password);
         }
     }

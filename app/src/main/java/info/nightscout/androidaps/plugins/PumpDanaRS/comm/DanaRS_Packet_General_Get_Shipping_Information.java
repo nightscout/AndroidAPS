@@ -5,17 +5,16 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_General_Get_Shipping_Information extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_General_Get_Shipping_Information() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__GET_SHIPPING_INFORMATION;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -35,7 +34,7 @@ public class DanaRS_Packet_General_Get_Shipping_Information extends DanaRS_Packe
         dataSize = 3;
         pump.shippingCountry = asciiStringFromBuff(data, dataIndex, dataSize);
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Serial number: " + pump.serialNumber);
             log.debug("Shipping date: " + pump.shippingDate);
             log.debug("Shipping country: " + pump.shippingCountry);

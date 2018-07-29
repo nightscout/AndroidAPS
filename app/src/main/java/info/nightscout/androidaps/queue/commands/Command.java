@@ -3,18 +3,17 @@ package info.nightscout.androidaps.queue.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
  * Created by mike on 09.11.2017.
  */
 public abstract class Command {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
     public enum CommandType {
         BOLUS,
@@ -40,7 +39,7 @@ public abstract class Command {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.gs(R.string.connectiontimedout);
-        if (Config.logQueue)
+        if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result cancel");
         if (callback != null)
             callback.result(result).run();

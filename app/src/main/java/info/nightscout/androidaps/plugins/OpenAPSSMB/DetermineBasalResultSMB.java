@@ -5,12 +5,12 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.utils.DateUtil;
 
 public class DetermineBasalResultSMB extends APSResult {
-    private static final Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static final Logger log = LoggerFactory.getLogger(L.APS);
 
     private double eventualBG;
     private double snoozeBG;

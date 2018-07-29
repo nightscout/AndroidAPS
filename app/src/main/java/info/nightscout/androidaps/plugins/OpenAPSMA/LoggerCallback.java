@@ -4,8 +4,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by adrian on 15/10/17.
@@ -14,7 +13,7 @@ import info.nightscout.androidaps.Constants;
 
 public class LoggerCallback extends ScriptableObject {
 
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static StringBuffer errorBuffer = new StringBuffer();
     private static StringBuffer logBuffer = new StringBuffer();
@@ -36,14 +35,14 @@ public class LoggerCallback extends ScriptableObject {
     }
 
     public void jsFunction_log(Object obj1) {
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             log.debug(obj1.toString());
         logBuffer.append(obj1.toString());
         logBuffer.append(' ');
     }
 
     public void jsFunction_error(Object obj1) {
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             log.error(obj1.toString());
         errorBuffer.append(obj1.toString());
         errorBuffer.append(' ');

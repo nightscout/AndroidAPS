@@ -27,21 +27,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNsFood;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by mike on 24.09.2017.
  */
 
 public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
-    private Logger log = LoggerFactory.getLogger(Constants.DATAFOOD);
+    private Logger log = LoggerFactory.getLogger(L.DATAFOOD);
 
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledFoodEventPost = null;
@@ -112,7 +111,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void onCreate() {
         super.onCreate();
         try {
-            if (Config.logDataFood)
+            if (L.isEnabled(L.DATAFOOD))
                 log.info("onCreate");
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Food.class);
         } catch (SQLException e) {
@@ -125,7 +124,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
         if (oldVersion == 7 && newVersion == 8) {
             log.debug("Upgrading database from v7 to v8");
         } else {
-            if (Config.logDataFood)
+            if (L.isEnabled(L.DATAFOOD))
                 log.info("onUpgrade");
 //            this.resetFood();
         }
@@ -165,7 +164,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
         class PostRunnable implements Runnable {
             public void run() {
-                if (Config.logDataFood)
+                if (L.isEnabled(L.DATAFOOD))
                     log.debug("Firing EventFoodChange");
                 MainApp.bus().post(event);
                 callback.setPost(null);
@@ -276,7 +275,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void deleteByNSId(String _id) throws SQLException {
         Food stored = this.findByNSId(_id);
         if (stored != null) {
-            if (Config.logDataFood)
+            if (L.isEnabled(L.DATAFOOD))
                 log.debug("Removing Food record from database: " + stored.toString());
             this.delete(stored);
         }
@@ -330,7 +329,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void createOrUpdate(Food food) {
         try {
             this.getDao().createOrUpdate(food);
-            if (Config.logDataFood)
+            if (L.isEnabled(L.DATAFOOD))
                 log.debug("Created or Updated: " + food.toString());
         } catch (SQLException e) {
             log.error("Unable to createOrUpdate Food", e);
@@ -341,7 +340,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void create(Food food) {
         try {
             this.getDao().create(food);
-            if (Config.logDataFood)
+            if (L.isEnabled(L.DATAFOOD))
                 log.debug("New record: " + food.toString());
         } catch (SQLException e) {
             log.error("Unable to create Food", e);

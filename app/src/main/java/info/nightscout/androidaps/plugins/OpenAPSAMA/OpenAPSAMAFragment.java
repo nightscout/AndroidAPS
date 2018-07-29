@@ -16,9 +16,9 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
@@ -26,7 +26,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JSONFormatter;
 
 public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     Button run;
     TextView lastRunView;

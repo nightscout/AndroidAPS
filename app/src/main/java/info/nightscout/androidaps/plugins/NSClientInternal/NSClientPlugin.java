@@ -29,6 +29,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
@@ -37,7 +38,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 public class NSClientPlugin extends PluginBase {
-    private Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     static NSClientPlugin nsClientPlugin;
 
@@ -132,13 +133,13 @@ public class NSClientPlugin extends PluginBase {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug("Service is disconnected");
             nsClientService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug("Service is connected");
             NSClientService.LocalBinder mLocalBinder = (NSClientService.LocalBinder) service;
             if (mLocalBinder != null) // is null when running in roboelectric
@@ -157,7 +158,7 @@ public class NSClientPlugin extends PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNSClientNewLog ev) {
         addToLog(ev);
-        if (Config.logNsclient)
+        if (L.isEnabled(L.NSCLIENT))
             log.debug(ev.action + " " + ev.logText);
     }
 

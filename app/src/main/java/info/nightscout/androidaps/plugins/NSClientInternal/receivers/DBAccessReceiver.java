@@ -11,11 +11,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
@@ -23,7 +23,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
 
     @Override

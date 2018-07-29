@@ -7,16 +7,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DateUtil;
 
 public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int year = 0;
     private int month = 0;
@@ -47,7 +46,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
         hour = cal.get(Calendar.HOUR_OF_DAY);
         min = cal.get(Calendar.MINUTE);
         sec = cal.get(Calendar.SECOND);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Loading event history from: " + new Date(cal.getTimeInMillis()).toLocaleString());
     }
 
@@ -72,7 +71,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
             int dataSize = 1;
             error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
             done = true;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("History end. Code: " + error + " Success: " + (error == 0x00));
         } else if (data.length == 5) {
             int dataIndex = DATA_START;
@@ -83,7 +82,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
             dataIndex += dataSize;
             dataSize = 2;
             totalCount = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("History end. Code: " + error + " Success: " + (error == 0x00) + " Toatal count: " + totalCount);
         } else {
             int recordCode = byteArrayToInt(getBytes(data, DATA_START, 1));
@@ -106,7 +105,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
 
             int value = ((data[DATA_START + 8] & 0xFF) << 8) + (data[DATA_START + 9] & 0xFF);
 
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("History packet: " + recordCode + " Date: " + datetimewihtsec.toLocaleString() + " Code: " + historyCode + " Value: " + value);
 
 

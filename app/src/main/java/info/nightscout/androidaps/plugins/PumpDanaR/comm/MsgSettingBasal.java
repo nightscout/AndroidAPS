@@ -3,8 +3,7 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -12,11 +11,11 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
  * Created by mike on 05.07.2016.
  */
 public class MsgSettingBasal extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSettingBasal() {
         SetCommand(0x3202);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -30,7 +29,7 @@ public class MsgSettingBasal extends MessageBase {
             pump.pumpProfiles[pump.activeProfile][index] = basal / 100d;
         }
 
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             for (int index = 0; index < 24; index++) {
                 log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
             }

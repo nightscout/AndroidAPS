@@ -7,11 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_Option_Set_Pump_Time extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     private Date date;
     public int error;
 
@@ -23,7 +22,7 @@ public class DanaRS_Packet_Option_Set_Pump_Time extends DanaRS_Packet {
     public DanaRS_Packet_Option_Set_Pump_Time(Date date) {
         this();
         this.date = date;
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Setting pump time " + date.toLocaleString());
         }
     }
@@ -45,7 +44,7 @@ public class DanaRS_Packet_Option_Set_Pump_Time extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (error == 0)
                 log.debug("Result OK");
             else

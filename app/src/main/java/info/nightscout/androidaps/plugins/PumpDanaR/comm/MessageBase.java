@@ -12,8 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.CRC;
 
 /*
@@ -23,7 +22,7 @@ import info.nightscout.utils.CRC;
  */
 
 public class MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     protected byte[] buffer = new byte[512];
     private int position = 6;
 
@@ -96,7 +95,7 @@ public class MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (bytes.length > 6) {
                 int command = (bytes[5] & 0xFF) | ((bytes[4] << 8) & 0xFF00);
                 log.debug("UNPROCESSED MSG: " + getMessageName() + " Command: " + String.format("%04X", command) + " Data: " + toHexString(bytes));

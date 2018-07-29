@@ -3,8 +3,7 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 
@@ -12,11 +11,11 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
  * Created by mike on 05.07.2016.
  */
 public class MsgSettingMaxValues extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSettingMaxValues() {
         SetCommand(0x3205);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -26,7 +25,7 @@ public class MsgSettingMaxValues extends MessageBase {
         pump.maxBasal = intFromBuff(bytes, 2, 2) / 100d;
         pump.maxDailyTotalUnits = intFromBuff(bytes, 4, 2) / 100;
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Max bolus: " + pump.maxBolus);
             log.debug("Max basal: " + pump.maxBasal);
             log.debug("Total daily max units: " + pump.maxDailyTotalUnits);

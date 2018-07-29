@@ -5,17 +5,16 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_General_Get_Today_Delivery_Total extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_General_Get_Today_Delivery_Total() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__GET_TODAY_DELIVERY_TOTAL;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -35,7 +34,7 @@ public class DanaRS_Packet_General_Get_Today_Delivery_Total extends DanaRS_Packe
         dataSize = 2;
         pump.dailyTotalBolusUnits = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Daily total: " + pump.dailyTotalUnits + " U");
             log.debug("Daily total bolus: " + pump.dailyTotalBolusUnits + " U");
             log.debug("Daily total basal: " + pump.dailyTotalBasalUnits + " U");

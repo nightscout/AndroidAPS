@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
@@ -21,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -39,7 +38,7 @@ import static info.nightscout.utils.HardLimits.verifyHardLimits;
  * Created by mike on 05.08.2016.
  */
 public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static OpenAPSMAPlugin openAPSMAPlugin;
 
@@ -90,7 +89,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public void invoke(String initiator, boolean tempBasalFallback) {
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             log.debug("invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterMAJS determineBasalAdapterMAJS = null;
@@ -102,21 +101,21 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         if (profile == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug(MainApp.gs(R.string.noprofileselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug(MainApp.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
             return;
         }
@@ -143,7 +142,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
 
         double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "MA data gathering", start);
 
         minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
@@ -174,7 +173,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "MA calculation", start);
 
 

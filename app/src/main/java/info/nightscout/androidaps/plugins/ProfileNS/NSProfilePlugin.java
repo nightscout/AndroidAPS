@@ -13,6 +13,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
@@ -77,7 +78,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
                 MainApp.bus().post(new EventProfileStoreChanged());
                 MainApp.bus().post(new EventNSProfileUpdateGUI());
             }
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug("Received profileStore: " + activeProfile + " " + profile);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);

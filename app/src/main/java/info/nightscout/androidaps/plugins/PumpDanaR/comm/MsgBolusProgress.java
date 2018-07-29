@@ -3,15 +3,14 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 public class MsgBolusProgress extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static Treatment t;
     private static double amount;
@@ -28,7 +27,7 @@ public class MsgBolusProgress extends MessageBase {
         this.amount = amount;
         this.t = t;
         lastReceive = System.currentTimeMillis();
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message: amount: " + amount + " treatment: " + t.toString());
     }
 
@@ -43,7 +42,7 @@ public class MsgBolusProgress extends MessageBase {
         bolusingEvent.t = t;
         bolusingEvent.percent = Math.min((int) (done / amount * 100), 100);
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Bolus remaining: " + progress + " delivered: " + done);
         }
 

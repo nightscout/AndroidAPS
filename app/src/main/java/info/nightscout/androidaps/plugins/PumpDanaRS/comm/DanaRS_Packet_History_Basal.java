@@ -7,11 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_History_Basal extends DanaRS_Packet_History_ {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_History_Basal() {
         super();
@@ -21,7 +20,7 @@ public class DanaRS_Packet_History_Basal extends DanaRS_Packet_History_ {
     public DanaRS_Packet_History_Basal(Date from) {
         super(from);
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__BASAL;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 

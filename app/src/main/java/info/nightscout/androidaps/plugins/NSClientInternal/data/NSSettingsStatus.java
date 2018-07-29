@@ -14,14 +14,14 @@ import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.utils.BundleLogger;
+import info.nightscout.androidaps.logging.BundleLogger;
 
 /*
  {
@@ -114,7 +114,7 @@ import info.nightscout.utils.BundleLogger;
  }
  */
 public class NSSettingsStatus {
-    private Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     private static NSSettingsStatus instance = null;
 
@@ -140,7 +140,7 @@ public class NSSettingsStatus {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
 
-        if (Config.logNsclient)
+        if (L.isEnabled(L.NSCLIENT))
             log.debug("Got NS status: " + BundleLogger.log(bundle));
 
         if (bundle.containsKey("nsclientversioncode")) {
@@ -149,7 +149,7 @@ public class NSSettingsStatus {
             nightscoutVersionName = bundle.getString("nightscoutversionname");
             Integer nsClientVersionCode = bundle.getInt("nsclientversioncode");
             String nsClientVersionName = bundle.getString("nsclientversionname");
-            if (Config.logNsclient)
+            if (L.isEnabled(L.NSCLIENT))
                 log.debug("Got versions: NSClient: " + nsClientVersionName + " Nightscout: " + nightscoutVersionName);
             try {
                 if (nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
@@ -175,7 +175,7 @@ public class NSSettingsStatus {
             try {
                 JSONObject statusJson = new JSONObject(bundle.getString("status"));
                 setData(statusJson);
-                if (Config.logNsclient)
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug("Received status: " + statusJson.toString());
                 Double targetHigh = getThreshold("bgTargetTop");
                 Double targetlow = getThreshold("bgTargetBottom");

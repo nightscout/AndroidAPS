@@ -3,8 +3,6 @@ package info.nightscout.androidaps.queue.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -12,6 +10,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -22,7 +21,7 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandSetProfile extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPQUEUE);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
     private Profile profile;
 
@@ -35,7 +34,7 @@ public class CommandSetProfile extends Command {
     @Override
     public void execute() {
         if (ConfigBuilderPlugin.getCommandQueue().isThisProfileSet(profile)) {
-            if (Config.logQueue)
+            if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Correct profile already set. profile: " + profile.toString());
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).enacted(false)).run();
@@ -43,7 +42,7 @@ public class CommandSetProfile extends Command {
         }
 
         PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setNewBasalProfile(profile);
-        if (Config.logQueue)
+        if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted + " profile: " + profile.toString());
         if (callback != null)
             callback.result(r).run();

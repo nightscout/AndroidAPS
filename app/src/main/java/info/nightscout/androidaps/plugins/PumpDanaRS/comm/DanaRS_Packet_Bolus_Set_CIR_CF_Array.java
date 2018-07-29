@@ -5,11 +5,10 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_Bolus_Set_CIR_CF_Array extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int cir01;
     private int cir02;
@@ -47,7 +46,7 @@ public class DanaRS_Packet_Bolus_Set_CIR_CF_Array extends DanaRS_Packet {
         this.cf05 = cf05;
         this.cf06 = cf06;
         this.cf07 = cf07;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -88,7 +87,7 @@ public class DanaRS_Packet_Bolus_Set_CIR_CF_Array extends DanaRS_Packet {
     @Override
     public void handleMessage(byte[] data) {
         int result = intFromBuff(data, 0, 1);
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");
             else

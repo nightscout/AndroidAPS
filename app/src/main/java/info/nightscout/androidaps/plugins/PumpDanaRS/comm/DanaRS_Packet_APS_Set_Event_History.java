@@ -8,12 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.DateUtil;
 
 public class DanaRS_Packet_APS_Set_Event_History extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int type;
     private long time;
@@ -32,7 +31,7 @@ public class DanaRS_Packet_APS_Set_Event_History extends DanaRS_Packet {
         this.time = time;
         this.param1 = param1;
         this.param2 = param2;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Set history entry: " + DateUtil.dateAndTimeString(time) + " type: " + type + " param1: " + param1 + " param2: " + param2);
     }
 
@@ -67,10 +66,10 @@ public class DanaRS_Packet_APS_Set_Event_History extends DanaRS_Packet {
         int result = intFromBuff(data, 0, 1);
         if (result != 0) {
             failed = true;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.error("Set history entry result: " + result + " FAILED!!!");
         } else {
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Set history entry result: " + result);
         }
     }

@@ -3,17 +3,16 @@ package info.nightscout.androidaps.plugins.PumpDanaRv2.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 public class MsgStatusAPS_v2 extends MessageBase {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgStatusAPS_v2() {
         SetCommand(0xE001);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -24,7 +23,7 @@ public class MsgStatusAPS_v2 extends MessageBase {
         DanaRPump pump = DanaRPump.getInstance();
         pump.iob = iob;
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Delivered so far: " + deliveredSoFar);
             log.debug("Current pump IOB: " + iob);
         }

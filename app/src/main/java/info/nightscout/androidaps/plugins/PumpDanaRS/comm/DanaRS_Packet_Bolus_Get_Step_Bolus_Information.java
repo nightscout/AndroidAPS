@@ -7,17 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Bolus_Get_Step_Bolus_Information extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_Bolus_Get_Step_Bolus_Information() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BOLUS__GET_STEP_BOLUS_INFORMATION;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -58,7 +57,7 @@ public class DanaRS_Packet_Bolus_Get_Step_Bolus_Information extends DanaRS_Packe
         dataSize = 1;
         pump.bolusStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("BolusType: " + bolusType);
             log.debug("Initial bolus amount: " + pump.initialBolusAmount + " U");

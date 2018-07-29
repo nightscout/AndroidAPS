@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,6 +27,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
@@ -51,7 +51,7 @@ import info.nightscout.utils.Round;
  */
 
 public class GraphData {
-    private static Logger log = LoggerFactory.getLogger(Constants.OVERVIEW);
+    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
 
     private GraphView graph;
     public double maxY = Double.MIN_VALUE;
@@ -75,7 +75,7 @@ public class GraphData {
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
         if (bgReadingsArray == null || bgReadingsArray.size() == 0) {
-            if (Config.logOverview)
+            if (L.isEnabled(L.OVERVIEW))
                 log.debug("No BG data.");
             return;
         }

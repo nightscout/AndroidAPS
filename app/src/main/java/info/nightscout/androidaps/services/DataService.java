@@ -11,13 +11,12 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
@@ -33,13 +32,13 @@ import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
-import info.nightscout.utils.BundleLogger;
+import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
 
 
 public class DataService extends IntentService {
-    private Logger log = LoggerFactory.getLogger(Constants.DATASERVICE);
+    private Logger log = LoggerFactory.getLogger(L.DATASERVICE);
 
     public DataService() {
         super("DataService");
@@ -48,7 +47,7 @@ public class DataService extends IntentService {
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        if (Config.logDataService) {
+        if (L.isEnabled(L.DATASERVICE)) {
             log.debug("onHandleIntent " + intent);
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
         }
@@ -101,7 +100,7 @@ public class DataService extends IntentService {
             SmsCommunicatorPlugin.getPlugin().handleNewData(intent);
         }
 
-        if (Config.logDataService)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("onHandleIntent exit " + intent);
         DataReceiver.completeWakefulIntent(intent);
     }
@@ -124,7 +123,7 @@ public class DataService extends IntentService {
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
-        if (Config.logDataService)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("Got intent: " + intent.getAction());
 
 
@@ -254,7 +253,7 @@ public class DataService extends IntentService {
         NSMbg nsMbg = new NSMbg(mbgJson);
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
-        if (Config.logDataService)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("Adding/Updating new MBG: " + careportalEvent.log());
     }
 

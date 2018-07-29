@@ -3,12 +3,11 @@ package info.nightscout.androidaps.plugins.PumpDanaRv2.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -22,11 +21,11 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
  * Created by mike on 30.06.2016.
  */
 public class MsgCheckValue_v2 extends MessageBase {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgCheckValue_v2() {
         SetCommand(0xF0F1);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -35,7 +34,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         DanaRPump pump = DanaRPump.getInstance();
 
         pump.isNewPump = true;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New firmware confirmed");
 
         pump.model = intFromBuff(bytes, 0, 1);
@@ -88,7 +87,7 @@ public class MsgCheckValue_v2 extends MessageBase {
             ConfigBuilderPlugin.getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Model: " + String.format("%02X ", pump.model));
             log.debug("Protocol: " + String.format("%02X ", pump.protocol));
             log.debug("Product Code: " + String.format("%02X ", pump.productCode));

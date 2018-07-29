@@ -7,17 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_General_Get_More_Information extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_General_Get_More_Information() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__GET_MORE_INFORMATION;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -58,7 +57,7 @@ public class DanaRS_Packet_General_Get_More_Information extends DanaRS_Packet {
         dataSize = 2;
         pump.lastBolusAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Daily total units: " + pump.dailyTotalUnits + " U");
             log.debug("Is extended in progress: " + pump.isExtendedInProgress);
             log.debug("Extended bolus remaining minutes: " + pump.extendedBolusRemainingMinutes);

@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
@@ -29,7 +29,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JSONFormatter;
 
 public class OpenAPSSMBFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     @BindView(R.id.openapsma_run)
     Button run;

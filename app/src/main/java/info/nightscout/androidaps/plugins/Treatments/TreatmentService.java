@@ -29,8 +29,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
@@ -39,6 +37,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.utils.JsonHelper;
 
@@ -48,7 +47,7 @@ import info.nightscout.utils.JsonHelper;
  */
 
 public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
-    private static Logger log = LoggerFactory.getLogger(Constants.DATATREATMENTS);
+    private static Logger log = LoggerFactory.getLogger(L.DATATREATMENTS);
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTreatmentEventPost = null;
@@ -104,7 +103,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public void onCreate() {
         super.onCreate();
         try {
-            if (Config.logDataTreatments)
+            if (L.isEnabled(L.DATATREATMENTS))
                 log.info("onCreate");
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Treatment.class);
         } catch (SQLException e) {
@@ -124,7 +123,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 throw new RuntimeException(e);
             }
         } else {
-            if (Config.logDataTreatments)
+            if (L.isEnabled(L.DATATREATMENTS))
                 log.info("onUpgrade");
 //            this.resetFood();
         }
@@ -165,11 +164,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         class PostRunnable implements Runnable {
             public void run() {
-                if (Config.logDataTreatments)
+                if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("Firing EventReloadTreatmentData");
                 MainApp.bus().post(event);
                 if (DatabaseHelper.earliestDataChange != null) {
-                    if (Config.logDataTreatments)
+                    if (L.isEnabled(L.DATATREATMENTS))
                         log.debug("Firing EventNewHistoryData");
                     MainApp.bus().post(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
                 }
@@ -262,7 +261,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     boolean sameSource = existingTreatment.source == treatment.source;
                     if (!equalRePumpHistory) {
                         // another treatment exists. Update it with the treatment coming from the pump
-                        if (Config.logDataTreatments)
+                        if (L.isEnabled(L.DATATREATMENTS))
                             log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
                         long oldDate = existingTreatment.date;
 
@@ -287,7 +286,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
                     boolean sameSource = existingTreatment.source == treatment.source;
                     long oldDate = existingTreatment.date;
-                    if (Config.logDataTreatments)
+                    if (L.isEnabled(L.DATATREATMENTS))
                         log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
 
                     //preserve carbs
@@ -304,7 +303,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     return new UpdateReturn(equalRePumpHistory || sameSource, false);
                 }
                 getDao().create(treatment);
-                if (Config.logDataTreatments)
+                if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
@@ -319,7 +318,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         getDao().delete(old); // need to delete/create because date may change too
                         old.copyFrom(treatment);
                         getDao().create(old);
-                        if (Config.logDataTreatments)
+                        if (L.isEnabled(L.DATATREATMENTS))
                             log.debug("Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
                         if (historyChange) {
                             DatabaseHelper.updateEarliestDataChange(oldDate);
@@ -340,7 +339,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             getDao().delete(old); // need to delete/create because date may change too
                             old.copyFrom(treatment);
                             getDao().create(old);
-                            if (Config.logDataTreatments)
+                            if (L.isEnabled(L.DATATREATMENTS))
                                 log.debug("Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
                             if (historyChange) {
                                 DatabaseHelper.updateEarliestDataChange(oldDate);
@@ -352,7 +351,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     }
                 }
                 getDao().create(treatment);
-                if (Config.logDataTreatments)
+                if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
@@ -360,7 +359,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             }
             if (treatment.source == Source.USER) {
                 getDao().create(treatment);
-                if (Config.logDataTreatments)
+                if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
@@ -413,7 +412,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     private void deleteByNSId(String _id) {
         Treatment stored = findByNSId(_id);
         if (stored != null) {
-            if (Config.logDataTreatments)
+            if (L.isEnabled(L.DATATREATMENTS))
                 log.debug("Removing Treatment record from database: " + stored.toString());
             delete(stored);
             DatabaseHelper.updateEarliestDataChange(stored.date);

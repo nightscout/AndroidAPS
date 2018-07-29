@@ -5,18 +5,17 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Option_Get_User_Option extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
 
     public DanaRS_Packet_Option_Get_User_Option() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION;
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Requesting user settings");
         }
     }
@@ -89,7 +88,7 @@ public class DanaRS_Packet_Option_Get_User_Option extends DanaRS_Packet {
         dataSize = 1;
         int selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("timeDisplayType: " + pump.timeDisplayType);
             log.debug("buttonScrollOnOff: " + pump.buttonScrollOnOff);
             log.debug("beepAndAlarm: " + pump.beepAndAlarm);

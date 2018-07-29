@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by mike on 28.05.2016.
  */
 public class MessageOriginalNames {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static HashMap<Integer, String> messageNames;
 

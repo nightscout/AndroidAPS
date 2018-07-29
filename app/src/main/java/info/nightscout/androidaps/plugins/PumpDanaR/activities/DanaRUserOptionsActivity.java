@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
@@ -31,7 +31,7 @@ import info.nightscout.utils.NumberPicker;
  */
 
 public class DanaRUserOptionsActivity extends Activity {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
+    private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
     Switch timeFormat;
     Switch buttonScroll;
@@ -86,7 +86,7 @@ public class DanaRUserOptionsActivity extends Activity {
 
         DanaRPump pump = DanaRPump.getInstance();
         //used for debugging
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("UserOptionsLoaded:" + (System.currentTimeMillis() - pump.lastConnection) / 1000 + " s ago"
                     + "\ntimeDisplayType:" + pump.timeDisplayType
                     + "\nbuttonScroll:" + pump.buttonScrollOnOff

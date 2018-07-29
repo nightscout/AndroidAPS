@@ -5,10 +5,10 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 public class NSMbg {
-    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
     public long date;
     public double mbg;
     public String json;

@@ -10,7 +10,6 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -22,6 +21,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -193,13 +193,13 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-                if (Config.logPump)
+                if (L.isEnabled(L.PUMP))
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
                     mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                     timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-                    if (Config.logPump)
+                    if (L.isEnabled(L.PUMP))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
                 mDanaRPump.lastSettingsRead = now;
@@ -209,7 +209,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
             if (mDanaRPump.dailyTotalUnits > mDanaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
-                if (Config.logPump)
+                if (L.isEnabled(L.PUMP))
                     log.debug("Approaching daily limit: " + mDanaRPump.dailyTotalUnits + "/" + mDanaRPump.maxDailyTotalUnits);
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
@@ -301,7 +301,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
                     stop.stopped = true;
                     stop.forced = true;
-                    if (Config.logPump)
+                    if (L.isEnabled(L.PUMP))
                         log.debug("Communication stopped");
                 }
             }
@@ -345,10 +345,10 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                         public void run() {
                             if (mDanaRPump.lastBolusTime.getTime() > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
                                 t.insulin = mDanaRPump.lastBolusAmount;
-                                if (Config.logPump)
+                                if (L.isEnabled(L.PUMP))
                                     log.debug("Used bolus amount from history: " + mDanaRPump.lastBolusAmount);
                             } else {
-                                if (Config.logPump)
+                                if (L.isEnabled(L.PUMP))
                                     log.debug("Bolus amount in history too old: " + mDanaRPump.lastBolusTime.toLocaleString());
                             }
                             synchronized (o) {
@@ -402,7 +402,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
     @Subscribe
     public void onStatusEvent(EventAppExit event) {
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("EventAppExit received");
 
         if (mSerialIOThread != null)
@@ -411,7 +411,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
 
         stopSelf();
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("EventAppExit finished");
     }
 

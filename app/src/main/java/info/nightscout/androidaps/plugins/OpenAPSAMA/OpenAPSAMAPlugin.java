@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
@@ -21,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
@@ -39,7 +38,7 @@ import info.nightscout.utils.Round;
  * Created by mike on 05.08.2016.
  */
 public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static OpenAPSAMAPlugin openAPSAMAPlugin;
 
@@ -91,7 +90,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public void invoke(String initiator, boolean tempBasalFallback) {
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             log.debug("invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS;
@@ -103,21 +102,21 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         if (profile == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug(MainApp.gs(R.string.noprofileselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug(MainApp.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
             return;
         }
@@ -135,12 +134,12 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         Date start = new Date();
         Date startPart = new Date();
         IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
         MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "getMealData()", startPart);
 
         double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
@@ -182,9 +181,9 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = new AutosensResult();
             lastAutosensResult.sensResult = "autosens disabled";
         }
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "AMA data gathering", start);
 
         start = new Date();
@@ -200,7 +199,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
-        if (Config.logAps)
+        if (L.isEnabled(L.APS))
             Profiler.log(log, "AMA calculation", start);
         // Fix bug determine basal
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())

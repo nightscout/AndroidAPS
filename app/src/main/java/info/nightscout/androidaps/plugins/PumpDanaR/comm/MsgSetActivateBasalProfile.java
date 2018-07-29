@@ -3,15 +3,14 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 public class MsgSetActivateBasalProfile extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSetActivateBasalProfile() {
         SetCommand(0x330C);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -19,7 +18,7 @@ public class MsgSetActivateBasalProfile extends MessageBase {
     public MsgSetActivateBasalProfile(byte index) {
         this();
         AddParamByte(index);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Activate basal profile: " + index);
     }
 
@@ -28,10 +27,10 @@ public class MsgSetActivateBasalProfile extends MessageBase {
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Activate basal profile result: " + result + " FAILED!!!");
         } else {
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Activate basal profile result: " + result);
         }
     }

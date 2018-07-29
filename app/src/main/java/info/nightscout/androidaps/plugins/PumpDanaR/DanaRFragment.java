@@ -23,8 +23,6 @@ import org.slf4j.LoggerFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.TDDStatsActivity;
@@ -33,6 +31,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
@@ -47,7 +46,7 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
 public class DanaRFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMP);
+    private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
     private Handler loopHandler = new Handler();
     private Runnable refreshLoop = new Runnable() {
@@ -146,7 +145,7 @@ public class DanaRFragment extends SubscriberFragment {
 
     @OnClick(R.id.danar_btconnection)
     void onBtConnectionClick() {
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("Clicked connect to pump");
         DanaRPump.getInstance().lastConnection = 0;
         ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);

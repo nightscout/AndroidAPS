@@ -5,11 +5,10 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_Basal_Set_Profile_Number extends DanaRS_Packet {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     private int profileNumber;
 
     public DanaRS_Packet_Basal_Set_Profile_Number() {
@@ -20,7 +19,7 @@ public class DanaRS_Packet_Basal_Set_Profile_Number extends DanaRS_Packet {
     public DanaRS_Packet_Basal_Set_Profile_Number(int profileNumber) {
         this();
         this.profileNumber = profileNumber;
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Setting profile number " + profileNumber);
         }
     }
@@ -35,7 +34,7 @@ public class DanaRS_Packet_Basal_Set_Profile_Number extends DanaRS_Packet {
     @Override
     public void handleMessage(byte[] data) {
         int result = intFromBuff(data, 0, 1);
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");
             else

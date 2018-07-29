@@ -13,18 +13,17 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 
 /**
  * Created by mike on 21.02.2016.
  */
 public class UploadQueue {
-    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     public static String status() {
         return "QUEUE: " + MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);
@@ -46,7 +45,7 @@ public class UploadQueue {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
-                if (Config.logNsclient)
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug("Adding to queue: " + dbr.data);
                 MainApp.getDbHelper().create(dbr);
                 NSClientPlugin plugin = NSClientPlugin.getPlugin();
@@ -61,10 +60,10 @@ public class UploadQueue {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
-                if (Config.logNsclient)
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug("ClearQueue");
                 MainApp.getDbHelper().deleteAllDbRequests();
-                if (Config.logNsclient)
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug(status());
             });
         }
@@ -82,7 +81,7 @@ public class UploadQueue {
                         return;
                     }
                     if (MainApp.getDbHelper().deleteDbRequest(id) == 1) {
-                        if (Config.logNsclient)
+                        if (L.isEnabled(L.NSCLIENT))
                             log.debug("Removed item from UploadQueue. " + UploadQueue.status());
                     }
                 } catch (JSONException e) {
@@ -99,7 +98,7 @@ public class UploadQueue {
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
                 MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
-                if (Config.logNsclient)
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug("Removing " + _id + " from UploadQueue. " + UploadQueue.status());
             });
         }

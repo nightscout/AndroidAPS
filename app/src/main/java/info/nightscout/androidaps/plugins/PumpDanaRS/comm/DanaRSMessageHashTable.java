@@ -1,11 +1,8 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by mike on 28.05.2016.
@@ -15,9 +12,6 @@ public class DanaRSMessageHashTable {
 
     static {
         if (messages == null) {
-            boolean savedState = Config.logPumpComm;
-            Config.logPumpComm = false;
-
             messages = new HashMap<>();
             put(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
             put(new DanaRS_Packet_Basal_Get_Basal_Rate());
@@ -87,7 +81,6 @@ public class DanaRSMessageHashTable {
             put(new DanaRS_Packet_APS_History_Events());
             put(new DanaRS_Packet_APS_Set_Event_History());
 
-            Config.logPumpComm = savedState;
         }
     }
 

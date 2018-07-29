@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -28,6 +26,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -45,7 +44,7 @@ import info.nightscout.utils.SP;
  */
 
 public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
-    protected Logger log = LoggerFactory.getLogger(Constants.PUMP);
+    protected Logger log = LoggerFactory.getLogger(L.PUMP);
 
     protected AbstractDanaRExecutionService sExecutionService;
 
@@ -135,7 +134,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             Double profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement);
             if (profileValue == null) return true;
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
-                if (Config.logPump)
+                if (L.isEnabled(L.PUMP))
                     log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
                 return false;
             }
@@ -186,7 +185,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
-            if (Config.logPump)
+            if (L.isEnabled(L.PUMP))
                 log.debug("setTempBasalPercent: Correct value already set");
             return result;
         }
@@ -200,7 +199,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
             result.isPercent = true;
-            if (Config.logPump)
+            if (L.isEnabled(L.PUMP))
                 log.debug("setTempBasalPercent: OK");
             return result;
         }
@@ -228,7 +227,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             result.absolute = pump.extendedBolusAbsoluteRate;
             result.isPercent = false;
             result.isTempCancel = false;
-            if (Config.logPump)
+            if (L.isEnabled(L.PUMP))
                 log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulin);
             return result;
         }
@@ -243,7 +242,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             if (!SP.getBoolean("danar_useextended", false))
                 result.bolusDelivered = pump.extendedBolusAmount;
             result.isPercent = false;
-            if (Config.logPump)
+            if (L.isEnabled(L.PUMP))
                 log.debug("setExtendedBolus: OK");
             return result;
         }
@@ -266,7 +265,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         if (!pump.isExtendedInProgress) {
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            if (Config.logPump)
+            if (L.isEnabled(L.PUMP))
                 log.debug("cancelExtendedBolus: OK");
             return result;
         } else {

@@ -7,17 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 public class MsgStatusBolusExtended_v2 extends MessageBase {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgStatusBolusExtended_v2() {
         SetCommand(0x0207);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -46,7 +45,7 @@ public class MsgStatusBolusExtended_v2 extends MessageBase {
         pump.extendedBolusStart = extendedBolusStart;
         pump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes;
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Is extended bolus running: " + isExtendedInProgress);
             log.debug("Extended bolus min: " + extendedBolusMinutes);
             log.debug("Extended bolus amount: " + extendedBolusAmount);

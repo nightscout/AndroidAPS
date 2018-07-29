@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -38,6 +37,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
@@ -54,7 +54,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class LoopPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static final String CHANNEL_ID = "AndroidAPS-Openloop";
 
@@ -254,13 +254,13 @@ public class LoopPlugin extends PluginBase {
 
     public synchronized void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
         try {
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug("invoke from " + initiator);
             Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
 
             if (!loopEnabled.value()) {
                 String message = MainApp.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
-                if (Config.logAps)
+                if (L.isEnabled(L.APS))
                     log.debug(message);
                 MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
@@ -274,7 +274,7 @@ public class LoopPlugin extends PluginBase {
             Profile profile = MainApp.getConfigBuilder().getProfile();
 
             if (!MainApp.getConfigBuilder().isProfileValid("Loop")) {
-                if (Config.logAps)
+                if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.noprofileselected));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
                 return;
@@ -305,7 +305,7 @@ public class LoopPlugin extends PluginBase {
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
             if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
-                if (Config.logAps)
+                if (L.isEnabled(L.APS))
                     log.debug("SMB requsted but still in 3 min interval");
                 resultAfterConstraints.smb = 0;
             }
@@ -321,14 +321,14 @@ public class LoopPlugin extends PluginBase {
             NSUpload.uploadDeviceStatus();
 
             if (isSuspended()) {
-                if (Config.logAps)
+                if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.loopsuspended));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.loopsuspended)));
                 return;
             }
 
             if (pump.isSuspended()) {
-                if (Config.logAps)
+                if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.pumpsuspended));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.pumpsuspended)));
                 return;
@@ -416,7 +416,7 @@ public class LoopPlugin extends PluginBase {
 
             MainApp.bus().post(new EventLoopUpdateGui());
         } finally {
-            if (Config.logAps)
+            if (L.isEnabled(L.APS))
                 log.debug("invoke end");
         }
     }

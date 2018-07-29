@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
@@ -83,7 +83,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
 
 public class DanaRSService extends Service {
-    private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private BLEComm bleComm = BLEComm.getInstance(this);
 
@@ -156,11 +156,11 @@ public class DanaRSService extends Service {
             bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
 
             long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump time difference: " + timeDiff + " seconds");
             if (Math.abs(timeDiff) > 3) {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
-                    if (Config.logPumpComm)
+                    if (L.isEnabled(L.PUMPCOMM))
                         log.debug("Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
@@ -181,7 +181,7 @@ public class DanaRSService extends Service {
                     bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date(DateUtil.now() + T.secs(10).msecs())));
                     bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
                     timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
-                    if (Config.logPumpComm)
+                    if (L.isEnabled(L.PUMPCOMM))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
             }
@@ -206,7 +206,7 @@ public class DanaRSService extends Service {
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
             if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
-                if (Config.logPumpComm)
+                if (L.isEnabled(L.PUMPCOMM))
                     log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
@@ -218,7 +218,7 @@ public class DanaRSService extends Service {
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Pump status loaded");
     }
 
@@ -235,11 +235,11 @@ public class DanaRSService extends Service {
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
             msg = new DanaRS_Packet_APS_History_Events(0);
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Loading complete event history");
         } else {
             msg = new DanaRS_Packet_APS_History_Events(lastHistoryFetched);
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Loading event history from: " + new Date(lastHistoryFetched).toLocaleString());
         }
         bleComm.sendMessage(msg);
@@ -250,7 +250,7 @@ public class DanaRSService extends Service {
             lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded - T.mins(1).msecs();
         else
             lastHistoryFetched = 0;
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Events loaded");
         danaRPump.lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
@@ -298,7 +298,7 @@ public class DanaRSService extends Service {
                 if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 20 sec expecting broken comm
                     stop.stopped = true;
                     stop.forced = true;
-                    if (Config.logPumpComm)
+                    if (L.isEnabled(L.PUMPCOMM))
                         log.debug("Communication stopped");
                 }
             }
@@ -344,7 +344,7 @@ public class DanaRSService extends Service {
     }
 
     public void bolusStop() {
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("bolusStop >>>>> @ " + (bolusingTreatment == null ? "" : bolusingTreatment.insulin));
         DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop();
         stop.forced = true;
@@ -521,11 +521,11 @@ public class DanaRSService extends Service {
 
     @Subscribe
     public void onStatusEvent(EventAppExit event) {
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("EventAppExit received");
 
         stopSelf();
-        if (Config.logPump)
+        if (L.isEnabled(L.PUMP))
             log.debug("EventAppExit finished");
     }
 

@@ -3,19 +3,18 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 05.07.2016.
  */
 public class MsgSettingProfileRatiosAll extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSettingProfileRatiosAll() {
         SetCommand(0x320D);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
     }
 
@@ -41,7 +40,7 @@ public class MsgSettingProfileRatiosAll extends MessageBase {
             pump.nightCF = intFromBuff(bytes, 14, 2) / 100d;
         }
 
-        if (Config.logPumpComm) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Pump units: " + (pump.units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));
             log.debug("Current pump morning CIR: " + pump.morningCIR);
             log.debug("Current pump morning CF: " + pump.morningCF);

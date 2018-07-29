@@ -15,12 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.utils.BundleLogger;
+import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -80,7 +79,7 @@ import info.nightscout.utils.SP;
 }
  */
 public class NSDeviceStatus {
-    private Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     private static NSDeviceStatus instance = null;
 
@@ -99,7 +98,7 @@ public class NSDeviceStatus {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
 
-        if (Config.logNsclient)
+        if (L.isEnabled(L.NSCLIENT))
             log.debug("Got NS devicestatus: " + BundleLogger.log(bundle));
 
         try {

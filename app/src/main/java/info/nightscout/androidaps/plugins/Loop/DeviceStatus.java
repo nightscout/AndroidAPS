@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.logging.L;
 
 /*
 {
@@ -365,7 +365,7 @@ import info.nightscout.androidaps.Constants;
 */
 
 public class DeviceStatus {
-    private static Logger log = LoggerFactory.getLogger(Constants.APS);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     public String device = null;
     public JSONObject pump = null;

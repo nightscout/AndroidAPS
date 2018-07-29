@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.SP;
 
@@ -23,7 +23,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 20.02.2016.
  */
 public class BroadcastTreatment {
-    private static Logger log = LoggerFactory.getLogger(Constants.NSCLIENT);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     public static void handleNewTreatment(JSONObject treatment, boolean isDelta, boolean isLocalBypass) {
 

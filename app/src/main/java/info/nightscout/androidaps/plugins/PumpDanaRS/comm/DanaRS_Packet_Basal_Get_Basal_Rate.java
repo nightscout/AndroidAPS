@@ -6,23 +6,22 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
-	private Logger log = LoggerFactory.getLogger(Constants.PUMPCOMM);
+	private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
 
 	public DanaRS_Packet_Basal_Get_Basal_Rate() {
 		super();
 		opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__GET_BASAL_RATE;
-		if (Config.logPumpComm) {
+		if (L.isEnabled(L.PUMPCOMM)) {
 			log.debug("Requesting basal rates");
 		}
 	}
@@ -46,7 +45,7 @@ public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
 			dataSize = 2;
 			pump.pumpProfiles[pump.activeProfile][i] = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 		}
-		if (Config.logPumpComm) {
+		if (L.isEnabled(L.PUMPCOMM)) {
 			log.debug("Max basal: " + pump.maxBasal + " U");
 			log.debug("Basal step: " + pump.basalStep + " U");
 			for (int index = 0; index < 24; index++)
