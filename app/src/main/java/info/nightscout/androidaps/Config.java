@@ -24,7 +24,6 @@ public class Config {
 
 
     public static boolean logFunctionCalls = true;
-    public static boolean logAPSResult = true;
     public static boolean logPrefsChange = true;
     public static boolean logConfigBuilder = true;
     public static boolean logCongigBuilderActions = true;
@@ -44,5 +43,6 @@ public class Config {
     public static boolean logPump = true;
     public static boolean logPumpComm = true;
     public static boolean logPumpBtComm = false;
+    public static boolean logAps = true;
 
 }

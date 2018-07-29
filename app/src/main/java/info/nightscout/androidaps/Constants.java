@@ -84,4 +84,5 @@ public class Constants {
     public static final String PUMPQUEUE = "PUMPQUEUE";
     public static final String PUMPCOMM = "PUMPCOMM";
     public static final String PUMPBTCOMM = "PUMPBTCOMM";
+    public static final String APS = "APS";
 }

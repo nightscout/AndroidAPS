@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -25,7 +26,7 @@ import info.nightscout.utils.DecimalFormatter;
  * Created by mike on 09.06.2016.
  */
 public class APSResult {
-    private static Logger log = LoggerFactory.getLogger(APSResult.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.APS);
 
     public long date = 0;
     public String reason;

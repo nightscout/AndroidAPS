@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Constants;
+
 /*
 {
         "_id": "576cfd15217b0bed77d63641",
@@ -363,7 +365,7 @@ import org.slf4j.LoggerFactory;
 */
 
 public class DeviceStatus {
-    private static Logger log = LoggerFactory.getLogger(DeviceStatus.class);
+    private static Logger log = LoggerFactory.getLogger(Constants.APS);
 
     public String device = null;
     public JSONObject pump = null;
@@ -373,12 +375,12 @@ public class DeviceStatus {
     public int uploaderBattery = 0;
     public String created_at = null;
 
-    public JSONObject mongoRecord () {
+    public JSONObject mongoRecord() {
         JSONObject record = new JSONObject();
 
         try {
-            if (device != null) record.put("device" , device);
-            if (pump != null) record.put("pump" , pump);
+            if (device != null) record.put("device", device);
+            if (pump != null) record.put("pump", pump);
             if (suggested != null) {
                 JSONObject openaps = new JSONObject();
                 if (enacted != null) openaps.put("enacted", enacted);
@@ -387,7 +389,7 @@ public class DeviceStatus {
                 record.put("openaps", openaps);
             }
             if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
-            if (created_at != null) record.put("created_at" , created_at);
+            if (created_at != null) record.put("created_at", created_at);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
