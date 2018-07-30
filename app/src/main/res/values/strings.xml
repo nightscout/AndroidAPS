@@ -183,8 +183,8 @@
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
-    <string name="cs_lang">Czech</string>
-    <string name="en_lang">English</string>
+    <string name="cs_lang" translatable="false">Czech</string>
+    <string name="en_lang" translatable="false">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
@@ -235,24 +235,24 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
-    <string name="nl_lang">Dutch</string>
-    <string name="de_lang">German</string>
-    <string name="es_lang">Spanish</string>
-    <string name="el_lang">Greek</string>
-    <string name="it_lang">Italian</string>
-    <string name="ro_lang">Romanian</string>
-    <string name="ru_lang">Russian</string>
-    <string name="sv_lang">Swedish</string>
-    <string name="fr_lang">French</string>
-    <string name="zh_lang">Chinese</string>
-    <string name="pl_lang">Polski</string>
+    <string name="nl_lang" translatable="false">Dutch</string>
+    <string name="de_lang" translatable="false">German</string>
+    <string name="es_lang" translatable="false">Spanish</string>
+    <string name="el_lang" translatable="false">Greek</string>
+    <string name="it_lang" translatable="false">Italian</string>
+    <string name="ro_lang" translatable="false">Romanian</string>
+    <string name="ru_lang" translatable="false">Russian</string>
+    <string name="sv_lang" translatable="false">Swedish</string>
+    <string name="fr_lang" translatable="false">French</string>
+    <string name="zh_lang" translatable="false">Chinese</string>
+    <string name="pl_lang" translatable="false">Polski</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
     <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
-    <string name="bg_lang">Bulgarian</string>
+    <string name="bg_lang" translatable="false">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
-    <string name="language">Language</string>
+    <string name="language" translatable="false">Language</string>
 
     <string name="danarpump">DanaR</string>
     <string name="connecting">Connecting</string>
@@ -381,7 +381,7 @@
     <string name="overview_quickwizard_item_remove_button">Remove</string>
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
-    <string name="ko_lang">Korean</string>
+    <string name="ko_lang" translatable="false">Korean</string>
     <string name="actions">Actions</string>
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
@@ -1086,7 +1086,7 @@
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
-    <string name="ga_lang">Irish</string>
+    <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
     <string translatable="false" name="key_wearwizard_tt">wearwizard_tt</string>
@@ -1112,10 +1112,10 @@
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient handles connection to Nightscout. You can skip this part now but you will not be able to pass objectives until you setup it.</string>
-    <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5-6h on new profile is equal to DIA 3h on old insulin profiles.</string>
+    <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="bgsourcesetup">Configure BG source</string>
     <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
-    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggresive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
+    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="startobjective">Start your first objective</string>
     <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>
