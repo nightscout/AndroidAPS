@@ -8,11 +8,11 @@
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
             android:defaultValue="logs@androidaps.org"
-            android:dialogMessage="@string/logshipper_email"
+            android:dialogMessage="@string/maintenance_email"
             android:inputType="textEmailAddress"
             android:key="@string/key_maintenance_logs_email"
             android:selectAllOnFocus="true"
-            android:title="@string/nsclientinternal_url_title"
+            android:title="@string/maintenance_email"
             validatingEditText:emptyAllowed="false"
             validatingEditText:testErrorString="@string/invalid_email_message"
             validatingEditText:testType="email"/>
@@ -21,7 +21,7 @@
             android:defaultValue="2"
             android:inputType="number"
             android:key="@string/key_maintenance_logs_amount"
-            android:title="@string/logshipper_amount">
+            android:title="@string/maintenance_amount">
 
         </EditTextPreference>
 
