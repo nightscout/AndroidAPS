@@ -5,6 +5,7 @@ import com.squareup.otto.Bus;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -61,7 +62,7 @@ public abstract class InsulinOrefBasePlugin extends PluginBase implements Insuli
     }
 
     public double getUserDefinedDia() {
-        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : MIN_DIA;
+        return ProfileFunctions.getInstance().getProfile() != null ? ProfileFunctions.getInstance().getProfile().getDia() : MIN_DIA;
     }
 
     public Iob iobCalcForTreatment(Treatment treatment, long time) {

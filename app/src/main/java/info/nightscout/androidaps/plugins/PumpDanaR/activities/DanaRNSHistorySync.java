@@ -14,6 +14,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DateUtil;
@@ -182,7 +183,7 @@ public class DanaRNSHistorySync {
                             log.debug("Syncing glucose record " + record.recordValue + " " + DateUtil.toISOString(record.recordDate));
                         nsrec.put(DANARSIGNATURE, record.bytes);
                         nsrec.put("eventType", "BG Check");
-                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, MainApp.getConfigBuilder().getProfileUnits()));
+                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, ProfileFunctions.getInstance().getProfileUnits()));
                         nsrec.put("glucoseType", "Finger");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
                         nsrec.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));

@@ -26,6 +26,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
@@ -79,7 +80,7 @@ public class IobCobOref1Thread extends Thread {
                     log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
                 return; // app still initializing
             }
-            if (!MainApp.getConfigBuilder().isProfileValid("IobCobThread")) {
+            if (!ProfileFunctions.getInstance().isProfileValid("IobCobThread")) {
                 if (L.isEnabled(L.AUTOSENS))
                     log.debug("Aborting calculation thread (No profile): " + from);
                 return; // app still initializing
@@ -129,7 +130,7 @@ public class IobCobOref1Thread extends Thread {
                         continue;
                     }
 
-                    Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
+                    Profile profile = ProfileFunctions.getInstance().getProfile(bgTime);
                     if (profile == null) {
                         if (L.isEnabled(L.AUTOSENS))
                             log.debug("Aborting calculation thread (no profile): " + from);

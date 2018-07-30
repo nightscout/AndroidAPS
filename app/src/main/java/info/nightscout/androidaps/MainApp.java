@@ -107,7 +107,6 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (L.isEnabled(L.CORE))
             log.debug("onCreate");
         sInstance = this;
         sResources = getResources();

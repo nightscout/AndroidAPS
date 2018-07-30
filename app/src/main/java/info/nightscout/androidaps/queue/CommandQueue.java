@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -502,7 +503,7 @@ public class CommandQueue {
 
     public boolean isThisProfileSet(Profile profile) {
         PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
-        Profile current = MainApp.getConfigBuilder().getProfile();
+        Profile current = ProfileFunctions.getInstance().getProfile();
         if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);
             if (!result) {

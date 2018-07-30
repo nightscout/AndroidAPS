@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.utils.FabricPrivacy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
     private void checkPump() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
             Date lastConnection = pump.lastDataTime();
             boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();

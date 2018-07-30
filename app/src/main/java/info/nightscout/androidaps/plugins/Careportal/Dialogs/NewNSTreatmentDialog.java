@@ -49,6 +49,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DefaultValueHelper;
@@ -171,7 +172,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         view.findViewById(R.id.cancel).setOnClickListener(this);
 
         // profile
-        profile = MainApp.getConfigBuilder().getProfile();
+        profile = ProfileFunctions.getInstance().getProfile();
         profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
         if (profileStore == null) {
             if (options.eventType == R.id.careportal_profileswitch) {
@@ -186,7 +187,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSpinner.setAdapter(adapter);
             // set selected to actual profile
             for (int p = 0; p < profileList.size(); p++) {
-                if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName(false)))
+                if (profileList.get(p).equals(ProfileFunctions.getInstance().getProfileName(false)))
                     profileSpinner.setSelection(p);
             }
         }
@@ -214,7 +215,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 }
                 boolean erase = false;
 
-                String units = MainApp.getConfigBuilder().getProfileUnits();
+                String units = ProfileFunctions.getInstance().getProfileUnits();
                 DefaultValueHelper helper = new DefaultValueHelper();
                 if (MainApp.gs(R.string.eatingsoon).equals(reasonList.get(position))) {
                     defaultDuration = helper.determineEatingSoonTTDuration();
@@ -786,8 +787,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch = new ProfileSwitch();
             profileSwitch.date = System.currentTimeMillis();
             profileSwitch.source = Source.USER;
-            profileSwitch.profileName = MainApp.getConfigBuilder().getProfileName(System.currentTimeMillis(), false);
-            profileSwitch.profileJson = MainApp.getConfigBuilder().getProfile().getData().toString();
+            profileSwitch.profileName = ProfileFunctions.getInstance().getProfileName(System.currentTimeMillis(), false);
+            profileSwitch.profileJson = ProfileFunctions.getInstance().getProfile().getData().toString();
             profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeshift != 0;

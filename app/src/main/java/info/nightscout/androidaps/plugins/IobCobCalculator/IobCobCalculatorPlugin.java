@@ -33,6 +33,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
@@ -302,7 +303,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     public long calculateDetectionStart(long from, boolean limitDataToOldestAvailable) {
-        Profile profile = MainApp.getConfigBuilder().getProfile(from);
+        Profile profile = ProfileFunctions.getInstance().getProfile(from);
         double dia = Constants.defaultDIA;
         if (profile != null) dia = profile.getDia();
 
@@ -599,7 +600,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
         if (MainApp.getConfigBuilder() == null)
             return; // app still initializing
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null)
             return; // app still initializing
         dia = profile.getDia();

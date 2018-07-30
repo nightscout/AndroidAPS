@@ -25,6 +25,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -153,7 +154,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public double getY() {
-        String units = MainApp.getConfigBuilder().getProfileUnits();
+        String units = ProfileFunctions.getInstance().getProfileUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {

@@ -16,6 +16,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -93,7 +94,7 @@ public class TemporaryBasal implements Interval {
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
-        double basal = MainApp.getConfigBuilder().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
+        double basal = ProfileFunctions.getInstance().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
         this.date = extendedBolus.date;
         this.isValid = extendedBolus.isValid;
         this.source = extendedBolus.source;
@@ -318,7 +319,7 @@ public class TemporaryBasal implements Interval {
     public String toStringFull() {
         if(isFakeExtended){
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             Double currentBasalRate = profile.getBasal();
             double rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
             return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h ("+DecimalFormatter.to2Decimal(netExtendedRate)+"E) @" +
@@ -340,7 +341,7 @@ public class TemporaryBasal implements Interval {
 
             double rate  = 0d;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 Double currentBasalRate = profile.getBasal();
                 rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
             } else if (isAbsolute){
@@ -348,7 +349,7 @@ public class TemporaryBasal implements Interval {
             }
 
             if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 if(profile != null) {
                     double basal = profile.getBasal();
                     if(basal != 0){
@@ -367,7 +368,7 @@ public class TemporaryBasal implements Interval {
 
             double rate  = 0d;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 Double currentBasalRate = profile.getBasal();
                 rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
             } else if (isAbsolute){
@@ -375,7 +376,7 @@ public class TemporaryBasal implements Interval {
             }
 
             if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 if(profile != null) {
                     double basal = profile.getBasal();
                     if(basal != 0){
@@ -392,7 +393,7 @@ public class TemporaryBasal implements Interval {
 
             double rate  = 0d;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 Double currentBasalRate = profile.getBasal();
                 rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
             } else if (isAbsolute){

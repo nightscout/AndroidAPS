@@ -35,6 +35,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCustomCalculationFinished;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
@@ -229,7 +230,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
             return;
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {
             noProfile.setVisibility(View.VISIBLE);

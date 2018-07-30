@@ -29,6 +29,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -63,7 +64,7 @@ public class GraphData {
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
-        units = MainApp.getConfigBuilder().getProfileUnits();
+        units = ProfileFunctions.getInstance().getProfileUnits();
         this.graph = graph;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
@@ -144,7 +145,7 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            Profile profile = MainApp.getConfigBuilder().getProfile(time);
+            Profile profile = ProfileFunctions.getInstance().getProfile(time);
             if (profile == null) continue;
             BasalData basalData = iobCobCalculatorPlugin.getBasalData(profile, time);
             double baseBasalValue = basalData.basal;
@@ -348,7 +349,7 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            Profile profile = MainApp.getConfigBuilder().getProfile(time);
+            Profile profile = ProfileFunctions.getInstance().getProfile(time);
             double iob = 0d;
             if (profile != null)
                 iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob;

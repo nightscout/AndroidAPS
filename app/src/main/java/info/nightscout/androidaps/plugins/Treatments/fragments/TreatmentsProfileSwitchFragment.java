@@ -24,6 +24,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
@@ -64,7 +65,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
 
         @Override
         public void onBindViewHolder(ProfileSwitchViewHolder holder, int position) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null) return;
             ProfileSwitch profileSwitch = profileSwitchList.get(position);
             holder.ph.setVisibility(profileSwitch.source == Source.PUMP ? View.VISIBLE : View.GONE);

@@ -42,6 +42,7 @@ import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
@@ -691,7 +692,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
-            String units = JsonHelper.safeGetString(trJson, "units", MainApp.getConfigBuilder().getProfileUnits());
+            String units = JsonHelper.safeGetString(trJson, "units", ProfileFunctions.getInstance().getProfileUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(trJson.getLong("mills"))
                     .duration(trJson.getInt("duration"))

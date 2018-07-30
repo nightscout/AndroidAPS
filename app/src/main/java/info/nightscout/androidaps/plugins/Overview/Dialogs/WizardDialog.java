@@ -56,6 +56,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
@@ -325,7 +326,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     return;
                 }
                 okClicked = true;
-                final Profile profile = MainApp.getConfigBuilder().getProfile();
+                final Profile profile = ProfileFunctions.getInstance().getProfile();
 
                 if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
@@ -432,7 +433,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void initDialog() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
 
         if (profile == null || profileStore == null) {
@@ -483,7 +484,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
         Profile specificProfile;
         if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active)))
-            specificProfile = MainApp.getConfigBuilder().getProfile();
+            specificProfile = ProfileFunctions.getInstance().getProfile();
         else
             specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);
 

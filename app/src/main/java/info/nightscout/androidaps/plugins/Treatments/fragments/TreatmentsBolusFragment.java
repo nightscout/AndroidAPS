@@ -24,6 +24,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
@@ -69,7 +70,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null)
                 return;
             Treatment t = treatments.get(position);

@@ -85,6 +85,7 @@ import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
@@ -453,7 +454,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (v == apsModeView) {
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
             final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
-            if (loopPlugin == null || !MainApp.getConfigBuilder().isProfileValid("ContexMenuCreation"))
+            if (!ProfileFunctions.getInstance().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.gs(R.string.loop));
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
@@ -496,7 +497,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null)
             return true;
         final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
@@ -637,7 +638,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
         boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
-        String units = MainApp.getConfigBuilder().getProfileUnits();
+        String units = ProfileFunctions.getInstance().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
@@ -725,7 +726,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void onClickAcceptTemp() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         Context context = getContext();
 
         if (context == null) return;
@@ -767,7 +768,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
         final TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
 
         final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
@@ -1048,7 +1049,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.GONE);
 
-        if (!MainApp.getConfigBuilder().isProfileValid("Overview")) {
+        if (!ProfileFunctions.getInstance().isProfileValid("Overview")) {
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             return;
@@ -1061,7 +1062,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
 
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
 
         final String units = profile.getUnits();
         final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
@@ -1245,7 +1246,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
 
-        activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
+        activeProfileView.setText(ProfileFunctions.getInstance().getProfileName());
         activeProfileView.setBackgroundColor(Color.GRAY);
 
         // QuickWizard button

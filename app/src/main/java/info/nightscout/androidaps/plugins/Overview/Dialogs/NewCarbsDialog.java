@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 
 import com.google.common.base.Joiner;
 
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -309,7 +310,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         }
         okClicked = true;
         try {
-            final Profile currentProfile = MainApp.getConfigBuilder().getProfile();
+            final Profile currentProfile = ProfileFunctions.getInstance().getProfile();
             if (currentProfile == null) {
                 return;
             }

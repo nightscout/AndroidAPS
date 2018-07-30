@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
@@ -271,9 +272,9 @@ public class LoopPlugin extends PluginBase {
             if (!isEnabled(PluginType.LOOP))
                 return;
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
 
-            if (!MainApp.getConfigBuilder().isProfileValid("Loop")) {
+            if (!ProfileFunctions.getInstance().isProfileValid("Loop")) {
                 if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.noprofileselected));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));

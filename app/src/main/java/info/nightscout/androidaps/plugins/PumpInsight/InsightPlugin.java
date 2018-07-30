@@ -33,6 +33,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
@@ -671,7 +672,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             status.put("timestamp", DateUtil.toISOString(connector.getLastContactTime()));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+                extended.put("ActiveProfile", ProfileFunctions.getInstance().getProfileName());
             } catch (Exception e) {
             }
             TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);

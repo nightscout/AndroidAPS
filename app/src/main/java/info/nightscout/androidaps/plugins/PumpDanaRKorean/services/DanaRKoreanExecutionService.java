@@ -23,6 +23,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -171,7 +172,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             long now = System.currentTimeMillis();
             mDanaRPump.lastConnection = now;
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
             if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));

@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
@@ -113,8 +114,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTreatmentData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
-            dia = MainApp.getConfigBuilder().getProfile().getDia();
+        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+            dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
         synchronized (treatments) {
             treatments.clear();
@@ -126,8 +127,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTempBasalData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
-            dia = MainApp.getConfigBuilder().getProfile().getDia();
+        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+            dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
         synchronized (tempBasals) {
@@ -140,8 +141,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeExtendedBolusData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && MainApp.getConfigBuilder().getProfile() != null)
-            dia = MainApp.getConfigBuilder().getProfile().getDia();
+        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+            dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
         synchronized (extendedBoluses) {
@@ -176,7 +177,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null)
             return total;
 
@@ -224,7 +225,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public MealData getMealData() {
         MealData result = new MealData();
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) return result;
 
         long now = System.currentTimeMillis();
@@ -410,7 +411,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public void updateTotalIOBTempBasals() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile != null)
             lastTempBasalsCalculation = getCalculationToTimeTempBasals(DateUtil.now(), profile);
     }

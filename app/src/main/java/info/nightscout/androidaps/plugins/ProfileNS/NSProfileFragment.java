@@ -24,6 +24,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
 import info.nightscout.utils.DecimalFormatter;
@@ -92,7 +93,7 @@ public class NSProfileFragment extends SubscriberFragment {
             profileSpinner.setAdapter(adapter);
             // set selected to actual profile
             for (int p = 0; p < profileList.size(); p++) {
-                if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+                if (profileList.get(p).equals(ProfileFunctions.getInstance().getProfileName()))
                     profileSpinner.setSelection(p);
             }
             noProfile.setVisibility(View.GONE);

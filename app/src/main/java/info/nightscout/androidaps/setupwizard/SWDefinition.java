@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -306,8 +307,8 @@ public class SWDefinition {
                                     newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                                     newDialog.show(getActivity().getSupportFragmentManager(), "NewNSTreatmentDialog");
                                 }))
-                        .validator(() -> MainApp.getConfigBuilder().getProfile() != null)
-                        .visibility(() -> MainApp.getConfigBuilder().getProfile() == null)
+                        .validator(() -> ProfileFunctions.getInstance().getProfile() != null)
+                        .visibility(() -> ProfileFunctions.getInstance().getProfile() == null)
                 )
         .add(new SWScreen(R.string.configbuilder_pump)
                 .skippable(false)

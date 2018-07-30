@@ -15,6 +15,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -71,7 +72,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         }
 
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("No profile available");

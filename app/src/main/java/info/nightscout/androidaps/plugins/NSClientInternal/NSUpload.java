@@ -24,6 +24,7 @@ import java.util.Locale;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -83,7 +84,7 @@ public class NSUpload {
             if (useAbsolute) {
                 TemporaryBasal t = temporaryBasal.clone();
                 t.isAbsolute = true;
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 if (profile != null) {
                     t.absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
                     uploadTempBasalStartAbsolute(t, null);
@@ -195,8 +196,8 @@ public class NSUpload {
     }
 
     public static void uploadDeviceStatus() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        String profileName = MainApp.getConfigBuilder().getProfileName();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+        String profileName = ProfileFunctions.getInstance().getProfileName();
 
         if (profile == null || profileName == null) {
             log.error("Profile is null. Skipping upload");
@@ -303,7 +304,7 @@ public class NSUpload {
 
     public static void uploadTempTarget(TempTarget tempTarget) {
         try {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
 
             if (profile == null) {
                 log.error("Profile is null. Skipping upload");

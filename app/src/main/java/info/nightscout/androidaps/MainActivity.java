@@ -49,6 +49,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -291,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkUpgradeToProfileTarget() { // TODO: can be removed in the future
         boolean oldKeyExists = SP.contains("openapsma_min_bg");
         if (oldKeyExists) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             String oldRange = SP.getDouble("openapsma_min_bg", 0d) + " - " + SP.getDouble("openapsma_max_bg", 0d);
             String newRange = "";
             if (profile != null) {

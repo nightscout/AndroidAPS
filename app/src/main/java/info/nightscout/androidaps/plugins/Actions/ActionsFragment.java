@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SingleClickButton;
@@ -131,7 +132,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         profileSwitch.setVisibility(View.GONE);
                     }
 
-                    if (MainApp.getConfigBuilder().getProfile() == null) {
+                    if (ProfileFunctions.getInstance().getProfile() == null) {
                         tempTarget.setVisibility(View.GONE);
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
