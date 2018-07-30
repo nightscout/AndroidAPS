@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +22,10 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.Food.FoodPlugin;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LoggerUtils;
 import info.nightscout.utils.SP;
 
@@ -73,16 +68,6 @@ public class MaintenancePlugin extends PluginBase {
                 .description(R.string.description_maintenance)
         );
         this.ctx = ctx;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-
     }
 
     public void sendLogs() {
@@ -148,7 +133,9 @@ public class MaintenancePlugin extends PluginBase {
 
     /**
      * returns a list of log files. The number of returned logs is given via the amount
-     * parameter. The log files are sorted by the name descending.
+     * parameter.
+     *
+     * The log files are sorted by the name descending.
      *
      * @param directory
      * @param amount
@@ -184,14 +171,6 @@ public class MaintenancePlugin extends PluginBase {
         return result.subList(0, toIndex);
     }
 
-    /**
-     * Zips the given files in a zipfile which is stored in the given zipDir using the givven
-     * name.
-     *
-     * @param zipFile
-     * @param files
-     * @return
-     */
     public File zipLogs(File zipFile, List<File> files) {
         LOG.debug("creating zip {}", zipFile.getAbsolutePath());
 
@@ -216,13 +195,6 @@ public class MaintenancePlugin extends PluginBase {
         return "AndroidAPS_LOG_" + String.valueOf(new Date().getTime()) + LoggerUtils.SUFFIX;
     }
 
-    /**
-     * This method stores all given files inside the given zipFile.
-     *
-     * @param zipFile
-     * @param files
-     * @throws IOException
-     */
     public void zip(File zipFile, List<File> files) throws IOException {
         final int BUFFER_SIZE = 2048;
 
