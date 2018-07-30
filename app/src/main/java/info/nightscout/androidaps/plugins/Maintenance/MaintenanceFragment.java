@@ -39,9 +39,23 @@ public class MaintenanceFragment extends Fragment {
         view.findViewById(R.id.nav_resetdb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.nav_resetdb)
+                        .setMessage(R.string.reset_db_confirm)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            MainApp.getDbHelper().resetDatabases();
+                            // should be handled by Plugin-Interface and
+                            // additional service interface and plugin registry
+                            FoodPlugin.getPlugin().getService().resetFood();
+                            TreatmentsPlugin.getPlugin().getService().resetTreatments();
+                        })
+                        .create()
+                        .show();
             }
         });
+
+
 
         return view;
     }

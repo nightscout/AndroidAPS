@@ -146,21 +146,6 @@ public class MaintenancePlugin extends PluginBase {
         }
     }
 
-    public void resetDb() {
-//        new AlertDialog.Builder(this)
-//                .setTitle(R.string.nav_resetdb)
-//                .setMessage(R.string.reset_db_confirm)
-//                .setNegativeButton(android.R.string.cancel, null)
-//                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-//                    MainApp.getDbHelper().resetDatabases();
-//                    // should be handled by Plugin-Interface and
-//                    // additional service interface and plugin registry
-//                    FoodPlugin.getPlugin().getService().resetFood();
-//                    TreatmentsPlugin.getPlugin().getService().resetTreatments();
-//                })
-//                .create()
-//                .show();
-    }
 
     public void exportSettings() {
 //        ImportExportPrefs.verifyStoragePermissions(this);
