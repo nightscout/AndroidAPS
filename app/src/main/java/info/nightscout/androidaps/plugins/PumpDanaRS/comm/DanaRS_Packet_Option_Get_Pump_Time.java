@@ -1,21 +1,22 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-import com.cozmo.danar.util.BleCommandUtil;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Option_Get_Pump_Time extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Option_Get_Pump_Time.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_Option_Get_Pump_Time() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_OPTION__GET_PUMP_TIME;
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Requesting pump time");
         }
     }
@@ -49,7 +50,7 @@ public class DanaRS_Packet_Option_Get_Pump_Time extends DanaRS_Packet {
         Date time = new Date(100 + year, month - 1, day, hour, min, sec);
         DanaRPump.getInstance().pumpTime = time;
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Pump time " + time.toLocaleString());
         }
     }

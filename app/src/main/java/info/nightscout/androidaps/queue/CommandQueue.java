@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -22,6 +20,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
@@ -77,10 +76,10 @@ import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
  */
 
 public class CommandQueue {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
     private final LinkedList<Command> queue = new LinkedList<>();
-    protected Command performing;
+    Command performing;
 
     private QueueThread thread = null;
 
@@ -111,13 +110,13 @@ public class CommandQueue {
 
     private synchronized void inject(Command command) {
         // inject as a first command
-        if (Config.logQueue)
+        if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.addFirst(command);
     }
 
     private synchronized void add(Command command) {
-        if (Config.logQueue)
+        if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Adding: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.add(command);
     }
@@ -151,17 +150,17 @@ public class CommandQueue {
     // start thread again if not already running
     protected synchronized void notifyAboutNewCommand() {
         while (thread != null && thread.getState() != Thread.State.TERMINATED && thread.waitingForDisconnect) {
-            if (Config.logQueue)
+            if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Waiting for previous thread finish");
             SystemClock.sleep(500);
         }
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
-            if (Config.logQueue)
+            if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Starting new thread");
         } else {
-            if (Config.logQueue)
+            if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Thread is already running");
         }
     }
@@ -187,12 +186,12 @@ public class CommandQueue {
 
         if (type == Command.CommandType.SMB_BOLUS) {
             if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
-                if (Config.logQueue)
+                if (L.isEnabled(L.PUMPQUEUE))
                     log.debug("Rejecting SMB since a bolus is queue/running");
                 return false;
             }
             if (detailedBolusInfo.lastKnownBolusTime < TreatmentsPlugin.getPlugin().getLastBolusTime()) {
-                if (Config.logQueue)
+                if (L.isEnabled(L.PUMPQUEUE))
                     log.debug("Rejecting bolus, another bolus was issued since request time");
                 return false;
             }
@@ -346,7 +345,7 @@ public class CommandQueue {
     // returns true if command is queued
     public boolean setProfile(Profile profile, Callback callback) {
         if (isThisProfileSet(profile)) {
-            if (Config.logQueue)
+            if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Correct profile already set");
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).enacted(false)).run();
@@ -391,7 +390,7 @@ public class CommandQueue {
     // returns true if command is queued
     public boolean readStatus(String reason, Callback callback) {
         if (isLastScheduled(Command.CommandType.READSTATUS)) {
-            if (Config.logQueue)
+            if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("READSTATUS " + reason + " ignored as duplicated");
             if (callback != null)
                 callback.result(executingNowError()).run();
@@ -507,7 +506,7 @@ public class CommandQueue {
         if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);
             if (!result) {
-                if (Config.logQueue) {
+                if (L.isEnabled(L.PUMPQUEUE)) {
                     log.debug("Current profile: " + current.toString());
                     log.debug("New profile: " + profile.toString());
                 }

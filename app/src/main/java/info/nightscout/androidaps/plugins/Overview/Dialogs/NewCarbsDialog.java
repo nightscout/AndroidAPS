@@ -21,7 +21,7 @@ import android.widget.RadioButton;
 
 import com.google.common.base.Joiner;
 
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

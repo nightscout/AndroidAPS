@@ -1,18 +1,15 @@
 package info.nightscout.androidaps.plugins.ConstraintsObjectives;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,28 +18,15 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.squareup.otto.Subscribe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
 import info.nightscout.utils.FabricPrivacy;
 
 public class ObjectivesFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
-
     RecyclerView recyclerView;
     CheckBox enableFake;
     TextView reset;

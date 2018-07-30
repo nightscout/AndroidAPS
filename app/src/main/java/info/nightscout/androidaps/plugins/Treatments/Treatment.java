@@ -29,8 +29,6 @@ import info.nightscout.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(Treatment.class);
-
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)

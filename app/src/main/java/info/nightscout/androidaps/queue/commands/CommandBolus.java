@@ -3,11 +3,10 @@ package info.nightscout.androidaps.queue.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
@@ -19,9 +18,9 @@ import info.nightscout.utils.DecimalFormatter;
  */
 
 public class CommandBolus extends Command {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
-    DetailedBolusInfo detailedBolusInfo;
+    private DetailedBolusInfo detailedBolusInfo;
 
     public CommandBolus(DetailedBolusInfo detailedBolusInfo, Callback callback, CommandType type) {
         commandType = type;
@@ -35,7 +34,7 @@ public class CommandBolus extends Command {
 
         BolusProgressDialog.bolusEnded = true;
         MainApp.bus().post(new EventDismissBolusprogressIfRunning(r));
-        if (Config.logQueue)
+        if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted);
 
         if (callback != null)

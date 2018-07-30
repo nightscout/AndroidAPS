@@ -4,8 +4,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by adrian on 15/10/17.
@@ -14,10 +13,10 @@ import info.nightscout.utils.ToastUtils;
 
 public class LoggerCallback extends ScriptableObject {
 
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
-    static StringBuffer errorBuffer = new StringBuffer();
-    static StringBuffer logBuffer = new StringBuffer();
+    private static StringBuffer errorBuffer = new StringBuffer();
+    private static StringBuffer logBuffer = new StringBuffer();
 
 
     public LoggerCallback() {
@@ -36,26 +35,27 @@ public class LoggerCallback extends ScriptableObject {
     }
 
     public void jsFunction_log(Object obj1) {
-        log.debug(obj1.toString());
+        if (L.isEnabled(L.APS))
+            log.debug(obj1.toString());
         logBuffer.append(obj1.toString());
         logBuffer.append(' ');
     }
 
     public void jsFunction_error(Object obj1) {
-        log.error(obj1.toString());
+        if (L.isEnabled(L.APS))
+            log.error(obj1.toString());
         errorBuffer.append(obj1.toString());
         errorBuffer.append(' ');
     }
 
 
-
-    public static String getScriptDebug(){
+    public static String getScriptDebug() {
         String ret = "";
-        if(errorBuffer.length() > 0){
+        if (errorBuffer.length() > 0) {
             ret += "e:\n" + errorBuffer.toString();
         }
-        if(ret.length() > 0 && logBuffer.length() > 0) ret += '\n';
-        if(logBuffer.length() > 0){
+        if (ret.length() > 0 && logBuffer.length() > 0) ret += '\n';
+        if (logBuffer.length() > 0) {
             ret += "d:\n" + logBuffer.toString();
         }
         return ret;

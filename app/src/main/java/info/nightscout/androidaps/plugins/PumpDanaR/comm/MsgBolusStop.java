@@ -5,11 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 public class MsgBolusStop extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgBolusStop.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     private static Treatment t;
     private static Double amount;
 
@@ -26,10 +27,14 @@ public class MsgBolusStop extends MessageBase {
         this.t = t;
         this.amount = amount;
         forced = false;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("Bolus stop: amount: " + amount + " treatment: " + t.toString());
     }
 
     @Override
     public void handleMessage(byte[] bytes) {
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("Messsage received");
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
         stopped = true;
         if (!forced) {

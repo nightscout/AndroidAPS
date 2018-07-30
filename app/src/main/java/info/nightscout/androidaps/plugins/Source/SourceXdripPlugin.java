@@ -6,23 +6,22 @@ import android.os.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.utils.BundleLogger;
+import info.nightscout.androidaps.logging.BundleLogger;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
-    private static Logger log = LoggerFactory.getLogger(Constants.BGSOURCE);
+    private static Logger log = LoggerFactory.getLogger(L.BGSOURCE);
 
     private static SourceXdripPlugin plugin = null;
 
@@ -56,7 +55,7 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
 
-        if (Config.logBgSource)
+        if (L.isEnabled(L.BGSOURCE))
             log.debug("Received xDrip data: " + BundleLogger.log(intent.getExtras()));
 
         BgReading bgReading = new BgReading();

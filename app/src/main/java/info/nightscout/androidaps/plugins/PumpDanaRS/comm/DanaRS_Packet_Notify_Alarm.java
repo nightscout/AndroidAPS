@@ -1,18 +1,17 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-
-import com.cozmo.danar.util.BleCommandUtil;
-
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 
 public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Notify_Alarm.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int alarmCode;
 
@@ -20,6 +19,8 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
         super();
         type = BleCommandUtil.DANAR_PACKET__TYPE_NOTIFY;
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_NOTIFY__ALARM;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -76,7 +77,7 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
                 break;
         }
 
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Error detected: " + errorString);
         NSUpload.uploadError(errorString);
     }

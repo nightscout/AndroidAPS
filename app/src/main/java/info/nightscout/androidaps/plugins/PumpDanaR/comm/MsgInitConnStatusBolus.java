@@ -3,22 +3,24 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 28.05.2016.
  */
 public class MsgInitConnStatusBolus extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBolus.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgInitConnStatusBolus() {
         SetCommand(0x0302);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -34,7 +36,7 @@ public class MsgInitConnStatusBolus extends MessageBase {
         pump.maxBolus = intFromBuff(bytes, 2, 2) / 100d;
         //int bolusRate = intFromBuff(bytes, 4, 8);
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Is Extended bolus enabled: " + pump.isExtendedBolusEnabled);
             log.debug("Bolus increment: " + pump.bolusStep);
             log.debug("Bolus max: " + pump.maxBolus);

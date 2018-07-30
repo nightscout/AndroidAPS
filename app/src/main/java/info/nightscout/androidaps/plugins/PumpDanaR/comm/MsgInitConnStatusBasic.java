@@ -3,14 +3,16 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class MsgInitConnStatusBasic extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBasic.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgInitConnStatusBasic() {
         SetCommand(0x0303);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -39,14 +41,17 @@ public class MsgInitConnStatusBasic extends MessageBase {
             boolean deliveryStepBolus = (bolusConfig & DanaRPump.DELIVERY_STEP_BOLUS) != 0;
             boolean deliveryBasal = (bolusConfig & DanaRPump.DELIVERY_BASAL) != 0;
             boolean deliveryExtBolus = (bolusConfig & DanaRPump.DELIVERY_EXT_BOLUS) != 0;
-            log.debug("Delivery prime: " + deliveryPrime);
-            log.debug("Delivery step bolus: " + deliveryStepBolus);
-            log.debug("Delivery basal: " + deliveryBasal);
-            log.debug("Delivery ext bolus: " + deliveryExtBolus);
+            if (L.isEnabled(L.PUMPCOMM)) {
+                log.debug("Delivery prime: " + deliveryPrime);
+                log.debug("Delivery step bolus: " + deliveryStepBolus);
+                log.debug("Delivery basal: " + deliveryBasal);
+                log.debug("Delivery ext bolus: " + deliveryExtBolus);
+            }
         } catch (Exception e) {
+            log.error("Unhadled exception", e);
         }
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Pump suspended: " + pump.pumpSuspended);
             log.debug("Calculator enabled: " + pump.calculatorEnabled);
             log.debug("Daily total units: " + pump.dailyTotalUnits);

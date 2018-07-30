@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -18,7 +17,8 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -26,7 +26,7 @@ import info.nightscout.utils.SP;
  */
 
 public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterface {
-    private static Logger log = LoggerFactory.getLogger(Constants.BGSOURCE);
+    private static Logger log = LoggerFactory.getLogger(L.BGSOURCE);
 
     private static SourceDexcomG5Plugin plugin = null;
 
@@ -65,12 +65,12 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
         BgReading bgReading = new BgReading();
 
         String data = bundle.getString("data");
-        if (Config.logBgSource)
+        if (L.isEnabled(L.BGSOURCE))
             log.debug("Received Dexcom Data", data);
 
         try {
             JSONArray jsonArray = new JSONArray(data);
-            if (Config.logBgSource)
+            if (L.isEnabled(L.BGSOURCE))
                 log.debug("Received Dexcom Data size:" + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject json = jsonArray.getJSONObject(i);

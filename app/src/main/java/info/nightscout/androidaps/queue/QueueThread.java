@@ -8,17 +8,14 @@ import android.os.SystemClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.utils.SP;
 
@@ -27,7 +24,7 @@ import info.nightscout.utils.SP;
  */
 
 public class QueueThread extends Thread {
-    private Logger log = LoggerFactory.getLogger(Constants.QUEUE);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
     private CommandQueue queue;
 
@@ -55,7 +52,7 @@ public class QueueThread extends Thread {
             while (true) {
                 PumpInterface pump = ConfigBuilderPlugin.getActivePump();
                 if (pump == null) {
-                    if (Config.logQueue)
+                    if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("pump == null");
                     MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.pumpNotInitialized)));
                     SystemClock.sleep(1000);
@@ -66,7 +63,7 @@ public class QueueThread extends Thread {
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     MainApp.bus().post(new EventDismissBolusprogressIfRunning(null));
                     MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.connectiontimedout)));
-                    if (Config.logQueue)
+                    if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("timed out");
                     pump.stopConnecting();
 
@@ -75,7 +72,7 @@ public class QueueThread extends Thread {
                     long last_watchdog = SP.getLong(R.string.key_btwatchdog_lastbark, 0l);
                     watchdog = watchdog && System.currentTimeMillis() - last_watchdog > (Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000);
                     if (watchdog) {
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("BT watchdog - toggeling the phonest bluetooth");
                         //write time
                         SP.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis());
@@ -95,7 +92,7 @@ public class QueueThread extends Thread {
                         pump.connect("watchdog");
                     } else {
                         queue.clear();
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("no connection possible");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
                         pump.disconnect("Queue empty");
@@ -105,7 +102,7 @@ public class QueueThread extends Thread {
                 }
 
                 if (pump.isConnecting()) {
-                    if (Config.logQueue)
+                    if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("connecting " + secondsElapsed);
                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
                     SystemClock.sleep(1000);
@@ -114,7 +111,7 @@ public class QueueThread extends Thread {
 
 
                 if (!pump.isConnected()) {
-                    if (Config.logQueue)
+                    if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("connect");
                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
                     pump.connect("Connection needed");
@@ -125,13 +122,13 @@ public class QueueThread extends Thread {
                 if (queue.performing() == null) {
                     if (!connectLogged) {
                         connectLogged = true;
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("connection time " + secondsElapsed + "s");
                     }
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
                         queue.pickup();
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("performing " + queue.performing().status());
                         MainApp.bus().post(new EventQueueChanged());
                         queue.performing().execute();
@@ -147,16 +144,16 @@ public class QueueThread extends Thread {
                     long secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000;
                     if (secondsFromLastCommand >= 5) {
                         waitingForDisconnect = true;
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("queue empty. disconnect");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
                         pump.disconnect("Queue empty");
                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("disconnected");
                         return;
                     } else {
-                        if (Config.logQueue)
+                        if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("waiting for disconnect");
                         SystemClock.sleep(1000);
                     }

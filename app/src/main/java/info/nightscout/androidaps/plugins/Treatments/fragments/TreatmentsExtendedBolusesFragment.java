@@ -18,9 +18,6 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -35,12 +32,10 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 
 
 public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsExtendedBolusesFragment.class);
-
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 

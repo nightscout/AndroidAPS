@@ -22,10 +22,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.utils.SP;
 
 /**
@@ -36,7 +36,7 @@ public class NotificationStore {
 
     private static final String CHANNEL_ID = "AndroidAPS-Overview";
 
-    private static Logger log = LoggerFactory.getLogger(Constants.NOTIFICATION);
+    private static Logger log = LoggerFactory.getLogger(L.NOTIFICATION);
     public List<Notification> store = new ArrayList<>();
     private boolean usesChannels;
 
@@ -52,7 +52,7 @@ public class NotificationStore {
     }
 
     public synchronized boolean add(Notification n) {
-        if (Config.logNotification)
+        if (L.isEnabled(L.NOTIFICATION))
             log.debug("Notification received: " + n.text);
         for (Notification storeNotification : store) {
             if (storeNotification.id == n.id) {
@@ -108,7 +108,7 @@ public class NotificationStore {
     }
 
     public void snoozeTo(long timeToSnooze) {
-        if (Config.logNotification)
+        if (L.isEnabled(L.NOTIFICATION))
             log.debug("Snoozing alarm until: " + timeToSnooze);
         SP.putLong("snoozedTo", timeToSnooze);
     }
@@ -118,7 +118,7 @@ public class NotificationStore {
             Notification notification = new Notification(Notification.NSALARM, MainApp.gs(R.string.nsalarm_staledata), Notification.URGENT);
             SP.putLong("snoozedTo", System.currentTimeMillis());
             add(notification);
-            if (Config.logNotification)
+            if (L.isEnabled(L.NOTIFICATION))
                 log.debug("Snoozed to current time and added back notification!");
         }
     }

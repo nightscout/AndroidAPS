@@ -6,8 +6,6 @@ import android.os.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -15,13 +13,14 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.utils.BundleLogger;
+import info.nightscout.androidaps.logging.BundleLogger;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
-    private static Logger log = LoggerFactory.getLogger(Constants.BGSOURCE);
+    private static Logger log = LoggerFactory.getLogger(L.BGSOURCE);
 
     private static SourceGlimpPlugin plugin = null;
 
@@ -53,7 +52,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
 
-        if (Config.logBgSource)
+        if (L.isEnabled(L.BGSOURCE))
             log.debug("Received Glimp Data: " + BundleLogger.log(bundle));
 
         BgReading bgReading = new BgReading();

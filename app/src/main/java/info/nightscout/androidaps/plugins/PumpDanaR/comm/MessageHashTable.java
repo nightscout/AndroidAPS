@@ -9,8 +9,6 @@ import java.util.HashMap;
  * Created by mike on 28.05.2016.
  */
 public class MessageHashTable {
-    private static Logger log = LoggerFactory.getLogger(MessageHashTable.class);
-
     public static HashMap<Integer, MessageBase> messages = null;
 
     static {

@@ -10,14 +10,12 @@ import android.support.v7.app.AlertDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.services.Intents;
 
 /**
  * Created by mike on 10.02.2017.

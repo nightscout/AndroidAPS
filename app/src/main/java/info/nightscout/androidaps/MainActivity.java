@@ -38,14 +38,19 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.activities.AgreementActivity;
+import info.nightscout.androidaps.activities.HistoryBrowseActivity;
+import info.nightscout.androidaps.activities.PreferencesActivity;
+import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
@@ -58,7 +63,7 @@ import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
 
 public class MainActivity extends AppCompatActivity {
-    private static Logger log = LoggerFactory.getLogger(MainActivity.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     protected PowerManager.WakeLock mWakeLock;
 
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Config.logFunctionCalls)
+        if (L.isEnabled(L.CORE))
             log.debug("onCreate");
 
         Iconify.with(new FontAwesomeModule());
@@ -130,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        if (L.isEnabled(L.CORE))
+            log.debug("onResume");
+
         if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
@@ -149,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        if (L.isEnabled(L.CORE))
+            log.debug("onDestroy");
         if (mWakeLock != null)
             if (mWakeLock.isHeld())
                 mWakeLock.release();
@@ -400,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setIcon(R.mipmap.blueowl);
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
-                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + NSSettingsStatus.getInstance().nightscoutVersionName;
                 if (MainApp.engineeringMode)
                     message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
                 message += MainApp.gs(R.string.about_link_urls);

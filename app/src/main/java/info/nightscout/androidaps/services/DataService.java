@@ -1,8 +1,7 @@
-package info.nightscout.androidaps.Services;
+package info.nightscout.androidaps.services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Telephony;
 
@@ -12,19 +11,15 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
@@ -37,13 +32,13 @@ import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
-import info.nightscout.utils.BundleLogger;
+import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
 
 
 public class DataService extends IntentService {
-    private static Logger log = LoggerFactory.getLogger(DataService.class);
+    private Logger log = LoggerFactory.getLogger(L.DATASERVICE);
 
     public DataService() {
         super("DataService");
@@ -52,8 +47,10 @@ public class DataService extends IntentService {
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        if (Config.logFunctionCalls)
+        if (L.isEnabled(L.DATASERVICE)) {
+            log.debug("onHandleIntent " + intent);
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
+        }
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -78,15 +75,23 @@ public class DataService extends IntentService {
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {
             // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
             NSProfilePlugin.getPlugin().handleNewData(intent);
+        } else if (Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
+            NSDeviceStatus.getInstance().handleNewData(intent);
+        } else if (Intents.ACTION_NEW_STATUS.equals(action)) {
+            NSSettingsStatus.getInstance().handleNewData(intent);
+        } else if (Intents.ACTION_NEW_FOOD.equals(action)) {
+            EventNsFood evt = new EventNsFood(EventNsFood.ADD, bundles);
+            MainApp.bus().post(evt);
+        } else if (Intents.ACTION_CHANGED_FOOD.equals(action)) {
+            EventNsFood evt = new EventNsFood(EventNsFood.UPDATE, bundles);
+            MainApp.bus().post(evt);
+        } else if (Intents.ACTION_REMOVED_FOOD.equals(action)) {
+            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
+            MainApp.bus().post(evt);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
                         Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
-                        Intents.ACTION_NEW_STATUS.equals(action) ||
-                        Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
-                        Intents.ACTION_NEW_FOOD.equals(action) ||
-                        Intents.ACTION_CHANGED_FOOD.equals(action) ||
-                        Intents.ACTION_REMOVED_FOOD.equals(action) ||
                         Intents.ACTION_NEW_CAL.equals(action) ||
                         Intents.ACTION_NEW_MBG.equals(action))
                 ) {
@@ -95,7 +100,7 @@ public class DataService extends IntentService {
             SmsCommunicatorPlugin.getPlugin().handleNewData(intent);
         }
 
-        if (Config.logFunctionCalls)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("onHandleIntent exit " + intent);
         DataReceiver.completeWakefulIntent(intent);
     }
@@ -118,82 +123,9 @@ public class DataService extends IntentService {
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
-        if (Config.logIncommingData)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("Got intent: " + intent.getAction());
 
-
-        if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
-            if (bundles.containsKey("nsclientversioncode")) {
-                ConfigBuilderPlugin.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
-                ConfigBuilderPlugin.nightscoutVersionName = bundles.getString("nightscoutversionname");
-                ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
-                ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
-                log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
-                try {
-                    if (ConfigBuilderPlugin.nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
-                        Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
-                        MainApp.bus().post(new EventNewNotification(notification));
-                    } else {
-                        MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    log.error("Unhandled exception", e);
-                }
-                if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
-                    Notification notification = new Notification(Notification.OLD_NS, MainApp.gs(R.string.unsupportednsversion), Notification.NORMAL);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                } else {
-                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));
-                }
-            } else {
-                Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
-            }
-            if (bundles.containsKey("status")) {
-                try {
-                    JSONObject statusJson = new JSONObject(bundles.getString("status"));
-                    NSSettingsStatus.getInstance().setData(statusJson);
-                    if (Config.logIncommingData)
-                        log.debug("Received status: " + statusJson.toString());
-                    Double targetHigh = NSSettingsStatus.getInstance().getThreshold("bgTargetTop");
-                    Double targetlow = NSSettingsStatus.getInstance().getThreshold("bgTargetBottom");
-                    if (targetHigh != null)
-                        OverviewPlugin.bgTargetHigh = targetHigh;
-                    if (targetlow != null)
-                        OverviewPlugin.bgTargetLow = targetlow;
-                } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
-                }
-            }
-        }
-        if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
-            try {
-                if (bundles.containsKey("devicestatus")) {
-                    JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
-                    NSDeviceStatus.getInstance().setData(devicestatusJson);
-                    if (devicestatusJson.has("pump")) {
-                        // Objectives 0
-                        ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                        ObjectivesPlugin.saveProgress();
-                    }
-                }
-                if (bundles.containsKey("devicestatuses")) {
-                    String devicestatusesstring = bundles.getString("devicestatuses");
-                    JSONArray jsonArray = new JSONArray(devicestatusesstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject devicestatusJson = jsonArray.getJSONObject(i);
-                        NSDeviceStatus.getInstance().setData(devicestatusJson);
-                        if (devicestatusJson.has("pump")) {
-                            // Objectives 0
-                            ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                            ObjectivesPlugin.saveProgress();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
-        }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
@@ -219,7 +151,7 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("treatment")) {
                     String trstring = bundles.getString("treatment");
                     JSONObject json = new JSONObject(trstring);
-                    handleTreatmentFromNS(json);
+                    handleRemovedTreatmentFromNS(json);
                 }
 
                 if (bundles.containsKey("treatments")) {
@@ -227,7 +159,7 @@ public class DataService extends IntentService {
                     JSONArray jsonArray = new JSONArray(trstring);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject json = jsonArray.getJSONObject(i);
-                        handleTreatmentFromNS(json);
+                        handleRemovedTreatmentFromNS(json);
                     }
                 }
             } catch (JSONException e) {
@@ -255,21 +187,9 @@ public class DataService extends IntentService {
                 log.error("Unhandled exception", e);
             }
         }
-
-        if (intent.getAction().equals(Intents.ACTION_NEW_FOOD)
-                || intent.getAction().equals(Intents.ACTION_CHANGED_FOOD)) {
-            int mode = Intents.ACTION_NEW_FOOD.equals(intent.getAction()) ? EventNsFood.ADD : EventNsFood.UPDATE;
-            EventNsFood evt = new EventNsFood(mode, bundles);
-            MainApp.bus().post(evt);
-        }
-
-        if (intent.getAction().equals(Intents.ACTION_REMOVED_FOOD)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
-            MainApp.bus().post(evt);
-        }
     }
 
-    private void handleTreatmentFromNS(JSONObject json) {
+    private void handleRemovedTreatmentFromNS(JSONObject json) {
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.REMOVE, json);
         MainApp.bus().post(evtTreatment);
@@ -333,7 +253,7 @@ public class DataService extends IntentService {
         NSMbg nsMbg = new NSMbg(mbgJson);
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
-        if (Config.logIncommingData)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("Adding/Updating new MBG: " + careportalEvent.log());
     }
 

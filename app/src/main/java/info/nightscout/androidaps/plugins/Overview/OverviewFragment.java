@@ -80,13 +80,13 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
@@ -115,7 +115,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
@@ -126,7 +126,7 @@ import info.nightscout.utils.ToastUtils;
 import static info.nightscout.utils.DateUtil.now;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
-    private static Logger log = LoggerFactory.getLogger(Constants.OVERVIEW);
+    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
 
     TextView timeView;
     TextView bgView;
@@ -826,7 +826,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     synchronized (builder) {
                         if (accepted) {
-                            if (Config.logOverview)
+                            if (L.isEnabled(L.OVERVIEW))
                                 log.debug("guarding: already accepted");
                             return;
                         }
@@ -1032,7 +1032,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @SuppressLint("SetTextI18n")
     public void updateGUI(final String from) {
-        if (Config.logOverview)
+        if (L.isEnabled(L.OVERVIEW))
             log.debug("updateGUI entered from: " + from);
         final Date updateGUIStart = new Date();
 
@@ -1428,7 +1428,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             final long now = System.currentTimeMillis();
 
             //  ------------------ 1st graph
-            if (Config.logOverview)
+            if (L.isEnabled(L.OVERVIEW))
                 Profiler.log(log, from + " - 1st graph - START", updateGUIStart);
 
             final GraphData graphData = new GraphData(bgGraph, IobCobCalculatorPlugin.getPlugin());
@@ -1461,7 +1461,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             graphData.addNowLine(now);
 
             // ------------------ 2nd graph
-            if (Config.logOverview)
+            if (L.isEnabled(L.OVERVIEW))
                 Profiler.log(log, from + " - 2nd graph - START", updateGUIStart);
 
             final GraphData secondGraphData = new GraphData(iobGraph, IobCobCalculatorPlugin.getPlugin());
@@ -1516,13 +1516,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     // finally enforce drawing of graphs
                     graphData.performUpdate();
                     secondGraphData.performUpdate();
-                    if (Config.logOverview)
+                    if (L.isEnabled(L.OVERVIEW))
                         Profiler.log(log, from + " - onDataChanged", updateGUIStart);
                 });
             }
         }).start();
 
-        if (Config.logOverview)
+        if (L.isEnabled(L.OVERVIEW))
             Profiler.log(log, from, updateGUIStart);
     }
 

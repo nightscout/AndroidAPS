@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -70,14 +70,8 @@ public class ConfigBuilderPlugin extends PluginBase {
     private static ProfileInterface activeProfile;
     private static TreatmentsInterface activeTreatments;
     private static APSInterface activeAPS;
-    private static LoopPlugin activeLoop;
     private static InsulinInterface activeInsulin;
     private static SensitivityInterface activeSensitivity;
-
-    static public String nightscoutVersionName = "";
-    static public Integer nightscoutVersionCode = 0;
-    static public String nsClientVersionName = "";
-    static public Integer nsClientVersionCode = 0;
 
     private static ArrayList<PluginBase> pluginList;
 
@@ -126,7 +120,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     public void storeSettings(String from) {
         if (pluginList != null) {
-            if (Config.logPrefsChange)
+            if (Config.logConfigBuilder)
                 log.debug("Storing settings from: " + from);
 
             for (PluginBase p : pluginList) {
@@ -158,7 +152,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     }
 
     private void loadSettings() {
-        if (Config.logPrefsChange)
+        if (Config.logConfigBuilder)
             log.debug("Loading stored settings");
         for (PluginBase p : pluginList) {
             PluginType type = p.getType();
@@ -195,7 +189,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     private void upgradeSettings() {
         if (!SP.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
-        if (Config.logPrefsChange)
+        if (Config.logConfigBuilder)
             log.debug("Upgrading stored settings");
         for (PluginBase p : pluginList) {
             log.debug("Processing " + p.getName());
@@ -336,9 +330,6 @@ public class ConfigBuilderPlugin extends PluginBase {
             VirtualPumpPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
         }
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
-
-        // PluginType.LOOP
-        activeLoop = this.determineActivePlugin(PluginType.LOOP);
 
         // PluginType.TREATMENT
         activeTreatments = this.determineActivePlugin(PluginType.TREATMENT);
