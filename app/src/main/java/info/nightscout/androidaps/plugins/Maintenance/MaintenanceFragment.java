@@ -11,6 +11,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.ImportExportPrefs;
 
 /**
  *
@@ -21,6 +22,8 @@ public class MaintenanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.maintenance_fragment, container, false);
+
+        final Fragment f = this;
 
         view.findViewById(R.id.log_send).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +42,7 @@ public class MaintenanceFragment extends Fragment {
         view.findViewById(R.id.nav_resetdb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(getContext())
+                new AlertDialog.Builder(f.getContext())
                         .setTitle(R.string.nav_resetdb)
                         .setMessage(R.string.reset_db_confirm)
                         .setNegativeButton(android.R.string.cancel, null)
@@ -55,6 +58,23 @@ public class MaintenanceFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.nav_export).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // start activity for checking permissions...
+                ImportExportPrefs.verifyStoragePermissions(f);
+                ImportExportPrefs.exportSharedPreferences(f);
+            }
+        });
+
+        view.findViewById(R.id.nav_import).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // start activity for checking permissions...
+                ImportExportPrefs.verifyStoragePermissions(f);
+                ImportExportPrefs.importSharedPreferences(f);
+            }
+        });
 
 
         return view;

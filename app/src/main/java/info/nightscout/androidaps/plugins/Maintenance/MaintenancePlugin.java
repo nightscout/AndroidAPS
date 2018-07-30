@@ -146,17 +146,6 @@ public class MaintenancePlugin extends PluginBase {
         }
     }
 
-
-    public void exportSettings() {
-//        ImportExportPrefs.verifyStoragePermissions(this);
-//        ImportExportPrefs.exportSharedPreferences(this);
-    }
-
-    public void importSettings() {
-//        ImportExportPrefs.verifyStoragePermissions(this);
-//        ImportExportPrefs.importSharedPreferences(this);
-    }
-
     /**
      * returns a list of log files. The number of returned logs is given via the amount
      * parameter. The log files are sorted by the name descending.
