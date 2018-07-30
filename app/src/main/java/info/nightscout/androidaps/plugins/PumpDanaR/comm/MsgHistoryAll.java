@@ -7,14 +7,17 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DateUtil;
 
 public class MsgHistoryAll extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgHistoryAll.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgHistoryAll() {
         SetCommand(0x41F2);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override

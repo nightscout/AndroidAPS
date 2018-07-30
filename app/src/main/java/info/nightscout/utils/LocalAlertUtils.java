@@ -13,7 +13,9 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -79,7 +81,7 @@ public class LocalAlertUtils {
         //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
             Date lastConnection = pump.lastDataTime();
             long earliestAlarmTime = lastConnection.getTime() + pumpUnreachableThreshold();

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import info.nightscout.androidaps.events.Event;
+import info.nightscout.androidaps.logging.L;
 
 /** Logs events has they're being posted to and dispatched from the event bus.
  *
@@ -18,7 +19,7 @@ import info.nightscout.androidaps.events.Event;
  * after 10s (after startup) and then again every 60s.
  * */
 public class LoggingBus extends Bus {
-    private static Logger log = LoggerFactory.getLogger(LoggingBus.class);
+    private static Logger log = LoggerFactory.getLogger(L.EVENTS);
 
     private static long everyMinute = System.currentTimeMillis() + 10 * 1000;
     private Map<String, Set<String>> event2Receiver = new HashMap<>();

@@ -32,6 +32,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
@@ -134,7 +135,7 @@ public class ActionStringHandler {
             ///////////////////////////////////////////////////////// TEMPTARGET
             boolean isMGDL = Boolean.parseBoolean(act[1]);
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null) {
                 sendError("No profile found!");
                 return;
@@ -203,7 +204,7 @@ public class ActionStringHandler {
             boolean useTrend = SP.getBoolean(R.string.key_wearwizard_trend, false);
             int percentage = Integer.parseInt(act[2]);
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null) {
                 sendError("No profile found!");
                 return;
@@ -363,7 +364,7 @@ public class ActionStringHandler {
 
     private static String generateTDDMessage(List<TDD> historyList, List<TDD> dummies) {
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {
             return "No profile loaded :(";
@@ -517,7 +518,7 @@ public class ActionStringHandler {
         if (!Config.APS) {
             return "Targets only apply in APS mode!";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) {
             return "No profile set :(";
         }
@@ -541,7 +542,7 @@ public class ActionStringHandler {
         if (!Config.APS) {
             return "Only apply in APS mode!";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) {
             return "No profile set :(";
         }
@@ -651,7 +652,7 @@ public class ActionStringHandler {
         if (timeshift < 0 || timeshift > 23) {
             msg += String.format(MainApp.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
         }
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {
             msg += MainApp.gs(R.string.notloadedplugins) + "\n";

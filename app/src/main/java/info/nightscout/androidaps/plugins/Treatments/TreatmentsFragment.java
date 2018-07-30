@@ -27,8 +27,6 @@ import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempora
 import info.nightscout.utils.FabricPrivacy;
 
 public class TreatmentsFragment extends SubscriberFragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
-
     TextView treatmentsTab;
     TextView extendedBolusesTab;
     TextView tempBasalsTab;

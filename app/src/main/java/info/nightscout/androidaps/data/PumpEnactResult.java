@@ -10,11 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
 public class PumpEnactResult {
-    private static Logger log = LoggerFactory.getLogger(PumpEnactResult.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
     public boolean enacted = false;    // request was processed successfully and change has been made

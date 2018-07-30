@@ -1,4 +1,4 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.logging;
 
 import android.os.Bundle;
 

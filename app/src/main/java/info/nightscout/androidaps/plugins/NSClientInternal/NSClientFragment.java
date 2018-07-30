@@ -34,8 +34,6 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
 public class NSClientFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    private static Logger log = LoggerFactory.getLogger(NSClientFragment.class);
-
     private TextView logTextView;
     private TextView queueTextView;
     private TextView urlTextView;

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.R;
 import info.nightscout.utils.SP;
 
 public class AgreementActivity extends Activity {

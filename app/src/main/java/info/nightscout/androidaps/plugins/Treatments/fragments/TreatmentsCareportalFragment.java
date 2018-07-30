@@ -22,13 +22,13 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.Translator;
 

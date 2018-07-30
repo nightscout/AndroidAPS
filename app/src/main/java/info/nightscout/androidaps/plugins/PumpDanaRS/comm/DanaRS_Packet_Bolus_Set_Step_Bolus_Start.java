@@ -5,14 +5,12 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Bolus_Set_Step_Bolus_Start.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private double amount;
     private int speed;
@@ -35,7 +33,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
         this.amount = amount;
         this.speed = speed;
 
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Bolus start : " + amount + " speed: " + speed);
     }
 
@@ -52,7 +50,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
     @Override
     public void handleMessage(byte[] data) {
         errorCode = intFromBuff(data, 0, 1);
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (errorCode == 0) {
                 log.debug("Result OK");
                 failed = false;

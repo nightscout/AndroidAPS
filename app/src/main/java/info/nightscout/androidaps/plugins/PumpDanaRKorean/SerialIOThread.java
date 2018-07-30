@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.AbstractSerialIOThread;
@@ -21,7 +21,7 @@ import info.nightscout.utils.CRC;
  * Created by mike on 17.07.2016.
  */
 public class SerialIOThread extends AbstractSerialIOThread {
-    private static Logger log = LoggerFactory.getLogger(SerialIOThread.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
     private InputStream mInputStream = null;
     private OutputStream mOutputStream = null;
@@ -72,7 +72,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
                         message = MessageHashTable_k.findMessage(command);
                     }
 
-                    if (Config.logDanaMessageDetail)
+                    if (L.isEnabled(L.PUMPBTCOMM))
                         log.debug("<<<<< " + message.getMessageName() + " " + message.toHexString(extractedBuff));
 
                     // process the message content
@@ -84,7 +84,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
                 }
             }
         } catch (Exception e) {
-            if (Config.logDanaSerialEngine && e.getMessage().indexOf("bt socket closed") < 0)
+            if (e.getMessage().indexOf("bt socket closed") < 0)
                 log.error("Thread exception: ", e);
             mKeepRunning = false;
         }
@@ -148,7 +148,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
         processedMessage = message;
 
         byte[] messageBytes = message.getRawMessageBytes();
-        if (Config.logDanaSerialEngine)
+        if (L.isEnabled(L.PUMPBTCOMM))
             log.debug(">>>>> " + message.getMessageName() + " " + message.toHexString(messageBytes));
 
         try {
@@ -167,10 +167,11 @@ public class SerialIOThread extends AbstractSerialIOThread {
 
         SystemClock.sleep(200);
         if (!message.received) {
-            log.warn("Reply not received " + message.getMessageName());
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.warn("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
                 DanaRPump.getInstance().isNewPump = false;
-                log.debug("Old firmware detected");
+                log.error("Old firmware detected");
             }
         }
     }
@@ -181,24 +182,29 @@ public class SerialIOThread extends AbstractSerialIOThread {
         try {
             mInputStream.close();
         } catch (Exception e) {
-            if (Config.logDanaSerialEngine) log.debug(e.getMessage());
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug(e.getMessage());
         }
         try {
             mOutputStream.close();
         } catch (Exception e) {
-            if (Config.logDanaSerialEngine) log.debug(e.getMessage());
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug(e.getMessage());
         }
         try {
             mRfCommSocket.close();
         } catch (Exception e) {
-            if (Config.logDanaSerialEngine) log.debug(e.getMessage());
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug(e.getMessage());
         }
         try {
             System.runFinalization();
         } catch (Exception e) {
-            if (Config.logDanaSerialEngine) log.debug(e.getMessage());
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug(e.getMessage());
         }
-        if (Config.logDanaSerialEngine) log.debug("Disconnected: " + reason);
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("Disconnected: " + reason);
     }
 
 }

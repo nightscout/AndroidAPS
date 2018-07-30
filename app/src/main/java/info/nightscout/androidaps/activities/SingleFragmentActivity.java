@@ -1,16 +1,17 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.PasswordProtection;
 
 public class SingleFragmentActivity extends AppCompatActivity {

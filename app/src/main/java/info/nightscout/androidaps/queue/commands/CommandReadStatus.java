@@ -1,5 +1,9 @@
 package info.nightscout.androidaps.queue.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.LocalAlertUtils;
@@ -9,7 +13,9 @@ import info.nightscout.utils.LocalAlertUtils;
  */
 
 public class CommandReadStatus extends Command {
-    String reason;
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
+
+    private String reason;
 
     public CommandReadStatus(String reason, Callback callback) {
         commandType = CommandType.READSTATUS;
@@ -21,6 +27,8 @@ public class CommandReadStatus extends Command {
     public void execute() {
         ConfigBuilderPlugin.getActivePump().getPumpStatus();
         LocalAlertUtils.notifyPumpStatusRead();
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("CommandReadStatus executed. Reason: " + reason);
         if (callback != null)
             callback.result(null).run();
     }

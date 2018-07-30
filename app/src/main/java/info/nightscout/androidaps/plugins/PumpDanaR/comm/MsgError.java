@@ -3,17 +3,19 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 
 public class MsgError extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgError.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgError() {
         SetCommand(0x0601);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -47,7 +49,7 @@ public class MsgError extends MessageBase {
             bolusingEvent.status = errorString;
             MainApp.bus().post(bolusingEvent);
         }
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Error detected: " + errorString);
         NSUpload.uploadError(errorString);
     }

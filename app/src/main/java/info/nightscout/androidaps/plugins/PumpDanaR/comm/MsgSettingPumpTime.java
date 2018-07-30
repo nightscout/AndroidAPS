@@ -5,14 +5,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class MsgSettingPumpTime extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSettingPumpTime.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSettingPumpTime() {
         SetCommand(0x320A);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -26,7 +28,7 @@ public class MsgSettingPumpTime extends MessageBase {
                         intFromBuff(bytes, 0, 1)
                 );
 
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Pump time: " + time + " Phone time: " + new Date());
 
         DanaRPump.getInstance().pumpTime = time;

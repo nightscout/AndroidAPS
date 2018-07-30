@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.plugins.NSClientInternal.data;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,7 +16,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -73,7 +79,7 @@ import info.nightscout.utils.SP;
 }
  */
 public class NSDeviceStatus {
-    private static Logger log = LoggerFactory.getLogger(NSDeviceStatus.class);
+    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     private static NSDeviceStatus instance = null;
 
@@ -86,6 +92,41 @@ public class NSDeviceStatus {
     private JSONObject data = null;
 
     public NSDeviceStatus() {
+    }
+
+    public void handleNewData(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        if (L.isEnabled(L.NSCLIENT))
+            log.debug("Got NS devicestatus: " + BundleLogger.log(bundle));
+
+        try {
+            if (bundle.containsKey("devicestatus")) {
+                JSONObject devicestatusJson = new JSONObject(bundle.getString("devicestatus"));
+                setData(devicestatusJson);
+                if (devicestatusJson.has("pump")) {
+                    // Objectives 0
+                    ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
+                    ObjectivesPlugin.saveProgress();
+                }
+            }
+            if (bundle.containsKey("devicestatuses")) {
+                String devicestatusesstring = bundle.getString("devicestatuses");
+                JSONArray jsonArray = new JSONArray(devicestatusesstring);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject devicestatusJson = jsonArray.getJSONObject(i);
+                    setData(devicestatusJson);
+                    if (devicestatusJson.has("pump")) {
+                        // Objectives 0
+                        ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
+                        ObjectivesPlugin.saveProgress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Unhandled exception", e);
+        }
     }
 
     public NSDeviceStatus setData(JSONObject obj) {
