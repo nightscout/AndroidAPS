@@ -180,6 +180,7 @@
 
         <activity android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".logging.LogSettingActivity"></activity>
     </application>
 
 </manifest>

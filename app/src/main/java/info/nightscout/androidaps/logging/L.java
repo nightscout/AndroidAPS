@@ -19,7 +19,7 @@ public class L {
             enabled = SP.getBoolean(getSPName(), defaultValue);
         }
 
-       LogElement(String name, boolean defaultValue, boolean requiresRestart) {
+        LogElement(String name, boolean defaultValue, boolean requiresRestart) {
             this.name = name;
             this.defaultValue = defaultValue;
             this.requiresRestart = requiresRestart;
@@ -36,6 +36,14 @@ public class L {
             return "log_" + name;
         }
 
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+            SP.putBoolean(getSPName(), enabled);
+        }
+
+        void resetToDefault() {
+            setEnabled(defaultValue);
+        }
     }
 
     private static List<LogElement> logElements;
@@ -45,8 +53,7 @@ public class L {
     }
 
     private static LogElement findByName(String name) {
-        for (LogElement element: logElements
-             ) {
+        for (LogElement element : logElements) {
             if (element.name.equals(name))
                 return element;
         }
@@ -56,6 +63,17 @@ public class L {
     public static boolean isEnabled(String name) {
         return findByName(name).enabled;
     }
+
+    public static List<LogElement> getLogElements() {
+        return logElements;
+    }
+
+    public static void resetToDefaults() {
+        for (LogElement element : logElements) {
+            element.resetToDefault();
+        }
+    }
+
 
     public static final String CORE = "CORE";
     public static final String AUTOSENS = "AUTOSENS";
@@ -80,26 +98,26 @@ public class L {
 
     private static void initialize() {
         logElements = new ArrayList<>();
-        logElements.add(new LogElement(CORE, true));
-        logElements.add(new LogElement(CONFIGBUILDER, true));
-        logElements.add(new LogElement(AUTOSENS, false));
-        logElements.add(new LogElement(EVENTS, false, true));
-        logElements.add(new LogElement(BGSOURCE, true));
-        logElements.add(new LogElement(OVERVIEW, true));
-        logElements.add(new LogElement(NOTIFICATION, true));
         logElements.add(new LogElement(ALARM, false));
-        logElements.add(new LogElement(DATASERVICE, true));
+        logElements.add(new LogElement(APS, true));
+        logElements.add(new LogElement(AUTOSENS, false));
+        logElements.add(new LogElement(BGSOURCE, true));
+        logElements.add(new LogElement(CONFIGBUILDER, true));
+        logElements.add(new LogElement(CORE, true));
         logElements.add(new LogElement(DATABASE, true));
         logElements.add(new LogElement(DATAFOOD, true));
+        logElements.add(new LogElement(DATASERVICE, true));
         logElements.add(new LogElement(DATATREATMENTS, true));
+        logElements.add(new LogElement(EVENTS, false, true));
+        logElements.add(new LogElement(NOTIFICATION, true));
         logElements.add(new LogElement(NSCLIENT, true));
         logElements.add(new LogElement(OBJECTIVES, false));
-        logElements.add(new LogElement(PUMP, true));
-        logElements.add(new LogElement(PUMPQUEUE, true));
-        logElements.add(new LogElement(PUMPCOMM, true));
-        logElements.add(new LogElement(PUMPBTCOMM, false));
-        logElements.add(new LogElement(APS, true));
+        logElements.add(new LogElement(OVERVIEW, true));
         logElements.add(new LogElement(PROFILE, true));
+        logElements.add(new LogElement(PUMP, true));
+        logElements.add(new LogElement(PUMPBTCOMM, false));
+        logElements.add(new LogElement(PUMPCOMM, true));
+        logElements.add(new LogElement(PUMPQUEUE, true));
     }
 
 }
