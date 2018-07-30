@@ -11,3 +11,5 @@ app/src/main/jniLibs
 full/
 debug/
 release/
+app/com.crashlytics.settings.json
+app/session_analytics.tap
