@@ -21,14 +21,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -37,6 +42,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
@@ -50,6 +56,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
@@ -349,13 +356,13 @@ public class LoopPlugin extends PluginBase {
                         lastRun.smbSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
-                    MainApp.getConfigBuilder().applyTBRRequest(resultAfterConstraints, profile, new Callback() {
+                    applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
                         public void run() {
                             if (result.enacted || result.success) {
                                 lastRun.tbrSetByPump = result;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
-                                MainApp.getConfigBuilder().applySMBRequest(resultAfterConstraints, new Callback() {
+                                applySMBRequest(resultAfterConstraints, new Callback() {
                                     @Override
                                     public void run() {
                                         //Callback is only called if a bolus was acutally requested
@@ -420,6 +427,165 @@ public class LoopPlugin extends PluginBase {
             if (L.isEnabled(L.APS))
                 log.debug("invoke end");
         }
+    }
+
+    /**
+     * expect absolute request and allow both absolute and percent response based on pump capabilities
+     */
+    public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
+        if (!request.tempBasalRequested) {
+            if (callback != null) {
+                callback.result(new PumpEnactResult().enacted(false).success(true).comment(MainApp.gs(R.string.nochangerequested))).run();
+            }
+            return;
+        }
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
+
+        request.rateConstraint = new Constraint<>(request.rate);
+        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
+
+        if (!pump.isInitialized()) {
+            log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpNotInitialized));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (pump.isSuspended()) {
+            log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpsuspended));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (Config.logCongigBuilderActions)
+            log.debug("applyAPSRequest: " + request.toString());
+
+        long now = System.currentTimeMillis();
+        TemporaryBasal activeTemp = activeTreatments.getTempBasalFromHistory(now);
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+            if (activeTemp != null) {
+                if (Config.logCongigBuilderActions)
+                    log.debug("applyAPSRequest: cancelTempBasal()");
+                MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+            } else {
+                if (Config.logCongigBuilderActions)
+                    log.debug("applyAPSRequest: Basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                            .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
+                }
+            }
+        } else if (activeTemp != null
+                && activeTemp.getPlannedRemainingMinutes() > 5
+                && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
+                && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: Temp basal set correctly");
+            if (callback != null) {
+                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                        .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
+                        .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
+            }
+        } else {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: setTempBasalAbsolute()");
+            MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+        }
+    }
+
+    public void applySMBRequest(APSResult request, Callback callback) {
+        if (!request.bolusRequested) {
+            return;
+        }
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
+
+        long lastBolusTime = activeTreatments.getLastBolusTime();
+        if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+            log.debug("SMB requested but still in 3 min interval");
+            if (callback != null) {
+                callback.result(new PumpEnactResult()
+                        .comment(MainApp.gs(R.string.smb_frequency_exceeded))
+                        .enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (!pump.isInitialized()) {
+            log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpNotInitialized));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (pump.isSuspended()) {
+            log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpsuspended));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (Config.logCongigBuilderActions)
+            log.debug("applySMBRequest: " + request.toString());
+
+        // deliver SMB
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.lastKnownBolusTime = activeTreatments.getLastBolusTime();
+        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+        detailedBolusInfo.insulin = request.smb;
+        detailedBolusInfo.isSMB = true;
+        detailedBolusInfo.source = Source.USER;
+        detailedBolusInfo.deliverAt = request.deliverAt;
+        if (Config.logCongigBuilderActions)
+            log.debug("applyAPSRequest: bolus()");
+        MainApp.getConfigBuilder().getCommandQueue().bolus(detailedBolusInfo, callback);
+    }
+
+    public void disconnectPump(int durationInMinutes, Profile profile) {
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
+
+        LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
+        MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        if (pump.getPumpDescription().isExtendedBolusCapable && activeTreatments.isInHistoryExtendedBoluslInProgress()) {
+            MainApp.getConfigBuilder().getCommandQueue().cancelExtended(new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.extendedbolusdeliveryerror));
+                    }
+                }
+            });
+        }
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
+    }
+
+    public void suspendLoop(int durationInMinutes) {
+        LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
+        MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
     }
 
 }

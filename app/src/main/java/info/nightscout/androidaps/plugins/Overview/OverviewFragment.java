@@ -537,39 +537,39 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             NSUpload.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor1h))) {
-            MainApp.getConfigBuilder().suspendLoop(60);
+            LoopPlugin.getPlugin().suspendLoop(60);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor2h))) {
-            MainApp.getConfigBuilder().suspendLoop(120);
+            LoopPlugin.getPlugin().suspendLoop(120);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor3h))) {
-            MainApp.getConfigBuilder().suspendLoop(180);
+            LoopPlugin.getPlugin().suspendLoop(180);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor10h))) {
-            MainApp.getConfigBuilder().suspendLoop(600);
+            LoopPlugin.getPlugin().suspendLoop(600);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor15m))) {
-            MainApp.getConfigBuilder().disconnectPump(15, profile);
+            LoopPlugin.getPlugin().disconnectPump(15, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor30m))) {
-            MainApp.getConfigBuilder().disconnectPump(30, profile);
+            LoopPlugin.getPlugin().disconnectPump(30, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor1h))) {
-            MainApp.getConfigBuilder().disconnectPump(60, profile);
+            LoopPlugin.getPlugin().disconnectPump(60, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor2h))) {
-            MainApp.getConfigBuilder().disconnectPump(120, profile);
+            LoopPlugin.getPlugin().disconnectPump(120, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor3h))) {
-            MainApp.getConfigBuilder().disconnectPump(180, profile);
+            LoopPlugin.getPlugin().disconnectPump(180, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.careportal_profileswitch))) {
@@ -741,7 +741,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     hideTempRecommendation();
                     clearNotification();
-                    MainApp.getConfigBuilder().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
+                    LoopPlugin.getPlugin().applyTBRRequest(finalLastRun.constraintsProcessed, profile, new Callback() {
                         @Override
                         public void run() {
                             if (result.enacted) {

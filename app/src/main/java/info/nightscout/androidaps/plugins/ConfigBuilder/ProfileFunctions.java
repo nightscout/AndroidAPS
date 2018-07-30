@@ -135,7 +135,7 @@ public class ProfileFunctions {
                     .putCustomAttribute("getProfileSwitchesFromHistory", activeTreatments.getProfileSwitchesFromHistory().toString())
             );
         }
-        log.debug("getProfile at the end: returning null");
+        log.error("getProfile at the end: returning null");
         return null;
     }
 
