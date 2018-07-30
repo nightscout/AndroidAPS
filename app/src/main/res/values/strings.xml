@@ -55,6 +55,7 @@
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
+    <string name="objectives_button_back">Back</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
