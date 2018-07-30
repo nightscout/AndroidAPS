@@ -89,23 +89,16 @@ public class MaintenancePlugin extends PluginBase {
         ctx.startActivity(emailIntent);
     }
 
+    //todo replace this with a call on startup of the application, specifically to remove
+    // unnecessary garbage from the log exports
     public void deleteLogs() {
         String logDirectory = LoggerUtils.getLogDirectory();
         File logDir = new File(logDirectory);
 
-        File[] files = logDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String name) {
-                return name.startsWith("AndroidAPS")
-                            && name.endsWith(".zip");
-            }
-        });
+        File[] files = logDir.listFiles((file, name) -> name.startsWith("AndroidAPS")
+                    && name.endsWith(".zip"));
 
-        Arrays.sort(files, new Comparator<File>() {
-            public int compare(File f1, File f2) {
-                return f1.getName().compareTo(f2.getName());
-            }
-        });
+        Arrays.sort(files, (f1, f2) -> f1.getName().compareTo(f2.getName()));
 
         List<File> delFiles = Arrays.asList(files);
         int amount = SP.getInt("key_logshipper_amount", 2);
@@ -145,20 +138,11 @@ public class MaintenancePlugin extends PluginBase {
         LOG.debug("getting {} logs from directory {}", amount, directory);
         File logDir = new File(directory);
 
-        File[] files = logDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String name) {
-                return name.startsWith("AndroidAPS")
-                        && (name.endsWith(".log")
-                        || (name.endsWith(".zip") && !name.endsWith(LoggerUtils.SUFFIX)));
-            }
-        });
+        File[] files = logDir.listFiles((file, name) -> name.startsWith("AndroidAPS")
+                && (name.endsWith(".log")
+                || (name.endsWith(".zip") && !name.endsWith(LoggerUtils.SUFFIX))));
 
-        Arrays.sort(files, new Comparator<File>() {
-            public int compare(File f1, File f2) {
-                return f2.getName().compareTo(f1.getName());
-            }
-        });
+        Arrays.sort(files, (f1, f2) -> f2.getName().compareTo(f1.getName()));
 
         List<File> result = Arrays.asList(files);
         int toIndex = amount++;
