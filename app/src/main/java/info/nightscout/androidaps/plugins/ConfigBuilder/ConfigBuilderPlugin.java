@@ -1,35 +1,17 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
-import android.content.Intent;
 import android.support.annotation.Nullable;
-
-import com.crashlytics.android.answers.CustomEvent;
-import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppInitialized;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -38,24 +20,18 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class ConfigBuilderPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
+    private Logger log = LoggerFactory.getLogger(L.CONFIGBUILDER);
 
     private static ConfigBuilderPlugin configBuilderPlugin;
 
@@ -113,14 +89,15 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private void setAlwaysEnabledPluginsEnabled() {
         for (PluginBase plugin : pluginList) {
-            if (plugin.pluginDescription.alwaysEnabled) plugin.setPluginEnabled(plugin.getType(), true);
+            if (plugin.pluginDescription.alwaysEnabled)
+                plugin.setPluginEnabled(plugin.getType(), true);
         }
         storeSettings("setAlwaysEnabledPluginsEnabled");
     }
 
     public void storeSettings(String from) {
         if (pluginList != null) {
-            if (Config.logConfigBuilder)
+            if (L.isEnabled(L.CONFIGBUILDER))
                 log.debug("Storing settings from: " + from);
 
             for (PluginBase p : pluginList) {
@@ -143,16 +120,18 @@ public class ConfigBuilderPlugin extends PluginBase {
     private void savePref(PluginBase p, PluginType type, boolean storeVisible) {
         String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
         SP.putBoolean(settingEnabled, p.isEnabled(type));
-        log.debug("Storing: " + settingEnabled + ":" + p.isEnabled(type));
+        if (L.isEnabled(L.CONFIGBUILDER))
+            log.debug("Storing: " + settingEnabled + ":" + p.isEnabled(type));
         if (storeVisible) {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
             SP.putBoolean(settingVisible, p.isFragmentVisible());
-            log.debug("Storing: " + settingVisible + ":" + p.isFragmentVisible());
+            if (L.isEnabled(L.CONFIGBUILDER))
+                log.debug("Storing: " + settingVisible + ":" + p.isFragmentVisible());
         }
     }
 
     private void loadSettings() {
-        if (Config.logConfigBuilder)
+        if (L.isEnabled(L.CONFIGBUILDER))
             log.debug("Loading stored settings");
         for (PluginBase p : pluginList) {
             PluginType type = p.getType();
@@ -173,7 +152,8 @@ public class ConfigBuilderPlugin extends PluginBase {
         else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true);
         }
-        log.debug("Loaded: " + settingEnabled + ":" + p.isEnabled(type));
+        if (L.isEnabled(L.CONFIGBUILDER))
+            log.debug("Loaded: " + settingEnabled + ":" + p.isEnabled(type));
         if (loadVisible) {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
             if (SP.contains(settingVisible))
@@ -181,7 +161,8 @@ public class ConfigBuilderPlugin extends PluginBase {
             else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
                 p.setFragmentVisible(type, true);
             }
-            log.debug("Loaded: " + settingVisible + ":" + p.isFragmentVisible());
+            if (L.isEnabled(L.CONFIGBUILDER))
+                log.debug("Loaded: " + settingVisible + ":" + p.isFragmentVisible());
         }
     }
 
@@ -189,10 +170,11 @@ public class ConfigBuilderPlugin extends PluginBase {
     private void upgradeSettings() {
         if (!SP.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
-        if (Config.logConfigBuilder)
+        if (L.isEnabled(L.CONFIGBUILDER))
             log.debug("Upgrading stored settings");
         for (PluginBase p : pluginList) {
-            log.debug("Processing " + p.getName());
+            if (L.isEnabled(L.CONFIGBUILDER))
+                log.debug("Processing " + p.getName());
             for (int type = 1; type < 11; type++) {
                 PluginType newType;
                 switch (type) {
@@ -276,20 +258,21 @@ public class ConfigBuilderPlugin extends PluginBase {
     }
 
     void logPluginStatus() {
-        for (PluginBase p : pluginList) {
-            log.debug(p.getName() + ":" +
-                    (p.isEnabled(PluginType.GENERAL) ? " GENERAL" : "") +
-                    (p.isEnabled(PluginType.TREATMENT) ? " TREATMENT" : "") +
-                    (p.isEnabled(PluginType.SENSITIVITY) ? " SENSITIVITY" : "") +
-                    (p.isEnabled(PluginType.PROFILE) ? " PROFILE" : "") +
-                    (p.isEnabled(PluginType.APS) ? " APS" : "") +
-                    (p.isEnabled(PluginType.PUMP) ? " PUMP" : "") +
-                    (p.isEnabled(PluginType.CONSTRAINTS) ? " CONSTRAINTS" : "") +
-                    (p.isEnabled(PluginType.LOOP) ? " LOOP" : "") +
-                    (p.isEnabled(PluginType.BGSOURCE) ? " BGSOURCE" : "") +
-                    (p.isEnabled(PluginType.INSULIN) ? " INSULIN" : "")
-            );
-        }
+        if (L.isEnabled(L.CONFIGBUILDER))
+            for (PluginBase p : pluginList) {
+                log.debug(p.getName() + ":" +
+                        (p.isEnabled(PluginType.GENERAL) ? " GENERAL" : "") +
+                        (p.isEnabled(PluginType.TREATMENT) ? " TREATMENT" : "") +
+                        (p.isEnabled(PluginType.SENSITIVITY) ? " SENSITIVITY" : "") +
+                        (p.isEnabled(PluginType.PROFILE) ? " PROFILE" : "") +
+                        (p.isEnabled(PluginType.APS) ? " APS" : "") +
+                        (p.isEnabled(PluginType.PUMP) ? " PUMP" : "") +
+                        (p.isEnabled(PluginType.CONSTRAINTS) ? " CONSTRAINTS" : "") +
+                        (p.isEnabled(PluginType.LOOP) ? " LOOP" : "") +
+                        (p.isEnabled(PluginType.BGSOURCE) ? " BGSOURCE" : "") +
+                        (p.isEnabled(PluginType.INSULIN) ? " INSULIN" : "")
+                );
+            }
     }
 
     private void verifySelectionInCategories() {
@@ -386,7 +369,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private void setFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
                                         PluginType pluginType) {
-        if (Config.logConfigBuilder)
+        if (L.isEnabled(L.CONFIGBUILDER))
             log.debug("Selected interface: " + activePluginName);
         for (PluginBase p : pluginsInCategory) {
             if (!p.getName().equals(activePluginName)) {

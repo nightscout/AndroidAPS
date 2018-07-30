@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -447,7 +446,8 @@ public class LoopPlugin extends PluginBase {
         request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
 
         if (!pump.isInitialized()) {
-            log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpNotInitialized));
+            if (L.isEnabled(L.APS))
+                log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpNotInitialized));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
@@ -455,25 +455,26 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (pump.isSuspended()) {
-            log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpsuspended));
+            if (L.isEnabled(L.APS))
+                log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpsuspended));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
 
-        if (Config.logCongigBuilderActions)
+        if (L.isEnabled(L.APS))
             log.debug("applyAPSRequest: " + request.toString());
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = activeTreatments.getTempBasalFromHistory(now);
         if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
             if (activeTemp != null) {
-                if (Config.logCongigBuilderActions)
+                if (L.isEnabled(L.APS))
                     log.debug("applyAPSRequest: cancelTempBasal()");
                 MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
             } else {
-                if (Config.logCongigBuilderActions)
+                if (L.isEnabled(L.APS))
                     log.debug("applyAPSRequest: Basal set correctly");
                 if (callback != null) {
                     callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
@@ -484,7 +485,7 @@ public class LoopPlugin extends PluginBase {
                 && activeTemp.getPlannedRemainingMinutes() > 5
                 && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
                 && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
-            if (Config.logCongigBuilderActions)
+            if (L.isEnabled(L.APS))
                 log.debug("applyAPSRequest: Temp basal set correctly");
             if (callback != null) {
                 callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
@@ -492,7 +493,7 @@ public class LoopPlugin extends PluginBase {
                         .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
             }
         } else {
-            if (Config.logCongigBuilderActions)
+            if (L.isEnabled(L.APS))
                 log.debug("applyAPSRequest: setTempBasalAbsolute()");
             MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
         }
@@ -508,7 +509,8 @@ public class LoopPlugin extends PluginBase {
 
         long lastBolusTime = activeTreatments.getLastBolusTime();
         if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
-            log.debug("SMB requested but still in 3 min interval");
+            if (L.isEnabled(L.APS))
+                log.debug("SMB requested but still in 3 min interval");
             if (callback != null) {
                 callback.result(new PumpEnactResult()
                         .comment(MainApp.gs(R.string.smb_frequency_exceeded))
@@ -518,7 +520,8 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (!pump.isInitialized()) {
-            log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpNotInitialized));
+            if (L.isEnabled(L.APS))
+                log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpNotInitialized));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
@@ -526,14 +529,15 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (pump.isSuspended()) {
-            log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpsuspended));
+            if (L.isEnabled(L.APS))
+                log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpsuspended));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
 
-        if (Config.logCongigBuilderActions)
+        if (L.isEnabled(L.APS))
             log.debug("applySMBRequest: " + request.toString());
 
         // deliver SMB
@@ -544,7 +548,7 @@ public class LoopPlugin extends PluginBase {
         detailedBolusInfo.isSMB = true;
         detailedBolusInfo.source = Source.USER;
         detailedBolusInfo.deliverAt = request.deliverAt;
-        if (Config.logCongigBuilderActions)
+        if (L.isEnabled(L.APS))
             log.debug("applyAPSRequest: bolus()");
         MainApp.getConfigBuilder().getCommandQueue().bolus(detailedBolusInfo, callback);
     }

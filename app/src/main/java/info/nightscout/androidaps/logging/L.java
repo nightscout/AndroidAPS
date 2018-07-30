@@ -76,10 +76,12 @@ public class L {
     public static final String PUMPBTCOMM = "PUMPBTCOMM";
     public static final String APS = "APS";
     public static final String PROFILE = "PROFILE";
+    public static final String CONFIGBUILDER = "CONFIGBUILDER";
 
     private static void initialize() {
         logElements = new ArrayList<>();
         logElements.add(new LogElement(CORE, true));
+        logElements.add(new LogElement(CONFIGBUILDER, true));
         logElements.add(new LogElement(AUTOSENS, false));
         logElements.add(new LogElement(EVENTS, false, true));
         logElements.add(new LogElement(BGSOURCE, true));

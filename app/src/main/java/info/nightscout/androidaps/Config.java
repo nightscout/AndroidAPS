@@ -23,7 +23,4 @@ public class Config {
     public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
 
 
-    public static boolean logConfigBuilder = true;
-    public static boolean logCongigBuilderActions = true;
-
 }
