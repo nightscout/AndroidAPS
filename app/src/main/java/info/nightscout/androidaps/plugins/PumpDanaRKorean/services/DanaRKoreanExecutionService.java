@@ -93,9 +93,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
 
         stopSelf();
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventAppExit finished");
-    }
+     }
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange pch) {

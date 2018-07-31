@@ -161,8 +161,6 @@ public class NSClientService extends Service {
         destroy();
 
         stopSelf();
-        if (L.isEnabled(L.NSCLIENT))
-            log.debug("EventAppExit finished");
     }
 
     @Subscribe

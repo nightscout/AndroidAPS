@@ -412,8 +412,6 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
 
         stopSelf();
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventAppExit finished");
     }
 
     public PumpEnactResult setUserOptions() {
