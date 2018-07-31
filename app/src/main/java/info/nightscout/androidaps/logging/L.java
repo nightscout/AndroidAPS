@@ -81,7 +81,6 @@ public class L {
     public static final String BGSOURCE = "BGSOURCE";
     public static final String OVERVIEW = "OVERVIEW";
     public static final String NOTIFICATION = "NOTIFICATION";
-    public static final String ALARM = "ALARM";
     public static final String DATASERVICE = "DATASERVICE";
     public static final String DATABASE = "DATABASE";
     public static final String DATAFOOD = "DATAFOOD";
@@ -98,7 +97,6 @@ public class L {
 
     private static void initialize() {
         logElements = new ArrayList<>();
-        logElements.add(new LogElement(ALARM, false));
         logElements.add(new LogElement(APS, true));
         logElements.add(new LogElement(AUTOSENS, false));
         logElements.add(new LogElement(BGSOURCE, true));

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 
 public class AlarmSoundService extends Service {
-    private static Logger log = LoggerFactory.getLogger(L.ALARM);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     MediaPlayer player;
     int resourceId = R.raw.error;
@@ -35,14 +35,14 @@ public class AlarmSoundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (L.isEnabled(L.ALARM))
+        if (L.isEnabled(L.CORE))
             log.debug("onCreate");
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (player != null && player.isPlaying())
             player.stop();
-        if (L.isEnabled(L.ALARM))
+        if (L.isEnabled(L.CORE))
             log.debug("onStartCommand");
         if (intent != null && intent.hasExtra("soundid"))
             resourceId = intent.getIntExtra("soundid", R.raw.error);
@@ -77,7 +77,7 @@ public class AlarmSoundService extends Service {
     public void onDestroy() {
         player.stop();
         player.release();
-        if (L.isEnabled(L.ALARM))
+        if (L.isEnabled(L.CORE))
             log.debug("onDestroy");
     }
 }
