@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.activities;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -33,14 +33,15 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
@@ -121,7 +122,7 @@ public class TDDStatsActivity extends Activity {
 
         TBB = SP.getString("TBB", "10.00");
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile != null) {
             double cppTBB = profile.baseBasalSum();
             TBB = decimalFormat.format(cppTBB);

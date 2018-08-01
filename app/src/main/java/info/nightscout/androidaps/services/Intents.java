@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.Services;
+package info.nightscout.androidaps.services;
 
 public interface Intents {
     // NSClient -> App

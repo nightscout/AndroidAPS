@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.Sensitivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.utils.Round;
@@ -16,7 +16,7 @@ import info.nightscout.utils.SafeParse;
 
 public abstract class AbstractSensitivityPlugin extends PluginBase implements SensitivityInterface {
 
-    private static final Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static final Logger log = LoggerFactory.getLogger(L.AUTOSENS);
 
     public AbstractSensitivityPlugin(PluginDescription pluginDescription) {
         super(pluginDescription);
@@ -53,7 +53,7 @@ public abstract class AbstractSensitivityPlugin extends PluginBase implements Se
 
         if (ratio != rawRatio) {
             ratioLimit += "Ratio limited from " + rawRatio + " to " + ratio;
-            if (Config.logAutosensData)
+            if (L.isEnabled(L.AUTOSENS))
                 log.debug(ratioLimit);
         }
 

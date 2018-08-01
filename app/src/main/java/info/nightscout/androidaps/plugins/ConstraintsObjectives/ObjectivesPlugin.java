@@ -15,6 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
@@ -32,7 +33,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
+    private static Logger log = LoggerFactory.getLogger(L.OBJECTIVES);
 
     private static ObjectivesPlugin objectivesPlugin;
 
@@ -94,7 +95,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
         SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
         SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.OBJECTIVES))
             log.debug("Objectives stored");
         MainApp.bus().post(new EventObjectivesSaved());
     }
@@ -107,7 +108,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.OBJECTIVES))
             log.debug("Objectives loaded");
     }
 

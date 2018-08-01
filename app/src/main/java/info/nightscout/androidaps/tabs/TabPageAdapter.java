@@ -3,12 +3,10 @@ package info.nightscout.androidaps.tabs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import org.slf4j.Logger;
@@ -17,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by mike on 30.05.2016.
@@ -27,7 +26,7 @@ public class TabPageAdapter extends FragmentPagerAdapter {
 
     Context context;
 
-    private static Logger log = LoggerFactory.getLogger(TabPageAdapter.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     public TabPageAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -47,19 +46,19 @@ public class TabPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public void finishUpdate(ViewGroup container) {
-        try{
+        try {
             super.finishUpdate(container);
-        } catch (NullPointerException nullPointerException){
+        } catch (NullPointerException nullPointerException) {
             System.out.println("Catch the NullPointerException in FragmentStatePagerAdapter.finishUpdate");
-        } catch (IllegalStateException e){
-            log.error(e.getMessage());
+        } catch (IllegalStateException e) {
+            log.error("Unhandled exception", e);
         }
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if(preferences.getBoolean("short_tabtitles", false)){
+        if (preferences.getBoolean("short_tabtitles", false)) {
             return visibleFragmentList.get(position).getNameShort();
         }
         return visibleFragmentList.get(position).getName();

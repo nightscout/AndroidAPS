@@ -3,13 +3,12 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.utils.HardLimits;
+import info.nightscout.androidaps.logging.L;
 
 public class MsgBolusStart extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgBolusStart.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public static int errorCode;
 
@@ -25,7 +24,7 @@ public class MsgBolusStart extends MessageBase {
 
         AddParamInt((int) (amount * 100));
 
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Bolus start : " + amount);
     }
 
@@ -34,9 +33,10 @@ public class MsgBolusStart extends MessageBase {
         errorCode = intFromBuff(bytes, 0, 1);
         if (errorCode != 2) {
             failed = true;
-            log.debug("Messsage response: " + errorCode + " FAILED!!");
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Messsage response: " + errorCode + " FAILED!!");
         } else {
-            if (Config.logDanaMessageDetail)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Messsage response: " + errorCode + " OK");
         }
     }

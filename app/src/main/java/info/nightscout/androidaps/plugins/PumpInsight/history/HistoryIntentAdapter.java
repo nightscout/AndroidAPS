@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import org.json.JSONException;
 import org.json.JSONObject;

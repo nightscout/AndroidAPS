@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+import info.nightscout.androidaps.logging.L;
+
 /**
  * Created by mike on 20.09.2017.
  */
@@ -15,7 +17,7 @@ import java.util.Objects;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TDDS)
 public class TDD {
-    private static Logger log = LoggerFactory.getLogger(TDD.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;

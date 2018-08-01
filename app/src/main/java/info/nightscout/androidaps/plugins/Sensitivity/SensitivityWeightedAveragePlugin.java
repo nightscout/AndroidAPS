@@ -8,13 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -26,7 +27,7 @@ import info.nightscout.utils.SP;
  */
 
 public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static Logger log = LoggerFactory.getLogger(L.AUTOSENS);
 
     private static SensitivityWeightedAveragePlugin plugin = null;
 
@@ -58,21 +59,22 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
-            log.debug("No autosens data available. lastDataTime=" + iobCobCalculatorPlugin.lastDataTime());
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("No autosens data available. lastDataTime=" + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
         AutosensData current = iobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            if (Config.logAutosensData)
+            if (L.isEnabled(L.AUTOSENS))
                 log.debug("No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) {
-            if (Config.logAutosensData)
+            if (L.isEnabled(L.AUTOSENS))
                 log.debug("No profile available");
             return new AutosensResult();
         }
@@ -130,11 +132,11 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         }
 
         if (data.size() == 0) {
-            if (Config.logAutosensData)
+            if (L.isEnabled(L.AUTOSENS))
                 log.debug("Data size: " + data.size() + " fromTime: " + DateUtil.dateAndTimeString(fromTime) + " toTime: " + DateUtil.dateAndTimeString(toTime));
             return new AutosensResult();
         } else {
-            if (Config.logAutosensData)
+            if (L.isEnabled(L.AUTOSENS))
                 log.debug("Data size: " + data.size() + " fromTime: " + DateUtil.dateAndTimeString(fromTime) + " toTime: " + DateUtil.dateAndTimeString(toTime));
         }
 
@@ -159,7 +161,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         String ratioLimit = "";
         String sensResult;
 
-        if (Config.logAutosensData)
+        if (L.isEnabled(L.AUTOSENS))
             log.debug("Records: " + index + "   " + pastSensitivity);
 
         double average = weightedsum / weights;
@@ -174,13 +176,13 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
             sensResult = "Sensitivity normal";
         }
 
-        if (Config.logAutosensData)
+        if (L.isEnabled(L.AUTOSENS))
             log.debug(sensResult);
 
         AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
                 sensResult, data.size());
 
-        if (Config.logAutosensData)
+        if (L.isEnabled(L.AUTOSENS))
             log.debug("Sensitivity to: {}  weightedaverage: {} ratio: {} mealCOB: {}", new Date(toTime).toLocaleString(),
                     average, output.ratio, current.cob);
 

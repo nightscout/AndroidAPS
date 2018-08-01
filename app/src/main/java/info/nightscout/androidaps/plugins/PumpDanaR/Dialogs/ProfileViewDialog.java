@@ -33,8 +33,6 @@ import info.nightscout.utils.DecimalFormatter;
  * Created by mike on 10.07.2016.
  */
 public class ProfileViewDialog extends DialogFragment {
-    private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
-
     private  TextView noProfile;
     private  TextView units;
     private  TextView dia;

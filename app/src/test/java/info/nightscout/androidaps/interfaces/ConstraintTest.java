@@ -4,17 +4,27 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import info.AAPSMocker;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 19.03.2018.
  */
 
 @RunWith(PowerMockRunner.class)
+@PrepareForTest({MainApp.class, SP.class})
 public class ConstraintTest {
 
     @Test
-    public void doTests() throws Exception {
+    public void doTests() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+
         Constraint<Boolean> b = new Constraint<>(true);
         Assert.assertEquals(Boolean.TRUE, b.value());
         Assert.assertEquals("", b.getReasons());

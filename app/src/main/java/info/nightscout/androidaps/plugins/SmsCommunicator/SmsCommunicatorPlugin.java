@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.SmsCommunicator;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -20,7 +21,8 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -39,13 +41,12 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.T;
@@ -165,10 +166,11 @@ public class SmsCommunicatorPlugin extends PluginBase {
         return false;
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewSMS ev) {
+    public void handleNewData(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
 
-        Object[] pdus = (Object[]) ev.bundle.get("pdus");
+        Object[] pdus = (Object[]) bundle.get("pdus");
         if (pdus != null) {
             // For every SMS message received
             for (Object pdu : pdus) {
@@ -206,7 +208,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     BgReading actualBG = DatabaseHelper.actualBg();
                     BgReading lastBG = DatabaseHelper.lastBg();
 
-                    String units = MainApp.getConfigBuilder().getProfileUnits();
+                    String units = ProfileFunctions.getInstance().getProfileUnits();
 
                     if (actualBG != null) {
                         reply = MainApp.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
@@ -377,7 +379,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             }
                         } else {
                             tempBasal = SafeParse.stringToDouble(splited[1]);
-                            Profile profile = MainApp.getConfigBuilder().getProfile();
+                            Profile profile = ProfileFunctions.getInstance().getProfile();
                             if (profile == null) {
                                 reply = MainApp.gs(R.string.noprofile);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -470,7 +472,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     } else if (tempBasalWaitingForConfirmation != null && !tempBasalWaitingForConfirmation.processed &&
                             tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - tempBasalWaitingForConfirmation.date.getTime() < Constants.SMS_CONFIRM_TIMEOUT) {
                         tempBasalWaitingForConfirmation.processed = true;
-                        Profile profile = MainApp.getConfigBuilder().getProfile();
+                        Profile profile = ProfileFunctions.getInstance().getProfile();
                         if (profile != null)
                             ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true, profile, new Callback() {
                                 @Override

@@ -1,4 +1,4 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.plugins.NSClientInternal;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,9 @@ import java.util.Locale;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
@@ -37,13 +39,16 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
+import info.nightscout.utils.BatteryLevel;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 26.05.2017.
  */
 
 public class NSUpload {
-    private static Logger log = LoggerFactory.getLogger(NSUpload.class);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
@@ -79,7 +84,7 @@ public class NSUpload {
             if (useAbsolute) {
                 TemporaryBasal t = temporaryBasal.clone();
                 t.isAbsolute = true;
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 if (profile != null) {
                     t.absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
                     uploadTempBasalStartAbsolute(t, null);
@@ -191,8 +196,8 @@ public class NSUpload {
     }
 
     public static void uploadDeviceStatus() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        String profileName = MainApp.getConfigBuilder().getProfileName();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+        String profileName = ProfileFunctions.getInstance().getProfileName();
 
         if (profile == null || profileName == null) {
             log.error("Profile is null. Skipping upload");
@@ -232,7 +237,8 @@ public class NSUpload {
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
-                log.debug("OpenAPS data too old to upload");
+                if (L.isEnabled(L.NSCLIENT))
+                    log.debug("OpenAPS data too old to upload");
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
             JSONObject pumpstatus = ConfigBuilderPlugin.getActivePump().getJSONStatus(profile, profileName);
@@ -298,7 +304,7 @@ public class NSUpload {
 
     public static void uploadTempTarget(TempTarget tempTarget) {
         try {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
 
             if (profile == null) {
                 log.error("Profile is null. Skipping upload");
@@ -490,7 +496,7 @@ public class NSUpload {
             try {
                 data.put("eventType", "Note");
                 data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", MainApp.gs(R.string.androidaps_start)+" - "+ Build.MANUFACTURER + " "+ Build.MODEL);
+                data.put("notes", MainApp.gs(R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
@@ -500,7 +506,7 @@ public class NSUpload {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
-            }
+        }
     }
 
     public static void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
