@@ -160,6 +160,8 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
+
+    useLibrary  "org.apache.http.legacy"
 }
 
 allprojects {

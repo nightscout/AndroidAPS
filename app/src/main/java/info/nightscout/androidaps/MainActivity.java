@@ -63,6 +63,7 @@ import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.VersionChecker;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        VersionChecker.check();
     }
 
     private void checkPluginPreferences(ViewPager viewPager) {
