@@ -57,6 +57,7 @@ public class NSUpload {
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("duration", temporaryBasal.durationInMinutes);
             data.put("absolute", temporaryBasal.absoluteRate);
+            data.put("rate", temporaryBasal.absoluteRate);
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
             data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
@@ -81,12 +82,16 @@ public class NSUpload {
         try {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
+            Profile profile = ProfileFunctions.getInstance().getProfile();
+            double absoluteRate = 0;
+            if (profile != null) {
+                absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
+            }
             if (useAbsolute) {
                 TemporaryBasal t = temporaryBasal.clone();
                 t.isAbsolute = true;
-                Profile profile = ProfileFunctions.getInstance().getProfile();
                 if (profile != null) {
-                    t.absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
+                    t.absoluteRate = absoluteRate;
                     uploadTempBasalStartAbsolute(t, null);
                 }
             } else {
@@ -95,6 +100,8 @@ public class NSUpload {
                 data.put("eventType", CareportalEvent.TEMPBASAL);
                 data.put("duration", temporaryBasal.durationInMinutes);
                 data.put("percent", temporaryBasal.percentRate - 100);
+                if (profile != null)
+                    data.put("rate", absoluteRate);
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
                 data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
