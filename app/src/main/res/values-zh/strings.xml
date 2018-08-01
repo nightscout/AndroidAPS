@@ -652,7 +652,7 @@
   <string name="bloodsugarmeasurementalert">血糖测量警报</string>
   <string name="remaininsulinalert">剩余胰岛素数量</string>
   <string name="danarspump">丹纳RS</string>
-  <string name="danarspump_shortname">丹纳</string>
+  <string name="danarspump_shortname">丹纳泵</string>
   <string name="selectedpump">已选择的泵</string>
   <string name="pairpump">配对新的泵</string>
   <string name="bolusspeed">大剂量输注速度</string>
