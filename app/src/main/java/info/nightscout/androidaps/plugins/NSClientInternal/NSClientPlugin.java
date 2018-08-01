@@ -209,6 +209,12 @@ public class NSClientPlugin extends PluginBase {
             nsClientService.resend(reason);
     }
 
+    public void pause(boolean newState) {
+        SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
+        paused = newState;
+        MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+    }
+
     public UploadQueue queue() {
         return NSClientService.uploadQueue;
     }

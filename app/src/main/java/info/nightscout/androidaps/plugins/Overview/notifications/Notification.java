@@ -65,6 +65,7 @@ public class Notification {
     public static final int PERMISSION_BATTERY = 37;
     public static final int PERMISSION_SMS = 38;
     public static final int MAXIMUM_BASAL_VALUE_REPLACED = 39;
+    public static final int NSMALFUNCTION = 40;
 
 
     public int id;

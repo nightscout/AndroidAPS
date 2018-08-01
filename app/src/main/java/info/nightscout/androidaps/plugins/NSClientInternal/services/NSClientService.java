@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -57,6 +59,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -64,6 +67,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -101,6 +105,11 @@ public class NSClientService extends Service {
     private String nsAPIhashCode = "";
 
     public static UploadQueue uploadQueue = new UploadQueue();
+
+    private ArrayList<Long> reconnections = new ArrayList<>();
+    private int WATCHDOG_INTERVAL_MINUTES = 2;
+    private int WATCHDOG_RECONNECT_IN = 1;
+    private int WATCHDOG_MAXCONNECTIONS = 5;
 
     public NSClientService() {
         registerBus();
@@ -241,8 +250,35 @@ public class NSClientService extends Service {
             connectCounter++;
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + mSocket.id()));
             sendAuthMessage(new NSAuthAck());
+            watchdog();
         }
     };
+
+    void watchdog() {
+        synchronized (reconnections) {
+            long now = DateUtil.now();
+            reconnections.add(now);
+            for (int i = 0; i < reconnections.size(); i++) {
+                Long r = reconnections.get(i);
+                if (r < now - T.mins(WATCHDOG_INTERVAL_MINUTES).msecs()) {
+                    reconnections.remove(r);
+                }
+            }
+            MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAXCONNECTIONS));
+            if (reconnections.size() >= WATCHDOG_MAXCONNECTIONS) {
+                Notification n = new Notification(Notification.NSMALFUNCTION, MainApp.gs(R.string.nsmalfunction), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(n));
+                MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
+                NSClientPlugin.getPlugin().pause(true);
+                MainApp.bus().post(new EventNSClientUpdateGUI());
+                new Thread(() -> {
+                    SystemClock.sleep(T.mins(WATCHDOG_RECONNECT_IN).msecs());
+                    MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "reenabling NSClient"));
+                    NSClientPlugin.getPlugin().pause(false);
+                }).start();
+            }
+        }
+    }
 
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override

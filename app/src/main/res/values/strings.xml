@@ -1170,6 +1170,7 @@
     <string name="openaps_noasdata">No autosens data available</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
+    <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
