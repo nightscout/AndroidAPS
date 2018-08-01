@@ -442,9 +442,9 @@ public class LoopPlugin extends PluginBase {
     }
 
     public void acceptChangeRequest() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
 
-        MainApp.getConfigBuilder().applyTBRRequest(lastRun.constraintsProcessed, profile, new Callback() {
+        applyTBRRequest(lastRun.constraintsProcessed, profile, new Callback() {
             @Override
             public void run() {
                 if (result.enacted) {
