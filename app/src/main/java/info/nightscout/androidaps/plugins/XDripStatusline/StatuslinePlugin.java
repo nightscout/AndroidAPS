@@ -14,6 +14,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventAppInitialized;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -80,7 +82,6 @@ public class StatuslinePlugin extends PluginBase {
     @Override
     protected void onStart() {
         MainApp.bus().register(this);
-        sendStatus();
         super.onStart();
     }
 
@@ -179,6 +180,16 @@ public class StatuslinePlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
+        sendStatus();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventAppInitialized ev) {
+        sendStatus();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventConfigBuilderChange ev) {
         sendStatus();
     }
 
