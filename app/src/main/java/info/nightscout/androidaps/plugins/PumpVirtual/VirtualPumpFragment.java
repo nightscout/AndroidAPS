@@ -113,10 +113,8 @@ public class VirtualPumpFragment extends SubscriberFragment {
 
                     String template = MainApp.gs(R.string.virtualpump_pump_def);
 
-                    template = template.replace("EXTENDED_NOTE", pumpType.hasExtendedBasals() ? //
-                            MainApp.gs(R.string.virtualpump_pump_def_extended_note) : "");
 
-                    pumpSettingsView.setText(pumpType.getFullDescription(template));
+                    pumpSettingsView.setText(pumpType.getFullDescription(template, pumpType.hasExtendedBasals()));
 
                 }
             });

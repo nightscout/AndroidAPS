@@ -4,6 +4,8 @@ package info.nightscout.androidaps.plugins.PumpCommon.defs;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCommon.data.DoseSettings;
 
 
@@ -273,18 +275,21 @@ public enum PumpType {
     }
 
 
-    public String getFullDescription(String i18nTemplate) {
+    public String getFullDescription(String i18nTemplate, boolean hasExtendedBasals) {
 
         String unit = getPumpTempBasalType()==PumpTempBasalType.Percent ? "%" : "";
 
         DoseSettings eb = getExtendedBolusSettings();
         DoseSettings tbr = getTbrSettings();
 
+        String extendedNote = hasExtendedBasals ? MainApp.gs(R.string.virtualpump_pump_def_extended_note) : "";
+
         return String.format(i18nTemplate, //
                 getStep("" + getBolusSize(), getSpecialBolusSize()), //
                 eb.getStep(), eb.getDurationStep(), eb.getMaxDuration()/60, //
                 getStep(getBaseBasalRange(), getBaseBasalSpecialSteps()), //
-                tbr.getMinDose() + unit + "-" + tbr.getMaxDose() + unit, tbr.getStep() + unit,  tbr.getDurationStep(), tbr.getMaxDuration()/60);
+                tbr.getMinDose() + unit + "-" + tbr.getMaxDose() + unit, tbr.getStep() + unit,
+                tbr.getDurationStep(), tbr.getMaxDuration()/60, extendedNote);
     }
 
 
