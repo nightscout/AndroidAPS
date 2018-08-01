@@ -41,19 +41,9 @@ public class MaintenanceFragment extends Fragment {
 
         final Fragment f = this;
 
-        view.findViewById(R.id.log_send).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MaintenancePlugin.getPlugin().sendLogs();
-            }
-        });
+        view.findViewById(R.id.log_send).setOnClickListener(view1 -> MaintenancePlugin.getPlugin().sendLogs());
 
-        view.findViewById(R.id.log_delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MaintenancePlugin.getPlugin().deleteLogs();
-            }
-        });
+        view.findViewById(R.id.log_delete).setOnClickListener(view12 -> MaintenancePlugin.getPlugin().deleteLogs());
 
         view.findViewById(R.id.nav_resetdb).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,22 +64,16 @@ public class MaintenanceFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.nav_export).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // start activity for checking permissions...
-                ImportExportPrefs.verifyStoragePermissions(f);
-                ImportExportPrefs.exportSharedPreferences(f);
-            }
+        view.findViewById(R.id.nav_export).setOnClickListener(view13 -> {
+            // start activity for checking permissions...
+            ImportExportPrefs.verifyStoragePermissions(f);
+            ImportExportPrefs.exportSharedPreferences(f);
         });
 
-        view.findViewById(R.id.nav_import).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // start activity for checking permissions...
-                ImportExportPrefs.verifyStoragePermissions(f);
-                ImportExportPrefs.importSharedPreferences(f);
-            }
+        view.findViewById(R.id.nav_import).setOnClickListener(view14 -> {
+            // start activity for checking permissions...
+            ImportExportPrefs.verifyStoragePermissions(f);
+            ImportExportPrefs.importSharedPreferences(f);
         });
 
 
