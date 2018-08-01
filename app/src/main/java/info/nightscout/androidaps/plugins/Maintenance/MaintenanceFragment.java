@@ -18,6 +18,22 @@ import info.nightscout.utils.ImportExportPrefs;
  */
 public class MaintenanceFragment extends Fragment {
 
+    private Fragment f;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        this.f = this;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        this.f = null;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
