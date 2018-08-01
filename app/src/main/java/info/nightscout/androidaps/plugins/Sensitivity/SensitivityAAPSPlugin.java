@@ -10,13 +10,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -28,7 +29,7 @@ import info.nightscout.utils.SP;
  */
 
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static Logger log = LoggerFactory.getLogger(L.AUTOSENS);
 
     static SensitivityAAPSPlugin plugin = null;
 
@@ -49,8 +50,8 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
     }
 
     @Override
-    public AutosensResult detectSensitivity(long fromTime, long toTime) {
-        LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
+    public AutosensResult detectSensitivity(IobCobCalculatorPlugin iobCobCalculatorPlugin, long fromTime, long toTime) {
+        LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
         String age = SP.getString(R.string.key_age, "");
         int defaultHours = 24;
@@ -59,21 +60,23 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
         if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {
-            log.debug("No profile");
+            log.error("No profile");
             return new AutosensResult();
         }
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
-            log.debug("No autosens data available. lastDataTime=" + IobCobCalculatorPlugin.getPlugin().lastDataTime());
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("No autosens data available. lastDataTime=" + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
-        AutosensData current = IobCobCalculatorPlugin.getPlugin().getAutosensData(toTime); // this is running inside lock already
+        AutosensData current = iobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            log.debug("No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + IobCobCalculatorPlugin.getPlugin().lastDataTime());
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
@@ -131,7 +134,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
         String ratioLimit = "";
         String sensResult = "";
 
-        if (Config.logAutosensData)
+        if (L.isEnabled(L.AUTOSENS))
             log.debug("Records: " + index + "   " + pastSensitivity);
 
         Arrays.sort(deviations);
@@ -148,13 +151,13 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
             sensResult = "Sensitivity normal";
         }
 
-        if (Config.logAutosensData)
+        if (L.isEnabled(L.AUTOSENS))
             log.debug(sensResult);
 
         AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
                 sensResult, deviationsArray.size());
 
-        if (Config.logAutosensData) {
+        if (L.isEnabled(L.AUTOSENS)) {
             log.debug("Sensitivity to: {}, percentile: {} ratio: {} mealCOB: ",
                     new Date(toTime).toLocaleString(),
                     percentile, output.ratio, ratio, current.cob);

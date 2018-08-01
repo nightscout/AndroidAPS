@@ -1,13 +1,21 @@
 package info.nightscout.androidaps.plugins.Sensitivity;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.AAPSMocker;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.utils.SP;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MainApp.class, SP.class})
 public class AbstractSensitivityPluginTest {
 
     private class SensitivityTestClass extends AbstractSensitivityPlugin {
@@ -21,13 +29,17 @@ public class AbstractSensitivityPluginTest {
         }
 
         @Override
-        public AutosensResult detectSensitivity(long fromTime, long toTime) {
+        public AutosensResult detectSensitivity(IobCobCalculatorPlugin plugin, long fromTime, long toTime) {
             return null;
         }
     }
 
     @Test
     public void fillResultTest() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+
         SensitivityTestClass sut = new SensitivityTestClass();
 
         AutosensResult ar = sut.fillResult(1d, 1d, "1",

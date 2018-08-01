@@ -14,6 +14,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventAppInitialized;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -25,6 +27,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -79,7 +82,6 @@ public class StatuslinePlugin extends PluginBase {
     @Override
     protected void onStart() {
         MainApp.bus().register(this);
-        sendStatus();
         super.onStart();
     }
 
@@ -93,7 +95,7 @@ public class StatuslinePlugin extends PluginBase {
     private void sendStatus() {
         String status = ""; // sent once on disable
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (isEnabled(PluginType.GENERAL) && profile != null) {
             status = buildStatusString(profile);
@@ -178,6 +180,16 @@ public class StatuslinePlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
+        sendStatus();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventAppInitialized ev) {
+        sendStatus();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventConfigBuilderChange ev) {
         sendStatus();
     }
 

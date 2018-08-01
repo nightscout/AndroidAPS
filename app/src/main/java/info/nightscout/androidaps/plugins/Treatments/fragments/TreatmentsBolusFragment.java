@@ -20,14 +20,12 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
@@ -40,14 +38,12 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 import static info.nightscout.utils.DateUtil.now;
 
 public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsBolusFragment.class);
-
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -74,7 +70,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null)
                 return;
             Treatment t = treatments.get(position);

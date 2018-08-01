@@ -24,10 +24,10 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.OKDialog;
 
 import static butterknife.OnItemSelected.Callback.NOTHING_SELECTED;
@@ -62,24 +62,22 @@ public class NSProfileFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
-            View view = inflater.inflate(R.layout.nsprofile_fragment, container, false);
+        View view = inflater.inflate(R.layout.nsprofile_fragment, container, false);
 
-            unbinder = ButterKnife.bind(this, view);
-            updateGUI();
-            return view;
-        } catch (Exception e) {
-            FabricPrivacy.logException(e);
-        }
-
-        return null;
+        unbinder = ButterKnife.bind(this, view);
+        updateGUI();
+        return view;
     }
 
     @Subscribe
     public void onStatusEvent(final EventNSProfileUpdateGUI ev) {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> { synchronized (NSProfileFragment.this) { updateGUI(); } });
+            activity.runOnUiThread(() -> {
+                synchronized (NSProfileFragment.this) {
+                    updateGUI();
+                }
+            });
     }
 
     @Override
@@ -95,7 +93,7 @@ public class NSProfileFragment extends SubscriberFragment {
             profileSpinner.setAdapter(adapter);
             // set selected to actual profile
             for (int p = 0; p < profileList.size(); p++) {
-                if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+                if (profileList.get(p).equals(ProfileFunctions.getInstance().getProfileName()))
                     profileSpinner.setSelection(p);
             }
             noProfile.setVisibility(View.GONE);

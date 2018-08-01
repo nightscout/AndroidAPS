@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -86,7 +89,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 pref.setSummary("******");
             } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
                 pref.setSummary(SP.getString(R.string.key_danars_name, ""));
-            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
+            } else if (editTextPref.getText() != null ) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {

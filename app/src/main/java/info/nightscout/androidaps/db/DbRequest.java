@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
+
 /**
  * Created by mike on 27.02.2016.
  * <p>
@@ -17,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_DBREQUESTS)
 public class DbRequest {
-    private static Logger log = LoggerFactory.getLogger(DbRequest.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public String nsClientID = null;

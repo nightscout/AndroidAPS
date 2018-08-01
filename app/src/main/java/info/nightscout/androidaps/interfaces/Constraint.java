@@ -6,12 +6,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.L;
+
 /**
  * Created by mike on 19.03.2018.
  */
 
 public class Constraint<T extends Comparable> {
-    private static Logger log = LoggerFactory.getLogger(Constraint.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     T value;
     T originalValue;
@@ -57,7 +59,7 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
-   public Constraint<T> setIfGreater(T value, String reason, Object from) {
+    public Constraint<T> setIfGreater(T value, String reason, Object from) {
         if (value.compareTo(this.value) > 0) {
             this.value = value;
             mostLimiting.clear();
@@ -74,7 +76,7 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
-   public Constraint addMostLimingReason(String reason, Object from) {
+    public Constraint addMostLimingReason(String reason, Object from) {
         mostLimiting.add(from.getClass().getSimpleName().replace("Plugin", "") + ": " + reason);
         return this;
     }
@@ -86,7 +88,8 @@ public class Constraint<T extends Comparable> {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        if (L.isEnabled(L.APS))
+            log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
 
@@ -110,7 +113,7 @@ public class Constraint<T extends Comparable> {
     }
 
     public void copyReasons(Constraint<?> another) {
-        for (String s: another.getReasonList()) {
+        for (String s : another.getReasonList()) {
             reasons.add(s);
         }
     }

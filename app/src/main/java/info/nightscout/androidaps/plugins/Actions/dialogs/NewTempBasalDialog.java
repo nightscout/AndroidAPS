@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.FabricPrivacy;
@@ -70,7 +71,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         double tempPercentStep = pumpDescription.tempPercentStep;
         basalPercent.setParams(100d, 0d, maxTempPercent, tempPercentStep, new DecimalFormat("0"), true);
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         Double currentBasal = profile != null ? profile.getBasal() : 0d;
         basalAbsolute = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalabsoluteinput);
         basalAbsolute.setParams(currentBasal, 0d, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, new DecimalFormat("0.00"), true);
@@ -118,7 +119,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     final boolean setAsPercent = percentRadio.isChecked();
                     int durationInMinutes = SafeParse.stringToInt(duration.getText());
 
-                    Profile profile = MainApp.getConfigBuilder().getProfile();
+                    Profile profile = ProfileFunctions.getInstance().getProfile();
                     if (profile == null)
                         return;
 

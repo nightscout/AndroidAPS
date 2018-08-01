@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
@@ -14,10 +14,12 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class MsgSettingUserOptions extends MessageBase {
 
-    private static Logger log = LoggerFactory.getLogger(MsgSettingUserOptions.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSettingUserOptions() {
         SetCommand(0x320B);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] packet) {
@@ -43,7 +45,7 @@ public class MsgSettingUserOptions extends MessageBase {
         int selectableLanguage5 = bytes[14];
         */
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
 
             log.debug("timeDisplayType: " + pump.timeDisplayType);
             log.debug("Button scroll: " + pump.buttonScrollOnOff);

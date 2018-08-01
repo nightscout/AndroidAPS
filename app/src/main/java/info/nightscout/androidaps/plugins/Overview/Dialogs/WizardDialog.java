@@ -56,6 +56,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
@@ -146,6 +147,23 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         super.onPause();
         MainApp.bus().unregister(this);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("bgCheckbox", bgCheckbox.isChecked());
+        savedInstanceState.putBoolean("ttCheckbox", ttCheckbox.isChecked());
+        savedInstanceState.putBoolean("bolusIobCheckbox", bolusIobCheckbox.isChecked());
+        savedInstanceState.putBoolean("basalIobCheckbox", basalIobCheckbox.isChecked());
+        savedInstanceState.putBoolean("bgtrendCheckbox", bgtrendCheckbox.isChecked());
+        savedInstanceState.putBoolean("cobCheckbox", cobCheckbox.isChecked());
+        savedInstanceState.putDouble("editBg", editBg.getValue());
+        savedInstanceState.putDouble("editCarbs", editCarbs.getValue());
+        savedInstanceState.putDouble("editCorr", editCorr.getValue());
+        savedInstanceState.putDouble("editCarbTime", editCarbTime.getValue());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+
 
     @Subscribe
     public void onStatusEvent(final EventNewBG e) {
@@ -259,6 +277,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+        //recovering state if there is something
+        if (savedInstanceState != null) {
+            editCarbs.setValue(savedInstanceState.getDouble("editCarbs"));
+            editBg.setValue(savedInstanceState.getDouble("editBg"));
+            editCarbTime.setValue(savedInstanceState.getDouble("editCarbTime"));
+            editCorr.setValue(savedInstanceState.getDouble("editCorr"));
+        }
         return view;
     }
 
@@ -301,7 +326,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     return;
                 }
                 okClicked = true;
-                final Profile profile = MainApp.getConfigBuilder().getProfile();
+                final Profile profile = ProfileFunctions.getInstance().getProfile();
 
                 if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
@@ -408,7 +433,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void initDialog() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
 
         if (profile == null || profileStore == null) {
@@ -459,7 +484,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
         Profile specificProfile;
         if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active)))
-            specificProfile = MainApp.getConfigBuilder().getProfile();
+            specificProfile = ProfileFunctions.getInstance().getProfile();
         else
             specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);
 

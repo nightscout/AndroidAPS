@@ -7,15 +7,15 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Services.DataService;
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.services.DataService;
 
 public class DataReceiver extends WakefulBroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(DataReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATASERVICE);
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Config.logFunctionCalls)
+        if (L.isEnabled(L.DATASERVICE))
             log.debug("onReceive " + intent);
         startWakefulService(context, new Intent(context, DataService.class)
                 .setAction(intent.getAction())

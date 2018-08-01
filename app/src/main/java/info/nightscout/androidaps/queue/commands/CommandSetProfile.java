@@ -10,6 +10,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -20,7 +21,8 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandSetProfile extends Command {
-    private static Logger log = LoggerFactory.getLogger(CommandSetProfile.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
+
     private Profile profile;
 
     public CommandSetProfile(Profile profile, Callback callback) {
@@ -32,13 +34,16 @@ public class CommandSetProfile extends Command {
     @Override
     public void execute() {
         if (ConfigBuilderPlugin.getCommandQueue().isThisProfileSet(profile)) {
-            log.debug("QUEUE: Correct profile already set");
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("Correct profile already set. profile: " + profile.toString());
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).enacted(false)).run();
             return;
         }
 
         PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setNewBasalProfile(profile);
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Result success: " + r.success + " enacted: " + r.enacted + " profile: " + profile.toString());
         if (callback != null)
             callback.result(r).run();
 

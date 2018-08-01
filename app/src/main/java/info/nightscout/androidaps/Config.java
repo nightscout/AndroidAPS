@@ -23,22 +23,4 @@ public class Config {
     public static final boolean SMSCOMMUNICATORENABLED = !BuildConfig.NSCLIENTOLNY && !BuildConfig.G5UPLOADER;
 
 
-    public static final boolean detailedLog = true;
-    public static final boolean logFunctionCalls = true;
-    public static final boolean logIncommingData = true;
-    public static final boolean logAPSResult = true;
-    public static final boolean logPumpComm = true;
-    public static final boolean logPrefsChange = true;
-    public static final boolean logConfigBuilder = true;
-    public static final boolean logNSUpload = true;
-    public static final boolean logPumpActions = true;
-    public static final boolean logCongigBuilderActions = true;
-    public static final boolean logAutosensData = false;
-    public static final boolean logEvents = false;
-    public static final boolean logProfile = false;
-
-    // DanaR specific
-    public static final boolean logDanaBTComm = true;
-    public static boolean logDanaMessageDetail = true;
-    public static final boolean logDanaSerialEngine = true;
 }

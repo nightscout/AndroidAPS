@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -24,6 +23,8 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
@@ -42,24 +43,26 @@ import static info.nightscout.utils.DateUtil.now;
  */
 
 public class IobCobThread extends Thread {
-    private static Logger log = LoggerFactory.getLogger("AUTOSENS");
+    private static Logger log = LoggerFactory.getLogger(L.AUTOSENS);
     private final Event cause;
 
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private boolean bgDataReload;
+    private boolean limitDataToOldestAvailable;
     private String from;
-    private long start;
+    private long end;
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobThread(IobCobCalculatorPlugin plugin, String from, long start, boolean bgDataReload, Event cause) {
+    public IobCobThread(IobCobCalculatorPlugin plugin, String from, long end, boolean bgDataReload, boolean limitDataToOldestAvailable, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
         this.bgDataReload = bgDataReload;
+        this.limitDataToOldestAvailable = limitDataToOldestAvailable;
         this.from = from;
         this.cause = cause;
-        this.start = start;
+        this.end = end;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
@@ -69,34 +72,39 @@ public class IobCobThread extends Thread {
     public final void run() {
         mWakeLock.acquire();
         try {
-            log.debug("AUTOSENSDATA thread started: " + from);
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("AUTOSENSDATA thread started: " + from);
             if (MainApp.getConfigBuilder() == null) {
-                log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
                 return; // app still initializing
             }
-            if (!MainApp.getConfigBuilder().isProfileValid("IobCobThread")) {
-                log.debug("Aborting calculation thread (No profile): " + from);
+            if (!ProfileFunctions.getInstance().isProfileValid("IobCobThread")) {
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Aborting calculation thread (No profile): " + from);
                 return; // app still initializing
             }
             //log.debug("Locking calculateSensitivityData");
 
-            long oldestTimeWithData = iobCobCalculatorPlugin.oldestDataAvailable();
+            long oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable);
 
             synchronized (iobCobCalculatorPlugin.dataLock) {
                 if (bgDataReload) {
-                    iobCobCalculatorPlugin.loadBgData(start);
+                    iobCobCalculatorPlugin.loadBgData(end);
                     iobCobCalculatorPlugin.createBucketedData();
                 }
                 List<BgReading> bucketed_data = iobCobCalculatorPlugin.getBucketedData();
-                LongSparseArray<AutosensData> autosensDataTable = IobCobCalculatorPlugin.getPlugin().getAutosensDataTable();
+                LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
                 if (bucketed_data == null || bucketed_data.size() < 3) {
-                    log.debug("Aborting calculation thread (No bucketed data available): " + from);
+                    if (L.isEnabled(L.AUTOSENS))
+                        log.debug("Aborting calculation thread (No bucketed data available): " + from);
                     return;
                 }
 
                 long prevDataTime = IobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
-                log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
@@ -105,7 +113,8 @@ public class IobCobThread extends Thread {
 
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                         iobCobCalculatorPlugin.stopCalculationTrigger = false;
-                        log.debug("Aborting calculation thread (trigger): " + from);
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Aborting calculation thread (trigger): " + from);
                         return;
                     }
                     // check if data already exists
@@ -120,13 +129,14 @@ public class IobCobThread extends Thread {
                         continue;
                     }
 
-                    Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
+                    Profile profile = ProfileFunctions.getInstance().getProfile(bgTime);
                     if (profile == null) {
-                        log.debug("Aborting calculation thread (no profile): " + from);
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Aborting calculation thread (no profile): " + from);
                         return; // profile not set yet
                     }
 
-                    if (Config.logAutosensData)
+                    if (L.isEnabled(L.AUTOSENS))
                         log.debug("Processing calculation thread: " + from + " (" + i + "/" + bucketed_data.size() + ")");
 
                     double sens = Profile.toMgdl(profile.getIsf(bgTime), profile.getUnits());
@@ -165,10 +175,10 @@ public class IobCobThread extends Thread {
                     // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
                     if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
                         long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
-                        AutosensData hourAgoData = IobCobCalculatorPlugin.getPlugin().getAutosensData(hourago);
+                        AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
                         if (hourAgoData != null) {
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
-                            if (Config.logAutosensData)
+                            if (L.isEnabled(L.AUTOSENS))
                                 log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString());
                             int past = 1;
                             try {
@@ -184,7 +194,7 @@ public class IobCobThread extends Thread {
                                         minDeviation = ad.avgDeviation;
                                     }
 
-                                    //if (Config.logAutosensData)
+                                    //if (Config.isEnabled(L.AUTOSENS))
                                     //    log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation);
                                 }
                             } catch (Exception e) {
@@ -265,13 +275,13 @@ public class IobCobThread extends Thread {
                     previous = autosensData;
                     if (bgTime < now())
                         autosensDataTable.put(bgTime, autosensData);
-                    if (Config.logAutosensData)
-                        log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + IobCobCalculatorPlugin.getPlugin().lastDataTime());
+                    if (L.isEnabled(L.AUTOSENS))
+                        log.debug("Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime());
                     AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime);
-                    if (Config.logAutosensData)
+                    if (L.isEnabled(L.AUTOSENS))
                         log.debug("Sensitivity result: " + sensitivity.toString());
                     autosensData.autosensResult = sensitivity;
-                    if (Config.logAutosensData)
+                    if (L.isEnabled(L.AUTOSENS))
                         log.debug(autosensData.toString());
                 }
             }
@@ -282,7 +292,8 @@ public class IobCobThread extends Thread {
         } finally {
             mWakeLock.release();
             MainApp.bus().post(new EventIobCalculationProgress(""));
-            log.debug("AUTOSENSDATA thread ended: " + from);
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("AUTOSENSDATA thread ended: " + from);
         }
     }
 
