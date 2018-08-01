@@ -33,6 +33,7 @@ import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -180,6 +181,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null)
             return total;
+
+        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        if (insulinInterface == null)
+            return  total;
 
         double dia = profile.getDia();
 
@@ -364,6 +369,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     public IobTotal getCalculationToTimeTempBasals(long time, Profile profile, boolean truncate, long truncateTime) {
         IobTotal total = new IobTotal(time);
+
+        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        if (insulinInterface == null)
+            return  total;
+
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
                 TemporaryBasal t = tempBasals.get(pos);
