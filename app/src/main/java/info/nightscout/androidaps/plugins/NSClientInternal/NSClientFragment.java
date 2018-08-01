@@ -131,9 +131,7 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
-                SP.putBoolean(R.string.key_nsclientinternal_paused, isChecked);
-                NSClientPlugin.getPlugin().paused = isChecked;
-                MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+                NSClientPlugin.getPlugin().pause(isChecked);
                 updateGUI();
                 FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientPause"));
                 break;
@@ -154,19 +152,17 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    NSClientPlugin.getPlugin().updateLog();
-                    logTextView.setText(NSClientPlugin.getPlugin().textLog);
-                    if (NSClientPlugin.getPlugin().autoscroll) {
-                        logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                    urlTextView.setText(NSClientPlugin.getPlugin().url());
-                    Spanned queuetext = Html.fromHtml(MainApp.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
-                    queueTextView.setText(queuetext);
-                    statusTextView.setText(NSClientPlugin.getPlugin().status);
+            activity.runOnUiThread(() -> {
+                NSClientPlugin.getPlugin().updateLog();
+                pausedCheckbox.setChecked(SP.getBoolean(R.string.key_nsclientinternal_paused, false));
+                logTextView.setText(NSClientPlugin.getPlugin().textLog);
+                if (NSClientPlugin.getPlugin().autoscroll) {
+                    logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                 }
+                urlTextView.setText(NSClientPlugin.getPlugin().url());
+                Spanned queuetext = Html.fromHtml(MainApp.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
+                queueTextView.setText(queuetext);
+                statusTextView.setText(NSClientPlugin.getPlugin().status);
             });
     }
 

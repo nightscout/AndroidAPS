@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -353,6 +355,23 @@ public class ActionStringHandler {
             }
             rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
 
+        } else if ("changeRequest".equals(act[0])) {
+            ////////////////////////////////////////////// CHANGE REQUEST
+            rTitle = MainApp.gs(R.string.openloop_newsuggestion);
+            rAction = "changeRequest";
+            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+            rMessage += finalLastRun.constraintsProcessed;
+
+            WearPlugin.getPlugin().requestChangeConfirmation(rTitle, rMessage, rAction);
+            lastSentTimestamp = System.currentTimeMillis();
+            lastConfirmActionString = rAction;
+            return;
+        } else if ("cancelChangeRequest".equals(act[0])) {
+            ////////////////////////////////////////////// CANCEL CHANGE REQUEST NOTIFICATION
+            rAction = "cancelChangeRequest";
+
+            WearPlugin.getPlugin().requestNotificationCancel(rAction);
+            return;
         } else return;
 
 
@@ -626,6 +645,11 @@ public class ActionStringHandler {
             doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
+        } else if ("changeRequest".equals(act[0])) {
+            LoopPlugin.getPlugin().acceptChangeRequest();
+            NotificationManager notificationManager =
+                    (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.notificationID);
         }
         lastBolusWizard = null;
     }

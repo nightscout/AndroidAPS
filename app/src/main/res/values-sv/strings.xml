@@ -135,7 +135,7 @@
   <string name="loop_aps_label">APS</string>
   <string name="loop_constraintsprocessed_label">Efter begränsningar</string>
   <string name="loop_tbrsetbypump_label">Temp basal satt i pump</string>
-  <string name="openapsma_lastenact_label">Senast startad</string>
+  <string name="openapsma_lastenact_label">Senaste justering</string>
   <string name="ok">OK</string>
   <string name="cancel">Avbryt</string>
   <string name="noapsselected">INGEN APS VALD</string>
@@ -225,7 +225,7 @@
   <string name="filenotfound">Hittade inte filen</string>
   <string name="nav_export">Exportera inställningar</string>
   <string name="nav_import">Importera inställningar</string>
-  <string name="openapsma_maxbasal_title">Max enheter per timme som temp basal kan sättas till</string>
+  <string name="openapsma_maxbasal_title">Max enheter per timme</string>
   <string name="openapsma_maxbasal_summary">Detta värde kallas max basal inom OpenAPS</string>
   <string name="openapsma_maxiob_title">Maximal basal IOB som OpenAPS kan ge [E]</string>
   <string name="openapsma_maxiob_summary">Detta värde kallas Max IOB i OpenAPS. Det är ställt till noll från start. Efter flera dagar till veckor, beroende på hur du känner, kan du välja att justera denna.</string>
@@ -263,9 +263,9 @@
   <string name="smscommunicator_bolusreplywithcode">För att ge bolus %1$.2f enheter, svara med kod %2$s</string>
   <string name="smscommunicator_calibrationreplywithcode">För att skicka kalibrering %1$.2f, svara med kod %2$s</string>
   <string name="smscommunicator_bolusfailed">Bolus misslyckades</string>
-  <string name="bolusdelivered" formatted="false">Bolus %.2f enheter korrekt tillförd</string>
-  <string name="bolusrequested" formatted="false">Kommer att tillföra %.2f enheter</string>
-  <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2f enheter tillförd</string>
+  <string name="bolusdelivered" formatted="false">Bolus %.2f enheter korrekt levererad</string>
+  <string name="bolusrequested" formatted="false">Kommer att leverera %.2f enheter</string>
+  <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2f enheter levererad</string>
   <string name="bolusdelivering" formatted="false">Levererar %.2f enheter</string>
   <string name="smscommunicator_remotecommandsallowed">Tillåt fjärrstyrning via SMS</string>
   <string name="smscommunicator_remotebolusnotallowed">Fjärrbolus är inte tillåtet</string>
@@ -660,7 +660,7 @@
   <string name="serialnumber">Serienummer</string>
   <string name="careportal_newnstreatment_percentage_label">Procent</string>
   <string name="careportal_newnstreatment_timeshift_label">Tidsförskjutning</string>
-  <string name="default_temptargets">Standardvärde för temp mål</string>
+  <string name="default_temptargets">Standardmålvärden</string>
   <string name="eatingsoon_duration">Äta snart [min]</string>
   <string name="eatingsoon_target">Mål vid Äta snart</string>
   <string name="activity_duration">Träning [min]</string>
@@ -823,9 +823,9 @@
   <string name="enablesmbaftercarbs_summary">Använd SMB i 6 timmar efter kolhydrater, även med 0 COB. Endast möjligt med en bra filtrerad BG-källa, t ex Dexcom G5.</string>
   <string name="enablesmbwithcob">Använd SMB med kolhydrater (COB)</string>
   <string name="enablesmbwithcob_summary">Använd SMB medan du har kolhydrater aktiva (COB)</string>
-  <string name="enablesmbwithtemptarget">Använd SMB när temp målvärde är satt</string>
+  <string name="enablesmbwithtemptarget">Använd SMB vid temp målvärde</string>
   <string name="enablesmbwithtemptarget_summary">Använd SMB när temp mål är satt, t ex Äta snart eller Träning</string>
-  <string name="enablesmbwithhightemptarget">Använd SMB även när ett högt temp målvärde är satt</string>
+  <string name="enablesmbwithhightemptarget">Använd SMB vid högt målvärde</string>
   <string name="enablesmbwithhightemptarget_summary">Använd SMB även när ett högt temp målvärde är satt (över 5,5 mmol)</string>
   <string name="let_temp_basal_run">Låt temp basalen gå</string>
   <string name="mute">Tysta</string>
@@ -1007,9 +1007,9 @@
   <string name="nth_objective">%1$d. Mål</string>
   <string name="poctech">Poctech</string>
   <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
-  <string name="high_temptarget_raises_sensitivity_title">Högt temp målvärde höjer känsligheten</string>
+  <string name="high_temptarget_raises_sensitivity_title">Högt målvärde höjer känsligheten</string>
   <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Höj känsligheten om temp målvärde är 100 mg/dl (5.5 mmol/l) eller högre]]></string>
-  <string name="low_temptarget_lowers_sensitivity_title">Lågt temp målvärde sänker känsligheten</string>
+  <string name="low_temptarget_lowers_sensitivity_title">Lågt målvärde sänker känsligheten</string>
   <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Sänk känsligheten om temp målvärde är mindre än 100 mg/dl (5.5 mmol/l)]]></string>
   <string name="combo_invalid_setup">Felaktig pumpinstallation. Kontrollera dokumentationen och verifiera att Snabbmenyn heter QUICK INFO med hjälp av 360-mjukvaran.</string>
   <string name="custom">Anpassad</string>
@@ -1022,6 +1022,8 @@
   <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
   <string name="generated_ecarbs_note">Genererade eCarbs för %1$dg kolhydrater över %2$dh med fördröjning på %3$dm</string>
   <string name="openaps_noasdata">Ingen data tillgänglig för autosens</string>
+  <string name="nav_logsettings">Loggningsinställningar</string>
+  <string name="resettodefaults">Återställ standardinställningar</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dagar</item>
