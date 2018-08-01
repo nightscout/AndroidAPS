@@ -26,6 +26,12 @@
                     android:dependency="wearcontrol"/>
 
                 <CheckBoxPreference
+                    android:key="@string/key_wearwizard_tt"
+                    android:title="@string/treatments_wizard_tt_label"
+                    android:defaultValue="false"
+                    android:dependency="@string/key_wearwizard_bg"/>
+
+                <CheckBoxPreference
                     android:key="@string/key_wearwizard_trend"
                     android:title="@string/treatments_wizard_bgtrend_label"
                     android:defaultValue="false"

@@ -1,9 +1,5 @@
 package info.nightscout.androidaps.receivers;
 
-/**
- * Created by mike on 07.07.2016.
- */
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,15 +14,22 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.queue.commands.Command;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.LocalAlertUtils;
 
+
+/**
+ * Created by mike on 07.07.2016.
+ */
 public class KeepAliveReceiver extends BroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
     public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
 
     public static void cancelAlarm(Context context) {
@@ -45,14 +48,16 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         LocalAlertUtils.shortenSnoozeInterval();
         LocalAlertUtils.checkStaleBGAlert();
         checkPump();
+        FabricPrivacy.uploadDailyStats();
 
-        log.debug("KeepAlive received");
+        if (L.isEnabled(L.CORE))
+            log.debug("KeepAlive received");
         wl.release();
     }
 
     private void checkPump() {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
             Date lastConnection = pump.lastDataTime();
             boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();

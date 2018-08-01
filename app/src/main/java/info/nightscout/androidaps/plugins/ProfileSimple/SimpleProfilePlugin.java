@@ -9,22 +9,23 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SimpleProfilePlugin extends PluginBase implements ProfileInterface {
-    private static Logger log = LoggerFactory.getLogger(SimpleProfilePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(L.PROFILE);
 
     private static SimpleProfilePlugin simpleProfilePlugin;
 
@@ -51,12 +52,13 @@ public class SimpleProfilePlugin extends PluginBase implements ProfileInterface 
                 .fragmentClass(SimpleProfileFragment.class.getName())
                 .pluginName(R.string.simpleprofile)
                 .shortName(R.string.simpleprofile_shortname)
+                .description(R.string.description_profile_simple)
         );
         loadSettings();
     }
 
     public void storeSettings() {
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.PROFILE))
             log.debug("Storing settings");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
@@ -71,12 +73,13 @@ public class SimpleProfilePlugin extends PluginBase implements ProfileInterface 
 
         editor.apply();
         createConvertedProfile();
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.PROFILE))
             log.debug("Storing settings: " + getRawProfile().getData().toString());
+        MainApp.bus().post(new EventProfileStoreChanged());
     }
 
     private void loadSettings() {
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.PROFILE))
             log.debug("Loading stored settings");
 
         mgdl = SP.getBoolean("SimpleProfile" + "mgdl", true);

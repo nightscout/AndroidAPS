@@ -3,16 +3,18 @@ package info.nightscout.androidaps.plugins.PumpDanaRKorean.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 
 public class MsgStatusBasic_k extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusBasic_k.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgStatusBasic_k() {
         SetCommand(0x020A);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -29,7 +31,7 @@ public class MsgStatusBasic_k extends MessageBase {
         pump.currentBasal = currentBasal;
         pump.batteryRemaining = batteryRemaining;
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Daily total units: " + dailyTotalUnits);
             log.debug("Max daily total units: " + maxDailyTotalUnits);
             log.debug("Reservoir remaining units: " + reservoirRemainingUnits);

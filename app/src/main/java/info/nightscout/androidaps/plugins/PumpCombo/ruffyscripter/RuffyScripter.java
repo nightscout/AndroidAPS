@@ -281,10 +281,10 @@ public class RuffyScripter implements RuffyCommands {
                         log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
                     } catch (CommandException e) {
                         log.error("CommandException running command", e);
-                        activeCmd.getResult().success = false;
+                        cmd.getResult().success = false;
                     } catch (Exception e) {
                         log.error("Unexpected exception running cmd", e);
-                        activeCmd.getResult().success = false;
+                        cmd.getResult().success = false;
                     }
                 }, cmd.getClass().getSimpleName());
                 long executionStart = System.currentTimeMillis();
@@ -328,6 +328,7 @@ public class RuffyScripter implements RuffyCommands {
                     if (unparsableMenuEncountered) {
                         log.error("UnparsableMenuEncountered flagged, aborting command");
                         cmdThread.interrupt();
+                        activeCmd.getResult().invalidSetup = true;
                         activeCmd.getResult().success = false;
                     }
 

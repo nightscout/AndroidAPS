@@ -15,10 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventNetworkChange;
+import info.nightscout.androidaps.logging.L;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    private static Logger log = LoggerFactory.getLogger(NetworkChangeReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -44,17 +45,20 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
                         event.ssid = wifiInfo.getSSID();
                     }
-                    log.debug("NETCHANGE: Wifi connected. SSID: " + event.ssid);
+                    if (L.isEnabled(L.CORE))
+                        log.debug("NETCHANGE: Wifi connected. SSID: " + event.ssid);
                 }
             }
 
             if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                 event.mobileConnected = true;
                 event.roaming = activeNetwork.isRoaming();
-                log.debug("NETCHANGE: Mobile connected. Roaming: " + event.roaming);
+                if (L.isEnabled(L.CORE))
+                    log.debug("NETCHANGE: Mobile connected. Roaming: " + event.roaming);
             }
         } else {
-            log.debug("NETCHANGE: Disconnected.");
+            if (L.isEnabled(L.CORE))
+                log.debug("NETCHANGE: Disconnected.");
         }
 
         return event;

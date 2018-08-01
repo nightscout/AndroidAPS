@@ -1,45 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".plugins.ConstraintsObjectives.ObjectivesFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:visibility="gone">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/objectives_fake"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/objectives_fake_layout"
-            android:visibility="gone">
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:text="Enable fake time and progress" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Enable fake time and progress"
-                android:id="@+id/objectives_fake" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reset"
-                android:id="@+id/objectives_reset"
-                android:textColor="#fef900"
-                android:gravity="right"
-                android:layout_weight="0.5"
-                android:layout_marginRight="10dp" />
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/objectives_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
+        <Button
+            android:id="@+id/objectives_reset"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset" />
     </LinearLayout>
 
-
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/objectives_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
+</LinearLayout>

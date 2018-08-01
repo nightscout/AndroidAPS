@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -187,7 +186,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                             }
                                         });
                                     } else {
-                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                                     }
                                     FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
                                 }

@@ -25,6 +25,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -70,6 +71,7 @@ public class StatuslinePlugin extends PluginBase {
                 .shortName(R.string.xdripstatus_shortname)
                 .neverVisible(true)
                 .preferencesId(R.xml.pref_xdripstatus)
+                .description(R.string.description_xdrip_status_line)
         );
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -92,7 +94,7 @@ public class StatuslinePlugin extends PluginBase {
     private void sendStatus() {
         String status = ""; // sent once on disable
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (isEnabled(PluginType.GENERAL) && profile != null) {
             status = buildStatusString(profile);

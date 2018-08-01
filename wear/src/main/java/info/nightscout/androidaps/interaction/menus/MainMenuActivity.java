@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
+import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity;

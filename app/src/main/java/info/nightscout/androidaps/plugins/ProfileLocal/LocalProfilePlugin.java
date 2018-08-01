@@ -8,15 +8,16 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
@@ -25,7 +26,7 @@ import info.nightscout.utils.SP;
  */
 public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
     public static final String LOCAL_PROFILE = "LocalProfile";
-    private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(L.PROFILE);
 
     private static LocalProfilePlugin localProfilePlugin;
 
@@ -63,6 +64,7 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
                 .fragmentClass(LocalProfileFragment.class.getName())
                 .pluginName(R.string.localprofile)
                 .shortName(R.string.localprofile_shortname)
+                .description(R.string.description_profile_local)
         );
         loadSettings();
     }
@@ -79,12 +81,13 @@ public class LocalProfilePlugin extends PluginBase implements ProfileInterface {
 
         createAndStoreConvertedProfile();
         edited = false;
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.PROFILE))
             log.debug("Storing settings: " + getRawProfile().getData().toString());
+        MainApp.bus().post(new EventProfileStoreChanged());
     }
 
     public synchronized void loadSettings() {
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.PROFILE))
             log.debug("Loading stored settings");
 
         mgdl = SP.getBoolean(LOCAL_PROFILE + "mgdl", false);

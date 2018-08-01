@@ -50,7 +50,7 @@ public interface TreatmentsInterface {
 
     boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus);
 
-    boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo);
+    boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate);
 
     TempTarget getTempTargetFromHistory();
     TempTarget getTempTargetFromHistory(long time);

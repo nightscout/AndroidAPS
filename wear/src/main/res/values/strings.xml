@@ -48,16 +48,9 @@
 
 
     <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip2">AAPSv2</string>
     <string name="label_xdrip_large">AAPS(Large)</string>
     <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
     <string name="label_xdrip_no_chart">AAPS(NoChart)</string>
     <string name="label_xdrip_circle">AAPS(Circle)</string>
-    <string name="label_xdrip_activity">AAPS</string>
-    <string name="app_settings">AAPS Settings</string>
-
-    <string name="title_activity_bolus">BolusActivity</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
 
 </resources>

@@ -17,6 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -27,7 +28,7 @@ import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
 public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(ProfileSwitch.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;

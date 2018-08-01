@@ -24,6 +24,8 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -32,7 +34,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -82,6 +84,8 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 .pluginName(R.string.virtualpump)
                 .shortName(R.string.virtualpump_shortname)
                 .preferencesId(R.xml.pref_virtualpump)
+                .neverVisible(BuildConfig.NSCLIENTOLNY || BuildConfig.G5UPLOADER)
+                .description(R.string.description_pump_virtual)
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
@@ -193,7 +197,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public double getBaseBasalRate() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile != null)
             return profile.getBasal();
         else
@@ -225,11 +229,11 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         bolusingEvent.percent = 100;
         MainApp.bus().post(bolusingEvent);
         SystemClock.sleep(1000);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         return result;
     }
 
@@ -253,7 +257,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
@@ -281,7 +285,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
@@ -305,7 +309,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
@@ -323,7 +327,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
             //tempBasal = null;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Canceling temp basal: " + result);
             MainApp.bus().post(new EventVirtualPumpUpdateGui());
         }
@@ -343,7 +347,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.enacted = true;
         result.isTempCancel = true;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Canceling extended basal: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();

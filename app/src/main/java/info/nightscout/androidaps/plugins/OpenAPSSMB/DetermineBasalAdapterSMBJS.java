@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.OpenAPSSMB;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeJSON;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -27,6 +25,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
@@ -35,10 +34,10 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class DetermineBasalAdapterSMBJS {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterSMBJS.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
 
-    private ScriptReader mScriptReader = null;
+    private ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
     private JSONArray mIobData;
@@ -64,7 +63,7 @@ public class DetermineBasalAdapterSMBJS {
      * Main code
      */
 
-    public DetermineBasalAdapterSMBJS(ScriptReader scriptReader) throws IOException {
+    DetermineBasalAdapterSMBJS(ScriptReader scriptReader) {
         mScriptReader = scriptReader;
     }
 
@@ -72,19 +71,21 @@ public class DetermineBasalAdapterSMBJS {
     public DetermineBasalResultSMB invoke() {
 
 
-        log.debug(">>> Invoking detemine_basal <<<");
-        log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
-        log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
-        log.debug("Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
-        log.debug("Profile:        " + (storedProfile = mProfile.toString()));
-        log.debug("Meal data:      " + (storedMeal_data = mMealData.toString()));
-        if (mAutosensData != null)
-            log.debug("Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
-        else
-            log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
-        log.debug("Reservoir data: " + "undefined");
-        log.debug("MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
-        log.debug("SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
+        if (L.isEnabled(L.APS)) {
+            log.debug(">>> Invoking detemine_basal <<<");
+            log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
+            log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
+            log.debug("Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
+            log.debug("Profile:        " + (storedProfile = mProfile.toString()));
+            log.debug("Meal data:      " + (storedMeal_data = mMealData.toString()));
+            if (mAutosensData != null)
+                log.debug("Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
+            else
+                log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
+            log.debug("Reservoir data: " + "undefined");
+            log.debug("MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
+            log.debug("SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
+        }
 
         DetermineBasalResultSMB determineBasalResultSMB = null;
 
@@ -135,7 +136,7 @@ public class DetermineBasalAdapterSMBJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (Config.logAPSResult)
+                if (L.isEnabled(L.APS))
                     log.debug("Result: " + result);
                 try {
                     determineBasalResultSMB = new DetermineBasalResultSMB(new JSONObject(result));
@@ -143,17 +144,13 @@ public class DetermineBasalAdapterSMBJS {
                     log.error("Unhandled exception", e);
                 }
             } else {
-                log.debug("Problem loading JS Functions");
+                log.error("Problem loading JS Functions");
             }
         } catch (IOException e) {
-            log.debug("IOException");
+            log.error("IOException");
         } catch (RhinoException e) {
             log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
-        } catch (IllegalAccessException e) {
-            log.error(e.toString());
-        } catch (InstantiationException e) {
-            log.error(e.toString());
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             log.error(e.toString());
         } finally {
             Context.exit();
@@ -234,8 +231,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("max_daily_safety_multiplier", SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
         mProfile.put("current_basal_safety_multiplier", SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
 
-        mProfile.put("high_temptarget_raises_sensitivity", SMBDefaults.high_temptarget_raises_sensitivity);
-        mProfile.put("low_temptarget_lowers_sensitivity", SMBDefaults.low_temptarget_lowers_sensitivity);
+        mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
+        mProfile.put("low_temptarget_lowers_sensitivity", SP.getBoolean(R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity));
         mProfile.put("sensitivity_raises_target", SMBDefaults.sensitivity_raises_target);
         mProfile.put("resistance_lowers_target", SMBDefaults.resistance_lowers_target);
         mProfile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments);
@@ -244,13 +241,13 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
         //align with max-absorption model in AMA sensitivity
-        if(mealData.usedMinCarbsImpact > 0){
+        if (mealData.usedMinCarbsImpact > 0) {
             mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
         } else {
             mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
         }
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
-        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false)&& advancedFiltering);
+        mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
@@ -319,31 +316,21 @@ public class DetermineBasalAdapterSMBJS {
 
     }
 
-    public Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
+    private Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
 
         if (jsonObject == null) return Undefined.instance;
 
-        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), new Callable() {
-            @Override
-            public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
-                return objects[1];
-            }
-        });
+        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
         return param;
     }
 
-    public Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
+    private Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
         //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
-        Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), new Callable() {
-            @Override
-            public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
-                return objects[1];
-            }
-        });
+        Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
         return param;
     }
 
-    public String readFile(String filename) throws IOException {
+    private String readFile(String filename) throws IOException {
         byte[] bytes = mScriptReader.readFile(filename);
         String string = new String(bytes, "UTF-8");
         if (string.startsWith("#!/usr/bin/env node")) {

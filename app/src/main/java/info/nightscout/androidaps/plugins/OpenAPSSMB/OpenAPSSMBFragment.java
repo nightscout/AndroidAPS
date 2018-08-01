@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
@@ -28,7 +29,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JSONFormatter;
 
 public class OpenAPSSMBFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(OpenAPSSMBFragment.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     @BindView(R.id.openapsma_run)
     Button run;
@@ -84,9 +85,9 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+            activity.runOnUiThread(() -> {
+                synchronized (OpenAPSSMBFragment.this) {
+                    if (!isBound()) return;
                     OpenAPSSMBPlugin plugin = OpenAPSSMBPlugin.getPlugin();
                     DetermineBasalResultSMB lastAPSResult = plugin.lastAPSResult;
                     if (lastAPSResult != null) {
@@ -123,20 +124,36 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
     void updateResultGUI(final String text) {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    resultView.setText(text);
-                    glucoseStatusView.setText("");
-                    currentTempView.setText("");
-                    iobDataView.setText("");
-                    profileView.setText("");
-                    mealDataView.setText("");
-                    autosensDataView.setText("");
-                    scriptdebugView.setText("");
-                    requestView.setText("");
-                    lastRunView.setText("");
+            activity.runOnUiThread(() -> {
+                synchronized (OpenAPSSMBFragment.this) {
+                    if (isBound()) {
+                        resultView.setText(text);
+                        glucoseStatusView.setText("");
+                        currentTempView.setText("");
+                        iobDataView.setText("");
+                        profileView.setText("");
+                        mealDataView.setText("");
+                        autosensDataView.setText("");
+                        scriptdebugView.setText("");
+                        requestView.setText("");
+                        lastRunView.setText("");
+                    }
                 }
             });
+    }
+
+    private boolean isBound() {
+        return run != null
+                && lastRunView != null
+                && constraintsView != null
+                && glucoseStatusView != null
+                && currentTempView != null
+                && iobDataView != null
+                && profileView != null
+                && mealDataView != null
+                && autosensDataView != null
+                && resultView != null
+                && scriptdebugView != null
+                && requestView != null;
     }
 }

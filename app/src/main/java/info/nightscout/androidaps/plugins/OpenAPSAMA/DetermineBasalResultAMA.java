@@ -6,19 +6,19 @@ import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.utils.DateUtil;
 
 public class DetermineBasalResultAMA extends APSResult {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalResultAMA.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
-    public double eventualBG;
-    public double snoozeBG;
+    private double eventualBG;
+    private double snoozeBG;
 
-    public DetermineBasalResultAMA(NativeObject result, JSONObject j) {
+    DetermineBasalResultAMA(NativeObject result, JSONObject j) {
         this();
-        date = new Date();
+        date = DateUtil.now();
         json = j;
         if (result.containsKey("error")) {
             reason = result.get("error").toString();
@@ -48,7 +48,7 @@ public class DetermineBasalResultAMA extends APSResult {
         bolusRequested = false;
     }
 
-    public DetermineBasalResultAMA() {
+    private DetermineBasalResultAMA() {
         hasPredictions = true;
     }
 

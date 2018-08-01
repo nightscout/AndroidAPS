@@ -44,12 +44,12 @@ def generateGitBuild = { ->
         stringBuilder.append('NoGitSystemAvailable')
     }
     stringBuilder.append('-')
-    stringBuilder.append((new Date()).format('yyyy.MM.dd'))
+    stringBuilder.append((new Date()).format('yyyy.MM.dd-HH:mm'))
     stringBuilder.append('"')
     return stringBuilder.toString()
 }
 
-tasks.matching {it instanceof Test}.all {
+tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "skipped", "started"]
     testLogging.exceptionFormat = "full"
 }
@@ -63,7 +63,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "1.60e-dev"
+        version "2.0c-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -89,7 +89,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled (project.hasProperty('coverage') ? true : false)
+            testCoverageEnabled(project.hasProperty('coverage') ? true : false)
         }
     }
     productFlavors {
@@ -99,7 +99,8 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/blueowl"
+                    appIcon: "@mipmap/ic_launcher",
+                    appIconRound: "@mipmap/ic_launcher_round"
             ]
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
@@ -112,7 +113,8 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/blueowl"
+                    appIcon: "@mipmap/blueowl",
+                    appIconRound: "@null"
             ]
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
@@ -125,7 +127,8 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl"
+                    appIcon: "@mipmap/yellowowl",
+                    appIconRound: "@null"
             ]
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
@@ -138,7 +141,8 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl"
+                    appIcon: "@mipmap/yellowowl",
+                    appIconRound: "@null"
             ]
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
@@ -156,7 +160,7 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
- }
+}
 
 allprojects {
     repositories {
@@ -242,7 +246,7 @@ dependencies {
 }
 
 task unzip(type: Copy) {
-    def zipPath = configurations.libs.find {it.name.startsWith("danars") }
+    def zipPath = configurations.libs.find { it.name.startsWith("danars") }
     def zipFile = file(zipPath)
     def outputDir = file("${buildDir}/unpacked/dist")
 
