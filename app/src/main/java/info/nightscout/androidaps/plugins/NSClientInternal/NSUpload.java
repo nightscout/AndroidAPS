@@ -82,7 +82,7 @@ public class NSUpload {
         try {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
-            Profile profile = ProfileFunctions.getInstance().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile(temporaryBasal.date);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
