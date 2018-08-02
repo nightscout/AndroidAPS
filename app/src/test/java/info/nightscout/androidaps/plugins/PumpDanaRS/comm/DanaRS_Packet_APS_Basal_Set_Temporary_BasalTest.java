@@ -38,6 +38,9 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_BasalTest {
         packet = new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(10);
         assertEquals(10, packet.temporaryBasalRatio);
         assertEquals(packet.PARAM30MIN, packet.temporaryBasalDuration);
+        packet = new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(20, true, false);
+        assertEquals(20, packet.temporaryBasalRatio);
+        assertEquals(packet.PARAM15MIN, packet.temporaryBasalDuration);
         // over 100% should last 15 min
         packet.setParams(150);
         assertEquals(150, packet.temporaryBasalRatio);
