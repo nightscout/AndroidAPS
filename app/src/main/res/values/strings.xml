@@ -1133,7 +1133,7 @@
     <string name="danar_pumpalarm_vibrate">Vibrate</string>
     <string name="danar_pumpalarm_both">Both</string>
     <string name="danar_screentimeout">LCD on time [s]</string>
-    <string name="danar_backlight">Backlight on time [h]</string>
+    <string name="danar_backlight">Backlight on time [s]</string>
     <string name="danar_glucoseunits">Glucose units</string>
     <string name="danar_shutdown">Shutdown(hours)</string>
     <string name="danar_lowreservoir">Low reservoir (Units)</string>
