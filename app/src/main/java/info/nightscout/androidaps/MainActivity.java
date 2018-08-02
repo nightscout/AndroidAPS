@@ -51,13 +51,10 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LogSettingActivity;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.Food.FoodPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.AndroidPermission;
-import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.OKDialog;
@@ -378,29 +375,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.nav_setupwizard:
                 startActivity(new Intent(this, SetupWizardActivity.class));
-                return true;
-            case R.id.nav_resetdb:
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.nav_resetdb)
-                        .setMessage(R.string.reset_db_confirm)
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            MainApp.getDbHelper().resetDatabases();
-                            // should be handled by Plugin-Interface and
-                            // additional service interface and plugin registry
-                            FoodPlugin.getPlugin().getService().resetFood();
-                            TreatmentsPlugin.getPlugin().getService().resetTreatments();
-                        })
-                        .create()
-                        .show();
-                return true;
-            case R.id.nav_export:
-                ImportExportPrefs.verifyStoragePermissions(this);
-                ImportExportPrefs.exportSharedPreferences(this);
-                return true;
-            case R.id.nav_import:
-                ImportExportPrefs.verifyStoragePermissions(this);
-                ImportExportPrefs.importSharedPreferences(this);
                 return true;
             case R.id.nav_show_logcat:
                 LogDialog.showLogcat(this);
