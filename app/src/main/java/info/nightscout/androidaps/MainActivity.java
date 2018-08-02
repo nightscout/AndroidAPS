@@ -49,14 +49,12 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.LogSettingActivity;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.AndroidPermission;
 import info.nightscout.utils.LocaleHelper;
-import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
@@ -375,12 +373,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.nav_setupwizard:
                 startActivity(new Intent(this, SetupWizardActivity.class));
-                return true;
-            case R.id.nav_show_logcat:
-                LogDialog.showLogcat(this);
-                return true;
-            case R.id.nav_logsettings:
-                startActivity(new Intent(this, LogSettingActivity.class));
                 return true;
             case R.id.nav_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

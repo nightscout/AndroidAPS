@@ -1,4 +1,4 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.plugins.Maintenance;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,6 +28,8 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 03.07.2016.

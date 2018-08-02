@@ -13,10 +13,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -26,7 +24,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.utils.LoggerUtils;
 import info.nightscout.utils.SP;
 
 public class MaintenancePlugin extends PluginBase {
@@ -60,7 +57,7 @@ public class MaintenancePlugin extends PluginBase {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(MaintenanceFragment.class.getName())
-                .alwayVisible(true)
+                .alwayVisible(false)
                 .alwaysEnabled(true)
                 .pluginName(R.string.maintenance)
                 .shortName(R.string.maintenance_shortname)

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Maintenance;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -10,8 +11,8 @@ import android.view.ViewGroup;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Food.FoodPlugin;
+import info.nightscout.androidaps.plugins.Maintenance.activities.LogSettingActivity;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.ImportExportPrefs;
 
 /**
  *
@@ -43,37 +44,36 @@ public class MaintenanceFragment extends Fragment {
 
         view.findViewById(R.id.log_send).setOnClickListener(view1 -> MaintenancePlugin.getPlugin().sendLogs());
 
-        view.findViewById(R.id.log_delete).setOnClickListener(view12 -> MaintenancePlugin.getPlugin().deleteLogs());
+        view.findViewById(R.id.log_delete).setOnClickListener(view1 -> MaintenancePlugin.getPlugin().deleteLogs());
 
-        view.findViewById(R.id.nav_resetdb).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(f.getContext())
-                        .setTitle(R.string.nav_resetdb)
-                        .setMessage(R.string.reset_db_confirm)
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            MainApp.getDbHelper().resetDatabases();
-                            // should be handled by Plugin-Interface and
-                            // additional service interface and plugin registry
-                            FoodPlugin.getPlugin().getService().resetFood();
-                            TreatmentsPlugin.getPlugin().getService().resetTreatments();
-                        })
-                        .create()
-                        .show();
-            }
-        });
+        view.findViewById(R.id.nav_resetdb).setOnClickListener(view1 -> new AlertDialog.Builder(f.getContext())
+                .setTitle(R.string.nav_resetdb)
+                .setMessage(R.string.reset_db_confirm)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    MainApp.getDbHelper().resetDatabases();
+                    // should be handled by Plugin-Interface and
+                    // additional service interface and plugin registry
+                    FoodPlugin.getPlugin().getService().resetFood();
+                    TreatmentsPlugin.getPlugin().getService().resetTreatments();
+                })
+                .create()
+                .show());
 
-        view.findViewById(R.id.nav_export).setOnClickListener(view13 -> {
+        view.findViewById(R.id.nav_export).setOnClickListener(view1 -> {
             // start activity for checking permissions...
             ImportExportPrefs.verifyStoragePermissions(f);
             ImportExportPrefs.exportSharedPreferences(f);
         });
 
-        view.findViewById(R.id.nav_import).setOnClickListener(view14 -> {
+        view.findViewById(R.id.nav_import).setOnClickListener(view1 -> {
             // start activity for checking permissions...
             ImportExportPrefs.verifyStoragePermissions(f);
             ImportExportPrefs.importSharedPreferences(f);
+        });
+
+        view.findViewById(R.id.nav_logsettings).setOnClickListener(view1 -> {
+            startActivity(new Intent(getActivity(), LogSettingActivity.class));
         });
 
 

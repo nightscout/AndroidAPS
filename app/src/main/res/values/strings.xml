@@ -497,10 +497,6 @@
     <string name="error_field_must_not_be_empty">The field must not be empty</string>
     <string name="error_phone_not_valid">Phone number not valid</string>
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
-    <string name="copy_to_clipboard">Copy To Clipboard</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="nav_show_logcat">Show log</string>
-    <string name="nav_export_log">Export Logs</string>
     <string name="overview_calibration">Calibration</string>
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
@@ -1171,7 +1167,7 @@
     <string name="invalid_email_message">Invalid Email</string>
     <string name="key_maintenance_logs_amount" translatable="false">amount of logs to send</string>
     <string name="maintenance_amount">No of Logs to send</string>
-    <string name="maintenance">Wartung</string>
+    <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
     <string name="send_all_logs">Send Logs by Email</string>

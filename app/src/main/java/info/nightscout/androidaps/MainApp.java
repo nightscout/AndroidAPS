@@ -79,7 +79,7 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.LoggerUtils;
+import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
 import io.fabric.sdk.android.Fabric;
 
 

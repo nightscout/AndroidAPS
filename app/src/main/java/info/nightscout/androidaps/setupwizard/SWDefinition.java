@@ -51,7 +51,7 @@ import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.AndroidPermission;
-import info.nightscout.utils.ImportExportPrefs;
+import info.nightscout.androidaps.plugins.Maintenance.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;

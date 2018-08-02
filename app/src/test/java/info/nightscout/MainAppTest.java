@@ -12,7 +12,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.utils.LoggerUtils;
+import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
 
 
 /**
