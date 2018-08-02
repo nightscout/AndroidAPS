@@ -120,7 +120,7 @@ public abstract class PluginBase {
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
-                    onStateChange(type, state, State.ENABLED);
+                    onStateChange(type, state, State.DISABLED);
                     state = State.DISABLED;
                     onStop();
                     if (L.isEnabled(L.CORE))

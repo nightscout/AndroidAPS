@@ -160,6 +160,8 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
+
+    useLibrary  "org.apache.http.legacy"
 }
 
 allprojects {
@@ -188,6 +190,7 @@ dependencies {
     libs "MilosKozak:danars-support-lib:master@zip"
 
     implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
+    implementation "com.android.support:support-v13:${supportLibraryVersion}"
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
     implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
     implementation "com.android.support:recyclerview-v7:${supportLibraryVersion}"

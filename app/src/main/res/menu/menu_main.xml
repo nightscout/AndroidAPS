@@ -19,26 +19,6 @@
         app:showAsAction="never"
         android:title="@string/nav_setupwizard" />
     <item
-        android:id="@+id/nav_resetdb"
-        app:showAsAction="never"
-        android:title="@string/nav_resetdb" />
-    <item
-        android:id="@+id/nav_export"
-        app:showAsAction="never"
-        android:title="@string/nav_export" />
-    <item
-        android:id="@+id/nav_import"
-        app:showAsAction="never"
-        android:title="@string/nav_import" />
-    <item
-        android:id="@+id/nav_show_logcat"
-        app:showAsAction="never"
-        android:title="@string/nav_show_logcat" />
-    <item
-        android:id="@+id/nav_logsettings"
-        app:showAsAction="never"
-        android:title="@string/nav_logsettings" />
-    <item
         android:id="@+id/nav_about"
         app:showAsAction="never"
         android:title="@string/nav_about" />

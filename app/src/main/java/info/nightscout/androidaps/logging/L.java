@@ -8,9 +8,9 @@ import info.nightscout.utils.SP;
 public class L {
 
     public static class LogElement {
-        String name;
+        public String name;
         boolean defaultValue;
-        boolean enabled;
+        public boolean enabled;
         boolean requiresRestart = false;
 
         LogElement(String name, boolean defaultValue) {

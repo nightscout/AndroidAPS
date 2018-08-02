@@ -1,14 +1,17 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.plugins.Maintenance;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,8 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 03.07.2016.
@@ -45,7 +50,6 @@ public class ImportExportPrefs {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
@@ -56,7 +60,22 @@ public class ImportExportPrefs {
         }
     }
 
-    public static void exportSharedPreferences(final Activity c) {
+    public static void verifyStoragePermissions(Fragment fragment) {
+        int permission = ContextCompat.checkSelfPermission(fragment.getContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            fragment.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+        }
+
+    }
+
+    public static void exportSharedPreferences(final Fragment f) {
+        exportSharedPreferences(f.getContext());
+    }
+
+    public static void exportSharedPreferences(final Context c) {
 
         new AlertDialog.Builder(c)
                 .setMessage(MainApp.gs(R.string.export_to) + " " + file + " ?")
@@ -86,13 +105,17 @@ public class ImportExportPrefs {
                 .show();
     }
 
-    public static void importSharedPreferences(final Activity c) {
-        new AlertDialog.Builder(c)
+    public static void importSharedPreferences(final Fragment fragment) {
+        importSharedPreferences(fragment.getContext());
+    }
+
+    public static void importSharedPreferences(final Context context) {
+        new AlertDialog.Builder(context)
                 .setMessage(MainApp.gs(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                         SharedPreferences.Editor editor = prefs.edit();
                         String line;
                         String[] lineParts;
@@ -113,20 +136,20 @@ public class ImportExportPrefs {
                             }
                             reader.close();
                             editor.commit();
-                            OKDialog.show(c, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), new Runnable() {
+                            OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), new Runnable() {
                                 @Override
                                 public void run() {
                                     log.debug("Exiting");
                                     MainApp.instance().stopKeepAliveService();
                                     MainApp.bus().post(new EventAppExit());
                                     MainApp.closeDbHelper();
-                                    c.finish();
+//                                    context.finish();
                                     System.runFinalization();
                                     System.exit(0);
                                 }
                             });
                         } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.filenotfound) + " " + file);
+                            ToastUtils.showToastInUiThread(context, MainApp.gs(R.string.filenotfound) + " " + file);
                             log.error("Unhandled exception", e);
                         } catch (IOException e) {
                             log.error("Unhandled exception", e);

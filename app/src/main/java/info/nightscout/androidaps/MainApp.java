@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 
-import ch.qos.logback.classic.LoggerContext;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -40,6 +39,7 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.Maintenance.MaintenancePlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
@@ -79,6 +79,7 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
 import io.fabric.sdk.android.Fabric;
 
 
@@ -128,7 +129,7 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
-        String extFilesDir = this.getLogDirectory();
+        String extFilesDir = LoggerUtils.getLogDirectory();
         File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
@@ -190,6 +191,7 @@ public class MainApp extends Application {
             pluginsList.add(StatuslinePlugin.initPlugin(this));
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
+            pluginsList.add(MaintenancePlugin.initPlugin(this));
 
             pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());
 
@@ -387,11 +389,6 @@ public class MainApp extends Application {
 
     public static boolean isDev() {
         return devBranch;
-    }
-
-    public String getLogDirectory() {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        return lc.getProperty("EXT_FILES_DIR");
     }
 
     @Override

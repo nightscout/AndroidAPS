@@ -1020,7 +1020,6 @@
   <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
   <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
   <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
-  <string name="generated_ecarbs_note">Genererade eCarbs för %1$dg kolhydrater över %2$dh med fördröjning på %3$dm</string>
   <string name="openaps_noasdata">Ingen data tillgänglig för autosens</string>
   <string name="nav_logsettings">Loggningsinställningar</string>
   <string name="resettodefaults">Återställ standardinställningar</string>

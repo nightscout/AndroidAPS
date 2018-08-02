@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.logging;
+package info.nightscout.androidaps.plugins.Maintenance.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 
 public class LogSettingActivity extends AppCompatActivity {
 
