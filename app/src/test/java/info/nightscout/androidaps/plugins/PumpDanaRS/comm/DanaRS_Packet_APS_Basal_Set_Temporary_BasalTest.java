@@ -8,16 +8,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.SP;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by mike on 20.11.2017.
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, SP.class})
+@PrepareForTest({MainApp.class, SP.class, L.class})
 public class DanaRS_Packet_APS_Basal_Set_Temporary_BasalTest {
 
     @Test
@@ -25,10 +27,16 @@ public class DanaRS_Packet_APS_Basal_Set_Temporary_BasalTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
+        AAPSMocker.mockL();
+
         // under 100% should last 30 min
         DanaRS_Packet_APS_Basal_Set_Temporary_Basal packet = new DanaRS_Packet_APS_Basal_Set_Temporary_Basal();
         packet.setParams(0);
         assertEquals(0, packet.temporaryBasalRatio);
+        assertEquals(packet.PARAM30MIN, packet.temporaryBasalDuration);
+        //constructor with param
+        packet = new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(10);
+        assertEquals(10, packet.temporaryBasalRatio);
         assertEquals(packet.PARAM30MIN, packet.temporaryBasalDuration);
         // over 100% should last 15 min
         packet.setParams(150);
