@@ -108,7 +108,7 @@ public class PumpEnactResult {
             if (bolusDelivered > 0) {
                 ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
                 ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.gs(R.string.smb_shortname)
+                ret += "\n" + MainApp.gs(R.string.configbuilder_insulin)
                         + ": " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
                 ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
