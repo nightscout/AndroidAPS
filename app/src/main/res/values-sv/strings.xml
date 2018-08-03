@@ -465,9 +465,6 @@
   <string name="error_field_must_not_be_empty">Detta fält får inte vara tomt</string>
   <string name="error_phone_not_valid">Ogiltigt telefonnummer</string>
   <string name="smscommunicator_invalidphonennumber">Ogiltigt telefonnummer för SMS</string>
-  <string name="copy_to_clipboard">Kopiera till Urklipp</string>
-  <string name="copied_to_clipboard">Kopierat till Urklipp</string>
-  <string name="nav_show_logcat">Visa logg</string>
   <string name="overview_calibration">Kalibrering</string>
   <string name="send_calibration" formatted="false">Skicka kalibrering %.1f till xDrip?</string>
   <string name="xdripnotinstalled">xDrip+ inte installerat</string>
@@ -991,7 +988,7 @@
   <string name="danar_pumpalarm_vibrate">Vibrera</string>
   <string name="danar_pumpalarm_both">Båda</string>
   <string name="danar_screentimeout">LCD på, tid [s]</string>
-  <string name="danar_backlight">Bakgrundsbelysning på, tid [h]</string>
+  <string name="danar_backlight">Bakgrundsbelysning på, tid [s]</string>
   <string name="danar_glucoseunits">Glukosenheter</string>
   <string name="danar_shutdown">Stäng av (timmar)</string>
   <string name="danar_lowreservoir">Låg nivå reservoar (enheter)</string>
@@ -1019,10 +1016,22 @@
   <string name="storedsettingsfound">Tidigare sparade inställningar hittade</string>
   <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
   <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
+  <string name="maintenance_settings">Underhållsinställningar</string>
+  <string name="maintenance_email">e-post</string>
+  <string name="invalid_email_message">Ogiltig e-postadress</string>
+  <string name="maintenance_amount">Antal loggar att skicka</string>
+  <string name="maintenance">Underhåll</string>
+  <string name="maintenance_shortname">UH</string>
+  <string name="description_maintenance">Tillhandahåller funktioner för underhåll (t ex skicka eller ta bort loggar).</string>
+  <string name="send_all_logs">Skicka loggar per e-post</string>
+  <string name="delete_logs">Radera loggar</string>
   <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
   <string name="openaps_noasdata">Ingen data tillgänglig för autosens</string>
   <string name="nav_logsettings">Loggningsinställningar</string>
   <string name="resettodefaults">Återställ standardinställningar</string>
+  <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
+  <string name="as">AS</string>
+  <string name="versionavailable">Version %1$s tillgänglig</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dagar</item>

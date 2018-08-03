@@ -464,9 +464,6 @@
   <string name="error_field_must_not_be_empty">Toto pole nesmí být prázdné</string>
   <string name="error_phone_not_valid">Neplatné telefonní číslo</string>
   <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
-  <string name="copy_to_clipboard">Kopírovat do schránky</string>
-  <string name="copied_to_clipboard">Nakopírováno do schránky</string>
-  <string name="nav_show_logcat">Zobrazit log</string>
   <string name="overview_calibration">Kalibrace</string>
   <string name="send_calibration" formatted="false">Poslat do xDripu kalibraci %.1f ?</string>
   <string name="xdripnotinstalled">xDrip+ není nainstalován</string>
@@ -1018,7 +1015,6 @@
   <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
   <string name="error_adding_treatment_title">Data ošetření neúplná</string>
   <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), zpoždění: %3$d m</string>
   <string name="openaps_noasdata">Nedostupná data o glykémiích</string>
   <string name="nav_logsettings">Nastavení logování</string>
   <string name="resettodefaults">Obnovit výchozí</string>

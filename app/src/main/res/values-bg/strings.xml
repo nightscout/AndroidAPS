@@ -465,9 +465,6 @@
   <string name="error_field_must_not_be_empty">Полето не може  да бъде празно</string>
   <string name="error_phone_not_valid">Телефонният номер не е валиден</string>
   <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
-  <string name="copy_to_clipboard">Копирай</string>
-  <string name="copied_to_clipboard">Копирано</string>
-  <string name="nav_show_logcat">Покажи лог</string>
   <string name="overview_calibration">Калибрация</string>
   <string name="send_calibration" formatted="false">Изпрати калибрация %.1f към xDrip?</string>
   <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
@@ -991,7 +988,6 @@
   <string name="danar_pumpalarm_vibrate">Вибрация</string>
   <string name="danar_pumpalarm_both">И двете</string>
   <string name="danar_screentimeout">Включен екран за [сек]</string>
-  <string name="danar_backlight">Подсветка за [сек]</string>
   <string name="danar_glucoseunits">Единици на КЗ</string>
   <string name="danar_shutdown">Изключване след(часа)</string>
   <string name="danar_lowreservoir">Минимален инсулин в резервоара (единици)</string>

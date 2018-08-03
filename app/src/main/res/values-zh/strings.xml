@@ -465,9 +465,6 @@
   <string name="error_field_must_not_be_empty">此字段不能为空</string>
   <string name="error_phone_not_valid">电话号码无效</string>
   <string name="smscommunicator_invalidphonennumber">无效的SMS手机号码</string>
-  <string name="copy_to_clipboard">复制到剪贴板</string>
-  <string name="copied_to_clipboard">已复制到剪贴板</string>
-  <string name="nav_show_logcat">显示日志</string>
   <string name="overview_calibration">校准</string>
   <string name="send_calibration" formatted="false">确认将校准值 %.1f 发送到 xDrip 吗？</string>
   <string name="xdripnotinstalled">没有安装xDrip+</string>
@@ -991,7 +988,6 @@
   <string name="danar_pumpalarm_vibrate">振动</string>
   <string name="danar_pumpalarm_both">两者都</string>
   <string name="danar_screentimeout">LCD屏幕亮的时间[s]</string>
-  <string name="danar_backlight">背景光开启的时间[h]</string>
   <string name="danar_glucoseunits">血糖单位</string>
   <string name="danar_shutdown">关机(小时)</string>
   <string name="danar_lowreservoir">储药器药量低(单位)</string>
