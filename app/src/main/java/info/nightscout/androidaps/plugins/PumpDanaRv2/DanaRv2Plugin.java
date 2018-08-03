@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.PumpDanaRv2;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
@@ -141,31 +141,27 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection > 0 && pump.maxBasal > 0;
+        return DanaRPump.getInstance().lastConnection > 0 && DanaRPump.getInstance().maxBasal > 0;
     }
 
     @Override
     public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
         boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || context == null){
+        if (allowHardwarePump || context == null) {
             pluginSwitcher.invoke();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(R.string.allow_hardware_pump_text)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            pluginSwitcher.invoke();
-                            SP.putBoolean("allow_hardware_pump", true);
-                            if (L.isEnabled(L.PUMP))
-                                log.debug("First time HW pump allowed!");
-                        }
+                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                        pluginSwitcher.invoke();
+                        SP.putBoolean("allow_hardware_pump", true);
+                        if (L.isEnabled(L.PUMP))
+                            log.debug("First time HW pump allowed!");
                     })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            pluginSwitcher.cancel();
-                            if (L.isEnabled(L.PUMP))
-                                log.debug("User does not allow switching to HW pump!");
-                        }
+                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                        pluginSwitcher.cancel();
+                        if (L.isEnabled(L.PUMP))
+                            log.debug("User does not allow switching to HW pump!");
                     });
             builder.create().show();
         }
@@ -191,7 +187,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                     speed = 60;
                     break;
             }
-            detailedBolusInfo.date = DateUtil.now() + (long)(speed * detailedBolusInfo.insulin * 1000);
+            detailedBolusInfo.date = DateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;
@@ -323,6 +319,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+        DanaRPump pump = DanaRPump.getInstance();
         PumpEnactResult result = new PumpEnactResult();
         percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
@@ -375,7 +372,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return result;
     }
 
-    public PumpEnactResult setHighTempBasalPercent(Integer percent) {
+    private PumpEnactResult setHighTempBasalPercent(Integer percent) {
+        DanaRPump pump = DanaRPump.getInstance();
         PumpEnactResult result = new PumpEnactResult();
         boolean connectionOK = sExecutionService.highTempBasal(percent);
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
@@ -406,7 +404,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.enacted = true;
             result.isTempCancel = true;
         }
-        if (!pump.isTempBasalInProgress) {
+        if (!DanaRPump.getInstance().isTempBasalInProgress) {
             result.success = true;
             result.isTempCancel = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);

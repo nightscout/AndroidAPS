@@ -90,7 +90,6 @@ public class DanaRSService extends Service {
 
     private IBinder mBinder = new LocalBinder();
 
-    private DanaRPump danaRPump = DanaRPump.getInstance();
     private Treatment bolusingTreatment = null;
 
     private long lastHistoryFetched = 0;
@@ -130,6 +129,7 @@ public class DanaRSService extends Service {
     }
 
     public void getPumpStatus() {
+        DanaRPump danaRPump = DanaRPump.getInstance();
         try {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpstatus)));
 
@@ -253,7 +253,7 @@ public class DanaRSService extends Service {
             lastHistoryFetched = 0;
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Events loaded");
-        danaRPump.lastConnection = System.currentTimeMillis();
+        DanaRPump.getInstance().lastConnection = System.currentTimeMillis();
         return new PumpEnactResult().success(true);
     }
 
@@ -362,7 +362,7 @@ public class DanaRSService extends Service {
 
     public boolean tempBasal(Integer percent, int durationInHours) {
         if (!isConnected()) return false;
-        if (danaRPump.isTempBasalInProgress) {
+        if (DanaRPump.getInstance().isTempBasalInProgress) {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
             bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
             SystemClock.sleep(500);
@@ -377,7 +377,7 @@ public class DanaRSService extends Service {
     }
 
     public boolean highTempBasal(Integer percent) {
-        if (danaRPump.isTempBasalInProgress) {
+        if (DanaRPump.getInstance().isTempBasalInProgress) {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
             bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
             SystemClock.sleep(500);
@@ -396,7 +396,7 @@ public class DanaRSService extends Service {
             return false;
         }
 
-        if (danaRPump.isTempBasalInProgress) {
+        if (DanaRPump.getInstance().isTempBasalInProgress) {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
             bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
             SystemClock.sleep(500);
@@ -448,7 +448,7 @@ public class DanaRSService extends Service {
         bleComm.sendMessage(msgSet);
         DanaRS_Packet_Basal_Set_Profile_Number msgActivate = new DanaRS_Packet_Basal_Set_Profile_Number(0);
         bleComm.sendMessage(msgActivate);
-        danaRPump.lastSettingsRead = 0; // force read full settings
+        DanaRPump.getInstance().lastSettingsRead = 0; // force read full settings
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
