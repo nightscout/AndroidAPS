@@ -94,6 +94,7 @@ public class L {
     public static final String APS = "APS";
     public static final String PROFILE = "PROFILE";
     public static final String CONFIGBUILDER = "CONFIGBUILDER";
+    public static final String UI = "UI";
 
     private static void initialize() {
         logElements = new ArrayList<>();
@@ -116,6 +117,7 @@ public class L {
         logElements.add(new LogElement(PUMPBTCOMM, false));
         logElements.add(new LogElement(PUMPCOMM, true));
         logElements.add(new LogElement(PUMPQUEUE, true));
+        logElements.add(new LogElement(UI, true));
     }
 
 }
