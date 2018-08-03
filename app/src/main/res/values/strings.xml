@@ -1182,6 +1182,7 @@
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
     <string name="as">AS</string>
     <string name="versionavailable">Version %1$s available</string>
+    <string name="time_offset">Time offset</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

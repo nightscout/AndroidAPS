@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textStyle="bold"
-                    android:text="@string/time" />
+                    android:text="@string/time_offset" />
 
                 <info.nightscout.utils.NumberPicker
                     android:id="@+id/newcarbs_time"
