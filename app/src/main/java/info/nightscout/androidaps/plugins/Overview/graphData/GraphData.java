@@ -331,6 +331,8 @@ public class GraphData {
     }
 
     private double getNearestBg(long date) {
+        if (bgReadingsArray == null)
+            return Profile.fromMgdlToUnits(100, units);
         for (int r = 0; r < bgReadingsArray.size(); r++) {
             BgReading reading = bgReadingsArray.get(r);
             if (reading.date > date) continue;
