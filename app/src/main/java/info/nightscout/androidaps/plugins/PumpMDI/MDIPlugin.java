@@ -190,7 +190,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         result.success = false;
         result.comment = MainApp.gs(R.string.pumperror);
         if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Canceling extended basal: " + result);
+            log.debug("Canceling extended bolus: " + result);
         return result;
     }
 

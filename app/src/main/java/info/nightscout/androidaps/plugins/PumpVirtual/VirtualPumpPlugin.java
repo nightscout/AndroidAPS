@@ -343,7 +343,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.isTempCancel = true;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Canceling extended basal: " + result);
+            log.debug("Canceling extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
         return result;
