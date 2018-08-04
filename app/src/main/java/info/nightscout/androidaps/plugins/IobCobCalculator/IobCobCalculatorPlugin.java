@@ -298,6 +298,17 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 //log.error("***** Average");
             }
         }
+
+        // Normalize bucketed data
+        for (int i = bucketed_data.size() - 2; i > 0 ; i--) {
+            BgReading current = bucketed_data.get(i);
+            BgReading previous = bucketed_data.get(i+1);
+            long msecDiff = current.date - previous.date;
+            long adjusted = (msecDiff - T.mins(5).msecs()) / 1000;
+            log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
+            current.date = previous.date + T.mins(5).msecs();
+        }
+
         if (L.isEnabled(L.AUTOSENS))
             log.debug("Bucketed data created. Size: " + bucketed_data.size());
     }
