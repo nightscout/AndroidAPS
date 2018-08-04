@@ -482,7 +482,7 @@
   <string name="disconnecting">Desconectando</string>
   <string name="executing">Ejecutando</string>
   <string name="virtualpump_settings">Ajustes bomba virtual</string>
-  <string name="virtualpump_uploadstatus_title">Subiendo estado a NS</string>
+  <string name="virtualpump_uploadstatus_title">Subir estado a NS</string>
   <string name="wrongpassword">Contraseña incorrecta</string>
   <string name="settings_password">Contraseña para ajustes</string>
   <string name="unlock_settings">Desbloquear ajustes</string>
@@ -843,7 +843,7 @@
   <string name="wear_predictions_summary">Mostrar predicciones en el reloj</string>
   <string name="wear_predictions_title">Predicciones</string>
   <string name="data_choices">Opciones de datos</string>
-  <string name="fabric_upload">Carga inicial</string>
+  <string name="fabric_upload">Reporte fallos a Fabric.io</string>
   <string name="allow_automated_crash_reporting">Permita que los informes automáticos de errores y los datos de uso de funciones se envíen a los desarrolladores a través del servicio fabric.io.</string>
   <string name="g5appnotdetected">Por favor actualiza la aplicación G5 a una soportada</string>
   <string name="start_activity_tt">Inicio OT Actividad</string>
@@ -948,7 +948,7 @@
   <string name="openapsama_max_daily_safety_multiplier">Máximo multiplicador diario de seguridad</string>
   <string name="openapsama_current_basal_safety_multiplier">Multiplicador de seguridad basal actual</string>
   <string name="value_unavailable_short">n/a</string>
-  <string name="ns_autobackfill_title">Auto Rellenar glucosas omitidas (Autobackfill BG)</string>
+  <string name="ns_autobackfill_title">Auto Rellenar mediciones perdidas</string>
   <string name="wear_wizard_settings">Configuración del Asistente</string>
   <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
   <string name="wear_display_settings">Ajustes pantalla</string>
