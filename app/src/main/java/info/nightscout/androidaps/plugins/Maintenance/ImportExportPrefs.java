@@ -143,7 +143,9 @@ public class ImportExportPrefs {
                                     MainApp.instance().stopKeepAliveService();
                                     MainApp.bus().post(new EventAppExit());
                                     MainApp.closeDbHelper();
-//                                    context.finish();
+                                    if (context instanceof Activity) {
+                                        ((Activity)context).finish();
+                                    }
                                     System.runFinalization();
                                     System.exit(0);
                                 }
