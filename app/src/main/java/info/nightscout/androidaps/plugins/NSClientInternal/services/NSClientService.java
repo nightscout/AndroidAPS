@@ -248,7 +248,8 @@ public class NSClientService extends Service {
         @Override
         public void call(Object... args) {
             connectCounter++;
-            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + mSocket.id()));
+            String socketId = mSocket != null ? mSocket.id() : "NULL";
+            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + socketId));
             sendAuthMessage(new NSAuthAck());
             watchdog();
         }
@@ -289,7 +290,7 @@ public class NSClientService extends Service {
         }
     };
 
-    public void destroy() {
+    public synchronized void destroy() {
         if (mSocket != null) {
             mSocket.off(Socket.EVENT_CONNECT);
             mSocket.off(Socket.EVENT_DISCONNECT);
