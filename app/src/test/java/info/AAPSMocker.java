@@ -92,6 +92,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.minago)).thenReturn("%d min ago");
         when(MainApp.gs(R.string.hoursago)).thenReturn("%.1fh ago");
         when(MainApp.gs(R.string.careportal_profileswitch)).thenReturn("Profile Switch");
+        when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
     }
 
     public static MainApp mockMainApp() {
