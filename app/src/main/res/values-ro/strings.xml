@@ -712,6 +712,8 @@
   <string name="dexcomg5_xdripupload_title">Trimite date glicemie la xDrip+</string>
   <string name="dexcomg5_xdripupload_summary">Selectați 640g/Eversense ca sursă de date în xDrip+</string>
   <string name="nsclientbg">Glicemie NSClient</string>
+  <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %s</string>
+  <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %s</string>
   <string name="overview_editquickwizard_usebg">Calcul glicemie</string>
   <string name="overview_editquickwizard_usebolusiob">Calcul IOB bolus</string>
   <string name="overview_editquickwizard_usebasaliob">Calcul IOB bazală</string>
@@ -765,6 +767,7 @@
   <string name="combo_error_no_connection_no_bolus_delivered">Pompa nu poate fi contactată. Nu s-a livrat niciun bolus</string>
   <string name="combo_error_no_bolus_delivered">Livrare eșuată. Se pare că nu a fost livrat bolusul. Pentru siguranță, verificați în pompă pentru a evita bolusarea dublă. Pentru evitarea greșelilor, bolusurile nu sunt retrimise automat.</string>
   <string name="combo_error_partial_bolus_delivered">Doar %1$.2f U din totalul cerut de %2$.2f U a fost livrat din cauza unei erori. Verificați pompa pentru confirmare și acționați corespunzător.</string>
+  <string name="combo_error_bolus_verification_failed">Nu s-a reușit livrarea bolusului și citirea istoricului pompei, verificați pompa. Dacă a fost totuși livrat un bolus, acesta va fi adăugat în lista tratamentelor în timpul următoarei conexiuni cu pompa.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
   <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
   <string name="insightpump_shortname">Insight</string>
