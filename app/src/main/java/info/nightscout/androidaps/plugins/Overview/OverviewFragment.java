@@ -586,7 +586,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(MainApp.gs(R.string.eatingsoon))) {
             DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = defHelper.determineEatingSoonTT(Constants.MGDL);
+            double target = defHelper.determineEatingSoonTT(profile.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
                     .duration(defHelper.determineEatingSoonTTDuration())
@@ -597,7 +597,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.activity))) {
             DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = defHelper.determineActivityTT(Constants.MGDL);
+            double target = defHelper.determineActivityTT(profile.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defHelper.determineActivityTTDuration())
@@ -608,7 +608,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.hypo))) {
             DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = defHelper.determineHypoTT(Constants.MGDL);
+            double target = defHelper.determineHypoTT(profile.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defHelper.determineHypoTTDuration())
