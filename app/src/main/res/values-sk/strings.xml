@@ -713,8 +713,6 @@
   <string name="dexcomg5_xdripupload_title">Odosielať glykémie do xDrip+</string>
   <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
   <string name="nsclientbg">Glykémie z NS</string>
-  <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou</string>
-  <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou</string>
   <string name="overview_editquickwizard_usebg">Výpočet glykémie</string>
   <string name="overview_editquickwizard_usebolusiob">Výpočet bolusového IOB</string>
   <string name="overview_editquickwizard_usebasaliob">Výpočet bazálneho IOB</string>
@@ -768,7 +766,6 @@
   <string name="combo_error_no_connection_no_bolus_delivered">Pumpa nedostupná. Bolus nebol podaný</string>
   <string name="combo_error_no_bolus_delivered">Podávanie inzulínu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Aby ste si boli istí, skontrolujte pumpu a prípadne pošlite bolus znovu. Aby sa zabránilo nechcenému dvojitému bolusu, podanie bolusu nie je automaticky opakované.</string>
   <string name="combo_error_partial_bolus_delivered">Iba %1$.2f U z bolusu %2$.2f bolo podaného z dôvodu chyby. Skontrolujte podaný bolus na pumpe a urobte potrebné opatrenia.</string>
-  <string name="combo_error_bolus_verification_failed">Podanie bolusu a kontrola histórie pumpy zlyhala. Skontrolujte pumpu ručne. Pokiaľ bol bolus podaný, načíta sa pri ďalšom pripojení pumpy automaticky.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatok inzulínu v zásobníku pre takýto bolus</string>
   <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
   <string name="insightpump_shortname">Insight</string>
@@ -1034,4 +1031,5 @@
   <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
   <string name="as">AS</string>
   <string name="versionavailable">Verzia %1$s je k dispozícii</string>
+  <string name="time_offset">Časový posun</string>
 </resources>

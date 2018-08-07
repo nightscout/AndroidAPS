@@ -712,8 +712,6 @@
   <string name="dexcomg5_xdripupload_title">将血糖数据发送到 xDrip +</string>
   <string name="dexcomg5_xdripupload_summary">在 xDrip + 选择640ｇ/Eversense 数据源</string>
   <string name="nsclientbg">NSClient 血糖</string>
-  <string name="minimalbasalvaluereplaced">基础率值被泵支持的最小值替换了</string>
-  <string name="maximumbasalvaluereplaced">基础率值被泵支持的最大值替换了</string>
   <string name="overview_editquickwizard_usebg">血糖计算</string>
   <string name="overview_editquickwizard_usebolusiob">大剂量IOB (活性胰岛素) 计算</string>
   <string name="overview_editquickwizard_usebasaliob">基础率IOB (活性胰岛素) 计算</string>
@@ -767,7 +765,6 @@
   <string name="combo_error_no_connection_no_bolus_delivered">找不到泵，大剂量输注失败</string>
   <string name="combo_error_no_bolus_delivered">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
   <string name="combo_error_partial_bolus_delivered">由于遇到一个错误， %2$.2f U 中只有%1$.2fU 输注成功了. 请在泵上检查并核实，看是否需要采取适当的措施.</string>
-  <string name="combo_error_bolus_verification_failed">输注大剂量和核实泵的历史失败，请检查泵，如果大剂量已经输注成功，会在治疗Tab里自动添加一个大剂量记录.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">储药器里没有足够的胰岛素可用于大剂量输注了</string>
   <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
   <string name="insightpump_shortname">Insight</string>

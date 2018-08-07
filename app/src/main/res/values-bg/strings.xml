@@ -625,8 +625,6 @@
   <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
   <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
   <string name="nsclientbg">КЗ от NS</string>
-  <string name="minimalbasalvaluereplaced">Базалната стойност е заместена от минимално подържаната</string>
-  <string name="maximumbasalvaluereplaced">Базалната стойност е заменена с максимално зададената</string>
   <string name="overview_editquickwizard_usebg">Калкулиране на КЗ</string>
   <string name="overview_editquickwizard_usebolusiob">Калкулиране на Болус IOB</string>
   <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
@@ -680,7 +678,6 @@
   <string name="combo_error_no_connection_no_bolus_delivered">Помпата е недостъпна. Не беше доставен болус.</string>
   <string name="combo_error_no_bolus_delivered">Болусът беше неуспешен.  За да сте сигурни, моля, проверете помпата, за да избегнете повторение на вече доставен болус. За да се избегнат бъгове болусите не се повтарят автоматично.</string>
   <string name="combo_error_partial_bolus_delivered">Само %1$.2f U от искания болус от %2$.2f U е доставен поради грешка. Моля, проверете помпата, за да потвърдите това и да предприемете съответните действия.</string>
-  <string name="combo_error_bolus_verification_failed">Свързването с помпата при доставката на болус се провали. Моля, проверете ръчно в историята на помпата доставен ли е болусът. Ако болусът е доставен, ще бъде добавен автоматично при следващото свързване с помпата.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
   <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
   <string name="insightpump_shortname">Insight</string>
