@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import com.squareup.otto.Subscribe;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -113,6 +114,10 @@ public class StatuslinePlugin extends PluginBase {
     @NonNull
     private String buildStatusString(Profile profile) {
         String status = "";
+
+        if (ConfigBuilderPlugin.getPlugin().getActivePump() == null)
+            return "";
+        
         LoopPlugin loopPlugin = LoopPlugin.getPlugin();
 
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
