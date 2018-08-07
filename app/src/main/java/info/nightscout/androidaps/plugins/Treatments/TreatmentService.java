@@ -381,16 +381,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
             Where where = queryBuilder.where();
             where.eq("pumpId", pumpId);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            List<Treatment> result = getDao().query(preparedQuery);
-            switch (result.size()) {
-                case 0:
-                    return null;
-                case 1:
-                    return result.get(0);
-                default:
-                    throw new RuntimeException("Multiple records with the same pump id found: " + result.toString());
-            }
+            queryBuilder.orderBy("date", true);
+
+            List<Treatment> result = getDao().query(queryBuilder.prepare());
+            if (result.isEmpty())
+                return null;
+            if (result.size() > 1)
+                log.warn("Multiple records with the same pump id found (returning first one): " + result.toString());
+            return result.get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
