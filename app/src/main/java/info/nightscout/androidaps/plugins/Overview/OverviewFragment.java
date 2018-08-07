@@ -592,8 +592,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     .duration(defHelper.determineEatingSoonTTDuration())
                     .reason(MainApp.gs(R.string.eatingsoon))
                     .source(Source.USER)
-                    .low(target)
-                    .high(target);
+                    .low(Profile.toMgdl(target, profile.getUnits()))
+                    .high(Profile.toMgdl(target, profile.getUnits()));
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.activity))) {
             DefaultValueHelper defHelper = new DefaultValueHelper();
@@ -603,8 +603,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     .duration(defHelper.determineActivityTTDuration())
                     .reason(MainApp.gs(R.string.activity))
                     .source(Source.USER)
-                    .low(target)
-                    .high(target);
+                    .low(Profile.toMgdl(target, profile.getUnits()))
+                    .high(Profile.toMgdl(target, profile.getUnits()));
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.hypo))) {
             DefaultValueHelper defHelper = new DefaultValueHelper();
@@ -612,10 +612,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defHelper.determineHypoTTDuration())
-                    .reason(MainApp.gs(R.string.activity))
+                    .reason(MainApp.gs(R.string.hypo))
                     .source(Source.USER)
-                    .low(target)
-                    .high(target);
+                    .low(Profile.toMgdl(target, profile.getUnits()))
+                    .high(Profile.toMgdl(target, profile.getUnits()));
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.custom))) {
             NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
