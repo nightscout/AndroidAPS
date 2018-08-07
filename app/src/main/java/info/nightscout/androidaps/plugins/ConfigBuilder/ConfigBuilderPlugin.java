@@ -100,6 +100,8 @@ public class ConfigBuilderPlugin extends PluginBase {
             if (L.isEnabled(L.CONFIGBUILDER))
                 log.debug("Storing settings from: " + from);
 
+            verifySelectionInCategories();
+
             for (PluginBase p : pluginList) {
                 PluginType type = p.getType();
                 if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwayVisible)
@@ -113,7 +115,6 @@ public class ConfigBuilderPlugin extends PluginBase {
                     }
                 }
             }
-            verifySelectionInCategories();
         }
     }
 
@@ -287,6 +288,8 @@ public class ConfigBuilderPlugin extends PluginBase {
         if (activeInsulin == null) {
             activeInsulin = InsulinOrefRapidActingPlugin.getPlugin();
             InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(PluginType.INSULIN, true);
+            if (L.isEnabled(L.CONFIGBUILDER))
+                log.debug("Defaulting InsulinOrefRapidActingPlugin");
         }
         this.setFragmentVisiblities(((PluginBase) activeInsulin).getName(), pluginsInCategory, PluginType.INSULIN);
 
@@ -296,6 +299,8 @@ public class ConfigBuilderPlugin extends PluginBase {
         if (activeSensitivity == null) {
             activeSensitivity = SensitivityOref0Plugin.getPlugin();
             SensitivityOref0Plugin.getPlugin().setPluginEnabled(PluginType.SENSITIVITY, true);
+            if (L.isEnabled(L.CONFIGBUILDER))
+                log.debug("Defaulting SensitivityOref0Plugin");
         }
         this.setFragmentVisiblities(((PluginBase) activeSensitivity).getName(), pluginsInCategory, PluginType.SENSITIVITY);
 
@@ -311,6 +316,8 @@ public class ConfigBuilderPlugin extends PluginBase {
         if (activePump == null) {
             activePump = VirtualPumpPlugin.getPlugin();
             VirtualPumpPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
+            if (L.isEnabled(L.CONFIGBUILDER))
+                log.debug("Defaulting VirtualPumpPlugin");
         }
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
 

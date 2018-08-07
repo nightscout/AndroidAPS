@@ -28,6 +28,7 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.ToastUtils;
 
@@ -79,26 +80,24 @@ public class ImportExportPrefs {
 
         new AlertDialog.Builder(c)
                 .setMessage(MainApp.gs(R.string.export_to) + " " + file + " ?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
-                        try {
-                            FileWriter fw = new FileWriter(file);
-                            PrintWriter pw = new PrintWriter(fw);
-                            Map<String, ?> prefsMap = prefs.getAll();
-                            for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-                                pw.println(entry.getKey() + "::" + entry.getValue().toString());
-                            }
-                            pw.close();
-                            fw.close();
-                            ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.exported));
-                        } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.filenotfound) + " " + file);
-                            log.error("Unhandled exception", e);
-                        } catch (IOException e) {
-                            log.error("Unhandled exception", e);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+                    try {
+                        FileWriter fw = new FileWriter(file);
+                        PrintWriter pw = new PrintWriter(fw);
+                        Map<String, ?> prefsMap = prefs.getAll();
+                        for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
+                            pw.println(entry.getKey() + "::" + entry.getValue().toString());
                         }
+                        pw.close();
+                        fw.close();
+                        ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.exported));
+                    } catch (FileNotFoundException e) {
+                        ToastUtils.showToastInUiThread(c, MainApp.gs(R.string.filenotfound) + " " + file);
+                        log.error("Unhandled exception", e);
+                    } catch (IOException e) {
+                        log.error("Unhandled exception", e);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -112,50 +111,46 @@ public class ImportExportPrefs {
     public static void importSharedPreferences(final Context context) {
         new AlertDialog.Builder(context)
                 .setMessage(MainApp.gs(R.string.import_from) + " " + file + " ?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        String line;
-                        String[] lineParts;
-                        try {
-                            editor.clear();
-                            editor.commit();
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    String line;
+                    String[] lineParts;
+                    try {
+                        editor.clear();
+                        editor.commit();
 
-                            BufferedReader reader = new BufferedReader(new FileReader(file));
-                            while ((line = reader.readLine()) != null) {
-                                lineParts = line.split("::");
-                                if (lineParts.length == 2) {
-                                    if (lineParts[1].equals("true") || lineParts[1].equals("false")) {
-                                        editor.putBoolean(lineParts[0], Boolean.parseBoolean(lineParts[1]));
-                                    } else {
-                                        editor.putString(lineParts[0], lineParts[1]);
-                                    }
+                        BufferedReader reader = new BufferedReader(new FileReader(file));
+                        while ((line = reader.readLine()) != null) {
+                            lineParts = line.split("::");
+                            if (lineParts.length == 2) {
+                                if (lineParts[1].equals("true") || lineParts[1].equals("false")) {
+                                    editor.putBoolean(lineParts[0], Boolean.parseBoolean(lineParts[1]));
+                                } else {
+                                    editor.putString(lineParts[0], lineParts[1]);
                                 }
                             }
-                            reader.close();
-                            editor.commit();
-                            OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), new Runnable() {
-                                @Override
-                                public void run() {
-                                    log.debug("Exiting");
-                                    MainApp.instance().stopKeepAliveService();
-                                    MainApp.bus().post(new EventAppExit());
-                                    MainApp.closeDbHelper();
-                                    if (context instanceof Activity) {
-                                        ((Activity)context).finish();
-                                    }
-                                    System.runFinalization();
-                                    System.exit(0);
-                                }
-                            });
-                        } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(context, MainApp.gs(R.string.filenotfound) + " " + file);
-                            log.error("Unhandled exception", e);
-                        } catch (IOException e) {
-                            log.error("Unhandled exception", e);
                         }
+                        reader.close();
+                        editor.commit();
+                        ConfigBuilderPlugin.getPlugin().storeSettings("importSharedPreferences"); // process potentially missing plugins
+                        OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
+                            log.debug("Exiting");
+                            MainApp.instance().stopKeepAliveService();
+                            MainApp.bus().post(new EventAppExit());
+                            MainApp.closeDbHelper();
+                            if (context instanceof Activity) {
+                                ((Activity)context).finish();
+                            }
+                            System.runFinalization();
+                            System.exit(0);
+                        });
+                    } catch (FileNotFoundException e) {
+                        ToastUtils.showToastInUiThread(context, MainApp.gs(R.string.filenotfound) + " " + file);
+                        log.error("Unhandled exception", e);
+                    } catch (IOException e) {
+                        log.error("Unhandled exception", e);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
