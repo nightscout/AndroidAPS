@@ -108,7 +108,7 @@ public class MainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-            log.debug("onCreate");
+        log.debug("onCreate");
         sInstance = this;
         sResources = getResources();
         sConstraintsChecker = new ConstraintChecker(this);
@@ -172,13 +172,12 @@ public class MainApp extends Application {
             pluginsList.add(TreatmentsPlugin.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
-            if (!Config.NSCLIENT && !Config.G5UPLOADER)
+            if (!Config.NSCLIENT)
                 pluginsList.add(SourceXdripPlugin.getPlugin());
-            if (!Config.G5UPLOADER)
-                pluginsList.add(SourceNSClientPlugin.getPlugin());
-            if (!Config.NSCLIENT && !Config.G5UPLOADER)
+            pluginsList.add(SourceNSClientPlugin.getPlugin());
+            if (!Config.NSCLIENT)
                 pluginsList.add(SourceMM640gPlugin.getPlugin());
-            if (!Config.NSCLIENT && !Config.G5UPLOADER)
+            if (!Config.NSCLIENT)
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
             if (!Config.NSCLIENT)
                 pluginsList.add(SourceDexcomG5Plugin.getPlugin());

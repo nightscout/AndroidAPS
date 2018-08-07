@@ -73,7 +73,7 @@ public class MainAppTest {
     public void getSpecificPluginsListTest() {
         // currently MDI, VP, R, Rv2, KoreanR, RS
         int expected;
-        if (Config.NSCLIENT || Config.G5UPLOADER)
+        if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
             expected = 7;
@@ -84,7 +84,7 @@ public class MainAppTest {
     public void getSpecificPluginsVisibleInListTest() {
         // currently MDI, VP, R, Rv2, KoreanR, RS
         int expected;
-        if (Config.NSCLIENT || Config.G5UPLOADER)
+        if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
             expected = 7;
@@ -95,7 +95,7 @@ public class MainAppTest {
     public void getSpecificPluginsListByInterfaceTest() {
         // currently MDI, VP, R, Rv2, KoreanR, RS
         int expected;
-        if (Config.NSCLIENT || Config.G5UPLOADER)
+        if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
             expected = 7;
@@ -106,7 +106,7 @@ public class MainAppTest {
     public void getSpecificPluginsVisibleInListByInterfaceTest() {
         // currently MDI, VP, R, Rv2, KoreanR, RS
         int expected;
-        if (Config.NSCLIENT || Config.G5UPLOADER)
+        if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
             expected = 7;

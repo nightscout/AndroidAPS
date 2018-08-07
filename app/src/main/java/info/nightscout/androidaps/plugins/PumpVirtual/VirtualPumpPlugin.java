@@ -79,7 +79,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 .pluginName(R.string.virtualpump)
                 .shortName(R.string.virtualpump_shortname)
                 .preferencesId(R.xml.pref_virtualpump)
-                .neverVisible(Config.NSCLIENT || Config.G5UPLOADER)
+                .neverVisible(Config.NSCLIENT)
                 .description(R.string.description_pump_virtual)
         );
         pumpDescription.isBolusCapable = true;
@@ -114,7 +114,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return (Config.NSCLIENT || Config.G5UPLOADER) && fromNSAreCommingFakedExtendedBoluses;
+        return (Config.NSCLIENT) && fromNSAreCommingFakedExtendedBoluses;
     }
 
     @Override
@@ -151,7 +151,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public void connect(String reason) {
-        if (!Config.NSCLIENT && !Config.G5UPLOADER)
+        if (!Config.NSCLIENT)
             NSUpload.uploadDeviceStatus();
         lastDataTime = new Date();
     }

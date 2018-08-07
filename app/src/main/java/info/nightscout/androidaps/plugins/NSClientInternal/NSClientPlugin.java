@@ -73,7 +73,7 @@ public class NSClientPlugin extends PluginBase {
                 .description(R.string.description_ns_client)
         );
 
-        if (Config.NSCLIENT || Config.G5UPLOADER) {
+        if (Config.NSCLIENT) {
             pluginDescription.alwaysEnabled(true).visibleByDefault(true);
         }
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);

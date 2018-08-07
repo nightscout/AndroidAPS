@@ -155,7 +155,7 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setOngoing(true);
         builder.setOnlyAlertOnce(true);
         builder.setCategory(NotificationCompat.CATEGORY_STATUS);
-        if (Config.NSCLIENT || Config.G5UPLOADER){
+        if (Config.NSCLIENT){
             builder.setSmallIcon(R.drawable.nsclient_smallicon);
             Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.yellowowl);
             builder.setLargeIcon(largeIcon);

@@ -276,7 +276,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         }
 
         // TODO review
-        if (!Config.NSCLIENT && !Config.G5UPLOADER)
+        if (!Config.NSCLIENT)
             NSUpload.uploadDeviceStatus();
     }
 

@@ -215,9 +215,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         View view;
 
-        if (MainApp.sResources.getBoolean(R.bool.isTablet) && (Config.NSCLIENT || Config.G5UPLOADER)) {
+        if (MainApp.sResources.getBoolean(R.bool.isTablet) && (Config.NSCLIENT)) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
-        } else if (Config.NSCLIENT || Config.G5UPLOADER) {
+        } else if (Config.NSCLIENT) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
             shorttextmode = true;
         } else if (smallHeight || landscape) {
@@ -1201,7 +1201,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull() + " ";
             }
-            if (Config.NSCLIENT || Config.G5UPLOADER)
+            if (Config.NSCLIENT)
                 basalText += "(" + DecimalFormatter.to2Decimal(profile.getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
@@ -1229,11 +1229,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
             }
             extendedBolusView.setText(extendedBolusText);
-            if (Config.NSCLIENT || Config.G5UPLOADER) {
+            if (Config.NSCLIENT) {
                 extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extendedbolus), extendedBolus.toString(), null));
             }
             if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(Config.NSCLIENT || Config.G5UPLOADER ? View.INVISIBLE : View.GONE);
+                extendedBolusView.setVisibility(Config.NSCLIENT ? View.INVISIBLE : View.GONE);
             else
                 extendedBolusView.setVisibility(View.VISIBLE);
         }

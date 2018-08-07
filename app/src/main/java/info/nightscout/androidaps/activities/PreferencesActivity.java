@@ -135,7 +135,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(id);
             } else {
 
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
+                if (!Config.NSCLIENT) {
                     addPreferencesFromResource(R.xml.pref_password);
                 }
                 addPreferencesFromResource(R.xml.pref_age);
@@ -174,7 +174,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     }
                 }
 
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
+                if (!Config.NSCLIENT) {
                     addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginType.PUMP);
                 }
 
@@ -183,7 +183,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
 
-                if (!Config.NSCLIENT && !Config.G5UPLOADER) {
+                if (!Config.NSCLIENT) {
                     addPreferencesFromResource(R.xml.pref_others);
                 }
                 addPreferencesFromResource(R.xml.pref_datachoices);

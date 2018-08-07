@@ -102,12 +102,6 @@ android {
                     appIcon: "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
-            buildConfigField "boolean", "APS", "true"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "NSCLIENT", "false"
-            buildConfigField "boolean", "NSCLIENT2", "false"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
         pumpcontrol {
             applicationId "info.nightscout.androidaps"
@@ -118,12 +112,6 @@ android {
                     appIcon: "@mipmap/blueowl",
                     appIconRound: "@null"
             ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "NSCLIENT", "false"
-            buildConfigField "boolean", "NSCLIENT2", "false"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "true"
         }
         nsclient {
             applicationId "info.nightscout.nsclient"
@@ -134,12 +122,6 @@ android {
                     appIcon: "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "NSCLIENT", "true"
-            buildConfigField "boolean", "NSCLIENT2", "false"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
         nsclient2 {
             applicationId "info.nightscout.nsclient2"
@@ -150,28 +132,6 @@ android {
                     appIcon: "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "NSCLIENT", "false"
-            buildConfigField "boolean", "NSCLIENT2", "true"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
-        }
-        g5uploader {
-            applicationId "info.nightscout.nsclient"
-            dimension "standard"
-            resValue "string", "app_name", "NSClient"
-            versionName version + "-nsclient"
-            manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl",
-                    appIconRound: "@null"
-            ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "NSCLIENT", "false"
-            buildConfigField "boolean", "NSCLIENT2", "false"
-            buildConfigField "boolean", "G5UPLOADER", "true"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
     }
     compileOptions {

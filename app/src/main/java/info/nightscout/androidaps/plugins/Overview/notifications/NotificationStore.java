@@ -128,7 +128,7 @@ public class NotificationStore {
         NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.blueowl);
         int smallIcon = R.drawable.ic_notification;
-        if (Config.NSCLIENT || Config.G5UPLOADER) {
+        if (Config.NSCLIENT) {
             largeIcon = BitmapFactory.decodeResource(MainApp.instance().getResources(), R.mipmap.yellowowl);
             smallIcon = R.drawable.nsclient_smallicon;
         }

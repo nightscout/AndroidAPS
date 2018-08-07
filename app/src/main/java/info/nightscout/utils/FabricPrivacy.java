@@ -122,8 +122,6 @@ public class FabricPrivacy {
         CustomEvent type = new CustomEvent("AppUsageType");
         if (Config.NSCLIENT)
             type.putCustomAttribute("type", "NSClient");
-        else if (Config.G5UPLOADER)
-            type.putCustomAttribute("type", "G5Uploader");
         else if (Config.PUMPCONTROL)
             type.putCustomAttribute("type", "PumpControl");
         else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())

@@ -109,7 +109,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
                 butonsLayout.setVisibility(View.VISIBLE);
             }
 
-            if (Config.NSCLIENT || Config.G5UPLOADER)
+            if (Config.NSCLIENT)
                 statsLayout.setVisibility(View.GONE); // visible on overview
 
             updateGUI();
