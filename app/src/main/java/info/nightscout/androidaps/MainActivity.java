@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
         AndroidPermission.notifyForStoragePermission(this);
         AndroidPermission.notifyForBatteryOptimizationPermission(this);
-        if (BuildConfig.APS || BuildConfig.PUMPCONTROL) {
+        if (Config.PUMPDRIVERS) {
             AndroidPermission.notifyForLocationPermissions(this);
             AndroidPermission.notifyForSMSPermissions(this);
         }
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            boolean keepScreenOn = BuildConfig.NSCLIENTOLNY && SP.getBoolean(R.string.key_keep_screen_on, false);
+            boolean keepScreenOn = Config.NSCLIENT && SP.getBoolean(R.string.key_keep_screen_on, false);
             if (keepScreenOn)
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             else

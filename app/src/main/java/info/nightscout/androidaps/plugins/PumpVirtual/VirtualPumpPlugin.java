@@ -26,13 +26,13 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -79,7 +79,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 .pluginName(R.string.virtualpump)
                 .shortName(R.string.virtualpump_shortname)
                 .preferencesId(R.xml.pref_virtualpump)
-                .neverVisible(BuildConfig.NSCLIENTOLNY || BuildConfig.G5UPLOADER)
+                .neverVisible(Config.NSCLIENT || Config.G5UPLOADER)
                 .description(R.string.description_pump_virtual)
         );
         pumpDescription.isBolusCapable = true;

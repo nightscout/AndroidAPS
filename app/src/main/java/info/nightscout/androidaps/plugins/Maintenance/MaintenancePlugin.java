@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -80,7 +81,7 @@ public class MaintenancePlugin extends PluginBase {
         LOG.debug("zipFile: {}", zipFile.getAbsolutePath());
         File zip = this.zipLogs(zipFile, logs);
 
-        Uri attachementUri = FileProvider.getUriForFile(this.ctx, "info.nightscout.androidaps.fileprovider", zip);
+        Uri attachementUri = FileProvider.getUriForFile(this.ctx, BuildConfig.APPLICATION_ID + ".provider", zip);
         Intent emailIntent = this.sendMail(attachementUri, recipient, "Log Export");
         LOG.debug("sending emailIntent");
         ctx.startActivity(emailIntent);

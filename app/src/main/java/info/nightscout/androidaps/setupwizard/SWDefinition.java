@@ -13,11 +13,10 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -31,6 +30,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Maintenance.ImportExportPrefs;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
@@ -41,17 +41,16 @@ import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfilePlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWBreak;
 import info.nightscout.androidaps.setupwizard.elements.SWButton;
+import info.nightscout.androidaps.setupwizard.elements.SWEditString;
+import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.elements.SWFragment;
 import info.nightscout.androidaps.setupwizard.elements.SWHtmlLink;
 import info.nightscout.androidaps.setupwizard.elements.SWInfotext;
 import info.nightscout.androidaps.setupwizard.elements.SWPlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton;
-import info.nightscout.androidaps.setupwizard.elements.SWEditString;
-import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.AndroidPermission;
-import info.nightscout.androidaps.plugins.Maintenance.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
@@ -83,9 +82,9 @@ public class SWDefinition {
     }
 
     SWDefinition() {
-        if (BuildConfig.FLAVOR.equals("full") || BuildConfig.FLAVOR.equals("pumpcontrol"))
+        if (Config.APS || Config.PUMPCONTROL)
             SWDefinitionFull();
-        else if (BuildConfig.FLAVOR.equals("nsclient"))
+        else if (Config.NSCLIENT)
             SWDefinitionNSClient();
     }
 

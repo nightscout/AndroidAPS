@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:validatingEditText="http://schemas.android.com/apk/res/info.nightscout.androidaps">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:key="maintenance"
@@ -12,10 +11,13 @@
             android:inputType="textEmailAddress"
             android:key="@string/key_maintenance_logs_email"
             android:selectAllOnFocus="true"
-            android:title="@string/maintenance_email"
-            validatingEditText:emptyAllowed="false"
-            validatingEditText:testErrorString="@string/invalid_email_message"
-            validatingEditText:testType="email"/>
+            android:title="@string/maintenance_email" />
+
+        <!-- TODO: make this working with changed package name(nsclient)
+        validatingEditText:emptyAllowed="false"
+        validatingEditText:testErrorString="@string/invalid_email_message"
+        validatingEditText:testType="email"
+        -->
 
         <EditTextPreference
             android:defaultValue="2"

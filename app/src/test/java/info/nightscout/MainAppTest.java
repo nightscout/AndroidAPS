@@ -5,14 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 
 
 /**
@@ -122,7 +121,7 @@ public class MainAppTest {
 
     @Test
     public void isEngineeringModeOrReleaseTest() {
-        Assert.assertEquals(!BuildConfig.APS, mainApp.isEngineeringModeOrRelease());
+        Assert.assertEquals(!Config.APS, mainApp.isEngineeringModeOrRelease());
     }
 
     @Test
