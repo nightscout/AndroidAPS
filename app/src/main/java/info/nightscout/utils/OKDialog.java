@@ -22,10 +22,6 @@ import info.nightscout.androidaps.R;
 public class OKDialog {
     private static Logger log = LoggerFactory.getLogger(OKDialog.class);
 
-    public static void show(final Activity activity, String title, String message, final Runnable runnable) {
-        show(activity, title, message, runnable);
-    }
-
     public static void show(final Context context, String title, String message, final Runnable runnable) {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme));
