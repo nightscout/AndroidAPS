@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.driver;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -36,44 +36,36 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     public String errorDescription = null;
     public String serialNumber;
-    //public PumpType pumpType = null;
+    // public PumpType pumpType = null;
     public String pumpFrequency = null;
     public String rileyLinkAddress = null;
     public Double maxBolus;
     public Double maxBasal;
-    private String[] frequencies;
-    private boolean isFrequencyUS = false;
-
     public boolean inPreInit = true;
-
-    String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
-    String regexSN = "[0-9]{6}";
-
-    private Map<String, PumpType> medtronicPumpMap = null;
-    private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
-
     // statuses
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     public RileyLinkError rileyLinkError;
     public PumpDeviceState pumpDeviceState = PumpDeviceState.NeverContacted;
-
     public MedtronicDeviceType medtronicDeviceType = null;
-
-
-    // fixme
-
-
     public double currentBasal = 0;
-
     public int tempBasalInProgress = 0;
     public int tempBasalRatio = 0;
     public int tempBasalRemainMin = 0;
     public Date tempBasalStart;
     public Double tempBasalAmount = 0.0d;
-    public Integer tempBasalLength = 0;
-
 
     // fixme
+    public Integer tempBasalLength = 0;
+    String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
+    String regexSN = "[0-9]{6}";
+    boolean serialChanged = false;
+    boolean rileyLinkAddressChanged = false;
+    private String[] frequencies;
+    private boolean isFrequencyUS = false;
+
+    // fixme
+    private Map<String, PumpType> medtronicPumpMap = null;
+    private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
 
 
     public MedtronicPumpStatus(PumpDescription pumpDescription) {
@@ -95,11 +87,9 @@ public class MedtronicPumpStatus extends PumpStatus {
             createMedtronicDeviceTypeMap();
 
         this.lastConnection = SP.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L);
-        Date d = new Date();
-        d.setTime(this.lastConnection);
-
-        this.lastDataTime = d;
+        this.lastDataTime = new LocalDateTime(this.lastConnection);
     }
+
 
     private void createMedtronicDeviceTypeMap() {
         medtronicDeviceTypeMap = new HashMap<>();
@@ -138,9 +128,6 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    boolean serialChanged = false;
-    boolean rileyLinkAddressChanged = false;
-
     public void verifyConfiguration() {
         try {
 
@@ -168,7 +155,6 @@ public class MedtronicPumpStatus extends PumpStatus {
                 }
             }
 
-
             String pumpType = SP.getString(MedtronicConst.Prefs.PumpType, null);
 
             if (pumpType == null) {
@@ -191,7 +177,6 @@ public class MedtronicPumpStatus extends PumpStatus {
                 }
             }
 
-
             String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
 
             if (pumpFrequency == null) {
@@ -206,10 +191,10 @@ public class MedtronicPumpStatus extends PumpStatus {
                     this.isFrequencyUS = pumpFrequency.equals(frequencies[0]);
 
                     RileyLinkUtil.setRileyLinkTargetFrequency(this.isFrequencyUS ? //
-                            RileyLinkTargetFrequency.Medtronic_US : RileyLinkTargetFrequency.Medtronic_WorldWide);
+                    RileyLinkTargetFrequency.Medtronic_US
+                        : RileyLinkTargetFrequency.Medtronic_WorldWide);
                 }
             }
-
 
             String rileyLinkAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
 
@@ -227,7 +212,6 @@ public class MedtronicPumpStatus extends PumpStatus {
                 }
             }
 
-
             maxBolus = checkParameterValue(MedtronicConst.Prefs.MaxBolus, "25.0", 25.0d);
 
             maxBasal = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0d);
@@ -239,6 +223,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             LOG.error("Error on Verification: " + ex.getMessage(), ex);
         }
     }
+
 
     private boolean startService() {
 

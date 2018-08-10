@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record;
 
-
 import android.os.Bundle;
 
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class TempBasalRatePumpEvent extends TimeStampedRecord {
+
     private double basalRate = 0.0; // rate in Units/hr
     private boolean mIsPercent = false; // The value is either an absolute number or a percentage
 
@@ -44,7 +44,7 @@ public class TempBasalRatePumpEvent extends TimeStampedRecord {
         }
         if ((asUINT8(data[7]) >> 3) == 0) {
             mIsPercent = false;
-            basalRate = (double) (asUINT8(data[1])) / 40.0;
+            basalRate = (double)(asUINT8(data[1])) / 40.0;
         } else {
             mIsPercent = true;
             basalRate = asUINT8(data[1]);

@@ -20,20 +20,23 @@ public class MedtronicUITask {
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicUITask.class);
 
     public MedtronicCommandType commandType;
-    private Object[] parameters;
-    private boolean received;
     public Object returnData;
     String errorDescription;
     boolean invalid = false;
+    private Object[] parameters;
+    private boolean received;
+
 
     public MedtronicUITask(MedtronicCommandType commandType) {
         this.commandType = commandType;
     }
 
+
     public MedtronicUITask(MedtronicCommandType commandType, Object... parameters) {
         this.commandType = commandType;
         this.parameters = parameters;
     }
+
 
     public void execute(MedtronicCommunicationManager communicationManager) {
 
@@ -43,27 +46,27 @@ public class MedtronicUITask {
             case PumpModel: {
                 returnData = communicationManager.getPumpModel();
             }
-            break;
+                break;
 
             case GetBasalProfileSTD: {
                 returnData = communicationManager.getBasalProfile();
             }
-            break;
+                break;
 
             case GetRemainingInsulin: {
                 returnData = communicationManager.getRemainingInsulin();
             }
-            break;
+                break;
 
             case RealTimeClock: {
                 returnData = communicationManager.getPumpTime();
             }
-            break;
+                break;
 
             case GetBatteryStatus: {
                 returnData = communicationManager.getRemainingBattery();
             }
-            break;
+                break;
 
             case SetTemporaryBasal: {
                 TempBasalPair tbr = getTBRSettings();
@@ -71,29 +74,29 @@ public class MedtronicUITask {
                     returnData = communicationManager.setTBR(tbr);
                 }
             }
-            break;
+                break;
 
             case ReadTemporaryBasal: {
                 returnData = communicationManager.getTemporaryBasal();
             }
-            break;
+                break;
 
             case PumpState: {
                 // TODO maybe remove this, data returned is almost useless
                 returnData = communicationManager.getPumpState();
             }
-            break;
+                break;
 
-//            case "RefreshData.GetBolus": {
-//                returnData = communicationManager.getBolusStatus();
-//            }
-//            break;
+            // case "RefreshData.GetBolus": {
+            // returnData = communicationManager.getBolusStatus();
+            // }
+            // break;
 
             case Settings:
             case Settings_512: {
                 returnData = communicationManager.getPumpSettings();
             }
-            break;
+                break;
 
             case SetBolus: {
                 Double amount = getDoubleFromParameters(0);
@@ -101,35 +104,35 @@ public class MedtronicUITask {
                 if (amount != null)
                     returnData = communicationManager.setBolus(amount);
             }
-            break;
+                break;
 
             case CancelTBR: {
                 // FIXME check if TBR is actually running
                 returnData = communicationManager.cancelTBR();
             }
-            break;
+                break;
 
             case SetBasalProfileSTD:
             case SetBasalProfileA: {
 
-//                Float amount = getAmount();
-//
-//                if (amount != null) {
-//
-//                    BasalProfile profile = new BasalProfile();
-//
-//                    int basalStrokes1 = MedtronicUtil.getBasalStrokesInt(amount);
-//                    int basalStrokes2 = MedtronicUtil.getBasalStrokesInt(amount * 2);
-//
-//                    for (int i = 0; i < 24; i++) {
-//                        profile.addEntry(new BasalProfileEntry(i % 2 == 0 ? basalStrokes1 : basalStrokes2, i * 2));
-//                    }
-//
-//                    returnData = communicationManager.setBasalProfile(profile);
-//                }
+                // Float amount = getAmount();
+                //
+                // if (amount != null) {
+                //
+                // BasalProfile profile = new BasalProfile();
+                //
+                // int basalStrokes1 = MedtronicUtil.getBasalStrokesInt(amount);
+                // int basalStrokes2 = MedtronicUtil.getBasalStrokesInt(amount * 2);
+                //
+                // for (int i = 0; i < 24; i++) {
+                // profile.addEntry(new BasalProfileEntry(i % 2 == 0 ? basalStrokes1 : basalStrokes2, i * 2));
+                // }
+                //
+                // returnData = communicationManager.setBasalProfile(profile);
+                // }
 
             }
-            break;
+                break;
 
             default: {
                 LOG.warn("This commandType is not supported (yet) - {}.", commandType);
@@ -137,7 +140,6 @@ public class MedtronicUITask {
             }
 
         }
-
 
         if (returnData == null) {
             if (!invalid)
@@ -147,30 +149,30 @@ public class MedtronicUITask {
             received = true;
         }
 
-
     }
 
+
     private TempBasalPair getTBRSettings() {
-        TempBasalPair tempBasalPair = new TempBasalPair(
-                getDoubleFromParameters(0), //
-                false, //
-                getIntegerFromParameters(1));
+        TempBasalPair tempBasalPair = new TempBasalPair(getDoubleFromParameters(0), //
+            false, //
+            getIntegerFromParameters(1));
 
         return tempBasalPair;
     }
 
+
     private Float getFloatFromParameters(int index) {
-        return (Float) parameters[index];
+        return (Float)parameters[index];
     }
 
 
     public Double getDoubleFromParameters(int index) {
-        return (Double) parameters[index];
+        return (Double)parameters[index];
     }
 
 
     public Integer getIntegerFromParameters(int index) {
-        return (Integer) parameters[index];
+        return (Integer)parameters[index];
     }
 
 
@@ -196,12 +198,14 @@ public class MedtronicUITask {
 
         // should never happen
         if (invalid) {
-            statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating, "Unsupported command in MedtronicUITask");
+            statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+                "Unsupported command in MedtronicUITask");
             MainApp.bus().post(statusChange);
         }
 
         if (errorDescription != null) {
-            statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating, errorDescription);
+            statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+                errorDescription);
             MainApp.bus().post(statusChange);
         }
 

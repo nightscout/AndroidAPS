@@ -5,10 +5,10 @@ import android.os.Bundle;
 /**
  * Created by geoff on 7/6/16.
  * <p>
- * These are "one liner" messages between client and service.
- * Must still be contained within ServiceTransports
+ * These are "one liner" messages between client and service. Must still be contained within ServiceTransports
  */
 public class ServiceNotification extends ServiceMessage {
+
     public ServiceNotification() {
     }
 
@@ -36,14 +36,13 @@ public class ServiceNotification extends ServiceMessage {
     }
 
 
-    public void setNotificationType(String notificationType) {
-        map.putString("NotificationType", notificationType);
-    }
-
-
     public String getNotificationType() {
         return map.getString("NotificationType", "");
     }
 
+
+    public void setNotificationType(String notificationType) {
+        map.putString("NotificationType", notificationType);
+    }
 
 }

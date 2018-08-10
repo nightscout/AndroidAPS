@@ -12,6 +12,7 @@ public interface PumpDriverInterface extends PumpInterface {
 
     void initDriver(PumpStatus pumpStatus, PumpDescription pumpDescription);
 
+
     PumpStatus getPumpStatusData();
 
 }

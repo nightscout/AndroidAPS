@@ -8,7 +8,6 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtron
  */
 public class WakeAndTuneTask extends PumpTask {
 
-
     public WakeAndTuneTask() {
     }
 

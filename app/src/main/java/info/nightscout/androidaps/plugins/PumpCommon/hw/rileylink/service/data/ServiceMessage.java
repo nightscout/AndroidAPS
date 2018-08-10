@@ -8,6 +8,7 @@ import android.os.Bundle;
  * Base class for all messages passed between service and client
  */
 public class ServiceMessage {
+
     protected Bundle map = new Bundle();
 
 
@@ -35,6 +36,5 @@ public class ServiceMessage {
     public String getServiceMessageType() {
         return map.getString("ServiceMessageType");
     }
-
 
 }

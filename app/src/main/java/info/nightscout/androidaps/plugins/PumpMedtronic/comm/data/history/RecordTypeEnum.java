@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history;
 
-import android.os.Bundle;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+
+import android.os.Bundle;
 
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.AlarmClockReminderPumpEvent;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.AlarmSensorPumpEvent;
@@ -68,36 +68,35 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType
 @Deprecated
 public enum RecordTypeEnum {
 
-    Null((byte) 0x00, null, 0), //
+    Null((byte)0x00, null, 0), //
 
     // Good Events
     BolusNormal(0x01, BolusNormalPumpEvent.class), // OK
-    Prime((byte) 0x03, PrimePumpEvent.class), // OK
-    AlarmPump((byte) 0x06, PumpAlarmPumpEvent.class), //
-    ResultDailyTotal((byte) 0x07, ResultDailyTotalPumpEvent.class), // OK
-    ChangeBasalProfile_old_profile((byte) 0x08, ChangeBasalProfilePatternPumpEvent.class), // OK
-    ChangeBasalProfile_new_profile((byte) 0x09, ChangeBasalProfilePumpEvent.class), // OK
+    Prime((byte)0x03, PrimePumpEvent.class), // OK
+    AlarmPump((byte)0x06, PumpAlarmPumpEvent.class), //
+    ResultDailyTotal((byte)0x07, ResultDailyTotalPumpEvent.class), // OK
+    ChangeBasalProfile_old_profile((byte)0x08, ChangeBasalProfilePatternPumpEvent.class), // OK
+    ChangeBasalProfile_new_profile((byte)0x09, ChangeBasalProfilePumpEvent.class), // OK
 
-    CalBgForPh((byte) 0x0A, CalBgForPhPumpEvent.class),  //
-    AlarmSensor((byte) 0x0B, AlarmSensorPumpEvent.class),  //
-    ClearAlarm((byte) 0x0C, ClearAlarmPumpEvent.class),  //
-    SelectBasalProfile((byte) 0x14, IgnoredHistoryEntry.class, 7), // OK
-    TempBasalDuration((byte) 0x16, TempBasalDurationPumpEvent.class),  // OK
-    ChangeTime((byte) 0x17, ChangeTimePumpEvent.class),  // OK
-    NewTimeSet((byte) 0x18, NewTimeSet.class), // OK
+    CalBgForPh((byte)0x0A, CalBgForPhPumpEvent.class), //
+    AlarmSensor((byte)0x0B, AlarmSensorPumpEvent.class), //
+    ClearAlarm((byte)0x0C, ClearAlarmPumpEvent.class), //
+    SelectBasalProfile((byte)0x14, IgnoredHistoryEntry.class, 7), // OK
+    TempBasalDuration((byte)0x16, TempBasalDurationPumpEvent.class), // OK
+    ChangeTime((byte)0x17, ChangeTimePumpEvent.class), // OK
+    NewTimeSet((byte)0x18, NewTimeSet.class), // OK
 
-
-    JournalEntryPumpLowBattery((byte) 0x19, JournalEntryPumpLowBatteryPumpEvent.class),  //
-    RECORD_TYPE_BATTERY((byte) 0x1A, BatteryPumpEvent.class),  //
+    JournalEntryPumpLowBattery((byte)0x19, JournalEntryPumpLowBatteryPumpEvent.class), //
+    RECORD_TYPE_BATTERY((byte)0x1A, BatteryPumpEvent.class), //
     SetAutoOff(0x1b, 7), //
-    Suspend((byte) 0x1E, SuspendPumpEvent.class),  // OK
-    Resume((byte) 0x1F, ResumePumpEvent.class),  // OK
+    Suspend((byte)0x1E, SuspendPumpEvent.class), // OK
+    Resume((byte)0x1F, ResumePumpEvent.class), // OK
     SelfTest(0x20, 7), //
-    Rewind((byte) 0x21, RewindPumpEvent.class),  //
+    Rewind((byte)0x21, RewindPumpEvent.class), //
     ClearSettings(0x22, 7), //
-    ChangeChildBlockEnable((byte) 0x23, ChangeChildBlockEnablePumpEvent.class),  //
-    ChangeMaxBolus((byte) 0x24, ChangeMaxBolusPumpEvent.class),  //
-    EnableDisableRemote((byte) 0x26, EnableDisableRemotePumpEvent.class),  //
+    ChangeChildBlockEnable((byte)0x23, ChangeChildBlockEnablePumpEvent.class), //
+    ChangeMaxBolus((byte)0x24, ChangeMaxBolusPumpEvent.class), //
+    EnableDisableRemote((byte)0x26, EnableDisableRemotePumpEvent.class), //
     ChangeMaxBasal(0x2c, 7), //
     EnableBolusWizard(0x2d, 7), //
     Andy2E(0x2e, 7), //
@@ -105,9 +104,9 @@ public enum RecordTypeEnum {
     Andy30(0x30, 7), //
     ChangeBGReminderOffset(0x31, 7), //
     ChangeAlarmClockTime(0x32, 7), //
-    tempBasal((byte) 0x33, TempBasalRatePumpEvent.class),  //
-    journalEntryPumpLowReservoir((byte) 0x34, JournalEntryPumpLowReservoirPumpEvent.class),  //
-    AlarmClockReminder((byte) 0x35, AlarmClockReminderPumpEvent.class),  //
+    tempBasal((byte)0x33, TempBasalRatePumpEvent.class), //
+    journalEntryPumpLowReservoir((byte)0x34, JournalEntryPumpLowReservoirPumpEvent.class), //
+    AlarmClockReminder((byte)0x35, AlarmClockReminderPumpEvent.class), //
     ChangeMeterId(0x36, 7), // 715 = 21 ??
     MM512_Event_0x37(0x37, 7), //
     MM512_Event_0x38(0x38, 7), //
@@ -117,11 +116,11 @@ public enum RecordTypeEnum {
     changeParadigmLinkID(0x3c, 7), //
     MM512_Event_0x3D(0x3D, 7), //
     MM512_Event_0x3E(0x3e, 7), //
-    bgReceived((byte) 0x3F, BGReceivedPumpEvent.class),  //
+    bgReceived((byte)0x3F, BGReceivedPumpEvent.class), //
     JournalEntryMealMarker(0x40, 7), //
-    JournalEntryExerciseMarker((byte) 0x41, JournalEntryExerciseMarkerPumpEvent.class),  //
-    JournalEntryInsulinMarker((byte) 0x42, Unknown7ByteEvent1.class),  //
-    journalEntryOtherMarker((byte) 0x43, InsulinMarkerEvent.class),  //
+    JournalEntryExerciseMarker((byte)0x41, JournalEntryExerciseMarkerPumpEvent.class), //
+    JournalEntryInsulinMarker((byte)0x42, Unknown7ByteEvent1.class), //
+    journalEntryOtherMarker((byte)0x43, InsulinMarkerEvent.class), //
 
     MM512_Event_0x44(0x44, 7), //
     MM512_Event_0x45(0x45, 7), //
@@ -135,52 +134,50 @@ public enum RecordTypeEnum {
     MM512_Event_0x4d(0x4d, 7), //
     MM512_Event_0x4e(0x4e, 7), //
 
+    // case changeBolusWizardSetup = 0x4f, 7), //
 
-    //                case changeBolusWizardSetup = 0x4f, 7), //
+    changeSensorSetup2((byte)0x50, ChangeSensorSetup2PumpEvent.class), //
+    // case restoreMystery51 = 0x51, 7), //
+    // case restoreMystery52 = 0x52, 7), //
+    // case changeSensorAlarmSilenceConfig = 0x53, 7), //
+    // case restoreMystery54 = 0x54, 7), //
+    // case restoreMystery55 = 0x55, 7), //
+    ChangeSensorRateOfChangeAlertSetup((byte)0x56, ChangeSensorRateOfChangeAlertSetupPumpEvent.class), //
+    ChangeBolusScrollStepSize((byte)0x57, ChangeBolusScrollStepSizePumpEvent.class), //
+    ChangeBolusWizardSetup((byte)0x5A, ChangeBolusWizardSetupPumpEvent.class), //
+    BolusWizardBolusEstimate((byte)0x5B, BolusWizardBolusEstimatePumpEvent.class), //
+    unabsorbedInsulin((byte)0x5C, UnabsorbedInsulin.class), //
+    // case saveSettings = 0x5d, 7), //
+    changeVariableBolus((byte)0x5e, ChangeVariableBolusPumpEvent.class), //
+    changeAudioBolus((byte)0x5f, ChangeAudioBolusPumpEvent.class), //
+    ChangeBGReminderEnable((byte)0x60, ChangeBGReminderEnablePumpEvent.class), //
+    ChangeAlarmClockEnable((byte)0x61, ChangeAlarmClockEnablePumpEvent.class), //
 
-    changeSensorSetup2((byte) 0x50, ChangeSensorSetup2PumpEvent.class),  //
-    //                case restoreMystery51 = 0x51, 7), //
-    //            case restoreMystery52 = 0x52, 7), //
-    //            case changeSensorAlarmSilenceConfig = 0x53, 7), //
-    //            case restoreMystery54 = 0x54, 7), //
-    //            case restoreMystery55 = 0x55, 7), //
-    ChangeSensorRateOfChangeAlertSetup((byte) 0x56, ChangeSensorRateOfChangeAlertSetupPumpEvent.class),  //
-    ChangeBolusScrollStepSize((byte) 0x57, ChangeBolusScrollStepSizePumpEvent.class),  //
-    ChangeBolusWizardSetup((byte) 0x5A, ChangeBolusWizardSetupPumpEvent.class),  //
-    BolusWizardBolusEstimate((byte) 0x5B, BolusWizardBolusEstimatePumpEvent.class),  //
-    unabsorbedInsulin((byte) 0x5C, UnabsorbedInsulin.class),  //
-    //             case saveSettings = 0x5d, 7), //
-    changeVariableBolus((byte) 0x5e, ChangeVariableBolusPumpEvent.class),  //
-    changeAudioBolus((byte) 0x5f, ChangeAudioBolusPumpEvent.class), //
-    ChangeBGReminderEnable((byte) 0x60, ChangeBGReminderEnablePumpEvent.class), //
-    ChangeAlarmClockEnable((byte) 0x61, ChangeAlarmClockEnablePumpEvent.class),  //
-
-
-    ChangeTempBasalType((byte) 0x62, ChangeTempBasalTypePumpEvent.class),  //
-    ChangeAlarmNotifyMode((byte) 0x63, ChangeAlarmNotifyModePumpEvent.class),  //
-    ChangeTimeFormat((byte) 0x64, ChangeTimeFormatPumpEvent.class),  //
-    ChangeReservoirWarningTime((byte) 0x65, ChangeReservoirWarningTimePumpEvent.class),  //
-    ChangeBolusReminderEnable((byte) 0x66, ChangeBolusReminderEnablePumpEvent.class),  //
-    ChangeBolusReminderTime((byte) 0x67, ChangeBolusReminderTimePumpEvent.class),  //
-    DeleteBolusReminderTime((byte) 0x68, DeleteBolusReminderTimePumpEvent.class),  //
+    ChangeTempBasalType((byte)0x62, ChangeTempBasalTypePumpEvent.class), //
+    ChangeAlarmNotifyMode((byte)0x63, ChangeAlarmNotifyModePumpEvent.class), //
+    ChangeTimeFormat((byte)0x64, ChangeTimeFormatPumpEvent.class), //
+    ChangeReservoirWarningTime((byte)0x65, ChangeReservoirWarningTimePumpEvent.class), //
+    ChangeBolusReminderEnable((byte)0x66, ChangeBolusReminderEnablePumpEvent.class), //
+    ChangeBolusReminderTime((byte)0x67, ChangeBolusReminderTimePumpEvent.class), //
+    DeleteBolusReminderTime((byte)0x68, DeleteBolusReminderTimePumpEvent.class), //
     // case bolusReminder = 0x69, 7), //
-    DeleteAlarmClockTime((byte) 0x6a, DeleteAlarmClockTimePumpEvent.class),  //
+    DeleteAlarmClockTime((byte)0x6a, DeleteAlarmClockTimePumpEvent.class), //
     DailyTotal515(0x6c, 38), // FIXME
-    dailyTotal522((byte) 0x6D, Model522ResultTotalsPumpEvent.class),  //
-    dailyTotal523((byte) 0x6E, IgnoredHistoryEntry.class, 52), // Sara6E  // FIXME
-    ChangeCarbUnits((byte) 0x6f, ChangeCarbUnitsPumpEvent.class),  //
-    basalProfileStart((byte) 0x7B, BasalProfileStart.class),  //
-    ChangeWatchdogEnable((byte) 0x7c, ChangeWatchdogEnablePumpEvent.class), //
-    ChangeOtherDeviceID((byte) 0x7d, ChangeOtherDeviceIDPumpEvent.class),  //
-    ChangeWatchdogMarriageProfile((byte) 0x81, ChangeWatchdogMarriageProfilePumpEvent.class),  //
-    DeleteOtherDeviceID((byte) 0x82, DeleteOtherDeviceIDPumpEvent.class),  //
-    ChangeCaptureEventEnable((byte) 0x83, ChangeCaptureEventEnablePumpEvent.class),
+    dailyTotal522((byte)0x6D, Model522ResultTotalsPumpEvent.class), //
+    dailyTotal523((byte)0x6E, IgnoredHistoryEntry.class, 52), // Sara6E // FIXME
+    ChangeCarbUnits((byte)0x6f, ChangeCarbUnitsPumpEvent.class), //
+    basalProfileStart((byte)0x7B, BasalProfileStart.class), //
+    ChangeWatchdogEnable((byte)0x7c, ChangeWatchdogEnablePumpEvent.class), //
+    ChangeOtherDeviceID((byte)0x7d, ChangeOtherDeviceIDPumpEvent.class), //
+    ChangeWatchdogMarriageProfile((byte)0x81, ChangeWatchdogMarriageProfilePumpEvent.class), //
+    DeleteOtherDeviceID((byte)0x82, DeleteOtherDeviceIDPumpEvent.class), //
+    ChangeCaptureEventEnable((byte)0x83, ChangeCaptureEventEnablePumpEvent.class),
 
     // Irelevant records (events that don't concern us for AAPS usage)
 
-
     ;
 
+    private static final String TAG = "RecordTypeEnum";
     private static Map<Byte, RecordTypeEnum> mapByOpCode = null;
     private byte opcode;
     private Class mRecordClass;
@@ -188,24 +185,14 @@ public enum RecordTypeEnum {
     private String shortTypeName;
 
 
-    public byte opcode() {
-        return opcode;
-    }
-
-
-    public Class recordClass() {
-        return mRecordClass;
-    }
-
-
     RecordTypeEnum(int b, Class c) {
-        opcode = (byte) b;
+        opcode = (byte)b;
         mRecordClass = c;
     }
 
 
     RecordTypeEnum(int b, Class c, int length) {
-        opcode = (byte) b;
+        opcode = (byte)b;
         mRecordClass = c;
         this.length = length;
     }
@@ -217,7 +204,7 @@ public enum RecordTypeEnum {
 
 
     public static RecordTypeEnum fromByte(byte b) {
-        for(RecordTypeEnum en : RecordTypeEnum.values()) {
+        for (RecordTypeEnum en : RecordTypeEnum.values()) {
             if (en.opcode() == b) {
                 return en;
             }
@@ -226,7 +213,21 @@ public enum RecordTypeEnum {
     }
 
 
-    private static final String TAG = "RecordTypeEnum";
+    public static <T extends Record> T getRecordClassInstance(Bundle bundle, MedtronicDeviceType model) {
+        byte opcode = bundle.getByte("_opcode");
+        RecordTypeEnum e = RecordTypeEnum.fromByte(opcode);
+        return e.getRecordClassInstance(model);
+    }
+
+
+    public byte opcode() {
+        return opcode;
+    }
+
+
+    public Class recordClass() {
+        return mRecordClass;
+    }
 
 
     public <T extends Record> T getRecordClassInstance(MedtronicDeviceType model) {
@@ -242,7 +243,7 @@ public enum RecordTypeEnum {
 
                     // if this is IgnoredHistoryEntry we need to set type so that we get correct length and name
                     if (record instanceof IgnoredHistoryEntry) {
-                        IgnoredHistoryEntry he = (IgnoredHistoryEntry) record;
+                        IgnoredHistoryEntry he = (IgnoredHistoryEntry)record;
                         he.init(this);
                     }
                 }
@@ -258,13 +259,6 @@ public enum RecordTypeEnum {
             e.printStackTrace();
         }
         return record;
-    }
-
-
-    public static <T extends Record> T getRecordClassInstance(Bundle bundle, MedtronicDeviceType model) {
-        byte opcode = bundle.getByte("_opcode");
-        RecordTypeEnum e = RecordTypeEnum.fromByte(opcode);
-        return e.getRecordClassInstance(model);
     }
 
 

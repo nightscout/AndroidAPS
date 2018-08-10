@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.S
  * Created by geoff on 7/10/16.
  */
 public class PumpTask extends ServiceTask {
+
     public PumpTask() {
         super();
     }

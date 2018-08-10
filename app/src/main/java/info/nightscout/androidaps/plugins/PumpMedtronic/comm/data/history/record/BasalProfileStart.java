@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class BasalProfileStart extends TimeStampedRecord {
+
     private static final String TAG = "BasalProfileStart";
     private int offset = 0;
     private double rate = 0.0;
@@ -36,7 +37,7 @@ public class BasalProfileStart extends TimeStampedRecord {
 
         profileIndex = asUINT8(data[1]);
         offset = asUINT8(data[7]) * 30 * 1000 * 60;
-        rate = (double) (asUINT8(data[8])) / 40.0;
+        rate = (double)(asUINT8(data[8])) / 40.0;
         return true;
     }
 

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  * - fixed rate is not one bit but two
  */
 public class BasalProfileEntry {
+
     public byte[] rate_raw;
     public double rate;
     public byte startTime_raw;
@@ -20,7 +21,7 @@ public class BasalProfileEntry {
         rate = -9.999E6;
         rate_raw = MedtronicUtil.getByteArrayFromUnsignedShort(0xFF, true);
         startTime = new LocalTime(0);
-        startTime_raw = (byte) 0xFF;
+        startTime_raw = (byte)0xFF;
     }
 
 
@@ -29,7 +30,7 @@ public class BasalProfileEntry {
         // startTimeByte is time-of-day, in 30 minute increments
         rate_raw = MedtronicUtil.getByteArrayFromUnsignedShort(rateStrokes, true);
         rate = rateStrokes * 0.025;
-        startTime_raw = (byte) startTimeInterval;
+        startTime_raw = (byte)startTimeInterval;
         startTime = new LocalTime(startTimeInterval / 2, (startTimeInterval % 2) * 30);
     }
 
@@ -39,7 +40,7 @@ public class BasalProfileEntry {
         // startTimeByte is time-of-day, in 30 minute increments
         rate_raw = MedtronicUtil.getByteArrayFromUnsignedShort(rateByte, true);
         rate = rateByte * 0.025;
-        startTime_raw = (byte) startTimeByte;
+        startTime_raw = (byte)startTimeByte;
         startTime = new LocalTime(startTimeByte / 2, (startTimeByte % 2) * 30);
     }
 

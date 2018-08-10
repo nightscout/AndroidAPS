@@ -3,27 +3,22 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 
 /**
- * Application:   GGC - GNU Gluco Control
- * Plug-in:       Pump Tool (support for Pump devices)
+ * Application: GGC - GNU Gluco Control
+ * Plug-in: Pump Tool (support for Pump devices)
  * <p>
  * See AUTHORS for copyright information.
  * <p>
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * <p>
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
- * Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * <p>
- * Filename:     BolusDTO
- * Description:  Bolus DTO
+ * Filename: BolusDTO Description: Bolus DTO
  * <p>
  * Author: Andy {andy@atech-software.com}
  */
@@ -33,11 +28,12 @@ public class TemporaryBasalRateDTO extends PumpTimeStampedRecord {
     private Float amount;
     private TBRUnit unit = TBRUnit.Percent; // percent, U
     private Integer duration; // min
-    //private ATechDate aTechDate;
 
+
+    // private ATechDate aTechDate;
 
     public TemporaryBasalRateDTO() {
-        //this.decimalPrecission = 2;
+        // this.decimalPrecission = 2;
     }
 
 
@@ -71,7 +67,8 @@ public class TemporaryBasalRateDTO extends PumpTimeStampedRecord {
             val *= -1;
         }
 
-        return String.format("TBR_VALUE=%s%s;TBR_UNIT=%s;DURATION=%s", sign, getFormattedDecimal(val), getUnit().getDescription(), getDurationString());
+        return String.format("TBR_VALUE=%s%s;TBR_UNIT=%s;DURATION=%s", sign, getFormattedDecimal(val), getUnit()
+            .getDescription(), getDurationString());
     }
 
 
@@ -93,7 +90,6 @@ public class TemporaryBasalRateDTO extends PumpTimeStampedRecord {
     public void setUnit(TBRUnit unit) {
         this.unit = unit;
     }
-
 
     public enum TBRUnit {
         Percent("%"), //

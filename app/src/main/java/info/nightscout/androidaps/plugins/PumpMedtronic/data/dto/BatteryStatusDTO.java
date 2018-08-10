@@ -15,9 +15,8 @@ public class BatteryStatusDTO {
     public int getCalculatedPercent(BatteryType batteryType) {
         double percent = (voltage - batteryType.lowVoltage) / (batteryType.highVoltage - batteryType.lowVoltage);
 
-        return (int) (percent * 100.0d);
+        return (int)(percent * 100.0d);
     }
-
 
     public enum BatteryStatusType {
         Normal,

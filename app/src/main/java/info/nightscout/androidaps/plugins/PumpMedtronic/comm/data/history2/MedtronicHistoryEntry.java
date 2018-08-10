@@ -1,36 +1,30 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
 
+import java.util.List;
 
 import org.joda.time.LocalDateTime;
-
-import java.util.List;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpTimeStampedRecord;
 
 /**
- * Application:   GGC - GNU Gluco Control
- * Plug-in:       GGC PlugIn Base (base class for all plugins)
+ * Application: GGC - GNU Gluco Control
+ * Plug-in: GGC PlugIn Base (base class for all plugins)
  * <p>
  * See AUTHORS for copyright information.
  * <p>
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * <p>
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
- * Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * <p>
- * Filename:     MinimedHistoryRecord
- * Description:  Minimed History Record.
+ * Filename: MinimedHistoryRecord Description: Minimed History Record.
  * <p>
  * Author: Andy {andy@atech-software.com}
  */
@@ -59,14 +53,14 @@ public abstract class MedtronicHistoryEntry {
             return;
 
         head = new byte[getHeadLength() - 1];
-        for(int i = 1; i < (getHeadLength()); i++) {
+        for (int i = 1; i < (getHeadLength()); i++) {
             head[i - 1] = listRawData.get(i);
         }
 
         if (getDateTimeLength() > 0) {
             datetime = new byte[getDateTimeLength()];
 
-            for(int i = getHeadLength(), j = 0; j < getDateTimeLength(); i++, j++) {
+            for (int i = getHeadLength(), j = 0; j < getDateTimeLength(); i++, j++) {
                 datetime[j] = listRawData.get(i);
             }
         }
@@ -74,7 +68,7 @@ public abstract class MedtronicHistoryEntry {
         if (getBodyLength() > 0) {
             body = new byte[getBodyLength()];
 
-            for(int i = (getHeadLength() + getDateTimeLength()), j = 0; j < getBodyLength(); i++, j++) {
+            for (int i = (getHeadLength() + getDateTimeLength()), j = 0; j < getBodyLength(); i++, j++) {
                 body[j] = listRawData.get(i);
             }
 
@@ -188,13 +182,13 @@ public abstract class MedtronicHistoryEntry {
     }
 
 
-    public void setLocalDateTime(LocalDateTime atdate) {
-        this.dateTime = atdate;
+    public LocalDateTime getLocalDateTime() {
+        return this.dateTime;
     }
 
 
-    public LocalDateTime getLocalDateTime() {
-        return this.dateTime;
+    public void setLocalDateTime(LocalDateTime atdate) {
+        this.dateTime = atdate;
     }
 
 

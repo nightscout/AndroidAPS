@@ -14,17 +14,17 @@ import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 
 public abstract class PumpDriverAbstract implements PumpDriverInterface {
 
+    protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
+        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
+    protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
+        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
     protected PumpDescription pumpDescription;
     protected PumpStatus pumpStatusData;
 
-    protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
-
-    protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
 
     protected PumpDriverAbstract() {
     }
+
 
     public void initDriver(PumpStatus pumpStatus, PumpDescription pumpDescription) {
         this.pumpDescription = pumpDescription;
@@ -43,6 +43,7 @@ public abstract class PumpDriverAbstract implements PumpDriverInterface {
         return this.pumpStatusData;
     }
 
+
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
@@ -55,6 +56,6 @@ public abstract class PumpDriverAbstract implements PumpDriverInterface {
             return new Date();
         }
 
-        return this.pumpStatusData.lastDataTime;
+        return this.pumpStatusData.lastDataTime.toDate();
     }
 }

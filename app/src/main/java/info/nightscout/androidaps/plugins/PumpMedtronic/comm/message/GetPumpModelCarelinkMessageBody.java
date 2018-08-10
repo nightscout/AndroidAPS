@@ -11,23 +11,28 @@ public class GetPumpModelCarelinkMessageBody extends MessageBody {
         return 1;
     }
 
+
     @Override
     public void init(byte[] rxData) {
 
     }
 
+
     public byte[] getRxData() {
-        return new byte[]{0};
+        return new byte[] { 0 };
     }
+
 
     public void setRxData(byte[] rxData) {
 
     }
 
+
     @Override
     public byte[] getTxData() {
-        return new byte[]{0};
+        return new byte[] { 0 };
     }
+
 
     public void setTxData(byte[] txData) {
 

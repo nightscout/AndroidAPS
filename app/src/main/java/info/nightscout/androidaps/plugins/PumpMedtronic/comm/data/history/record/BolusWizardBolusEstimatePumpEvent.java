@@ -20,7 +20,7 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
 
 
     public BolusWizardBolusEstimatePumpEvent() {
-        correctionEstimate = (double) 0.0;
+        correctionEstimate = (double)0.0;
         bloodGlucose = 0;
         carbohydrates = 0;
         carbRatio = 0.0;
@@ -141,24 +141,24 @@ public class BolusWizardBolusEstimatePumpEvent extends TimeStampedRecord {
             carbohydrates = (asUINT8(data[8]) & 0x0c << 6) + asUINT8(data[7]);
             bloodGlucose = (asUINT8(data[8]) & 0x03 << 8) + asUINT8(data[1]);
             foodEstimate = insulinDecode(asUINT8(data[14]), asUINT8(data[15]));
-            correctionEstimate = (double) ((asUINT8(data[16]) & 0b111000) << 5 + asUINT8(data[13])) / 40.0;
+            correctionEstimate = (double)((asUINT8(data[16]) & 0b111000) << 5 + asUINT8(data[13])) / 40.0;
             bolusEstimate = insulinDecode(asUINT8(data[19]), asUINT8(data[20]));
             unabsorbedInsulinTotal = insulinDecode(asUINT8(data[17]), asUINT8(data[18]));
             bgTargetLow = asUINT8(data[12]);
             bgTargetHigh = asUINT8(data[21]);
             insulinSensitivity = asUINT8(data[11]);
-            carbRatio = (double) (((asUINT8(data[9]) & 0x07) << 8) + asUINT8(data[10])) / 40.0;
+            carbRatio = (double)(((asUINT8(data[9]) & 0x07) << 8) + asUINT8(data[10])) / 40.0;
         } else {
             carbohydrates = asUINT8(data[7]);
             bloodGlucose = ((asUINT8(data[8]) & 0x03) << 8) + asUINT8(data[1]);
-            foodEstimate = (double) (asUINT8(data[13])) / 10.0;
-            correctionEstimate = (double) ((asUINT8(data[14]) << 8) + asUINT8(data[12])) / 10.0;
-            bolusEstimate = (double) (asUINT8(data[18])) / 10.0;
-            unabsorbedInsulinTotal = (double) (asUINT8(data[16])) / 10.0;
+            foodEstimate = (double)(asUINT8(data[13])) / 10.0;
+            correctionEstimate = (double)((asUINT8(data[14]) << 8) + asUINT8(data[12])) / 10.0;
+            bolusEstimate = (double)(asUINT8(data[18])) / 10.0;
+            unabsorbedInsulinTotal = (double)(asUINT8(data[16])) / 10.0;
             bgTargetLow = asUINT8(data[11]);
             bgTargetHigh = asUINT8(data[19]);
             insulinSensitivity = asUINT8(data[10]);
-            carbRatio = (double) asUINT8(data[9]);
+            carbRatio = (double)asUINT8(data[9]);
         }
 
         return true;

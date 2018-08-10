@@ -11,9 +11,11 @@ public enum PumpStatusType {
 
     private String statusString;
 
+
     PumpStatusType(String statusString) {
         this.statusString = statusString;
     }
+
 
     public String getStatus() {
         return statusString;

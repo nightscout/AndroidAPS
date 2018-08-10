@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record;
 
-
 import android.os.Bundle;
 
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeStampedRecord;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class PumpAlarmPumpEvent extends TimeStampedRecord {
+
     private int rawtype = 0;
 
 

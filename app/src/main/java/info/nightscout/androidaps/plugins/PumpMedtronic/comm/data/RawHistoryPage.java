@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data;
 
-import android.util.Log;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import android.util.Log;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  * Created by geoff on 6/4/16.
  */
 public class RawHistoryPage {
+
     private static final String TAG = "RawHistoryPage";
     private static final Logger LOG = LoggerFactory.getLogger(RawHistoryPage.class);
     byte[] data = new byte[0];
@@ -54,9 +55,11 @@ public class RawHistoryPage {
         int crcStored = ByteUtil.toInt(data[1022], data[1023]);
 
         if (crcCalculated != crcStored) {
-            LOG.error("Stored CRC ({}) is different than calculated ({}), but ignored for now.", crcStored, crcCalculated);
+            LOG.error("Stored CRC ({}) is different than calculated ({}), but ignored for now.", crcStored,
+                crcCalculated);
         } else {
-            if (MedtronicUtil.isLowLevelDebug()) LOG.debug("CRC ok.");
+            if (MedtronicUtil.isLowLevelDebug())
+                LOG.debug("CRC ok.");
         }
 
         return crcCalculated == crcStored;
@@ -75,6 +78,5 @@ public class RawHistoryPage {
             offset += linesize;
         }
     }
-
 
 }

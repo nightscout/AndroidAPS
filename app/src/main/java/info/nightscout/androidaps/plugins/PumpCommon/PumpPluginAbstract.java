@@ -1,17 +1,17 @@
 package info.nightscout.androidaps.plugins.PumpCommon;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-
-import com.squareup.otto.Subscribe;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+
+import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -46,53 +46,44 @@ import info.nightscout.utils.DecimalFormatter;
 // FIXME remove PumpDriver instances, just keep methods that do something here
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
+    protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
+        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
+    protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
+        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
+    // protected PumpStatus pumpStatusData;
     private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
-
     protected PumpDescription pumpDescription = new PumpDescription();
-    //protected PumpStatus pumpStatusData;
-
     protected PumpDriverInterface pumpDriver;
     protected PumpStatus pumpStatus;
     protected String internalName;
-
     protected ServiceConnection serviceConnection = null;
     protected boolean serviceRunning = false;
 
 
-    protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
-
-    protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
-
-
-//    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
-//                                 String internalName, //
-//                                 String fragmentClassName, //
-//                                 int pluginName, //
-//                                 int pluginShortName, //
-//                                 PumpType pumpType) {
-//        this(pumpDriverInterface, //
-//                internalName, //
-//                new PluginDescription() //
-//                        .mainType(PluginType.PUMP) //
-//                        .fragmentClass(fragmentClassName) //
-//                        .pluginName(pluginName) //
-//                        .shortName(pluginShortName), //
-//                pumpType //
-//        );
-//    }
-
+    // protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
+    // String internalName, //
+    // String fragmentClassName, //
+    // int pluginName, //
+    // int pluginShortName, //
+    // PumpType pumpType) {
+    // this(pumpDriverInterface, //
+    // internalName, //
+    // new PluginDescription() //
+    // .mainType(PluginType.PUMP) //
+    // .fragmentClass(fragmentClassName) //
+    // .pluginName(pluginName) //
+    // .shortName(pluginShortName), //
+    // pumpType //
+    // );
+    // }
 
     protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
-                                 String internalName, //
-                                 PluginDescription pluginDescription,
-                                 PumpType pumpType //
+            String internalName, //
+            PluginDescription pluginDescription, PumpType pumpType //
     ) {
         super(pluginDescription);
 
         LOG.error("After super called.");
-
 
         this.pumpDriver = pumpDriverInterface;
         this.internalName = internalName;
@@ -104,7 +95,6 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         initPumpStatusData();
 
         LOG.error("Before set description");
-
 
         LOG.error("Before pumpDriver");
 
@@ -150,6 +140,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
      */
     public abstract void onStartCustomActions();
 
+
     /**
      * Service class (same one you did serviceConnection for)
      *
@@ -174,9 +165,11 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         return pumpDriver.isInitialized();
     }
 
+
     public boolean isSuspended() {
         return pumpDriver.isSuspended();
     }
+
 
     public boolean isBusy() {
         return pumpDriver.isBusy();
@@ -234,10 +227,9 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     } // base basal rate, not temp basal
 
 
-//    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-//        return pumpDriver.deliverTreatment(detailedBolusInfo);
-//    }
-
+    // public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+    // return pumpDriver.deliverTreatment(detailedBolusInfo);
+    // }
 
     public void stopBolusDelivering() {
         pumpDriver.stopBolusDelivering();
@@ -245,12 +237,15 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
+            boolean enforceNew) {
         return pumpDriver.setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
     }
 
+
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
+            boolean enforceNew) {
         return pumpDriver.setTempBasalPercent(percent, durationInMinutes, profile, enforceNew);
     }
 
@@ -258,9 +253,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         return pumpDriver.setExtendedBolus(insulin, durationInMinutes);
     }
-    //some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
-    //when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
+
+    // some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
+    // when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         return pumpDriver.cancelTempBasal(enforceNew);
@@ -272,28 +268,27 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         return OPERATION_NOT_YET_SUPPORTED;
     }
 
+
     // Status to be passed to NS
 
-
-//    public JSONObject getJSONStatus(Profile profile, String profileName) {
-//        return pumpDriver.getJSONStatus(profile, profileName);
-//    }
-
+    // public JSONObject getJSONStatus(Profile profile, String profileName) {
+    // return pumpDriver.getJSONStatus(profile, profileName);
+    // }
 
     public String deviceID() {
         LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
         return "FakeDevice";
     }
 
-    // Pump capabilities
 
+    // Pump capabilities
 
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
-    // Short info for SMS, Wear etc
 
+    // Short info for SMS, Wear etc
 
     public boolean isFakingTempsByExtendedBoluses() {
         LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
@@ -306,63 +301,63 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         return this.pumpDriver.loadTDDs();
     }
 
+
     // Constraints interface
 
-//    @Override
-//    public boolean isLoopEnabled() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isClosedModeEnabled() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAutosensModeEnabled() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAMAModeEnabled() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isSMBModeEnabled() {
-//        return true;
-//    }
-//
-//    @Override
-//    public Double applyBasalConstraints(Double absoluteRate) {
-//        this.pumpStatus.constraintBasalRateAbsolute = absoluteRate;
-//        return absoluteRate;
-//    }
-//
-//    @Override
-//    public Integer applyBasalConstraints(Integer percentRate) {
-//        this.pumpStatus.constraintBasalRatePercent = percentRate;
-//        return percentRate;
-//    }
-//
-//    @Override
-//    public Double applyBolusConstraints(Double insulin) {
-//        this.pumpStatus.constraintBolus = insulin;
-//        return insulin;
-//    }
-//
-//    @Override
-//    public Integer applyCarbsConstraints(Integer carbs) {
-//        this.pumpStatus.constraintCarbs = carbs;
-//        return carbs;
-//    }
-//
-//    @Override
-//    public Double applyMaxIOBConstraints(Double maxIob) {
-//        this.pumpStatus.constraintMaxIob = maxIob;
-//        return maxIob;
-//    }
-
+    // @Override
+    // public boolean isLoopEnabled() {
+    // return true;
+    // }
+    //
+    // @Override
+    // public boolean isClosedModeEnabled() {
+    // return true;
+    // }
+    //
+    // @Override
+    // public boolean isAutosensModeEnabled() {
+    // return true;
+    // }
+    //
+    // @Override
+    // public boolean isAMAModeEnabled() {
+    // return true;
+    // }
+    //
+    // @Override
+    // public boolean isSMBModeEnabled() {
+    // return true;
+    // }
+    //
+    // @Override
+    // public Double applyBasalConstraints(Double absoluteRate) {
+    // this.pumpStatus.constraintBasalRateAbsolute = absoluteRate;
+    // return absoluteRate;
+    // }
+    //
+    // @Override
+    // public Integer applyBasalConstraints(Integer percentRate) {
+    // this.pumpStatus.constraintBasalRatePercent = percentRate;
+    // return percentRate;
+    // }
+    //
+    // @Override
+    // public Double applyBolusConstraints(Double insulin) {
+    // this.pumpStatus.constraintBolus = insulin;
+    // return insulin;
+    // }
+    //
+    // @Override
+    // public Integer applyCarbsConstraints(Integer carbs) {
+    // this.pumpStatus.constraintCarbs = carbs;
+    // return carbs;
+    // }
+    //
+    // @Override
+    // public Double applyMaxIOBConstraints(Double maxIob) {
+    // this.pumpStatus.constraintMaxIob = maxIob;
+    // return maxIob;
+    // }
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
@@ -387,7 +382,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
             TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
+                extended.put("TempBasalAbsoluteRate",
+                    tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
@@ -412,29 +408,33 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         return pump;
     }
 
+
     // FIXME i18n, null checks: iob, TDD
     @Override
     public String shortStatus(boolean veryShort) {
         String ret = "";
         if (pumpStatus.lastConnection != 0) {
             Long agoMsec = System.currentTimeMillis() - pumpStatus.lastConnection;
-            int agoMin = (int) (agoMsec / 60d / 1000d);
+            int agoMin = (int)(agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " min ago\n";
         }
         if (pumpStatus.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pumpStatus.lastBolusAmount) + "U @" + //
-                    android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
+                android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
         }
-        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin()
+            .getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
+        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(
+            System.currentTimeMillis());
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         if (!veryShort) {
-            ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / " + pumpStatus.maxDailyTotalUnits + " U\n";
+            ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
+                + pumpStatus.maxDailyTotalUnits + " U\n";
         }
         ret += "IOB: " + pumpStatus.iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + "U\n";
@@ -450,9 +450,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
                 LOG.error("deliverTreatment: Invalid input");
-                return new PumpEnactResult().success(false).enacted(false)
-                        .bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(MainApp.gs(R.string.danar_invalidinput));
+                return new PumpEnactResult().success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
+                    .comment(MainApp.gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -468,9 +467,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
                 LOG.debug("deliverTreatment: Carb only treatment.");
 
-                return new PumpEnactResult().success(true).enacted(true)
-                        .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
-                        .comment(MainApp.gs(R.string.virtualpump_resultok));
+                return new PumpEnactResult().success(true).enacted(true).bolusDelivered(0d)
+                    .carbsDelivered(detailedBolusInfo.carbs).comment(MainApp.gs(R.string.virtualpump_resultok));
             }
         } finally {
             triggerUIChange();
@@ -486,25 +484,22 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResult()
-                .success(false).enacted(false).comment(MainApp.gs(resourceId));
+        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(resourceId));
     }
-
 
     // Profile interface
 
-//    @Nullable
-//    public ProfileStore getProfile() {
-//        return this.pumpStatus.profileStore;
-//    }
-//
-//    public String getUnits() {
-//        return this.pumpStatus.units;
-//    }
-//
-//    public String getProfileName() {
-//        return this.pumpStatus.activeProfileName;
-//    }
-
+    // @Nullable
+    // public ProfileStore getProfile() {
+    // return this.pumpStatus.profileStore;
+    // }
+    //
+    // public String getUnits() {
+    // return this.pumpStatus.units;
+    // }
+    //
+    // public String getProfileName() {
+    // return this.pumpStatus.activeProfileName;
+    // }
 
 }

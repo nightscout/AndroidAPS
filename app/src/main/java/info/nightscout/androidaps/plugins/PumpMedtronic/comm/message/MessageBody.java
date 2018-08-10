@@ -6,10 +6,13 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
  * Created by geoff on 5/29/16.
  */
 
-// Andy (4.6.2018): We probably need rewrite of this message body code. If there is no data sent, body is 00, which denotes,
-// no parameters. If we have 3 parameters sent (1 2 3), the body would actually be length of 4, first byte beeing the length
+// Andy (4.6.2018): We probably need rewrite of this message body code. If there is no data sent, body is 00, which
+// denotes,
+// no parameters. If we have 3 parameters sent (1 2 3), the body would actually be length of 4, first byte beeing the
+// length
 // of the message, so the body would be 3 1 2 3. This is not done that way now.
 public class MessageBody {
+
     public int getLength() {
         return 0;
     }
@@ -20,7 +23,7 @@ public class MessageBody {
 
 
     public byte[] getTxData() {
-        return new byte[]{};
+        return new byte[] {};
     }
 
 
@@ -33,6 +36,5 @@ public class MessageBody {
 
         return sb.toString();
     }
-
 
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class GattAttributes {
 
     // NOTE: these uuid strings must be lower case!
-   
+
     public static String PREFIX = "0000";
     public static String SUFFIX = "-0000-1000-8000-00805f9b34fb";
     public static String SERVICE_GAP = PREFIX + "1800" + SUFFIX;
@@ -40,7 +40,6 @@ public class GattAttributes {
         attributes.put(SERVICE_GAP, "Device Information Service");
         attributes.put(CHARA_GAP_NAME, "Name"); //
         attributes.put(CHARA_GAP_NUM, "Number"); //
-
 
         attributes.put(SERVICE_BATTERY, "Battery Service");
 
@@ -84,6 +83,5 @@ public class GattAttributes {
     public static boolean isRileyLink(UUID uuid) {
         return attributesRileyLinkSpecific.containsKey(uuid.toString());
     }
-
 
 }

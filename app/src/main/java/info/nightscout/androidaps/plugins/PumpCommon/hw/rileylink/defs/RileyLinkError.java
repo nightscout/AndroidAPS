@@ -10,7 +10,6 @@ public enum RileyLinkError {
 
     // Configuration
 
-
     // BT
     NoBluetoothAdapter(R.string.rileylink_error_no_bt_adapter), //
     BluetoothDisabled(R.string.rileylink_error_bt_disabled), //
@@ -24,9 +23,9 @@ public enum RileyLinkError {
     NoContactWithDevice(R.string.rileylink_error_pump_unreachable, R.string.rileylink_error_pod_unreachable), //
     ;
 
-
     int resourceId;
     Integer resourceIdPod;
+
 
     RileyLinkError(int resourceId) {
         this.resourceId = resourceId;
@@ -43,7 +42,8 @@ public enum RileyLinkError {
         if (this.resourceIdPod != null) {
 
             return targetDevice == RileyLinkTargetDevice.MedtronicPump ? //
-                    this.resourceId : this.resourceIdPod;
+            this.resourceId
+                : this.resourceIdPod;
         } else {
             return this.resourceId;
         }

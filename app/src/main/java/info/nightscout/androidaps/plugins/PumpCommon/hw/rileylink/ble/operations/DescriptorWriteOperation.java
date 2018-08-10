@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.operations;
 
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.os.SystemClock;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.os.SystemClock;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
 
@@ -28,11 +28,13 @@ public class DescriptorWriteOperation extends BLECommOperation {
         this.value = value;
     }
 
+
     @Override
     public void gattOperationCompletionCallback(UUID uuid, byte[] value) {
         super.gattOperationCompletionCallback(uuid, value);
         operationComplete.release();
     }
+
 
     @Override
     public void execute(RileyLinkBLE comm) {
@@ -42,7 +44,8 @@ public class DescriptorWriteOperation extends BLECommOperation {
         try {
             boolean didAcquire = operationComplete.tryAcquire(getGattOperationTimeout_ms(), TimeUnit.MILLISECONDS);
             if (didAcquire) {
-                SystemClock.sleep(1); // This is to allow the IBinder thread to exit before we continue, allowing easier understanding of the sequence of events.
+                SystemClock.sleep(1); // This is to allow the IBinder thread to exit before we continue, allowing easier
+                                      // understanding of the sequence of events.
                 // success
             } else {
                 LOG.error("Timeout waiting for descriptor write operation to complete");

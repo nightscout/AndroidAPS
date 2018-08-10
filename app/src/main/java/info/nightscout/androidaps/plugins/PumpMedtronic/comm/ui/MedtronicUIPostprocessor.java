@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui;
 
+import java.util.Date;
+import java.util.Map;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
-
 /**
  * Created by andy on 6/15/18.
  */
@@ -27,6 +26,7 @@ public class MedtronicUIPostprocessor {
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicUIPostprocessor.class);
 
     MedtronicPumpStatus pumpStatus;
+
 
     public MedtronicUIPostprocessor() {
         pumpStatus = MedtronicUtil.getPumpStatus();
@@ -40,44 +40,43 @@ public class MedtronicUIPostprocessor {
         switch (uiTask.commandType) {
 
             case GetBasalProfileSTD: {
-                BasalProfile basalProfile = (BasalProfile) uiTask.returnData;
+                BasalProfile basalProfile = (BasalProfile)uiTask.returnData;
                 pumpStatus.basalsByHour = basalProfile.getProfilesByHour();
             }
-            break;
+                break;
 
             case SetBolus: {
                 pumpStatus.lastBolusAmount = uiTask.getDoubleFromParameters(0);
                 pumpStatus.lastBolusTime = new Date();
             }
-            break;
+                break;
 
             case GetRemainingInsulin: {
-                pumpStatus.reservoirRemainingUnits = (Float) uiTask.returnData;
+                pumpStatus.reservoirRemainingUnits = (Float)uiTask.returnData;
             }
-            break;
+                break;
 
             case CancelTBR: {
                 pumpStatus.tempBasalStart = null;
                 pumpStatus.tempBasalAmount = null;
                 pumpStatus.tempBasalLength = null;
             }
-            break;
+                break;
 
             case RealTimeClock: {
                 processTime(uiTask);
             }
-            break;
-
+                break;
 
             case GetBatteryStatus: {
-                BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO) uiTask.returnData;
+                BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO)uiTask.returnData;
 
                 if (batteryStatusDTO.batteryStatusType == BatteryStatusDTO.BatteryStatusType.Low)
                     pumpStatus.batteryRemaining = 18;
                 else
                     pumpStatus.batteryRemaining = 70;
             }
-            break;
+                break;
 
             case PumpModel: {
                 if (pumpStatus.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
@@ -85,15 +84,13 @@ public class MedtronicUIPostprocessor {
                     sendNotification(R.string.medtronic_error_pump_type_set_differs_from_detected, Notification.NORMAL);
                 }
             }
-            break;
-
+                break;
 
             case Settings_512:
             case Settings: {
                 postProcessSettings(uiTask);
             }
-            break;
-
+                break;
 
             // no postprocessing
 
@@ -102,12 +99,12 @@ public class MedtronicUIPostprocessor {
 
         }
 
-
     }
+
 
     private void processTime(MedtronicUITask uiTask) {
 
-        LocalDateTime ldt = (LocalDateTime) uiTask.returnData;
+        LocalDateTime ldt = (LocalDateTime)uiTask.returnData;
 
         Date d1 = ldt.toDate();
 
@@ -115,8 +112,8 @@ public class MedtronicUIPostprocessor {
         long diff = Math.abs(d1.getTime() - currentTimeMillis);
 
         LOG.warn("Pump Time: " + ldt + ", DeviceTime=" + d1 + //
-                //", epoch: " + d1.getTime() + ", current: " + currentTimeMillis + //
-                ", diff: " + diff / 1000 + " s");
+            // ", epoch: " + d1.getTime() + ", current: " + currentTimeMillis + //
+            ", diff: " + diff / 1000 + " s");
 
         if (diff >= 10 * 60 * 1000) {
             LOG.debug("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
@@ -130,13 +127,21 @@ public class MedtronicUIPostprocessor {
 
 
     private void sendNotification(int resourceId, int notificationUrgencyType) {
-        Notification notification = new Notification(Notification.MEDTRONIC_PUMP_ALARM, MainApp.gs(resourceId), notificationUrgencyType);
+        Notification notification = new Notification(Notification.MEDTRONIC_PUMP_ALARM, MainApp.gs(resourceId),
+            notificationUrgencyType);
+        MainApp.bus().post(new EventNewNotification(notification));
+    }
+
+
+    private void sendNotification(int resourceId, int notificationUrgencyType, Object... parameters) {
+        Notification notification = new Notification(Notification.MEDTRONIC_PUMP_ALARM, MainApp.gs(resourceId,
+            parameters), notificationUrgencyType);
         MainApp.bus().post(new EventNewNotification(notification));
     }
 
 
     private void postProcessSettings(MedtronicUITask uiTask) {
-        Map<String, PumpSettingDTO> settings = (Map<String, PumpSettingDTO>) uiTask.returnData;
+        Map<String, PumpSettingDTO> settings = (Map<String, PumpSettingDTO>)uiTask.returnData;
 
         MedtronicUtil.setSettings(settings);
 
@@ -171,17 +176,18 @@ public class MedtronicUIPostprocessor {
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBolus)) {
             LOG.error("Wrong Max Bolus set on Pump (must be {}).", pumpStatus.maxBolus);
-            sendNotification(R.string.medtronic_error_pump_wrong_max_bolus_set, Notification.NORMAL);
+            sendNotification(R.string.medtronic_error_pump_wrong_max_bolus_set, Notification.NORMAL,
+                pumpStatus.maxBolus);
         }
 
         checkValue = settings.get("PCFG_MAX_BASAL");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBasal)) {
             LOG.error("Wrong Max Basal set on Pump (must be {}).", pumpStatus.maxBasal);
-            sendNotification(R.string.medtronic_error_pump_wrong_max_basal_set, Notification.NORMAL);
+            sendNotification(R.string.medtronic_error_pump_wrong_max_basal_set, Notification.NORMAL,
+                pumpStatus.maxBasal);
         }
 
     }
-
 
 }

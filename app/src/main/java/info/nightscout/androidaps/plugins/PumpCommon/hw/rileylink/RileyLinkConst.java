@@ -12,7 +12,7 @@ public class RileyLinkConst {
 
         public static final String RileyLinkReady = Prefix + "RileyLink_Ready";
         public static final String RileyLinkGattFailed = Prefix + "RileyLink_Gatt_Failed";
-        //public static final String RileyLinkError = Prefix + "RileyLink_Ready";
+        // public static final String RileyLinkError = Prefix + "RileyLink_Ready";
 
         public static final String BluetoothConnected = Prefix + "Bluetooth_Connected";
         public static final String BluetoothReconnected = Prefix + "Bluetooth_Reconnected";
@@ -35,6 +35,7 @@ public class RileyLinkConst {
     }
 
     public class IPC {
+
         // needs to br renamed (and maybe removed)
         public static final String MSG_PUMP_quickTune = Prefix + "MSG_PUMP_quickTune";
         public static final String MSG_PUMP_tunePump = Prefix + "MSG_PUMP_tunePump";

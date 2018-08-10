@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
 
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
@@ -16,27 +15,22 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.RawHistoryPage
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
- * Application:   GGC - GNU Gluco Control
- * Plug-in:       GGC PlugIn Base (base class for all plugins)
+ * Application: GGC - GNU Gluco Control
+ * Plug-in: GGC PlugIn Base (base class for all plugins)
  * <p>
  * See AUTHORS for copyright information.
  * <p>
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * <p>
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
- * Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * <p>
- * Filename:     DeviceIdentification
- * Description:  Class for display of Device Identification.
+ * Filename: DeviceIdentification Description: Class for display of Device Identification.
  * <p>
  * Author: Andy {andy@atech-software.com}
  */
@@ -62,11 +56,10 @@ public abstract class MedtronicHistoryDecoder {
     public abstract void postProcess();
 
 
-    //public abstract void refreshOutputWriter();
-
+    // public abstract void refreshOutputWriter();
 
     public boolean decodePage(RawHistoryPage dataPage) throws Exception {
-        //refreshOutputWriter();
+        // refreshOutputWriter();
 
         List<? extends MedtronicHistoryEntry> minimedHistoryRecords = processPageAndCreateRecords(dataPage);
 
@@ -88,8 +81,9 @@ public abstract class MedtronicHistoryDecoder {
     public List<Byte> checkPage(RawHistoryPage page) throws RuntimeException {
         List<Byte> byteList = new ArrayList<Byte>();
 
-        if (page.getData().length != 1024 /*page.commandType.getRecordLength()*/) {
-            LOG.error("Page size is not correct. Size should be {}, but it was {} instead.", 1024, page.getData().length);
+        if (page.getData().length != 1024 /* page.commandType.getRecordLength() */) {
+            LOG.error("Page size is not correct. Size should be {}, but it was {} instead.", 1024,
+                page.getData().length);
             // throw exception perhaps
             return byteList;
         }
@@ -107,11 +101,13 @@ public abstract class MedtronicHistoryDecoder {
     }
 
 
-    public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) throws Exception;
+    public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page)
+            throws Exception;
 
 
     protected void prepareStatistics() {
-        if (!statisticsEnabled) return;
+        if (!statisticsEnabled)
+            return;
 
         unknownOpCodes = new HashMap<Integer, Integer>();
         mapStatistics = new HashMap<RecordDecodeStatus, Map<String, String>>();
@@ -123,7 +119,8 @@ public abstract class MedtronicHistoryDecoder {
 
 
     protected void addToStatistics(MedtronicHistoryEntry pumpHistoryEntry, RecordDecodeStatus status, Integer opCode) {
-        if (!statisticsEnabled) return;
+        if (!statisticsEnabled)
+            return;
 
         if (opCode != null) {
             if (!unknownOpCodes.containsKey(opCode)) {
@@ -155,7 +152,8 @@ public abstract class MedtronicHistoryDecoder {
             sb = new StringBuilder();
 
             if (entry.getKey() != RecordDecodeStatus.OK) {
-                if (entry.getValue().size() == 0) continue;
+                if (entry.getValue().size() == 0)
+                    continue;
 
                 for (Map.Entry<String, String> entrysub : entry.getValue().entrySet()) {
                     StringUtil.appendToStringBuilder(sb, entrysub.getKey(), ", ");
@@ -163,7 +161,8 @@ public abstract class MedtronicHistoryDecoder {
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                LOG.debug("    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
+                LOG.debug("    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(),
+                    sb.toString());
             } else {
                 LOG.debug("    {}             - {}", entry.getKey().name(), entry.getValue().size());
             }
@@ -172,14 +171,18 @@ public abstract class MedtronicHistoryDecoder {
 
 
     private int getUnsignedByte(byte value) {
-        if (value < 0) return value + 256;
-        else return value;
+        if (value < 0)
+            return value + 256;
+        else
+            return value;
     }
 
 
     protected int getUnsignedInt(int value) {
-        if (value < 0) return value + 256;
-        else return value;
+        if (value < 0)
+            return value + 256;
+        else
+            return value;
     }
 
 

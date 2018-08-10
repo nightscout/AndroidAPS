@@ -9,16 +9,16 @@ import info.nightscout.androidaps.R;
 public enum PumpDeviceState {
 
     NeverContacted(R.string.medtronic_pump_status_never_contacted), //
-    Sleeping, //
+    Sleeping(R.string.medtronic_pump_status_sleeping), //
     WakingUp(R.string.medtronic_pump_status_waking_up), //
-    Active, //
+    Active(R.string.medtronic_pump_status_active), //
     ErrorWhenCommunicating(R.string.medtronic_pump_status_error_comm), //
     TimeoutWhenCommunicating(R.string.medtronic_pump_status_timeout_comm), //
     ProblemContacting(R.string.medtronic_pump_status_problem_contacting), //
     InvalidConfiguration(R.string.medtronic_pump_status_invalid_config);
 
-
     Integer resourceId = null;
+
 
     PumpDeviceState() {
 
@@ -28,6 +28,7 @@ public enum PumpDeviceState {
     PumpDeviceState(int resourceId) {
         this.resourceId = resourceId;
     }
+
 
     public Integer getResourceId() {
         return resourceId;

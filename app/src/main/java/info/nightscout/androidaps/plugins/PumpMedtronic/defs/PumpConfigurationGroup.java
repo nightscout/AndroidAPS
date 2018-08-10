@@ -19,10 +19,10 @@ public enum PumpConfigurationGroup {
 
     ; //
 
+    static boolean translated;
     int code;
     String i18nKey;
     String translation;
-    static boolean translated;
 
 
     PumpConfigurationGroup(int code, String i18nKey) {

@@ -10,10 +10,12 @@ public class AlarmClockReminderPumpEvent extends TimeStampedRecord {
     public AlarmClockReminderPumpEvent() {
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Alarm Reminder";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

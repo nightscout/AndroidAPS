@@ -144,7 +144,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
 
     @Override
     public Date lastDataTime() {
-        return pumpStatusData.lastDataTime;
+        return pumpStatusData.lastDataTime.toDate();
     }
 
     @Override

@@ -1,5 +1,9 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic;
 
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,18 +19,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -34,11 +34,11 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpCommon.dialog.RileylinkSettingsActivity;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.dialog.RileyLinkStatusActivity;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
@@ -53,10 +53,40 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
 public class MedtronicFragment extends SubscriberFragment {
-    private static Logger LOG = LoggerFactory.getLogger(MedtronicFragment.class);
 
+    private static Logger LOG = LoggerFactory.getLogger(MedtronicFragment.class);
+    @BindView(R.id.medtronic_lastconnection)
+    TextView lastConnectionView;
+    @BindView(R.id.medtronic_lastbolus)
+    TextView lastBolusView;
+    @BindView(R.id.medtronic_basabasalrate)
+    TextView basaBasalRateView;
+
+    // @BindView(R.id.medtronic_btconnection)
+    // TextView btConnectionView;
+    @BindView(R.id.medtronic_tempbasal)
+    TextView tempBasalView;
+    @BindView(R.id.medtronic_pumpstate_battery)
+    TextView batteryView;
+    @BindView(R.id.medtronic_rl_status)
+    IconTextView rileyLinkStatus;
+    @BindView(R.id.medtronic_reservoir)
+    TextView reservoirView;
+    @BindView(R.id.medtronic_errors)
+    TextView errorsView;
+    @BindView(R.id.medtronic_queue)
+    TextView queueView;
+    @BindView(R.id.overview_pumpstatuslayout)
+    LinearLayout pumpStatusLayout;
+    @BindView(R.id.overview_pump_medtronic)
+    TextView overviewPumpMedtronicView;
+    @BindView(R.id.medtronic_pump_status)
+    IconTextView pumpStatusIconView;
+    @BindView(R.id.medtronic_refresh)
+    Button refreshButton;
     private Handler loopHandler = new Handler();
     private Runnable refreshLoop = new Runnable() {
+
         @Override
         public void run() {
             updateGUI();
@@ -64,52 +94,10 @@ public class MedtronicFragment extends SubscriberFragment {
         }
     };
 
-    @BindView(R.id.medtronic_lastconnection)
-    TextView lastConnectionView;
-
-    //@BindView(R.id.medtronic_btconnection)
-    //TextView btConnectionView;
-
-    @BindView(R.id.medtronic_lastbolus)
-    TextView lastBolusView;
-
-    @BindView(R.id.medtronic_basabasalrate)
-    TextView basaBasalRateView;
-
-    @BindView(R.id.medtronic_tempbasal)
-    TextView tempBasalView;
-
-    @BindView(R.id.medtronic_pumpstate_battery)
-    TextView batteryView;
-
-    @BindView(R.id.medtronic_rl_status)
-    IconTextView rileyLinkStatus;
-
-    @BindView(R.id.medtronic_reservoir)
-    TextView reservoirView;
-
-    @BindView(R.id.medtronic_errors)
-    TextView errorsView;
-
-
-    @BindView(R.id.medtronic_queue)
-    TextView queueView;
-
-    @BindView(R.id.overview_pumpstatuslayout)
-    LinearLayout pumpStatusLayout;
-
-    @BindView(R.id.overview_pump_medtronic)
-    TextView overviewPumpMedtronicView;
-
-    @BindView(R.id.medtronic_pump_status)
-    IconTextView pumpStatusIconView;
-
-    @BindView(R.id.medtronic_refresh)
-    Button refreshButton;
-
 
     public MedtronicFragment() {
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,9 +112,9 @@ public class MedtronicFragment extends SubscriberFragment {
         loopHandler.removeCallbacks(refreshLoop);
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.medtronic_fragment, container, false);
             unbinder = ButterKnife.bind(this, view);
@@ -148,10 +136,12 @@ public class MedtronicFragment extends SubscriberFragment {
         return null;
     }
 
+
     @OnClick(R.id.medtronic_history)
     void onHistoryClick() {
-        //startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
+        // startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
     }
+
 
     @OnClick(R.id.medtronic_refresh)
     void onRefreshClick() {
@@ -159,6 +149,7 @@ public class MedtronicFragment extends SubscriberFragment {
         MedtronicPumpPlugin.getPlugin().resetStatusState();
 
         ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked refresh", new Callback() {
+
             @Override
             public void run() {
                 refreshButton.setEnabled(true);
@@ -166,9 +157,10 @@ public class MedtronicFragment extends SubscriberFragment {
         });
     }
 
+
     @OnClick(R.id.medtronic_stats)
     void onStatsClick() {
-        startActivity(new Intent(getContext(), RileylinkSettingsActivity.class));
+        startActivity(new Intent(getContext(), RileyLinkStatusActivity.class));
     }
 
 
@@ -182,18 +174,17 @@ public class MedtronicFragment extends SubscriberFragment {
     public void onStatusEvent(final EventMedtronicDeviceStatusChange eventStatusChange) {
         LOG.info("onStatusEvent(EventMedtronicDeviceStatusChange): {}", eventStatusChange);
         Activity activity = getActivity();
-        //final String status = c.textStatus();
+        // final String status = c.textStatus();
         if (activity != null) {
-            activity.runOnUiThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
+            activity.runOnUiThread(new Runnable() {
 
-                            MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
-                            setDeviceStatus(pumpStatus);
-                        }
-                    }
-            );
+                @Override
+                public void run() {
+
+                    MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
+                    setDeviceStatus(pumpStatus);
+                }
+            });
         }
 
     }
@@ -201,7 +192,8 @@ public class MedtronicFragment extends SubscriberFragment {
 
     private void setDeviceStatus(MedtronicPumpStatus pumpStatus) {
 
-        pumpStatus.rileyLinkServiceState = (RileyLinkServiceState) checkStatusSet(pumpStatus.rileyLinkServiceState, RileyLinkUtil.getServiceState());
+        pumpStatus.rileyLinkServiceState = (RileyLinkServiceState)checkStatusSet(pumpStatus.rileyLinkServiceState,
+            RileyLinkUtil.getServiceState());
 
         if (pumpStatus.rileyLinkServiceState != null) {
 
@@ -222,7 +214,7 @@ public class MedtronicFragment extends SubscriberFragment {
             }
         }
 
-        pumpStatus.rileyLinkError = (RileyLinkError) checkStatusSet(pumpStatus.rileyLinkError, RileyLinkUtil.getError());
+        pumpStatus.rileyLinkError = (RileyLinkError)checkStatusSet(pumpStatus.rileyLinkError, RileyLinkUtil.getError());
 
         if (pumpStatus.rileyLinkError != null) {
             int resourceId = pumpStatus.rileyLinkError.getResourceId(getTargetDevice());
@@ -230,11 +222,11 @@ public class MedtronicFragment extends SubscriberFragment {
         } else
             errorsView.setText("-");
 
-
-        pumpStatus.pumpDeviceState = (PumpDeviceState) checkStatusSet(pumpStatus.pumpDeviceState, MedtronicUtil.getPumpDeviceState());
+        pumpStatus.pumpDeviceState = (PumpDeviceState)checkStatusSet(pumpStatus.pumpDeviceState,
+            MedtronicUtil.getPumpDeviceState());
 
         if (pumpStatus.pumpDeviceState != null) {
-            // TODO  Pump State
+            // TODO Pump State
 
             switch (pumpStatus.pumpDeviceState) {
                 case Sleeping:
@@ -260,24 +252,23 @@ public class MedtronicFragment extends SubscriberFragment {
                         pumpStatusIconView.setText("   " + cmd.name());
 
                 }
-                break;
+                    break;
 
-//                // FIXME
-//
-//                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-//                    break;
-//
-//                // FIXME
-//
-//                    pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-//                    break;
+                // // FIXME
+                //
+                // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                // break;
+                //
+                // // FIXME
+                //
+                // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                // break;
                 default:
                     LOG.warn("Unknown pump state: " + pumpStatus.pumpDeviceState);
             }
         } else {
             pumpStatusIconView.setText("{fa-bed}   ");
         }
-
 
         if (queueView != null) {
             Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
@@ -288,7 +279,6 @@ public class MedtronicFragment extends SubscriberFragment {
                 queueView.setText(status);
             }
         }
-
 
     }
 
@@ -320,20 +310,24 @@ public class MedtronicFragment extends SubscriberFragment {
         updateGUI();
     }
 
+
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange s) {
         updateGUI();
     }
+
 
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange s) {
         updateGUI();
     }
 
+
     @Subscribe
     public void onStatusEvent(final EventQueueChanged s) {
         updateGUI();
     }
+
 
     // GUI functions
     @Override
@@ -341,11 +335,12 @@ public class MedtronicFragment extends SubscriberFragment {
         Activity activity = getActivity();
         if (activity != null && basaBasalRateView != null)
             activity.runOnUiThread(new Runnable() {
+
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
 
-                    MedtronicPumpPlugin plugin = (MedtronicPumpPlugin) MedtronicPumpPlugin.getPlugin();
+                    MedtronicPumpPlugin plugin = (MedtronicPumpPlugin)MedtronicPumpPlugin.getPlugin();
                     MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
 
                     setDeviceStatus(pumpStatus);
@@ -384,22 +379,23 @@ public class MedtronicFragment extends SubscriberFragment {
                         lastBolusView.setText("");
                     }
 
-
                     // base basal rate
-                    basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  " + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
-
+                    basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  "
+                        + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
 
                     // FIXME temp basal - check - maybe set as combo ??
                     if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
                         if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
-                            tempBasalView.setText(TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                            tempBasalView.setText(TreatmentsPlugin.getPlugin()
+                                .getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                         } else {
                             tempBasalView.setText("");
                         }
                     } else {
                         // v2 plugin
                         if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
-                            tempBasalView.setText(TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                            tempBasalView.setText(TreatmentsPlugin.getPlugin()
+                                .getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                         } else {
                             tempBasalView.setText("");
                         }
@@ -410,7 +406,8 @@ public class MedtronicFragment extends SubscriberFragment {
                     SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 51d, 26d);
 
                     // reservoir
-                    reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / " + pumpStatus.reservoirFullUnits + " " + MainApp.gs(R.string.insulin_unit_shortname));
+                    reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / "
+                        + pumpStatus.reservoirFullUnits + " " + MainApp.gs(R.string.insulin_unit_shortname));
                     SetWarnColor.setColorInverse(reservoirView, pumpStatus.reservoirRemainingUnits, 50d, 20d);
 
                     errorsView.setText(pumpStatus.getErrorInfo());

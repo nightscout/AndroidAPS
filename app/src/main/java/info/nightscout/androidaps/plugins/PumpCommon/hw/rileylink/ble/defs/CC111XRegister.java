@@ -37,11 +37,12 @@ public enum CC111XRegister {
     paTable0(0x2e), //
 
     ;
+
     public byte value;
 
 
     CC111XRegister(int value) {
-        this.value = (byte) value;
+        this.value = (byte)value;
     }
 
 }

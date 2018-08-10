@@ -21,12 +21,12 @@ public enum RFSpyCommand {
 
 
     RFSpyCommand(int code) {
-        this.code = (byte) code;
+        this.code = (byte)code;
     }
 
 
     RFSpyCommand(int code, boolean encoded) {
-        this.code = (byte) code;
+        this.code = (byte)code;
         this.encoded = encoded;
     }
 

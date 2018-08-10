@@ -1,18 +1,18 @@
 package info.nightscout.androidaps.plugins.PumpCommon.utils;
 
-import org.joda.time.LocalDateTime;
-
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import org.joda.time.LocalDateTime;
 
 /**
  * Created by geoff on 4/28/15.
  */
 public class StringUtil {
 
-
-    public static DecimalFormat DecimalFormaters[] = {new DecimalFormat("#0"), new DecimalFormat("#0.0"), new DecimalFormat("#0.00"), new DecimalFormat("#0.000")};
+    public static DecimalFormat DecimalFormaters[] = {
+        new DecimalFormat("#0"), new DecimalFormat("#0.0"), new DecimalFormat("#0.00"), new DecimalFormat("#0.000") };
 
 
     public static String fromBytes(byte[] ra) {
@@ -25,7 +25,7 @@ public class StringUtil {
         int sz = ra.size();
         String rval = "";
         int n;
-        for(n = 0; n < sz; n++) {
+        for (n = 0; n < sz; n++) {
             rval = rval + ra.get(n);
             if (n < sz - 1) {
                 rval = rval + joiner;

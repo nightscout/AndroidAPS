@@ -8,10 +8,21 @@ abstract public class Record {
 
     protected MedtronicDeviceType model;
     protected byte recordOp;
-    //protected int length;
+    // protected int length;
     protected int foundAtOffset;
     protected byte[] rawbytes = new byte[0];
-    //protected String recordTypeName = this.getClass().getSimpleName();
+
+
+    // protected String recordTypeName = this.getClass().getSimpleName();
+
+    public Record() {
+
+    }
+
+
+    protected static int asUINT8(byte b) {
+        return (b < 0) ? b + 256 : b;
+    }
 
 
     public String getRecordTypeName() {
@@ -31,11 +42,6 @@ abstract public class Record {
 
     public int getFoundAtOffset() {
         return foundAtOffset;
-    }
-
-
-    public Record() {
-
     }
 
 
@@ -80,11 +86,6 @@ abstract public class Record {
 
     public byte getRecordOp() {
         return recordOp;
-    }
-
-
-    protected static int asUINT8(byte b) {
-        return (b < 0) ? b + 256 : b;
     }
 
 

@@ -6,18 +6,22 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
  * Created by geoff on 6/5/16.
  */
 public class JournalEntryExerciseMarkerPumpEvent extends TimeStampedRecord {
+
     public JournalEntryExerciseMarkerPumpEvent() {
     }
+
 
     @Override
     public int getLength() {
         return 8;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Exercise Marker";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

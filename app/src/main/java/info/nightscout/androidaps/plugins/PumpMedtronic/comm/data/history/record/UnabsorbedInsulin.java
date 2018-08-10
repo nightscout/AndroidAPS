@@ -1,18 +1,23 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record;
 
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.util.Log;
-
-import java.util.ArrayList;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.Record;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class UnabsorbedInsulin extends Record {
+
     private static final String TAG = "UnabsorbedInsulin";
+    ArrayList<UnabsorbedInsulinRecord> records = new ArrayList<>();
     private int length = 2;
+
+
+    public UnabsorbedInsulin() {
+    }
 
 
     @Override
@@ -24,24 +29,6 @@ public class UnabsorbedInsulin extends Record {
     @Override
     public String getShortTypeName() {
         return "Unabsorbed Insulin";
-    }
-
-
-    class UnabsorbedInsulinRecord {
-        public double amount = 0.0;
-        public int age = 0;
-
-
-        public UnabsorbedInsulinRecord(double amount, int age) {
-            this.amount = amount;
-            this.age = age;
-        }
-    }
-
-    ArrayList<UnabsorbedInsulinRecord> records = new ArrayList<>();
-
-
-    public UnabsorbedInsulin() {
     }
 
 
@@ -59,8 +46,8 @@ public class UnabsorbedInsulin extends Record {
         }
 
         int numRecords = (asUINT8(data[1]) - 2) / 3;
-        for(int i = 0; i < numRecords; i++) {
-            double amount = (double) (asUINT8(data[2 + (i * 3)])) / 40.0;
+        for (int i = 0; i < numRecords; i++) {
+            double amount = (double)(asUINT8(data[2 + (i * 3)])) / 40.0;
             int age = asUINT8(data[3 + (i * 3)]) + (((asUINT8(data[4 + (i * 3)])) & 0b110000) << 4);
             records.add(new UnabsorbedInsulinRecord(amount, age));
         }
@@ -78,7 +65,7 @@ public class UnabsorbedInsulin extends Record {
         } else if (storedAges.length != storedAmounts.length) {
             Log.e(TAG, "readFromBundle: failed to load from bundle: array size mismatch");
         } else {
-            for(int i = 0; i < storedAges.length; i++) {
+            for (int i = 0; i < storedAges.length; i++) {
                 records.add(new UnabsorbedInsulinRecord(storedAmounts[i], storedAges[i]));
             }
         }
@@ -88,12 +75,12 @@ public class UnabsorbedInsulin extends Record {
 
     @Override
     public void writeToBundle(Bundle in) {
-        // Use parallel arrays to serialize the data.  Note there is a small loss
+        // Use parallel arrays to serialize the data. Note there is a small loss
         // of precision when going from double to float.
         float[] storedAmounts = new float[records.size()];
         int[] storedAges = new int[records.size()];
-        for(int i = 0; i < records.size(); i++) {
-            storedAmounts[i] = (float) records.get(i).amount;
+        for (int i = 0; i < records.size(); i++) {
+            storedAmounts[i] = (float)records.get(i).amount;
             storedAges[i] = records.get(i).age;
         }
         in.putFloatArray("amounts", storedAmounts);
@@ -107,5 +94,17 @@ public class UnabsorbedInsulin extends Record {
     @Override
     public boolean isAAPSRelevant() {
         return true;
+    }
+
+    class UnabsorbedInsulinRecord {
+
+        public double amount = 0.0;
+        public int age = 0;
+
+
+        public UnabsorbedInsulinRecord(double amount, int age) {
+            this.amount = amount;
+            this.age = age;
+        }
     }
 }

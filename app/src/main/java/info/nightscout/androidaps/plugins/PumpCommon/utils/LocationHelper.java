@@ -10,11 +10,11 @@ import android.os.Build;
 
 import info.nightscout.androidaps.R;
 
-
 /**
  * Helper for checking if location services are enabled on the device.
  */
 public class LocationHelper {
+
     /**
      * Determine if GPS is currently enabled.
      * <p>
@@ -24,9 +24,10 @@ public class LocationHelper {
      * @return true if location is enabled, false otherwise.
      */
     public static boolean isLocationEnabled(Context context) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
+
 
     /**
      * Prompt the user to enable GPS location if it isn't already on.
@@ -44,6 +45,7 @@ public class LocationHelper {
         builder.setTitle(R.string.location_not_found_title);
         builder.setMessage(R.string.location_not_found_message);
         builder.setPositiveButton(R.string.location_yes, new DialogInterface.OnClickListener() {
+
             public void onClick(DialogInterface dialogInterface, int i) {
                 parent.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             }
@@ -51,6 +53,7 @@ public class LocationHelper {
         builder.setNegativeButton(R.string.location_no, null);
         builder.create().show();
     }
+
 
     /**
      * Prompt the user to enable GPS location on devices that need it for Bluetooth discovery.
@@ -66,8 +69,9 @@ public class LocationHelper {
         }
     }
 
-    //public static Boolean locationPermission(ActivityWithMenu act) {
-    //    return ActivityCompat.checkSelfPermission(act, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    //}
+    // public static Boolean locationPermission(ActivityWithMenu act) {
+    // return ActivityCompat.checkSelfPermission(act, Manifest.permission.ACCESS_FINE_LOCATION) ==
+    // PackageManager.PERMISSION_GRANTED;
+    // }
 
 }

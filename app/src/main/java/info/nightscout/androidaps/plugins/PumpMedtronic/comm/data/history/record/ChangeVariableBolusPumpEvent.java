@@ -6,13 +6,16 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
  * Created by geoff on 6/5/16.
  */
 public class ChangeVariableBolusPumpEvent extends TimeStampedRecord {
+
     public ChangeVariableBolusPumpEvent() {
     }
+
 
     @Override
     public String getShortTypeName() {
         return "Ch Var. Bolus";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

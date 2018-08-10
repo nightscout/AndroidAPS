@@ -28,9 +28,7 @@ public enum MinimedTargetType {
     CGMSData_NA, //
     CGMSConfiguration_NA;
 
-
     MinimedTargetType() {
     }
-
 
 }

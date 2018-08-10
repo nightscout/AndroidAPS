@@ -50,7 +50,6 @@ public class MedtronicPumpTask extends PumpTask {
                     medtronicPumpResult.addParameter("RemainingInsulin", remainingInsulin);
                 }
 
-
             case PumpModel: {
                 MedtronicDeviceType pumpModel = communicationManager.getPumpModel();
 
@@ -60,7 +59,7 @@ public class MedtronicPumpTask extends PumpTask {
                     medtronicPumpResult.addParameter("PumpModel", pumpModel.name());
                 }
             }
-            break;
+                break;
 
             case RealTimeClock: {
                 LocalDateTime pumpResponse = communicationManager.getPumpTime();
@@ -72,8 +71,7 @@ public class MedtronicPumpTask extends PumpTask {
                     medtronicPumpResult.setError();
                 }
             }
-            break;
-
+                break;
 
             default:
                 LOG.error("Type {} is NOT supported.");

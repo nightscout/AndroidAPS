@@ -28,14 +28,14 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data;
  * GGW: TODO: examine src/ecc1/medtronic for better history parsing
  */
 
-import android.os.Bundle;
-import android.util.Log;
-
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.joda.time.DateTime;
+
+import android.os.Bundle;
+import android.util.Log;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
@@ -49,19 +49,117 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType
 
 @Deprecated
 public class Page {
+
     private final static String TAG = "Page";
     private static final boolean DEBUG_PAGE = true;
-
-    private byte[] crc;
-    private byte[] data;
-    //protected PumpModel model;
+    // protected PumpModel model;
     public static MedtronicDeviceType model = MedtronicDeviceType.Medtronic_522;
     public List<Record> mRecordList;
+    private byte[] crc;
+    private byte[] data;
 
 
     public Page() {
         this.model = MedtronicDeviceType.Unknown_Device;
         mRecordList = new ArrayList<>();
+    }
+
+
+    /*
+     * attemptParseRecord will attempt to create a subclass of Record from the given
+     * data and offset. It will return NULL if it fails. If it succeeds, the returned
+     * subclass of Record can be examined for its length, so that the next attempt can be made.
+     * 
+     * TODO maybe try to change this, so that we can loose all the classes and using enum instead with full
+     * configuration. Its something to think about for later versions -- Andy
+     */
+    public static <T extends Record> T attemptParseRecord(byte[] data, int offsetStart) {
+        // no data?
+        if (data == null) {
+            return null;
+        }
+        // invalid offset?
+        if (data.length < offsetStart) {
+            return null;
+        }
+        // Log.d(TAG,String.format("checking for handler for record type 0x%02X at index %d",data[offsetStart],offsetStart));
+        RecordTypeEnum en = RecordTypeEnum.fromByte(data[offsetStart]);
+        T record = en.getRecordClassInstance(model);
+        if (record != null) {
+            // have to do this to set the record's opCode
+            byte[] tmpData = new byte[data.length];
+            System.arraycopy(data, offsetStart, tmpData, 0, data.length - offsetStart);
+            boolean didParse = record.parseWithOffset(tmpData, model, offsetStart);
+            if (!didParse) {
+                Log.e(
+                    TAG,
+                    String.format("attemptParseRecord: class %s (opcode 0x%02X) failed to parse at offset %d",
+                        record.getShortTypeName(), data[offsetStart], offsetStart));
+            }
+        }
+        return record;
+    }
+
+
+    public static DateTime parseSimpleDate(byte[] data, int offset) {
+        DateTime timeStamp = null;
+        int seconds = 0;
+        int minutes = 0;
+        int hour = 0;
+        // int high = data[0] >> 4;
+        int low = data[0 + offset] & 0x1F;
+        // int year_high = data[1] >> 4;
+        int mhigh = (data[0 + offset] & 0xE0) >> 4;
+        int mlow = (data[1 + offset] & 0x80) >> 7;
+        int month = mhigh + mlow;
+        int dayOfMonth = low + 1;
+        // python code says year is data[1] & 0x0F, but that will cause problem in 2016.
+        // Hopefully, the remaining bits are part of the year...
+        int year = data[1 + offset] & 0x3F;
+        /*
+         * Log.w(TAG, String.format("Attempting to create DateTime from: %04d-%02d-%02d %02d:%02d:%02d",
+         * year + 2000, month, dayOfMonth, hour, minutes, seconds));
+         */
+        try {
+            timeStamp = new DateTime(year + 2000, month, dayOfMonth, hour, minutes, seconds);
+        } catch (org.joda.time.IllegalFieldValueException e) {
+            // Log.e(TAG,"Illegal DateTime field");
+            // e.printStackTrace();
+            return null;
+        }
+        return timeStamp;
+    }
+
+
+    public static void discoverRecords(byte[] data) {
+        int i = 0;
+        boolean done = false;
+
+        ArrayList<Integer> keyLocations = new ArrayList();
+        while (!done) {
+            RecordTypeEnum en = RecordTypeEnum.fromByte(data[i]);
+            if (en != RecordTypeEnum.Null) {
+                keyLocations.add(i);
+                Log.v(TAG, String.format("Possible record of type %s found at index %d", en, i));
+            }
+            /*
+             * DateTime ts = parseSimpleDate(data,i);
+             * if (ts != null) {
+             * if (ts.year().get() == 2015) {
+             * Log.w(TAG, String.format("Possible simple date at index %d", i));
+             * }
+             * }
+             */
+            i = i + 1;
+            done = (i >= data.length - 2);
+        }
+        // for each of the discovered key locations, attempt to parse a sequence of records
+        for (RecordTypeEnum en : RecordTypeEnum.values()) {
+
+        }
+        for (int ix = 0; ix < keyLocations.size(); ix++) {
+
+        }
     }
 
 
@@ -91,7 +189,8 @@ public class Page {
         this.model = model;
         int pageOffset = 0;
 
-        if ((rawPage == null) || (rawPage.length == 0)) return false;
+        if ((rawPage == null) || (rawPage.length == 0))
+            return false;
         this.data = Arrays.copyOfRange(rawPage, 0, rawPage.length - 2);
         this.crc = Arrays.copyOfRange(rawPage, rawPage.length - 2, rawPage.length);
         byte[] expectedCrc = CRC.calculate16CCITT(this.data);
@@ -99,7 +198,10 @@ public class Page {
             Log.i(TAG, String.format("Data length: %d", data.length));
         }
         if (!Arrays.equals(crc, expectedCrc)) {
-            Log.w(TAG, String.format("CRC does not match expected value. Expected: %s Was: %s", HexDump.toHexString(expectedCrc), HexDump.toHexString(crc)));
+            Log.w(
+                TAG,
+                String.format("CRC does not match expected value. Expected: %s Was: %s",
+                    HexDump.toHexString(expectedCrc), HexDump.toHexString(crc)));
         } else {
             if (DEBUG_PAGE) {
                 Log.i(TAG, "CRC OK");
@@ -110,7 +212,9 @@ public class Page {
         while (pageOffset < data.length) {
             if (data[pageOffset] == 0) {
                 if (record != null) {
-                    Log.i(TAG, String.format("End of page or Previous parse fail: prev opcode 0x%02x, curr offset %d, %d bytes remaining", record.getRecordOp(), pageOffset, data.length - pageOffset + 1));
+                    Log.i(TAG, String.format(
+                        "End of page or Previous parse fail: prev opcode 0x%02x, curr offset %d, %d bytes remaining",
+                        record.getRecordOp(), pageOffset, data.length - pageOffset + 1));
                     break;
                 } else {
                     Log.i(TAG, "WTF?");
@@ -132,8 +236,8 @@ public class Page {
         ArrayList<Record> pickyRecords = new ArrayList<>();
         pickyRecords.addAll(mRecordList);
         parseByDates(rawPage, model);
-        for(Record r : mRecordList) {
-            for(Record r2 : pickyRecords) {
+        for (Record r : mRecordList) {
+            for (Record r2 : pickyRecords) {
                 if (r.getFoundAtOffset() == r2.getFoundAtOffset()) {
                     Log.v(TAG, "Found matching record at offset " + r.getFoundAtOffset());
                 }
@@ -147,7 +251,7 @@ public class Page {
         mRecordList = new ArrayList<>();
         if (rawPage.length != 1024) {
             Log.e(TAG, "Unexpected page size. Expected: 1024 Was: " + rawPage.length);
-            //return false;
+            // return false;
         }
         Page.model = model;
         if (DEBUG_PAGE) {
@@ -166,7 +270,10 @@ public class Page {
             Log.i(TAG, String.format("Data length: %d", data.length));
         }
         if (!Arrays.equals(crc, expectedCrc)) {
-            Log.w(TAG, String.format("CRC does not match expected value. Expected: %s Was: %s", HexDump.toHexString(expectedCrc), HexDump.toHexString(crc)));
+            Log.w(
+                TAG,
+                String.format("CRC does not match expected value. Expected: %s Was: %s",
+                    HexDump.toHexString(expectedCrc), HexDump.toHexString(crc)));
         } else {
             if (DEBUG_PAGE) {
                 Log.i(TAG, "CRC OK");
@@ -201,7 +308,6 @@ public class Page {
             pageOffset++;
         }
 
-
         return true;
     }
 
@@ -210,7 +316,7 @@ public class Page {
         mRecordList = new ArrayList<>(); // wipe old contents each time when parsing.
         if (rawPage.length != 1024) {
             Log.e(TAG, "Unexpected page size. Expected: 1024 Was: " + rawPage.length);
-            //return false;
+            // return false;
         }
         this.model = model;
         if (DEBUG_PAGE) {
@@ -229,7 +335,10 @@ public class Page {
             Log.i(TAG, String.format("Data length: %d", data.length));
         }
         if (!Arrays.equals(crc, expectedCrc)) {
-            Log.w(TAG, String.format("CRC does not match expected value. Expected: %s Was: %s", HexDump.toHexString(expectedCrc), HexDump.toHexString(crc)));
+            Log.w(
+                TAG,
+                String.format("CRC does not match expected value. Expected: %s Was: %s",
+                    HexDump.toHexString(expectedCrc), HexDump.toHexString(crc)));
         } else {
             if (DEBUG_PAGE) {
                 Log.i(TAG, "CRC OK");
@@ -249,12 +358,14 @@ public class Page {
                     record = null;
                 }
             } else {
-                Log.v(TAG, "Zero opcode encountered -- end of page. " + (rawPage.length - dataIndex) + " bytes remaining.");
+                Log.v(TAG, "Zero opcode encountered -- end of page. " + (rawPage.length - dataIndex)
+                    + " bytes remaining.");
 
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Possible parsing problem: ");
                 stringBuilder.append("Previous record: " + previousRecord);
-                stringBuilder.append("  Content of previous record: " + HexDump.toHexStringDisplayable(previousRecord.getRawbytes()));
+                stringBuilder.append("  Content of previous record: "
+                    + HexDump.toHexStringDisplayable(previousRecord.getRawbytes()));
 
                 int remainingData = rawPage.length - dataIndex;
                 byte[] tmpData = new byte[remainingData + 10];
@@ -269,10 +380,13 @@ public class Page {
 
             if (record != null) {
                 if (record instanceof IgnoredHistoryEntry) {
-                    IgnoredHistoryEntry he = (IgnoredHistoryEntry) record;
-                    Log.v(TAG, "parseFrom: found event " + he.getShortTypeName() + " length=" + record.getLength() + " offset=" + record.getFoundAtOffset() + " -- IGNORING");
+                    IgnoredHistoryEntry he = (IgnoredHistoryEntry)record;
+                    Log.v(TAG, "parseFrom: found event " + he.getShortTypeName() + " length=" + record.getLength()
+                        + " offset=" + record.getFoundAtOffset() + " -- IGNORING");
                 } else {
-                    Log.v(TAG, "parseFrom: found event " + record.getClass().getSimpleName() + " length=" + record.getLength() + " offset=" + record.getFoundAtOffset());
+                    Log.v(TAG,
+                        "parseFrom: found event " + record.getClass().getSimpleName() + " length=" + record.getLength()
+                            + " offset=" + record.getFoundAtOffset());
                     mRecordList.add(record);
                 }
 
@@ -283,19 +397,19 @@ public class Page {
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Possible parsing problem: ");
                 stringBuilder.append("Previous record: " + previousRecord);
-                stringBuilder.append("  Content of previous record: " + HexDump.toHexStringDisplayable(previousRecord.getRawbytes()));
+                stringBuilder.append("  Content of previous record: "
+                    + HexDump.toHexStringDisplayable(previousRecord.getRawbytes()));
 
                 int remainingData = data.length - dataIndex;
                 byte[] tmpData = Arrays.copyOfRange(data, dataIndex, 1022);
 
-
-                //new byte[remainingData];
-                //System.arraycopy(data, dataIndex, tmpData, 0, remainingData - 2);
+                // new byte[remainingData];
+                // System.arraycopy(data, dataIndex, tmpData, 0, remainingData - 2);
 
                 stringBuilder.append("  Remaining data: " + HexDump.toHexStringDisplayable(tmpData));
 
-
-                Log.e(TAG, String.format("parseFrom: Failed to parse opcode 0x%02x, offset=%d", data[dataIndex], dataIndex));
+                Log.e(TAG,
+                    String.format("parseFrom: Failed to parse opcode 0x%02x, offset=%d", data[dataIndex], dataIndex));
                 done = true;
             }
             if (dataIndex >= data.length - 2) {
@@ -308,7 +422,7 @@ public class Page {
         if (DEBUG_PAGE) {
             Log.i(TAG, String.format("Number of records: %d", mRecordList.size()));
             int index = 1;
-            for(Record r : mRecordList) {
+            for (Record r : mRecordList) {
                 Log.v(TAG, String.format("Record #%d: %s", index, r.getShortTypeName()));
                 index += 1;
             }
@@ -317,112 +431,17 @@ public class Page {
     }
 
 
-    /* attemptParseRecord will attempt to create a subclass of Record from the given
-     * data and offset.  It will return NULL if it fails.  If it succeeds, the returned
-     * subclass of Record can be examined for its length, so that the next attempt can be made.
-     *
-     * TODO maybe try to change this, so that we can loose all the classes and using enum instead with full
-     * configuration. Its something to think about for later versions -- Andy
-     */
-    public static <T extends Record> T attemptParseRecord(byte[] data, int offsetStart) {
-        // no data?
-        if (data == null) {
-            return null;
-        }
-        // invalid offset?
-        if (data.length < offsetStart) {
-            return null;
-        }
-        //Log.d(TAG,String.format("checking for handler for record type 0x%02X at index %d",data[offsetStart],offsetStart));
-        RecordTypeEnum en = RecordTypeEnum.fromByte(data[offsetStart]);
-        T record = en.getRecordClassInstance(model);
-        if (record != null) {
-            // have to do this to set the record's opCode
-            byte[] tmpData = new byte[data.length];
-            System.arraycopy(data, offsetStart, tmpData, 0, data.length - offsetStart);
-            boolean didParse = record.parseWithOffset(tmpData, model, offsetStart);
-            if (!didParse) {
-                Log.e(TAG, String.format("attemptParseRecord: class %s (opcode 0x%02X) failed to parse at offset %d", record.getShortTypeName(), data[offsetStart], offsetStart));
-            }
-        }
-        return record;
-    }
-
-
-    public static DateTime parseSimpleDate(byte[] data, int offset) {
-        DateTime timeStamp = null;
-        int seconds = 0;
-        int minutes = 0;
-        int hour = 0;
-        //int high = data[0] >> 4;
-        int low = data[0 + offset] & 0x1F;
-        //int year_high = data[1] >> 4;
-        int mhigh = (data[0 + offset] & 0xE0) >> 4;
-        int mlow = (data[1 + offset] & 0x80) >> 7;
-        int month = mhigh + mlow;
-        int dayOfMonth = low + 1;
-        // python code says year is data[1] & 0x0F, but that will cause problem in 2016.
-        // Hopefully, the remaining bits are part of the year...
-        int year = data[1 + offset] & 0x3F;
-        /*
-        Log.w(TAG, String.format("Attempting to create DateTime from: %04d-%02d-%02d %02d:%02d:%02d",
-                year + 2000, month, dayOfMonth, hour, minutes, seconds));
-         */
-        try {
-            timeStamp = new DateTime(year + 2000, month, dayOfMonth, hour, minutes, seconds);
-        } catch (org.joda.time.IllegalFieldValueException e) {
-            //Log.e(TAG,"Illegal DateTime field");
-            //e.printStackTrace();
-            return null;
-        }
-        return timeStamp;
-    }
-
-
-    public static void discoverRecords(byte[] data) {
-        int i = 0;
-        boolean done = false;
-
-        ArrayList<Integer> keyLocations = new ArrayList();
-        while (!done) {
-            RecordTypeEnum en = RecordTypeEnum.fromByte(data[i]);
-            if (en != RecordTypeEnum.Null) {
-                keyLocations.add(i);
-                Log.v(TAG, String.format("Possible record of type %s found at index %d", en, i));
-            }
-            /*
-            DateTime ts = parseSimpleDate(data,i);
-            if (ts != null) {
-                if (ts.year().get() == 2015) {
-                    Log.w(TAG, String.format("Possible simple date at index %d", i));
-                }
-            }
-            */
-            i = i + 1;
-            done = (i >= data.length - 2);
-        }
-        // for each of the discovered key locations, attempt to parse a sequence of records
-        for(RecordTypeEnum en : RecordTypeEnum.values()) {
-
-        }
-        for(int ix = 0; ix < keyLocations.size(); ix++) {
-
-        }
-    }
-
     /*
-    *
-    * For IPC serialization
-    *
+     * 
+     * For IPC serialization
      */
 
     /*
-    private byte[] crc;
-    private byte[] data;
-    protected PumpModel model;
-    public List<Record> mRecordList;
-    */
-
+     * private byte[] crc;
+     * private byte[] data;
+     * protected PumpModel model;
+     * public List<Record> mRecordList;
+     */
 
     public Bundle pack() {
         Bundle bundle = new Bundle();
@@ -430,7 +449,7 @@ public class Page {
         bundle.putByteArray("data", data);
         bundle.putString("model", model.name());
         ArrayList<Bundle> records = new ArrayList<>();
-        for(int i = 0; i < mRecordList.size(); i++) {
+        for (int i = 0; i < mRecordList.size(); i++) {
             try {
                 records.add(mRecordList.get(i).dictionaryRepresentation());
             } catch (NullPointerException e) {
@@ -449,13 +468,12 @@ public class Page {
         ArrayList<Bundle> records = in.getParcelableArrayList("mRecordList");
         mRecordList = new ArrayList<>();
         if (records != null) {
-            for(int i = 0; i < records.size(); i++) {
+            for (int i = 0; i < records.size(); i++) {
                 Record r = RecordTypeEnum.getRecordClassInstance(records.get(i), model);
                 r.readFromBundle(records.get(i));
                 mRecordList.add(r);
             }
         }
     }
-
 
 }

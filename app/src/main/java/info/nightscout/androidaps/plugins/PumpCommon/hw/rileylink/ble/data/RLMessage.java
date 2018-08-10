@@ -7,6 +7,7 @@ public interface RLMessage {
 
     byte[] getTxData();
 
+
     boolean isValid();
 
 }

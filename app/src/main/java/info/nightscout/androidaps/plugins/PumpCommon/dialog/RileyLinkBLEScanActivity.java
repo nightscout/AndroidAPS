@@ -1,5 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpCommon.dialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -33,38 +39,75 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.LocationHelper;
 import info.nightscout.utils.SP;
 
-
 public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(RileyLinkBLEScanActivity.class);
-
-    private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothLeScanner mLEScanner;
-    private LeDeviceListAdapter mLeDeviceListAdapter;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
+    private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
+    // Stops scanning after 10 seconds.
+    private static final long SCAN_PERIOD = 30000;
     public boolean mScanning;
-    private Handler mHandler;
     public Snackbar snackbar;
     public ScanSettings settings;
     public List<ScanFilter> filters;
     public ListView listBTScan;
     public Toolbar toolbarBTScan;
     public Context mContext = this;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothLeScanner mLEScanner;
+    private LeDeviceListAdapter mLeDeviceListAdapter;
+    private Handler mHandler;
+    private ScanCallback mScanCallback = new ScanCallback() {
 
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
-    private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 30000;
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            final BluetoothDevice device = result.getDevice();
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (device.getName() != null && device.getName().length() > 0) {
+                        mLeDeviceListAdapter.addDevice(device);
+                        mLeDeviceListAdapter.notifyDataSetChanged();
+                        LOG.debug("Found BLE" + device.getName());
+                    }
+                }
+            });
+        }
+
+
+        @Override
+        public void onBatchScanResults(final List<ScanResult> results) {
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    for (ScanResult result : results) {
+                        BluetoothDevice device = result.getDevice();
+                        if (device.getName() != null && device.getName().length() > 0) {
+                            mLeDeviceListAdapter.addDevice(device);
+                            LOG.debug("Found BLE" + result.toString());
+                        } else {
+                            LOG.error("Found BLE, but name appears to be missing. Ignoring. " + device.getAddress());
+                        }
+                    }
+                    mLeDeviceListAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            Log.e("Scan Failed", "Error Code: " + errorCode);
+            Toast.makeText(mContext, "Scan Failed " + errorCode, Toast.LENGTH_LONG).show();
+        }
+    };
 
 
     @Override
@@ -77,33 +120,35 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
         mHandler = new Handler();
 
         mLeDeviceListAdapter = new LeDeviceListAdapter();
-        listBTScan = (ListView) findViewById(R.id.rileylink_listBTScan);
+        listBTScan = (ListView)findViewById(R.id.rileylink_listBTScan);
         listBTScan.setAdapter(mLeDeviceListAdapter);
         listBTScan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textview = (TextView) view.findViewById(R.id.rileylink_device_address);
+                TextView textview = (TextView)view.findViewById(R.id.rileylink_device_address);
                 String bleAddress = textview.getText().toString();
 
                 SP.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-//                //Notify that we have a new rileylinkAddressKey
-//                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_rileylinkAddressKey);
-//
-//                LOG.debug("New rileylinkAddressKey: " + bleAddress);
-//
-//                //Notify that we have a new pumpIDKey
-//                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_pumpIDKey);
+                // //Notify that we have a new rileylinkAddressKey
+                // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_rileylinkAddressKey);
+                //
+                // LOG.debug("New rileylinkAddressKey: " + bleAddress);
+                //
+                // //Notify that we have a new pumpIDKey
+                // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_pumpIDKey);
                 finish();
             }
         });
 
-        toolbarBTScan = (Toolbar) findViewById(R.id.rileylink_toolbarBTScan);
+        toolbarBTScan = (Toolbar)findViewById(R.id.rileylink_toolbarBTScan);
         toolbarBTScan.setTitle(R.string.rileylink_scanner_title);
         setSupportActionBar(toolbarBTScan);
 
         snackbar = Snackbar.make(findViewById(R.id.RileyLinkScan), "Scanning...", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("STOP", new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 scanLeDevice(false);
@@ -151,8 +196,9 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
             // Use this check to determine whether BLE is supported on the device. Then
             // you can selectively disable BLE-related features.
             if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                //your code that requires permission
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                // your code that requires permission
+                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
+                    PERMISSION_REQUEST_COARSE_LOCATION);
             }
 
             // Ensures Bluetooth is available on the device and it is enabled. If not,
@@ -197,12 +243,13 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
+
                 @Override
                 public void run() {
                     mScanning = false;
                     mLEScanner.stopScan(mScanCallback);
                     LOG.debug("scanLeDevice: Scanning Stop");
-                    //Toast.makeText(mContext, "Scanning finished", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(mContext, "Scanning finished", Toast.LENGTH_SHORT).show();
                     snackbar.dismiss();
                 }
             }, SCAN_PERIOD);
@@ -210,66 +257,27 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
             mScanning = true;
             mLEScanner.startScan(mScanCallback);
             LOG.debug("scanLeDevice: Scanning Start");
-            //Toast.makeText(this, "Scanning", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Scanning", Toast.LENGTH_SHORT).show();
             snackbar.show();
         } else {
             mScanning = false;
             mLEScanner.stopScan(mScanCallback);
 
             LOG.debug("scanLeDevice: Scanning Stop");
-            //Toast.makeText(this, "Scanning finished", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Scanning finished", Toast.LENGTH_SHORT).show();
             snackbar.dismiss();
 
         }
     }
 
+    static class ViewHolder {
 
-    private ScanCallback mScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            final BluetoothDevice device = result.getDevice();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (device.getName() != null && device.getName().length() > 0) {
-                        mLeDeviceListAdapter.addDevice(device);
-                        mLeDeviceListAdapter.notifyDataSetChanged();
-                        LOG.debug("Found BLE" + device.getName());
-                    }
-                }
-            });
-        }
-
-
-        @Override
-        public void onBatchScanResults(final List<ScanResult> results) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    for (ScanResult result : results) {
-                        BluetoothDevice device = result.getDevice();
-                        if (device.getName() != null && device.getName().length() > 0) {
-                            mLeDeviceListAdapter.addDevice(device);
-                            LOG.debug("Found BLE" + result.toString());
-                        } else {
-                            LOG.error("Found BLE, but name appears to be missing. Ignoring. " + device.getAddress());
-                        }
-                    }
-                    mLeDeviceListAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            Log.e("Scan Failed", "Error Code: " + errorCode);
-            Toast.makeText(mContext, "Scan Failed " + errorCode, Toast.LENGTH_LONG).show();
-        }
-    };
-
+        TextView deviceName;
+        TextView deviceAddress;
+    }
 
     private class LeDeviceListAdapter extends BaseAdapter {
+
         private ArrayList<BluetoothDevice> mLeDevices;
         private LayoutInflater mInflator;
 
@@ -325,19 +333,19 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
             if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_scan_item, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.rileylink_device_address);
-                viewHolder.deviceName = (TextView) view.findViewById(R.id.rileylink_device_name);
+                viewHolder.deviceAddress = (TextView)view.findViewById(R.id.rileylink_device_address);
+                viewHolder.deviceName = (TextView)view.findViewById(R.id.rileylink_device_name);
                 view.setTag(viewHolder);
             } else {
-                viewHolder = (ViewHolder) view.getTag();
+                viewHolder = (ViewHolder)view.getTag();
             }
 
             BluetoothDevice device = mLeDevices.get(i);
             String deviceName = device.getName();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             if (SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "").compareTo(device.getAddress()) == 0) {
-                //viewHolder.deviceName.setTextColor(getColor(R.color.secondary_text_light));
-                //viewHolder.deviceAddress.setTextColor(getColor(R.color.secondary_text_light));
+                // viewHolder.deviceName.setTextColor(getColor(R.color.secondary_text_light));
+                // viewHolder.deviceAddress.setTextColor(getColor(R.color.secondary_text_light));
                 deviceName += " (" + getResources().getString(R.string.rileylink_scanner_selected_device) + ")";
             }
             viewHolder.deviceName.setText(deviceName);
@@ -345,12 +353,6 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
             return view;
         }
-    }
-
-
-    static class ViewHolder {
-        TextView deviceName;
-        TextView deviceAddress;
     }
 
 }

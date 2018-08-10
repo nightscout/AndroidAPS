@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType
 // This event existed as 0x18 in Roundtrip and early Decocare,
 // but I don't see a corresponding event in RileyLink_ios.
 public class NewTimeSet extends TimeStampedRecord {
+
     public NewTimeSet() {
     }
 

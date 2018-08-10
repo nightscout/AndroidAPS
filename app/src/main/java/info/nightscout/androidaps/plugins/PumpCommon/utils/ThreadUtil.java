@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.PumpCommon.utils;
  * Created by geoff on 5/27/16.
  */
 public class ThreadUtil {
+
     public static long getThreadId() {
         return Thread.currentThread().getId();
     }

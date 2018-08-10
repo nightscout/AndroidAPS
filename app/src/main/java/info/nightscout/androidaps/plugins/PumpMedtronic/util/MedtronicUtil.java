@@ -1,16 +1,18 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.util;
 
-import org.joda.time.LocalTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.data.RLHistoryItem;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
@@ -30,6 +32,8 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtron
 public class MedtronicUtil extends RileyLinkUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicUtil.class);
+    static int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
+    static int CRC_SIZE = 1;
     private static boolean lowLevelDebug = true;
     private static PumpDeviceState pumpDeviceState;
     private static MedtronicDeviceType medtronicPumpModel;
@@ -60,8 +64,8 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
-        byte highByte = (byte) (shortValue >> 8 & 0xFF);
-        byte lowByte = (byte) (shortValue & 0xFF);
+        byte highByte = (byte)(shortValue >> 8 & 0xFF);
+        byte lowByte = (byte)(shortValue & 0xFF);
 
         if (highByte > 0) {
             return createByteArray(lowByte, highByte);
@@ -85,7 +89,6 @@ public class MedtronicUtil extends RileyLinkUtil {
             array[i] = data.get(i);
         }
 
-
         return array;
     }
 
@@ -96,7 +99,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static double decodeBasalInsulin(int i) {
-        return (double) i / 40.0d;
+        return (double)i / 40.0d;
     }
 
 
@@ -122,7 +125,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
     public static byte[] createCommandBody(byte[] input) {
 
-        return ByteUtil.concat((byte) input.length, input);
+        return ByteUtil.concat((byte)input.length, input);
     }
 
 
@@ -150,7 +153,7 @@ public class MedtronicUtil extends RileyLinkUtil {
                 scrollRate = 2;
         }
 
-        int strokes = (int) (amount * (strokesPerUnit / (scrollRate * 1.0d)));
+        int strokes = (int)(amount * (strokesPerUnit / (scrollRate * 1.0d)));
 
         strokes *= scrollRate;
 
@@ -159,32 +162,27 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    static int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
-
-    static int CRC_SIZE = 1;
-
-
     public static byte[] buildCommandPayload(MessageType commandType, byte[] parameters) {
         return buildCommandPayload(commandType.getValue(), parameters);
     }
 
 
     public static byte[] buildCommandPayload(MedtronicCommandType commandType, byte[] parameters) {
-        return buildCommandPayload((byte) commandType.commandCode, parameters);
+        return buildCommandPayload((byte)commandType.commandCode, parameters);
     }
 
 
     public static byte[] buildCommandPayload(byte commandType, byte[] parameters) {
         // A7 31 65 51 C0 00 52
 
-        byte commandLength = (byte) (parameters == null ? 2 : 2 + parameters.length);
+        byte commandLength = (byte)(parameters == null ? 2 : 2 + parameters.length);
 
-        ByteBuffer sendPayloadBuffer = ByteBuffer.allocate(ENVELOPE_SIZE + commandLength); //  + CRC_SIZE
+        ByteBuffer sendPayloadBuffer = ByteBuffer.allocate(ENVELOPE_SIZE + commandLength); // + CRC_SIZE
         sendPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
 
         byte[] serialNumberBCD = RileyLinkUtil.getRileyLinkServiceData().pumpIDBytes;
 
-        sendPayloadBuffer.put((byte) 0xA7);
+        sendPayloadBuffer.put((byte)0xA7);
         sendPayloadBuffer.put(serialNumberBCD[0]);
         sendPayloadBuffer.put(serialNumberBCD[1]);
         sendPayloadBuffer.put(serialNumberBCD[2]);
@@ -192,9 +190,9 @@ public class MedtronicUtil extends RileyLinkUtil {
         sendPayloadBuffer.put(commandType);
 
         if (parameters == null) {
-            sendPayloadBuffer.put((byte) 0x00);
+            sendPayloadBuffer.put((byte)0x00);
         } else {
-            sendPayloadBuffer.put((byte) parameters.length); // size
+            sendPayloadBuffer.put((byte)parameters.length); // size
 
             for (byte val : parameters) {
                 sendPayloadBuffer.put(val);
@@ -205,17 +203,14 @@ public class MedtronicUtil extends RileyLinkUtil {
 
         LOG.info(HexDump.toHexStringDisplayable(payload));
 
-        //int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
+        // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 
-        //LOG.info("crc: " + crc);
+        // LOG.info("crc: " + crc);
 
-        //sendPayloadBuffer.put((byte) crc);
+        // sendPayloadBuffer.put((byte) crc);
 
         return sendPayloadBuffer.array();
     }
-
-
-    // FIXME
 
 
     public static boolean isLowLevelDebug() {
@@ -227,18 +222,28 @@ public class MedtronicUtil extends RileyLinkUtil {
         MedtronicUtil.lowLevelDebug = lowLevelDebug;
     }
 
-    public static void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
-        MedtronicUtil.pumpDeviceState = pumpDeviceState;
-        MainApp.bus().post(new EventMedtronicDeviceStatusChange(pumpDeviceState));
-    }
 
     public static PumpDeviceState getPumpDeviceState() {
         return pumpDeviceState;
     }
 
-    // TODO MOVE
+
+    public static void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
+        MedtronicUtil.pumpDeviceState = pumpDeviceState;
+
+        historyRileyLink.add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
+
+        MainApp.bus().post(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+    }
+
+
     public static boolean isModelSet() {
         return MedtronicUtil.medtronicPumpModel != null;
+    }
+
+
+    public static MedtronicDeviceType getMedtronicPumpModel() {
+        return MedtronicUtil.medtronicPumpModel;
     }
 
 
@@ -249,13 +254,8 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    public static MedtronicDeviceType getMedtronicPumpModel() {
-        return MedtronicUtil.medtronicPumpModel;
-    }
-
-
     public static MedtronicCommunicationManager getMedtronicCommunicationManager() {
-        return (MedtronicCommunicationManager) RileyLinkUtil.rileyLinkCommunicationManager;
+        return (MedtronicCommunicationManager)RileyLinkUtil.rileyLinkCommunicationManager;
     }
 
 
@@ -268,21 +268,29 @@ public class MedtronicUtil extends RileyLinkUtil {
         MedtronicUtil.medtronicService = medtronicService;
     }
 
-    public static void setPumpStatus(MedtronicPumpStatus medtronicPumpStatus) {
-        MedtronicUtil.medtronicPumpStatus = medtronicPumpStatus;
-    }
 
     public static MedtronicPumpStatus getPumpStatus() {
         return MedtronicUtil.medtronicPumpStatus;
     }
 
-    public static void setCurrentCommand(MedtronicCommandType currentCommand) {
-        MedtronicUtil.currentCommand = currentCommand;
+
+    public static void setPumpStatus(MedtronicPumpStatus medtronicPumpStatus) {
+        MedtronicUtil.medtronicPumpStatus = medtronicPumpStatus;
     }
+
 
     public static MedtronicCommandType getCurrentCommand() {
         return MedtronicUtil.currentCommand;
     }
+
+
+    public static void setCurrentCommand(MedtronicCommandType currentCommand) {
+        MedtronicUtil.currentCommand = currentCommand;
+
+        if (currentCommand != null)
+            historyRileyLink.add(new RLHistoryItem(currentCommand));
+    }
+
 
     public static boolean isSame(Double d1, Double d2) {
         double diff = d1 - d2;
@@ -290,11 +298,13 @@ public class MedtronicUtil extends RileyLinkUtil {
         return (Math.abs(diff) <= 0.000001);
     }
 
-    public static void setSettings(Map<String, PumpSettingDTO> settings) {
-        MedtronicUtil.settings = settings;
-    }
 
     public static Map<String, PumpSettingDTO> getSettings() {
         return settings;
+    }
+
+
+    public static void setSettings(Map<String, PumpSettingDTO> settings) {
+        MedtronicUtil.settings = settings;
     }
 }

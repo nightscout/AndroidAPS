@@ -6,13 +6,16 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
  * Created by geoff on 6/5/16.
  */
 public class ChangeChildBlockEnablePumpEvent extends TimeStampedRecord {
+
     public ChangeChildBlockEnablePumpEvent() {
     }
+
 
     @Override
     public String getShortTypeName() {
         return "Ch Child Block Ena";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

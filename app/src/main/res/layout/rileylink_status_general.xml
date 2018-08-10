@@ -3,7 +3,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkSettingsTab1">
+    tools:context="info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.dialog.RileyLinkStatusGeneral">
 
     <ScrollView
         android:layout_width="match_parent"

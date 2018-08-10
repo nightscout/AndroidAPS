@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType
 
 public class IgnoredHistoryEntry extends Record {
 
-    //public int lngth = 7;
+    // public int lngth = 7;
     private RecordTypeEnum typeEnum = RecordTypeEnum.Null;
 
 

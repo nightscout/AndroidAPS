@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType
  * Created by geoff on 6/5/16.
  */
 public class ChangeTempBasalTypePumpEvent extends TimeStampedRecord {
+
     private boolean isPercent = false; // either absolute or percent
 
 

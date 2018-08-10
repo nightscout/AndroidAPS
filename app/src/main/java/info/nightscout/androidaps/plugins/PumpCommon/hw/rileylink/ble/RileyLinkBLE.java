@@ -1,5 +1,13 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Semaphore;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -11,14 +19,6 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.SystemClock;
 import android.widget.Toast;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.Semaphore;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
@@ -40,22 +40,16 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.ThreadUtil;
 public class RileyLinkBLE {
 
     private static final Logger LOG = LoggerFactory.getLogger(RFTools.class);
-
+    private final Context context;
     public boolean gattDebugEnabled = true;
-
+    boolean manualDisconnect = false;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGattCallback bluetoothGattCallback;
-
-    private final Context context;
-
     private BluetoothDevice rileyLinkDevice;
     private BluetoothGatt bluetoothConnectionGatt = null;
-
     private BLECommOperation mCurrentOperation;
     private Semaphore gattOperationSema = new Semaphore(1, true);
-
     private Runnable radioResponseCountNotified;
-
     private boolean mIsConnected = false;
 
 
@@ -67,10 +61,13 @@ public class RileyLinkBLE {
         bluetoothGattCallback = new BluetoothGattCallback() {
 
             @Override
-            public void onCharacteristicChanged(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
+            public void onCharacteristicChanged(final BluetoothGatt gatt,
+                    final BluetoothGattCharacteristic characteristic) {
                 super.onCharacteristicChanged(gatt, characteristic);
                 if (gattDebugEnabled) {
-                    LOG.trace(ThreadUtil.sig() + "onCharacteristicChanged " + GattAttributes.lookup(characteristic.getUuid()) + " " + HexDump.toHexString(characteristic.getValue()));
+                    LOG.trace(ThreadUtil.sig() + "onCharacteristicChanged "
+                        + GattAttributes.lookup(characteristic.getUuid()) + " "
+                        + HexDump.toHexString(characteristic.getValue()));
                     if (characteristic.getUuid().equals(UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT))) {
                         LOG.debug("Response Count is " + HexDump.toHexString(characteristic.getValue()));
                     }
@@ -82,25 +79,29 @@ public class RileyLinkBLE {
 
 
             @Override
-            public void onCharacteristicRead(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic, int status) {
+            public void onCharacteristicRead(final BluetoothGatt gatt,
+                    final BluetoothGattCharacteristic characteristic, int status) {
                 super.onCharacteristicRead(gatt, characteristic, status);
-
 
                 final String statusMessage = getGattStatusMessage(status);
                 if (gattDebugEnabled) {
-                    LOG.trace(ThreadUtil.sig() + "onCharacteristicRead (" + GattAttributes.lookup(characteristic.getUuid()) + ") " + statusMessage + ":" + HexDump.toHexString(characteristic.getValue()));
+                    LOG.trace(ThreadUtil.sig() + "onCharacteristicRead ("
+                        + GattAttributes.lookup(characteristic.getUuid()) + ") " + statusMessage + ":"
+                        + HexDump.toHexString(characteristic.getValue()));
                 }
                 mCurrentOperation.gattOperationCompletionCallback(characteristic.getUuid(), characteristic.getValue());
             }
 
 
             @Override
-            public void onCharacteristicWrite(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic, int status) {
+            public void onCharacteristicWrite(final BluetoothGatt gatt,
+                    final BluetoothGattCharacteristic characteristic, int status) {
                 super.onCharacteristicWrite(gatt, characteristic, status);
 
                 final String uuidString = GattAttributes.lookup(characteristic.getUuid());
                 if (gattDebugEnabled) {
-                    LOG.trace(ThreadUtil.sig() + "onCharacteristicWrite " + getGattStatusMessage(status) + " " + uuidString + " " + HexDump.toHexString(characteristic.getValue()));
+                    LOG.trace(ThreadUtil.sig() + "onCharacteristicWrite " + getGattStatusMessage(status) + " "
+                        + uuidString + " " + HexDump.toHexString(characteristic.getValue()));
                 }
                 mCurrentOperation.gattOperationCompletionCallback(characteristic.getUuid(), characteristic.getValue());
             }
@@ -142,8 +143,9 @@ public class RileyLinkBLE {
                     }
 
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
-                        (newState == BluetoothProfile.STATE_DISCONNECTING)) {
-                    //LOG.debug("We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" : "Disconnecting");
+                    (newState == BluetoothProfile.STATE_DISCONNECTING)) {
+                    // LOG.debug("We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
+                    // "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected);
                     if (manualDisconnect)
@@ -159,7 +161,8 @@ public class RileyLinkBLE {
             public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
                 super.onDescriptorWrite(gatt, descriptor, status);
                 if (gattDebugEnabled) {
-                    LOG.warn("onDescriptorWrite " + GattAttributes.lookup(descriptor.getUuid()) + " " + getGattStatusMessage(status) + " written: " + HexDump.toHexString(descriptor.getValue()));
+                    LOG.warn("onDescriptorWrite " + GattAttributes.lookup(descriptor.getUuid()) + " "
+                        + getGattStatusMessage(status) + " written: " + HexDump.toHexString(descriptor.getValue()));
                 }
                 mCurrentOperation.gattOperationCompletionCallback(descriptor.getUuid(), descriptor.getValue());
             }
@@ -232,10 +235,12 @@ public class RileyLinkBLE {
                     if (rileyLinkFound) {
                         mIsConnected = true;
                         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady);
-                        //RileyLinkUtil.sendNotification(new ServiceNotification(RileyLinkConst.Intents.RileyLinkReady), null);
+                        // RileyLinkUtil.sendNotification(new
+                        // ServiceNotification(RileyLinkConst.Intents.RileyLinkReady), null);
                     } else {
                         mIsConnected = false;
-                        RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkError, RileyLinkError.DeviceIsNotRileyLink);
+                        RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkError,
+                            RileyLinkError.DeviceIsNotRileyLink);
                     }
 
                 } else {
@@ -309,7 +314,7 @@ public class RileyLinkBLE {
                 debugService(serviceI, indentCount + 4);
             }
         }
-        //}
+        // }
     }
 
 
@@ -336,7 +341,7 @@ public class RileyLinkBLE {
 
     public boolean enableNotifications() {
         BLECommOperationResult result = setNotification_blocking(UUID.fromString(GattAttributes.SERVICE_RADIO), //
-                UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT));
+            UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT));
         if (result.resultCode != BLECommOperationResult.RESULT_SUCCESS) {
             LOG.error("Error setting response count notification");
             return false;
@@ -369,9 +374,6 @@ public class RileyLinkBLE {
     }
 
 
-    boolean manualDisconnect = false;
-
-
     public void disconnect() {
         mIsConnected = false;
         LOG.warn("Closing GATT connection");
@@ -380,8 +382,8 @@ public class RileyLinkBLE {
             // Not sure if to disconnect or to close first..
             bluetoothConnectionGatt.disconnect();
             manualDisconnect = true;
-            //bluetoothConnectionGatt.close();
-            //bluetoothConnectionGatt = null;
+            // bluetoothConnectionGatt.close();
+            // bluetoothConnectionGatt = null;
         }
     }
 
@@ -414,7 +416,8 @@ public class RileyLinkBLE {
                     LOG.error("BT Device not supported");
                     // TODO: 11/07/2016 UI update for user
                 } else {
-                    BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(charaUUID);
+                    BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
+                        .getCharacteristic(charaUUID);
                     // Tell Android that we want the notifications
                     bluetoothConnectionGatt.setCharacteristicNotification(chara, true);
                     List<BluetoothGattDescriptor> list = chara.getDescriptors();
@@ -425,7 +428,8 @@ public class RileyLinkBLE {
                     }
                     BluetoothGattDescriptor descr = list.get(0);
                     // Tell the remote device to send the notifications
-                    mCurrentOperation = new DescriptorWriteOperation(bluetoothConnectionGatt, descr, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    mCurrentOperation = new DescriptorWriteOperation(bluetoothConnectionGatt, descr,
+                        BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                     mCurrentOperation.execute(this);
                     if (mCurrentOperation.timedOut) {
                         rval.resultCode = BLECommOperationResult.RESULT_TIMEOUT;
@@ -464,14 +468,15 @@ public class RileyLinkBLE {
             } else {
                 if (bluetoothConnectionGatt.getService(serviceUUID) == null) {
                     // Catch if the service is not supported by the BLE device
-                    // GGW: Tue Jul 12 01:14:01 UTC 2016:  This can also happen if the
+                    // GGW: Tue Jul 12 01:14:01 UTC 2016: This can also happen if the
                     // app that created the bluetoothConnectionGatt has been destroyed/created,
                     // e.g. when the user switches from portrait to landscape.
                     rval.resultCode = BLECommOperationResult.RESULT_NONE;
                     LOG.error("BT Device not supported");
                     // TODO: 11/07/2016 UI update for user
                 } else {
-                    BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(charaUUID);
+                    BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
+                        .getCharacteristic(charaUUID);
                     mCurrentOperation = new CharacteristicWriteOperation(bluetoothConnectionGatt, chara, value);
                     mCurrentOperation.execute(this);
                     if (mCurrentOperation.timedOut) {
@@ -506,7 +511,8 @@ public class RileyLinkBLE {
             if (mCurrentOperation != null) {
                 rval.resultCode = BLECommOperationResult.RESULT_BUSY;
             } else {
-                BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(charaUUID);
+                BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(
+                    charaUUID);
                 mCurrentOperation = new CharacteristicReadOperation(bluetoothConnectionGatt, chara);
                 mCurrentOperation.execute(this);
                 if (mCurrentOperation.timedOut) {
@@ -544,6 +550,5 @@ public class RileyLinkBLE {
 
         return statusMessage;
     }
-
 
 }

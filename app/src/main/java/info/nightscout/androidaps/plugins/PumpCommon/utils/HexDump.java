@@ -23,7 +23,9 @@ import java.util.List;
  * only.
  */
 public class HexDump {
-    private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+    private final static char[] HEX_DIGITS = {
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 
     public static String dumpHexString(byte[] array) {
@@ -40,11 +42,11 @@ public class HexDump {
         result.append("\n0x");
         result.append(toHexString(offset));
 
-        for(int i = offset; i < offset + length; i++) {
+        for (int i = offset; i < offset + length; i++) {
             if (lineIndex == 16) {
                 result.append(" ");
 
-                for(int j = 0; j < 16; j++) {
+                for (int j = 0; j < 16; j++) {
                     if (line[j] > ' ' && line[j] < '~') {
                         result.append(new String(line, j, 1));
                     } else {
@@ -68,11 +70,11 @@ public class HexDump {
         if (lineIndex != 16) {
             int count = (16 - lineIndex) * 3;
             count++;
-            for(int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) {
                 result.append(" ");
             }
 
-            for(int i = 0; i < lineIndex; i++) {
+            for (int i = 0; i < lineIndex; i++) {
                 if (line[i] > ' ' && line[i] < '~') {
                     result.append(new String(line, i, 1));
                 } else {
@@ -99,7 +101,7 @@ public class HexDump {
         char[] buf = new char[length * 2];
 
         int bufIndex = 0;
-        for(int i = offset; i < offset + length; i++) {
+        for (int i = offset; i < offset + length; i++) {
             byte b = array[i];
             buf[bufIndex++] = HEX_DIGITS[(b >>> 4) & 0x0F];
             buf[bufIndex++] = HEX_DIGITS[b & 0x0F];
@@ -120,7 +122,7 @@ public class HexDump {
                 sb.append("Zero-length array");
             } else {
 
-                for(byte element : arr) {
+                for (byte element : arr) {
                     sb.append(getCorrectHexValue(element));
                     sb.append(" ");
                 }
@@ -134,7 +136,7 @@ public class HexDump {
     public static String toHexStringDisplayable(List<Byte> data) {
         StringBuilder sb = new StringBuilder();
 
-        for(byte element : data) {
+        for (byte element : data) {
             sb.append(getCorrectHexValue(element));
             sb.append(" ");
         }
@@ -144,7 +146,7 @@ public class HexDump {
 
 
     public static String getCorrectHexValue(byte inp) {
-        String hx = Integer.toHexString((char) inp);
+        String hx = Integer.toHexString((char)inp);
         hx = hx.toUpperCase();
 
         if (hx.length() == 0)
@@ -185,10 +187,10 @@ public class HexDump {
     public static byte[] toByteArray(int i) {
         byte[] array = new byte[4];
 
-        array[3] = (byte) (i & 0xFF);
-        array[2] = (byte) ((i >> 8) & 0xFF);
-        array[1] = (byte) ((i >> 16) & 0xFF);
-        array[0] = (byte) ((i >> 24) & 0xFF);
+        array[3] = (byte)(i & 0xFF);
+        array[2] = (byte)((i >> 8) & 0xFF);
+        array[1] = (byte)((i >> 16) & 0xFF);
+        array[0] = (byte)((i >> 24) & 0xFF);
 
         return array;
     }
@@ -197,8 +199,8 @@ public class HexDump {
     public static byte[] toByteArray(short i) {
         byte[] array = new byte[2];
 
-        array[1] = (byte) (i & 0xFF);
-        array[0] = (byte) ((i >> 8) & 0xFF);
+        array[1] = (byte)(i & 0xFF);
+        array[0] = (byte)((i >> 8) & 0xFF);
 
         return array;
     }
@@ -220,12 +222,11 @@ public class HexDump {
         int length = hexString.length();
         byte[] buffer = new byte[length / 2];
 
-        for(int i = 0; i < length; i += 2) {
-            buffer[i / 2] = (byte) ((toByte(hexString.charAt(i)) << 4) | toByte(hexString.charAt(i + 1)));
+        for (int i = 0; i < length; i += 2) {
+            buffer[i / 2] = (byte)((toByte(hexString.charAt(i)) << 4) | toByte(hexString.charAt(i + 1)));
         }
 
         return buffer;
     }
-
 
 }

@@ -177,7 +177,7 @@
         <service android:name=".plugins.Persistentnotification.DummyService" />
 
 
- 	<service
+        <service
             android:name=".plugins.PumpMedtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
             android:exported="true" />
@@ -185,7 +185,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
- 
+
         <activity
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -193,11 +193,12 @@
             android:label="@string/title_activity_setup_wizard" />
 
         <activity
-            android:name=".plugins.PumpCommon.dialog.RileylinkSettingsActivity"
+            android:name=".plugins.PumpCommon.hw.rileylink.dialog.RileyLinkStatusActivity"
             android:label="@string/title_activity_rileylink_settings"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/Theme.AppCompat.NoTitle" />
 
-        <activity android:name=".SingleFragmentActivity"
+        <activity
+            android:name=".SingleFragmentActivity"
             android:theme="@style/AppTheme" />
     </application>
 

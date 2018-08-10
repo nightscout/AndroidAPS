@@ -16,7 +16,6 @@ public enum PumpCapability {
     // grouped
     VirtualPump(Bolus, ExtendedBolus, TBR, BasalProfileSet, StoreCarbInfo), //
 
-
     Bolus_TBR_Basal_Refill_Carb(Bolus, TBR, BasalProfileSet, Refill, StoreCarbInfo), //
     Bolus_Extended_TBR_Basal_Carb(Bolus, ExtendedBolus, TBR, BasalProfileSet, StoreCarbInfo), //
     Bolus_Extended_TBR_Basal_Refill_Carb(Bolus, ExtendedBolus, TBR, BasalProfileSet, Refill, StoreCarbInfo), //
@@ -53,6 +52,5 @@ public enum PumpCapability {
         } else
             return false;
     }
-
 
 }

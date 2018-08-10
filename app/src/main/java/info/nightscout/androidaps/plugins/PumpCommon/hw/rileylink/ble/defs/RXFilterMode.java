@@ -14,6 +14,6 @@ public enum RXFilterMode {
 
 
     RXFilterMode(int value) {
-        this.value = (byte) value;
+        this.value = (byte)value;
     }
 }

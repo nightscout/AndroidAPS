@@ -38,33 +38,33 @@ public class MedtronicUIComm {
 
         MedtronicUtil.setCurrentCommand(commandType);
 
-//        new Thread(() -> {
-//            LOG.warn("@@@ Start Thread");
-//
-//            task.execute(getCommunicationManager());
-//
-//            LOG.warn("@@@ End Thread");
-//        });
+        // new Thread(() -> {
+        // LOG.warn("@@@ Start Thread");
+        //
+        // task.execute(getCommunicationManager());
+        //
+        // LOG.warn("@@@ End Thread");
+        // });
 
         task.execute(getCommunicationManager());
 
-//        for (int i = 0; i < getMaxWaitTime(commandType); i++) {
-//            synchronized (task) {
-////                try {
-////
-////                    //task.wait(1000);
-////                } catch (InterruptedException e) {
-////                    LOG.error("executeCommand InterruptedException", e);
-////                }
-//
-//
-//                SystemClock.sleep(1000);
-//            }
-//
-//            if (task.isReceived()) {
-//                break;
-//            }
-//        }
+        // for (int i = 0; i < getMaxWaitTime(commandType); i++) {
+        // synchronized (task) {
+        // // try {
+        // //
+        // // //task.wait(1000);
+        // // } catch (InterruptedException e) {
+        // // LOG.error("executeCommand InterruptedException", e);
+        // // }
+        //
+        //
+        // SystemClock.sleep(1000);
+        // }
+        //
+        // if (task.isReceived()) {
+        // break;
+        // }
+        // }
 
         if (!task.isReceived()) {
             LOG.warn("Reply not received for " + commandType);
@@ -76,6 +76,7 @@ public class MedtronicUIComm {
         return task;
 
     }
+
 
     /**
      * We return 25s as waitTime (17 for wakeUp, and addtional 8 for data retrieval) for normal commands and
@@ -95,6 +96,7 @@ public class MedtronicUIComm {
     public int getInvalidResponsesCount() {
         return getCommunicationManager().getNotConnectedCount();
     }
+
 
     public void startTunning() {
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);

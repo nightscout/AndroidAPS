@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandTyp
 public class PumpMessage implements RLMessage {
 
     public PacketType packetType = PacketType.Carelink;
-    public byte[] address = new byte[]{0, 0, 0};
+    public byte[] address = new byte[] { 0, 0, 0 };
     public MedtronicCommandType commandType;
     public Byte invalidCommandType;
     public MessageBody messageBody = new MessageBody();
@@ -41,13 +41,12 @@ public class PumpMessage implements RLMessage {
     }
 
 
-    //    public void init(PacketType packetType, byte[] address, MessageType messageType, MessageBody messageBody) {
-    //        this.packetType = packetType;
-    //        this.address = address;
-    //        this.messageType = messageType;
-    //        this.messageBody = messageBody;
-    //    }
-
+    // public void init(PacketType packetType, byte[] address, MessageType messageType, MessageBody messageBody) {
+    // this.packetType = packetType;
+    // this.address = address;
+    // this.messageType = messageType;
+    // this.messageBody = messageBody;
+    // }
 
     public void init(PacketType packetType, byte[] address, MedtronicCommandType commandType, MessageBody messageBody) {
         this.packetType = packetType;
@@ -74,14 +73,15 @@ public class PumpMessage implements RLMessage {
             }
         }
         if (rxData.length > 5) {
-            this.messageBody = MedtronicCommandType.constructMessageBody(commandType, ByteUtil.substring(rxData, 5, rxData.length - 5));
+            this.messageBody = MedtronicCommandType.constructMessageBody(commandType,
+                ByteUtil.substring(rxData, 5, rxData.length - 5));
         }
     }
 
 
     @Override
     public byte[] getTxData() {
-        byte[] rval = ByteUtil.concat(new byte[]{(byte) packetType.getValue()}, address);
+        byte[] rval = ByteUtil.concat(new byte[] { (byte)packetType.getValue() }, address);
         rval = ByteUtil.concat(rval, commandType.getCommandCode());
         rval = ByteUtil.concat(rval, messageBody.getTxData());
         return rval;
@@ -89,7 +89,7 @@ public class PumpMessage implements RLMessage {
 
 
     public byte[] getContents() {
-        return ByteUtil.concat(new byte[]{commandType.getCommandCode()}, messageBody.getTxData());
+        return ByteUtil.concat(new byte[] { commandType.getCommandCode() }, messageBody.getTxData());
     }
 
 
@@ -101,7 +101,8 @@ public class PumpMessage implements RLMessage {
 
         byte[] data = messageBody.getTxData();
 
-        int length = ByteUtil.asUINT8(data[0]); // length is not always correct so, we check whole array if we have data, after length
+        int length = ByteUtil.asUINT8(data[0]); // length is not always correct so, we check whole array if we have
+                                                // data, after length
         int originalLength = length;
 
         // check if displayed length is invalid
@@ -125,7 +126,8 @@ public class PumpMessage implements RLMessage {
 
         System.arraycopy(messageBody.getTxData(), 1, arrayOut, 0, length);
 
-        Log.d("PumpMessage", "Length: " + length + ", Original Length: " + originalLength + ", CommandType: " + commandType);
+        Log.d("PumpMessage", "Length: " + length + ", Original Length: " + originalLength + ", CommandType: "
+            + commandType);
 
         return arrayOut;
     }

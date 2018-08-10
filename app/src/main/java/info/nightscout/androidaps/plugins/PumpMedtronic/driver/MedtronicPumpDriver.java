@@ -18,13 +18,14 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
  * Created by andy on 4/28/18.
  */
 @Deprecated
-public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInterface*/ {
+public class MedtronicPumpDriver extends VirtualPumpDriver /* implements PumpInterface */{
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpDriver.class);
-    //MedtronicPumpStatus pumpStatusLocal;
+
+
+    // MedtronicPumpStatus pumpStatusLocal;
 
     public MedtronicPumpDriver() {
-
 
     }
 
@@ -34,15 +35,18 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         return true;
     }
 
+
     @Override
     public boolean isConnecting() {
         return false;
     }
 
+
     @Override
     public void connect(String reason) {
         // connection is established by each command specifically
     }
+
 
     @Override
     public void stopConnecting() {
@@ -58,14 +62,13 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         return super.cancelTempBasal(enforceNew);
     }
 
-    @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
 
-        TemporaryBasal tempBasal = new TemporaryBasal()
-                .date(System.currentTimeMillis())
-                .absolute(absoluteRate)
-                .duration(durationInMinutes)
-                .source(Source.USER);
+    @Override
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
+            boolean enforceNew) {
+
+        TemporaryBasal tempBasal = new TemporaryBasal().date(System.currentTimeMillis()).absolute(absoluteRate)
+            .duration(durationInMinutes).source(Source.USER);
 
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
@@ -81,6 +84,5 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /*implements PumpInte
         getPumpStatusData().setLastCommunicationToNow();
         return result;
     }
-
 
 }

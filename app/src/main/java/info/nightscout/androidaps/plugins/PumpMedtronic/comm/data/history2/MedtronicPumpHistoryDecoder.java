@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
 
-
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
@@ -21,27 +20,22 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpBolusType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
- * Application:   GGC - GNU Gluco Control
- * Plug-in:       GGC PlugIn Base (base class for all plugins)
+ * Application: GGC - GNU Gluco Control
+ * Plug-in: GGC PlugIn Base (base class for all plugins)
  * <p>
  * See AUTHORS for copyright information.
  * <p>
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * <p>
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
- * Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+ * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * <p>
- * Filename:     MedtronicPumpHistoryDecoder
- * Description:  Decoder for history data.
+ * Filename: MedtronicPumpHistoryDecoder Description: Decoder for history data.
  * <p>
  * Author: Andy {andy@atech-software.com}
  */
@@ -51,10 +45,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpHistoryDecoder.class);
     private static final String TAG = "MdtPumpHistoryDecoder";
 
-    //PumpValuesWriter pumpValuesWriter = null;
+    // PumpValuesWriter pumpValuesWriter = null;
 
     // DataAccessPlugInBase dataAccess = DataAccessPump.getInstance();
-
+    BolusDTO bolusEntry;
+    PumpHistoryEntry pumpHistoryEntry4BolusEntry;
     // Temporary records for processing
     private PumpHistoryEntry tbrPreviousRecord;
     private PumpHistoryEntry changeTimeRecord;
@@ -87,7 +82,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             boolean special = false;
             incompletePacket = false;
 
-
             if (opCode == 0) {
                 counter++;
                 if (skipped == null)
@@ -115,17 +109,17 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             }
 
             List<Byte> listRawData = new ArrayList<Byte>();
-            listRawData.add((byte) opCode);
+            listRawData.add((byte)opCode);
 
             if (entryType == PumpHistoryEntryType.UnabsorbedInsulin) {
                 int elements = dataClear.get(counter);
-                listRawData.add((byte) elements);
+                listRawData.add((byte)elements);
                 counter++;
 
                 int els = getUnsignedInt(elements);
 
                 for (int k = 0; k < (els - 2); k++) {
-                    listRawData.add((byte) dataClear.get(counter));
+                    listRawData.add((byte)dataClear.get(counter));
                     counter++;
                 }
 
@@ -138,15 +132,14 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                         listRawData.add(dataClear.get(counter));
                         counter++;
                     } catch (Exception ex) {
-                        Log.e(TAG, "OpCode: " + HexDump.getCorrectHexValue((byte) opCode) + ", Invalid package: " + HexDump.toHexStringDisplayable(listRawData));
-                        //throw ex;
+                        Log.e(TAG, "OpCode: " + HexDump.getCorrectHexValue((byte)opCode) + ", Invalid package: "
+                            + HexDump.toHexStringDisplayable(listRawData));
+                        // throw ex;
                         incompletePacket = true;
                         break;
                     }
 
-
                 }
-
 
                 if (incompletePacket)
                     break;
@@ -234,7 +227,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
 
     public RecordDecodeStatus decodeRecord(MedtronicHistoryEntry entryIn) {
-        PumpHistoryEntry precord = (PumpHistoryEntry) entryIn;
+        PumpHistoryEntry precord = (PumpHistoryEntry)entryIn;
         try {
             return decodeRecord(entryIn, false);
         } catch (Exception ex) {
@@ -244,10 +237,23 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
+    // private void decodeCalBGForPH(PumpHistoryEntry entry) {
+    // int high = (entry.getDatetime()[4] & 0x80) >> 7;
+    // int bg = bitUtils.toInt(high, getUnsignedInt(entry.getHead()[0]));
+    //
+    // writeData(PumpBaseType.AdditionalData, PumpAdditionalDataType.BloodGlucose, "" + bg, entry.getATechDate());
+    // }
+
+    // masks = [ ( 0x80, 7), (0x40, 6), (0x20, 5), (0x10, 4) ]
+    // nibbles = [ ]
+    // for mask, shift in masks:
+    // nibbles.append( ( (year & mask) >> shift ) )
+    // return nibbles
+
     public RecordDecodeStatus decodeRecord(MedtronicHistoryEntry entryIn, boolean x) {
         // FIXME
         // TODO
-        PumpHistoryEntry entry = (PumpHistoryEntry) entryIn;
+        PumpHistoryEntry entry = (PumpHistoryEntry)entryIn;
 
         if (entry.getDateTimeLength() > 0) {
             decodeDateTime(entry);
@@ -257,40 +263,35 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         decodeDateTime(entry);
 
         switch (entry.getEntryType()) {
-            // not implemented
+        // not implemented
             case ChangeBasalProfile_NewProfile:
             case ChangeBasalProfile_OldProfile:
             case SelectBasalProfile:
             case DailyTotals522:
 
-                //case IanA8:
+                // case IanA8:
             case DailyTotals523:
             case DailyTotals512:
                 return RecordDecodeStatus.NotSupported;
 
+                // WORK IN PROGRESS
 
-            // WORK IN PROGRESS
-
-            // POSSIBLY READY
+                // POSSIBLY READY
 
             case BasalProfileStart:
                 return decodeBasalProfileStart(entry);
 
+                // AAPS Implementation - Not yet done
 
-            // AAPS Implementation - Not yet done
+                // AAPS Implementation - OK entries
 
+                // AAPS events (Tbr, Bolus)
 
-            // AAPS Implementation - OK entries
+                // AAPS alerts
 
-            // AAPS events (Tbr, Bolus)
+                // AAPS TDDs
 
-            // AAPS alerts
-
-
-            // AAPS TDDs
-
-
-            // AAPS Implementation - Ignored entries
+                // AAPS Implementation - Ignored entries
             case CalBGForPH:
             case ChangeRemoteId:
             case ClearAlarm:
@@ -298,7 +299,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case ToggleRemote:
             case UnabsorbedInsulin:
             case BGReceived: // Ian3F: CGMS
-            case SensorAlert: // Ian08  CGMS
+            case SensorAlert: // Ian08 CGMS
             case ChangeTempBasalType:
             case ChangeTimeFormat:
             case ChangeReservoirWarningTime:
@@ -367,8 +368,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 // LOG.debug(" -- ignored Pump Entry: " + entry.getEntryType().name());
                 return RecordDecodeStatus.Ignored;
 
-
-            // **** Implemented records ****
+                // **** Implemented records ****
 
             case ChangeTime:
                 changeTimeRecord = entry;
@@ -377,7 +377,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case NewTimeSet:
                 decodeChangeTime(entry);
                 return RecordDecodeStatus.OK;
-
 
             case TempBasalDuration:
                 decodeTempBasal(entry);
@@ -404,26 +403,25 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 return RecordDecodeStatus.OK;
 
             case LowBattery:
-                //this.writeData(PumpBaseType.Event, PumpEventType.BatteryLow, entry.getATechDate());
+                // this.writeData(PumpBaseType.Event, PumpEventType.BatteryLow, entry.getATechDate());
                 return RecordDecodeStatus.OK;
 
             case PumpSuspend:
-                //this.writeData(PumpBaseType.Event, PumpEventType.BasalStop, entry.getATechDate());
+                // this.writeData(PumpBaseType.Event, PumpEventType.BasalStop, entry.getATechDate());
                 return RecordDecodeStatus.OK;
 
             case PumpResume:
-                //this.writeData(PumpBaseType.Event, PumpEventType.BasalRun, entry.getATechDate());
+                // this.writeData(PumpBaseType.Event, PumpEventType.BasalRun, entry.getATechDate());
                 return RecordDecodeStatus.OK;
 
             case Rewind:
-                //this.writeData(PumpBaseType.Event, PumpEventType.CartridgeRewind, entry.getATechDate());
+                // this.writeData(PumpBaseType.Event, PumpEventType.CartridgeRewind, entry.getATechDate());
                 return RecordDecodeStatus.OK;
-
 
             case EventUnknown_MM522_0x05:
                 break;
             case NoDeliveryAlarm:
-                //this.writeData(PumpBaseType.Alarm, PumpAlarms.NoDelivery, entry.getATechDate());
+                // this.writeData(PumpBaseType.Alarm, PumpAlarms.NoDelivery, entry.getATechDate());
                 return RecordDecodeStatus.OK;
 
             case BolusWizardBolusEstimate:
@@ -438,11 +436,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case UnknownBasePacket:
                 return RecordDecodeStatus.Error;
 
-            //case Andy0d:
+                // case Andy0d:
 
-            //case Andy58:
+                // case Andy58:
 
-            //case Andy90:
+                // case Andy90:
 
             default: {
                 LOG.debug("Not supported: " + entry.getEntryType());
@@ -451,9 +449,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         }
 
-
         return RecordDecodeStatus.Error;
-
 
     }
 
@@ -463,32 +459,19 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         if (changeTimeRecord == null)
             return;
 
-        //String timeChange = String.format(PumpEventType.DateTimeChanged.getValueTemplate(), this.changeTimeRecord.getATechDate().getDateTimeString(), entry.getATechDate().getDateTimeString());
+        // String timeChange = String.format(PumpEventType.DateTimeChanged.getValueTemplate(),
+        // this.changeTimeRecord.getATechDate().getDateTimeString(), entry.getATechDate().getDateTimeString());
 
-        //writeData(PumpBaseType.Event, PumpEventType.DateTimeChanged, timeChange, entry.getATechDate());
+        // writeData(PumpBaseType.Event, PumpEventType.DateTimeChanged, timeChange, entry.getATechDate());
 
         this.changeTimeRecord = null;
     }
 
 
-    //    private void decodeCalBGForPH(PumpHistoryEntry entry) {
-    //        int high = (entry.getDatetime()[4] & 0x80) >> 7;
-    //        int bg = bitUtils.toInt(high, getUnsignedInt(entry.getHead()[0]));
-    //
-    //        writeData(PumpBaseType.AdditionalData, PumpAdditionalDataType.BloodGlucose, "" + bg, entry.getATechDate());
-    //    }
-
-
-    // masks = [ ( 0x80, 7), (0x40, 6), (0x20, 5), (0x10, 4) ]
-    // nibbles = [ ]
-    // for mask, shift in masks:
-    // nibbles.append( ( (year & mask) >> shift ) )
-    // return nibbles
-
-
     // FIXME
     private void decodeBatteryActivity(PumpHistoryEntry entry) {
-        //this.writeData(PumpBaseType.Event, entry.getHead()[0] == 0 ? PumpEventType.BatteryRemoved : PumpEventType.BatteryReplaced, entry.getATechDate());
+        // this.writeData(PumpBaseType.Event, entry.getHead()[0] == 0 ? PumpEventType.BatteryRemoved :
+        // PumpEventType.BatteryReplaced, entry.getATechDate());
     }
 
 
@@ -496,7 +479,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
     private void decodeEndResultTotals(PumpHistoryEntry entry) {
         float totals = bitUtils.toInt(entry.getHead()[2], entry.getHead()[3]) * 0.025f;
 
-        //this.writeData(PumpBaseType.Report, PumpReport.InsulinTotalDay, getFormattedFloat(totals, 2), entry.getATechDate());
+        // this.writeData(PumpBaseType.Report, PumpReport.InsulinTotalDay, getFormattedFloat(totals, 2),
+        // entry.getATechDate());
     }
 
 
@@ -508,15 +492,18 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         Float rate = null;
         int index = body[2];
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
+            MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f;
         }
 
         if (rate == null) {
-            LOG.warn("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
+            LOG.warn("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
+                body);
             return RecordDecodeStatus.Error;
         } else {
-            //writeData(PumpBaseType.Basal, PumpBasalType.ValueChange, getFormattedFloat(rate, 3), entry.getATechDate());
+            // writeData(PumpBaseType.Basal, PumpBasalType.ValueChange, getFormattedFloat(rate, 3),
+            // entry.getATechDate());
             return RecordDecodeStatus.OK;
         }
 
@@ -530,7 +517,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         float bolus_strokes = 10.0f;
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
+            MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolus_strokes = 40.0f;
 
@@ -541,19 +529,19 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             // carb_ratio (?) = (((self.body[2] & 0x07) << 8) + self.body[3]) /
             // 10.0s
             dto.insulinSensitivity = new Float(body[4]);
-            dto.bgTargetLow = (int) body[5];
-            dto.bgTargetHigh = (int) body[14];
+            dto.bgTargetLow = (int)body[5];
+            dto.bgTargetHigh = (int)body[14];
             dto.correctionEstimate = (((body[9] & 0x38) << 5) + body[6]) / bolus_strokes;
             dto.foodEstimate = ((body[7] << 8) + body[8]) / bolus_strokes;
             dto.unabsorbedInsulin = ((body[10] << 8) + body[11]) / bolus_strokes;
             dto.bolusTotal = ((body[12] << 8) + body[13]) / bolus_strokes;
         } else {
             dto.bloodGlucose = (((body[1] & 0x0F) << 8) | entry.getHead()[0]);
-            dto.carbs = (int) body[0];
+            dto.carbs = (int)body[0];
             dto.carbRatio = new Float(body[2]);
             dto.insulinSensitivity = new Float(body[3]);
-            dto.bgTargetLow = (int) body[4];
-            dto.bgTargetHigh = (int) body[12];
+            dto.bgTargetLow = (int)body[4];
+            dto.bgTargetHigh = (int)body[12];
             dto.bolusTotal = body[11] / 10.0f;
             dto.foodEstimate = body[6] / 10.0f;
             dto.unabsorbedInsulin = body[9] / 10.0f;
@@ -563,7 +551,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         entry.setHistoryEntryDetails(dto);
 
-        //this.writeData(PumpBaseType.Event, PumpEventType.BolusWizard, dto.getValue(), entry.getATechDate());
+        // this.writeData(PumpBaseType.Event, PumpEventType.BolusWizard, dto.getValue(), entry.getATechDate());
 
     }
 
@@ -571,7 +559,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
     // FIXME
     private void decodeLowReservoir(PumpHistoryEntry entry) {
         float amount = (getUnsignedInt(entry.getHead()[0]) * 1.0f / 10.0f);
-        //this.writeData(PumpBaseType.Event, PumpEventType.ReservoirLowDesc, getFormattedFloat(amount, 1), entry.getATechDate());
+        // this.writeData(PumpBaseType.Event, PumpEventType.ReservoirLowDesc, getFormattedFloat(amount, 1),
+        // entry.getATechDate());
     }
 
 
@@ -580,7 +569,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         float amount = bitUtils.toInt(entry.getHead()[2], entry.getHead()[3]) / 10.0f;
         float fixed = bitUtils.toInt(entry.getHead()[0], entry.getHead()[1]) / 10.0f;
 
-        //this.writeData(PumpBaseType.Event, PumpEventType.PrimeInfusionSet, fixed > 0 ? getFormattedFloat(fixed, 1) : getFormattedFloat(amount, 1), entry.getATechDate());
+        // this.writeData(PumpBaseType.Event, PumpEventType.PrimeInfusionSet, fixed > 0 ? getFormattedFloat(fixed, 1) :
+        // getFormattedFloat(amount, 1), entry.getATechDate());
     }
 
 
@@ -598,16 +588,13 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    BolusDTO bolusEntry;
-    PumpHistoryEntry pumpHistoryEntry4BolusEntry;
-
-
     private void decodeBolus(PumpHistoryEntry entry) {
         BolusDTO bolus = new BolusDTO();
 
         byte[] data = entry.getHead();
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
+            MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus.setRequestedAmount(bitUtils.toInt(data[0], data[1]) / 40.0f);
             bolus.setDeliveredAmount(bitUtils.toInt(data[2], data[3]) / 10.0f);
             bolus.setInsulinOnBoard(bitUtils.toInt(data[4], data[5]) / 40.0f);
@@ -618,7 +605,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             bolus.setDuration(data[2] * 30);
         }
 
-        bolus.setBolusType((bolus.getDuration() != null && (bolus.getDuration() > 0)) ? PumpBolusType.Extended : PumpBolusType.Normal);
+        bolus.setBolusType((bolus.getDuration() != null && (bolus.getDuration() > 0)) ? PumpBolusType.Extended
+            : PumpBolusType.Normal);
         bolus.setLocalDateTime(entry.getLocalDateTime());
 
         if (bolusEntry != null) {
@@ -649,7 +637,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
 
     private void writeBolus(PumpHistoryEntry pumpHistoryEntry, BolusDTO bolus) {
-        //writeData(PumpBaseType.Bolus, bolus.getBolusType(), bolus.getValue(), bolus.getATechDate());
+        // writeData(PumpBaseType.Bolus, bolus.getBolusType(), bolus.getValue(), bolus.getATechDate());
         pumpHistoryEntry.setHistoryEntryDetails(bolus);
         resetBolusEntry();
     }
@@ -682,7 +670,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         BasalProfileEntry basalProfileEntry = new BasalProfileEntry(tbrRate.getHead()[0], tbrDuration.getHead()[0]);
 
-
         // System.out.println(
         // "TBR: amount=" + tbr.getAmount() + ", duration=" + tbr.getDuration()
         // + " min. Packed: " + tbr.getValue());
@@ -690,11 +677,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         // FIXME set Unit
 
         // FIXME AAPS
-        //        if (tbr.getDuration() > 0) {
-        //            writeData(PumpBaseType.Basal, PumpBasalType.TemporaryBasalRate, tbr.getValue(), entry.getATechDate());
-        //        } else {
-        //            writeData(PumpBaseType.Basal, PumpBasalType.TemporaryBasalRateCanceled, "", entry.getATechDate());
-        //        }
+        // if (tbr.getDuration() > 0) {
+        // writeData(PumpBaseType.Basal, PumpBasalType.TemporaryBasalRate, tbr.getValue(), entry.getATechDate());
+        // } else {
+        // writeData(PumpBaseType.Basal, PumpBasalType.TemporaryBasalRateCanceled, "", entry.getATechDate());
+        // }
 
         tbrPreviousRecord = null;
     }
@@ -716,9 +703,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             int month = ((dt[0] >> 4) & 0x0c) + ((dt[1] >> 6) & 0x03);
             // ((dt[0] & 0xC0) >> 6) | ((dt[1] & 0xC0) >> 4);
 
-
             int dayOfMonth = dt[3] & 0x1F;
-            int year = fix2DigitYear(dt[4] & 0x3F); // Assuming this is correct, need to verify. Otherwise this will be a problem in 2016.
+            int year = fix2DigitYear(dt[4] & 0x3F); // Assuming this is correct, need to verify. Otherwise this will be
+                                                    // a problem in 2016.
 
             LocalDateTime atdate = new LocalDateTime(year, month, dayOfMonth, hour, minutes, seconds);
 
@@ -731,11 +718,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             int dayOfMonth = low + 1;
             int year = 2000 + (ByteUtil.asUINT8(dt[1]) & 0x7F);
 
-            //LocalDate rval = new LocalDate(year, month, dayOfMonth);
+            // LocalDate rval = new LocalDate(year, month, dayOfMonth);
 
-            //            int dayOfMonth = dt[0] & 0x1F;
-            //            int month = (((dt[0] & 0xE0) >> 4) + ((dt[1] & 0x80) >> 7));
-            //            int year = fix2DigitYear(dt[1] & 0x3F);
+            // int dayOfMonth = dt[0] & 0x1F;
+            // int month = (((dt[0] & 0xE0) >> 4) + ((dt[1] & 0x80) >> 7));
+            // int year = fix2DigitYear(dt[1] & 0x3F);
 
             LocalDateTime atdate = new LocalDateTime(year, month, dayOfMonth, 0, 0);
 
@@ -759,17 +746,16 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         return year;
     }
 
-
     // WRITE DATA
 
-
-    //    private void writeData(PumpBaseType baseType, CodeEnumWithTranslation subType, ATechDate aTechDate) {
-    //        this.pumpValuesWriter.writeObject(baseType.name() + "_" + subType.getName(), aTechDate);
-    //    }
+    // private void writeData(PumpBaseType baseType, CodeEnumWithTranslation subType, ATechDate aTechDate) {
+    // this.pumpValuesWriter.writeObject(baseType.name() + "_" + subType.getName(), aTechDate);
+    // }
     //
     //
-    //    private void writeData(PumpBaseType baseType, CodeEnumWithTranslation subType, String value, ATechDate aTechDate) {
-    //        this.pumpValuesWriter.writeObject(baseType.name() + "_" + subType.getName(), aTechDate, value);
-    //    }
+    // private void writeData(PumpBaseType baseType, CodeEnumWithTranslation subType, String value, ATechDate aTechDate)
+    // {
+    // this.pumpValuesWriter.writeObject(baseType.name() + "_" + subType.getName(), aTechDate, value);
+    // }
 
 }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record;
 
-
 import android.os.Bundle;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
@@ -8,6 +7,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 public class BGReceivedPumpEvent extends TimeStampedRecord {
+
     private int amount = 0;
     private byte[] meter = new byte[3];
 

@@ -16,11 +16,12 @@ public class EventMedtronicDeviceStatusChange extends Event {
     public PumpDeviceState pumpDeviceState;
     public String errorDescription;
 
-//    public EventMedtronicDeviceStatusChange(RileyLinkServiceState rileyLinkServiceState, PumpDeviceState pumpDeviceState) {
-//        this.rileyLinkServiceState = rileyLinkServiceState;
-//        this.pumpDeviceState = pumpDeviceState;
-//    }
 
+    // public EventMedtronicDeviceStatusChange(RileyLinkServiceState rileyLinkServiceState, PumpDeviceState
+    // pumpDeviceState) {
+    // this.rileyLinkServiceState = rileyLinkServiceState;
+    // this.pumpDeviceState = pumpDeviceState;
+    // }
 
     public EventMedtronicDeviceStatusChange(RileyLinkServiceState rileyLinkServiceState) {
         this(rileyLinkServiceState, null);
@@ -37,17 +38,16 @@ public class EventMedtronicDeviceStatusChange extends Event {
         this.pumpDeviceState = pumpDeviceState;
     }
 
+
     public EventMedtronicDeviceStatusChange(PumpDeviceState pumpDeviceState, String errorDescription) {
         this.pumpDeviceState = pumpDeviceState;
         this.errorDescription = errorDescription;
     }
 
+
     @Override
     public String toString() {
-        return "EventMedtronicDeviceStatusChange [" +
-                "rileyLinkServiceState=" + rileyLinkServiceState +
-                ", rileyLinkError=" + rileyLinkError +
-                ", pumpDeviceState=" + pumpDeviceState +
-                ']';
+        return "EventMedtronicDeviceStatusChange [" + "rileyLinkServiceState=" + rileyLinkServiceState
+            + ", rileyLinkError=" + rileyLinkError + ", pumpDeviceState=" + pumpDeviceState + ']';
     }
 }

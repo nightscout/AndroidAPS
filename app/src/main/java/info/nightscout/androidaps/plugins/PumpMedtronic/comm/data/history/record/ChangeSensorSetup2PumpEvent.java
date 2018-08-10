@@ -6,18 +6,22 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
  * Created by geoff on 6/5/16.
  */
 public class ChangeSensorSetup2PumpEvent extends TimeStampedRecord {
+
     public ChangeSensorSetup2PumpEvent() {
     }
+
 
     @Override
     public int getLength() {
         return 37;
     }
 
+
     @Override
     public String getShortTypeName() {
         return "Ch Sensor Setup2";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

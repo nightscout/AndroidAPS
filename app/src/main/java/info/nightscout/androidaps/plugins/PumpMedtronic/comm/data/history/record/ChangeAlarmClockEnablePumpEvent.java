@@ -6,13 +6,16 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeSt
  * Created by geoff on 6/5/16.
  */
 public class ChangeAlarmClockEnablePumpEvent extends TimeStampedRecord {
+
     public ChangeAlarmClockEnablePumpEvent() {
     }
+
 
     @Override
     public String getShortTypeName() {
         return "Alarm Clock Enable";
     }
+
 
     @Override
     public boolean isAAPSRelevant() {

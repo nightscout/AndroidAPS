@@ -12,8 +12,8 @@ public class DoseSettings {
     private float minDose;
     private Float maxDose;
 
-    public DoseSettings(float step, int durationStep, int maxDuration, float minDose, Float maxDose)
-    {
+
+    public DoseSettings(float step, int durationStep, int maxDuration, float minDose, Float maxDose) {
         this.step = step;
         this.durationStep = durationStep;
         this.maxDuration = maxDuration;
@@ -21,8 +21,8 @@ public class DoseSettings {
         this.maxDose = maxDose;
     }
 
-    public DoseSettings(float step, int durationStep, int maxDuration, float minDose)
-    {
+
+    public DoseSettings(float step, int durationStep, int maxDuration, float minDose) {
         this(step, durationStep, maxDuration, minDose, null);
     }
 
@@ -31,17 +31,21 @@ public class DoseSettings {
         return step;
     }
 
+
     public int getDurationStep() {
         return durationStep;
     }
+
 
     public int getMaxDuration() {
         return maxDuration;
     }
 
+
     public float getMinDose() {
         return minDose;
     }
+
 
     public Float getMaxDose() {
         return maxDose;

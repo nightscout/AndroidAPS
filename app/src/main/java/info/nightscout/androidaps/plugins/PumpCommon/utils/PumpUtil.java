@@ -11,13 +11,12 @@ import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 
 public class PumpUtil {
 
-    public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType)
-    {
+    public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType) {
         setPumpDescription(pumpDescription, pumpType, false);
     }
 
-    public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType, boolean isVirtualPump)
-    {
+
+    public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType, boolean isVirtualPump) {
         PumpCapability pumpCapability = isVirtualPump ? PumpCapability.VirtualPump : pumpType.getPumpCapability();
 
         pumpDescription.isBolusCapable = pumpCapability.hasCapability(PumpCapability.Bolus);
@@ -30,14 +29,11 @@ public class PumpUtil {
 
         pumpDescription.isTempBasalCapable = pumpCapability.hasCapability(PumpCapability.TBR);
 
-        if (pumpType.getPumpTempBasalType()==PumpTempBasalType.Percent)
-        {
+        if (pumpType.getPumpTempBasalType() == PumpTempBasalType.Percent) {
             pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
             pumpDescription.maxTempPercent = pumpType.getTbrSettings().getMaxDose().intValue();
             pumpDescription.tempPercentStep = (int)pumpType.getTbrSettings().getStep();
-        }
-        else
-        {
+        } else {
             pumpDescription.tempBasalStyle = PumpDescription.ABSOLUTE;
             pumpDescription.maxTempAbsolute = pumpType.getTbrSettings().getMaxDose();
             pumpDescription.tempAbsoluteStep = pumpType.getTbrSettings().getStep();
@@ -46,7 +42,6 @@ public class PumpUtil {
         pumpDescription.tempDurationStep = pumpType.getTbrSettings().getDurationStep();
         pumpDescription.tempMaxDuration = pumpType.getTbrSettings().getMaxDuration();
 
-
         pumpDescription.isSetBasalProfileCapable = pumpCapability.hasCapability(PumpCapability.BasalProfileSet);
         pumpDescription.basalStep = pumpType.getBaseBasalStep();
         pumpDescription.basalMinimumRate = pumpType.getBaseBasalMinValue();
@@ -54,6 +49,5 @@ public class PumpUtil {
         pumpDescription.isRefillingCapable = pumpCapability.hasCapability(PumpCapability.Refill);
         pumpDescription.storesCarbInfo = pumpCapability.hasCapability(PumpCapability.StoreCarbInfo);
     }
-
 
 }

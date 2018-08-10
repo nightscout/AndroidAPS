@@ -6,6 +6,7 @@ import android.os.Bundle;
  * Created by geoff on 6/25/16.
  */
 public class ServiceCommand extends ServiceMessage {
+
     public ServiceCommand() {
         map = new Bundle();
     }

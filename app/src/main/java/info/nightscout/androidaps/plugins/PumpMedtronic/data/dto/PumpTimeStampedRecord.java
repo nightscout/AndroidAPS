@@ -14,13 +14,13 @@ public class PumpTimeStampedRecord {
     protected int decimalPrecission = 2;
 
 
-    public void setLocalDateTime(LocalDateTime ATechDate) {
-        this.localDateTime = ATechDate;
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public void setLocalDateTime(LocalDateTime ATechDate) {
+        this.localDateTime = ATechDate;
     }
 
 
