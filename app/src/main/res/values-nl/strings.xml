@@ -770,9 +770,9 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="combo_error_partial_bolus_delivered">Maar %1$.2f E van de gevraagde %2$.2f E zijn toegediend door een storing. Gelieve op de pomp te controleren en het gepaste gevolg uit te voeren.</string>
   <string name="combo_error_bolus_verification_failed">Het toedienen van de bolus en het controleren van de geschiedenis van de pomp is mislukt, controleer de pomp. Als een bolus is toegediend, wordt deze toegevoegd aan Behandelingen tijdens de volgende verbinding met de pomp.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
-  <string name="extendedbolusdeliveryerror">Vertraagde bolus toedien storing</string>
-  <string name="insightpump_shortname">Inzicht</string>
-  <string name="insightpump">Inzicht pomp</string>
+  <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
+  <string name="insightpump_shortname">Insight</string>
+  <string name="insightpump">Insight pomp</string>
   <string name="status_no_colon">Status</string>
   <string name="changed">Verwisseld</string>
   <string name="pump_stopped_uppercase">Pomp Gestopt</string>

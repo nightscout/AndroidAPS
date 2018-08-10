@@ -712,6 +712,8 @@
   <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
   <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
   <string name="nsclientbg">NSClient BG</string>
+  <string name="minimalbasalvaluereplaced">Valor basal reemplazado por el valor mínimo soportado: %s</string>
+  <string name="maximumbasalvaluereplaced">Valor basal reemplazado por valor máximo soportado: %s</string>
   <string name="overview_editquickwizard_usebg">Cálculo BG</string>
   <string name="overview_editquickwizard_usebolusiob">Cálculo bolo IOB</string>
   <string name="overview_editquickwizard_usebasaliob">Cálculo basal IOB</string>
@@ -765,6 +767,7 @@
   <string name="combo_error_no_connection_no_bolus_delivered">Bomba inalcanzable. No se administró ningún Bolo</string>
   <string name="combo_error_no_bolus_delivered">Emisión del bolo fallada. Ningún bolo se ha emitido. Para asegurarse, por favor controle la bomba para evitar bolo doble. Para evitar bugs no se reinician bolos automáticamente.</string>
   <string name="combo_error_partial_bolus_delivered">Sólo %1$.2f U del bolo mandado de %2$.2f U ha sido suministrado a causa de un error. Por favor verifica esto en la bomba y toma las acciones apropiadas.</string>
+  <string name="combo_error_bolus_verification_failed">Entrega del bolo y verificación del historial de la bomba falló, por favor, revise la bomba. Si un bolo fue puesto por la bomba, se añadirá a los tratamientos en la próxima conexión a la bomba.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">No hay suficiente insulina en el depósito para emitir bolo</string>
   <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
   <string name="insightpump_shortname">Insight</string>
