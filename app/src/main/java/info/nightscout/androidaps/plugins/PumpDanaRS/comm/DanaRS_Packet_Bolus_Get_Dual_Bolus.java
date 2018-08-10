@@ -41,7 +41,8 @@ public class DanaRS_Packet_Bolus_Get_Dual_Bolus extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 1;
         double bolusIncrement = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
-
+        if (error != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("Bolus step: " + pump.bolusStep + " U");

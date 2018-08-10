@@ -9,6 +9,10 @@ import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_Bolus_Get_Initial_Bolus extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private double initialBolusValue01;
+    private double initialBolusValue02;
+    private double initialBolusValue03;
+    double initialBolusValue04;
 
     public DanaRS_Packet_Bolus_Get_Initial_Bolus() {
         super();
@@ -21,19 +25,24 @@ public class DanaRS_Packet_Bolus_Get_Initial_Bolus extends DanaRS_Packet {
     public void handleMessage(byte[] data) {
         int dataIndex = DATA_START;
         int dataSize = 2;
-        double initialBolusValue01 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
+        initialBolusValue01 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 
         dataIndex += dataSize;
         dataSize = 2;
-        double initialBolusValue02 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
+        initialBolusValue02 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 
         dataIndex += dataSize;
         dataSize = 2;
-        double initialBolusValue03 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
+        initialBolusValue03 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
 
         dataIndex += dataSize;
         dataSize = 2;
-        double initialBolusValue04 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
+        initialBolusValue04 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
+        if (initialBolusValue01 == 0d && initialBolusValue02 == 0d && initialBolusValue03 == 0d && initialBolusValue04 == 0d)
+            failed = true;
+        else
+            failed = false;
+
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Initial bolus amount 01: " + initialBolusValue01);
             log.debug("Initial bolus amount 02: " + initialBolusValue02);

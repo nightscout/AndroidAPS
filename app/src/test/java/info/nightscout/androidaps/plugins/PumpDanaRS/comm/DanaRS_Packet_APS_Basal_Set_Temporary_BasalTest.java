@@ -12,7 +12,6 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.SP;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by mike on 20.11.2017.

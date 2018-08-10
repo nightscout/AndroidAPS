@@ -37,7 +37,8 @@ public class DanaRS_Packet_Bolus_Get_Extended_Bolus extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 1;
         pump.bolusStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
-
+        if (error != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("Extended bolus running: " + pump.extendedBolusAbsoluteRate + " U/h");

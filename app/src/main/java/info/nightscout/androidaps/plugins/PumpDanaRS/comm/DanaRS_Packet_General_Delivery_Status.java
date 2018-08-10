@@ -22,6 +22,8 @@ public class DanaRS_Packet_General_Delivery_Status extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         int status = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+        if (status != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Status: " + status);
         }

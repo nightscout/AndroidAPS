@@ -39,6 +39,8 @@ public class DanaRS_Packet_Basal_Set_Basal_Rate extends DanaRS_Packet {
     @Override
     public void handleMessage(byte[] data) {
         int result = intFromBuff(data, 0, 1);
+        if(result != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");

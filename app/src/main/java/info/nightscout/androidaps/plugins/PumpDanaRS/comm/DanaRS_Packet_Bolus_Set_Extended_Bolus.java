@@ -41,6 +41,8 @@ public class DanaRS_Packet_Bolus_Set_Extended_Bolus extends DanaRS_Packet {
     @Override
     public void handleMessage(byte[] data) {
         int result = intFromBuff(data, 0, 1);
+        if (result!=0)
+            failed=true;
         if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");

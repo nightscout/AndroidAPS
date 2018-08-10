@@ -21,6 +21,10 @@ public class DanaRS_Packet_General_Initial_Screen_Information extends DanaRS_Pac
 
     @Override
     public void handleMessage(byte[] data) {
+        if (data.length < 17) {
+            failed = true;
+            return;
+        }
         DanaRPump pump = DanaRPump.getInstance();
 
         int dataIndex = DATA_START;

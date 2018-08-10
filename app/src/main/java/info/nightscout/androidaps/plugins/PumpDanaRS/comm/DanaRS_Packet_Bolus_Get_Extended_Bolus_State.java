@@ -45,7 +45,8 @@ public class DanaRS_Packet_Bolus_Get_Extended_Bolus_State extends DanaRS_Packet 
         dataIndex += dataSize;
         dataSize = 2;
         pump.extendedBolusDeliveredSoFar = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
-
+        if (error != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("Is extended bolus running: " + pump.isExtendedInProgress);

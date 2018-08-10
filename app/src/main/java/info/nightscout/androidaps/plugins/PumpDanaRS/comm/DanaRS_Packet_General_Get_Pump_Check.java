@@ -24,6 +24,10 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
+        if (data.length <5){
+            failed = true;
+            return;
+        }
         DanaRPump pump = DanaRPump.getInstance();
 
         int dataIndex = DATA_START;

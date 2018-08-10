@@ -22,6 +22,8 @@ public class DanaRS_Packet_Etc_Keep_Connection extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         int error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+        if (error!=0)
+            failed=true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
         }

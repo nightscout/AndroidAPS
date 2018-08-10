@@ -20,6 +20,10 @@ public class DanaRS_Packet_General_Get_Shipping_Information extends DanaRS_Packe
 
     @Override
     public void handleMessage(byte[] data) {
+        if (data.length < 18){
+            failed = true;
+            return;
+        }
         DanaRPump pump = DanaRPump.getInstance();
 
         int dataIndex = DATA_START;

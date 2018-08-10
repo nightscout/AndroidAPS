@@ -55,6 +55,7 @@ public class DanaRS_Packet_Option_Set_User_Option extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+        failed = error != 0;
         if (L.isEnabled(L.PUMPCOMM)) {
             if (error == 0)
                 log.debug("Result OK");

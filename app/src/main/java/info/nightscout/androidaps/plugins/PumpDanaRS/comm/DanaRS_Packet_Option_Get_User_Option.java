@@ -87,6 +87,8 @@ public class DanaRS_Packet_Option_Get_User_Option extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 1;
         int selectableLanguage5 = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+        // Pump's screen on time can't be less than 5
+        failed = pump.lcdOnTimeSec < 5 ? true : false;
 
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("timeDisplayType: " + pump.timeDisplayType);

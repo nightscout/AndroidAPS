@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
-
     private static Treatment t;
     private static double amount;
 
@@ -45,6 +44,7 @@ public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
             bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), deliveredInsulin);
             bolusingEvent.t = t;
             bolusingEvent.percent = Math.min((int) (deliveredInsulin / amount * 100), 100);
+            failed = bolusingEvent.percent < 100? true: false;
             MainApp.bus().post(bolusingEvent);
         }
 

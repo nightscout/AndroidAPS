@@ -40,6 +40,10 @@ public class DanaRS_Packet_Notify_Missed_Bolus_Alarm extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 1;
         endMin = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+
+        if(endMin == 1 && endMin == endHour && startHour == endHour &&startHour == startMin )
+            failed = true;
+
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Start hour: " + startHour);
             log.debug("Start min: " + startMin);
