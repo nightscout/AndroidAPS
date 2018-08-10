@@ -52,18 +52,10 @@ public class NewNSTreatmentDialogTest {
         data.put("duration", 0);
         data.put("percentage", 110);
         data.put("timeshift", 0);
-//        dialog.createNSTreatment(data);
+        dialog.createNSTreatment(data);
 
         // Profile should be sent to NS
-//        Assert.assertEquals(AAPSMocker.TESTPROFILENAME, profileSwitchUpload.profileName);
-    }
-
-    @Test
-    public void doProfileSwitch() {
-    }
-
-    @Test
-    public void doProfileSwitch1() {
+        Assert.assertEquals(AAPSMocker.TESTPROFILENAME, profileSwitchUpload.profileName);
     }
 
     @Before
@@ -75,7 +67,7 @@ public class NewNSTreatmentDialogTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockStrings();
         PowerMockito.mockStatic(NSUpload.class);
-//        AAPSMocker.mockTreatmentService();
+        AAPSMocker.mockTreatmentService();
         AAPSMocker.mockBus();
         AAPSMocker.mockDatabaseHelper();
 
