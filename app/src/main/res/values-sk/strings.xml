@@ -1024,7 +1024,6 @@
   <string name="send_all_logs">Zasielať logy E-mailom</string>
   <string name="delete_logs">Vymazať logy</string>
   <string name="error_adding_treatment_message">Ošetrenie (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nie je možné pridať. Skontrolujte a podľa potreby manuálne pridajte záznam.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Štart: %3$d m</string>
   <string name="openaps_noasdata">Nedostupné dáta o glykémiách</string>
   <string name="nav_logsettings">Nastavenie logovania</string>
   <string name="resettodefaults">Obnoviť predvolené</string>

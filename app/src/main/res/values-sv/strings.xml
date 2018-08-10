@@ -1024,7 +1024,6 @@
   <string name="send_all_logs">Skicka loggar per e-post</string>
   <string name="delete_logs">Radera loggar</string>
   <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d g fördelat över %2$d tim, förskjutet %3$d m</string>
   <string name="openaps_noasdata">Ingen data tillgänglig för autosens</string>
   <string name="nav_logsettings">Loggningsinställningar</string>
   <string name="resettodefaults">Återställ standardinställningar</string>

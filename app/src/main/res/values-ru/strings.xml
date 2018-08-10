@@ -1028,7 +1028,6 @@ Context | Edit Context</string>
   <string name="send_all_logs">Отправить журналы (логи) по email</string>
   <string name="delete_logs">Удалить записи журнала</string>
   <string name="error_adding_treatment_message">Назначение (инсулин: %1$.2f, углеводы: %2$d, в: %3$s) не было добавлено. Пожалуйста, проверьте и при необходимости добавьте запись вручную.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d г. (%2$d h), начало: %3$d m</string>
   <string name="openaps_noasdata">Данные autosens недоступны</string>
   <string name="nav_logsettings">Настройки журнала</string>
   <string name="resettodefaults">Восстановить значения по умолчанию</string>
