@@ -1026,7 +1026,6 @@
   <string name="send_all_logs">Enviar registros por email</string>
   <string name="delete_logs">Borrar registros</string>
   <string name="error_adding_treatment_message">Un tratamiento (insulina: %1$.2f, carbs: %2$d, at: %3$s) no ha podido ser añadido a tratamientos. Por favor compruebe y añada manualmente el registro apropiadamente.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), inicio: %3$d m</string>
   <string name="openaps_noasdata">Sin datos autosens disponibles</string>
   <string name="nav_logsettings">Ajustes del registro</string>
   <string name="resettodefaults">Restablecer valores predeterminados</string>

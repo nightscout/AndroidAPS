@@ -1023,7 +1023,6 @@
   <string name="send_all_logs">Изпратщане на логове чрез ел. поща</string>
   <string name="delete_logs">Изтрий логове</string>
   <string name="error_adding_treatment_message">Събитие (инсулин: %1$.2f, въглехидрати: %2$d, в: %3$s) не може да бъде добавено към събития. Моля уверете се, че е правилно и го добавете ръчно.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d г (%2$d ч), старт: %3$d м</string>
   <string name="openaps_noasdata">Няма налични данни за авточувствителност</string>
   <string name="nav_logsettings">Настройки на логовете</string>
   <string name="resettodefaults">Възстанови настройките по подразбиране</string>
