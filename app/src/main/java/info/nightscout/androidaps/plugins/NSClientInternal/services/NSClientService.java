@@ -250,7 +250,8 @@ public class NSClientService extends Service {
             connectCounter++;
             String socketId = mSocket != null ? mSocket.id() : "NULL";
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + socketId));
-            sendAuthMessage(new NSAuthAck());
+            if (mSocket != null)
+                sendAuthMessage(new NSAuthAck());
             watchdog();
         }
     };
