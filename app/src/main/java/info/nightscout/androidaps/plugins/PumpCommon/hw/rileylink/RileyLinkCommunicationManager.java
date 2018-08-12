@@ -31,7 +31,7 @@ import info.nightscout.utils.SP;
 public abstract class RileyLinkCommunicationManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(RileyLinkCommunicationManager.class);
-
+    private static final int SCAN_TIMEOUT = 1500;
     protected final RFSpy rfspy;
     protected final Context context;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
@@ -41,15 +41,12 @@ public abstract class RileyLinkCommunicationManager {
     protected RileyLinkServiceData rileyLinkServiceData;
     protected RileyLinkTargetFrequency targetFrequency;
     private double[] scanFrequencies;
+
     // internal flag
     private boolean showPumpMessages = true;
     private int timeoutCount = 0;
     private long nextWakeUpRequired = 0L;
 
-
-    // protected PumpMessage sendAndListen(RLMessage msg) {
-    // return sendAndListen(msg, 4000); // 2000
-    // }
 
     public RileyLinkCommunicationManager(Context context, RFSpy rfspy, RileyLinkTargetFrequency targetFrequency) {
         this.context = context;
@@ -95,7 +92,6 @@ public abstract class RileyLinkCommunicationManager {
                     // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_quickTune);
                 }
             }
-
         }
 
         if (showPumpMessages) {
@@ -212,7 +208,7 @@ public abstract class RileyLinkCommunicationManager {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
                 RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0, (byte)0,
-                    (byte)0, (byte)0, 1500, (byte)0);
+                    (byte)0, (byte)0, SCAN_TIMEOUT, (byte)0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
@@ -266,7 +262,7 @@ public abstract class RileyLinkCommunicationManager {
         // RLMessage msg = makeRLMessage(RLMessageType.ReadSimpleData);
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
         RadioPacket pkt = new RadioPacket(pumpMsgContent);
-        RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte)0, (byte)0, (byte)0, (byte)0, 1500, (byte)0);
+        RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte)0, (byte)0, (byte)0, (byte)0, SCAN_TIMEOUT, (byte)0);
         if (resp.wasTimeout()) {
             LOG.warn("tune_tryFrequency: no pump response at frequency {}", freqMHz);
         } else if (resp.looksLikeRadioPacket()) {

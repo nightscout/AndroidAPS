@@ -26,6 +26,23 @@ public class TempBasalPair {
     }
 
 
+    /**
+     * This constructor is for use with PumpHistoryDecoder
+     *
+     * @param rateByte
+     * @param startTimeByte
+     * @param isPercent
+     */
+    public TempBasalPair(byte rateByte, int startTimeByte, boolean isPercent) {
+        if (isPercent)
+            this.insulinRate = rateByte;
+        else
+            this.insulinRate = rateByte * 0.025;
+        this.durationMinutes = startTimeByte * 30;
+        this.isPercent = isPercent;
+    }
+
+
     public TempBasalPair(double insulinRate, boolean isPercent, int durationMinutes) {
         this.insulinRate = insulinRate;
         this.isPercent = isPercent;
@@ -90,8 +107,7 @@ public class TempBasalPair {
         list.add((byte)5);
 
         byte[] insulinRate = MedtronicUtil.getBasalStrokes(this.insulinRate, true);
-        byte[] timeMin = MedtronicUtil.getByteArrayFromUnsignedShort(
-            MedtronicUtil.getIntervalFromMinutes(durationMinutes), true);
+        byte timeMin = (byte)MedtronicUtil.getIntervalFromMinutes(durationMinutes);
 
         // list.add((byte) 0); // ?
 
@@ -100,19 +116,19 @@ public class TempBasalPair {
         if (insulinRate.length == 1)
             list.add((byte)0x00);
         else
-            list.add(insulinRate[1]);
+            list.add(insulinRate[0]);
 
-        list.add(insulinRate[0]);
+        list.add(insulinRate[1]);
         // list.add((byte) 0); // percent amount
 
-        list.add(timeMin[0]); // 3 (time) - OK
+        list.add(timeMin); // 3 (time) - OK
 
         if (insulinRate.length == 1)
             list.add((byte)0x00);
         else
-            list.add(insulinRate[1]);
+            list.add(insulinRate[0]);
 
-        list.add(insulinRate[0]);
+        list.add(insulinRate[1]);
 
         return MedtronicUtil.createByteArray(list);
     }

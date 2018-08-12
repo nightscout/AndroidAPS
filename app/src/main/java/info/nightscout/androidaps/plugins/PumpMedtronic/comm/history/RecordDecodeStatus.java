@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
+package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history;
 
 /**
  * Application: GGC - GNU Gluco Control

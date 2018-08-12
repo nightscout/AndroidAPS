@@ -62,8 +62,6 @@ public class MedtronicPumpStatus extends PumpStatus {
     boolean rileyLinkAddressChanged = false;
     private String[] frequencies;
     private boolean isFrequencyUS = false;
-
-    // fixme
     private Map<String, PumpType> medtronicPumpMap = null;
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
 

@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  */
 public class BasalProfile {
 
-    protected static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
+    public static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
     // private static final String TAG = "BasalProfile";
     private static final Logger LOG = LoggerFactory.getLogger(BasalProfile.class);
     private static final boolean DEBUG_BASALPROFILE = false;
@@ -47,35 +47,6 @@ public class BasalProfile {
     // this asUINT8 should be combined with Record.asUINT8, and placed in a new util class.
     protected static int readUnsignedByte(byte b) {
         return (b < 0) ? b + 256 : b;
-    }
-
-
-    public static void testParser() {
-        byte[] testData = new byte[] {
-            32, 0, 0, 38, 0, 13, 44, 0, 19, 38, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        /*
-         * from decocare:
-         * _test_schedule = {'total': 22.50, 'schedule': [
-         * { 'start': '12:00A', 'rate': 0.80 },
-         * { 'start': '6:30A', 'rate': 0.95 },
-         * { 'start': '9:30A', 'rate': 1.10 },
-         * { 'start': '2:00P', 'rate': 0.95 },
-         * ]}
-         */
-        BasalProfile profile = new BasalProfile();
-        profile.setRawData(testData);
-        List<BasalProfileEntry> entries = profile.getEntries();
-        if (entries.isEmpty()) {
-            LOG.error("testParser: failed");
-        } else {
-            for (int i = 0; i < entries.size(); i++) {
-                BasalProfileEntry e = entries.get(i);
-                LOG.debug(String.format("testParser entry #%d: rate: %.2f, start %d:%d", i, e.rate,
-                    e.startTime.getHourOfDay(), e.startTime.getMinuteOfHour()));
-            }
-        }
-
     }
 
 
@@ -108,6 +79,7 @@ public class BasalProfile {
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
+            // this doesn't work
             LOG.debug(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
                 entry.rate_raw, startString, entry.startTime_raw));
 
@@ -122,8 +94,7 @@ public class BasalProfile {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
 
-            sb.append(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)\n", i + 1, entry.rate,
-                entry.rate_raw, startString, entry.startTime_raw));
+            sb.append(String.format("Entry %d, rate=%.3f, start=%s\n", i + 1, entry.rate, startString));
         }
 
         return sb.toString();
@@ -187,22 +158,19 @@ public class BasalProfile {
             LOG.warn("Raw Data is empty.");
             return entries; // an empty list
         }
-        int i = 0;
         boolean done = false;
         int r, st;
-        while (!done) {
+
+        for (int i = 0; i < mRawData.length - 2; i += 3) {
+
+            if ((mRawData[i] == 0) && (mRawData[i + 1] == 0) && (mRawData[i + 2] == 0))
+                break;
 
             r = MedtronicUtil.makeUnsignedShort(mRawData[i + 1], mRawData[i]); // readUnsignedByte(mRawData[i]);
-            // What is mRawData[i+1]? Not used in decocare.
             st = readUnsignedByte(mRawData[i + 2]);
             entries.add(new BasalProfileEntry(r, st));
-            i = i + 3;
-            if (i >= MAX_RAW_DATA_SIZE) {
-                done = true;
-            } else if ((mRawData[i] == 0) && (mRawData[i + 1] == 0) && (mRawData[i + 2] == 0)) {
-                done = true;
-            }
         }
+
         return entries;
     }
 
@@ -228,16 +196,8 @@ public class BasalProfile {
 
             byte[] strokes = MedtronicUtil.getBasalStrokes(profileEntry.rate, true);
 
-            // TODO check if this is correct
             outData.add(profileEntry.rate_raw[0]);
             outData.add(profileEntry.rate_raw[1]);
-
-            // int time = profileEntry.startTime.getHourOfDay();
-
-            // if (profileEntry.startTime.getMinuteOfHour() == 30) {
-            // time++;
-            // }
-
             outData.add(profileEntry.startTime_raw);
         }
 

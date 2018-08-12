@@ -72,6 +72,14 @@ public class ByteUtil {
     }
 
 
+    public static byte[] substring(byte[] a, int start) {
+        int len = a.length - start;
+        byte[] rval = new byte[len];
+        System.arraycopy(a, start, rval, 0, len);
+        return rval;
+    }
+
+
     public static String shortHexString(byte[] ra) {
         String rval = "";
         if (ra == null) {
@@ -234,6 +242,102 @@ public class ByteUtil {
     public static int makeUnsignedShort(int i, int j) {
         int k = (i & 0xff) << 8 | j & 0xff;
         return k;
+    }
+
+
+    /**
+     * Gets the correct hex value.
+     *
+     * @param inp the inp
+     * @return the correct hex value
+     */
+    public static String getCorrectHexValue(int inp) {
+        String hx = Integer.toHexString((char)inp);
+
+        if (hx.length() == 0)
+            return "00";
+        else if (hx.length() == 1)
+            return "0" + hx;
+        else if (hx.length() == 2)
+            return hx;
+        else if (hx.length() == 4)
+            return hx.substring(2);
+        else {
+            System.out.println("Hex Error: " + inp);
+        }
+
+        return null;
+    }
+
+
+    public static byte[] getByteArrayFromList(List<Byte> list) {
+        byte[] out = new byte[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            out[i] = list.get(i);
+        }
+
+        return out;
+    }
+
+
+    public static String getHex(byte abyte0[]) {
+        return abyte0 != null ? getHex(abyte0, abyte0.length) : null;
+    }
+
+
+    public static String getHex(byte abyte0[], int i) {
+        StringBuffer stringbuffer = new StringBuffer();
+        if (abyte0 != null) {
+            i = Math.min(i, abyte0.length);
+            for (int j = 0; j < i; j++) {
+                stringbuffer.append(getHex(abyte0[j]));
+                if (j < i - 1) {
+                    stringbuffer.append(" ");
+                }
+            }
+
+        }
+        return new String(stringbuffer);
+    }
+
+
+    public static String getHex(byte byte0) {
+        String s = byte0 != -1 ? "0x" : "";
+        return s + getHexCompact(byte0);
+    }
+
+
+    public static String getHexCompact(byte byte0) {
+        int i = byte0 != -1 ? convertUnsignedByteToInt(byte0) : (int)byte0;
+        return getHexCompact(i);
+    }
+
+
+    public static int convertUnsignedByteToInt(byte data) {
+        return data & 0xff;
+    }
+
+
+    // public String getHexCompact(int i) {
+    // long l = i != -1 ? convertUnsignedIntToLong(i) : i;
+    // return getHexCompact(l);
+    // }
+
+    public static String getHexCompact(int l) {
+        String s = Long.toHexString(l).toUpperCase();
+        String s1 = isOdd(s.length()) ? "0" : "";
+        return l != -1L ? s1 + s : "-1";
+    }
+
+
+    public static boolean isEven(int i) {
+        return i % 2 == 0;
+    }
+
+
+    public static boolean isOdd(int i) {
+        return !isEven(i);
     }
 
     public enum BitConversion {

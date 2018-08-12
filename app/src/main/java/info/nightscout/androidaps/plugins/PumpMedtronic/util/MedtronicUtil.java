@@ -68,9 +68,9 @@ public class MedtronicUtil extends RileyLinkUtil {
         byte lowByte = (byte)(shortValue & 0xFF);
 
         if (highByte > 0) {
-            return createByteArray(lowByte, highByte);
+            return createByteArray(highByte, lowByte);
         } else {
-            return returnFixedSize ? createByteArray(lowByte, highByte) : createByteArray(lowByte);
+            return returnFixedSize ? createByteArray(highByte, lowByte) : createByteArray(lowByte);
         }
 
     }
@@ -119,7 +119,34 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static byte[] getBolusStrokes(double amount) {
-        return getStrokes(amount, medtronicPumpModel.getBolusStrokes(), false);
+
+        int strokesPerUnit = medtronicPumpModel.getBolusStrokes();
+
+        int length;
+        int scrollRate;
+
+        if (strokesPerUnit >= 40) {
+            length = 2;
+
+            // 40-stroke pumps scroll faster for higher unit values
+
+            if (amount > 10)
+                scrollRate = 4;
+            else if (amount > 1)
+                scrollRate = 2;
+            else
+                scrollRate = 1;
+
+        } else {
+            length = 1;
+            scrollRate = 1;
+        }
+
+        int strokes = (int)(amount * ((strokesPerUnit * 1.0d) / (scrollRate * 1.0d))) * scrollRate;
+
+        byte[] body = ByteUtil.fromHexString(String.format("%02x%0" + (2 * length) + "x", length, strokes));
+
+        return body;
     }
 
 
@@ -307,4 +334,5 @@ public class MedtronicUtil extends RileyLinkUtil {
     public static void setSettings(Map<String, PumpSettingDTO> settings) {
         MedtronicUtil.settings = settings;
     }
+
 }

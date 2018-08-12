@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RXFil
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.operations.BLECommOperationResult;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ThreadUtil;
 
@@ -107,6 +108,9 @@ public class RFSpy {
 
         // prepend length, and send it.
         byte[] prepended = ByteUtil.concat(new byte[] { (byte)(bytes.length) }, bytes);
+
+        //LOG.debug("writeToData (command={},raw={})", command.name(), HexDump.toHexStringDisplayable(prepended));
+
         BLECommOperationResult writeCheck = rileyLinkBle.writeCharacteristic_blocking(radioServiceUUID, radioDataUUID,
             prepended);
         if (writeCheck.resultCode != BLECommOperationResult.RESULT_SUCCESS) {

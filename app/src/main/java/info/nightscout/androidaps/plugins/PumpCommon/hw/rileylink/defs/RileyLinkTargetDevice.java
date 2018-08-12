@@ -17,7 +17,6 @@ public enum RileyLinkTargetDevice {
 
     RileyLinkTargetDevice(int resourceId, boolean tuneUpEnabled) {
         this.resourceId = resourceId;
-
         this.tuneUpEnabled = tuneUpEnabled;
     }
 

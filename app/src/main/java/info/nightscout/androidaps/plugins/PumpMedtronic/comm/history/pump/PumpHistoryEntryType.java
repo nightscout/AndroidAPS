@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
+package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeChildBlockEnable(0x23, "ChangeChildBlockEnable"), // 8?
     ChangeMaxBolus(0x24), // 8?
     EventUnknown_MM522_0x25(0x25), // 8?
-    ToggleRemote(0x26, "EnableDisableRemote", 2, 5, 0), // 2, 5, 14
+    ToggleRemote(0x26, "EnableDisableRemote", 2, 5, 14), // 2, 5, 14 V6:2,5,14
     ChangeRemoteId(0x27, "ChangeRemoteID"), // ??
 
     ChangeMaxBasal(0x2c), //
@@ -88,7 +88,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     EventUnknown_MM512_0x38(0x38), //
     EventUnknown_MM512_0x39(0x39), //
     EventUnknown_MM512_0x3b(0x3b), //
-    ChangeParadigmLinkID(0x3c), // V3 ?
+    ChangeParadigmLinkID(0x3c, 2, 5, 14), // V3 ? V6: 2,5,14
 
     BGReceived(0x3f, "BGReceived", 2, 5, 3), // Ian3F
     JournalEntryMealMarker(0x40, 2, 5, 2), //
@@ -232,7 +232,12 @@ public enum PumpHistoryEntryType // implements CodeEnum
     static void setSpecialRulesForEntryTypes() {
         EndResultTotals.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 3));
         Bolus.addSpecialRuleHead(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8));
-        BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
+        // BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
+        BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 143)); // V5:
+                                                                                                                // 522
+                                                                                                                // has
+                                                                                                                // old
+                                                                                                                // form
         BolusWizardBolusEstimate.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15));
         BolusReminder.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 2));
     }
@@ -259,6 +264,11 @@ public enum PumpHistoryEntryType // implements CodeEnum
     // this.totalLength = (head + date + body);
     // }
     //
+
+    public static boolean isRelevantEntry() {
+        return true;
+    }
+
 
     public int getCode() {
         return this.opCode;
@@ -340,6 +350,8 @@ public enum PumpHistoryEntryType // implements CodeEnum
     }
 
 
+    // byte[] dh = { 2, 3 };
+
     private int determineSizeByRule(int defaultValue, List<SpecialRule> rules) {
         int size = defaultValue;
 
@@ -352,8 +364,6 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
         return size;
     }
-
-    // byte[] dh = { 2, 3 };
 
     enum DateFormat {
         None(0), //

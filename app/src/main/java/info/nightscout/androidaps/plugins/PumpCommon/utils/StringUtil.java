@@ -80,4 +80,19 @@ public class StringUtil {
     public static String toDateTimeString(LocalDateTime localDateTime) {
         return localDateTime.toString("dd.MM.yyyy HH:mm:ss");
     }
+
+
+    public static String getStringInLength(String value, int length) {
+        StringBuilder val = new StringBuilder(value);
+
+        if (val.length() > length) {
+            return val.substring(0, length);
+        }
+
+        for (int i = val.length(); i < length; i++) {
+            val.append(" ");
+        }
+
+        return val.toString();
+    }
 }

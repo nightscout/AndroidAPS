@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
+package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.RawHistoryPage;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
@@ -118,7 +117,8 @@ public abstract class MedtronicHistoryDecoder {
     }
 
 
-    protected void addToStatistics(MedtronicHistoryEntry pumpHistoryEntry, RecordDecodeStatus status, Integer opCode) {
+    protected void addToStatistics(MedtronicHistoryEntryInterface pumpHistoryEntry, RecordDecodeStatus status,
+            Integer opCode) {
         if (!statisticsEnabled)
             return;
 
@@ -129,8 +129,8 @@ public abstract class MedtronicHistoryDecoder {
             return;
         }
 
-        if (!mapStatistics.get(status).containsKey(pumpHistoryEntry.getEntryType().name())) {
-            mapStatistics.get(status).put(pumpHistoryEntry.getEntryType().name(), "");
+        if (!mapStatistics.get(status).containsKey(pumpHistoryEntry.getEntryTypeName())) {
+            mapStatistics.get(status).put(pumpHistoryEntry.getEntryTypeName(), "");
         }
     }
 

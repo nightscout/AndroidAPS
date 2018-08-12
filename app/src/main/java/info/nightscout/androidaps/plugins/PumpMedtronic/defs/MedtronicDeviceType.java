@@ -73,7 +73,7 @@ public enum MedtronicDeviceType {
 
     MedtronicConverterType pumpConverter;
     MedtronicConverterType cgmsConverter;
-    private String pumpModel = "";
+    private String pumpModel;
 
     // String smallReservoirPump;
     // String bigReservoirPump;
@@ -141,6 +141,11 @@ public enum MedtronicDeviceType {
 
     public MedtronicConverterType getPumpConverterType() {
         return pumpConverter;
+    }
+
+
+    public boolean isLargerFormat() {
+        return isSameDevice(this, Medtronic_523andHigher);
     }
 
 

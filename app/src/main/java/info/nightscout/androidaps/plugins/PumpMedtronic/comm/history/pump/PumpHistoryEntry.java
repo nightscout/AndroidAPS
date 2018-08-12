@@ -1,7 +1,8 @@
-package info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history2;
+package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
-import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpTimeStampedRecord;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
 
 /**
  * Application: GGC - GNU Gluco Control
@@ -62,20 +63,20 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
 
     @Override
     public String getToStringStart() {
-        return "PumpHistoryRecord [type=" + entryType.name() + " [" + getOpCode() + ", 0x"
+        return "PumpHistoryRecord [type=" + StringUtil.getStringInLength(entryType.name(), 20) + " ["
+            + StringUtil.getStringInLength("" + getOpCode(), 3) + ", 0x"
             + HexDump.getCorrectHexValue((byte)getOpCode()) + "]";
     }
 
 
-    public PumpTimeStampedRecord getHistoryEntryDetails() {
-        return historyEntryDetails;
-    }
-
-
-    public void setHistoryEntryDetails(PumpTimeStampedRecord historyEntryDetails) {
-        this.historyEntryDetails = historyEntryDetails;
-    }
-
+    // public PumpTimeStampedRecord getHistoryEntryDetails() {
+    // return historyEntryDetails;
+    // }
+    //
+    //
+    // public void setHistoryEntryDetails(PumpTimeStampedRecord historyEntryDetails) {
+    // this.historyEntryDetails = historyEntryDetails;
+    // }
 
     public int getOffset() {
         return offset;
@@ -84,5 +85,17 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
 
     public void setOffset(int offset) {
         this.offset = offset;
+    }
+
+
+    @Override
+    public String getEntryTypeName() {
+        return this.entryType.name();
+    }
+
+
+    @Override
+    public int getDateLength() {
+        return this.entryType.getDateLength();
     }
 }

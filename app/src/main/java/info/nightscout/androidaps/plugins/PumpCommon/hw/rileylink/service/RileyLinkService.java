@@ -32,8 +32,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.utils.SP;
 
-//import static info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.;
-
 /**
  * Created by andy on 5/6/18.
  * Split from original file and renamed.
@@ -61,6 +59,7 @@ public abstract class RileyLinkService extends Service {
         this.context = context;
         RileyLinkUtil.setContext(this.context);
         determineRileyLinkTargetFrequency();
+        RileyLinkUtil.setRileyLinkService(this);
         RileyLinkUtil.setRileyLinkTargetFrequency(rileyLinkTargetFrequency);
         initRileyLinkServiceData();
     }

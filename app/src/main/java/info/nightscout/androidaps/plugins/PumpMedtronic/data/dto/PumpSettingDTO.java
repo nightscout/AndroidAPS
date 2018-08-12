@@ -20,4 +20,10 @@ public class PumpSettingDTO {
         this.configurationGroup = configurationGroup;
     }
 
+
+    @Override
+    public String toString() {
+        return "PumpSettingDTO [key=" + key + ",value=" + value + ",group=" + configurationGroup.name() + "]";
+    }
+
 }
