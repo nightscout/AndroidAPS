@@ -21,6 +21,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.queue.commands.Command;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.LocalAlertUtils;
 
@@ -63,6 +64,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
+            if (L.isEnabled(L.CORE))
+                log.debug("Last connection: " + DateUtil.dateAndTimeString(lastConnection));
             LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
 
             if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
