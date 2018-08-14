@@ -684,7 +684,7 @@
   <string name="shortprotein">Pr</string>
   <string name="shortfat">Fett</string>
   <string name="active"><![CDATA[<Aktiv>]]></string>
-  <string name="waitingforestimatedbolusend">Väntar på att bolus ska slutföras (%1$d sek).</string>
+  <string name="waitingforestimatedbolusend">Slutför bolus (%1$d sek)</string>
   <string name="processinghistory">Behandlar</string>
   <string name="startingbolus">Påbörjar bolus</string>
   <string name="executingrightnow">Kommando körs just nu</string>
@@ -712,6 +712,8 @@
   <string name="dexcomg5_xdripupload_title">Skicka BG-data till xDrip+</string>
   <string name="dexcomg5_xdripupload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
   <string name="nsclientbg">NSClient BG</string>
+  <string name="minimalbasalvaluereplaced">Basalvärdet ersatt med det lägsta tillåtna: %s</string>
+  <string name="maximumbasalvaluereplaced">Basalvärdet ersatt med det maximala tillåtna: %s</string>
   <string name="overview_editquickwizard_usebg">Använd BG</string>
   <string name="overview_editquickwizard_usebolusiob">Använd bolus-IOB</string>
   <string name="overview_editquickwizard_usebasaliob">Använd basal-IOB</string>
@@ -1024,6 +1026,7 @@
   <string name="send_all_logs">Skicka loggar per e-post</string>
   <string name="delete_logs">Radera loggar</string>
   <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
+  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), fördröjd i %3$d m</string>
   <string name="openaps_noasdata">Ingen data tillgänglig för autosens</string>
   <string name="nav_logsettings">Loggningsinställningar</string>
   <string name="resettodefaults">Återställ standardinställningar</string>

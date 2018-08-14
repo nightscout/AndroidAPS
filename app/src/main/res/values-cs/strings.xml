@@ -4,7 +4,7 @@
   <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
   <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
   <string name="treatmentssafety_maxcarbs_title">Maximální počet sacharidů [g]</string>
-  <string name="nav_preferences">Předvolby</string>
+  <string name="nav_preferences">Nastavení</string>
   <string name="nav_refreshtreatments">Obnovit ošetření z NS</string>
   <string name="nav_resetdb">Inicializovat databáze</string>
   <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
@@ -1026,6 +1026,7 @@
   <string name="send_all_logs">Poslat logy e-mailem</string>
   <string name="delete_logs">Smazat logy</string>
   <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
+  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), start: %3$d m</string>
   <string name="openaps_noasdata">Nedostupná data o glykémiích</string>
   <string name="nav_logsettings">Nastavení logování</string>
   <string name="resettodefaults">Obnovit výchozí</string>
