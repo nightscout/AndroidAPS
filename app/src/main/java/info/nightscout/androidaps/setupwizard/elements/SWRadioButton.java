@@ -69,7 +69,7 @@ public class SWRadioButton extends SWItem {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int i = (int) group.findViewById(checkedId).getTag();
-            save(values()[i]);
+            save(values()[i], 0);
         });
         layout.addView(radioGroup);
 

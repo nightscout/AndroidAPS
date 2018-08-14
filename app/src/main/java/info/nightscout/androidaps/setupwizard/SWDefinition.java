@@ -58,14 +58,11 @@ import info.nightscout.utils.SP;
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
 
-    private String packageName;
-
     private AppCompatActivity activity;
     private List<SWScreen> screens = new ArrayList<>();
 
     public void setActivity(AppCompatActivity activity) {
         this.activity = activity;
-        packageName = activity.getPackageName();
     }
 
     public AppCompatActivity getActivity() {
@@ -184,11 +181,13 @@ public class SWDefinition {
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                 .add(new SWEditUrl()
                         .preferenceId(R.string.key_nsclientinternal_url)
+                        .updateDelay(5)
                         .label(R.string.nsclientinternal_url_title)
                         .comment(R.string.nsclientinternal_url_dialogmessage))
                 .add(new SWEditString()
                         .validator(text -> text.length() >= 12)
                         .preferenceId(R.string.key_nsclientinternal_api_secret)
+                        .updateDelay(5)
                         .label(R.string.nsclientinternal_secret_dialogtitle)
                         .comment(R.string.nsclientinternal_secret_dialogmessage))
                 .add(new SWBreak())
@@ -531,10 +530,12 @@ public class SWDefinition {
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                 .add(new SWEditUrl()
                         .preferenceId(R.string.key_nsclientinternal_url)
+                        .updateDelay(5)
                         .label(R.string.nsclientinternal_url_title)
                         .comment(R.string.nsclientinternal_url_dialogmessage))
                 .add(new SWEditString()
                         .validator(text -> text.length() >= 12)
+                        .updateDelay(5)
                         .preferenceId(R.string.key_nsclientinternal_api_secret)
                         .label(R.string.nsclientinternal_secret_dialogtitle)
                         .comment(R.string.nsclientinternal_secret_dialogmessage))
