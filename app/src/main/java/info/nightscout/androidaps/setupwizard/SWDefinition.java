@@ -545,6 +545,25 @@ public class SWDefinition {
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
                 .visibility(() -> !(NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth))
         )
+        .add(new SWScreen(R.string.configbuilder_bgsource)
+                .skippable(false)
+                .add(new SWPlugin()
+                        .option(PluginType.BGSOURCE, R.string.configbuilder_bgsource_description)
+                        .label(R.string.configbuilder_bgsource))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.bgsourcesetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveBgSource();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveBgSource()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveBgSource()).getPreferencesId() > 0))
+                .validator(() -> MainApp.getConfigBuilder().getActiveBgSource() != null)
+        )
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)
                 .add(new SWInfotext()

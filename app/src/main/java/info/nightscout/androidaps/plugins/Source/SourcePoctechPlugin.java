@@ -42,7 +42,6 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.poctech)
-                .showInList(!Config.NSCLIENT)
                 .preferencesId(R.xml.pref_poctech)
                 .description(R.string.description_source_poctech)
         );
