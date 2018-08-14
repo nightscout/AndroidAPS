@@ -75,7 +75,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isClosedLoopAllowedTest() throws Exception {
-        when(SP.getString("aps_mode", "open")).thenReturn("closed");
+        when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("closed");
         objectivesPlugin.objectives.get(3).setStartedOn(null);
 
         Constraint<Boolean> c = constraintChecker.isClosedLoopAllowed();
@@ -83,7 +83,7 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 2); // Safety & Objectives
         Assert.assertEquals(Boolean.FALSE, c.value());
 
-        when(SP.getString("aps_mode", "open")).thenReturn("open");
+        when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("open");
         c = constraintChecker.isClosedLoopAllowed();
         Assert.assertEquals(true, c.getReasonList().size() == 3); // 2x Safety & Objectives
         Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 3); // 2x Safety & Objectives
