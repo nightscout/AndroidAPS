@@ -38,6 +38,9 @@ public class DBAccessReceiver extends BroadcastReceiver {
             if (bundles == null) return;
             if (!bundles.containsKey("action")) return;
 
+            if (L.isEnabled(L.NSCLIENT))
+                BundleLogger.log(bundles);
+
             String collection = null;
             String _id = null;
             JSONObject data = null;
@@ -46,19 +49,16 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 collection = bundles.getString("collection");
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
-                BundleLogger.log(bundles);
             }
             try {
                 _id = bundles.getString("_id");
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
-                BundleLogger.log(bundles);
             }
             try {
                 data = new JSONObject(bundles.getString("data"));
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
-                BundleLogger.log(bundles);
             }
 
             if (data == null && !action.equals("dbRemove") || _id == null && action.equals("dbRemove")) {
@@ -75,7 +75,6 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 data.put("NSCLIENT_ID", nsclientid);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
-                BundleLogger.log(bundles);
             }
 
             if (!isAllowedCollection(collection)) {

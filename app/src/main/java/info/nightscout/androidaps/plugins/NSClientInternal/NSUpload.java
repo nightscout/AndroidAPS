@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -71,7 +72,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -113,7 +114,7 @@ public class NSUpload {
                 Intent intent = new Intent(Intents.ACTION_DATABASE);
                 intent.putExtras(bundle);
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                context.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 DbLogger.dbAdd(intent, data.toString());
             }
         } catch (JSONException e) {
@@ -139,7 +140,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -167,7 +168,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -195,7 +196,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -265,7 +266,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, deviceStatus.mongoRecord().toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -346,7 +347,7 @@ public class NSUpload {
                 Intent intent = new Intent(Intents.ACTION_DATABASE);
                 intent.putExtras(bundle);
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                context.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 DbLogger.dbAdd(intent, data.toString());
             }
         } catch (JSONException e) {
@@ -394,7 +395,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -412,7 +413,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbRemove(intent, _id);
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -435,7 +436,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -465,7 +466,7 @@ public class NSUpload {
         Intent intent = new Intent(Intents.ACTION_DATABASE);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         DbLogger.dbAdd(intent, data.toString());
     }
 
@@ -489,7 +490,7 @@ public class NSUpload {
         Intent intent = new Intent(Intents.ACTION_DATABASE);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         DbLogger.dbAdd(intent, data.toString());
     }
 
@@ -511,7 +512,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         }
     }
@@ -536,7 +537,7 @@ public class NSUpload {
         Intent intent = new Intent(Intents.ACTION_DATABASE);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         DbLogger.dbAdd(intent, data.toString());
     }
 
@@ -550,7 +551,7 @@ public class NSUpload {
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             DbLogger.dbRemove(intent, _id);
         } catch (Exception e) {
             log.error("Unhandled exception", e);
