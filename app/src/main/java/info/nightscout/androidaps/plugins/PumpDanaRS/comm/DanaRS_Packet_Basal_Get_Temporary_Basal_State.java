@@ -31,6 +31,9 @@ public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet
         int dataSize = 1;
         int error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
+        if (error == 1)
+            failed = true;
+
         dataIndex += dataSize;
         dataSize = 1;
         pump.isTempBasalInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01;

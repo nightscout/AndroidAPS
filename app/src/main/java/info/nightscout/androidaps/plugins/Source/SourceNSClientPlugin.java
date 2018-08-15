@@ -44,8 +44,6 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.nsclientbg)
-                .showInList(!Config.NSCLIENT)
-                .alwaysEnabled(Config.NSCLIENT)
                 .description(R.string.description_source_ns_client)
         );
     }
@@ -96,7 +94,7 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
         NSSgv nsSgv = new NSSgv(sgvJson);
         BgReading bgReading = new BgReading(nsSgv);
         MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
-        SourceNSClientPlugin.getPlugin().detectSource(JsonHelper.safeGetString(sgvJson, "device"), JsonHelper.safeGetLong(sgvJson, "mills"));
+        SourceNSClientPlugin.getPlugin().detectSource(JsonHelper.safeGetString(sgvJson, "device", "none"), JsonHelper.safeGetLong(sgvJson, "mills"));
     }
 
     public void detectSource(String source, long timeStamp) {

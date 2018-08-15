@@ -118,7 +118,8 @@ public class DanaRS_Packet_Bolus_Get_CIR_CF_Array extends DanaRS_Packet {
             dataSize = 2;
             pump.nightCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
         }
-
+        if (pump.units < 0 || pump.units > 1)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Language: " + language);
             log.debug("Pump units: " + (pump.units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));

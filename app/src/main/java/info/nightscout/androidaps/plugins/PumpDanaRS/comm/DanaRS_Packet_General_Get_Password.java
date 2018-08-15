@@ -20,6 +20,11 @@ public class DanaRS_Packet_General_Get_Password extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
+        if (data.length < 2){
+            // returned data size is too small
+            failed = true;
+            return;
+        }
         DanaRPump pump = DanaRPump.getInstance();
 
         int pass = ((data[DATA_START + 1] & 0x000000FF) << 8) + (data[DATA_START + 0] & 0x000000FF);

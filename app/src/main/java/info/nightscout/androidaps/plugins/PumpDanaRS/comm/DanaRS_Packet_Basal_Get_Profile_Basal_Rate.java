@@ -13,6 +13,8 @@ public class DanaRS_Packet_Basal_Get_Profile_Basal_Rate extends DanaRS_Packet {
 
     private int profileNumber;
 
+    DanaRPump pump = DanaRPump.getInstance();
+
     public DanaRS_Packet_Basal_Get_Profile_Basal_Rate() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_BASAL_RATE;
@@ -36,7 +38,6 @@ public class DanaRS_Packet_Basal_Get_Profile_Basal_Rate extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
-        DanaRPump pump = DanaRPump.getInstance();
 
         int dataIndex = DATA_START;
         int dataSize = 2;

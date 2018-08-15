@@ -20,6 +20,8 @@ public class DanaRS_Packet_General_Set_User_Time_Change_Flag_Clear extends DanaR
     @Override
     public void handleMessage(byte[] data) {
         int result = intFromBuff(data, 0, 1);
+        if (result != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");

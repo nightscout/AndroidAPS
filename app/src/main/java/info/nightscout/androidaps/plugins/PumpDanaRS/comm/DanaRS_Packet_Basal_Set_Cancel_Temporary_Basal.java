@@ -24,8 +24,10 @@ public class DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal extends DanaRS_Packe
         if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");
-            else
+            else {
                 log.error("Result Error: " + result);
+                failed = true;
+            }
         }
     }
 

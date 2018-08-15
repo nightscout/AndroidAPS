@@ -106,6 +106,7 @@ public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
         if (!pump.isExtendedBolusEnabled) {
             Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.gs(R.string.danar_enableextendedbolus), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
+            failed = true;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
@@ -136,4 +137,6 @@ public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
     public String getFriendlyName() {
         return "BOLUS__GET_BOLUS_OPTION";
     }
+
+
 }

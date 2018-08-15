@@ -1026,7 +1026,7 @@
   <string name="send_all_logs">Trimite un email cu loguri</string>
   <string name="delete_logs">Șterge logurile</string>
   <string name="error_adding_treatment_message">Un tratament (insulină: %1$.2f, carbohidrați: %2$d, la: %3$s) nu a putut fi înregistrat. Reverificați și apoi adăugați manual înregistrarea corectă.</string>
-  <string name="generated_ecarbs_note">eCarbohidrați: %1$d g (%2$d o), start: %3$d m</string>
+  <string name="generated_ecarbs_note">eCarbohidrați: %1$d g (%2$d h), întârziere: %3$d m</string>
   <string name="openaps_noasdata">Nu există date disponibile privind autosens</string>
   <string name="nav_logsettings">Setări loguri</string>
   <string name="resettodefaults">Resetare la setările implicite</string>

@@ -22,6 +22,10 @@ public class DanaRS_Packet_General_Get_More_Information extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
+        if (data.length < 15){
+            failed = true;
+            return;
+        }
         DanaRPump pump = DanaRPump.getInstance();
 
         int dataIndex = DATA_START;
@@ -56,7 +60,9 @@ public class DanaRS_Packet_General_Get_More_Information extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 2;
         pump.lastBolusAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-
+        // On DanaRS DailyUnits can't be more than 160
+        if(pump.dailyTotalUnits > 160)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Daily total units: " + pump.dailyTotalUnits + " U");
             log.debug("Is extended in progress: " + pump.isExtendedInProgress);

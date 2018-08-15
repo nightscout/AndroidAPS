@@ -1027,7 +1027,6 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
   <string name="send_all_logs">Logs als E-Mail versenden</string>
   <string name="delete_logs">Logs löschen</string>
   <string name="error_adding_treatment_message">Der Eintrag (Insulin: %1$.2f, Kohlenhydrate: %2$d, um: %3$s) konnte nicht als Behandlung gespeichert werden. Bitte überprüfe die aktuelle Liste und füge, falls notwendig, den Datensatz manuell hinzu.</string>
-  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Start: %3$d m</string>
   <string name="openaps_noasdata">Keine Autosens-Daten verfügbar</string>
   <string name="nav_logsettings">Log-Einstellungen</string>
   <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>

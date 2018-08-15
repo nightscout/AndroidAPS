@@ -59,6 +59,8 @@ public class DanaRS_Packet_Bolus_Get_Calculation_Information extends DanaRS_Pack
             pump.currentTarget = pump.currentTarget / 100d;
             currentBG = currentBG / 100d;
         }
+        if (error != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("Pump units: " + (pump.units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));

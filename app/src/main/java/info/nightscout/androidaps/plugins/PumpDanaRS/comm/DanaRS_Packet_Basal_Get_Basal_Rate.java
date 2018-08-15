@@ -18,13 +18,13 @@ public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
 	private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
 
-	public DanaRS_Packet_Basal_Get_Basal_Rate() {
-		super();
-		opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__GET_BASAL_RATE;
-		if (L.isEnabled(L.PUMPCOMM)) {
-			log.debug("Requesting basal rates");
-		}
-	}
+    public DanaRS_Packet_Basal_Get_Basal_Rate() {
+        super();
+        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__GET_BASAL_RATE;
+        if (L.isEnabled(L.PUMPCOMM)) {
+            log.debug("Requesting basal rates");
+        }
+    }
 
 	@Override
 	public void handleMessage(byte[] data) {
@@ -53,6 +53,7 @@ public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
 		}
 
 		if (pump.basalStep != 0.01d) {
+		    failed = true;
 			Notification notification = new Notification(Notification.WRONGBASALSTEP, MainApp.gs(R.string.danar_setbasalstep001), Notification.URGENT);
 			MainApp.bus().post(new EventNewNotification(notification));
 		} else {

@@ -174,17 +174,12 @@ public class MainApp extends Application {
             pluginsList.add(TreatmentsPlugin.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
-            if (!Config.NSCLIENT)
-                pluginsList.add(SourceXdripPlugin.getPlugin());
+            pluginsList.add(SourceXdripPlugin.getPlugin());
             pluginsList.add(SourceNSClientPlugin.getPlugin());
-            if (!Config.NSCLIENT)
-                pluginsList.add(SourceMM640gPlugin.getPlugin());
-            if (!Config.NSCLIENT)
-                pluginsList.add(SourceGlimpPlugin.getPlugin());
-            if (!Config.NSCLIENT)
-                pluginsList.add(SourceDexcomG5Plugin.getPlugin());
-            if (!Config.NSCLIENT)
-                pluginsList.add(SourcePoctechPlugin.getPlugin());
+            pluginsList.add(SourceMM640gPlugin.getPlugin());
+            pluginsList.add(SourceGlimpPlugin.getPlugin());
+            pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+            pluginsList.add(SourcePoctechPlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 

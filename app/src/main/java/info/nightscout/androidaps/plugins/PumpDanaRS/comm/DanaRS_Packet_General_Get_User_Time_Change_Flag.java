@@ -19,6 +19,10 @@ public class DanaRS_Packet_General_Get_User_Time_Change_Flag extends DanaRS_Pack
 
     @Override
     public void handleMessage(byte[] data) {
+        if (data.length < 3){
+            failed = true;
+            return;
+        }
         int dataIndex = DATA_START;
         int dataSize = 1;
         int userTimeChangeFlag = byteArrayToInt(getBytes(data, dataIndex, dataSize));

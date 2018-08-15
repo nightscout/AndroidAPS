@@ -38,6 +38,10 @@ public class DanaRS_Packet_Review_Bolus_Avg extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 2;
         double bolusAvg28 = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
+        double required = (((1 & 0x000000FF) << 8) + (1 & 0x000000FF)) / 100d;
+        if ( bolusAvg03 == bolusAvg07 && bolusAvg07 == bolusAvg14 && bolusAvg14 == bolusAvg21 && bolusAvg21 == bolusAvg28 && bolusAvg28 == required )
+            failed = true;
+
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Bolus average 3d: " + bolusAvg03 + " U");
             log.debug("Bolus average 7d: " + bolusAvg07 + " U");

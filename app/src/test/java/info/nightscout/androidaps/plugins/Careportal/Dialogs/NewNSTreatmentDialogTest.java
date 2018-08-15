@@ -58,14 +58,6 @@ public class NewNSTreatmentDialogTest {
         Assert.assertEquals(AAPSMocker.TESTPROFILENAME, profileSwitchUpload.profileName);
     }
 
-    @Test
-    public void doProfileSwitch() {
-    }
-
-    @Test
-    public void doProfileSwitch1() {
-    }
-
     @Before
     public void prepareMock() throws Exception {
         AAPSMocker.mockMainApp();

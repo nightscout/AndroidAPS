@@ -58,14 +58,11 @@ import info.nightscout.utils.SP;
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);
 
-    private String packageName;
-
     private AppCompatActivity activity;
     private List<SWScreen> screens = new ArrayList<>();
 
     public void setActivity(AppCompatActivity activity) {
         this.activity = activity;
-        packageName = activity.getPackageName();
     }
 
     public AppCompatActivity getActivity() {
@@ -184,11 +181,13 @@ public class SWDefinition {
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                 .add(new SWEditUrl()
                         .preferenceId(R.string.key_nsclientinternal_url)
+                        .updateDelay(5)
                         .label(R.string.nsclientinternal_url_title)
                         .comment(R.string.nsclientinternal_url_dialogmessage))
                 .add(new SWEditString()
                         .validator(text -> text.length() >= 12)
                         .preferenceId(R.string.key_nsclientinternal_api_secret)
+                        .updateDelay(5)
                         .label(R.string.nsclientinternal_secret_dialogtitle)
                         .comment(R.string.nsclientinternal_secret_dialogmessage))
                 .add(new SWBreak())
@@ -365,6 +364,14 @@ public class SWDefinition {
                 .validator(() -> MainApp.getConfigBuilder().getActiveAPS() != null)
                 .visibility(() -> Config.APS)
         )
+        .add(new SWScreen(R.string.apsmode_title)
+                .skippable(false)
+                .add(new SWRadioButton()
+                        .option(R.array.aps_modeArray, R.array.aps_modeValues)
+                        .preferenceId(R.string.key_aps_mode).label(R.string.apsmode_title)
+                        .comment(R.string.setupwizard_preferred_aps_mode))
+                .validator(() -> SP.contains(R.string.key_aps_mode))
+        )
         .add(new SWScreen(R.string.configbuilder_loop)
                 .skippable(false)
                 .add(new SWInfotext()
@@ -523,10 +530,12 @@ public class SWDefinition {
                         .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
                 .add(new SWEditUrl()
                         .preferenceId(R.string.key_nsclientinternal_url)
+                        .updateDelay(5)
                         .label(R.string.nsclientinternal_url_title)
                         .comment(R.string.nsclientinternal_url_dialogmessage))
                 .add(new SWEditString()
                         .validator(text -> text.length() >= 12)
+                        .updateDelay(5)
                         .preferenceId(R.string.key_nsclientinternal_api_secret)
                         .label(R.string.nsclientinternal_secret_dialogtitle)
                         .comment(R.string.nsclientinternal_secret_dialogmessage))
@@ -544,6 +553,25 @@ public class SWDefinition {
                 .add(new SWBreak())
                 .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth)
                 .visibility(() -> !(NSClientPlugin.getPlugin().nsClientService != null && NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth))
+        )
+        .add(new SWScreen(R.string.configbuilder_bgsource)
+                .skippable(false)
+                .add(new SWPlugin()
+                        .option(PluginType.BGSOURCE, R.string.configbuilder_bgsource_description)
+                        .label(R.string.configbuilder_bgsource))
+                .add(new SWBreak())
+                .add(new SWButton()
+                        .text(R.string.bgsourcesetup)
+                        .action(() -> {
+                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveBgSource();
+                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                                Intent i = new Intent(activity, PreferencesActivity.class);
+                                i.putExtra("id", plugin.getPreferencesId());
+                                activity.startActivity(i);
+                            }, null);
+                        })
+                        .visibility(() -> MainApp.getConfigBuilder().getActiveBgSource()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveBgSource()).getPreferencesId() > 0))
+                .validator(() -> MainApp.getConfigBuilder().getActiveBgSource() != null)
         )
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)

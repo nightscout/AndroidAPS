@@ -41,8 +41,10 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop extends DanaRS_Packet {
         if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");
-            else
+            else {
                 log.error("Result Error: " + result);
+                failed = true;
+            }
         }
 
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();

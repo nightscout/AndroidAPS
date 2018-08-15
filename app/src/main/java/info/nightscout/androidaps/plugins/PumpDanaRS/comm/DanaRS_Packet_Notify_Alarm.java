@@ -76,9 +76,14 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
                 errorString = "Blood sugar check miss alarm ???";
                 break;
         }
+        // No error no need to upload anything
+        if(errorString == "") {
+            failed = true;
 
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Error detected: " + errorString);
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Error detected: " + errorString);
+            return;
+        }
         NSUpload.uploadError(errorString);
     }
 

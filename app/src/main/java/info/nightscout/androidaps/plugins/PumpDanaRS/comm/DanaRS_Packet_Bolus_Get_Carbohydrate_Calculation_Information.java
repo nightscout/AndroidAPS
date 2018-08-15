@@ -33,7 +33,8 @@ public class DanaRS_Packet_Bolus_Get_Carbohydrate_Calculation_Information extend
         dataIndex += dataSize;
         dataSize = 2;
         pump.currentCIR = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-
+        if (error != 0)
+            failed = true;
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("Carbs: " + carbs);
