@@ -961,6 +961,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = trJson.getInt("duration");
                 extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
                 extendedBolus._id = trJson.getString("_id");
+                // if faking found in NS, adapt AAPS to use it too
                 if (!VirtualPumpPlugin.getFakingStatus()) {
                     VirtualPumpPlugin.setFakingStatus(true);
                     updateEarliestDataChange(0);
@@ -975,6 +976,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
+                // if faking found in NS, adapt AAPS to use it too
                 if (!VirtualPumpPlugin.getFakingStatus()) {
                     VirtualPumpPlugin.setFakingStatus(true);
                     updateEarliestDataChange(0);
@@ -1044,17 +1046,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             extendedBolus.date = roundDateToSec(extendedBolus.date);
 
             if (extendedBolus.source == Source.PUMP) {
-                // check for changed from pump change in NS
-                QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
-                Where where = queryBuilder.where();
-                where.eq("pumpId", extendedBolus.pumpId);
-                PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
-                List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
-                if (trList.size() > 0) {
-                    // do nothing, pump history record cannot be changed
-                    return false;
+                // if pumpId == 0 do not check for existing pumpId
+                // used with pumps without history
+                // and insight where record as added first without pumpId
+                // and then is record updated with pumpId
+                if (extendedBolus.pumpId == 0) {
+                    getDaoExtendedBolus().createOrUpdate(extendedBolus);
+                } else {
+                    QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
+                    Where where = queryBuilder.where();
+                    where.eq("pumpId", extendedBolus.pumpId);
+                    PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+                    List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
+                    if (trList.size() > 0) {
+                        log.error("EXTENDEDBOLUS: Multiple records found for pumpId: " + extendedBolus.pumpId);
+                        return false;
+                    }
+                    getDaoExtendedBolus().createOrUpdate(extendedBolus);
                 }
-                getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
                     log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
                 updateEarliestDataChange(extendedBolus.date);
