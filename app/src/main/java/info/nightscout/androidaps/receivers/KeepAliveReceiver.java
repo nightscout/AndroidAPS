@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.LocalAlertUtils;
+import info.nightscout.utils.T;
 
 
 /**
@@ -31,7 +34,9 @@ import info.nightscout.utils.LocalAlertUtils;
  */
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
-    public static final long STATUS_UPDATE_FREQUENCY = 15 * 60 * 1000L;
+    public static final long STATUS_UPDATE_FREQUENCY = T.mins(15).msecs();
+    private static long lastReadStatus = 0;
+    private static long lastRun = 0;
 
     public static void cancelAlarm(Context context) {
         Intent intent = new Intent(context, KeepAliveReceiver.class);
@@ -66,16 +71,27 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
             if (L.isEnabled(L.CORE))
                 log.debug("Last connection: " + DateUtil.dateAndTimeString(lastConnection));
-            LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
+            // sometimes keepalive broadcast stops
+            // as as workaround test if readStatus was requested before an alarm is generated
+            if (lastReadStatus != 0 && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {
+                LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
+            }
 
             if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
                 MainApp.bus().post(new EventProfileSwitchChange());
             } else if (isStatusOutdated && !pump.isBusy()) {
+                lastReadStatus = System.currentTimeMillis();
                 ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
             } else if (isBasalOutdated && !pump.isBusy()) {
+                lastReadStatus = System.currentTimeMillis();
                 ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
             }
         }
+        if (lastRun != 0 && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
+            log.error("KeepAlive fail");
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("KeepAliveFail"));
+        }
+        lastRun = System.currentTimeMillis();
     }
 
     //called by MainApp at first app start
