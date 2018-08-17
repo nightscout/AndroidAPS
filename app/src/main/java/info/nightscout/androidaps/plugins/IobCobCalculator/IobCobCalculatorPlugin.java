@@ -110,35 +110,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return bucketed_data;
     }
 
-    @Nullable
-    public List<BgReading> getBucketedData(long fromTime) {
-        //log.debug("Locking getBucketedData");
-        synchronized (dataLock) {
-            if (bucketed_data == null) {
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("No bucketed data available");
-                return null;
-            }
-            int index = indexNewerThan(fromTime);
-            if (index > -1) {
-                List<BgReading> part = bucketed_data.subList(0, index);
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Bucketed data striped off: " + part.size() + "/" + bucketed_data.size());
-                return part;
-            }
-        }
-        //log.debug("Releasing getBucketedData");
-        return null;
-    }
-
-    private int indexNewerThan(long time) {
-        for (int index = 0; index < bucketed_data.size(); index++) {
-            if (bucketed_data.get(index).date < time)
-                return index - 1;
-        }
-        return -1;
-    }
-
+    // roundup to whole minute
     public static long roundUpTime(long time) {
         if (time % 60000 == 0)
             return time;
@@ -187,24 +159,26 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     @Nullable
-    private BgReading findNewer(long time) {
+    public BgReading findNewer(long time) {
         BgReading lastFound = bgReadings.get(0);
         if (lastFound.date < time) return null;
         for (int i = 1; i < bgReadings.size(); ++i) {
+            if (bgReadings.get(i).date == time) return bgReadings.get(i);
             if (bgReadings.get(i).date > time) continue;
-            lastFound = bgReadings.get(i);
+            lastFound = bgReadings.get(i-1);
             if (bgReadings.get(i).date < time) break;
         }
         return lastFound;
     }
 
     @Nullable
-    private BgReading findOlder(long time) {
+    public BgReading findOlder(long time) {
         BgReading lastFound = bgReadings.get(bgReadings.size() - 1);
         if (lastFound.date > time) return null;
         for (int i = bgReadings.size() - 2; i >= 0; --i) {
+            if (bgReadings.get(i).date == time) return bgReadings.get(i);
             if (bgReadings.get(i).date < time) continue;
-            lastFound = bgReadings.get(i);
+            lastFound = bgReadings.get(i + 1);
             if (bgReadings.get(i).date > time) break;
         }
         return lastFound;
@@ -217,7 +191,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
 
         bucketed_data = new ArrayList<>();
-        long currentTime = bgReadings.get(0).date + 5 * 60 * 1000 - bgReadings.get(0).date % (5 * 60 * 1000) - 5 * 60 * 1000L;
+        long currentTime = bgReadings.get(0).date - bgReadings.get(0).date % T.mins(5).msecs();
         //log.debug("First reading: " + new Date(currentTime).toLocaleString());
 
         while (true) {
@@ -227,16 +201,20 @@ public class IobCobCalculatorPlugin extends PluginBase {
             if (newer == null || older == null)
                 break;
 
-            double bgDelta = newer.value - older.value;
-            long timeDiffToNew = newer.date - currentTime;
+            if (older.date == newer.date) { // direct hit
+                bucketed_data.add(newer);
+            } else {
+                double bgDelta = newer.value - older.value;
+                long timeDiffToNew = newer.date - currentTime;
 
-            double currentBg = newer.value - (double) timeDiffToNew / (newer.date - older.date) * bgDelta;
-            BgReading newBgreading = new BgReading();
-            newBgreading.date = currentTime;
-            newBgreading.value = Math.round(currentBg);
-            bucketed_data.add(newBgreading);
-            //log.debug("BG: " + newBgreading.value + " (" + new Date(newBgreading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
-            currentTime -= 5 * 60 * 1000L;
+                double currentBg = newer.value - (double) timeDiffToNew / (newer.date - older.date) * bgDelta;
+                BgReading newBgreading = new BgReading();
+                newBgreading.date = currentTime;
+                newBgreading.value = Math.round(currentBg);
+                bucketed_data.add(newBgreading);
+                //log.debug("BG: " + newBgreading.value + " (" + new Date(newBgreading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
+            }
+            currentTime -= T.mins(5).msecs();
 
         }
     }
