@@ -317,7 +317,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public static long roundDateToSec(long date) {
-        return date - date % 1000;
+        long rounded = date - date % 1000;
+        if (rounded != date)
+            if (L.isEnabled(L.DATABASE))
+                log.debug("Rounding " + date + " to " + rounded);
+        return rounded;
     }
     // -------------------  BgReading handling -----------------------
 

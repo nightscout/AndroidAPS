@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -91,7 +92,7 @@ public class Treatment implements DataPointWithLabelInterface {
     public String toString() {
         return "Treatment{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + new Date(date).toLocaleString() +
                 ", isValid= " + isValid +
                 ", isSMB= " + isSMB +
                 ", _id= " + _id +
