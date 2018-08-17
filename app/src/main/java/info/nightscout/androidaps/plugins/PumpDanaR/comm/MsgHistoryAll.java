@@ -25,7 +25,7 @@ public class MsgHistoryAll extends MessageBase {
         byte recordCode = (byte) intFromBuff(bytes, 0, 1);
         Date date = dateFromBuff(bytes, 1);                     // 3 bytes
         Date datetime = dateTimeFromBuff(bytes, 1);             // 5 bytes
-        Date datetimewihtsec = dateTimeSecFromBuff(bytes, 1);   // 6 bytes
+        long datetimewihtsec = dateTimeSecFromBuff(bytes, 1);   // 6 bytes
 
         double dailyBasal = intFromBuff(bytes, 4, 2) * 0.01d;
         double dailyBolus = intFromBuff(bytes, 6, 2) * 0.01d;
@@ -79,42 +79,42 @@ public class MsgHistoryAll extends MessageBase {
                 break;
             case RecordTypes.RECORD_TYPE_PRIME:
                 messageType += "prime";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value * 0.01;
                 break;
             case RecordTypes.RECORD_TYPE_ERROR:
                 messageType += "error";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value * 0.01;
                 break;
             case RecordTypes.RECORD_TYPE_REFILL:
                 messageType += "refill";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value * 0.01;
                 break;
             case RecordTypes.RECORD_TYPE_BASALHOUR:
                 messageType += "basal hour";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value * 0.01;
                 break;
             case RecordTypes.RECORD_TYPE_TB:
                 messageType += "tb";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value * 0.01;
                 break;
             case RecordTypes.RECORD_TYPE_GLUCOSE:
                 messageType += "glucose";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value;
                 break;
             case RecordTypes.RECORD_TYPE_CARBO:
                 messageType += "carbo";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 danaRHistoryRecord.recordValue = value;
                 break;
             case RecordTypes.RECORD_TYPE_ALARM:
                 messageType += "alarm";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 String strAlarm = "None";
                 switch ((int) paramByte8) {
                     case 67:
@@ -135,7 +135,7 @@ public class MsgHistoryAll extends MessageBase {
                 break;
             case RecordTypes.RECORD_TYPE_SUSPEND:
                 messageType += "suspend";
-                danaRHistoryRecord.recordDate = datetimewihtsec.getTime();
+                danaRHistoryRecord.recordDate = datetimewihtsec;
                 String strRecordValue = "Off";
                 if ((int) paramByte8 == 79)
                     strRecordValue = "On";

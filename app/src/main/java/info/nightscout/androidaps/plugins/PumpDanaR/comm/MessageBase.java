@@ -142,8 +142,8 @@ public class MessageBase {
         return date;
     }
 
-    public static Date dateTimeSecFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + intFromBuff(buff, offset, 1),
                         intFromBuff(buff, offset + 1, 1) - 1,
@@ -151,8 +151,7 @@ public class MessageBase {
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         intFromBuff(buff, offset + 5, 1)
-                );
-        return date;
+                ).getTime();
     }
 
     public static Date dateFromBuff(byte[] buff, int offset) {

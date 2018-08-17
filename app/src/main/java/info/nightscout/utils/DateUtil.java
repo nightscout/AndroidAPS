@@ -97,25 +97,25 @@ public class DateUtil {
     }
 
     public static String dateString(Date date) {
-        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_DATE); this provide month name not number
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(date);
     }
 
     public static String dateString(long mills) {
-        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_DATE); this provide month name not number
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(mills);
     }
 
     public static String timeString(Date date) {
-        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_TIME);
         return new DateTime(date).toString(DateTimeFormat.shortTime());
     }
 
     public static String timeString(long mills) {
-        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_TIME);
         return new DateTime(mills).toString(DateTimeFormat.shortTime());
+    }
+
+    public static String timeFullString(long mills) {
+        return new DateTime(mills).toString(DateTimeFormat.fullTime());
     }
 
     public static String dateAndTimeString(Date date) {
@@ -128,6 +128,10 @@ public class DateUtil {
 
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
+    }
+
+    public static String dateAndTimeFullString(long mills) {
+        return dateString(mills) + " " + timeFullString(mills);
     }
 
     public static String minAgo(long time) {
