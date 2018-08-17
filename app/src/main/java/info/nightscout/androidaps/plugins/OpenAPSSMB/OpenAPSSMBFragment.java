@@ -25,6 +25,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JSONFormatter;
 
@@ -111,8 +112,8 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
                         if (lastAPSResult != null && lastAPSResult.inputConstraints != null)
                             constraintsView.setText(lastAPSResult.inputConstraints.getReasons().trim());
                     }
-                    if (plugin.lastAPSRun != null) {
-                        lastRunView.setText(plugin.lastAPSRun.toLocaleString().trim());
+                    if (plugin.lastAPSRun != 0) {
+                        lastRunView.setText(DateUtil.dateAndTimeFullString(plugin.lastAPSRun));
                     }
                     if (plugin.lastAutosensResult != null) {
                         autosensDataView.setText(JSONFormatter.format(plugin.lastAutosensResult.json()).toString().trim());

@@ -7,8 +7,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -53,7 +51,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     static Integer batteryPercent = 50;
     static Integer reservoirInUnits = 50;
 
-    private Date lastDataTime = new Date(0);
+    private long lastDataTime = 0;
 
     private static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
@@ -153,7 +151,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     public void connect(String reason) {
         if (!Config.NSCLIENT)
             NSUpload.uploadDeviceStatus();
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
     }
 
     @Override
@@ -166,12 +164,12 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public void getPumpStatus() {
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
     }
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
@@ -186,7 +184,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public Date lastDataTime() {
+    public long lastDataTime() {
         return lastDataTime;
     }
 
@@ -227,7 +225,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         return result;
     }
@@ -255,7 +253,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         return result;
     }
 
@@ -283,7 +281,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         return result;
     }
 
@@ -307,7 +305,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         return result;
     }
 
@@ -326,7 +324,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
                 log.debug("Canceling temp basal: " + result);
             MainApp.bus().post(new EventVirtualPumpUpdateGui());
         }
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         return result;
     }
 
@@ -345,7 +343,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Canceling extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
-        lastDataTime = new Date();
+        lastDataTime = System.currentTimeMillis();
         return result;
     }
 

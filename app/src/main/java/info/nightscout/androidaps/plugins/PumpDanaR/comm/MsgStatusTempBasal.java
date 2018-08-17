@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
@@ -33,7 +31,7 @@ public class MsgStatusTempBasal extends MessageBase {
         else tempBasalTotalSec = intFromBuff(bytes, 2, 1) * 60 * 60;
         int tempBasalRunningSeconds = intFromBuff(bytes, 3, 3);
         int tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60;
-        Date tempBasalStart = isTempBasalInProgress ? getDateFromTempBasalSecAgo(tempBasalRunningSeconds) : new Date(0);
+        long tempBasalStart = isTempBasalInProgress ? getDateFromTempBasalSecAgo(tempBasalRunningSeconds) : 0;
 
         DanaRPump pump = DanaRPump.getInstance();
         pump.isTempBasalInProgress = isTempBasalInProgress;
@@ -55,8 +53,8 @@ public class MsgStatusTempBasal extends MessageBase {
     }
 
     @NonNull
-    private Date getDateFromTempBasalSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
+    private long getDateFromTempBasalSecAgo(int tempBasalAgoSecs) {
+        return (long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000;
     }
 
     public static void updateTempBasalInDB() {
@@ -68,11 +66,11 @@ public class MsgStatusTempBasal extends MessageBase {
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal
-                    TemporaryBasal tempStop = new TemporaryBasal().date(danaRPump.tempBasalStart.getTime() - 1000).source(Source.USER);
+                    TemporaryBasal tempStop = new TemporaryBasal().date(danaRPump.tempBasalStart - 1000).source(Source.USER);
                     TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
                     // Create new
                     TemporaryBasal newTempBasal = new TemporaryBasal()
-                            .date(danaRPump.tempBasalStart.getTime())
+                            .date(danaRPump.tempBasalStart)
                             .percent(danaRPump.tempBasalPercent)
                             .duration(danaRPump.tempBasalTotalSec / 60)
                             .source(Source.USER);
@@ -87,7 +85,7 @@ public class MsgStatusTempBasal extends MessageBase {
             if (danaRPump.isTempBasalInProgress) {
                 // Create new
                 TemporaryBasal newTempBasal = new TemporaryBasal()
-                        .date(danaRPump.tempBasalStart.getTime())
+                        .date(danaRPump.tempBasalStart)
                         .percent(danaRPump.tempBasalPercent)
                         .duration(danaRPump.tempBasalTotalSec / 60)
                         .source(Source.USER);

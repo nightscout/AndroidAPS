@@ -66,6 +66,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -86,7 +87,6 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -95,6 +95,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalcul
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
@@ -111,14 +112,12 @@ import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
-import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
@@ -188,8 +187,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
-
-    final Object updateSync = new Object();
 
     public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, DEVSLOPE}
 
@@ -320,15 +317,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
 
-        bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                rangeToDisplay += 6;
-                rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
-                SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
-                updateGUI("rangeChange");
-                return false;
-            }
+        bgGraph.setOnLongClickListener(v -> {
+            rangeToDisplay += 6;
+            rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
+            SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
+            updateGUI("rangeChange");
+            return false;
         });
 
         setupChartMenu(view);
@@ -338,114 +332,111 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     private void setupChartMenu(View view) {
         chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
-        chartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-                boolean predictionsAvailable;
-                if (Config.APS)
-                    predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
-                else if (Config.NSCLIENT)
-                    predictionsAvailable = true;
-                else
-                    predictionsAvailable = false;
+        chartButton.setOnClickListener(v -> {
+            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+            boolean predictionsAvailable;
+            if (Config.APS)
+                predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
+            else if (Config.NSCLIENT)
+                predictionsAvailable = true;
+            else
+                predictionsAvailable = false;
 
-                MenuItem item;
-                CharSequence title;
-                SpannableString s;
-                PopupMenu popup = new PopupMenu(v.getContext(), v);
+            MenuItem item;
+            CharSequence title;
+            SpannableString s;
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
 
-                if (predictionsAvailable) {
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(SP.getBoolean("showprediction", true));
-                }
-
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+            if (predictionsAvailable) {
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
                 title = item.getTitle();
                 s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)), 0, s.length(), 0);
                 item.setTitle(s);
                 item.setCheckable(true);
-                item.setChecked(SP.getBoolean("showbasals", true));
-
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(SP.getBoolean("showiob", true));
-
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(SP.getBoolean("showcob", true));
-
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(SP.getBoolean("showdeviations", false));
-
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
-                title = item.getTitle();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(SP.getBoolean("showratios", false));
-
-                if (MainApp.devBranch) {
-                    item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
-                    title = item.getTitle();
-                    s = new SpannableString(title);
-                    s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
-                    item.setTitle(s);
-                    item.setCheckable(true);
-                    item.setChecked(SP.getBoolean("showdevslope", false));
-                }
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
-                            SP.putBoolean("showprediction", !item.isChecked());
-                        } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
-                            SP.putBoolean("showbasals", !item.isChecked());
-                        } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
-                            SP.putBoolean("showiob", !item.isChecked());
-                        } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
-                            SP.putBoolean("showcob", !item.isChecked());
-                        } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
-                            SP.putBoolean("showdeviations", !item.isChecked());
-                        } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
-                            SP.putBoolean("showratios", !item.isChecked());
-                        } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
-                            SP.putBoolean("showdevslope", !item.isChecked());
-                        }
-                        scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
-                        return true;
-                    }
-                });
-                chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
-                popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                    @Override
-                    public void onDismiss(PopupMenu menu) {
-                        chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
-                    }
-                });
-                popup.show();
+                item.setChecked(SP.getBoolean("showprediction", true));
             }
+
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showbasals", true));
+
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showiob", true));
+
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showcob", true));
+
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showdeviations", false));
+
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showratios", false));
+
+            if (MainApp.devBranch) {
+                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
+                title = item.getTitle();
+                s = new SpannableString(title);
+                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
+                item.setTitle(s);
+                item.setCheckable(true);
+                item.setChecked(SP.getBoolean("showdevslope", false));
+            }
+
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
+                        SP.putBoolean("showprediction", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
+                        SP.putBoolean("showbasals", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
+                        SP.putBoolean("showiob", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
+                        SP.putBoolean("showcob", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
+                        SP.putBoolean("showdeviations", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
+                        SP.putBoolean("showratios", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
+                        SP.putBoolean("showdevslope", !item.isChecked());
+                    }
+                    scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
+                    return true;
+                }
+            });
+            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+            popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                @Override
+                public void onDismiss(PopupMenu menu) {
+                    chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+                }
+            });
+            popup.show();
         });
     }
 
@@ -638,8 +629,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        boolean xdrip = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
-        boolean g5 = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean xdrip = SourceXdripPlugin.getPlugin().isEnabled(PluginType.BGSOURCE);
+        boolean g5 = SourceDexcomG5Plugin.getPlugin().isEnabled(PluginType.BGSOURCE);
         String units = ProfileFunctions.getInstance().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
@@ -1027,7 +1018,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void updateGUI(final String from) {
         if (L.isEnabled(L.OVERVIEW))
             log.debug("updateGUI entered from: " + from);
-        final Date updateGUIStart = new Date();
+        final long updateGUIStart = System.currentTimeMillis();
 
         if (getActivity() == null)
             return;

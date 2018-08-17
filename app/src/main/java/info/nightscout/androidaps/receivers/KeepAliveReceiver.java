@@ -12,8 +12,6 @@ import com.crashlytics.android.answers.CustomEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
@@ -65,8 +63,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
-            Date lastConnection = pump.lastDataTime();
-            boolean isStatusOutdated = lastConnection.getTime() + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
+            long lastConnection = pump.lastDataTime();
+            boolean isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis();
             boolean isBasalOutdated = Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep;
 
             if (L.isEnabled(L.CORE))

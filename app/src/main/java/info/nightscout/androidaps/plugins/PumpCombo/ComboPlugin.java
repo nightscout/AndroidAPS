@@ -355,8 +355,8 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     @NonNull
     @Override
-    public Date lastDataTime() {
-        return new Date(pump.lastSuccessfulCmdTime);
+    public long lastDataTime() {
+        return pump.lastSuccessfulCmdTime;
     }
 
     /**

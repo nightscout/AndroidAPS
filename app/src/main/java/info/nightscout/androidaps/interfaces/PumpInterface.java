@@ -2,8 +2,6 @@ package info.nightscout.androidaps.interfaces;
 
 import org.json.JSONObject;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -29,7 +27,7 @@ public interface PumpInterface {
     PumpEnactResult setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
-    Date lastDataTime();
+    long lastDataTime();
 
     double getBaseBasalRate(); // base basal rate, not temp basal
 

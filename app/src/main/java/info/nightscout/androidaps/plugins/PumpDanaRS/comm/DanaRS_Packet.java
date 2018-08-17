@@ -142,14 +142,13 @@ public class DanaRS_Packet {
         return new String(strbuff, StandardCharsets.UTF_8);
     }
 
-    public static Date dateFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static long dateFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + byteArrayToInt(getBytes(buff, offset, 1)),
                         byteArrayToInt(getBytes(buff, offset + 1, 1)) - 1,
                         byteArrayToInt(getBytes(buff, offset + 2, 1))
-                );
-        return date;
+                ).getTime();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

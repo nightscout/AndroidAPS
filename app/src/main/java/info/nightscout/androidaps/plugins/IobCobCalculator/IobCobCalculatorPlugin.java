@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -324,7 +323,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             getBGDataFrom = Math.max(oldestDataAvailable, (long) (from - T.hours(1).msecs() * (24 + dia)));
             if (getBGDataFrom == oldestDataAvailable)
                 if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
+                    log.debug("Limiting data to oldest available temps: " + DateUtil.dateAndTimeFullString(oldestDataAvailable));
         } else
             getBGDataFrom = (long) (from - T.hours(1).msecs() * (24 + dia));
         return getBGDataFrom;
@@ -685,11 +684,11 @@ public class IobCobCalculatorPlugin extends PluginBase {
             // clear up 5 min back for proper COB calculation
             long time = ev.time - 5 * 60 * 1000L;
             if (L.isEnabled(L.AUTOSENS))
-                log.debug("Invalidating cached data to: " + new Date(time).toLocaleString());
+                log.debug("Invalidating cached data to: " + DateUtil.dateAndTimeFullString(time));
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
                     if (L.isEnabled(L.AUTOSENS))
-                        log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
+                        log.debug("Removing from iobTable: " + DateUtil.dateAndTimeFullString(iobTable.keyAt(index)));
                     iobTable.removeAt(index);
                 } else {
                     break;
@@ -698,7 +697,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             for (int index = autosensDataTable.size() - 1; index >= 0; index--) {
                 if (autosensDataTable.keyAt(index) > time) {
                     if (L.isEnabled(L.AUTOSENS))
-                        log.debug("Removing from autosensDataTable: " + new Date(autosensDataTable.keyAt(index)).toLocaleString());
+                        log.debug("Removing from autosensDataTable: " + DateUtil.dateAndTimeFullString(autosensDataTable.keyAt(index)));
                     autosensDataTable.removeAt(index);
                 } else {
                     break;
@@ -707,7 +706,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             for (int index = basalDataTable.size() - 1; index >= 0; index--) {
                 if (basalDataTable.keyAt(index) > time) {
                     if (L.isEnabled(L.AUTOSENS))
-                        log.debug("Removing from basalDataTable: " + new Date(basalDataTable.keyAt(index)).toLocaleString());
+                        log.debug("Removing from basalDataTable: " + DateUtil.dateAndTimeFullString(basalDataTable.keyAt(index)));
                     basalDataTable.removeAt(index);
                 } else {
                     break;

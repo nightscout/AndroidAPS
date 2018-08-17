@@ -133,35 +133,32 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (mConnectionInProgress)
             return;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mConnectionInProgress = true;
-                getBTSocketForSelectedPump();
-                if (mRfcommSocket == null || mBTDevice == null) {
-                    mConnectionInProgress = false;
-                    return; // Device not found
-                }
-
-                try {
-                    mRfcommSocket.connect();
-                } catch (IOException e) {
-                    //log.error("Unhandled exception", e);
-                    if (e.getMessage().contains("socket closed")) {
-                        log.error("Unhandled exception", e);
-                    }
-                }
-
-                if (isConnected()) {
-                    if (mSerialIOThread != null) {
-                        mSerialIOThread.disconnect("Recreate SerialIOThread");
-                    }
-                    mSerialIOThread = new SerialIOThread(mRfcommSocket);
-                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
-                }
-
+        new Thread(() -> {
+            mConnectionInProgress = true;
+            getBTSocketForSelectedPump();
+            if (mRfcommSocket == null || mBTDevice == null) {
                 mConnectionInProgress = false;
+                return; // Device not found
             }
+
+            try {
+                mRfcommSocket.connect();
+            } catch (IOException e) {
+                //log.error("Unhandled exception", e);
+                if (e.getMessage().contains("socket closed")) {
+                    log.error("Unhandled exception", e);
+                }
+            }
+
+            if (isConnected()) {
+                if (mSerialIOThread != null) {
+                    mSerialIOThread.disconnect("Recreate SerialIOThread");
+                }
+                mSerialIOThread = new SerialIOThread(mRfcommSocket);
+                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
+            }
+
+            mConnectionInProgress = false;
         }).start();
     }
 
@@ -203,7 +200,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
             mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-            long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+            long timeDiff = (mDanaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
             if (L.isEnabled(L.PUMP))
                 log.debug("Pump time difference: " + timeDiff + " seconds");
             if (Math.abs(timeDiff) > 3) {
@@ -228,7 +225,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
                     mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                    timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                    timeDiff = (mDanaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                     if (L.isEnabled(L.PUMP))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
@@ -269,7 +266,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        return;
     }
 
     public boolean tempBasal(int percent, int durationInHours) {
@@ -479,7 +475,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         } else {
             msg = new MsgHistoryEvents_v2(lastHistoryFetched);
             if (L.isEnabled(L.PUMP))
-                log.debug("Loading event history from: " + new Date(lastHistoryFetched).toLocaleString());
+                log.debug("Loading event history from: " + DateUtil.dateAndTimeFullString(lastHistoryFetched));
         }
         mSerialIOThread.sendMessage(msg);
         while (!msg.done && mRfcommSocket.isConnected()) {

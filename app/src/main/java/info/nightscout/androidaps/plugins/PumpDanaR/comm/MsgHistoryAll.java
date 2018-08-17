@@ -23,8 +23,8 @@ public class MsgHistoryAll extends MessageBase {
     @Override
     public void handleMessage(byte[] bytes) {
         byte recordCode = (byte) intFromBuff(bytes, 0, 1);
-        Date date = dateFromBuff(bytes, 1);                     // 3 bytes
-        Date datetime = dateTimeFromBuff(bytes, 1);             // 5 bytes
+        long date = dateFromBuff(bytes, 1);                     // 3 bytes
+        long datetime = dateTimeFromBuff(bytes, 1);             // 5 bytes
         long datetimewihtsec = dateTimeSecFromBuff(bytes, 1);   // 6 bytes
 
         double dailyBasal = intFromBuff(bytes, 4, 2) * 0.01d;
@@ -46,7 +46,7 @@ public class MsgHistoryAll extends MessageBase {
 
         switch (recordCode) {
             case RecordTypes.RECORD_TYPE_BOLUS:
-                danaRHistoryRecord.recordDate = datetime.getTime();
+                danaRHistoryRecord.recordDate = datetime;
                 switch (0xF0 & paramByte8) {
                     case 0xA0:
                         danaRHistoryRecord.bolusType = "DS";
@@ -73,7 +73,7 @@ public class MsgHistoryAll extends MessageBase {
                 break;
             case RecordTypes.RECORD_TYPE_DAILY:
                 messageType += "dailyinsulin";
-                danaRHistoryRecord.recordDate = date.getTime();
+                danaRHistoryRecord.recordDate = date;
                 danaRHistoryRecord.recordDailyBasal = dailyBasal;
                 danaRHistoryRecord.recordDailyBolus = dailyBolus;
                 break;

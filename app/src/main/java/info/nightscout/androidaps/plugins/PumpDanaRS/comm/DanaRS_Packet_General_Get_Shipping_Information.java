@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.utils.DateUtil;
 
 public class DanaRS_Packet_General_Get_Shipping_Information extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -20,7 +21,7 @@ public class DanaRS_Packet_General_Get_Shipping_Information extends DanaRS_Packe
 
     @Override
     public void handleMessage(byte[] data) {
-        if (data.length < 18){
+        if (data.length < 18) {
             failed = true;
             return;
         }
@@ -40,7 +41,7 @@ public class DanaRS_Packet_General_Get_Shipping_Information extends DanaRS_Packe
 
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Serial number: " + pump.serialNumber);
-            log.debug("Shipping date: " + pump.shippingDate);
+            log.debug("Shipping date: " + DateUtil.dateAndTimeString(pump.shippingDate));
             log.debug("Shipping country: " + pump.shippingCountry);
         }
     }

@@ -191,13 +191,13 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                long timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                long timeDiff = (mDanaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                 if (L.isEnabled(L.PUMP))
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
                     mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                    timeDiff = (mDanaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                    timeDiff = (mDanaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                     if (L.isEnabled(L.PUMP))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
@@ -282,7 +282,6 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
         if (amount > 0) {
             MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-            long bolusStart = System.currentTimeMillis();
 
             if (!stop.stopped) {
                 mSerialIOThread.sendMessage(start);

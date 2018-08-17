@@ -48,7 +48,7 @@ public class DanaRS_Packet_Option_Get_Pump_Time extends DanaRS_Packet {
         int sec = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
         Date time = new Date(100 + year, month - 1, day, hour, min, sec);
-        DanaRPump.getInstance().pumpTime = time;
+        DanaRPump.getInstance().pumpTime = time.getTime();
 
         if ( year == month && month == day && day == hour && hour == min && min == sec && sec == 1)
             failed = true;

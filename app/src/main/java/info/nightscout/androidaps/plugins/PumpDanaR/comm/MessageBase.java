@@ -129,8 +129,8 @@ public class MessageBase {
         return 0;
     }
 
-    public static Date dateTimeFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static long dateTimeFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + intFromBuff(buff, offset, 1),
                         intFromBuff(buff, offset + 1, 1) - 1,
@@ -138,8 +138,7 @@ public class MessageBase {
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         0
-                );
-        return date;
+                ).getTime();
     }
 
     public static synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
@@ -154,14 +153,13 @@ public class MessageBase {
                 ).getTime();
     }
 
-    public static Date dateFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static long dateFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + intFromBuff(buff, offset, 1),
                         intFromBuff(buff, offset + 1, 1) - 1,
                         intFromBuff(buff, offset + 2, 1)
-                );
-        return date;
+                ).getTime();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
