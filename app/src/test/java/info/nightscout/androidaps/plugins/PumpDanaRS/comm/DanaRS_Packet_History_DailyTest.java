@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_DailyTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Daily packet = new DanaRS_Packet_History_Daily(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Daily packet = new DanaRS_Packet_History_Daily(System.currentTimeMillis());
 
         assertEquals("REVIEW__DAILY", packet.getFriendlyName());
     }

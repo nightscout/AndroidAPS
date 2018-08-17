@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_AlarmTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Alarm packet = new DanaRS_Packet_History_Alarm(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Alarm packet = new DanaRS_Packet_History_Alarm(System.currentTimeMillis());
 
         assertEquals("REVIEW__ALARM", packet.getFriendlyName());
     }

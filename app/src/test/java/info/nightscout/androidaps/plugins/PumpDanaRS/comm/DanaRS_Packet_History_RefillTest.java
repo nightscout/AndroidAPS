@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_RefillTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Refill packet = new DanaRS_Packet_History_Refill(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Refill packet = new DanaRS_Packet_History_Refill(System.currentTimeMillis());
 
         assertEquals("REVIEW__REFILL", packet.getFriendlyName());
     }

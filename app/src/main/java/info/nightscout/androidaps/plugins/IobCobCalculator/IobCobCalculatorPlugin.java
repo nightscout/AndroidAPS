@@ -102,6 +102,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return bgReadings;
     }
 
+    public void setBgReadings(List<BgReading> bgReadings) {
+        this.bgReadings = bgReadings;
+    }
+
     public List<BgReading> getBucketedData() {
         return bucketed_data;
     }
@@ -149,7 +153,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start) + " End date: " + DateUtil.dateAndTimeString(now));
     }
 
-    private boolean isAbout5minData() {
+    public boolean isAbout5minData() {
         synchronized (dataLock) {
             if (bgReadings == null || bgReadings.size() < 3) {
                 return true;
@@ -160,10 +164,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 long lastbgTime = bgReadings.get(i - 1).date;
                 long diff = lastbgTime - bgTime;
                 totalDiff += diff;
-                if (diff > 30 * 1000 && diff < 270 * 1000) { // 0:30 - 4:30
-                    log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "sec is5minData: " + false);
+                if (diff > T.secs(30).msecs() && diff < T.secs(270).msecs()) { // 0:30 - 4:30
                     if (L.isEnabled(L.AUTOSENS))
-                        return false;
+                        log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "sec is5minData: " + false);
+                    return false;
                 }
             }
             double intervals = totalDiff / (5 * 60 * 1000d);
@@ -175,7 +179,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
-    void createBucketedData() {
+    public void createBucketedData() {
         if (isAbout5minData())
             createBucketedData5min();
         else
@@ -299,9 +303,9 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
 
         // Normalize bucketed data
-        for (int i = bucketed_data.size() - 2; i > 0 ; i--) {
+        for (int i = bucketed_data.size() - 2; i > 0; i--) {
             BgReading current = bucketed_data.get(i);
-            BgReading previous = bucketed_data.get(i+1);
+            BgReading previous = bucketed_data.get(i + 1);
             long msecDiff = current.date - previous.date;
             long adjusted = (msecDiff - T.mins(5).msecs()) / 1000;
             log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");

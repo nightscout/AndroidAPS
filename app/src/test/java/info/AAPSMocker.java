@@ -148,9 +148,10 @@ public class AAPSMocker {
         when(MainApp.instance().getApplicationContext()).thenReturn(context);
     }
 
-    public static void mockDatabaseHelper() {
+    public static DatabaseHelper mockDatabaseHelper() {
         DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
         when(MainApp.getDbHelper()).thenReturn(databaseHelper);
+        return databaseHelper;
     }
 
     public static void mockCommandQueue() {
