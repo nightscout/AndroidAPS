@@ -184,6 +184,12 @@ public class IobCobCalculatorPluginTest {
         Assert.assertEquals(90, iobCobCalculatorPlugin.getBucketedData().get(1).value, 1);
         Assert.assertEquals(50, iobCobCalculatorPlugin.getBucketedData().get(5).value, 1);
         Assert.assertEquals(40, iobCobCalculatorPlugin.getBucketedData().get(6).value, 1);
+
+        //bucketed data should be null if no bg data available
+        iobCobCalculatorPlugin.setBgReadings(null);
+        iobCobCalculatorPlugin.createBucketedData();
+        Assert.assertEquals(null, iobCobCalculatorPlugin.getBucketedData());
+
     }
 
     @Test
