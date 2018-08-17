@@ -242,6 +242,30 @@ public class IobCobCalculatorPluginTest {
         Assert.assertEquals(null, iobCobCalculatorPlugin.findOlder(T.mins(4).msecs()));
     }
 
+    @Test
+    public void findPreviousTimeFromBucketedDataTest() {
+        List<BgReading> bgReadingList = new ArrayList<>();
+
+        iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        iobCobCalculatorPlugin.createBucketedData();
+        Assert.assertEquals(null, iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(1000));
+
+        // Super data should not be touched
+        bgReadingList.clear();
+        bgReadingList.add(new BgReading().date(T.mins(20).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(15).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(10).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(5).msecs()).value(100));
+
+        iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        iobCobCalculatorPlugin.createBucketedData();
+
+        Assert.assertEquals(null, iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(4).msecs()));
+        Assert.assertEquals((Long)T.mins(5).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(6).msecs()));
+        Assert.assertEquals((Long)T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(20).msecs()));
+        Assert.assertEquals((Long)T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(25).msecs()));
+    }
+
     @Before
     public void doMock() {
         AAPSMocker.mockMainApp();

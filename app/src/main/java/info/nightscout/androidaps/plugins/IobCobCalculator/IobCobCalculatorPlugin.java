@@ -351,11 +351,11 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     @Nullable
-    private Long findPreviousTimeFromBucketedData(long time) {
+    public Long findPreviousTimeFromBucketedData(long time) {
         if (bucketed_data == null)
             return null;
         for (int index = 0; index < bucketed_data.size(); index++) {
-            if (bucketed_data.get(index).date < time)
+            if (bucketed_data.get(index).date <= time)
                 return bucketed_data.get(index).date;
         }
         return null;
