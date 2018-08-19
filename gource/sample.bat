@@ -1,0 +1,2 @@
+gource -1024x768 --stop-position 1.0 --highlight-all-users --hide-filenames --seconds-per-day 0.08 --max-file-lag 0.1 --output-framerate 60 --output-ppm-stream output.ppm -logo c:\github\androidaps\logo\notif_icon.png c:\github\androidaps
+"c:\program files\ffmpeg\bin\ffmpeg" -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 aaps.mp4

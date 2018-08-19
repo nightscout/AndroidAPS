@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -29,8 +30,6 @@ import info.nightscout.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(Treatment.class);
-
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -93,7 +92,7 @@ public class Treatment implements DataPointWithLabelInterface {
     public String toString() {
         return "Treatment{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + new Date(date).toLocaleString() +
                 ", isValid= " + isValid +
                 ", isSMB= " + isSMB +
                 ", _id= " + _id +
@@ -132,6 +131,24 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+
+    /*
+     * mealBolus, _id and isSMB cannot be known coming from pump. Only compare rest
+     * TODO: remove debug toasts
+     */
+    public boolean equalsRePumpHistory(Treatment other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (insulin != other.insulin) {
+            return false;
+        }
+        if (carbs != other.carbs) {
+            return false;
+        }
+        return true;
+    }
+
     public void copyFrom(Treatment t) {
         date = t.date;
         _id = t._id;
@@ -140,6 +157,14 @@ public class Treatment implements DataPointWithLabelInterface {
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
         isSMB = t.isSMB;
+    }
+
+    public void copyBasics(Treatment t) {
+        date = t.date;
+        insulin = t.insulin;
+        carbs = t.carbs;
+        pumpId = t.pumpId;
+        source = t.source;
     }
 
     //  ----------------- DataPointInterface --------------------

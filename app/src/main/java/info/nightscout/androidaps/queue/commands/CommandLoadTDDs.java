@@ -1,7 +1,11 @@
 package info.nightscout.androidaps.queue.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
@@ -10,6 +14,8 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandLoadTDDs extends Command {
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
+
 
     public CommandLoadTDDs(Callback callback) {
         commandType = CommandType.LOADHISTORY; //belongs to the history group of commands
@@ -20,9 +26,11 @@ public class CommandLoadTDDs extends Command {
     public void execute() {
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         PumpEnactResult r = pump.loadTDDs();
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Result success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)
             callback.result(r).run();
-        }
+    }
 
     @Override
     public String status() {

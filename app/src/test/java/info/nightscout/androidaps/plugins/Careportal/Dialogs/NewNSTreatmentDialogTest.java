@@ -18,12 +18,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 import static info.nightscout.androidaps.plugins.Careportal.CareportalFragment.PROFILESWITCH;
@@ -57,14 +56,6 @@ public class NewNSTreatmentDialogTest {
 
         // Profile should be sent to NS
         Assert.assertEquals(AAPSMocker.TESTPROFILENAME, profileSwitchUpload.profileName);
-    }
-
-    @Test
-    public void doProfileSwitch() {
-    }
-
-    @Test
-    public void doProfileSwitch1() {
     }
 
     @Before

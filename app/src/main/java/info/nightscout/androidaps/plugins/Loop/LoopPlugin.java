@@ -21,47 +21,56 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
+import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class LoopPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
-    public static final String CHANNEL_ID = "AndroidAPS-Openloop";
+    private static final String CHANNEL_ID = "AndroidAPS-Openloop";
 
-    long lastBgTriggeredRun = 0;
+    private long lastBgTriggeredRun = 0;
 
-    protected static LoopPlugin loopPlugin;
+    private static LoopPlugin loopPlugin;
 
     @NonNull
     public static LoopPlugin getPlugin() {
@@ -132,15 +141,15 @@ public class LoopPlugin extends PluginBase {
         PumpInterface pump = ConfigBuilderPlugin.getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
-    
+
     /**
      * This method is triggered once autosens calculation has completed, so the LoopPlugin
      * has current data to work with. However, autosens calculation can be triggered by multiple
      * sources and currently only a new BG should trigger a loop run. Hence we return early if
      * the event causing the calculation is not EventNewBg.
-     *
-     *  Callers of {@link info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin#runCalculation(String, long, boolean, Event)}
-     *  are sources triggering a calculation which triggers this method upon completion.
+     * <p>
+     * Callers of {@link info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin#runCalculation(String, long, boolean, Event)}
+     * are sources triggering a calculation which triggers this method upon completion.
      */
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
@@ -249,19 +258,20 @@ public class LoopPlugin extends PluginBase {
         return isDisconnected;
     }
 
-    public synchronized void invoke(String initiator, boolean allowNotification){
+    public synchronized void invoke(String initiator, boolean allowNotification) {
         invoke(initiator, allowNotification, false);
     }
 
     public synchronized void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
         try {
-            if (Config.logFunctionCalls)
+            if (L.isEnabled(L.APS))
                 log.debug("invoke from " + initiator);
             Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
 
             if (!loopEnabled.value()) {
                 String message = MainApp.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
-                log.debug(message);
+                if (L.isEnabled(L.APS))
+                    log.debug(message);
                 MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
             }
@@ -271,10 +281,11 @@ public class LoopPlugin extends PluginBase {
             if (!isEnabled(PluginType.LOOP))
                 return;
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
 
-            if (!MainApp.getConfigBuilder().isProfileValid("Loop")) {
-                log.debug(MainApp.gs(R.string.noprofileselected));
+            if (!ProfileFunctions.getInstance().isProfileValid("Loop")) {
+                if (L.isEnabled(L.APS))
+                    log.debug(MainApp.gs(R.string.noprofileselected));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
                 return;
             }
@@ -304,7 +315,8 @@ public class LoopPlugin extends PluginBase {
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
             if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
-                log.debug("SMB requsted but still in 3 min interval");
+                if (L.isEnabled(L.APS))
+                    log.debug("SMB requsted but still in 3 min interval");
                 resultAfterConstraints.smb = 0;
             }
 
@@ -319,13 +331,15 @@ public class LoopPlugin extends PluginBase {
             NSUpload.uploadDeviceStatus();
 
             if (isSuspended()) {
-                log.debug(MainApp.gs(R.string.loopsuspended));
+                if (L.isEnabled(L.APS))
+                    log.debug(MainApp.gs(R.string.loopsuspended));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.loopsuspended)));
                 return;
             }
 
             if (pump.isSuspended()) {
-                log.debug(MainApp.gs(R.string.pumpsuspended));
+                if (L.isEnabled(L.APS))
+                    log.debug(MainApp.gs(R.string.pumpsuspended));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.gs(R.string.pumpsuspended)));
                 return;
             }
@@ -344,13 +358,13 @@ public class LoopPlugin extends PluginBase {
                         lastRun.smbSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
-                    MainApp.getConfigBuilder().applyTBRRequest(resultAfterConstraints, profile, new Callback() {
+                    applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
                         public void run() {
                             if (result.enacted || result.success) {
                                 lastRun.tbrSetByPump = result;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
-                                MainApp.getConfigBuilder().applySMBRequest(resultAfterConstraints, new Callback() {
+                                applySMBRequest(resultAfterConstraints, new Callback() {
                                     @Override
                                     public void run() {
                                         //Callback is only called if a bolus was acutally requested
@@ -385,7 +399,8 @@ public class LoopPlugin extends PluginBase {
                             .setAutoCancel(true)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
-                            .setVisibility(Notification.VISIBILITY_PUBLIC);
+                            .setVisibility(Notification.VISIBILITY_PUBLIC)
+                            .setLocalOnly(true);
 
                     // Creates an explicit intent for an Activity in your app
                     Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
@@ -407,14 +422,210 @@ public class LoopPlugin extends PluginBase {
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
                     MainApp.bus().post(new EventNewOpenLoopNotification());
+
+                    // Send to Wear
+                    ActionStringHandler.handleInitiate("changeRequest");
+                } else if (allowNotification) {
+                    // dismiss notifications
+                    NotificationManager notificationManager =
+                            (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.cancel(Constants.notificationID);
+                    ActionStringHandler.handleInitiate("cancelChangeRequest");
                 }
             }
 
             MainApp.bus().post(new EventLoopUpdateGui());
         } finally {
-            if (Config.logFunctionCalls)
+            if (L.isEnabled(L.APS))
                 log.debug("invoke end");
         }
+    }
+
+    public void acceptChangeRequest() {
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+
+        applyTBRRequest(lastRun.constraintsProcessed, profile, new Callback() {
+            @Override
+            public void run() {
+                if (result.enacted) {
+                    lastRun.tbrSetByPump = result;
+                    lastRun.lastEnact = new Date();
+                    lastRun.lastOpenModeAccept = new Date();
+                    NSUpload.uploadDeviceStatus();
+                    ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                    if (objectivesPlugin != null) {
+                        ObjectivesPlugin.manualEnacts++;
+                        ObjectivesPlugin.saveProgress();
+                    }
+                }
+                MainApp.bus().post(new EventAcceptOpenLoopChange());
+            }
+        });
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+    }
+
+    /**
+     * expect absolute request and allow both absolute and percent response based on pump capabilities
+     */
+    public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
+        if (!request.tempBasalRequested) {
+            if (callback != null) {
+                callback.result(new PumpEnactResult().enacted(false).success(true).comment(MainApp.gs(R.string.nochangerequested))).run();
+            }
+            return;
+        }
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
+
+        request.rateConstraint = new Constraint<>(request.rate);
+        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
+
+        if (!pump.isInitialized()) {
+            if (L.isEnabled(L.APS))
+                log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpNotInitialized));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (pump.isSuspended()) {
+            if (L.isEnabled(L.APS))
+                log.debug("applyAPSRequest: " + MainApp.gs(R.string.pumpsuspended));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (L.isEnabled(L.APS))
+            log.debug("applyAPSRequest: " + request.toString());
+
+        long now = System.currentTimeMillis();
+        TemporaryBasal activeTemp = activeTreatments.getTempBasalFromHistory(now);
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+            if (activeTemp != null) {
+                if (L.isEnabled(L.APS))
+                    log.debug("applyAPSRequest: cancelTempBasal()");
+                MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+            } else {
+                if (L.isEnabled(L.APS))
+                    log.debug("applyAPSRequest: Basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                            .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
+                }
+            }
+        } else if (activeTemp != null
+                && activeTemp.getPlannedRemainingMinutes() > 5
+                && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
+                && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+            if (L.isEnabled(L.APS))
+                log.debug("applyAPSRequest: Temp basal set correctly");
+            if (callback != null) {
+                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                        .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
+                        .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
+            }
+        } else {
+            if (L.isEnabled(L.APS))
+                log.debug("applyAPSRequest: setTempBasalAbsolute()");
+            MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+        }
+    }
+
+    public void applySMBRequest(APSResult request, Callback callback) {
+        if (!request.bolusRequested) {
+            return;
+        }
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
+
+        long lastBolusTime = activeTreatments.getLastBolusTime();
+        if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+            if (L.isEnabled(L.APS))
+                log.debug("SMB requested but still in 3 min interval");
+            if (callback != null) {
+                callback.result(new PumpEnactResult()
+                        .comment(MainApp.gs(R.string.smb_frequency_exceeded))
+                        .enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (!pump.isInitialized()) {
+            if (L.isEnabled(L.APS))
+                log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpNotInitialized));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (pump.isSuspended()) {
+            if (L.isEnabled(L.APS))
+                log.debug("applySMBRequest: " + MainApp.gs(R.string.pumpsuspended));
+            if (callback != null) {
+                callback.result(new PumpEnactResult().comment(MainApp.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+            }
+            return;
+        }
+
+        if (L.isEnabled(L.APS))
+            log.debug("applySMBRequest: " + request.toString());
+
+        // deliver SMB
+        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.lastKnownBolusTime = activeTreatments.getLastBolusTime();
+        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+        detailedBolusInfo.insulin = request.smb;
+        detailedBolusInfo.isSMB = true;
+        detailedBolusInfo.source = Source.USER;
+        detailedBolusInfo.deliverAt = request.deliverAt;
+        if (L.isEnabled(L.APS))
+            log.debug("applyAPSRequest: bolus()");
+        MainApp.getConfigBuilder().getCommandQueue().bolus(detailedBolusInfo, callback);
+    }
+
+    public void disconnectPump(int durationInMinutes, Profile profile) {
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
+
+        LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
+        MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        if (pump.getPumpDescription().isExtendedBolusCapable && activeTreatments.isInHistoryExtendedBoluslInProgress()) {
+            MainApp.getConfigBuilder().getCommandQueue().cancelExtended(new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.extendedbolusdeliveryerror));
+                    }
+                }
+            });
+        }
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
+    }
+
+    public void suspendLoop(int durationInMinutes) {
+        LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
+        MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+            @Override
+            public void run() {
+                if (!result.success) {
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                }
+            }
+        });
+        NSUpload.uploadOpenAPSOffline(durationInMinutes);
     }
 
 }

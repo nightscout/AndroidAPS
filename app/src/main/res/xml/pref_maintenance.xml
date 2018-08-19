@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="maintenance"
+        android:title="@string/maintenance_settings">
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:defaultValue="logs@androidaps.org"
+            android:dialogMessage="@string/maintenance_email"
+            android:inputType="textEmailAddress"
+            android:key="@string/key_maintenance_logs_email"
+            android:selectAllOnFocus="true"
+            android:title="@string/maintenance_email" />
+
+        <!-- TODO: make this working with changed package name(nsclient)
+        validatingEditText:emptyAllowed="false"
+        validatingEditText:testErrorString="@string/invalid_email_message"
+        validatingEditText:testType="email"
+        -->
+
+        <EditTextPreference
+            android:defaultValue="2"
+            android:inputType="number"
+            android:key="@string/key_maintenance_logs_amount"
+            android:title="@string/maintenance_amount">
+
+        </EditTextPreference>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

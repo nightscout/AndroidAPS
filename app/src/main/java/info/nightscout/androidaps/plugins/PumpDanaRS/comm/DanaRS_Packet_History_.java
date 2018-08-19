@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
-import com.cozmo.danar.util.BleCommandUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,12 +9,13 @@ import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DateUtil;
 
 public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_History_.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int year = 0;
     private int month = 0;
@@ -34,11 +33,11 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
         totalCount = 0;
     }
 
-    public DanaRS_Packet_History_(Date from) {
+    public DanaRS_Packet_History_(long from) {
         this();
         GregorianCalendar cal = new GregorianCalendar();
-        if (from.getTime() != 0)
-            cal.setTime(from);
+        if (from != 0)
+            cal.setTimeInMillis(from);
         else
             cal.set(2000, 0, 1, 0, 0, 0);
         year = cal.get(Calendar.YEAR) - 1900 - 100;
@@ -47,7 +46,8 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
         hour = cal.get(Calendar.HOUR_OF_DAY);
         min = cal.get(Calendar.MINUTE);
         sec = cal.get(Calendar.SECOND);
-        log.debug("Loading event history from: " + new Date(cal.getTimeInMillis()).toLocaleString());
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("Loading event history from: " + new Date(cal.getTimeInMillis()).toLocaleString());
     }
 
     @Override
@@ -71,7 +71,8 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
             int dataSize = 1;
             error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
             done = true;
-            log.debug("History end. Code: " + error + " Success: " + (error == 0x00));
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("History end. Code: " + error + " Success: " + (error == 0x00));
         } else if (data.length == 5) {
             int dataIndex = DATA_START;
             int dataSize = 1;
@@ -81,11 +82,12 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
             dataIndex += dataSize;
             dataSize = 2;
             totalCount = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-            log.debug("History end. Code: " + error + " Success: " + (error == 0x00) + " Toatal count: " + totalCount);
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("History end. Code: " + error + " Success: " + (error == 0x00) + " Toatal count: " + totalCount);
         } else {
             int recordCode = byteArrayToInt(getBytes(data, DATA_START, 1));
             int historyYear = byteArrayToInt(getBytes(data, DATA_START + 1, 1));
-            int historyMonth = byteArrayToInt(getBytes(data, DATA_START +2 , 1));
+            int historyMonth = byteArrayToInt(getBytes(data, DATA_START + 2, 1));
             int historyDay = byteArrayToInt(getBytes(data, DATA_START + 3, 1));
             int historyHour = byteArrayToInt(getBytes(data, DATA_START + 4, 1));
             double dailyBasal = (((data[DATA_START + 4] & 0xFF) << 8) + (data[DATA_START + 5] & 0xFF)) * 0.01d;
@@ -103,7 +105,8 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
 
             int value = ((data[DATA_START + 8] & 0xFF) << 8) + (data[DATA_START + 9] & 0xFF);
 
-            log.debug("History packet: " + recordCode + " Date: " + datetimewihtsec.toLocaleString() + " Code: " + historyCode + " Value: " + value);
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("History packet: " + recordCode + " Date: " + datetimewihtsec.toLocaleString() + " Code: " + historyCode + " Value: " + value);
 
 
             EventDanaRSyncStatus ev = new EventDanaRSyncStatus();

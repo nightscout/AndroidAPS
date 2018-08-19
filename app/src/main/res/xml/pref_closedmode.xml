@@ -6,7 +6,7 @@
 
         <ListPreference
             android:title="@string/apsmode_title"
-            android:key="aps_mode"
+            android:key="@string/key_aps_mode"
             android:defaultValue="open"
             android:entries="@array/aps_modeArray"
             android:entryValues="@array/aps_modeValues"/>

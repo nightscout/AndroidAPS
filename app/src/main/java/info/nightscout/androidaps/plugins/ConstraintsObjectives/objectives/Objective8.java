@@ -7,7 +7,7 @@ import info.nightscout.androidaps.R;
 public class Objective8 extends Objective {
 
     public Objective8() {
-        super(7, R.string.objectives_7_objective, 0);
+        super(7, R.string.objectives_7_objective, R.string.objectives_7_gate);
     }
 
     @Override

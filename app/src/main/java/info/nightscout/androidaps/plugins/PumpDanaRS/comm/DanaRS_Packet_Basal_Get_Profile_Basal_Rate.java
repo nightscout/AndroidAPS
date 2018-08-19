@@ -1,16 +1,19 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import com.cozmo.danar.util.BleCommandUtil;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Basal_Get_Profile_Basal_Rate extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Get_Profile_Basal_Rate.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int profileNumber;
+
+    DanaRPump pump = DanaRPump.getInstance();
 
     public DanaRS_Packet_Basal_Get_Profile_Basal_Rate() {
         super();
@@ -21,7 +24,7 @@ public class DanaRS_Packet_Basal_Get_Profile_Basal_Rate extends DanaRS_Packet {
     public DanaRS_Packet_Basal_Get_Profile_Basal_Rate(int profileNumber) {
         this();
         this.profileNumber = profileNumber;
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Requesting basal rates for profile " + profileNumber);
         }
     }
@@ -35,7 +38,6 @@ public class DanaRS_Packet_Basal_Get_Profile_Basal_Rate extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
-        DanaRPump pump = DanaRPump.getInstance();
 
         int dataIndex = DATA_START;
         int dataSize = 2;
@@ -47,7 +49,7 @@ public class DanaRS_Packet_Basal_Get_Profile_Basal_Rate extends DanaRS_Packet {
             dataIndex += dataSize;
             dataSize = 2;
         }
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             for (int index = 0; index < 24; index++)
                 log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profileNumber][index]);
         }

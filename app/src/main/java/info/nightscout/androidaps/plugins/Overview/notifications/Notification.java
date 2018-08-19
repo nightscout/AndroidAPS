@@ -20,8 +20,6 @@ import info.nightscout.utils.SP;
  */
 
 public class Notification {
-    private static Logger log = LoggerFactory.getLogger(Notification.class);
-
     public static final int URGENT = 0;
     public static final int NORMAL = 1;
     public static final int LOW = 2;
@@ -42,6 +40,8 @@ public class Notification {
     public static final int APPROACHING_DAILY_LIMIT = 11;
     public static final int NSCLIENT_NO_WRITE_PERMISSION = 12;
     public static final int MISSING_SMS_PERMISSION = 13;
+    public static final int PUMPERROR = 14;
+    public static final int WRONGSERIALNUMBER = 15;
 
     public static final int NSANNOUNCEMENT = 18;
     public static final int NSALARM = 19;
@@ -65,6 +65,8 @@ public class Notification {
     public static final int PERMISSION_BATTERY = 37;
     public static final int PERMISSION_SMS = 38;
     public static final int MAXIMUM_BASAL_VALUE_REPLACED = 39;
+    public static final int NSMALFUNCTION = 40;
+    public static final int NEWVERSIONDETECTED = 41;
 
 
     public int id;

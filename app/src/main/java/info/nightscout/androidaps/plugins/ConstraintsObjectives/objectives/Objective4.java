@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 public class Objective4 extends Objective {
 
     public Objective4() {
-        super(3, R.string.objectives_3_objective, R.string.objectives_4_gate);
+        super(3, R.string.objectives_3_objective, R.string.objectives_3_gate);
     }
 
     @Override

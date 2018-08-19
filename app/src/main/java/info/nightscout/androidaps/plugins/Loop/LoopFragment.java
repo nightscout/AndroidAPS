@@ -28,8 +28,6 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.utils.FabricPrivacy;
 
 public class LoopFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
-
     @BindView(R.id.loop_run)
     Button runNowButton;
     @BindView(R.id.loop_lastrun)

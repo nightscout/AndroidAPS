@@ -11,6 +11,9 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +27,9 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -47,6 +52,7 @@ import info.nightscout.utils.Round;
  */
 
 public class GraphData {
+    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
 
     private GraphView graph;
     public double maxY = Double.MIN_VALUE;
@@ -58,21 +64,25 @@ public class GraphData {
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
-        units = MainApp.getConfigBuilder().getProfileUnits();
+        units = ProfileFunctions.getInstance().getProfileUnits();
         this.graph = graph;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, List<BgReading> predictions) {
         double maxBgValue = Double.MIN_VALUE;
-        bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
+        //bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
+        bgReadingsArray = iobCobCalculatorPlugin.getBgReadings();
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
-        if (bgReadingsArray.size() == 0) {
+        if (bgReadingsArray == null || bgReadingsArray.size() == 0) {
+            if (L.isEnabled(L.OVERVIEW))
+                log.debug("No BG data.");
             return;
         }
 
         for (BgReading bg : bgReadingsArray) {
+            if (bg.date < fromTime || bg.date > toTime) continue;
             if (bg.value > maxBgValue) maxBgValue = bg.value;
             bgListArray.add(bg);
         }
@@ -135,9 +145,9 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            Profile profile = MainApp.getConfigBuilder().getProfile(time);
+            Profile profile = ProfileFunctions.getInstance().getProfile(time);
             if (profile == null) continue;
-            BasalData basalData = IobCobCalculatorPlugin.getPlugin().getBasalData(profile, time);
+            BasalData basalData = iobCobCalculatorPlugin.getBasalData(profile, time);
             double baseBasalValue = basalData.basal;
             double absoluteLineValue = baseBasalValue;
             double tempBasalValue = 0;
@@ -233,7 +243,7 @@ public class GraphData {
         targetsScale.setMultiplier(1);
 
         List<DataPoint> targetsSeriesArray = new ArrayList<>();
-        double lastTarget = 0;
+        double lastTarget = -1;
 
         if (LoopPlugin.lastRun != null && LoopPlugin.lastRun.constraintsProcessed != null) {
             APSResult apsResult = LoopPlugin.lastRun.constraintsProcessed;
@@ -243,22 +253,22 @@ public class GraphData {
             }
         }
 
-        for (long time = fromTime; time < toTime; time += 60 * 1000L) {
+        for (long time = fromTime; time < toTime; time += 5 * 60 * 1000L) {
             TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
             double value;
             if (tt == null) {
                 value = (profile.getTargetLow(time) + profile.getTargetHigh(time)) / 2;
             } else {
-                value = tt.target();
-                value = Profile.fromMgdlToUnits(value, profile.getUnits());
+                value = Profile.fromMgdlToUnits(tt.target(), profile.getUnits());
             }
-            if (lastTarget > 0 && lastTarget != value) {
-                targetsSeriesArray.add(new DataPoint(time, lastTarget));
+            if (lastTarget != value) {
+                if (lastTarget != -1)
+                    targetsSeriesArray.add(new DataPoint(time, lastTarget));
+                targetsSeriesArray.add(new DataPoint(time, value));
             }
             lastTarget = value;
-
-            targetsSeriesArray.add(new DataPoint(time, value));
         }
+        targetsSeriesArray.add(new DataPoint(toTime, lastTarget));
 
         DataPoint[] targets = new DataPoint[targetsSeriesArray.size()];
         targets = targetsSeriesArray.toArray(targets);
@@ -321,13 +331,15 @@ public class GraphData {
     }
 
     private double getNearestBg(long date) {
-        for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
+        if (bgReadingsArray == null)
+            return Profile.fromMgdlToUnits(100, units);
+        for (int r = 0; r < bgReadingsArray.size(); r++) {
             BgReading reading = bgReadingsArray.get(r);
             if (reading.date > date) continue;
             return Profile.fromMgdlToUnits(reading.value, units);
         }
         return bgReadingsArray.size() > 0
-                ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : 0;
+                ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : Profile.fromMgdlToUnits(100, units);
     }
 
     // scale in % of vertical size (like 0.3)
@@ -339,10 +351,10 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            Profile profile = MainApp.getConfigBuilder().getProfile(time);
+            Profile profile = ProfileFunctions.getInstance().getProfile(time);
             double iob = 0d;
             if (profile != null)
-                iob = IobCobCalculatorPlugin.getPlugin().calculateFromTreatmentsAndTempsSynchronized(time, profile).iob;
+                iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob;
             if (Math.abs(lastIob - iob) > 0.02) {
                 if (Math.abs(lastIob - iob) > 0.2)
                     iobArray.add(new ScaledDataPoint(time, lastIob, iobScale));
@@ -380,7 +392,7 @@ public class GraphData {
         Scale cobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
+            AutosensData autosensData = iobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
                 int cob = (int) autosensData.cob;
                 if (cob != lastCob) {
@@ -438,7 +450,7 @@ public class GraphData {
         Scale devScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
+            AutosensData autosensData = iobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
                 int color = MainApp.gc(R.color.deviationblack); // "="
                 if (autosensData.type.equals("") || autosensData.type.equals("non-meal")) {
@@ -488,11 +500,11 @@ public class GraphData {
         Scale ratioScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
+            AutosensData autosensData = iobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
-                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensRatio - 1, ratioScale));
-                maxRatioValueFound = Math.max(maxRatioValueFound, autosensData.autosensRatio - 1);
-                minRatioValueFound = Math.min(minRatioValueFound, autosensData.autosensRatio - 1);
+                ratioArray.add(new ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale));
+                maxRatioValueFound = Math.max(maxRatioValueFound, autosensData.autosensResult.ratio - 1);
+                minRatioValueFound = Math.min(minRatioValueFound, autosensData.autosensResult.ratio - 1);
             }
         }
 
@@ -504,11 +516,11 @@ public class GraphData {
         ratioSeries.setThickness(3);
 
         if (useForScale) {
-            maxY = maxRatioValueFound;
-            minY = minRatioValueFound;
+            maxY = Math.max(maxRatioValueFound, Math.abs(minRatioValueFound));
+            minY = -maxY;
         }
 
-        ratioScale.setMultiplier(maxY * scale / maxRatioValueFound);
+        ratioScale.setMultiplier(maxY * scale / Math.max(maxRatioValueFound, Math.abs(minRatioValueFound)));
 
         addSeries(ratioSeries);
     }
@@ -525,7 +537,7 @@ public class GraphData {
         Scale dsMinScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getAutosensData(time);
+            AutosensData autosensData = iobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
                 dsMaxArray.add(new ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale));
                 dsMinArray.add(new ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale));
@@ -604,8 +616,10 @@ public class GraphData {
             }
         }
 
-        graph.getViewport().setMaxY(Round.ceilTo(maxY, 1d));
-        graph.getViewport().setMinY(Round.floorTo(minY, 1d));
+        double step = 1d;
+        if (maxY < 1) step = 0.1d;
+        graph.getViewport().setMaxY(Round.ceilTo(maxY, step));
+        graph.getViewport().setMinY(Round.floorTo(minY, step));
         graph.getViewport().setYAxisBoundsManual(true);
 
         // draw it

@@ -83,6 +83,6 @@ class HistoryLogAdapter {
         detailedBolusInfo.source = Source.PUMP;
         detailedBolusInfo.pumpId = record_id;
         detailedBolusInfo.insulin = insulin;
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
     }
 }

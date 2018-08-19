@@ -5,13 +5,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
+import info.nightscout.androidaps.logging.L;
+
 /**
  * Created by mike on 28.05.2016.
  */
 public class MessageOriginalNames {
-    private static Logger log = LoggerFactory.getLogger(MessageOriginalNames.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
-    public static HashMap<Integer, String> messageNames;
+    private static HashMap<Integer, String> messageNames;
 
     static {
         messageNames = new HashMap<>();
@@ -162,7 +164,7 @@ public class MessageOriginalNames {
         if (messageNames.containsKey(command))
             return messageNames.get(command);
         else {
-            log.debug("Unknown command: " + String.format("%04X", command));
+            log.error("Unknown command: " + String.format("%04X", command));
             return "UNKNOWN_COMMAND";
         }
     }

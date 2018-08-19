@@ -2,9 +2,11 @@ package info.nightscout.androidaps.setupwizard.elements;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,14 @@ public class SWRadioButton extends SWItem {
     @Override
     public void generateDialog(LinearLayout layout) {
         Context context = layout.getContext();
+
+        TextView pdesc = new TextView(context);
+        pdesc.setText(getComment());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 0, 40);
+        pdesc.setLayoutParams(params);
+        layout.addView(pdesc);
+
         // Get if there is already value in SP
         String previousValue = SP.getString(preferenceId, "none");
         radioGroup = new RadioGroup(context);
@@ -59,9 +69,10 @@ public class SWRadioButton extends SWItem {
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int i = (int) group.findViewById(checkedId).getTag();
-            save(values()[i]);
+            save(values()[i], 0);
         });
         layout.addView(radioGroup);
+
         super.generateDialog(layout);
     }
 

@@ -2,6 +2,7 @@ package info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 
 import com.squareup.otto.Bus;
 
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Locale;
 
@@ -19,14 +21,22 @@ import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.SP;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -90,6 +100,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.minago)).thenReturn("%d min ago");
         when(MainApp.gs(R.string.hoursago)).thenReturn("%.1fh ago");
         when(MainApp.gs(R.string.careportal_profileswitch)).thenReturn("Profile Switch");
+        when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
+        when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
     }
 
     public static MainApp mockMainApp() {
@@ -122,14 +134,24 @@ public class AAPSMocker {
         when(SP.getInt(anyInt(), anyInt())).thenReturn(0);
     }
 
+    public static void mockL() {
+        PowerMockito.mockStatic(L.class);
+        when(L.isEnabled(any())).thenReturn(true);
+    }
+
+    public static void mockNSUpload(){
+        PowerMockito.mockStatic(NSUpload.class);
+    }
+
     public static void mockApplicationContext() {
         Context context = mock(Context.class);
         when(MainApp.instance().getApplicationContext()).thenReturn(context);
     }
 
-    public static void mockDatabaseHelper() {
+    public static DatabaseHelper mockDatabaseHelper() {
         DatabaseHelper databaseHelper = mock(DatabaseHelper.class);
         when(MainApp.getDbHelper()).thenReturn(databaseHelper);
+        return databaseHelper;
     }
 
     public static void mockCommandQueue() {
@@ -139,7 +161,9 @@ public class AAPSMocker {
 
     public static void mockTreatmentService() throws Exception {
         TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
+        TreatmentsPlugin treatmentsPlugin = PowerMockito.mock(TreatmentsPlugin.class);
         PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+        when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
     }
 
     public static Profile getValidProfile() {

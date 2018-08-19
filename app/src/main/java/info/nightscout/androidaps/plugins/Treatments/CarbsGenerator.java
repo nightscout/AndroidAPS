@@ -50,7 +50,7 @@ public class CarbsGenerator {
                 }
             });
         } else {
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo, false);
         }
     }
 }

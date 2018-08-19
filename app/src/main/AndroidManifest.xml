@@ -40,17 +40,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PreferencesActivity" />
+        <activity android:name=".activities.PreferencesActivity" />
         <activity
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".AgreementActivity" />
+        <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />
-        <activity android:name=".TDDStatsActivity" />
+        <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
@@ -66,7 +66,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
-        <activity android:name=".HistoryBrowseActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"
@@ -127,9 +127,19 @@
             </intent-filter>
         </receiver>
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
         <!-- Service processing incomming data -->
         <service
-            android:name=".Services.DataService"
+            android:name=".services.DataService"
             android:exported="false" />
         <service
             android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
@@ -159,7 +169,7 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".Services.AlarmSoundService"
+            android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service
@@ -178,8 +188,9 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_setup_wizard" />
 
-        <activity android:name=".SingleFragmentActivity"
+        <activity android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".plugins.Maintenance.activities.LogSettingActivity"></activity>
     </application>
 
 </manifest>

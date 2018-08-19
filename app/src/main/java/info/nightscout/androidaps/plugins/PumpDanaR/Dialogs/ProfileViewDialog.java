@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.Dialogs;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,22 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -33,8 +21,6 @@ import info.nightscout.utils.DecimalFormatter;
  * Created by mike on 10.07.2016.
  */
 public class ProfileViewDialog extends DialogFragment {
-    private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
-
     private  TextView noProfile;
     private  TextView units;
     private  TextView dia;

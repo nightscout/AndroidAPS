@@ -2,9 +2,15 @@ package info.nightscout.androidaps.plugins.PumpdanaRv2.comm;
 
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.AAPSMocker;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_APS_Basal_Set_Temporary_Basal;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetAPSTempBasalStart_v2;
+import info.nightscout.utils.SP;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,10 +18,16 @@ import static org.junit.Assert.assertEquals;
  * Created by mike on 20.11.2017.
  */
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MainApp.class, SP.class})
 public class MsgSetAPSTempBasalStart_v2Test extends MsgSetAPSTempBasalStart_v2 {
 
     @Test
-    public void runTest() throws Exception {
+    public void runTest() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+
         // under 100% should last 30 min
         setParams(0);
         assertEquals(0, intFromBuff(buffer, 0, 2));
