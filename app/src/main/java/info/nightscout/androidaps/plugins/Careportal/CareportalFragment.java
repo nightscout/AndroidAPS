@@ -100,7 +100,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
             noProfileView = view.findViewById(R.id.profileview_noprofile);
             butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
 
-            ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+            ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
             if (profileStore == null) {
                 noProfileView.setVisibility(View.VISIBLE);
                 butonsLayout.setVisibility(View.GONE);
