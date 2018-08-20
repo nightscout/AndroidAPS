@@ -74,7 +74,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
     public static final String DATABASE_TDDS = "TDDs";
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     public static Long earliestDataChange = null;
 
@@ -133,6 +133,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (oldVersion == 7 && newVersion == 8) {
                 log.debug("Upgrading database from v7 to v8");
+            } else if (oldVersion == 8 && newVersion == 9) {
+                log.debug("Upgrading database from v8 to v9");
             } else {
                 log.info(DatabaseHelper.class.getName(), "onUpgrade");
                 TableUtils.dropTable(connectionSource, TempTarget.class, true);

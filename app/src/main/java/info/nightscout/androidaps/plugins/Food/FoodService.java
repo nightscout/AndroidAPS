@@ -121,13 +121,9 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     public void onUpgrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        if (oldVersion == 7 && newVersion == 8) {
-            log.debug("Upgrading database from v7 to v8");
-        } else {
-            if (L.isEnabled(L.DATAFOOD))
-                log.info("onUpgrade");
+        if (L.isEnabled(L.DATAFOOD))
+            log.info("onUpgrade");
 //            this.resetFood();
-        }
     }
 
     public void onDowngrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {

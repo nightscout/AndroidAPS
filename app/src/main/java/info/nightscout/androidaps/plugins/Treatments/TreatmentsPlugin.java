@@ -506,6 +506,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
+        treatment.boluscalc = detailedBolusInfo.boluscalc.toString();
         TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment);
         boolean newRecordCreated = creatOrUpdateResult.newRecord;
         //log.debug("Adding new Treatment record" + treatment.toString());

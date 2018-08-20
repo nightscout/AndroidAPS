@@ -483,9 +483,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
         Profile specificProfile;
-        if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active)))
+        if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active))) {
             specificProfile = ProfileFunctions.getInstance().getProfile();
-        else
+            selectedAlternativeProfile = MainApp.getConfigBuilder().getActiveProfileInterface().getProfileName();
+        } else
             specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);
 
         // Entered values
@@ -579,12 +580,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         boluscalcJSON = new JSONObject();
         try {
             boluscalcJSON.put("profile", selectedAlternativeProfile);
+            boluscalcJSON.put("notes", notesEdit.getText());
             boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
             boluscalcJSON.put("targetBGLow", wizard.targetBGLow);
             boluscalcJSON.put("targetBGHigh", wizard.targetBGHigh);
             boluscalcJSON.put("isf", wizard.sens);
             boluscalcJSON.put("ic", wizard.ic);
             boluscalcJSON.put("iob", -(wizard.insulingFromBolusIOB + wizard.insulingFromBasalsIOB));
+            boluscalcJSON.put("bolusiob", wizard.insulingFromBolusIOB);
+            boluscalcJSON.put("basaliob", wizard.insulingFromBasalsIOB);
             boluscalcJSON.put("bolusiobused", bolusIobCheckbox.isChecked());
             boluscalcJSON.put("basaliobused", basalIobCheckbox.isChecked());
             boluscalcJSON.put("bg", c_bg);
@@ -594,11 +598,18 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             boluscalcJSON.put("insulincarbs", wizard.insulinFromCarbs);
             boluscalcJSON.put("carbs", c_carbs);
             boluscalcJSON.put("cob", c_cob);
+            boluscalcJSON.put("cobused", cobCheckbox.isChecked());
             boluscalcJSON.put("insulincob", wizard.insulinFromCOB);
             boluscalcJSON.put("othercorrection", corrAfterConstraint);
             boluscalcJSON.put("insulinsuperbolus", wizard.insulinFromSuperBolus);
             boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
             boluscalcJSON.put("insulin", calculatedTotalInsulin);
+            boluscalcJSON.put("superbolusused", superbolusCheckbox.isChecked());
+            boluscalcJSON.put("insulinsuperbolus", wizard.insulinFromSuperBolus);
+            boluscalcJSON.put("trendused", bgtrendCheckbox.isChecked());
+            boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
+            boluscalcJSON.put("trend", bgTrend.getText());
+            boluscalcJSON.put("ttused", ttCheckbox.isChecked());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
