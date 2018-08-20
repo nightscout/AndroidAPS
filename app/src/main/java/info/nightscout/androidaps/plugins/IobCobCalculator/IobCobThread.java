@@ -179,11 +179,17 @@ public class IobCobThread extends Thread {
                         if (hourAgoData != null) {
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
                             if (L.isEnabled(L.AUTOSENS))
-                                log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString());
+                                log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + " hourAgoData=" + hourAgoData.toString());
                             int past = 1;
-                            try {
+//                            try {
                                 for (; past < 12; past++) {
                                     AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
+                                    if (L.isEnabled(L.AUTOSENS)) {
+                                        log.debug(">>>>> past=" + past + " ad=" + (ad != null ? ad.toString() : null));
+                                        if (ad == null)
+                                            autosensDataTable.toString();
+                                    }
+                                    // let it here crash on NPE to get more data as i cannot reproduce this bug
                                     double deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
                                     if (ad.avgDeviation > maxDeviation) {
                                         slopeFromMaxDeviation = Math.min(0, deviationSlope);
@@ -197,17 +203,20 @@ public class IobCobThread extends Thread {
                                     //if (Config.isEnabled(L.AUTOSENS))
                                     //    log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation);
                                 }
-                            } catch (Exception e) {
-                                log.error("Unhandled exception", e);
-                                FabricPrivacy.logException(e);
-                                FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
-                                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                                        .putCustomAttribute("version", BuildConfig.VERSION)
-                                        .putCustomAttribute("autosensDataTable", iobCobCalculatorPlugin.getAutosensDataTable().toString())
-                                        .putCustomAttribute("for_data", ">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString())
-                                        .putCustomAttribute("past", past)
-                                );
-                            }
+//                            } catch (Exception e) {
+//                                log.error("Unhandled exception", e);
+//                                FabricPrivacy.logException(e);
+//                                FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
+//                                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+//                                        .putCustomAttribute("version", BuildConfig.VERSION)
+//                                        .putCustomAttribute("autosensDataTable", iobCobCalculatorPlugin.getAutosensDataTable().toString())
+//                                        .putCustomAttribute("for_data", ">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString())
+//                                        .putCustomAttribute("past", past)
+//                                );
+//                            }
+                        } else {
+                            if (L.isEnabled(L.AUTOSENS))
+                                log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + " hourAgoData=" + "null");
                         }
                     }
 
