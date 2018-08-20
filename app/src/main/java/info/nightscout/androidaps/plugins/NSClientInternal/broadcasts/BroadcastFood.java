@@ -31,7 +31,7 @@ public class BroadcastFood {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
                 bundle.putString("foods", part.toString());
@@ -57,7 +57,7 @@ public class BroadcastFood {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
                 bundle.putString("foods", part.toString());
@@ -81,7 +81,7 @@ public class BroadcastFood {
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             bundle = new Bundle();
             bundle.putString("foods", foods.toString());
             bundle.putBoolean("delta", isDelta);

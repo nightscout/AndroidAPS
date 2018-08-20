@@ -27,7 +27,7 @@ public class BroadcastStatus {
         LocalBroadcastManager.getInstance(MainApp.instance())
                 .sendBroadcast(createIntent(status, isDelta));
 
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             context.sendBroadcast(createIntent(status, isDelta));
         }
     }
