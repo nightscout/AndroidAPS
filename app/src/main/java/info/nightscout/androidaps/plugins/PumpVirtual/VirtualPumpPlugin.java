@@ -148,6 +148,15 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void connect(String reason) {
         if (!Config.NSCLIENT)
             NSUpload.uploadDeviceStatus();

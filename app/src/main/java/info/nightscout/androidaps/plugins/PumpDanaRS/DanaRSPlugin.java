@@ -222,6 +222,15 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void disconnect(String from) {
         if (L.isEnabled(L.PUMP))
             log.debug("RS disconnect from: " + from);

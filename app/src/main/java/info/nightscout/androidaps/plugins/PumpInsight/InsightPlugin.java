@@ -260,6 +260,15 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void connect(String reason) {
         log("InsightPlugin::connect()");
         try {

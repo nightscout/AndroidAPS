@@ -101,6 +101,14 @@ public class QueueThread extends Thread {
                     }
                 }
 
+                if (pump.isHandshakeInProgress()) {
+                    if (L.isEnabled(L.PUMPQUEUE))
+                        log.debug("handshaking " + secondsElapsed);
+                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.HANDSHAKING, (int) secondsElapsed));
+                    SystemClock.sleep(100);
+                    continue;
+                }
+
                 if (pump.isConnecting()) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("connecting " + secondsElapsed);
@@ -108,7 +116,6 @@ public class QueueThread extends Thread {
                     SystemClock.sleep(1000);
                     continue;
                 }
-
 
                 if (!pump.isConnected()) {
                     if (L.isEnabled(L.PUMPQUEUE))

@@ -134,6 +134,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             return;
 
         new Thread(() -> {
+            mHandshakeInProgress = false;
             mConnectionInProgress = true;
             getBTSocketForSelectedPump();
             if (mRfcommSocket == null || mBTDevice == null) {
@@ -155,7 +156,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     mSerialIOThread.disconnect("Recreate SerialIOThread");
                 }
                 mSerialIOThread = new SerialIOThread(mRfcommSocket);
-                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
+                mHandshakeInProgress = true;
+                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.HANDSHAKING, 0));
             }
 
             mConnectionInProgress = false;

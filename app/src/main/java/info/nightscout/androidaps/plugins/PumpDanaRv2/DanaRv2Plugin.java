@@ -145,6 +145,16 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return sExecutionService != null && sExecutionService.isHandshakeInProgress();
+    }
+
+    @Override
+    public void finishHandshaking() {
+        sExecutionService.finishHandshaking();
+    }
+
+    @Override
     public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
         boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
         if (allowHardwarePump || context == null) {
