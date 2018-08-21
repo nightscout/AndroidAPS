@@ -168,6 +168,8 @@ public class QueueThread extends Thread {
             }
         } finally {
             mWakeLock.release();
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("thread end");
         }
     }
 }
