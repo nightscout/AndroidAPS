@@ -1358,7 +1358,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // Uploader status from ns
         if (uploaderDeviceStatusView != null) {
-            uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatus());
+            uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatusSpanned());
             uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus(), null));
         }
 
