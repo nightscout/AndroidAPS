@@ -1048,6 +1048,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public boolean createOrUpdate(ExtendedBolus extendedBolus) {
         try {
+            if (L.isEnabled(L.DATABASE))
+                log.debug("EXTENDEDBOLUS: createOrUpdate: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+
             ExtendedBolus old;
             extendedBolus.date = roundDateToSec(extendedBolus.date);
 
@@ -1071,7 +1074,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     getDaoExtendedBolus().createOrUpdate(extendedBolus);
                 }
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1085,7 +1088,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         old.copyFrom(extendedBolus);
                         getDaoExtendedBolus().create(old);
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.toString());
+                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.log());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
                         scheduleExtendedBolusChange();
@@ -1108,7 +1111,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             old.copyFrom(extendedBolus);
                             getDaoExtendedBolus().create(old);
                             if (L.isEnabled(L.DATABASE))
-                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.toString());
+                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.log());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
                             scheduleExtendedBolusChange();
@@ -1118,7 +1121,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1126,7 +1129,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (extendedBolus.source == Source.USER) {
                 getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
