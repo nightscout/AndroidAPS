@@ -202,7 +202,7 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
-    private void handleTreatmentFromNS(JSONObject json, Intent intent) throws JSONException {
+    private void handleTreatmentFromNS(JSONObject json, Intent intent) {
         // new DB model
         int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
         double insulin = JsonHelper.safeGetDouble(json, "insulin");

@@ -244,17 +244,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             Treatment treatment = Treatment.createFromJson(json);
             if (treatment != null)
                 createOrUpdate(treatment);
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-    }
-
-    public void createFoodFromJsonIfNotExists(JSONArray array) {
-        try {
-            for (int n = 0; n < array.length(); n++) {
-                JSONObject json = array.getJSONObject(n);
-                createTreatmentFromJsonIfNotExists(json);
-            }
+            else
+                log.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -340,6 +331,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         scheduleTreatmentChange(treatment);
                         return new UpdateReturn(true, true);
                     }
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Equal record by date from: " + Source.getString(treatment.source) + " " + old.toString());
                     return new UpdateReturn(true, false);
                 }
                 // find by NS _id
@@ -361,6 +354,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             scheduleTreatmentChange(treatment);
                             return new UpdateReturn(true, true);
                         }
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Equal record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                        return new UpdateReturn(true, false);
                     }
                 }
                 getDao().create(treatment);
