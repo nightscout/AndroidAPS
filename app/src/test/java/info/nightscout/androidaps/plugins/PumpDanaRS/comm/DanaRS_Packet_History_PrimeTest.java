@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_PrimeTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Prime packet = new DanaRS_Packet_History_Prime(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Prime packet = new DanaRS_Packet_History_Prime(System.currentTimeMillis());
 
         assertEquals("REVIEW__PRIME", packet.getFriendlyName());
     }

@@ -7,10 +7,9 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.utils.DateUtil;
 
 public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -55,7 +54,7 @@ public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet
         dataSize = 2;
         int runningMin = byteArrayToInt(getBytes(data, dataIndex, dataSize));
         int tempBasalRemainingMin = (pump.tempBasalTotalSec - runningMin * 60) / 60;
-        Date tempBasalStart = pump.isTempBasalInProgress ? getDateFromTempBasalSecAgo(runningMin * 60) : new Date(0);
+        long tempBasalStart = pump.isTempBasalInProgress ? getDateFromTempBasalSecAgo(runningMin * 60) : 0;
 
         if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Error code: " + error);
@@ -64,7 +63,7 @@ public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet
             log.debug("Current temp basal percent: " + pump.tempBasalPercent);
             log.debug("Current temp basal remaining min: " + tempBasalRemainingMin);
             log.debug("Current temp basal total sec: " + pump.tempBasalTotalSec);
-            log.debug("Current temp basal start: " + tempBasalStart);
+            log.debug("Current temp basal start: " + DateUtil.dateAndTimeFullString(tempBasalStart));
         }
     }
 
@@ -74,8 +73,8 @@ public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet
     }
 
     @NonNull
-    private Date getDateFromTempBasalSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
+    private long getDateFromTempBasalSecAgo(int tempBasalAgoSecs) {
+        return (long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000;
     }
 
 }

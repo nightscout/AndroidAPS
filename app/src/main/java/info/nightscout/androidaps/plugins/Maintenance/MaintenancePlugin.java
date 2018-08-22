@@ -81,7 +81,7 @@ public class MaintenancePlugin extends PluginBase {
         LOG.debug("zipFile: {}", zipFile.getAbsolutePath());
         File zip = this.zipLogs(zipFile, logs);
 
-        Uri attachementUri = FileProvider.getUriForFile(this.ctx, BuildConfig.APPLICATION_ID + ".provider", zip);
+        Uri attachementUri = FileProvider.getUriForFile(this.ctx, BuildConfig.APPLICATION_ID + ".fileprovider", zip);
         Intent emailIntent = this.sendMail(attachementUri, recipient, "Log Export");
         LOG.debug("sending emailIntent");
         ctx.startActivity(emailIntent);

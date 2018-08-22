@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_Blood_GlucoseTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Blood_Glucose packet = new DanaRS_Packet_History_Blood_Glucose(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Blood_Glucose packet = new DanaRS_Packet_History_Blood_Glucose(System.currentTimeMillis());
 
         assertEquals("REVIEW__BLOOD_GLUCOSE", packet.getFriendlyName());
     }

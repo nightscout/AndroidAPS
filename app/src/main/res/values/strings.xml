@@ -242,6 +242,7 @@
     <string name="it_lang" translatable="false">Italian</string>
     <string name="ro_lang" translatable="false">Romanian</string>
     <string name="ru_lang" translatable="false">Russian</string>
+    <string name="sk_lang" translatable="false">Slovak</string>
     <string name="sv_lang" translatable="false">Swedish</string>
     <string name="fr_lang" translatable="false">French</string>
     <string name="zh_lang" translatable="false">Chinese</string>
@@ -1185,6 +1186,9 @@
     <string name="time_offset">Time offset</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <string name="calculation_short">Calc</string>
+    <string name="handshaking">Handshaking</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

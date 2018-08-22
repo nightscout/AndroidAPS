@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_TemporaryTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Temporary packet = new DanaRS_Packet_History_Temporary(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Temporary packet = new DanaRS_Packet_History_Temporary(System.currentTimeMillis());
 
         assertEquals("REVIEW__TEMPORARY", packet.getFriendlyName());
     }

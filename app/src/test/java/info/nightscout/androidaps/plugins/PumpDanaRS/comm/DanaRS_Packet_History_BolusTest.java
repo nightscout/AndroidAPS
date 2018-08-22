@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_BolusTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Bolus packet = new DanaRS_Packet_History_Bolus(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Bolus packet = new DanaRS_Packet_History_Bolus(System.currentTimeMillis());
 
         assertEquals("REVIEW__BOLUS", packet.getFriendlyName());
     }

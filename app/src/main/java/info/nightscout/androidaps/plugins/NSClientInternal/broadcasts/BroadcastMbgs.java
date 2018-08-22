@@ -26,7 +26,7 @@ public class BroadcastMbgs {
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             bundle = new Bundle();
             bundle.putString("mbgs", mbgs.toString());
             bundle.putBoolean("delta", isDelta);

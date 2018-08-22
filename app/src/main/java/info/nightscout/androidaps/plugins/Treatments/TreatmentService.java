@@ -122,6 +122,13 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 log.error("Can't create database", e);
                 throw new RuntimeException(e);
             }
+        } else if (oldVersion == 8 && newVersion == 9) {
+            log.debug("Upgrading database from v8 to v9");
+            try {
+                getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` ADD COLUMN boluscalc STRING;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
             if (L.isEnabled(L.DATATREATMENTS))
                 log.info("onUpgrade");
@@ -130,7 +137,13 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     public void onDowngrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        // this method is not supported right now
+        if (oldVersion == 9 && newVersion == 8) {
+            try {
+                getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` DROP COLUMN boluscalc STRING;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void resetTreatments() {

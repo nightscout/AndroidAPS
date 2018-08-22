@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -13,11 +14,10 @@ import java.util.Date;
 
 /**
  * Created by jamorham on 21/02/2018.
- *
+ * <p>
  * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way
  * to disable them and make calls from a potentially invalid singleton reference. This wrapper
  * emulates the methods but ignores the request if the instance is null or invalid.
- *
  */
 
 public class FabricPrivacy {
@@ -110,8 +110,11 @@ public class FabricPrivacy {
         CustomEvent pluginStats = new CustomEvent("PluginStats");
         pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
         for (PluginBase plugin : MainApp.getPluginsList()) {
-            if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
-                pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
+            if (!plugin.pluginDescription.alwaysEnabled) {
+                if (plugin.isEnabled(plugin.getType()))
+                    pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
+                else
+                    pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "disabled");
             }
         }
 

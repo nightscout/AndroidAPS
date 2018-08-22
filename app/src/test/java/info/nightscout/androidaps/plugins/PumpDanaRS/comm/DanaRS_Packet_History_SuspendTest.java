@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_SuspendTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Suspend packet = new DanaRS_Packet_History_Suspend(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Suspend packet = new DanaRS_Packet_History_Suspend(System.currentTimeMillis());
 
         assertEquals("REVIEW__SUSPEND", packet.getFriendlyName());
     }

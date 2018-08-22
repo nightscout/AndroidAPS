@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.utils.DateUtil;
 
 public class MsgInitConnStatusTime extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -52,11 +53,11 @@ public class MsgInitConnStatusTime extends MessageBase {
             return;
         }
 
-        Date time = dateTimeSecFromBuff(bytes, 0);
+        long time = dateTimeSecFromBuff(bytes, 0);
         int versionCode = intFromBuff(bytes, 6, 1);
 
         if (L.isEnabled(L.PUMPCOMM)) {
-            log.debug("Pump time: " + time);
+            log.debug("Pump time: " + DateUtil.dateAndTimeFullString(time));
             log.debug("Version code: " + versionCode);
         }
     }

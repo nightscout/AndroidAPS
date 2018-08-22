@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.PumpDanaRKorean.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -17,6 +15,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.utils.DateUtil;
 
 public class MsgInitConnStatusTime_k extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -54,14 +53,14 @@ public class MsgInitConnStatusTime_k extends MessageBase {
             return;
         }
 
-        Date time = dateTimeSecFromBuff(bytes, 0);
+        long time = dateTimeSecFromBuff(bytes, 0);
         int versionCode1 = intFromBuff(bytes, 6, 1);
         int versionCode2 = intFromBuff(bytes, 7, 1);
         int versionCode3 = intFromBuff(bytes, 8, 1);
         int versionCode4 = intFromBuff(bytes, 9, 1);
 
         if (L.isEnabled(L.PUMPCOMM)) {
-            log.debug("Pump time: " + time);
+            log.debug("Pump time: " + DateUtil.dateAndTimeFullString(time));
             log.debug("Version code1: " + versionCode1);
             log.debug("Version code2: " + versionCode2);
             log.debug("Version code3: " + versionCode3);

@@ -2,8 +2,6 @@ package info.nightscout.androidaps.interfaces;
 
 import org.json.JSONObject;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -13,11 +11,13 @@ import info.nightscout.androidaps.data.PumpEnactResult;
  */
 public interface PumpInterface {
 
-    boolean isInitialized();
-    boolean isSuspended();
-    boolean isBusy();
-    boolean isConnected();
-    boolean isConnecting();
+    boolean isInitialized(); // true if pump status has been read and is ready to accept commands
+    boolean isSuspended();   // true if suspended (not delivering insulin)
+    boolean isBusy();        // if true pump is not ready to accept commands right now
+    boolean isConnected();   // true if BT connection is established
+    boolean isConnecting();  // true if BT connection is in progress
+    boolean isHandshakeInProgress(); // true if BT is connected but initial handshake is still in progress
+    void finishHandshaking(); // set initial handshake completed
 
     void connect(String reason);
     void disconnect(String reason);
@@ -29,7 +29,7 @@ public interface PumpInterface {
     PumpEnactResult setNewBasalProfile(Profile profile);
     boolean isThisProfileSet(Profile profile);
 
-    Date lastDataTime();
+    long lastDataTime();
 
     double getBaseBasalRate(); // base basal rate, not temp basal
 

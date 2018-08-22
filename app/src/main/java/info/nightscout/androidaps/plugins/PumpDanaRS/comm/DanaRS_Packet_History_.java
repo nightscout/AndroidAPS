@@ -33,11 +33,11 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
         totalCount = 0;
     }
 
-    public DanaRS_Packet_History_(Date from) {
+    public DanaRS_Packet_History_(long from) {
         this();
         GregorianCalendar cal = new GregorianCalendar();
-        if (from.getTime() != 0)
-            cal.setTime(from);
+        if (from != 0)
+            cal.setTimeInMillis(from);
         else
             cal.set(2000, 0, 1, 0, 0, 0);
         year = cal.get(Calendar.YEAR) - 1900 - 100;

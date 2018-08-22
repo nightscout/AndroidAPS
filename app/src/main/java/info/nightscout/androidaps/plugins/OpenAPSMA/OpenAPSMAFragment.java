@@ -15,6 +15,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JSONFormatter;
 
@@ -94,8 +95,8 @@ public class OpenAPSMAFragment extends SubscriberFragment implements View.OnClic
                     profileView.setText(JSONFormatter.format(determineBasalAdapterMAJS.getProfileParam()));
                     mealDataView.setText(JSONFormatter.format(determineBasalAdapterMAJS.getMealDataParam()));
                 }
-                if (OpenAPSMAPlugin.getPlugin().lastAPSRun != null) {
-                    lastRunView.setText(OpenAPSMAPlugin.getPlugin().lastAPSRun.toLocaleString());
+                if (OpenAPSMAPlugin.getPlugin().lastAPSRun != 0) {
+                    lastRunView.setText(DateUtil.dateAndTimeFullString(OpenAPSMAPlugin.getPlugin().lastAPSRun));
                 }
             });
     }

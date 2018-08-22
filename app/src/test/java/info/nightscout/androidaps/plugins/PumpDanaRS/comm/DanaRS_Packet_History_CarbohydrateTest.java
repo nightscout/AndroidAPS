@@ -29,7 +29,7 @@ public class DanaRS_Packet_History_CarbohydrateTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        DanaRS_Packet_History_Carbohydrate packet = new DanaRS_Packet_History_Carbohydrate(new Date(System.currentTimeMillis()));
+        DanaRS_Packet_History_Carbohydrate packet = new DanaRS_Packet_History_Carbohydrate(System.currentTimeMillis());
 
         assertEquals("REVIEW__CARBOHYDRATE", packet.getFriendlyName());
     }

@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -91,6 +89,15 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void connect(String reason) {
     }
 
@@ -120,8 +127,8 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public Date lastDataTime() {
-        return new Date();
+    public long lastDataTime() {
+        return System.currentTimeMillis();
     }
 
     @Override

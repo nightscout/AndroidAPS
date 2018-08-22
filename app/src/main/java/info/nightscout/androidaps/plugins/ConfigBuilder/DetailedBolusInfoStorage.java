@@ -33,21 +33,12 @@ public class DetailedBolusInfoStorage {
                 log.debug("Existing bolus info: " + store.get(i));
             if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {
                 found = store.get(i);
-                break;
-            }
-        }
-        return found;
-    }
-
-    public static synchronized void remove(long bolustime) {
-        for (int i = 0; i < store.size(); i++) {
-            long infoTime = store.get(i).date;
-            if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {
                 if (L.isEnabled(L.PUMP))
-                    log.debug("Removing bolus info: " + store.get(i));
+                    log.debug("Using & removing bolus info: " + store.get(i));
                 store.remove(i);
                 break;
             }
         }
+        return found;
     }
 }

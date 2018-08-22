@@ -176,6 +176,16 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return sExecutionService != null && sExecutionService.isHandshakeInProgress();
+    }
+
+    @Override
+    public void finishHandshaking() {
+        sExecutionService.finishHandshaking();
+    }
+
+    @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {

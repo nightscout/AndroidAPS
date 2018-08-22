@@ -103,7 +103,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     private static Logger log = LoggerFactory.getLogger(InsightPlugin.class);
     private StatusTaskRunner.Result statusResult;
     private long statusResultTime = -1;
-    private Date lastDataTime = new Date(0);
+    private long lastDataTime = 0;
     private boolean fauxTBRcancel = true;
     private PumpDescription pumpDescription = new PumpDescription();
     private double basalRate = 0;
@@ -260,6 +260,15 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void connect(String reason) {
         log("InsightPlugin::connect()");
         try {
@@ -407,7 +416,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     @Override
-    public Date lastDataTime() {
+    public long lastDataTime() {
         return lastDataTime;
     }
 
@@ -877,7 +886,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     private <T> T fetchTaskRunner(TaskRunner taskRunner, Class<T> resultType) throws Exception {
         try {
             T result = (T) taskRunner.fetchAndWaitUsingLatch(BUSY_WAIT_TIME);
-            lastDataTime = new Date();
+            lastDataTime = System.currentTimeMillis();
             return result;
         } catch (Exception e) {
             log("Error while fetching " + taskRunner.getClass().getSimpleName() + ": " + e.getClass().getSimpleName());
@@ -888,7 +897,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     private <T extends AppLayerMessage> T fetchSingleMessage(AppLayerMessage message, Class<T> resultType) throws Exception {
         try {
             T result = (T) new SingleMessageTaskRunner(connector.getServiceConnector(), message).fetchAndWaitUsingLatch(BUSY_WAIT_TIME);
-            lastDataTime = new Date();
+            lastDataTime = System.currentTimeMillis();
             return result;
         } catch (Exception e) {
             log("Error while fetching " + message.getClass().getSimpleName() + ": " + e.getClass().getSimpleName());

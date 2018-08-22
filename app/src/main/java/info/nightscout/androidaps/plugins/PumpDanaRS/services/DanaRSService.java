@@ -156,7 +156,7 @@ public class DanaRSService extends Service {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
             bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
 
-            long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+            long timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump time difference: " + timeDiff + " seconds");
             if (Math.abs(timeDiff) > 3) {
@@ -181,7 +181,7 @@ public class DanaRSService extends Service {
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
                     bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date(DateUtil.now() + T.secs(10).msecs())));
                     bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
-                    timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                    timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                     if (L.isEnabled(L.PUMPCOMM))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
@@ -241,7 +241,7 @@ public class DanaRSService extends Service {
         } else {
             msg = new DanaRS_Packet_APS_History_Events(lastHistoryFetched);
             if (L.isEnabled(L.PUMPCOMM))
-                log.debug("Loading event history from: " + new Date(lastHistoryFetched).toLocaleString());
+                log.debug("Loading event history from: " +DateUtil.dateAndTimeFullString(lastHistoryFetched));
         }
         bleComm.sendMessage(msg);
         while (!msg.done && bleComm.isConnected()) {

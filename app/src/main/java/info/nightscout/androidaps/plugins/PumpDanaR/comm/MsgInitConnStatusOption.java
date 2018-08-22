@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
@@ -34,6 +35,9 @@ public class MsgInitConnStatusOption extends MessageBase {
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump password: " + DanaRPump.getInstance().password);
         }
+
+        // This is last message of initial sequence
+        ConfigBuilderPlugin.getPlugin().getActivePump().finishHandshaking();
     }
 
 }

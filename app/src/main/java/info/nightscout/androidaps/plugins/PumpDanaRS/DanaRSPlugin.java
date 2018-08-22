@@ -16,8 +16,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -224,6 +222,15 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void disconnect(String from) {
         if (L.isEnabled(L.PUMP))
             log.debug("RS disconnect from: " + from);
@@ -380,8 +387,8 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public Date lastDataTime() {
-        return new Date(DanaRPump.getInstance().lastConnection);
+    public long lastDataTime() {
+        return DanaRPump.getInstance().lastConnection;
     }
 
     @Override
@@ -725,8 +732,8 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             status.put("timestamp", DateUtil.toISOString(pump.lastConnection));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             extended.put("PumpIOB", pump.iob);
-            if (pump.lastBolusTime.getTime() != 0) {
-                extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
+            if (pump.lastBolusTime != 0) {
+                extended.put("LastBolus", DateUtil.dateAndTimeFullString(pump.lastBolusTime));
                 extended.put("LastBolusAmount", pump.lastBolusAmount);
             }
             TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
@@ -777,7 +784,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
-        if (pump.lastBolusTime.getTime() != 0) {
+        if (pump.lastBolusTime != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis());

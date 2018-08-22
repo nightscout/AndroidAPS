@@ -80,8 +80,12 @@ public class VersionChecker {
 
         while ((line = bufferedReader.readLine()) != null) {
             Matcher m = p.matcher(line);
-            if (m.matches())
+            if (m.matches()) {
+                log.debug("+++ " + line);
                 return line;
+            } else {
+                log.debug("--- " + line);
+            }
         }
         inputStream.close();
         return null;

@@ -251,6 +251,15 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void connect(String reason) {
         // ruffyscripter establishes a connection as needed.
         // ComboPlugin.runCommand performs on connect checks if needed, thus needs info on
@@ -355,8 +364,8 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     @NonNull
     @Override
-    public Date lastDataTime() {
-        return new Date(pump.lastSuccessfulCmdTime);
+    public long lastDataTime() {
+        return pump.lastSuccessfulCmdTime;
     }
 
     /**

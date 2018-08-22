@@ -167,7 +167,9 @@ public class CommandQueue {
         }
     }
 
-    public static void independentConnect(String reason, Callback callback) {
+    public void independentConnect(String reason, Callback callback) {
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Starting new queue");
         CommandQueue tempCommandQueue = new CommandQueue();
         tempCommandQueue.readStatus(reason, callback);
     }

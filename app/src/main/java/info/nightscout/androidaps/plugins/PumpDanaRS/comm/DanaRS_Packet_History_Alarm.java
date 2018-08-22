@@ -17,7 +17,7 @@ public class DanaRS_Packet_History_Alarm extends DanaRS_Packet_History_ {
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__ALARM;
     }
 
-    public DanaRS_Packet_History_Alarm(Date from) {
+    public DanaRS_Packet_History_Alarm(long from) {
         super(from);
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__ALARM;
         if (L.isEnabled(L.PUMPCOMM))

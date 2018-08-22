@@ -65,11 +65,11 @@ public class DanaRPump {
 
     // Info
     public String serialNumber = "";
-    public Date shippingDate = new Date(0);
+    public long shippingDate = 0;
     public String shippingCountry = "";
     public boolean isNewPump = true;
     public int password = -1;
-    public Date pumpTime = new Date(0);
+    public long pumpTime = 0;
 
     public static final int DOMESTIC_MODEL = 0x01;
     public static final int EXPORT_MODEL = 0x03;
@@ -98,7 +98,7 @@ public class DanaRPump {
     public int batteryRemaining;
 
     public boolean bolusBlocked;
-    public Date lastBolusTime = new Date(0);
+    public long lastBolusTime = 0;
     public double lastBolusAmount;
 
     public double currentBasal;
@@ -107,7 +107,7 @@ public class DanaRPump {
     public int tempBasalPercent;
     public int tempBasalRemainingMin;
     public int tempBasalTotalSec;
-    public Date tempBasalStart;
+    public long tempBasalStart;
 
     public boolean isDualBolusInProgress;
     public boolean isExtendedInProgress;
@@ -115,7 +115,7 @@ public class DanaRPump {
     public double extendedBolusAmount;
     public double extendedBolusAbsoluteRate;
     public int extendedBolusSoFarInMinutes;
-    public Date extendedBolusStart;
+    public long extendedBolusStart;
     public int extendedBolusRemainingMinutes;
     public double extendedBolusDeliveredSoFar; //RS only
 

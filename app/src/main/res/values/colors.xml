@@ -27,6 +27,7 @@
     <color name="warning">#ff1a1a</color>
 
     <color name="defaultbackground">#424242</color>
+    <color name="defaulttext">#BBBBBB</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
