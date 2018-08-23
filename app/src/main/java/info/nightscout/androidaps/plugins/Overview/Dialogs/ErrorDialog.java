@@ -74,7 +74,7 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        super.dismissAllowingStateLoss();
         if (helperActivity != null) {
             helperActivity.finish();
         }
