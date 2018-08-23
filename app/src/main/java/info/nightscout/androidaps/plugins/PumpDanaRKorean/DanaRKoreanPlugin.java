@@ -21,9 +21,10 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
@@ -50,35 +51,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         pluginDescription.description(R.string.description_pump_dana_r_korean);
 
         useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
-
-        pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d;
-        pumpDescription.extendedBolusDurationStep = 30;
-        pumpDescription.extendedBolusMaxDuration = 8 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 200;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 60;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.1d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = false;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = true;
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("DanaR Korean"));
     }
 
     @Override

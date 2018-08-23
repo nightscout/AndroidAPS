@@ -14,6 +14,9 @@ public class PumpUtil {
 
     public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType)
     {
+        // reset
+        pumpDescription.resetSettings();
+
         PumpCapability pumpCapability = pumpType.getPumpCapability();
 
         pumpDescription.isBolusCapable = pumpCapability.hasCapability(PumpCapability.Bolus);

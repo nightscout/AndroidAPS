@@ -18,8 +18,9 @@ public enum PumpCapability {
 
     // grouped by pump
     VirtualPumpCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill), //
-    ComboCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
-    DanaCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
+    ComboCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, TDD, ManualTDDLoad), //
+    DanaCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, TDD, ManualTDDLoad), //
+    DanaWithHistoryCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
     InsightCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill,TDD,BasalRate30min), //
 
 
@@ -28,9 +29,6 @@ public enum PumpCapability {
     BasalRate_Duration30minAllowed, //
     BasalRate_Duration15and30minAllowed(BasalRate_Duration15minAllowed, BasalRate_Duration30minAllowed), //
     BasalRate_Duration15and30minNotAllowed, //
-
-
-
     ;
 
     PumpCapability[] children;

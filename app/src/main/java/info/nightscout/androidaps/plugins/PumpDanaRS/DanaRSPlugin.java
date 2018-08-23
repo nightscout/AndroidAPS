@@ -43,6 +43,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
@@ -88,36 +90,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                 .description(R.string.description_pump_dana_rs)
         );
 
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.05d;
-
-        pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d;
-        pumpDescription.extendedBolusDurationStep = 30;
-        pumpDescription.extendedBolusMaxDuration = 8 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 200;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 60;
-        pumpDescription.tempDurationStep15mAllowed = true;
-        pumpDescription.tempDurationStep30mAllowed = true;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.04d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = true;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = true;
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("DanaRS"));
     }
 
     @Override

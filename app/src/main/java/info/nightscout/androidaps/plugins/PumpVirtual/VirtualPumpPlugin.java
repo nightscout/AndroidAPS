@@ -458,9 +458,6 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (L.isEnabled(L.PUMP))
             log.debug("New pump configuration found ({}), changing from previous ({})", pumpTypeNew, pumpType);
 
-        // reset
-        pumpDescription.resetSettings();
-
         PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew);
 
         this.pumpType = pumpTypeNew;
