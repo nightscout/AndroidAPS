@@ -45,11 +45,11 @@ public class VirtualPumpPluginUTest {
 
 
     @Test
-    public void getPumpType() throws Exception {
+    public void getPumpType() {
     }
 
     @Test
-    public void refreshConfiguration() throws Exception {
+    public void refreshConfiguration() {
 
         when(SP.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo");
 
@@ -60,7 +60,7 @@ public class VirtualPumpPluginUTest {
 
 
     @Test
-    public void refreshConfigurationTwice() throws Exception {
+    public void refreshConfigurationTwice() {
 
         when(SP.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo");
 
