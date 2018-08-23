@@ -6,19 +6,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
-import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -53,7 +51,7 @@ public class VirtualPumpPluginUTest {
     @Test
     public void refreshConfiguration() throws Exception {
 
-        when(SP.getString("virtualpump_type", "Generic AAPS")).thenReturn("Accu-Chek Combo");
+        when(SP.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo");
 
         virtualPumpPlugin.refreshConfiguration();
 
@@ -64,11 +62,11 @@ public class VirtualPumpPluginUTest {
     @Test
     public void refreshConfigurationTwice() throws Exception {
 
-        when(SP.getString("virtualpump_type", "Generic AAPS")).thenReturn("Accu-Chek Combo");
+        when(SP.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo");
 
         virtualPumpPlugin.refreshConfiguration();
 
-        when(SP.getString("virtualpump_type", "Generic AAPS")).thenReturn("Accu-Chek Combo");
+        when(SP.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo");
 
         virtualPumpPlugin.refreshConfiguration();
 

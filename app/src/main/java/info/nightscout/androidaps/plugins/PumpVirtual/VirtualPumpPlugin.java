@@ -427,7 +427,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     public void refreshConfiguration()
     {
-        String pumptype = SP.getString("virtualpump_type", "Generic AAPS");
+        String pumptype = SP.getString(R.string.key_virtualpump_type, "Generic AAPS");
 
         PumpType pumpTypeNew = PumpType.getByDescription(pumptype);
 
