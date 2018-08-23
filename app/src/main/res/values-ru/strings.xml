@@ -1036,4 +1036,8 @@ Context | Edit Context</string>
   <string name="as">Авточувств</string>
   <string name="versionavailable">Доступна версия %1$s</string>
   <string name="time_offset">Смещение по времени</string>
+  <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
+  <string name="treatments_wizard_total_label">Итого</string>
+  <string name="calculation_short">Кальк</string>
+  <string name="handshaking">Подтверждение связи</string>
 </resources>

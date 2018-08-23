@@ -66,13 +66,13 @@
   <string name="treatments_iob_label_string">IOB:</string>
   <string name="sms_iob">IOB:</string>
   <string name="treatments_activity_string">Aktivität:</string>
-  <string name="treatments_iobtotal_label_string">Gesamt-IOB:</string>
-  <string name="treatments_iobactivitytotal_label_string">Gesamt-Insulin-Aktivität:</string>
+  <string name="treatments_iobtotal_label_string">Gesamt IOB:</string>
+  <string name="treatments_iobactivitytotal_label_string">Ges. IOB Aktivität:</string>
   <string name="tempbasals_realduration_label_string">Dauer:</string>
   <string name="tempbasals_netratio_label_string">Verhältnis:</string>
   <string name="tempbasals_netinsulin_label_string">Ins:</string>
   <string name="tempbasals_iob_label_string">IOB:</string>
-  <string name="tempbasals_iobtotal_label_string">Gesamt-IOB:</string>
+  <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
   <string name="treatments_newtreatment_insulinamount_label">Insulin-Menge</string>
   <string name="treatments_newtreatment_carbsamount_label">Kohlenhydrat-Menge</string>
   <string name="treatments_wizard_bg_label">BZ</string>

@@ -230,7 +230,7 @@
   <string name="openapsma_maxiob_title">Maximálny bazálny IOB, ktorý OpenAPS môže podať [U]</string>
   <string name="openapsma_maxiob_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako max IOB, je to maximálne množstvo inzulínu v [U], ktoré APS môže naraz podať.
 </string>
-  <string name="dismiss">ZAMIETNUŤ</string>
+  <string name="dismiss">POTVRDIŤ</string>
   <string name="danarpump">DanaR</string>
   <string name="connecting">Pripájanie</string>
   <string name="connected">Pripojené</string>
@@ -713,6 +713,8 @@
   <string name="dexcomg5_xdripupload_title">Odosielať glykémie do xDrip+</string>
   <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
   <string name="nsclientbg">Glykémie z NS</string>
+  <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou</string>
+  <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %s</string>
   <string name="overview_editquickwizard_usebg">Výpočet glykémie</string>
   <string name="overview_editquickwizard_usebolusiob">Výpočet bolusového IOB</string>
   <string name="overview_editquickwizard_usebasaliob">Výpočet bazálneho IOB</string>
@@ -766,6 +768,7 @@
   <string name="combo_error_no_connection_no_bolus_delivered">Pumpa nedostupná. Bolus nebol podaný</string>
   <string name="combo_error_no_bolus_delivered">Podávanie inzulínu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Aby ste si boli istí, skontrolujte pumpu a prípadne pošlite bolus znovu. Aby sa zabránilo nechcenému dvojitému bolusu, podanie bolusu nie je automaticky opakované.</string>
   <string name="combo_error_partial_bolus_delivered">Iba %1$.2f U z bolusu %2$.2f bolo podaného z dôvodu chyby. Skontrolujte podaný bolus na pumpe a urobte potrebné opatrenia.</string>
+  <string name="combo_error_bolus_verification_failed">Podanie bolusu a kontrola histórie pumpy zlyhala. Skontrolujte pumpu. Pokiaľ bolus prebehol, načíta se pri najbližšom pripojení automaticky.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatok inzulínu v zásobníku pre takýto bolus</string>
   <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
   <string name="insightpump_shortname">Insight</string>
@@ -1024,6 +1027,7 @@
   <string name="send_all_logs">Zasielať logy E-mailom</string>
   <string name="delete_logs">Vymazať logy</string>
   <string name="error_adding_treatment_message">Ošetrenie (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nie je možné pridať. Skontrolujte a podľa potreby manuálne pridajte záznam.</string>
+  <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Oneskorenie: %3$d m</string>
   <string name="openaps_noasdata">Nedostupné dáta o glykémiách</string>
   <string name="nav_logsettings">Nastavenie logovania</string>
   <string name="resettodefaults">Obnoviť predvolené</string>
@@ -1031,4 +1035,26 @@
   <string name="as">AS</string>
   <string name="versionavailable">Verzia %1$s je k dispozícii</string>
   <string name="time_offset">Časový posun</string>
+  <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
+  <string name="treatments_wizard_total_label">Spolu</string>
+  <string name="calculation_short">Kalk</string>
+  <string name="handshaking">Overovanie</string>
+  <plurals name="objective_days">
+    <item quantity="one">%1$d deň</item>
+    <item quantity="few">%1$d dní</item>
+    <item quantity="many">%1$d dní</item>
+    <item quantity="other">%1$d dní</item>
+  </plurals>
+  <plurals name="objective_hours">
+    <item quantity="one">%1$d hodina</item>
+    <item quantity="few">%1$d hodín</item>
+    <item quantity="many">%1$d hodín</item>
+    <item quantity="other">%1$d hodín</item>
+  </plurals>
+  <plurals name="objective_minutes">
+    <item quantity="one">%1$d minúta</item>
+    <item quantity="few">%1$d minút</item>
+    <item quantity="many">%1$d minút</item>
+    <item quantity="other">%1$d minút</item>
+  </plurals>
 </resources>
