@@ -121,6 +121,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     protected void onStart() {
         super.onStart();
+        MainApp.bus().register(this);
         refreshConfiguration();
     }
 
