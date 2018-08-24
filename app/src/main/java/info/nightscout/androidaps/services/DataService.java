@@ -254,7 +254,7 @@ public class DataService extends IntentService {
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
         if (L.isEnabled(L.DATASERVICE))
-            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+            log.debug("Adding/Updating new MBG: " + careportalEvent.toString());
     }
 
 }

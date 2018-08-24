@@ -1353,7 +1353,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (list.size() == 1) {
                 CareportalEvent record = list.get(0);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("Removing CareportalEvent record from database: " + record.log());
+                    log.debug("Removing CareportalEvent record from database: " + record.toString());
                 delete(record);
             } else {
                 if (L.isEnabled(L.DATABASE))
