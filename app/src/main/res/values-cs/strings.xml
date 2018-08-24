@@ -948,6 +948,10 @@
   <string name="openapsama_max_daily_safety_multiplier">Max násobitel denního nejvyššího bazálu</string>
   <string name="openapsama_current_basal_safety_multiplier">Max násobitel současného bazálu</string>
   <string name="value_unavailable_short">---</string>
+  <string name="virtualpump_type">Typ virtuální pumpy</string>
+  <string name="virtualpump_definition">Definice pumpy</string>
+  <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nProdl. bolus: [Krok=%2$s, Délka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Délka=%8$smin-%9$sh\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">* Rozdílné hodnoty podle rozsahu nejsou podporovány.</string>
   <string name="ns_autobackfill_title">Doplňování glykémií z NS</string>
   <string name="wear_wizard_settings">Nastavení wizardu</string>
   <string name="wear_wizard_settings_summary">Kalkulace použité ve výsledku wizardu:</string>
