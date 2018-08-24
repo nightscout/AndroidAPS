@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.PumpVirtual;
 
 import android.os.SystemClock;
 
+import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -28,6 +31,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -56,6 +61,9 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     private static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
     private PumpDescription pumpDescription = new PumpDescription();
+
+    PumpType pumpType = null;
+
 
     private static void loadFakingStatus() {
         fromNSAreCommingFakedExtendedBoluses = SP.getBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, false);
@@ -108,6 +116,24 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
         pumpDescription.storesCarbInfo = false;
         pumpDescription.is30minBasalRatesCapable = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MainApp.bus().register(this);
+        refreshConfiguration();
+    }
+
+    @Override
+    protected void onStop() {
+        MainApp.bus().unregister(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventPreferenceChange s) {
+        if (s.isChanged(R.string.key_virtualpump_type))
+            refreshConfiguration();
     }
 
     @Override
@@ -412,6 +438,31 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     public String shortStatus(boolean veryShort) {
         return "Virtual Pump";
+    }
+
+    public PumpType getPumpType() {
+        return pumpType;
+    }
+
+
+    public void refreshConfiguration() {
+        String pumptype = SP.getString(R.string.key_virtualpump_type, "Generic AAPS");
+
+        PumpType pumpTypeNew = PumpType.getByDescription(pumptype);
+
+        if (L.isEnabled(L.PUMP))
+            log.debug("Pump in configuration: {}, PumpType object: {}", pumptype, pumpTypeNew);
+
+        if (pumpType == pumpTypeNew)
+            return;
+
+        if (L.isEnabled(L.PUMP))
+            log.debug("New pump configuration found ({}), changing from previous ({})", pumpTypeNew, pumpType);
+
+        PumpUtil.setPumpDescription(pumpDescription, pumpTypeNew);
+
+        this.pumpType = pumpTypeNew;
+
     }
 
 }

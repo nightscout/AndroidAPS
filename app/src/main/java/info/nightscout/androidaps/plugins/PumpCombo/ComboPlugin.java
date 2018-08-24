@@ -61,6 +61,8 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -84,42 +86,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     private final static PumpDescription pumpDescription = new PumpDescription();
-
-    static {
-        // these properties can't be changed on the pump, some via desktop configuration software
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
-
-        pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.extendedBolusStep = 0.1d;
-        pumpDescription.extendedBolusDurationStep = 15;
-        pumpDescription.extendedBolusMaxDuration = 12 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 500;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 15;
-        pumpDescription.tempDurationStep15mAllowed = true;
-        pumpDescription.tempDurationStep30mAllowed = true;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.05d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = false;
-
-        pumpDescription.is30minBasalRatesCapable = false;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = true;
-    }
 
     @NonNull
     private final RuffyCommands ruffyScripter;
@@ -173,6 +139,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 .description(R.string.description_pump_combo)
         );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("Accu-Chek Combo"));
     }
 
     public ComboPump getPump() {

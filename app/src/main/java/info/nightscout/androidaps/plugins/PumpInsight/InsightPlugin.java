@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
@@ -34,10 +33,13 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusSilentlyTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelTBRSilentlyTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
@@ -53,7 +55,6 @@ import info.nightscout.androidaps.plugins.PumpInsight.utils.StatusItem;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolus;
 import sugar.free.sightparser.applayer.descriptors.ActiveBolusType;
@@ -121,38 +122,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 .description(R.string.description_pump_insight)
         );
         log("InsightPlugin instantiated");
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.01d; // specification says 0.05U up to 2U then 0.1U @ 2-5U  0.2U @ 10-20U 0.5U 10-20U (are these just UI restrictions? Yes, they are!)
-
-        pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.01d; // specification probably same as above
-        pumpDescription.extendedBolusDurationStep = 15; // 15 minutes up to 24 hours
-        pumpDescription.extendedBolusMaxDuration = 24 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        //pumpDescription.tempBasalStyle = PumpDescription.PERCENT | PumpDescription.ABSOLUTE;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 250; // 0-250%
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 15; // 15 minutes up to 24 hours
-        pumpDescription.tempDurationStep15mAllowed = true;
-        pumpDescription.tempDurationStep30mAllowed = true;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.is30minBasalRatesCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.02d;
-        pumpDescription.basalMaximumRate = 25d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = false;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = false;
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("Accu-Chek Insight"));
     }
 
 
@@ -212,7 +182,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     @Override
     public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
         boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || context == null){
+        if (allowHardwarePump || context == null) {
             pluginSwitcher.invoke();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -529,16 +499,16 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         log("Calculated requested rate: " + absoluteRate + " base rate: " + getBaseBasalRate() + " percentage: " + percent + "%");
         try {
             if (percent > 250) {
-                log ("Calculated rate is above 250%, switching to emulation using extended boluses");
+                log("Calculated rate is above 250%, switching to emulation using extended boluses");
                 cancelTempBasal(true);
                 if (!setExtendedBolus((absoluteRate - getBaseBasalRate()) / 60D * ((double) durationInMinutes), durationInMinutes).success) {
                     //Fallback to TBR if setting an extended bolus didn't work
-                    log ("Setting an extended bolus didn't work, falling back to normal TBR");
+                    log("Setting an extended bolus didn't work, falling back to normal TBR");
                     return setTempBasalPercent((int) percent, durationInMinutes, profile, true);
                 }
                 return new PumpEnactResult().success(true).enacted(true).absolute(absoluteRate).duration(durationInMinutes);
             } else {
-                log ("Calculated rate is below or equal to 250%, using normal TBRs");
+                log("Calculated rate is below or equal to 250%, using normal TBRs");
                 cancelExtendedBolus();
                 return setTempBasalPercent((int) percent, durationInMinutes, profile, true);
             }
@@ -567,7 +537,8 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                     .source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
             updateGui();
-            if (L.isEnabled(L.PUMPCOMM)) log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Set temp basal " + percent + "% for " + durationInMinutes + "m");
             connector.requestHistorySync(5000);
             connector.tryToGetPumpStatusAgain();
             return new PumpEnactResult().success(true).enacted(true).percent(percent);
