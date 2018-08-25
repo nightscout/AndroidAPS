@@ -149,7 +149,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     @Override
     public boolean isInitialized() {
         DanaRPump pump = DanaRPump.getInstance();
-        return pump.lastConnection > 0 && pump.maxBasal > 0 && !pump.isConfigUD && !pump.isEasyModeEnabled && pump.isExtendedBolusEnabled;
+        return pump.lastConnection > 0 && pump.maxBasal > 0 && !pump.isConfigUD && !pump.isEasyModeEnabled && pump.isExtendedBolusEnabled && pump.isPasswordOK();
     }
 
     @Override

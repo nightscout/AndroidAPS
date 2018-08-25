@@ -112,7 +112,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Override
     public boolean isInitialized() {
-        return DanaRPump.getInstance().lastConnection > 0 && DanaRPump.getInstance().maxBasal > 0;
+        return DanaRPump.getInstance().lastConnection > 0 && DanaRPump.getInstance().maxBasal > 0 && DanaRPump.getInstance().isPasswordOK();
     }
 
     @Override

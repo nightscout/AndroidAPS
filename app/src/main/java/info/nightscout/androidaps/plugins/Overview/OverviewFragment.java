@@ -1264,14 +1264,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     treatmentButton.setVisibility(View.GONE);
                 }
             }
-            if (wizardButton != null) {
+            if (pump.isInitialized() && !pump.isSuspended() && wizardButton != null) {
                 if (SP.getBoolean(R.string.key_show_wizard_button, true)) {
                     wizardButton.setVisibility(View.VISIBLE);
                 } else {
                     wizardButton.setVisibility(View.GONE);
                 }
             }
-            if (insulinButton != null) {
+            if (pump.isInitialized() && !pump.isSuspended() && insulinButton != null) {
                 if (SP.getBoolean(R.string.key_show_insulin_button, true)) {
                     insulinButton.setVisibility(View.VISIBLE);
                 } else {

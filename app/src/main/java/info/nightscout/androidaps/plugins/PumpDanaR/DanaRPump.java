@@ -249,4 +249,10 @@ public class DanaRPump {
         return record;
     }
 
+    public boolean isPasswordOK() {
+        if (password != -1 && password != SP.getInt(R.string.key_danar_password, -1)) {
+            return false;
+        }
+        return true;
+    }
 }
