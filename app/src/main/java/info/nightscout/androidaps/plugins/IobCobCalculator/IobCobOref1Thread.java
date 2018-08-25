@@ -30,6 +30,8 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -182,13 +184,20 @@ public class IobCobOref1Thread extends Thread {
                             if (L.isEnabled(L.AUTOSENS))
                                 log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + " hourAgoData=" + hourAgoData.toString());
                             int past = 1;
-//                            try {
+                            try {
                                 for (; past < 12; past++) {
                                     AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
                                     if (L.isEnabled(L.AUTOSENS)) {
                                         log.debug(">>>>> past=" + past + " ad=" + (ad != null ? ad.toString() : null));
-                                        if (ad == null)
-                                            autosensDataTable.toString();
+                                        if (ad == null) {
+                                            log.debug(autosensDataTable.toString());
+                                            log.debug(bucketed_data.toString());
+                                            log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
+                                            Notification notification = new Notification(Notification.SENDLOGFILES, MainApp.gs(R.string.sendlogfiles), Notification.LOW);
+                                            MainApp.bus().post(new EventNewNotification(notification));
+                                            SP.putBoolean("log_AUTOSENS", true);
+                                            break;
+                                        }
                                     }
                                     // let it here crash on NPE to get more data as i cannot reproduce this bug
                                     double deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
@@ -204,17 +213,24 @@ public class IobCobOref1Thread extends Thread {
                                     //if (Config.isEnabled(L.AUTOSENS))
                                     //    log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation);
                                 }
-//                            } catch (Exception e) {
-//                                log.error("Unhandled exception", e);
-//                                FabricPrivacy.logException(e);
-//                                FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
-//                                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-//                                        .putCustomAttribute("version", BuildConfig.VERSION)
-//                                        .putCustomAttribute("autosensDataTable", iobCobCalculatorPlugin.getAutosensDataTable().toString())
-//                                        .putCustomAttribute("for_data", ">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString())
-//                                        .putCustomAttribute("past", past)
-//                                );
-//                            }
+                            } catch (Exception e) {
+                                log.error("Unhandled exception", e);
+                                FabricPrivacy.logException(e);
+                                FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
+                                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
+                                        .putCustomAttribute("version", BuildConfig.VERSION)
+                                        .putCustomAttribute("autosensDataTable", iobCobCalculatorPlugin.getAutosensDataTable().toString())
+                                        .putCustomAttribute("for_data", ">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString())
+                                        .putCustomAttribute("past", past)
+                                );
+                                log.debug(autosensDataTable.toString());
+                                log.debug(bucketed_data.toString());
+                                log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
+                                Notification notification = new Notification(Notification.SENDLOGFILES, MainApp.gs(R.string.sendlogfiles), Notification.LOW);
+                                MainApp.bus().post(new EventNewNotification(notification));
+                                SP.putBoolean("log_AUTOSENS", true);
+                                break;
+                            }
                         } else {
                             if (L.isEnabled(L.AUTOSENS))
                                 log.debug(">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + " hourAgoData=" + "null");

@@ -67,6 +67,7 @@ public class Notification {
     public static final int MAXIMUM_BASAL_VALUE_REPLACED = 39;
     public static final int NSMALFUNCTION = 40;
     public static final int NEWVERSIONDETECTED = 41;
+    public static final int SENDLOGFILES = 42;
 
 
     public int id;
