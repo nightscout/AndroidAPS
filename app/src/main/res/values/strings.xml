@@ -1194,7 +1194,7 @@
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
     <string name="handshaking">Handshaking</string>
-    <string name="sendlogfiles">Send today\'s log files to developers. Unexpected situation.</string>
+    <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
