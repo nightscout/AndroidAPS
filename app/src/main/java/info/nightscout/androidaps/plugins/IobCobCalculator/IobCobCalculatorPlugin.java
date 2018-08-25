@@ -135,18 +135,21 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 long bgTime = bgReadings.get(i).date;
                 long lastbgTime = bgReadings.get(i - 1).date;
                 long diff = lastbgTime - bgTime;
+                diff %= T.mins(5).msecs();
+                if (diff > T.mins(2).plus(T.secs(30)).msecs())
+                    diff = diff - T.mins(5).msecs();
                 totalDiff += diff;
-                if (diff > T.secs(30).msecs() && diff < T.secs(270).msecs()) { // 0:30 - 4:30
+                diff = Math.abs(diff);
+                if (diff > T.secs(30).msecs()) {
                     if (L.isEnabled(L.AUTOSENS))
-                        log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "sec is5minData: " + false);
+                        log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "[s] is5minData: " + false);
                     return false;
                 }
             }
-            double intervals = totalDiff / (5 * 60 * 1000d);
-            double variability = Math.abs(intervals - Math.round(intervals));
-            boolean is5mindata = variability < 0.02;
+            double averageDiff = totalDiff / (bgReadings.size() -1) / 1000d;
+            boolean is5mindata = averageDiff < 10;
             if (L.isEnabled(L.AUTOSENS))
-                log.debug("Interval detection: values: " + bgReadings.size() + " variability: " + variability + " is5minData: " + is5mindata);
+                log.debug("Interval detection: values: " + bgReadings.size() + " averageDiff: " + averageDiff + "[s] is5minData: " + is5mindata);
             return is5mindata;
         }
     }

@@ -63,6 +63,27 @@ public class IobCobCalculatorPluginTest {
 
         Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData());
 
+        // too much shifted and missing data should return false
+        bgReadingList.clear();
+        bgReadingList.add(new BgReading().date(T.mins(83).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(78).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(73).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(68).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(63).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(58).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(53).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(48).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(43).plus(T.secs(40)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(38).plus(T.secs(33)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(33).plus(T.secs(1)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(28).plus(T.secs(0)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(23).plus(T.secs(0)).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(16).plus(T.secs(36)).msecs()).value(100));
+
+        iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+
+        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData());
+
         // slighly shifted data should return true
         bgReadingList.clear();
         bgReadingList.add(new BgReading().date(T.mins(20).msecs()).value(100));
