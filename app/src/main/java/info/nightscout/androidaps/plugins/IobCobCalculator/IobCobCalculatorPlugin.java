@@ -284,7 +284,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
 
         // Normalize bucketed data
-        for (int i = bucketed_data.size() - 2; i > 0; i--) {
+        for (int i = bucketed_data.size() - 2; i >= 0; i--) {
             BgReading current = bucketed_data.get(i);
             BgReading previous = bucketed_data.get(i + 1);
             long msecDiff = current.date - previous.date;

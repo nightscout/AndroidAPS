@@ -146,11 +146,12 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(15).msecs() + T.secs(10).msecs()).value(100));
         bgReadingList.add(new BgReading().date(T.mins(10).msecs() + T.secs(10).msecs()).value(100));
         bgReadingList.add(new BgReading().date(T.mins(5).msecs() - T.secs(10).msecs()).value(100));
+        bgReadingList.add(new BgReading().date(T.mins(0).msecs()).value(100));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData()); // too much drift
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(T.mins(15).msecs(), iobCobCalculatorPlugin.getBucketedData().get(1).date);
         Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.getBucketedData().get(2).date);
