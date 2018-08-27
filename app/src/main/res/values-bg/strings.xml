@@ -21,13 +21,10 @@
   <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
   <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
   <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
-  <string name="description_loop">Включва или изключва цикъла (loop).</string>
   <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
   <string name="description_ma">Алгоритъма, какъвто е бил през 2016</string>
   <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
   <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
-  <string name="description_overview">Показва текущото състояние на вашия цикъл и бутони за най-често използваните действия</string>
-  <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия цикъл</string>
   <string name="description_profile_local">Работа с профил, който е наличен само на този телефон (локален).</string>
   <string name="description_profile_nightscout">Работа с профила, които сте дефинирали в Nightscout</string>
   <string name="description_profile_simple">Работа с профил със само една стойност за всички часове.</string>
@@ -50,7 +47,6 @@
   <string name="description_source_xdrip">Получава данни за КЗ от xDrip.</string>
   <string name="description_treatments">Записва всички процедури, които са били направени</string>
   <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
-  <string name="description_xdrip_status_line">Покажи информация за вашия цикъл на xDrip + watchface.</string>
   <string name="description_sms_communicator">Дистанционно управление AndroidAPS чрез използване на SMS команди.</string>
   <string name="objectives_button_start">Стартирай</string>
   <string name="objectives_button_verify">Провери</string>
@@ -129,8 +125,6 @@
   <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
   <string name="days">дни</string>
   <string name="constraints">Ограничения</string>
-  <string name="loop">Цикъл - Loop</string>
-  <string name="configbuilder_loop">Цикъл - Loop</string>
   <string name="configbuilder_loop_description">Използвайте това, за да активирате loop интеграцията в \'AndroidAPS.</string>
   <string name="loop_aps_label">Алгоритъм за APS</string>
   <string name="loop_constraintsprocessed_label">След ограничения</string>
@@ -163,8 +157,6 @@
   <string name="configbuilder_bgsource_description">От къде трябва да AndroidAPS да си взима данни?</string>
   <string name="xdrip">xDrip</string>
   <string name="apsmode_title">APS режим</string>
-  <string name="closedloop">Затворен цикъл</string>
-  <string name="openloop">Отворен цикъл</string>
   <string name="disabledloop">Loop изключен</string>
   <string name="disableloop">Изключи Loop</string>
   <string name="enableloop">Включи Loop</string>
@@ -315,11 +307,7 @@
   <string name="overview_bolusprogress_goingtodeliver" formatted="false">Ще достави %.2fЕ</string>
   <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
   <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
-  <string name="objectives_1_objective">Стартиране в режим Отворен цикъл</string>
-  <string name="objectives_1_gate">Работа в режим \"Отворен цикъл\" за няколко дни и ръчно въвеждане на много временни базали. Настройте и използвайте временни и стандартни временни цели (напр. за активни или хипо-третирани въглехидрати)</string>
-  <string name="objectives_2_objective">Опитайте се да разбирате по-добре вашият Отворен цикъл, включително препоръчваните временни базали</string>
   <string name="objectives_2_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
-  <string name="objectives_3_objective">Стартиране на \"Затворен цикъл\" с изключване на базал при ниска КЗ</string>
   <string name="objectives_3_gate">Стартиране на \"Затворен цикъл\" с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
   <string name="objectives_4_objective">Настройване на \"Затворен цикъл\" чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
   <string name="objectives_4_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ.</string>
@@ -948,6 +936,10 @@
   <string name="openapsama_max_daily_safety_multiplier">Макс. множител за най-големия базал за денонощието</string>
   <string name="openapsama_current_basal_safety_multiplier">Макс. множител за настоящ базал</string>
   <string name="value_unavailable_short">---</string>
+  <string name="virtualpump_type">Виртуална помпа тип</string>
+  <string name="virtualpump_definition">Описание на помпата</string>
+  <string name="virtualpump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">* Диапазонни стойности за базал/болус не се поддържат от Виртиална Помпа.</string>
   <string name="ns_autobackfill_title">Изтегляне КЗ от Найтскаут</string>
   <string name="wear_wizard_settings">Настройки на съветник</string>
   <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
@@ -1036,6 +1028,9 @@
   <string name="versionavailable">Има налично обновяване до версия %1$s </string>
   <string name="time_offset">времево отместване</string>
   <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
+  <string name="treatments_wizard_total_label">Общо</string>
+  <string name="calculation_short">Калк</string>
+  <string name="handshaking">Сдвояване</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d дeн</item>
     <item quantity="other">%1$d дни</item>
