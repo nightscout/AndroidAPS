@@ -1042,6 +1042,7 @@
   <string name="treatments_wizard_total_label">Výsledek</string>
   <string name="calculation_short">Kalk</string>
   <string name="handshaking">Navazování spojení</string>
+  <string name="sendlogfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d den</item>
     <item quantity="few">%1$d dnů</item>
