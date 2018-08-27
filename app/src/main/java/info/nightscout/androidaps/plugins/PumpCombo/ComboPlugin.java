@@ -326,7 +326,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return basalProfile;
     }
 
-    @NonNull
     @Override
     public long lastDataTime() {
         return pump.lastSuccessfulCmdTime;
@@ -1240,7 +1239,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
         if (L.isEnabled(L.PUMP) && pumpHistoryChanged) {
-                log.debug("Setting 'pumpHistoryChanged' true");
+            log.debug("Setting 'pumpHistoryChanged' true");
         }
 
         List<Bolus> updatedPumpBolusHistory = historyResult.history.bolusHistory;

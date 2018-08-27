@@ -54,8 +54,6 @@ public class RuffyScripter implements RuffyCommands {
     private volatile long menuLastUpdated = 0;
     private volatile boolean unparsableMenuEncountered;
 
-
-    private String previousCommand = "<none>";
     private volatile Command activeCmd = null;
 
     private boolean started = false;
@@ -64,43 +62,43 @@ public class RuffyScripter implements RuffyCommands {
 
     private IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
-        public void log(String message) throws RemoteException {
+        public void log(String message) {
             if (log.isTraceEnabled()) {
                 log.trace("Ruffy says: " + message);
             }
         }
 
         @Override
-        public void fail(String message) throws RemoteException {
+        public void fail(String message) {
             log.warn("Ruffy warns: " + message);
         }
 
         @Override
-        public void requestBluetooth() throws RemoteException {
+        public void requestBluetooth() {
             log.trace("Ruffy invoked requestBluetooth callback");
         }
 
         @Override
-        public void rtStopped() throws RemoteException {
+        public void rtStopped() {
             log.debug("rtStopped callback invoked");
             currentMenu = null;
         }
 
         @Override
-        public void rtStarted() throws RemoteException {
+        public void rtStarted() {
             log.debug("rtStarted callback invoked");
         }
 
         @Override
-        public void rtClearDisplay() throws RemoteException {
+        public void rtClearDisplay() {
         }
 
         @Override
-        public void rtUpdateDisplay(byte[] quarter, int which) throws RemoteException {
+        public void rtUpdateDisplay(byte[] quarter, int which) {
         }
 
         @Override
-        public void rtDisplayHandleMenu(Menu menu) throws RemoteException {
+        public void rtDisplayHandleMenu(Menu menu) {
             // method is called every ~500ms
             log.debug("rtDisplayHandleMenu: " + menu);
 
@@ -113,7 +111,7 @@ public class RuffyScripter implements RuffyCommands {
         }
 
         @Override
-        public void rtDisplayHandleNoMenu() throws RemoteException {
+        public void rtDisplayHandleNoMenu() {
             log.warn("rtDisplayHandleNoMenu callback invoked");
             unparsableMenuEncountered = true;
         }
@@ -348,7 +346,6 @@ public class RuffyScripter implements RuffyCommands {
                         // ignore
                     }
                 }
-                previousCommand = "" + activeCmd;
                 activeCmd = null;
             }
         }
