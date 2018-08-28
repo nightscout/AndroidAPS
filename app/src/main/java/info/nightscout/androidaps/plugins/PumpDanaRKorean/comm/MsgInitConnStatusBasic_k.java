@@ -46,5 +46,12 @@ public class MsgInitConnStatusBasic_k extends MessageBase {
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EASYMODE_ENABLED));
         }
+
+        if (!DanaRPump.getInstance().isPasswordOK()) {
+            Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
+        }
     }
 }

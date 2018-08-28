@@ -109,6 +109,7 @@ public class FabricPrivacy {
     private static void uploadPluginStats() {
         CustomEvent pluginStats = new CustomEvent("PluginStats");
         pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
+        pluginStats.putCustomAttribute("HEAD", BuildConfig.HEAD);
         for (PluginBase plugin : MainApp.getPluginsList()) {
             if (!plugin.pluginDescription.alwaysEnabled) {
                 if (plugin.isEnabled(plugin.getType()))

@@ -145,7 +145,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     @Override
     public boolean isInitialized() {
         DanaRPump pump = DanaRPump.getInstance();
-        return pump.lastConnection > 0 && pump.isExtendedBolusEnabled && pump.maxBasal > 0;
+        return pump.lastConnection > 0 && pump.isExtendedBolusEnabled && pump.maxBasal > 0 && pump.isPasswordOK();
     }
 
     @Override
