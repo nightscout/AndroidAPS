@@ -47,6 +47,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     private static VirtualPumpPlugin plugin = null;
 
     public static VirtualPumpPlugin getPlugin() {
+
         loadFakingStatus();
         if (plugin == null)
             plugin = new VirtualPumpPlugin();
@@ -66,19 +67,23 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
 
     private static void loadFakingStatus() {
+
         fromNSAreCommingFakedExtendedBoluses = SP.getBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, false);
     }
 
     public static void setFakingStatus(boolean newStatus) {
+
         fromNSAreCommingFakedExtendedBoluses = newStatus;
         SP.putBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, fromNSAreCommingFakedExtendedBoluses);
     }
 
     public static boolean getFakingStatus() {
+
         return fromNSAreCommingFakedExtendedBoluses;
     }
 
     public VirtualPumpPlugin() {
+
         super(new PluginDescription()
                 .mainType(PluginType.PUMP)
                 .fragmentClass(VirtualPumpFragment.class.getName())
@@ -120,6 +125,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     protected void onStart() {
+
         super.onStart();
         MainApp.bus().register(this);
         refreshConfiguration();
@@ -127,17 +133,20 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     protected void onStop() {
+
         MainApp.bus().unregister(this);
     }
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange s) {
+
         if (s.isChanged(R.string.key_virtualpump_type))
             refreshConfiguration();
     }
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
+
         return (Config.NSCLIENT) && fromNSAreCommingFakedExtendedBoluses;
     }
 
@@ -150,40 +159,48 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public boolean isInitialized() {
+
         return true;
     }
 
     @Override
     public boolean isSuspended() {
+
         return false;
     }
 
     @Override
     public boolean isBusy() {
+
         return false;
     }
 
     @Override
     public boolean isConnected() {
+
         return true;
     }
 
     @Override
     public boolean isConnecting() {
+
         return false;
     }
 
     @Override
     public boolean isHandshakeInProgress() {
+
         return false;
     }
 
     @Override
     public void finishHandshaking() {
+
     }
 
     @Override
     public void connect(String reason) {
+
         if (!Config.NSCLIENT)
             NSUpload.uploadDeviceStatus();
         lastDataTime = System.currentTimeMillis();
@@ -191,19 +208,23 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public void disconnect(String reason) {
+
     }
 
     @Override
     public void stopConnecting() {
+
     }
 
     @Override
     public void getPumpStatus() {
+
         lastDataTime = System.currentTimeMillis();
     }
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
+
         lastDataTime = System.currentTimeMillis();
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
@@ -215,16 +236,19 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
+
         return true;
     }
 
     @Override
     public long lastDataTime() {
+
         return lastDataTime;
     }
 
     @Override
     public double getBaseBasalRate() {
+
         Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile != null)
             return profile.getBasal();
@@ -232,8 +256,18 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
             return 0d;
     }
 
+
+
+
+
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+
+        if (this.pumpType!=null)
+        {
+            detailedBolusInfo.insulin = PumpUtil.determineCorrectBolusSize(detailedBolusInfo.insulin, this.pumpType);
+        }
+
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.bolusDelivered = detailedBolusInfo.insulin;
@@ -272,6 +306,9 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+
+        absoluteRate = PumpUtil.determineCorrectBasalSize(absoluteRate, this.pumpType);
+
         TemporaryBasal tempBasal = new TemporaryBasal()
                 .date(System.currentTimeMillis())
                 .absolute(absoluteRate)

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpCommon.utils;
 
 import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.DoseStepSize;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpCapability;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpTempBasalType;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
@@ -10,6 +11,61 @@ import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
  */
 
 public class PumpUtil {
+
+
+    public static double determineCorrectBolusSize(double bolusAmount, PumpType pumpType)
+    {
+        if (bolusAmount == 0.0d || pumpType==null)
+        {
+            return bolusAmount;
+        }
+
+        double bolusStepSize;
+
+        if (pumpType.getSpecialBolusSize()==null)
+        {
+            bolusStepSize = pumpType.getBolusSize();
+        }
+        else
+        {
+            DoseStepSize specialBolusSize = pumpType.getSpecialBolusSize();
+
+            bolusStepSize = specialBolusSize.getStepSizeForAmount((float)bolusAmount);
+        }
+
+        return Math.round(bolusAmount/bolusStepSize) * bolusStepSize;
+
+    }
+
+
+    public static double determineCorrectBasalSize(Double basalAmount, PumpType pumpType)
+    {
+        if ( basalAmount == null || basalAmount == 0.0d || pumpType==null)
+        {
+            return basalAmount;
+        }
+
+        double basalStepSize;
+
+        if (pumpType.getBaseBasalSpecialSteps()==null)
+        {
+            basalStepSize = pumpType.getBaseBasalStep();
+        }
+        else
+        {
+            DoseStepSize specialBolusSize = pumpType.getBaseBasalSpecialSteps();
+
+            basalStepSize = specialBolusSize.getStepSizeForAmount(basalAmount.floatValue());
+        }
+
+        if (basalAmount> pumpType.getBaseBasalMaxValue())
+            basalAmount = pumpType.getBaseBasalMaxValue().doubleValue();
+
+
+        return Math.round(basalAmount/basalStepSize) * basalStepSize;
+
+    }
+
 
 
     public static void setPumpDescription(PumpDescription pumpDescription, PumpType pumpType)
