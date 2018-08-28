@@ -58,8 +58,8 @@ public class PumpUtil {
             basalStepSize = specialBolusSize.getStepSizeForAmount(basalAmount.floatValue());
         }
 
-        if (basalAmount> pumpType.getBaseBasalMaxValue())
-            basalAmount = pumpType.getBaseBasalMaxValue().doubleValue();
+        if (basalAmount> pumpType.getTbrSettings().getMaxDose())
+            basalAmount = pumpType.getTbrSettings().getMaxDose().doubleValue();
 
 
         return Math.round(basalAmount/basalStepSize) * basalStepSize;
