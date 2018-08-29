@@ -13,11 +13,12 @@ import java.util.Set;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
 
-/** Logs events has they're being posted to and dispatched from the event bus.
- *
+/**
+ * Logs events has they're being posted to and dispatched from the event bus.
+ * <p>
  * A summary of event-receiver calls that occurred so far is logged
  * after 10s (after startup) and then again every 60s.
- * */
+ */
 public class LoggingBus extends Bus {
     private static Logger log = LoggerFactory.getLogger(L.EVENTS);
 
@@ -49,7 +50,10 @@ public class LoggingBus extends Bus {
             log.debug("    source: <unknown>");
         }
 
-        super.post(event);
+        try {
+            super.post(event);
+        } catch (IllegalStateException ignored) {
+        }
     }
 
     @Override
