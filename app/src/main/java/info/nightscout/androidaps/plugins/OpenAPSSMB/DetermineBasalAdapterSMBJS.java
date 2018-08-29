@@ -240,12 +240,12 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
         mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
-        //align with max-absorption model in AMA sensitivity
-        if (mealData.usedMinCarbsImpact > 0) {
-            mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
-        } else {
-            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
-        }
+        // min_5m_carbimpact is not used within SMB determinebasal
+        //if (mealData.usedMinCarbsImpact > 0) {
+        //    mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
+        //} else {
+        //    mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
+        //}
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
