@@ -408,9 +408,24 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
-            if (!result.success)
-                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode);
-            else
+            if (!result.success) {
+                String error = "" + DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode;
+                switch (DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode) {
+                    case 0x10:
+                        error = MainApp.gs(R.string.maxbolusviolation);
+                        break;
+                    case 0x20:
+                        error = MainApp.gs(R.string.commanderror);
+                        break;
+                    case 0x40:
+                        error = MainApp.gs(R.string.speederror);
+                        break;
+                    case 0x80:
+                        error = MainApp.gs(R.string.insulinlimitviolation);
+                        break;
+                }
+                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error);
+            } else
                 result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (L.isEnabled(L.PUMP))
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);

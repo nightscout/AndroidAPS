@@ -1058,7 +1058,7 @@
     <string name="setupwizard_language_prompt">Select your language</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
-    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$d</string>
+    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
     <string name="firstinsulinincrement">First insulin increment</string>
     <string name="secondinsulinincrement">Second insulin increment</string>
     <string name="thirdinsulinincrement">Third insulin increment</string>
@@ -1195,6 +1195,10 @@
     <string name="calculation_short">Calc</string>
     <string name="handshaking">Handshaking</string>
     <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
+    <string name="maxbolusviolation">Max bolus violation</string>
+    <string name="commanderror">Command error</string>
+    <string name="speederror">Speed error</string>
+    <string name="insulinlimitviolation">Insulin limit violation</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
