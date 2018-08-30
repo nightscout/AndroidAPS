@@ -23,7 +23,7 @@ public class DoseSettings {
 
     public DoseSettings(float step, int durationStep, int maxDuration, float minDose)
     {
-        this(step, durationStep, maxDuration, minDose, null);
+        this(step, durationStep, maxDuration, minDose, Float.MAX_VALUE);
     }
 
 

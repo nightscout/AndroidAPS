@@ -263,10 +263,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
 
-        if (this.pumpType!=null)
-        {
-            detailedBolusInfo.insulin = PumpUtil.determineCorrectBolusSize(detailedBolusInfo.insulin, this.pumpType);
-        }
+        detailedBolusInfo.insulin = PumpUtil.determineCorrectBolusSize(detailedBolusInfo.insulin, this.pumpType);
 
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
@@ -362,6 +359,9 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         PumpEnactResult result = cancelExtendedBolus();
         if (!result.success)
             return result;
+
+        insulin = PumpUtil.determineCorrectExtendedBolusSize(insulin, this.pumpType);
+
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = System.currentTimeMillis();
         extendedBolus.insulin = insulin;
