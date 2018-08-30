@@ -274,8 +274,9 @@ public class DanaRFragment extends SubscriberFragment {
                         }
                     }
                     //hide user options button if not an RS pump or old firmware
+                    // also excludes pump with model 03 because of untested error
                     boolean isKorean = DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PUMP);
-                    if (isKorean || firmwareView.getText() == "OLD") {
+                    if (isKorean || firmwareView.getText() == "OLD" || pump.model == 3) {
                         danar_user_options.setVisibility(View.GONE);
                     }
                 }
