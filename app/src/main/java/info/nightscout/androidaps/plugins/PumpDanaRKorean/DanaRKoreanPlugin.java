@@ -51,7 +51,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         pluginDescription.description(R.string.description_pump_dana_r_korean);
 
         useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("DanaR Korean"));
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.DanaRKorean);
     }
 
     @Override

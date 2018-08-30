@@ -90,7 +90,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                 .description(R.string.description_pump_dana_rs)
         );
 
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("DanaRS"));
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.DanaRS);
     }
 
     @Override

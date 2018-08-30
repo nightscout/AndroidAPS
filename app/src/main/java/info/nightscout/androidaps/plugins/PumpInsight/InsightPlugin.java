@@ -122,7 +122,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 .description(R.string.description_pump_insight)
         );
         log("InsightPlugin instantiated");
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("Accu-Chek Insight"));
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.AccuChekInsight);
     }
 
 

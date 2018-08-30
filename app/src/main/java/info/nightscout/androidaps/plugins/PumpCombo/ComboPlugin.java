@@ -136,7 +136,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 .description(R.string.description_pump_combo)
         );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("Accu-Chek Combo"));
+        PumpUtil.setPumpDescription(pumpDescription, PumpType.AccuChekCombo);
     }
 
     public ComboPump getPump() {
