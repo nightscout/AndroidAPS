@@ -458,7 +458,6 @@
   <string name="openapsama_autosens_adjusttargets">Autosens también ajusta los objetivos</string>
   <string name="openapsama_autosens_adjusttargets_summary">Ajuste por defecto: true\nEsto se usa para permitir a autosens el ajuste de objetivos BG además de ISF y bases.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Ajuste por defecto: 2 \nEl retardo del bolo se realiza después de suministrar un bolo de comida, por lo que el lazo no se contrarrestará con bajas temporales cuando acaba de comer. Con el valor predeterminado de 2 y siendo DIA de 3 horas, el retardo del del bolo se realizará gradualmente durante 1,5 horas (3 DIA / 2).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">Ajustes por defecto: 3.0\nEsto es un ajuste por defecto para la absorción de carbohidratos cada 5 minutos. Por defecto se espera 3mg/dl/5min. Esto afecta la velocidad de reducción de COB y cuanta absorción se usa para calcular el BG futuro previsto, cuando la glucosa disminuye más de lo previsto o aumenta más de lo previsto.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Atención!\nNormalmente no tienes que editar los valores a continuación. Por favor PINCHA AQUI y LEE el texto y asegúrate que lo has ENTENDIDO antes de cambiar alguno de estos valores.</string>
   <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos.</string>
   <string name="error_only_numeric_digits_range_allowed">Sólo se permiten dígitos en el rango %1$s - %2$s</string>
@@ -928,7 +927,6 @@
   <string name="nav_setupwizard">Asistente de configuración</string>
   <string name="setupwizard_finish">FINALIZAR</string>
   <string name="setupwizard_language_prompt">Selecciona tu idioma</string>
-  <string name="boluserrorcode">Solicitado: %1$.2fU Entregado: %2$.2fU Código de error: %3$d</string>
   <string name="firstinsulinincrement">Primer incremento insulina</string>
   <string name="secondinsulinincrement">Segundo incremento insulina</string>
   <string name="thirdinsulinincrement">Tercer incremento insulina</string>

@@ -458,7 +458,6 @@
   <string name="openapsama_autosens_adjusttargets">Autosens 也调整目标血糖</string>
   <string name="openapsama_autosens_adjusttargets_summary">缺省值：是\n　这是用来允许 autosens调整血糖目标，还有 ISF胰岛素敏感系数和基础率这些参数。</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">默认值: 2 \n大剂量snooze是在输注餐时大剂量后开始生效的, 所以在你刚吃完饭的时候, 闭环不会因为你输注了大剂量而减少或停基础。这里的例子和缺省是 2; 因此, 3 小时的DIA(胰岛素持续作用时间) 意味着大剂量snooze将逐步在１. ５小时 (3 DIA/2) 后失效。</string>
-  <string name="openapsama_min_5m_carbimpact_summary">默认值: 3.0 这是默认的每5分钟碳水化合物吸收效果。默认值为3毫克/dl/5 分钟。这就影响了碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量, 当血糖的下降超过预期时, 或者不像预期的上升的那么多时。</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
   <string name="error_only_numeric_digits_allowed">只允许数字。</string>
   <string name="error_only_numeric_digits_range_allowed">仅允许在范围 %1$s - %2$s 内的数字。</string>
@@ -928,7 +927,6 @@
   <string name="nav_setupwizard">设置向导</string>
   <string name="setupwizard_finish">完成</string>
   <string name="setupwizard_language_prompt">选择你的语言</string>
-  <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$d</string>
   <string name="firstinsulinincrement">第一胰岛素增量</string>
   <string name="secondinsulinincrement">第二胰岛素增量</string>
   <string name="thirdinsulinincrement">第三胰岛素增量</string>

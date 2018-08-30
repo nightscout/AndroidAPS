@@ -460,7 +460,6 @@ MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM
   <string name="openapsama_autosens_adjusttargets">Autosens가 목표도 조절합니다.</string>
   <string name="openapsama_autosens_adjusttargets_summary">기본값: 활성\n이것은 autosens가 ISF와 기초주입뿐만 아니라, 혈당 목표범위를 조절할 수 있게 합니다.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">기본값: 2\n식사주입 후 Bolus snooze가 수행되게 되고, 따라서 식사주입 직후엔 loop가 low temp에 대응하지 않게 됩니다. 기본값이 2일때 예제는 다음과 같습니다; DIA가 3시간일 경우  bolus snooz는 점차적으로 1.5시간에 걸쳐 단계적으로 사라지게 됩니다.(3DIA/2).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">기본값: 3\n이것은 5분당 기본 탄수화물 흡수량에 대한 설정입니다. 예상되는 기본값은 3mg/dl/5min입니다. 이는 혈당이 예상보다 빨리 떨어지거나 오를때, 얼마나 빨리 COB가 감쇠하는지와 혈당예측을 위한 계산시 탄수화물 흡수량이 얼마나 될것으로 예상되는지에 영향을 미치게 됩니다.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
   <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
   <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
@@ -930,7 +929,6 @@ MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM
   <string name="nav_setupwizard">설정 마법사</string>
   <string name="setupwizard_finish">완료</string>
   <string name="setupwizard_language_prompt">언어를 선택하세요</string>
-  <string name="boluserrorcode">요청: %1$.2fU 전송: %2$.2fU 에러코드: %3$d</string>
   <string name="firstinsulinincrement">1차 인슐린 증분</string>
   <string name="secondinsulinincrement">2차 인슐린 증분</string>
   <string name="thirdinsulinincrement">3차 인슐린 증분</string>

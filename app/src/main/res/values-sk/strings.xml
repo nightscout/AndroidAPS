@@ -459,7 +459,6 @@
   <string name="openapsama_autosens_adjusttargets">Úprava cieľovej glykémie pomocou automatickej detekcie citlivosti</string>
   <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto nastavenie hovorí, že automatická detekcia citlivosti môže meniť tiež cieľové hodnoty glykémií.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Štandardná hodnota: 2\nToto nastavenie hovorí, po akú časť z hodnoty DIA uzavretý okruh po boluse čaká a nereaguje na zmeny glykémií (tu 3DIA/2 = 1,5h).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">Štandardná hodnota: 3.0 Tato hodnota definuje minimálnu časť strávených sacharidov za každých 5 min. Štandardná hodnota je 3mg/dl/5min. Tato hodnota ovplyvňuje výpočet COB.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknete TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
   <string name="error_only_numeric_digits_allowed">Povolené iba číslice.</string>
   <string name="error_only_numeric_digits_range_allowed">Povolené iba čísla v rozsahu %1$s - %2$s.</string>
@@ -929,7 +928,6 @@
   <string name="nav_setupwizard">Sprievodca nastavením</string>
   <string name="setupwizard_finish">Dokončiť</string>
   <string name="setupwizard_language_prompt">Vyberte jazyk</string>
-  <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$d</string>
   <string name="firstinsulinincrement">Prvý prídavok inzulínu</string>
   <string name="secondinsulinincrement">Druhý prídavok inzulínu</string>
   <string name="thirdinsulinincrement">Tretí prídavok inzulínu</string>

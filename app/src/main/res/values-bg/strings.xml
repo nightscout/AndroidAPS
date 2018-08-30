@@ -21,10 +21,13 @@
   <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
   <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
   <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
+  <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
   <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
   <string name="description_ma">Алгоритъма, какъвто е бил през 2016</string>
   <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
   <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
+  <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
+  <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
   <string name="description_profile_local">Работа с профил, който е наличен само на този телефон (локален).</string>
   <string name="description_profile_nightscout">Работа с профила, които сте дефинирали в Nightscout</string>
   <string name="description_profile_simple">Работа с профил със само една стойност за всички часове.</string>
@@ -47,6 +50,7 @@
   <string name="description_source_xdrip">Получава данни за КЗ от xDrip.</string>
   <string name="description_treatments">Записва всички процедури, които са били направени</string>
   <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
+  <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
   <string name="description_sms_communicator">Дистанционно управление AndroidAPS чрез използване на SMS команди.</string>
   <string name="objectives_button_start">Стартирай</string>
   <string name="objectives_button_verify">Провери</string>
@@ -125,6 +129,8 @@
   <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
   <string name="days">дни</string>
   <string name="constraints">Ограничения</string>
+  <string name="loop">Кръг - Loop</string>
+  <string name="configbuilder_loop">Режим на APS - Loop</string>
   <string name="configbuilder_loop_description">Използвайте това, за да активирате loop интеграцията в \'AndroidAPS.</string>
   <string name="loop_aps_label">Алгоритъм за APS</string>
   <string name="loop_constraintsprocessed_label">След ограничения</string>
@@ -157,6 +163,8 @@
   <string name="configbuilder_bgsource_description">От къде трябва да AndroidAPS да си взима данни?</string>
   <string name="xdrip">xDrip</string>
   <string name="apsmode_title">APS режим</string>
+  <string name="closedloop">Затворен кръг</string>
+  <string name="openloop">Отворен кръг</string>
   <string name="disabledloop">Loop изключен</string>
   <string name="disableloop">Изключи Loop</string>
   <string name="enableloop">Включи Loop</string>
@@ -307,7 +315,13 @@
   <string name="overview_bolusprogress_goingtodeliver" formatted="false">Ще достави %.2fЕ</string>
   <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
   <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
+  <string name="objectives_1_objective">Стартиране в режим Отворен кръг (Open loop)</string>
+  <string name="objectives_1_gate">Работа в режим \"Отворен кръг\" за няколко дни и ръчно въвеждане на много временни базали. Настройте и използвайте временни и стандартни временни цели (напр. за активни или хипо-третирани въглехидрати)</string>
+  <string name="objectives_2_objective">Опитайте се да разбирате по-добре вашият APS в режим \"Отворен кръг\", включително препоръчваните временни базали</string>
   <string name="objectives_2_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
+  <string name="objectives_3_objective">Стартиране на \"Затворен кръг\" с изключване на базал при ниска КЗ</string>
+  <string name="objectives_3_gate">Стартиране на \"Затворен кръг\" с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
+  <string name="objectives_4_objective">Настройване на \"Затворен кръг\" чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
   <string name="objectives_4_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ.</string>
   <string name="objectives_5_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
   <string name="objectives_5_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
@@ -316,11 +330,16 @@
   <string name="objectives_7_gate">Вие трябва да прочетете wiki и увеличите maxIOB за да може SMB да работи добре! Добро начало е maxIOB = средния болус за хранене + 3 x най-големия базал от профила</string>
   <string name="youareonallowedlimit">Достигнахте лимита</string>
   <string name="noprofileselected">Няма избран профил</string>
+  <string name="smscommunicator_loophasbeendisabled">APS е деактивиран</string>
+  <string name="smscommunicator_loophasbeenenabled">APS е активиран</string>
+  <string name="smscommunicator_loopisdisabled">APS е изключен</string>
+  <string name="smscommunicator_loopisenabled">APS е включен</string>
   <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
   <string name="valueoutofrange" formatted="false">Стойността %s е извън границите</string>
   <string name="smscommunicator_remotebasalnotallowed">Отдалечено прилагане на базал е забранено</string>
   <string name="smscommunicator_remotecommandnotallowed">Отдалеченото управление е забранено</string>
   <string name="smscommunicator_basalreplywithcode">За да стартирате базал от %1$.2fЕ отговорете с код %2$s</string>
+  <string name="smscommunicator_suspendreplywithcode">За да спрете APS за %1$d минути отговорете с код %2$s</string>
   <string name="smscommunicator_tempbasalset">Временен базал от %1$.2fЕ/ч за %2$d мин стартиран успешно</string>
   <string name="smscommunicator_tempbasalfailed">Неуспешно стартиране на временен базал</string>
   <string name="smscommunicator_basalstopreplywithcode" formatted="false">За да спрете времен базал отговорете с код %s</string>
@@ -439,7 +458,7 @@
   <string name="openapsama_autosens_adjusttargets">Да променя ли autosens и целевата КЗ</string>
   <string name="openapsama_autosens_adjusttargets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">По подразбиране: 3.0\nТова е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл/5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Стойност по подразбиране: 3.0 (АМА) или 8.0 (SMB). Това е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл за 5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
   <string name="error_only_numeric_digits_allowed">Позволени са само числа</string>
   <string name="error_only_numeric_digits_range_allowed">Позволени са числа между %1$s - %2$s</string>
@@ -503,6 +522,10 @@
   <string name="loopsuspended">Loop изключен</string>
   <string name="loopsuspendedfor">Изключен (%1$d мин)</string>
   <string name="loopsuperbolusfor">Суперболус (%1$d мин)</string>
+  <string name="suspendloopfor1h">Изключи APS за 1ч</string>
+  <string name="suspendloopfor2h">Изключи APS за 2ч</string>
+  <string name="suspendloopfor3h">Изключи APS за 3ч</string>
+  <string name="suspendloopfor10h">Изключи APS за 10 ч</string>
   <string name="disconnectpumpfor15m">Изключи помпата за 15 мин.</string>
   <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
   <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
@@ -510,6 +533,8 @@
   <string name="disconnectpumpfor3h">Изключи помпата за 3 ч</string>
   <string name="resume">Възстанови</string>
   <string name="smscommunicator_wrongduration">Грешна продължителност</string>
+  <string name="smscommunicator_loopsuspended">APS забранен</string>
+  <string name="smscommunicator_loopresumed">APS възобновен</string>
   <string name="treatments_wizard_bgtrend_label">Δ за 15мин</string>
   <string name="treatments_wizard_cob_label">СОВ</string>
   <string name="superbolus">Суперболус</string>
@@ -700,8 +725,10 @@
   <string name="negativeonly">Само отрицателни</string>
   <string name="overview_editquickwizard_usecob">Калкулиране на COB</string>
   <string name="overview_editquickwizard_usetemptarget">Калкулиране на временни цели</string>
+  <string name="loopenabled">APS разрешен</string>
   <string name="apsselected">Избран APS</string>
   <string name="nsclienthaswritepermission">NSClient има права за запис</string>
+  <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
   <string name="maxiobset">Максимален IOB е зададен правилно</string>
   <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
   <string name="basalprofilenotaligned" formatted="false">Няма базални стойности за някои часове: %s</string>
@@ -835,6 +862,7 @@
   <string name="overview_show_basals">Базали</string>
   <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
   <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
+  <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
   <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
   <string name="not_eng_mode_or_release">Режим за раработчици (Engineering mode) не е активиран и не е release версия</string>
   <string name="pump_basebasalrate">%.2f Е/ч</string>
@@ -857,6 +885,7 @@
   <string name="objectivenotfinished">ЦЕЛ %1$d не е завършена</string>
   <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
   <string name="novalidbasalrate">Няма валиден базал в помпата</string>
+  <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
   <string name="autosensdisabledinpreferences">Аутосенс е забранен в настройките</string>
   <string name="smbdisabledinpreferences">SMB е забранен в настройките</string>
   <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
@@ -878,6 +907,7 @@
   <string name="record_pump_site_change">Запис смяна на сет</string>
   <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
   <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
+  <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
   <string name="food_short">Храна</string>
   <string name="reset">нулиране</string>
   <string name="waitingfortimesynchronization">Изчаква синхронизация на времето (%1$d сек)</string>
@@ -898,7 +928,7 @@
   <string name="nav_setupwizard">Съветник за настройване</string>
   <string name="setupwizard_finish">КРАЙ</string>
   <string name="setupwizard_language_prompt">Избиране на език</string>
-  <string name="boluserrorcode">Поискано: %1$.2fU Доставено: %2$.2fU Error code: %3$d</string>
+  <string name="boluserrorcode">Стартирано: %1$.2fЕ Доставено: %2$.2fЕ Код на грешка: %3$s</string>
   <string name="firstinsulinincrement">Стойност на първия бърз бутон [e]</string>
   <string name="secondinsulinincrement">Стойност на втория бърз бутон [e]</string>
   <string name="thirdinsulinincrement">Стойност на третия бърз бутон [e]</string>
@@ -985,6 +1015,7 @@
   <string name="combo_invalid_setup">Невалидни настройки на помпата, проверете wiki и се уверете че меню Quick Info се казва QUICK INFO, с помощта на 360 софтуера.</string>
   <string name="custom">По избор</string>
   <string name="largetimedifftitle">Голяма времева разлика</string>
+  <string name="largetimediff">Голяма времева разлика: Помпата е изключена за повече от 1,5 часа. Моля, регулирайте ръчно времето на помпата и се уверете, че четенето на историята от помпата не води до неочаквано поведение. Ако е възможно, премахнете историята от помпата, преди да промените времето или да изключите затворения кръг за едно DIA след последното погрешно влизане в историята, но поне едно DIA отсега.</string>
   <string name="careportal_removestartedevents"> AndroidAPS стартира</string>
   <string name="storedsettingsfound">Открити са предишни настройки</string>
   <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
@@ -1012,6 +1043,11 @@
   <string name="treatments_wizard_total_label">Общо</string>
   <string name="calculation_short">Калк</string>
   <string name="handshaking">Сдвояване</string>
+  <string name="sendlogfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
+  <string name="maxbolusviolation">Превишавате макс болус</string>
+  <string name="commanderror">Грешка при команда</string>
+  <string name="speederror">Скорост грешка</string>
+  <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d дeн</item>
     <item quantity="other">%1$d дни</item>
