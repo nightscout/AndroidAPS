@@ -712,6 +712,8 @@
   <string name="dexcomg5_xdripupload_title">将血糖数据发送到 xDrip +</string>
   <string name="dexcomg5_xdripupload_summary">在 xDrip + 选择640ｇ/Eversense 数据源</string>
   <string name="nsclientbg">NSClient 血糖</string>
+  <string name="minimalbasalvaluereplaced">基础率值被泵支持的最小值: %s 替换了</string>
+  <string name="maximumbasalvaluereplaced">基础率值被泵支持的最大值:%s 替换了</string>
   <string name="overview_editquickwizard_usebg">血糖计算</string>
   <string name="overview_editquickwizard_usebolusiob">大剂量IOB (活性胰岛素) 计算</string>
   <string name="overview_editquickwizard_usebasaliob">基础率IOB (活性胰岛素) 计算</string>
@@ -765,6 +767,7 @@
   <string name="combo_error_no_connection_no_bolus_delivered">找不到泵，大剂量输注失败</string>
   <string name="combo_error_no_bolus_delivered">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
   <string name="combo_error_partial_bolus_delivered">由于遇到一个错误， %2$.2f U 中只有%1$.2fU 输注成功了. 请在泵上检查并核实，看是否需要采取适当的措施.</string>
+  <string name="combo_error_bolus_verification_failed">正在输注大剂量和核实泵的历史失败了，请检查泵，如果大剂量已经输注成功，下次连接泵的时候会在治疗的标签里自动添加一个大剂量记录.</string>
   <string name="combo_reservoir_level_insufficient_for_bolus">储药器里没有足够的胰岛素可用于大剂量输注了</string>
   <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
   <string name="insightpump_shortname">Insight</string>
@@ -945,6 +948,10 @@
   <string name="openapsama_max_daily_safety_multiplier">最大日基础率安全倍数</string>
   <string name="openapsama_current_basal_safety_multiplier">当前基础率安全倍数</string>
   <string name="value_unavailable_short">无可用</string>
+  <string name="virtualpump_type">虚拟泵类型</string>
+  <string name="virtualpump_definition">泵定义</string>
+  <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">* 虚拟泵不支持远程修改基础率或输注大剂量</string>
   <string name="ns_autobackfill_title">Autobackfill 血糖</string>
   <string name="wear_wizard_settings">向导设置</string>
   <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
@@ -985,6 +992,7 @@
   <string name="danar_pumpalarm_vibrate">振动</string>
   <string name="danar_pumpalarm_both">两者都</string>
   <string name="danar_screentimeout">LCD屏幕亮的时间[s]</string>
+  <string name="danar_backlight">背景光开启的时间[s]</string>
   <string name="danar_glucoseunits">血糖单位</string>
   <string name="danar_shutdown">关机(小时)</string>
   <string name="danar_lowreservoir">储药器药量低(单位)</string>
@@ -1012,10 +1020,29 @@
   <string name="storedsettingsfound">发现曾经保存过的设置</string>
   <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
   <string name="error_adding_treatment_title">治疗数据不完整</string>
+  <string name="maintenance_settings">维护设置</string>
+  <string name="maintenance_email">电子邮箱</string>
+  <string name="invalid_email_message">邮箱地址无效</string>
+  <string name="maintenance_amount">没有要发送的日志</string>
+  <string name="maintenance">维护</string>
+  <string name="maintenance_shortname">维护</string>
+  <string name="description_maintenance">提供了几个维护功能 (例如日志发送、日志删除)。</string>
+  <string name="send_all_logs">用电子邮件发送</string>
+  <string name="delete_logs">删除日志</string>
   <string name="error_adding_treatment_message">一个治疗 (胰岛素: %1$.2f, 碳水: %2$d, 在: %3$s)不能被添加到治疗里。请检查并手动记录是合适的。</string>
+  <string name="generated_ecarbs_note">eCarbs: %1$d 克 (%2$d h), 延迟: %3$d 分钟</string>
   <string name="openaps_noasdata">Autosens 数据不可用</string>
   <string name="nav_logsettings">日志设置</string>
   <string name="resettodefaults">重置为默认值</string>
+  <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
+  <string name="as">AS</string>
+  <string name="versionavailable">版本 %1$s 可用</string>
+  <string name="time_offset">时区偏移</string>
+  <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
+  <string name="treatments_wizard_total_label">总计</string>
+  <string name="calculation_short">计算</string>
+  <string name="handshaking">握手</string>
+  <string name="sendlogfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
   <plurals name="objective_days">
     <item quantity="other">%1$d　天</item>
   </plurals>

@@ -67,6 +67,8 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
         if (L.isEnabled(L.BGSOURCE))
             log.debug("Received Dexcom Data", data);
 
+        if (data == null) return;
+
         try {
             JSONArray jsonArray = new JSONArray(data);
             if (L.isEnabled(L.BGSOURCE))

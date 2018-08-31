@@ -47,6 +47,30 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    productFlavors {
+        flavorDimensions "standard"
+        full {
+            applicationId "info.nightscout.androidaps"
+            dimension "standard"
+            versionName version
+        }
+        pumpcontrol {
+            applicationId "info.nightscout.androidaps"
+            dimension "standard"
+            versionName version
+        }
+        nsclient {
+            applicationId "info.nightscout.nsclient"
+            dimension "standard"
+            versionName version + "-nsclient"
+        }
+        nsclient2 {
+            applicationId "info.nightscout.nsclient2"
+            dimension "standard"
+            versionName version + "-nsclient"
+        }
+    }
 }
 
 allprojects {

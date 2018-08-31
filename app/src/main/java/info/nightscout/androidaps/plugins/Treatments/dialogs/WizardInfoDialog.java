@@ -33,7 +33,6 @@ public class WizardInfoDialog extends DialogFragment implements OnClickListener 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.treatments_wizardinfo_dialog, null, false);
 
-        getDialog().getWindow().requestFeature(Window.FEATURE_CUSTOM_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         view.findViewById(R.id.ok).setOnClickListener(this);
