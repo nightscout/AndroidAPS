@@ -21,10 +21,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.utils.SP;
 
 public class MaintenancePlugin extends PluginBase {
@@ -203,6 +206,23 @@ public class MaintenancePlugin extends PluginBase {
         out.close();
     }
 
+    public static Intent sendMail(Uri attachementUri, String recipient, String subject)  {
+        StringBuilder builder =new StringBuilder();
+        
+        builder.append(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION + System.lineSeparator());
+        if (Config.NSCLIENT)
+            builder.append("NSCLIENT" + System.lineSeparator());
+
+        builder.append("Build: " + BuildConfig.BUILDVERSION + System.lineSeparator());
+        builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator());
+        builder.append(MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + NSSettingsStatus.getInstance().nightscoutVersionName + System.lineSeparator());
+        if (MainApp.engineeringMode)
+            builder.append(MainApp.gs(R.string.engineering_mode_enabled));
+
+        return sendMail(attachementUri, recipient, subject, builder.toString());
+    }
+
+
     /**
      * send a mail with the given file to the recipients with the given subject.
      *
@@ -213,16 +233,18 @@ public class MaintenancePlugin extends PluginBase {
      * @param attachementUri
      * @param recipient
      * @param subject
+     * @param body
+     *
      * @return
      */
-    public static Intent sendMail(Uri attachementUri, String recipient, String subject) {
+    public static Intent sendMail(Uri attachementUri, String recipient, String subject, String body) {
         LOG.debug("sending email to {} with subject {}", recipient, subject);
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{recipient});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
 
         LOG.debug("put path {}", attachementUri.toString());
         emailIntent.putExtra(Intent.EXTRA_STREAM, attachementUri);
