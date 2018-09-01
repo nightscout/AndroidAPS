@@ -326,4 +326,68 @@ public enum PumpType {
                     PumpCapability.BasalRate_Duration15and30minNotAllowed : specialBasalDurations;
         }
     }
+
+    public double determineCorrectBolusSize(double bolusAmount) {
+        if (bolusAmount == 0.0d) {
+            return bolusAmount;
+        }
+
+        double bolusStepSize;
+
+        if (getSpecialBolusSize() == null) {
+            bolusStepSize = getBolusSize();
+        } else {
+            DoseStepSize specialBolusSize = getSpecialBolusSize();
+
+            bolusStepSize = specialBolusSize.getStepSizeForAmount((float)bolusAmount);
+        }
+
+        return Math.round(bolusAmount / bolusStepSize) * bolusStepSize;
+    }
+
+
+    public double determineCorrectExtendedBolusSize(double bolusAmount) {
+        if (bolusAmount == 0.0d) {
+            return bolusAmount;
+        }
+
+        double bolusStepSize;
+
+        if (getExtendedBolusSettings() == null) { // this should be never null
+            return 0.0d;
+        }
+
+        DoseSettings extendedBolusSettings = getExtendedBolusSettings();
+
+        bolusStepSize = extendedBolusSettings.getStep();
+
+        if (bolusAmount > extendedBolusSettings.getMaxDose()) {
+            bolusAmount = extendedBolusSettings.getMaxDose();
+        }
+
+        return Math.round(bolusAmount / bolusStepSize) * bolusStepSize;
+    }
+
+
+    public double determineCorrectBasalSize(double basalAmount) {
+        if (basalAmount == 0.0d) {
+            return basalAmount;
+        }
+
+        double basalStepSize;
+
+        if (getBaseBasalSpecialSteps() == null) {
+            basalStepSize = getBaseBasalStep();
+        } else {
+            DoseStepSize specialBolusSize = getBaseBasalSpecialSteps();
+
+            basalStepSize = specialBolusSize.getStepSizeForAmount((float) basalAmount);
+        }
+
+        if (basalAmount > getTbrSettings().getMaxDose())
+            basalAmount = getTbrSettings().getMaxDose().doubleValue();
+
+        return Math.round(basalAmount / basalStepSize) * basalStepSize;
+
+    }
 }

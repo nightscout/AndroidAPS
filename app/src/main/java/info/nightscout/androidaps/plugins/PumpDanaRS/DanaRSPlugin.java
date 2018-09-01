@@ -44,7 +44,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
@@ -90,7 +89,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                 .description(R.string.description_pump_dana_rs)
         );
 
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.DanaRS);
+        pumpDescription.setPumpDescription(PumpType.DanaRS);
     }
 
     @Override
