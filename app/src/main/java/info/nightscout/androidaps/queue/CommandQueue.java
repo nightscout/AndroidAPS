@@ -298,7 +298,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);

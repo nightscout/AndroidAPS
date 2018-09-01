@@ -200,7 +200,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.setFakingStatus(true);
+        VirtualPumpPlugin.getPlugin().setFakingStatus(true);
         scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleExtendedBolusChange();
@@ -236,7 +236,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.setFakingStatus(false);
+        VirtualPumpPlugin.getPlugin().setFakingStatus(false);
         scheduleTemporaryBasalChange();
     }
 
@@ -967,8 +967,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = trJson.getInt("duration");
                 extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
                 extendedBolus._id = trJson.getString("_id");
-                if (!VirtualPumpPlugin.getFakingStatus()) {
-                    VirtualPumpPlugin.setFakingStatus(true);
+                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -981,8 +981,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
-                if (!VirtualPumpPlugin.getFakingStatus()) {
-                    VirtualPumpPlugin.setFakingStatus(true);
+                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }

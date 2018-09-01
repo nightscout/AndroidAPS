@@ -39,7 +39,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelBolusSilentlyTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.CancelTBRSilentlyTaskRunner;
 import info.nightscout.androidaps.plugins.PumpInsight.connector.Connector;
@@ -122,7 +121,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 .description(R.string.description_pump_insight)
         );
         log("InsightPlugin instantiated");
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("Accu-Chek Insight"));
+        pumpDescription.setPumpDescription(PumpType.AccuChekInsight);
     }
 
 

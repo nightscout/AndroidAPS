@@ -24,7 +24,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
@@ -48,7 +47,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public DanaRPlugin() {
         super();
         useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("DanaR"));
+        pumpDescription.setPumpDescription(PumpType.DanaR);
     }
 
     @Override

@@ -10,6 +10,8 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
@@ -121,6 +123,18 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)), this);
 
         absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(MainApp.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), MainApp.gs(R.string.hardlimit)), this);
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        // check for pump max
+        if (pump != null) {
+            double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
+            absoluteRate.setIfSmaller(pumpLimit, String.format(MainApp.gs(R.string.limitingbasalratio), pumpLimit, MainApp.gs(R.string.pumplimit)), this);
+        }
+
+        // do rounding
+        if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+            absoluteRate.set(Round.roundTo(absoluteRate.value(), pump.getPumpDescription().tempAbsoluteStep));
+        }
         return absoluteRate;
     }
 
@@ -136,10 +150,14 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         applyBasalConstraints(absoluteConstraint, profile);
         percentRate.copyReasons(absoluteConstraint);
 
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
         Integer percentRateAfterConst = Double.valueOf(absoluteConstraint.value() / currentBasal * 100).intValue();
-        if (percentRateAfterConst < 100)
-            percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, 10d).intValue();
-        else percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, 10d).intValue();
+        if (pump != null) {
+            if (percentRateAfterConst < 100)
+                percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
+            else
+                percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
+        }
 
         percentRate.set(percentRateAfterConst, String.format(MainApp.gs(R.string.limitingpercentrate), percentRateAfterConst, MainApp.gs(R.string.pumplimit)), this);
 
@@ -154,6 +172,29 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
         insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        if (pump != null) {
+            double rounded = Round.roundTo(insulin.value(), pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value()));
+            insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
+        }
+        return insulin;
+    }
+
+   @Override
+    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingextendedbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
+
+        Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
+        insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingextendedbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
+
+        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingextendedbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        if (pump != null) {
+            double rounded = Round.roundTo(insulin.value(), pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value()));
+            insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
+        }
         return insulin;
     }
 

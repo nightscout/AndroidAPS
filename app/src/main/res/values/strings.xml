@@ -1019,6 +1019,7 @@
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
     <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>

@@ -22,7 +22,7 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         // HARDCODED LIMITS
         if (halfhours < 1) halfhours = 1;
         if (halfhours > 16) halfhours = 16;
-        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+        amount = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(amount)).value();
 
         AddParamInt((int) (amount * 100));
         AddParamByte(halfhours);
