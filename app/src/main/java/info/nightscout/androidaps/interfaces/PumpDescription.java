@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
  */
 
 public class PumpDescription {
-    PumpType pumpType = PumpType.GenericAAPS;
+    public PumpType pumpType = PumpType.GenericAAPS;
 
     public PumpDescription () {
         resetSettings();

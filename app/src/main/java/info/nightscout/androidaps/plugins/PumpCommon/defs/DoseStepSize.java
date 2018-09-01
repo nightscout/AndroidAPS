@@ -10,18 +10,18 @@ public enum DoseStepSize
     ComboBasal( //
             new DoseStepSizeEntry(0f, 1f, 0.01f), //
             new DoseStepSizeEntry(1f, 10f, 0.05f), //
-            new DoseStepSizeEntry(10f, Float.MAX_VALUE, 0.1f)), //
+            new DoseStepSizeEntry(10f, Double.MAX_VALUE, 0.1f)), //
 
     InsightBolus(
             new DoseStepSizeEntry(0f, 2f, 0.05f), //
             new DoseStepSizeEntry(2f, 5f, 0.1f), //
             new DoseStepSizeEntry(5f, 10f, 0.2f), //
-            new DoseStepSizeEntry(10f, Float.MAX_VALUE, 0.5f)),
+            new DoseStepSizeEntry(10f, Double.MAX_VALUE, 0.5f)),
 
     MedtronicVeoBasal( //
             new DoseStepSizeEntry(0f, 1f, 0.025f), //
             new DoseStepSizeEntry(1f, 10f, 0.05f), //
-            new DoseStepSizeEntry(10f, Float.MAX_VALUE, 0.1f)), //
+            new DoseStepSizeEntry(10f, Double.MAX_VALUE, 0.1f)), //
 
     ;
 
@@ -35,7 +35,7 @@ public enum DoseStepSize
     }
 
 
-    public float getStepSizeForAmount(float amount)
+    public double getStepSizeForAmount(double amount)
     {
         for (DoseStepSizeEntry entry : entries) {
             if (entry.from <= amount && entry.to > amount)
@@ -57,7 +57,7 @@ public enum DoseStepSize
             sb.append(entry.from);
             sb.append("-");
 
-            if (entry.to == Float.MAX_VALUE)
+            if (entry.to == Double.MAX_VALUE)
             {
                 sb.append("~}");
             }
@@ -74,12 +74,12 @@ public enum DoseStepSize
 
     static class DoseStepSizeEntry
     {
-        float from;
-        float to;
-        float value;
+        double from;
+        double to;
+        double value;
 
         // to = this value is not included, but would actually mean <, so for rates between 0.025-0.975 u/h, we would have [from=0, to=10]
-        DoseStepSizeEntry(float from, float to, float value)
+        DoseStepSizeEntry(double from, double to, double value)
         {
             this.from = from;
             this.to = to;

@@ -227,8 +227,6 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
 
-        detailedBolusInfo.insulin = pumpType.determineCorrectBolusSize(detailedBolusInfo.insulin);
-
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.bolusDelivered = detailedBolusInfo.insulin;
@@ -266,8 +264,6 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-
-        absoluteRate = pumpType.determineCorrectBasalSize(absoluteRate);
 
         TemporaryBasal tempBasal = new TemporaryBasal()
                 .date(System.currentTimeMillis())
@@ -322,8 +318,6 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         PumpEnactResult result = cancelExtendedBolus();
         if (!result.success)
             return result;
-
-        insulin = pumpType.determineCorrectExtendedBolusSize(insulin);
 
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = System.currentTimeMillis();

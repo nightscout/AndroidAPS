@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 
@@ -34,12 +35,15 @@ public class QueueThread extends Thread {
 
     private PowerManager.WakeLock mWakeLock;
 
-    public QueueThread(CommandQueue queue) {
+    QueueThread(CommandQueue queue) {
         super();
 
         this.queue = queue;
-        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
+        Context context = MainApp.instance().getApplicationContext();
+        if (context != null) {
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
+        }
     }
 
     @Override
