@@ -157,6 +157,7 @@ public class APSREsultTest {
         AAPSMocker.mockStrings();
         AAPSMocker.mockBus();
         AAPSMocker.mockProfileFunctions();
+        AAPSMocker.mockTreatmentService();
         treatmentsPlugin = AAPSMocker.mockTreatmentPlugin();
         ConstraintChecker constraintChecker = AAPSMocker.mockConstraintsChecker();
 

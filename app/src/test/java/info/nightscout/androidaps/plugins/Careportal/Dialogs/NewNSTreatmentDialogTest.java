@@ -67,7 +67,7 @@ public class NewNSTreatmentDialogTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockStrings();
         PowerMockito.mockStatic(NSUpload.class);
-        AAPSMocker.mockTreatmentPlugin();
+        AAPSMocker.mockTreatmentService();
         AAPSMocker.mockBus();
         AAPSMocker.mockDatabaseHelper();
 

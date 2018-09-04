@@ -155,13 +155,16 @@ public class AAPSMocker {
         when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
     }
 
-    public static TreatmentsPlugin mockTreatmentPlugin() throws Exception {
-        TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
+    public static TreatmentsPlugin mockTreatmentPlugin() {
         PowerMockito.mockStatic(TreatmentsPlugin.class);
         TreatmentsPlugin treatmentsPlugin = PowerMockito.mock(TreatmentsPlugin.class);
-        PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
         when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
         return treatmentsPlugin;
+    }
+
+    public static void mockTreatmentService() throws Exception {
+        TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
+        PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
     }
 
     public static Profile getValidProfile() {
