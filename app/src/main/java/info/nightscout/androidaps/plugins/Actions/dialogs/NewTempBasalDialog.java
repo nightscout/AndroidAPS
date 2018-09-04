@@ -136,7 +136,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                         absolute = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(basalAbsoluteInput), profile).value();
                         confirmMessage += "\n" + absolute + " U/h ";
                         confirmMessage += "\n" + MainApp.gs(R.string.duration) + " " + durationInMinutes + "min ?";
-                        if (absolute - basalAbsoluteInput != 0d)
+                        if (Math.abs(absolute - basalAbsoluteInput) > 0.01d)
                             confirmMessage += "\n" + MainApp.gs(R.string.constraintapllied);
                     }
 

@@ -141,7 +141,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     }
                     if (carbsAfterConstraints > 0)
                         confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-                    if (insulinAfterConstraints - insulin != 0 || !Objects.equals(carbsAfterConstraints, carbs))
+                    if (Math.abs(insulinAfterConstraints - insulin) > 0.01d || !Objects.equals(carbsAfterConstraints, carbs))
                         confirmMessage += "<br/>" + MainApp.gs(R.string.constraintapllied);
 
 
