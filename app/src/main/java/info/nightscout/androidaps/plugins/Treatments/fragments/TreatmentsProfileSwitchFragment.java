@@ -20,10 +20,14 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Profile;
@@ -42,6 +46,7 @@ import info.nightscout.utils.SP;
  */
 
 public class TreatmentsProfileSwitchFragment extends SubscriberFragment implements View.OnClickListener {
+    private Logger log = LoggerFactory.getLogger(L.UI);
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -129,6 +134,10 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             @Override
             public void onClick(View v) {
                 final ProfileSwitch profileSwitch = (ProfileSwitch) v.getTag();
+                if (profileSwitch == null) {
+                    log.error("profileSwitch == null");
+                    return;
+                }
                 switch (v.getId()) {
                     case R.id.profileswitch_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
