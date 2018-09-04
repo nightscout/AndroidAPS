@@ -68,18 +68,20 @@ public class APSResult {
         return this;
     }
 
-
    public APSResult tempBasalRequested(boolean tempBasalRequested) {
         this.tempBasalRequested = tempBasalRequested;
         return this;
     }
-
 
    public APSResult usePercent(boolean usePercent) {
         this.usePercent = usePercent;
         return this;
     }
 
+   public APSResult json(JSONObject json) {
+        this.json = json;
+        return this;
+    }
 
     @Override
     public String toString() {
@@ -151,7 +153,7 @@ public class APSResult {
 
     protected void doClone(APSResult newResult) {
         newResult.date = date;
-        newResult.reason = new String(reason);
+        newResult.reason = reason != null ? new String(reason) : null;
         newResult.rate = rate;
         newResult.duration = duration;
         newResult.tempBasalRequested = tempBasalRequested;

@@ -14,18 +14,20 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, ProfileFunctions.class, TreatmentsPlugin.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, ProfileFunctions.class, TreatmentsPlugin.class, L.class})
 public class APSREsultTest {
     VirtualPumpPlugin virtualPumpPlugin;
     TreatmentsPlugin treatmentsPlugin;
@@ -148,6 +150,25 @@ public class APSREsultTest {
 
     }
 
+    @Test
+    public void cloneTest() {
+        APSResult apsResult = new APSResult();
+        apsResult.rate(10);
+
+        APSResult apsResult2 = apsResult.clone();
+        Assert.assertEquals(apsResult.rate, apsResult2.rate, 0);
+    }
+
+    @Test
+    public void jsonTest() {
+        closedLoopEnabled.set(true);
+        APSResult apsResult = new APSResult();
+        apsResult.rate(20).tempBasalRequested(true);
+        Assert.assertEquals(20d, JsonHelper.safeGetDouble(apsResult.json(), "rate"), 0d);
+
+        apsResult.rate(20).tempBasalRequested(false);
+        Assert.assertEquals(false, apsResult.json().has("rate"));
+    }
 
     @Before
     public void prepareMock() throws Exception {
