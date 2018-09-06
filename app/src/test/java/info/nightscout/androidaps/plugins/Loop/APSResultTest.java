@@ -28,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, ProfileFunctions.class, TreatmentsPlugin.class, L.class})
-public class APSREsultTest {
+public class APSResultTest {
     VirtualPumpPlugin virtualPumpPlugin;
     TreatmentsPlugin treatmentsPlugin;
     Constraint<Boolean> closedLoopEnabled = new Constraint<>(false);
