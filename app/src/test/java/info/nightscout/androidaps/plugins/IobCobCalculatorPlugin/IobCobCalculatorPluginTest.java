@@ -18,6 +18,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
 
@@ -108,7 +109,7 @@ public class IobCobCalculatorPluginTest {
     }
 
     @Test
-    public void createBucketedData5minTest() {
+    public void createBucketedData5minTest() throws Exception {
         List<BgReading> bgReadingList = new ArrayList<>();
 
         // Super data should not be touched
@@ -212,6 +213,131 @@ public class IobCobCalculatorPluginTest {
         iobCobCalculatorPlugin.createBucketedData();
         Assert.assertEquals(null, iobCobCalculatorPlugin.getBucketedData());
 
+        // real data gap test
+        bgReadingList.clear();
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T13:34:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T13:14:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T13:09:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T13:04:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:59:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:54:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:49:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:44:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:39:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:34:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:29:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:24:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:09:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T12:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:59:55Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:34:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:29:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:24:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:09:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T11:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:34:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:29:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:24:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:09:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T10:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:35:05Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:30:17Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:24:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:09:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T09:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:40:02Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:34:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:29:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:24:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:09:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T08:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:34:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:30:03Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:25:17Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:14:58Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:09:58Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T07:04:58Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:59:58Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:54:58Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:34:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:29:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:24:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:10:03Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T06:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:49:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:34:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:29:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:24:57Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:19:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:14:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:09:57Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T05:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:50:03Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:44:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:39:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:34:57Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:29:57Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:24:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:19:57Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:14:57Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:10:03Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T04:04:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T03:59:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T03:54:56Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T03:50:03Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T03:44:57Z")).value(100));
+
+        iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        iobCobCalculatorPlugin.createBucketedData();
+
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T13:34:57Z").getTime(), iobCobCalculatorPlugin.getBucketedData().get(0).date);
+        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T03:44:57Z").getTime(), iobCobCalculatorPlugin.getBucketedData().get(iobCobCalculatorPlugin.getBucketedData().size() - 1).date);
     }
 
     @Test
@@ -283,9 +409,9 @@ public class IobCobCalculatorPluginTest {
         iobCobCalculatorPlugin.createBucketedData();
 
         Assert.assertEquals(null, iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(4).msecs()));
-        Assert.assertEquals((Long)T.mins(5).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(6).msecs()));
-        Assert.assertEquals((Long)T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(20).msecs()));
-        Assert.assertEquals((Long)T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(25).msecs()));
+        Assert.assertEquals((Long) T.mins(5).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(6).msecs()));
+        Assert.assertEquals((Long) T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(20).msecs()));
+        Assert.assertEquals((Long) T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(25).msecs()));
     }
 
     @Before
