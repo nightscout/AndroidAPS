@@ -208,6 +208,10 @@ public class DataService extends IntentService {
         double insulin = JsonHelper.safeGetDouble(json, "insulin");
         double carbs = JsonHelper.safeGetDouble(json, "carbs");
         String eventType = JsonHelper.safeGetString(json, "eventType");
+        if (eventType == null) {
+            log.debug("Wrong treatment. Ignoring : " + json.toString());
+            return;
+        }
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
             MainApp.bus().post(evtTreatment);

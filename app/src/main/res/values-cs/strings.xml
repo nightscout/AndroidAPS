@@ -897,6 +897,7 @@
   <string name="basal_set_correctly">Bazál nastaven správně</string>
   <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
   <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
+  <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U: %2$s</string>
   <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
   <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
   <string name="limitingiob">IOB omezeno na %1$.1f U: %2$s</string>

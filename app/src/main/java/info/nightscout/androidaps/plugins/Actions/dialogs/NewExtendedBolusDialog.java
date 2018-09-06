@@ -74,7 +74,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     Double insulinAfterConstraint = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += MainApp.gs(R.string.duration) + " " + durationInMinutes + "min ?";
-                    if (insulinAfterConstraint - insulin != 0d)
+                    if (Math.abs(insulinAfterConstraint - insulin) > 0.01d)
                         confirmMessage += "\n" + MainApp.gs(R.string.constraintapllied);
                     insulin = insulinAfterConstraint;
 

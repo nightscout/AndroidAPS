@@ -12,7 +12,7 @@
   <string name="danar_useextended_title">&gt;200% 주입위한 확장식사주입</string>
   <string name="danar_bt_name_title">다나R 블루투스</string>
   <string name="ns_sync_use_absolute_title">기초주입량 절대값 사용하기</string>
-  <string name="alert_dialog_storage_permission_text">폰을 재부팅하고나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그가 기록이되지 않습니다.(알고리즘이 제대로 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
+  <string name="alert_dialog_storage_permission_text">폰을 재부팅하거나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그 기록이 되지 않습니다.(알고리즘이 정상적인 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
   <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
   <string name="description_careportal">고급 로그 항목을 입력합니다.</string>
   <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
@@ -236,9 +236,7 @@
   <string name="disconnected">연결 끊김</string>
   <string name="danar_pump_settings">다나R 펌프 설정</string>
   <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
-  <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.
-
-MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
+  <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
   <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
   <string name="save">저장</string>
   <string name="nobtadapter">블루투스 어댑터를 찾지 못했습니다</string>
@@ -460,6 +458,7 @@ MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM
   <string name="openapsama_autosens_adjusttargets">Autosens가 목표도 조절합니다.</string>
   <string name="openapsama_autosens_adjusttargets_summary">기본값: 활성\n이것은 autosens가 ISF와 기초주입뿐만 아니라, 혈당 목표범위를 조절할 수 있게 합니다.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">기본값: 2\n식사주입 후 Bolus snooze가 수행되게 되고, 따라서 식사주입 직후엔 loop가 low temp에 대응하지 않게 됩니다. 기본값이 2일때 예제는 다음과 같습니다; DIA가 3시간일 경우  bolus snooz는 점차적으로 1.5시간에 걸쳐 단계적으로 사라지게 됩니다.(3DIA/2).</string>
+  <string name="openapsama_min_5m_carbimpact_summary">기본값: 3.0 (AMA) 또는 8.0 (SMB). 5분당 탄수화물이 얼만큼 흡수되었는지에 대한 기본값 설정입니다. 기본값은 3mg/dl / 5분 입니다. 이는 혈당이 예상보다 빨리 떨어지거나 혹은 예상보다 오르지 않을때, COB가 얼마나 빨리 사라지게 되는지에 영향을 주게 되고, 추정된 탄수화물 흡수량이 미래 혈당 예측 계산시에도 영향을 주게 됩니다.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
   <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
   <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
@@ -898,6 +897,7 @@ MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM
   <string name="basal_set_correctly">기초주입이 정상적으로 설정되었습니다.</string>
   <string name="limitingpercentrate">%2$s로 인해 최대 비율이 %1$d%%로 제한됩니다.</string>
   <string name="limitingbolus">%2$s로 인해 식사주입이 %1$.1f U로 제한됩니다.</string>
+  <string name="limitingextendedbolus">%2$s로 인해 확장식사주입이 %1$.1f U로 제한됩니다.</string>
   <string name="limitingmaxiob">%2$s로 인해 최대 IOB가 %1$.1f U로 제한됩니다.</string>
   <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
   <string name="limitingiob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
@@ -929,6 +929,7 @@ MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM
   <string name="nav_setupwizard">설정 마법사</string>
   <string name="setupwizard_finish">완료</string>
   <string name="setupwizard_language_prompt">언어를 선택하세요</string>
+  <string name="boluserrorcode">요청: %1$.2fU 전송: %2$.2fU 에러코드: %3$s</string>
   <string name="firstinsulinincrement">1차 인슐린 증분</string>
   <string name="secondinsulinincrement">2차 인슐린 증분</string>
   <string name="thirdinsulinincrement">3차 인슐린 증분</string>
@@ -1043,6 +1044,10 @@ MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM
   <string name="calculation_short">Calc</string>
   <string name="handshaking">통신 확인</string>
   <string name="sendlogfiles">예상치 못한 상황 보고를 위해 오늘의 로그 파일을 개발자에게 전송합니다.</string>
+  <string name="maxbolusviolation">최대 식사주입 위반</string>
+  <string name="commanderror">명령 오류</string>
+  <string name="speederror">속도 오류</string>
+  <string name="insulinlimitviolation">인슐린 제한 위반</string>
   <plurals name="objective_days">
     <item quantity="other">%1$d 일</item>
   </plurals>
