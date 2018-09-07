@@ -2,7 +2,6 @@ package info;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 
 import com.squareup.otto.Bus;
 
@@ -10,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Locale;
 
@@ -21,11 +19,10 @@ import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
@@ -33,10 +30,8 @@ import info.nightscout.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -117,9 +112,10 @@ public class AAPSMocker {
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
     }
 
-    public static void mockConstraintsChecker() {
+    public static ConstraintChecker mockConstraintsChecker() {
         ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
+        return constraintChecker;
     }
 
     public static void mockBus() {
@@ -139,7 +135,7 @@ public class AAPSMocker {
         when(L.isEnabled(any())).thenReturn(true);
     }
 
-    public static void mockNSUpload(){
+    public static void mockNSUpload() {
         PowerMockito.mockStatic(NSUpload.class);
     }
 
@@ -159,11 +155,16 @@ public class AAPSMocker {
         when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
     }
 
+    public static TreatmentsPlugin mockTreatmentPlugin() {
+        PowerMockito.mockStatic(TreatmentsPlugin.class);
+        TreatmentsPlugin treatmentsPlugin = PowerMockito.mock(TreatmentsPlugin.class);
+        when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
+        return treatmentsPlugin;
+    }
+
     public static void mockTreatmentService() throws Exception {
         TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
-        TreatmentsPlugin treatmentsPlugin = PowerMockito.mock(TreatmentsPlugin.class);
         PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
-        when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
     }
 
     public static Profile getValidProfile() {
@@ -191,6 +192,14 @@ public class AAPSMocker {
             Assert.fail("getValidProfileStore() failed");
         }
         return profileStore;
+    }
+
+    public static void mockProfileFunctions() {
+        PowerMockito.mockStatic(ProfileFunctions.class);
+        ProfileFunctions profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
+        profile = getValidProfile();
+        PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
     }
 
     private static MockedBus bus = new MockedBus();
