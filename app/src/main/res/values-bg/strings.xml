@@ -897,6 +897,7 @@
   <string name="basal_set_correctly">Базалът е зададен коректно</string>
   <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
   <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
+  <string name="limitingextendedbolus">Ограничение на удължен болус до %1$.1f Е поради %2$s</string>
   <string name="limitingmaxiob">Ограничаване на макс. IOB до %1$.1f Е поради %2$s</string>
   <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
   <string name="limitingiob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
