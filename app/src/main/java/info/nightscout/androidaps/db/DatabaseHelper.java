@@ -41,6 +41,7 @@ import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
@@ -1571,23 +1572,30 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
-                if (store != null) {
-                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
-                    if (profile != null) {
-                        profileSwitch.profileJson = profile.getData().toString();
-                        if (L.isEnabled(L.DATABASE))
-                            log.debug("Profile switch prefilled with JSON from local store");
-                        // Update data in NS
-                        NSUpload.updateProfileSwitch(profileSwitch);
+                ProfileInterface profileInterface = MainApp.getConfigBuilder().getActiveProfileInterface();
+                if (profileInterface != null) {
+                    ProfileStore store = profileInterface.getProfile();
+                    if (store != null) {
+                        Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                        if (profile != null) {
+                            profileSwitch.profileJson = profile.getData().toString();
+                            if (L.isEnabled(L.DATABASE))
+                                log.debug("Profile switch prefilled with JSON from local store");
+                            // Update data in NS
+                            NSUpload.updateProfileSwitch(profileSwitch);
+                        } else {
+                            if (L.isEnabled(L.DATABASE))
+                                log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                            return;
+                        }
                     } else {
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                            log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;
                     }
                 } else {
                     if (L.isEnabled(L.DATABASE))
-                        log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                        log.debug("No active profile interface. Ignoring: " + trJson.toString());
                     return;
                 }
             }
