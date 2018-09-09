@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -23,6 +24,8 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
 
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -187,5 +190,8 @@ public class APSResultTest {
         when(ConfigBuilderPlugin.getActivePump()).thenReturn(virtualPumpPlugin);
 
         when(constraintChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled);
+
+        Mockito.when(SP.getDouble(anyInt(), anyDouble())).thenReturn(30d);
+
     }
 }
