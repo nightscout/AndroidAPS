@@ -897,6 +897,7 @@
   <string name="basal_set_correctly">Базал задан корректно</string>
   <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
   <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
+  <string name="limitingextendedbolus">Ограничение расширенного болюса до %1$.1f U из-за %2$s</string>
   <string name="limitingmaxiob">Ограничение максимума активного инсулина IOB до %1$.1f U из-за %2$s</string>
   <string name="limitingcarbs">Ограничение максимума углеводов до %1$d грамм из-за %2$s</string>
   <string name="limitingiob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
