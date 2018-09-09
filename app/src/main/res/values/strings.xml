@@ -1200,6 +1200,9 @@
     <string name="commanderror">Command error</string>
     <string name="speederror">Speed error</string>
     <string name="insulinlimitviolation">Insulin limit violation</string>
+    <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="loop_openmode_min_change">Minimal request change [%]</string>
+    <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 30%</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

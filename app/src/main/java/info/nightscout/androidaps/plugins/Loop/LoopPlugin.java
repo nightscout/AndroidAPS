@@ -33,7 +33,6 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -106,7 +105,7 @@ public class LoopPlugin extends PluginBase {
                 .fragmentClass(LoopFragment.class.getName())
                 .pluginName(R.string.loop)
                 .shortName(R.string.loop_shortname)
-                .preferencesId(R.xml.pref_closedmode)
+                .preferencesId(R.xml.pref_loop)
                 .description(R.string.description_loop)
         );
         loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);

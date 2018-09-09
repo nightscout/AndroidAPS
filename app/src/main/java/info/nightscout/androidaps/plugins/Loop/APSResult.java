@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 09.06.2016.
@@ -377,11 +378,11 @@ public class APSResult {
             }
             // report change bigger than 30%
             if (activeTemp != null) {
-                double percentToBeSmallChange = 30;
-                percentToBeSmallChange /= 100;
+                double percentMinChangeChange = SP.getDouble(R.string.key_loop_openmode_min_change, 30d);
+                percentMinChangeChange /= 100;
                 double change = rate / activeTemp.tempBasalConvertedToAbsolute(now, profile);
-                double lowThreshold = 1 - percentToBeSmallChange;
-                double highThreshold = 1 + percentToBeSmallChange;
+                double lowThreshold = 1 - percentMinChangeChange;
+                double highThreshold = 1 + percentMinChangeChange;
 
                 if (change < lowThreshold || change > highThreshold) {
                     if (L.isEnabled(L.APS))
