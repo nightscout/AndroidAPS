@@ -11,6 +11,8 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
@@ -42,6 +44,12 @@ class HistoryLogAdapter {
                         if (L.isEnabled(L.PUMP))
                             log.debug("Things seem to match: %" + percent);
                         temporaryBasal = temporaryBasalFromHistory;
+                        String _id = temporaryBasal._id;
+                        if (NSUpload.isIdValid(_id)) {
+                            NSUpload.removeCareportalEntryFromNS(_id);
+                        } else {
+                            UploadQueue.removeID("dbAdd", _id);
+                        }
                         MainApp.getDbHelper().delete(temporaryBasalFromHistory);
                     } else {
                         if (L.isEnabled(L.PUMP))
