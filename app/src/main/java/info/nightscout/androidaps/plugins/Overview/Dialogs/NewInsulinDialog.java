@@ -218,13 +218,13 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {
-                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + insulinAfterConstraints + "U" + "</font>");
+                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.to2Decimal(insulinAfterConstraints) + "U" + "</font>");
                 if (recordOnlyCheckbox.isChecked()) {
                     actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>");
                 }
             }
 
-            if (!insulinAfterConstraints.equals(insulin))
+            if (Math.abs(insulinAfterConstraints - insulin) > 0.01d)
                 actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
 
             int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
