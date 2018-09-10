@@ -1068,7 +1068,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     where.eq("pumpId", extendedBolus.pumpId);
                     PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
                     List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
-                    if (trList.size() > 0) {
+                    if (trList.size() > 1) {
                         log.error("EXTENDEDBOLUS: Multiple records found for pumpId: " + extendedBolus.pumpId);
                         return false;
                     }
