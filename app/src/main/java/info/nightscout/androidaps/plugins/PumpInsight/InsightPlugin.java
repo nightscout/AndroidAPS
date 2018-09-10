@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpInsight;
 
 import android.content.DialogInterface;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
@@ -576,7 +577,9 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
 
         try {
             cancelExtendedBolus();
+            SystemClock.sleep(1100); // to be sure db records are at least 1 sec off (for NS)
             realTBRCancel();
+            SystemClock.sleep(1100); // to be sure db records are at least 1 sec off (for NS)
             updateGui();
             if (L.isEnabled(L.PUMP)) log.debug("Canceling temp basal");
             connector.requestHistorySync(5000);
