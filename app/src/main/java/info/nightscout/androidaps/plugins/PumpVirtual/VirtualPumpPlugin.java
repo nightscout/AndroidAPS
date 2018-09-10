@@ -41,11 +41,12 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
-    static Integer batteryPercent = 50;
-    static Integer reservoirInUnits = 50;
-    private static Logger log = LoggerFactory.getLogger(VirtualPumpPlugin.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMP);
+
+    Integer batteryPercent = 50;
+    Integer reservoirInUnits = 50;
     private static VirtualPumpPlugin plugin = null;
-    private static boolean fromNSAreCommingFakedExtendedBoluses = false;
+    private boolean fromNSAreCommingFakedExtendedBoluses = false;
     private PumpType pumpType = null;
     private long lastDataTime = 0;
     private PumpDescription pumpDescription = new PumpDescription();

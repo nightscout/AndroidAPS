@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.PumpInsight.history;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
@@ -7,6 +10,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
@@ -16,12 +20,9 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
  */
 
 class HistoryLogAdapter {
+    private Logger log = LoggerFactory.getLogger(L.PUMP);
 
     private static final long MAX_TIME_DIFFERENCE = 61000;
-
-    private static void log(String msg) {
-        android.util.Log.e("HISTORYLOG", msg);
-    }
 
     void createTBRrecord(Date eventDate, int percent, int duration, long record_id) {
 
@@ -30,23 +31,29 @@ class HistoryLogAdapter {
         final TemporaryBasal temporaryBasalFromHistory = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(eventDate.getTime());
 
         if (temporaryBasalFromHistory == null) {
-            log("Create new TBR: " + eventDate + " " + percent + " " + duration);
+            if (L.isEnabled(L.PUMP))
+                log.debug("Create new TBR: " + eventDate + " " + percent + " " + duration);
         } else {
-            log("Loaded existing TBR record: " + temporaryBasalFromHistory.toString());
+            if (L.isEnabled(L.PUMP))
+                log.debug("Loaded existing TBR record: " + temporaryBasalFromHistory.toString());
             if (Math.abs(eventDate.getTime() - temporaryBasalFromHistory.date) < MAX_TIME_DIFFERENCE) {
                 if (temporaryBasalFromHistory.source != Source.PUMP) {
                     if (temporaryBasalFromHistory.percentRate == percent) {
-                        log("Things seem to match: %" + percent);
+                        if (L.isEnabled(L.PUMP))
+                            log.debug("Things seem to match: %" + percent);
                         temporaryBasal = temporaryBasalFromHistory;
                         MainApp.getDbHelper().delete(temporaryBasalFromHistory);
                     } else {
-                        log("This record has different percent rates: " + temporaryBasalFromHistory.percentRate + " vs us: " + percent);
+                        if (L.isEnabled(L.PUMP))
+                            log.debug("This record has different percent rates: " + temporaryBasalFromHistory.percentRate + " vs us: " + percent);
                     }
                 } else {
-                    log("This record is already a pump record!");
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("This record is already a pump record!");
                 }
             } else {
-                log("Time difference too great! : " + (eventDate.getTime() - temporaryBasalFromHistory.date));
+                if (L.isEnabled(L.PUMP))
+                    log.debug("Time difference too great! : " + (eventDate.getTime() - temporaryBasalFromHistory.date));
             }
         }
 
