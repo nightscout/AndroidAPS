@@ -11,6 +11,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -84,7 +85,8 @@ class HistoryLogAdapter {
         extendedBolus.source = Source.PUMP;
         extendedBolus.pumpId = record_id;
 
-        TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+        if (ProfileFunctions.getInstance().getProfile(extendedBolus.date) != null) // actual basal rate is needed for absolute rate calculation
+            TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
     }
 
     void createStandardBolusRecord(Date eventDate, double insulin, long record_id) {
