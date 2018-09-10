@@ -4,6 +4,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.utils.T;
 
 public class Objective5 extends Objective {
 
@@ -13,7 +14,7 @@ public class Objective5 extends Objective {
 
     @Override
     protected void setupTasks(List<Task> tasks) {
-        tasks.add(new MinimumDurationTask(24L * 60L * 60L * 1000L));
+        tasks.add(new MinimumDurationTask(T.days(1).msecs()));
         tasks.add(new Task(R.string.maxiobset) {
             @Override
             public boolean isCompleted() {

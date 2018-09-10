@@ -464,8 +464,8 @@ public class LoopPlugin extends PluginBase {
                     NSUpload.uploadDeviceStatus();
                     ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                     if (objectivesPlugin != null) {
-                        ObjectivesPlugin.manualEnacts++;
-                        ObjectivesPlugin.saveProgress();
+                        ObjectivesPlugin.getPlugin().manualEnacts++;
+                        ObjectivesPlugin.getPlugin().saveProgress();
                     }
                 }
                 MainApp.bus().post(new EventAcceptOpenLoopChange());
