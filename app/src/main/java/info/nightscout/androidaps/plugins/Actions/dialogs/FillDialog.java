@@ -91,7 +91,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.actions_fill_dialog, null, false);
+        View view = inflater.inflate(R.layout.actions_fill_dialog, container, false);
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);

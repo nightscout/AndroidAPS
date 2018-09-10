@@ -459,7 +459,7 @@
   <string name="openapsama_autosens_adjusttargets">Úprava cieľovej glykémie pomocou automatickej detekcie citlivosti</string>
   <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto nastavenie hovorí, že automatická detekcia citlivosti môže meniť tiež cieľové hodnoty glykémií.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Štandardná hodnota: 2\nToto nastavenie hovorí, po akú časť z hodnoty DIA uzavretý okruh po boluse čaká a nereaguje na zmeny glykémií (tu 3DIA/2 = 1,5h).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">Štandardná hodnota: 3.0 Tato hodnota definuje minimálnu časť strávených sacharidov za každých 5 min. Štandardná hodnota je 3mg/dl/5min. Tato hodnota ovplyvňuje výpočet COB.</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknete TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
   <string name="error_only_numeric_digits_allowed">Povolené iba číslice.</string>
   <string name="error_only_numeric_digits_range_allowed">Povolené iba čísla v rozsahu %1$s - %2$s.</string>
@@ -898,6 +898,7 @@
   <string name="basal_set_correctly">Bazál nastavený správne</string>
   <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
   <string name="limitingbolus">Bolus obmedzený na %1$.1f U: %2$s</string>
+  <string name="limitingextendedbolus">Predĺžený bolus obmedzený na %1$.1f U: %2$s</string>
   <string name="limitingmaxiob">Max IOB obmedzený na %1$.1f U: %2$s</string>
   <string name="limitingcarbs">Sacharidy obmedzené na %1$d g: %2$s</string>
   <string name="limitingiob">IOB obmedzený na %1$.1f U: %2$s</string>
@@ -929,7 +930,7 @@
   <string name="nav_setupwizard">Sprievodca nastavením</string>
   <string name="setupwizard_finish">Dokončiť</string>
   <string name="setupwizard_language_prompt">Vyberte jazyk</string>
-  <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$d</string>
+  <string name="boluserrorcode">Požadované: %1$.2fU Podané: %2$.2fU Chyba: %3$s</string>
   <string name="firstinsulinincrement">Prvý prídavok inzulínu</string>
   <string name="secondinsulinincrement">Druhý prídavok inzulínu</string>
   <string name="thirdinsulinincrement">Tretí prídavok inzulínu</string>
@@ -949,6 +950,10 @@
   <string name="openapsama_max_daily_safety_multiplier">Max násobiteľ denného najvyššieho bazálu</string>
   <string name="openapsama_current_basal_safety_multiplier">Max násobiteľ súčasného bazálu</string>
   <string name="value_unavailable_short">---</string>
+  <string name="virtualpump_type">Typ virtuálnej pumpy</string>
+  <string name="virtualpump_definition">Definícia pumpy</string>
+  <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">* Rozdielne hodnoty podľa rozsahu nie sú podporované.</string>
   <string name="ns_autobackfill_title">Automatické doplňovanie glykémií z NS</string>
   <string name="wear_wizard_settings">Nastavenie wizardu</string>
   <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>
@@ -1039,6 +1044,11 @@
   <string name="treatments_wizard_total_label">Spolu</string>
   <string name="calculation_short">Kalk</string>
   <string name="handshaking">Overovanie</string>
+  <string name="sendlogfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
+  <string name="maxbolusviolation">Prekročený maximálny bolus</string>
+  <string name="commanderror">Chyba príkazu</string>
+  <string name="speederror">Chyba rýchlosti</string>
+  <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d deň</item>
     <item quantity="few">%1$d dní</item>

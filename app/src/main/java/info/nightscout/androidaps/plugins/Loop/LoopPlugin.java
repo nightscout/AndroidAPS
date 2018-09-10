@@ -33,13 +33,13 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
@@ -51,6 +51,7 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
@@ -58,6 +59,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 import info.nightscout.utils.ToastUtils;
 
 /**
@@ -103,7 +105,7 @@ public class LoopPlugin extends PluginBase {
                 .fragmentClass(LoopFragment.class.getName())
                 .pluginName(R.string.loop)
                 .shortName(R.string.loop_shortname)
-                .preferencesId(R.xml.pref_closedmode)
+                .preferencesId(R.xml.pref_loop)
                 .description(R.string.description_loop)
         );
         loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);
@@ -148,8 +150,6 @@ public class LoopPlugin extends PluginBase {
      * sources and currently only a new BG should trigger a loop run. Hence we return early if
      * the event causing the calculation is not EventNewBg.
      * <p>
-     * Callers of {@link info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin#runCalculation(String, long, boolean, Event)}
-     * are sources triggering a calculation which triggers this method upon completion.
      */
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
@@ -305,16 +305,26 @@ public class LoopPlugin extends PluginBase {
                 return;
             }
 
+            // Prepare for pumps using % basals
+            if (pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
+                result.usePercent = true;
+            }
+            result.percent = (int) (result.rate / profile.getBasal() * 100);
+
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
             resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
             resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
+
+            resultAfterConstraints.percentConstraint = new Constraint<>(resultAfterConstraints.percent);
+            resultAfterConstraints.percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(resultAfterConstraints.percentConstraint, profile).value();
+
             resultAfterConstraints.smbConstraint = new Constraint<>(resultAfterConstraints.smb);
             resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
-            if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
+            if (lastBolusTime != 0 && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
                 if (L.isEnabled(L.APS))
                     log.debug("SMB requsted but still in 3 min interval");
                 resultAfterConstraints.smb = 0;
@@ -347,7 +357,7 @@ public class LoopPlugin extends PluginBase {
             Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
 
             if (closedLoopEnabled.value()) {
-                if (result.isChangeRequested()
+                if (resultAfterConstraints.isChangeRequested()
                         && !ConfigBuilderPlugin.getCommandQueue().bolusInQueue()
                         && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
                     final PumpEnactResult waiting = new PumpEnactResult();
@@ -390,7 +400,7 @@ public class LoopPlugin extends PluginBase {
                     lastRun.smbSetByPump = null;
                 }
             } else {
-                if (result.isChangeRequested() && allowNotification) {
+                if (resultAfterConstraints.isChangeRequested() && allowNotification) {
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(MainApp.instance().getApplicationContext(), CHANNEL_ID);
                     builder.setSmallIcon(R.drawable.notif_icon)
@@ -454,8 +464,8 @@ public class LoopPlugin extends PluginBase {
                     NSUpload.uploadDeviceStatus();
                     ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                     if (objectivesPlugin != null) {
-                        ObjectivesPlugin.manualEnacts++;
-                        ObjectivesPlugin.saveProgress();
+                        ObjectivesPlugin.getPlugin().manualEnacts++;
+                        ObjectivesPlugin.getPlugin().saveProgress();
                     }
                 }
                 MainApp.bus().post(new EventAcceptOpenLoopChange());
@@ -466,8 +476,12 @@ public class LoopPlugin extends PluginBase {
 
     /**
      * expect absolute request and allow both absolute and percent response based on pump capabilities
+     * TODO: update pump drivers to support APS request in %
      */
+
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
+        boolean allowPercentage = VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+
         if (!request.tempBasalRequested) {
             if (callback != null) {
                 callback.result(new PumpEnactResult().enacted(false).success(true).comment(MainApp.gs(R.string.nochangerequested))).run();
@@ -477,9 +491,6 @@ public class LoopPlugin extends PluginBase {
 
         PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
-
-        request.rateConstraint = new Constraint<>(request.rate);
-        request.rate = MainApp.getConstraintChecker().applyBasalConstraints(request.rateConstraint, profile).value();
 
         if (!pump.isInitialized()) {
             if (L.isEnabled(L.APS))
@@ -504,34 +515,66 @@ public class LoopPlugin extends PluginBase {
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = activeTreatments.getTempBasalFromHistory(now);
-        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
-            if (activeTemp != null) {
+        if (request.usePercent && allowPercentage) {
+            if (request.percent == 100 && request.duration == 0) {
+                if (activeTemp != null) {
+                    if (L.isEnabled(L.APS))
+                        log.debug("applyAPSRequest: cancelTempBasal()");
+                    MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                } else {
+                    if (L.isEnabled(L.APS))
+                        log.debug("applyAPSRequest: Basal set correctly");
+                    if (callback != null) {
+                        callback.result(new PumpEnactResult().percent(request.percent).duration(0)
+                                .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
+                    }
+                }
+            } else if (activeTemp != null
+                    && activeTemp.getPlannedRemainingMinutes() > 5
+                    && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
+                    && request.percent == activeTemp.percentRate) {
                 if (L.isEnabled(L.APS))
-                    log.debug("applyAPSRequest: cancelTempBasal()");
-                MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                    log.debug("applyAPSRequest: Temp basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().percent(request.percent)
+                            .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
+                            .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
+                }
             } else {
                 if (L.isEnabled(L.APS))
-                    log.debug("applyAPSRequest: Basal set correctly");
-                if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
-                            .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
-                }
-            }
-        } else if (activeTemp != null
-                && activeTemp.getPlannedRemainingMinutes() > 5
-                && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
-                && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
-            if (L.isEnabled(L.APS))
-                log.debug("applyAPSRequest: Temp basal set correctly");
-            if (callback != null) {
-                callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
-                        .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
-                        .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
+                    log.debug("applyAPSRequest: tempBasalPercent()");
+                MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
             }
         } else {
-            if (L.isEnabled(L.APS))
-                log.debug("applyAPSRequest: setTempBasalAbsolute()");
-            MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+            if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+                if (activeTemp != null) {
+                    if (L.isEnabled(L.APS))
+                        log.debug("applyAPSRequest: cancelTempBasal()");
+                    MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                } else {
+                    if (L.isEnabled(L.APS))
+                        log.debug("applyAPSRequest: Basal set correctly");
+                    if (callback != null) {
+                        callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                                .enacted(false).success(true).comment(MainApp.gs(R.string.basal_set_correctly))).run();
+                    }
+                }
+            } else if (activeTemp != null
+                    && activeTemp.getPlannedRemainingMinutes() > 5
+                    && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
+                    && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+                if (L.isEnabled(L.APS))
+                    log.debug("applyAPSRequest: Temp basal set correctly");
+                if (callback != null) {
+                    callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                            .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
+                            .comment(MainApp.gs(R.string.let_temp_basal_run))).run();
+                }
+            } else {
+                if (L.isEnabled(L.APS))
+                    log.debug("applyAPSRequest: setTempBasalAbsolute()");
+                MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+            }
         }
     }
 

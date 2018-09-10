@@ -37,10 +37,10 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     private static ObjectivesPlugin objectivesPlugin;
 
-    public static List<Objective> objectives = new ArrayList<>();
-    public static boolean bgIsAvailableInNS = false;
-    public static boolean pumpStatusIsAvailableInNS = false;
-    public static Integer manualEnacts = 0;
+    public List<Objective> objectives = new ArrayList<>();
+    public boolean bgIsAvailableInNS = false;
+    public boolean pumpStatusIsAvailableInNS = false;
+    public Integer manualEnacts = 0;
 
     public static ObjectivesPlugin getPlugin() {
         if (objectivesPlugin == null) {
@@ -91,7 +91,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         saveProgress();
     }
 
-    public static void saveProgress() {
+    public void saveProgress() {
         SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
         SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
         SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
@@ -112,7 +112,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
             log.debug("Objectives loaded");
     }
 
-    public static List<Objective> getObjectives() {
+    public List<Objective> getObjectives() {
         return objectives;
     }
 

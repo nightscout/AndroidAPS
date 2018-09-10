@@ -167,6 +167,11 @@ public class BgReading implements DataPointWithLabelInterface {
         return this;
     }
 
+    public BgReading date(Date date) {
+        this.date = date.getTime();
+        return this;
+    }
+
     public BgReading value(double value) {
         this.value = value;
         return this;

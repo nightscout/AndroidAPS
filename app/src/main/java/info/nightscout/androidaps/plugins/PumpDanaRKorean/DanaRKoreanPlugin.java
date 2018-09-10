@@ -24,7 +24,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
@@ -51,7 +50,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         pluginDescription.description(R.string.description_pump_dana_r_korean);
 
         useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.getByDescription("DanaR Korean"));
+        pumpDescription.setPumpDescription(PumpType.DanaRKorean);
     }
 
     @Override

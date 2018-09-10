@@ -458,7 +458,7 @@
   <string name="openapsama_autosens_adjusttargets">Autosens justerar även mål-BG</string>
   <string name="openapsama_autosens_adjusttargets_summary">Standardvärde: sant. Detta för att tillåta autosens justera mål-BG utöver ISF och basaler.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Standardvärde: 2  Bolus snooze är aktivt efter att du givit en måltidsbolus, detta för att inte loop ska lågtempa när du just ätit. I detta exempel och grundvärde är 2; innebär att DIA på 3 tim kommer bolus snooze kommer att fasas ut under 1,5 tim (3DIA/2).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">Standardvärde: 3.0 mg/dl/5 min  Detta är grundinställning för KH-absorption per 5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat.</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Standardvärde: 3.0 (AMA) eller 8.0 (SMB). Detta är grundinställning för KH-absorption per 5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Viktigt!\nNormalt behöver du inte ändra dessa värden. Vg KLICKA HÄR och LÄS texten och försäkra dig om att du FÖRSTÅTT innan du ändrar dessa värden.</string>
   <string name="error_only_numeric_digits_allowed">Endast siffror tillåtna.</string>
   <string name="error_only_numeric_digits_range_allowed">Endast siffror mellan %1$s - %2$s är tillåtna.</string>
@@ -897,6 +897,7 @@
   <string name="basal_set_correctly">Basal justerad korrekt</string>
   <string name="limitingpercentrate">Begränsar max procent hastighet till %1$d%% pga %2$s</string>
   <string name="limitingbolus">Begränsar bolus till %1$.1f enheter pga %2$s</string>
+  <string name="limitingextendedbolus">Begränsar bolus till %1$.1f enheter pga %2$s</string>
   <string name="limitingmaxiob">Begränsar max IOB till %1$.1f pga %2$s</string>
   <string name="limitingcarbs">Begränsar kolhydrater till %1$d g pga %2$s</string>
   <string name="limitingiob">Begränsar IOB till %1$.1f pga %2$s</string>
@@ -928,7 +929,7 @@
   <string name="nav_setupwizard">Installationsguide</string>
   <string name="setupwizard_finish">Avsluta</string>
   <string name="setupwizard_language_prompt">Välj språk</string>
-  <string name="boluserrorcode">Angivet: %1$.2f enheter. Levererat: %2$.2f enheter. Felkod: %3$d</string>
+  <string name="boluserrorcode">Angivet: %1$.2f enheter. Levererat: %2$.2f enheter. Felkod: %3$s</string>
   <string name="firstinsulinincrement">Första snabbknabben för insulin</string>
   <string name="secondinsulinincrement">Andra snabbknabben för insulin</string>
   <string name="thirdinsulinincrement">Tredje snabbknabben för insulin</string>
@@ -948,6 +949,10 @@
   <string name="openapsama_max_daily_safety_multiplier">Multiplikator för max daglig basal (max_daily)</string>
   <string name="openapsama_current_basal_safety_multiplier">Multiplikator för nuvarande basal (max_current)</string>
   <string name="value_unavailable_short">-</string>
+  <string name="virtualpump_type">Typ av virtuell pump</string>
+  <string name="virtualpump_definition">Pumpdefinition</string>
+  <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">* Den virtuella pumpen kräver fasta värden för basal/bolus.</string>
   <string name="ns_autobackfill_title">Auto Backfill BG</string>
   <string name="wear_wizard_settings">Kalkylatorinställningar</string>
   <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
@@ -1034,6 +1039,15 @@
   <string name="as">AS</string>
   <string name="versionavailable">Version %1$s tillgänglig</string>
   <string name="time_offset">Tidsförskjutning</string>
+  <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
+  <string name="treatments_wizard_total_label">Total</string>
+  <string name="calculation_short">Kalkyl</string>
+  <string name="handshaking">Handskakning</string>
+  <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
+  <string name="maxbolusviolation">Max bolus nådd</string>
+  <string name="commanderror">Kommandofel</string>
+  <string name="speederror">Felaktig hastighet</string>
+  <string name="insulinlimitviolation">Insulingräns nådd</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dagar</item>

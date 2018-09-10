@@ -86,8 +86,8 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
         }
 
         // Objectives 0
-        ObjectivesPlugin.bgIsAvailableInNS = true;
-        ObjectivesPlugin.saveProgress();
+        ObjectivesPlugin.getPlugin().bgIsAvailableInNS = true;
+        ObjectivesPlugin.getPlugin().saveProgress();
     }
 
     private void storeSgv(JSONObject sgvJson) {

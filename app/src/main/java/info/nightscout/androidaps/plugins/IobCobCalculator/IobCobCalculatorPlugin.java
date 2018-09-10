@@ -146,7 +146,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     return false;
                 }
             }
-            double averageDiff = totalDiff / (bgReadings.size() -1) / 1000d;
+            double averageDiff = totalDiff / (bgReadings.size() - 1) / 1000d;
             boolean is5mindata = averageDiff < 10;
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Interval detection: values: " + bgReadings.size() + " averageDiff: " + averageDiff + "[s] is5minData: " + is5mindata);
@@ -168,7 +168,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         for (int i = 1; i < bgReadings.size(); ++i) {
             if (bgReadings.get(i).date == time) return bgReadings.get(i);
             if (bgReadings.get(i).date > time) continue;
-            lastFound = bgReadings.get(i-1);
+            lastFound = bgReadings.get(i - 1);
             if (bgReadings.get(i).date < time) break;
         }
         return lastFound;
@@ -258,7 +258,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     newBgreading.value = Math.round(nextbg);
                     //console.error("Interpolated", bucketed_data[j]);
                     bucketed_data.add(newBgreading);
-                    //log.error("******************************************************************************************************* Adding:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
+                    if (L.isEnabled(L.AUTOSENS))
+                        log.debug("Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
 
                     elapsed_minutes = elapsed_minutes - 5;
                     lastbg = nextbg;
@@ -269,14 +270,16 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 newBgreading.value = bgReadings.get(i).value;
                 newBgreading.date = bgTime;
                 bucketed_data.add(newBgreading);
-                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else if (Math.abs(elapsed_minutes) > 2) {
                 j++;
                 BgReading newBgreading = new BgReading();
                 newBgreading.value = bgReadings.get(i).value;
                 newBgreading.date = bgTime;
                 bucketed_data.add(newBgreading);
-                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else {
                 bucketed_data.get(j).value = (bucketed_data.get(j).value + bgReadings.get(i).value) / 2;
                 //log.error("***** Average");
@@ -289,7 +292,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
             BgReading previous = bucketed_data.get(i + 1);
             long msecDiff = current.date - previous.date;
             long adjusted = (msecDiff - T.mins(5).msecs()) / 1000;
-            log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
             current.date = previous.date + T.mins(5).msecs();
         }
 

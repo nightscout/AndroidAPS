@@ -1,15 +1,22 @@
 package info.nightscout.androidaps.plugins.PumpInsight.history;
 
 import android.content.Intent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.TDD;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import sugar.free.sightparser.handling.HistoryBroadcast;
 
 import java.util.Date;
@@ -23,15 +30,12 @@ import static info.nightscout.androidaps.plugins.PumpInsight.history.PumpIdCache
  */
 
 class HistoryIntentAdapter {
+    private Logger log = LoggerFactory.getLogger(L.PUMP);
 
     private HistoryLogAdapter logAdapter = new HistoryLogAdapter();
 
     private static Date getDateExtra(Intent intent, String name) {
         return (Date) intent.getSerializableExtra(name);
-    }
-
-    private static void log(String msg) {
-        android.util.Log.e("HistoryIntentAdapter", msg);
     }
 
     static long getRecordUniqueID(long pump_serial_number, long pump_record_id) {
@@ -52,13 +56,14 @@ class HistoryIntentAdapter {
         final Date start_time = getDateExtra(intent, HistoryBroadcast.EXTRA_START_TIME);
 
         if ((pump_tbr_duration == -1) || (pump_tbr_percent == -1) || (pump_record_id == -1)) {
-            log("Invalid TBR record!!!");
+            log.error("Invalid TBR record!!!");
             return;
         }
 
         final long record_unique_id = getRecordUniqueID(pump_serial_number, pump_record_id);
 
-        log("Creating TBR record: " + pump_tbr_percent + "% " + pump_tbr_duration + "m" + " id:" + record_unique_id);
+        if (L.isEnabled(L.PUMP))
+            log.debug("Creating TBR record: " + pump_tbr_percent + "% " + pump_tbr_duration + "m" + " id:" + record_unique_id);
         logAdapter.createTBRrecord(start_time, pump_tbr_percent, pump_tbr_duration, record_unique_id);
     }
 
@@ -82,7 +87,7 @@ class HistoryIntentAdapter {
         switch (bolus_type) {
             case "STANDARD":
                 if (immediate_amount == -1) {
-                    log("ERROR Standard bolus fails sanity check");
+                    log.error("ERROR Standard bolus fails sanity check");
                     return;
                 }
                 LiveHistory.setStatus(bolus_type + " BOLUS\n" + immediate_amount + "U ", event_time.getTime());
@@ -91,7 +96,7 @@ class HistoryIntentAdapter {
 
             case "EXTENDED":
                 if ((extended_insulin == -1) || (extended_minutes == -1)) {
-                    log("ERROR: Extended bolus fails sanity check");
+                    log.error("ERROR: Extended bolus fails sanity check");
                     return;
                 }
                 LiveHistory.setStatus(bolus_type + " BOLUS\n" + extended_insulin + "U over " + extended_minutes + " min, ", event_time.getTime());
@@ -100,7 +105,7 @@ class HistoryIntentAdapter {
 
             case "MULTIWAVE":
                 if ((immediate_amount == -1) || (extended_insulin == -1) || (extended_minutes == -1)) {
-                    log("ERROR: Multiwave bolus fails sanity check");
+                    log.error("ERROR: Multiwave bolus fails sanity check");
                     return;
                 }
                 LiveHistory.setStatus(bolus_type + " BOLUS\n" + immediate_amount + "U + " + extended_insulin + "U over " + extended_minutes + " min, ", event_time.getTime());
@@ -108,7 +113,7 @@ class HistoryIntentAdapter {
                 logAdapter.createExtendedBolusRecord(start_time, extended_insulin, extended_minutes, record_unique_id);
                 break;
             default:
-                log("ERROR, UNKNWON BOLUS TYPE: " + bolus_type);
+                log.error("ERROR, UNKNWON BOLUS TYPE: " + bolus_type);
         }
     }
 
@@ -137,7 +142,8 @@ class HistoryIntentAdapter {
 
     private void uploadCareportalEvent(Date date, String event) {
         if (SP.getBoolean("insight_automatic_careportal_events", false)) {
-            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
+            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null)
+                return;
             try {
                 JSONObject data = new JSONObject();
                 String enteredBy = SP.getString("careportal_enteredby", "");
@@ -157,7 +163,8 @@ class HistoryIntentAdapter {
             String alertType = intent.getStringExtra(HistoryBroadcast.EXTRA_ALERT_TYPE);
             int alertText = getAlertText(alertType);
             if (alertText == 0) return;
-            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
+            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null)
+                return;
             logNote(date, MainApp.gs(alertText));
         }
     }
@@ -195,7 +202,8 @@ class HistoryIntentAdapter {
 
     private void logNote(Date date, String note) {
         try {
-            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null) return;
+            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date.getTime()) != null)
+                return;
             JSONObject data = new JSONObject();
             String enteredBy = SP.getString("careportal_enteredby", "");
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);

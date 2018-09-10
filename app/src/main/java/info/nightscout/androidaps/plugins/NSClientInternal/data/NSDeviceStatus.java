@@ -108,8 +108,8 @@ public class NSDeviceStatus {
                 setData(devicestatusJson);
                 if (devicestatusJson.has("pump")) {
                     // Objectives 0
-                    ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                    ObjectivesPlugin.saveProgress();
+                    ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS = true;
+                    ObjectivesPlugin.getPlugin().saveProgress();
                 }
             }
             if (bundle.containsKey("devicestatuses")) {
@@ -120,8 +120,8 @@ public class NSDeviceStatus {
                     setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
-                        ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                        ObjectivesPlugin.saveProgress();
+                        ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS = true;
+                        ObjectivesPlugin.getPlugin().saveProgress();
                     }
                 }
             }

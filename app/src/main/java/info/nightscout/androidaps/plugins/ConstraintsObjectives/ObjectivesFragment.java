@@ -55,7 +55,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             enableFake.setOnClickListener(v -> updateGUI());
             reset.setOnClickListener(v -> {
                 ObjectivesPlugin.getPlugin().reset();
-                ObjectivesPlugin.saveProgress();
+                ObjectivesPlugin.getPlugin().saveProgress();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 scrollToCurrentObjective();
             });
@@ -77,7 +77,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
     private void startUpdateTimer() {
         handler.removeCallbacks(objectiveUpdater);
-        for (Objective objective : ObjectivesPlugin.getObjectives()) {
+        for (Objective objective : ObjectivesPlugin.getPlugin().getObjectives()) {
             if (objective.isStarted() && !objective.isAccomplished()) {
                 long timeTillNextMinute = (System.currentTimeMillis() - objective.getStartedOn().getTime()) % (60 * 1000);
                 handler.postDelayed(objectiveUpdater, timeTillNextMinute);
@@ -87,8 +87,8 @@ public class ObjectivesFragment extends SubscriberFragment {
     }
 
     private void scrollToCurrentObjective() {
-        for (int i = 0; i < ObjectivesPlugin.getObjectives().size(); i++) {
-            Objective objective = ObjectivesPlugin.getObjectives().get(i);
+        for (int i = 0; i < ObjectivesPlugin.getPlugin().getObjectives().size(); i++) {
+            Objective objective = ObjectivesPlugin.getPlugin().getObjectives().get(i);
             if (!objective.isStarted() || !objective.isAccomplished()) {
                 RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
                     @Override
@@ -118,7 +118,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Objective objective = ObjectivesPlugin.getObjectives().get(position);
+            Objective objective = ObjectivesPlugin.getPlugin().getObjectives().get(position);
             holder.title.setText(MainApp.gs(R.string.nth_objective, position + 1));
             if (objective.getObjective() != 0) {
                 holder.objective.setVisibility(View.VISIBLE);
@@ -132,7 +132,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.gate.setTextColor(0xFFFFFFFF);
                 holder.verify.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.GONE);
-                if (position == 0 || ObjectivesPlugin.getObjectives().get(position - 1).isAccomplished())
+                if (position == 0 || ObjectivesPlugin.getPlugin().getObjectives().get(position - 1).isAccomplished())
                     holder.start.setVisibility(View.VISIBLE);
                 else holder.start.setVisibility(View.GONE);
             } else if (objective.isAccomplished()) {
@@ -173,7 +173,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         @Override
         public int getItemCount() {
-            return ObjectivesPlugin.getObjectives().size();
+            return ObjectivesPlugin.getPlugin().getObjectives().size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

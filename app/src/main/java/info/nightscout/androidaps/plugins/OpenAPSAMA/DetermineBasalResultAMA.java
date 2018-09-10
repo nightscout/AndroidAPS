@@ -55,21 +55,10 @@ public class DetermineBasalResultAMA extends APSResult {
     @Override
     public DetermineBasalResultAMA clone() {
         DetermineBasalResultAMA newResult = new DetermineBasalResultAMA();
-        newResult.reason = reason;
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.tempBasalRequested = tempBasalRequested;
-        newResult.rate = rate;
-        newResult.duration = duration;
+        doClone(newResult);
 
-        try {
-            newResult.json = new JSONObject(json.toString());
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
-        newResult.date = date;
         return newResult;
     }
 

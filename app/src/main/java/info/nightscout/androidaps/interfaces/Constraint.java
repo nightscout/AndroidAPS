@@ -47,6 +47,15 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
+    public Constraint<T> setIfDifferent(T value, String reason, Object from) {
+        if (!this.value.equals(value)) {
+            this.value = value;
+            addReason(reason, from);
+            addMostLimingReason(reason, from);
+        }
+        return this;
+    }
+
     public Constraint<T> setIfSmaller(T value, String reason, Object from) {
         if (value.compareTo(this.value) < 0) {
             this.value = value;

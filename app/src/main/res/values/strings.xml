@@ -1019,6 +1019,7 @@
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
     <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
@@ -1199,6 +1200,9 @@
     <string name="commanderror">Command error</string>
     <string name="speederror">Speed error</string>
     <string name="insulinlimitviolation">Insulin limit violation</string>
+    <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="loop_openmode_min_change">Minimal request change [%]</string>
+    <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 30%</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

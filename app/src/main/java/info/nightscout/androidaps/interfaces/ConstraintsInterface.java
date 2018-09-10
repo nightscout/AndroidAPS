@@ -43,6 +43,10 @@ public interface ConstraintsInterface {
         return insulin;
     }
 
+    default Constraint<Double>  applyExtendedBolusConstraints(Constraint<Double>  insulin) {
+        return insulin;
+    }
+
     default Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
         return carbs;
     }

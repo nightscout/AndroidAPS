@@ -225,16 +225,6 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         // Fix bug determine basal
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultSMB.tempBasalRequested = false;
-        // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
-            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
-            if (activeTemp != null && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
-                // going to cancel
-            } else if (activeTemp != null && Math.abs(determineBasalResultSMB.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
-                determineBasalResultSMB.tempBasalRequested = false;
-            } else if (activeTemp == null && Math.abs(determineBasalResultSMB.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultSMB.tempBasalRequested = false;
-        }
 
         determineBasalResultSMB.iob = iobArray[0];
 

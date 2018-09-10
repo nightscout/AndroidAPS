@@ -214,7 +214,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         DanaRPump pump = DanaRPump.getInstance();
-        insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+        insulin = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
@@ -407,6 +407,11 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
         insulin.setIfSmaller(DanaRPump.getInstance().maxBolus, String.format(MainApp.gs(R.string.limitingbolus), DanaRPump.getInstance().maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
+    }
+
+    @Override
+    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+        return applyBolusConstraints(insulin);
     }
 
     @Nullable

@@ -458,7 +458,7 @@
   <string name="openapsama_autosens_adjusttargets">Úprava cílové glykémie pomocí Autosens</string>
   <string name="openapsama_autosens_adjusttargets_summary">Výchozí hodnota: zapnuto\nToto nastavení říká, že autosens může měnit také cílové hodnoty glykémií.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Výchozí hodnota: 2\nToto nastavení říká, po jakou část z hodnoty DIA smyčka po bolusu čeká a nereaguje na změny glykémií (zde 3DIA/2 = 1,5h).</string>
-  <string name="openapsama_min_5m_carbimpact_summary">Výchozí hodnota: 3.0 Tato hodnota definuje minimální část strávených sacharidů za každých 5 min. Výchozí hodnota je 3mg/dl/5min. Tato hodnota ovlivňuje výpočet COB.</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Výchozí hodnota: 3.0 (AMA) nebo 8.0 (SMB) mg/dl/5min. Tato hodnota definuje minimální část strávených sacharidů za každých 5 min. Tato hodnota ovlivňuje výpočet COB.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Pozor!\nZa normálních okolností tyto hodnoty nemusíte měnit. Klikněte ZDE, PŘEČTĚTE si informace a UJISTĚTE se, že jim rozumíte dříve, než je začnete měnit.</string>
   <string name="error_only_numeric_digits_allowed">Povoleny pouze číslice.</string>
   <string name="error_only_numeric_digits_range_allowed">Povoleny pouze čísla v rozsahu %1$s - %2$s.</string>
@@ -897,6 +897,7 @@
   <string name="basal_set_correctly">Bazál nastaven správně</string>
   <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
   <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
+  <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U: %2$s</string>
   <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
   <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
   <string name="limitingiob">IOB omezeno na %1$.1f U: %2$s</string>
@@ -928,7 +929,7 @@
   <string name="nav_setupwizard">Průvodce nastavením</string>
   <string name="setupwizard_finish">Dokončit</string>
   <string name="setupwizard_language_prompt">Vyberte jazyk</string>
-  <string name="boluserrorcode">Požadováno: %1$.2fU Doručeno: %2$.2fU Chyba: %3$d</string>
+  <string name="boluserrorcode">Požadováno: %1$.2fU Doručeno: %2$.2fU Chyba: %3$s</string>
   <string name="firstinsulinincrement">První přídavek inzulínu</string>
   <string name="secondinsulinincrement">Druhý přídavek inzulínu</string>
   <string name="thirdinsulinincrement">Třetí přídavek inzulínu</string>
@@ -1043,6 +1044,10 @@
   <string name="calculation_short">Kalk</string>
   <string name="handshaking">Navazování spojení</string>
   <string name="sendlogfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
+  <string name="maxbolusviolation">Překročen maximální bolus</string>
+  <string name="commanderror">Chyba příkazu</string>
+  <string name="speederror">Chyba rychlosti</string>
+  <string name="insulinlimitviolation">Překročen limit inzulínu</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d den</item>
     <item quantity="few">%1$d dnů</item>

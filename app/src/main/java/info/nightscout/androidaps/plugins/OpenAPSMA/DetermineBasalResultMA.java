@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 public class DetermineBasalResultMA extends APSResult {
     private static Logger log = LoggerFactory.getLogger(L.APS);
 
-    public JSONObject json = new JSONObject();
     private double eventualBG;
     private double snoozeBG;
     private String mealAssist;
@@ -56,19 +55,8 @@ public class DetermineBasalResultMA extends APSResult {
     @Override
     public DetermineBasalResultMA clone() {
         DetermineBasalResultMA newResult = new DetermineBasalResultMA();
-        newResult.reason = new String(reason);
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.tempBasalRequested = isChangeRequested();
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.tempBasalRequested = isChangeRequested();
+        doClone(newResult);
 
-        try {
-            newResult.json = new JSONObject(json.toString());
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
         newResult.mealAssist = mealAssist;

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpCommon.utils;
+package info.nightscout.androidaps.interfaces;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,14 +13,14 @@ import static org.junit.Assert.*;
 /**
  * Created by andy on 5/13/18.
  */
-public class PumpUtilUTest {
+public class PumpDescritpionTest {
 
     @Test
-    public void setPumpDescription() throws Exception {
+    public void setPumpDescription() {
 
         PumpDescription pumpDescription = new PumpDescription();
 
-        PumpUtil.setPumpDescription(pumpDescription, PumpType.AccuChekCombo);
+        pumpDescription.setPumpDescription(PumpType.AccuChekCombo);
 
         Assert.assertEquals(pumpDescription.bolusStep, PumpType.AccuChekCombo.getBolusSize(), 0.1d);
         Assert.assertEquals(pumpDescription.basalMinimumRate, PumpType.AccuChekCombo.getBaseBasalStep(), 0.1d);

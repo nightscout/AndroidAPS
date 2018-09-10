@@ -21,6 +21,15 @@
             android:layout_marginTop="-15dp"
             android:background="@color/listdelimiter" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:text="@string/wear_wizard_settings"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

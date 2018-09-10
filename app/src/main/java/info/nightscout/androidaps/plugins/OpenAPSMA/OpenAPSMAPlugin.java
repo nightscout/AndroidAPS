@@ -182,16 +182,6 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultMA.tempBasalRequested = false;
-        // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
-            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
-            if (activeTemp != null && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
-                // going to cancel
-            } else if (activeTemp != null && Math.abs(determineBasalResultMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
-                determineBasalResultMA.tempBasalRequested = false;
-            } else if (activeTemp == null && Math.abs(determineBasalResultMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultMA.tempBasalRequested = false;
-        }
 
         determineBasalResultMA.iob = iobTotal;
 

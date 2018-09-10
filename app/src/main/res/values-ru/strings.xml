@@ -458,7 +458,7 @@
   <string name="openapsama_autosens_adjusttargets">Autosens тоже подстроит цели</string>
   <string name="openapsama_autosens_adjusttargets_summary">значение по умолчанию : верно. используется чтобы разрешить юстировку целевых СК, а также ISF и базала</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">значение по умолчанию :2 bolus snoose активируется после введения болюса на еду чтобы цикл не взаимодействовал с временными низкими СК сразу после еды. так, трехчасовой DIA при величине 2 означает постыпенное затихание bolus snooze после 1.5 часов (3DIA/2)</string>
-  <string name="openapsama_min_5m_carbimpact_summary">значение по умолчанию :3  усвоение углеводов за 5 мин. то есть 3 мг/дл/ 5 мин. Влияет на расчет прогнозируемой гликемии, когда СК падает быстрее или не растет так как ожидается.</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Эта настройка на усвоение углеводов за 5 мин. По умолчанию ожидается 3мг/дл/5мин. Влияет на скорость учета поглощения углеводов COB и усвоения в расчетах прогнозируемой гликемии, когда СК падает быстрее или не растет так как ожидается.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин</string>
   <string name="error_only_numeric_digits_allowed">разрешены только цифровые значения</string>
   <string name="error_only_numeric_digits_range_allowed">разрешены только цифровые значения в диапазоне %1$s - %2$s</string>
@@ -895,8 +895,9 @@
   <string name="maxdailybasalmultiplier">множитель макс суточного базала</string>
   <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
   <string name="basal_set_correctly">Базал задан корректно</string>
-  <string name="limitingpercentrate">Макс процент базала ограничен до %1$d% ед/ч вследствие %2$s</string>
+  <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
   <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
+  <string name="limitingextendedbolus">Ограничение расширенного болюса до %1$.1f U из-за %2$s</string>
   <string name="limitingmaxiob">Ограничение максимума активного инсулина IOB до %1$.1f U из-за %2$s</string>
   <string name="limitingcarbs">Ограничение максимума углеводов до %1$d грамм из-за %2$s</string>
   <string name="limitingiob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
@@ -928,7 +929,7 @@
   <string name="nav_setupwizard">Мастер настройки</string>
   <string name="setupwizard_finish">ГОТОВО</string>
   <string name="setupwizard_language_prompt">Выберите Ваш язык</string>
-  <string name="boluserrorcode">Запрошено: %1$.2f ед. Подано: %2$.2f ед. Код ошибки: %3$d</string>
+  <string name="boluserrorcode">Запрошено: %1$.2f ед. Подано: %2$.2f ед. Код ошибки: %3$s</string>
   <string name="firstinsulinincrement">Первый шаг увеличения инсулина</string>
   <string name="secondinsulinincrement">Второй шаг увеличения инсулина</string>
   <string name="thirdinsulinincrement">Третий шаг увеличения инсулина</string>
@@ -1045,4 +1046,10 @@ Context | Edit Context</string>
   <string name="calculation_short">Кальк</string>
   <string name="handshaking">Подтверждение связи</string>
   <string name="sendlogfiles">Отправьте файлы сегодняшнего лога разработчикам наряду с этим. Непредвиденная ситуация.</string>
+  <string name="maxbolusviolation">Макс нарушение болюса</string>
+  <string name="commanderror">Ошибка в команде</string>
+  <string name="speederror">Ошибка в скорости</string>
+  <string name="insulinlimitviolation">Нарушение ограничения инсулина</string>
+  <string name="loop_openmode_min_change">Минимальный запрос на изменения [%]</string>
+  <string name="loop_openmode_min_change_summary">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение. Значение по умолчанию — 30%</string>
 </resources>

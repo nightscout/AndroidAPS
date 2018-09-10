@@ -58,6 +58,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS));
     }
 
+    public Constraint<Double> getMaxExtendedBolusAllowed() {
+        return applyExtendedBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS));
+    }
+
     public Constraint<Integer> getMaxCarbsAllowed() {
         return applyCarbsConstraints(new Constraint<>(Constants.REALLYHIGHCARBS));
     }
@@ -166,6 +170,17 @@ public class ConstraintChecker implements ConstraintsInterface {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.applyBolusConstraints(insulin);
+        }
+        return insulin;
+    }
+
+    @Override
+    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
+            constrain.applyExtendedBolusConstraints(insulin);
         }
         return insulin;
     }
