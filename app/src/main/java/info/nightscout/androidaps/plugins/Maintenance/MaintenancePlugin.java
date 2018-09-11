@@ -27,12 +27,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.utils.SP;
 
 public class MaintenancePlugin extends PluginBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MaintenancePlugin.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.CORE);
 
     private final Context ctx;
 
