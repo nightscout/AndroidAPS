@@ -44,7 +44,7 @@ public class Constraint<T extends Comparable> {
 
     public Constraint<T> set(T value, String reason, Object from) {
         if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Setting value " + this.value + " -> " + value + " (" + reason + ")[" + from + "]");
+            log.debug("Setting value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
         this.value = value;
         addReason(reason, from);
         addMostLimingReason(reason, from);
@@ -54,7 +54,7 @@ public class Constraint<T extends Comparable> {
     public Constraint<T> setIfDifferent(T value, String reason, Object from) {
         if (!this.value.equals(value)) {
             if (L.isEnabled(L.CONSTRAINTS))
-                log.debug("Setting because of different value " + this.value + " -> " + value + " (" + reason + ")[" + from + "]");
+                log.debug("Setting because of different value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             addReason(reason, from);
             addMostLimingReason(reason, from);
@@ -65,7 +65,7 @@ public class Constraint<T extends Comparable> {
     public Constraint<T> setIfSmaller(T value, String reason, Object from) {
         if (value.compareTo(this.value) < 0) {
             if (L.isEnabled(L.CONSTRAINTS))
-                log.debug("Setting because of smaller value " + this.value + " -> " + value + " (" + reason + ")[" + from + "]");
+                log.debug("Setting because of smaller value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             mostLimiting.clear();
             addMostLimingReason(reason, from);
@@ -79,7 +79,7 @@ public class Constraint<T extends Comparable> {
     public Constraint<T> setIfGreater(T value, String reason, Object from) {
         if (value.compareTo(this.value) > 0) {
             if (L.isEnabled(L.CONSTRAINTS))
-                log.debug("Setting because of greater value " + this.value + " -> " + value + " (" + reason + ")[" + from + "]");
+                log.debug("Setting because of greater value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             mostLimiting.clear();
             addMostLimingReason(reason, from);
