@@ -13,7 +13,7 @@ import info.nightscout.androidaps.logging.L;
  */
 
 public class Constraint<T extends Comparable> {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
 
     T value;
     T originalValue;
@@ -37,10 +37,14 @@ public class Constraint<T extends Comparable> {
     public Constraint<T> set(T value) {
         this.value = value;
         this.originalValue = value;
+        if (L.isEnabled(L.CONSTRAINTS))
+            log.debug("Setting value " + value);
         return this;
     }
 
     public Constraint<T> set(T value, String reason, Object from) {
+        if (L.isEnabled(L.CONSTRAINTS))
+            log.debug("Setting value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
         this.value = value;
         addReason(reason, from);
         addMostLimingReason(reason, from);
@@ -49,6 +53,8 @@ public class Constraint<T extends Comparable> {
 
     public Constraint<T> setIfDifferent(T value, String reason, Object from) {
         if (!this.value.equals(value)) {
+            if (L.isEnabled(L.CONSTRAINTS))
+                log.debug("Setting because of different value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             addReason(reason, from);
             addMostLimingReason(reason, from);
@@ -58,6 +64,8 @@ public class Constraint<T extends Comparable> {
 
     public Constraint<T> setIfSmaller(T value, String reason, Object from) {
         if (value.compareTo(this.value) < 0) {
+            if (L.isEnabled(L.CONSTRAINTS))
+                log.debug("Setting because of smaller value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             mostLimiting.clear();
             addMostLimingReason(reason, from);
@@ -70,6 +78,8 @@ public class Constraint<T extends Comparable> {
 
     public Constraint<T> setIfGreater(T value, String reason, Object from) {
         if (value.compareTo(this.value) > 0) {
+            if (L.isEnabled(L.CONSTRAINTS))
+                log.debug("Setting because of greater value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             mostLimiting.clear();
             addMostLimingReason(reason, from);
@@ -80,13 +90,17 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
+    private String translateFrom(Object from) {
+        return from.getClass().getSimpleName().replace("Plugin", "");
+    }
+
     public Constraint addReason(String reason, Object from) {
-        reasons.add(from.getClass().getSimpleName().replace("Plugin", "") + ": " + reason);
+        reasons.add(translateFrom(from) + ": " + reason);
         return this;
     }
 
     public Constraint addMostLimingReason(String reason, Object from) {
-        mostLimiting.add(from.getClass().getSimpleName().replace("Plugin", "") + ": " + reason);
+        mostLimiting.add(translateFrom(from) + ": " + reason);
         return this;
     }
 
@@ -97,7 +111,7 @@ public class Constraint<T extends Comparable> {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        if (L.isEnabled(L.APS))
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
@@ -113,7 +127,8 @@ public class Constraint<T extends Comparable> {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        if (L.isEnabled(L.CONSTRAINTS))
+            log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
 
