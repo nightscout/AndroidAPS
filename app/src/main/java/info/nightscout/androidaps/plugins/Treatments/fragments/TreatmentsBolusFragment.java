@@ -145,6 +145,8 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             @Override
             public void onClick(View v) {
                 final Treatment treatment = (Treatment) v.getTag();
+                if (treatment == null)
+                    return;
                 switch (v.getId()) {
                     case R.id.treatments_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
