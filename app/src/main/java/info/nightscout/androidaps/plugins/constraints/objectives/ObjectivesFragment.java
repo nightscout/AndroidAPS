@@ -177,7 +177,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 objective.setAccomplishedOn(null);
                 objective.setStartedOn(null);
                 if (position > 0) {
-                    Objective prevObj = ObjectivesPlugin.getObjectives().get(position - 1);
+                    Objective prevObj = ObjectivesPlugin.getPlugin().getObjectives().get(position - 1);
                     prevObj.setAccomplishedOn(null);
                 }
                 notifyDataSetChanged();
