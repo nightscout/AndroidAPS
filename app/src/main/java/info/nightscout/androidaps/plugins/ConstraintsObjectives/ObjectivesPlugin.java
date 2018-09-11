@@ -33,7 +33,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(L.OBJECTIVES);
+    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
 
     private static ObjectivesPlugin objectivesPlugin;
 
@@ -95,7 +95,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
         SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
         SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
-        if (L.isEnabled(L.OBJECTIVES))
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives stored");
         MainApp.bus().post(new EventObjectivesSaved());
     }
@@ -108,7 +108,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        if (L.isEnabled(L.OBJECTIVES))
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives loaded");
     }
 

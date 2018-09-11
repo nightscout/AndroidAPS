@@ -86,7 +86,7 @@ public class L {
     public static final String DATAFOOD = "DATAFOOD";
     public static final String DATATREATMENTS = "DATATREATMENTS";
     public static final String NSCLIENT = "NSCLIENT";
-    public static final String OBJECTIVES = "OBJECTIVES";
+    public static final String CONSTRAINTS = "CONSTRAINTS";
     public static final String PUMP = "PUMP";
     public static final String PUMPQUEUE = "PUMPQUEUE";
     public static final String PUMPCOMM = "PUMPCOMM";
@@ -102,6 +102,7 @@ public class L {
         logElements.add(new LogElement(AUTOSENS, true));
         logElements.add(new LogElement(BGSOURCE, true));
         logElements.add(new LogElement(CONFIGBUILDER, true));
+        logElements.add(new LogElement(CONSTRAINTS, true));
         logElements.add(new LogElement(CORE, true));
         logElements.add(new LogElement(DATABASE, true));
         logElements.add(new LogElement(DATAFOOD, true));
@@ -110,7 +111,6 @@ public class L {
         logElements.add(new LogElement(EVENTS, false, true));
         logElements.add(new LogElement(NOTIFICATION, true));
         logElements.add(new LogElement(NSCLIENT, true));
-        logElements.add(new LogElement(OBJECTIVES, false));
         logElements.add(new LogElement(OVERVIEW, true));
         logElements.add(new LogElement(PROFILE, true));
         logElements.add(new LogElement(PUMP, true));
