@@ -874,6 +874,7 @@
   <string name="combo_warning_pump_basal_rate_changed">O rácio da basal foi alterado na bomba e vai ser actualizado em breve</string>
   <string name="combo_error_failure_reading_changed_basal_rate">Rácio da basal foi alterado na bomba, mas a leitura falhou</string>
   <string name="combo_activity_checking_for_history_changes">A verificar se há alterações de histórico</string>
+  <string name="combo_error_multiple_boluses_with_identical_timestamp">Bólus múltiplos, com a mesma quantidade e no mesmo minuto acabaram de ser importados. Apenas um registo pôde ser adicionado aos tratamentos. Por favor confirma na bomba e adicione o registo de bólus manualmente, utilizando o separador do Careportal. Tenha em atenção que deve criar um bólus com um tempo em que nã oexistem outros registos de bólus.</string>
   <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
   <string name="combo_check_date">O último bólus tem mais de 24 horas ou está no futuro. Por favor verifique se a data está definida correctamente na bomba.</string>
   <string name="combo_suspious_bolus_time">Hora/data da entrega do bólus na bomba parece errado, IOB aparentemente está incorrecto. Verifique hora/data na bomba.</string>
@@ -915,10 +916,12 @@
   <string name="automatic_careportal_events">Eventos careportal automáticos</string>
   <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automaticamente envia mudança de insulina, canula, pilha e alarmes da bomba para o NightScout</string>
   <string name="openapssmb_maxiob_title">Máximo total IOS OpenAPS não pode superar [U]</string>
+  <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
   <string name="pump_stopped">Bomba parada</string>
   <string name="pump_started">Bomba iniciada</string>
   <string name="pump_paused">Bomba suspensa</string>
   <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
+  <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
   <string name="time">Hora</string>
   <string name="overview_show_notes_field_in_dialogs_title">Mostrar campo de notas na janela de tratamentos</string>
   <string name="next_button">Seguinte</string>
@@ -948,26 +951,36 @@
   <string name="value_unavailable_short">n/a</string>
   <string name="virtualpump_type">Tipo da Bomba Virtual</string>
   <string name="virtualpump_definition">Definição da Bomba</string>
+  <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Estendido: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nTBR: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">*Intervalo dos valores basal/bólus não são suportados pela Bomba Virtual.</string>
   <string name="ns_autobackfill_title">Preenchimentoauto Glicemia</string>
   <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
   <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
   <string name="wear_display_settings">Mostrar Configurações</string>
   <string name="wear_general_settings">Configurações gerais</string>
   <string name="enable_nsclient">Activar NSCliente</string>
+  <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
   <string name="pumpsetup">Configurações da bomba</string>
   <string name="readstatus">Ler estado</string>
   <string name="adjustprofileinns">Alterações devem ser feitas no NS</string>
   <string name="exitwizard">Saltar assistente de configuração</string>
+  <string name="setupwizard_loop_description">Pressione o botão abaixo para activar o AndroidAPS para sugerir/fazer alterações basais</string>
+  <string name="setupwizard_objectives_description">Pressione o botão abaixo para activar os Objectivos. Veja o separador Objetivos, depois de concluir este assistente, para tornar o AndroidAPS completamente funcional.\n</string>
   <string name="enableobjectives">Activar Objectivos</string>
   <string name="apssetup">Configurar plugin APS</string>
   <string name="sensitivitysetup">Configurar plugin Sensibilidade</string>
+  <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
   <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
   <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
+  <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
   <string name="bgsourcesetup">Configure a fonte das glicemias</string>
+  <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
+  <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
   <string name="startobjective">Iniciar primeiro objectivo</string>
   <string name="permission">Permissão</string>
   <string name="askforpermission">Pedir permissão</string>
   <string name="needlocationpermission">Aplicação requer permissão de localização para pesquisa BT</string>
+  <string name="needstoragepermission">Aplicação necessita da permissão de armazenamento para ser capaz de armazenar ficheiros de registo</string>
   <string name="request">Pedido</string>
   <string name="insulinsourcesetup">Configurar plugin Insulina</string>
   <string name="exit">Sair</string>
@@ -1000,6 +1013,7 @@
   <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
   <string name="low_temptarget_lowers_sensitivity_title">Baixo alvotemp baixa sensibilidade</string>
   <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Baixar sensibilidade para alvostemp < 100]]></string>
+  <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
   <string name="custom">Personalizado</string>
   <string name="largetimedifftitle">Grande diferença Horária</string>
   <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
@@ -1011,6 +1025,7 @@
   <string name="maintenance_amount">Nr. de registos a enviar</string>
   <string name="maintenance">Manutenção</string>
   <string name="maintenance_shortname">MANU</string>
+  <string name="description_maintenance">Fornece várias funções para manutenção (ex. envio de relatórios, eliminação de relatórios).</string>
   <string name="send_all_logs">Enviar Logs por e-mail</string>
   <string name="delete_logs">Eliminar registos</string>
   <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), atraso: %3$d m</string>
