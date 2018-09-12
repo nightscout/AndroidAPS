@@ -31,6 +31,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -125,6 +126,11 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                 okClicked = true;
 
                 try {
+                    final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+
+                    if (pump == null)
+                        return;
+
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
 
@@ -134,15 +140,15 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
                     if (insulin > 0) {
-                        confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>";
+                        confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>";
                         if (recordOnlyCheckbox.isChecked()) {
-                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
+                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
                         }
+                        if (Math.abs(insulinAfterConstraints - insulin) > pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints) || !Objects.equals(carbsAfterConstraints, carbs))
+                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
                     }
                     if (carbsAfterConstraints > 0)
-                        confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-                    if (Math.abs(insulinAfterConstraints - insulin) > 0.01d || !Objects.equals(carbsAfterConstraints, carbs))
-                        confirmMessage += "<br/>" + MainApp.gs(R.string.constraintapllied);
+                        confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";
 
 
                     final double finalInsulinAfterConstraints = insulinAfterConstraints;
