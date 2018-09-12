@@ -157,7 +157,7 @@ public class BolusWizard {
         sb.append("IncludeBasalIOB=").append(includeBasalIOB).append("; ");
         sb.append("Superbolus=").append(superBolus).append("; ");
         sb.append("Trend=").append(trend).append("; ");
-        sb.append("Profile=").append(specificProfile != null ? specificProfile.getData().toString() : "null").append("; ");
+        sb.append("Profile=").append(specificProfile != null && specificProfile.getData() != null ? specificProfile.getData().toString() : "null").append("; ");
         sb.append("\n");
 
         sb.append("targetBGLow=").append(targetBGLow).append("; ");
