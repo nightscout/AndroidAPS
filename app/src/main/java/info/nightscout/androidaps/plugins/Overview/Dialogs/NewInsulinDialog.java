@@ -39,6 +39,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -49,6 +50,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.T;
 import info.nightscout.utils.ToastUtils;
 
 import static info.nightscout.utils.DateUtil.now;
@@ -210,7 +212,8 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
         try {
             Profile currentProfile = ProfileFunctions.getInstance().getProfile();
-            if (currentProfile == null)
+            final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            if (currentProfile == null || pump == null)
                 return;
 
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
@@ -218,13 +221,13 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {
-                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.to2Decimal(insulinAfterConstraints) + "U" + "</font>");
+                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>");
                 if (recordOnlyCheckbox.isChecked()) {
                     actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>");
                 }
             }
 
-            if (Math.abs(insulinAfterConstraints - insulin) > 0.01d)
+            if (Math.abs(insulinAfterConstraints - insulin) >  pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints))
                 actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
 
             int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
@@ -240,7 +243,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
             }
 
             int timeOffset = editTime.getValue().intValue();
-            final long time = now() + timeOffset * 1000 * 60;
+            final long time = now() + T.mins(timeOffset).msecs();
             if (timeOffset != 0) {
                 actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time));
             }

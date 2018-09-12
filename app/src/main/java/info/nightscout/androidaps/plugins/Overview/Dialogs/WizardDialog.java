@@ -55,6 +55,7 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
@@ -162,7 +163,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         savedInstanceState.putDouble("editCarbTime", editCarbTime.getValue());
         super.onSaveInstanceState(savedInstanceState);
     }
-
 
 
     @Subscribe
@@ -327,8 +327,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 }
                 okClicked = true;
                 final Profile profile = ProfileFunctions.getInstance().getProfile();
+                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
-                if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
+                if (pump != null && profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(calculatedTotalInsulin)).value();
@@ -339,14 +340,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     if (carbsAfterConstraints > 0)
                         confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";
 
-                    if (Math.abs(insulinAfterConstraints - calculatedTotalInsulin) > 0.01d || !carbsAfterConstraints.equals(calculatedCarbs)) {
-                        okClicked = false;
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                        builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
-                        builder.setPositiveButton(MainApp.gs(R.string.ok), null);
-                        builder.show();
-                        return;
+                    if (Math.abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints) || !carbsAfterConstraints.equals(calculatedCarbs)) {
+                        confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
                     }
 
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;
