@@ -210,6 +210,8 @@ public class MaintenancePlugin extends PluginBase {
     public static Intent sendMail(Uri attachementUri, String recipient, String subject)  {
         StringBuilder builder =new StringBuilder();
         
+        builder.append("ADD TIME OF EVENT HERE:" + System.lineSeparator());
+        builder.append("-----------------------" + System.lineSeparator());
         builder.append(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION + System.lineSeparator());
         if (Config.NSCLIENT)
             builder.append("NSCLIENT" + System.lineSeparator());
