@@ -288,17 +288,12 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResult();
-        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
-            result = cancelTempBasal(false);
-            if (!result.success)
-                return result;
-        }
         TemporaryBasal tempBasal = new TemporaryBasal()
                 .date(System.currentTimeMillis())
                 .percent(percent)
                 .duration(durationInMinutes)
                 .source(Source.USER);
+        PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = true;
         result.percent = percent;

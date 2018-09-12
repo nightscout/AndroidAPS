@@ -116,9 +116,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginTop="-15dp"
-                        android:paddingLeft="-5dp"
-                        android:paddingRight="-5dp"
+                        android:layout_marginTop="-5dp"
+                        android:paddingLeft="-2dp"
+                        android:paddingRight="-2dp"
                         android:text="→"
                         android:textSize="50sp"
                         android:textStyle="bold" />
