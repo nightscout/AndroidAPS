@@ -875,7 +875,7 @@
   <string name="combo_error_failure_reading_changed_basal_rate">Basalen ändrad i pumpen, men det gick inte att läsa till vad</string>
   <string name="combo_activity_checking_for_history_changes">Letar efter förändringar i historiken</string>
   <string name="combo_error_multiple_boluses_with_identical_timestamp">Flera bolusar med samma mängd insulin importerades just. Endast en kan läggas till i Careportal. Vänligen kontrollera pumpen och gör ändringar i Careportal manuellt vid behov. Observera att man bara kan ha en bolus per klockslag.</string>
-  <string name="about_link_urls">http://www.androidaps.org\nfacebook: http://facebook.androidaps.org</string>
+  <string name="about_link_urls">\n\nWeb: http://www.androidaps.org\n\nDocs: http://wiki.androidaps.org\n\nFB: http://facebook.androidaps.org</string>
   <string name="combo_check_date">Den senaste bolusen är äldre än 24 timmar eller i framtiden. Vänligen kontrollera tid och datum i pumpen.</string>
   <string name="combo_suspious_bolus_time">Tid/datum för bolusen verkar fel. IOB är troligen missvisande. Vänligen kontrollera tid och datum i pumpen.</string>
   <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
@@ -942,7 +942,7 @@
   <string name="ns_chargingonly">Endast vid laddning</string>
   <string name="connectionsettings_title">Anslutningsinställningar</string>
   <string name="ns_wifi_allowedssids">Tillåtna nätverksnamn (separerade med semikolon)</string>
-  <string name="ns_allowroaming">Tillåt anslutning vid roaming</string>
+  <string name="ns_allowroaming">Tillåt NS-data vid roaming</string>
   <string name="openapsama_autosens_max">Max autosens ratio</string>
   <string name="openapsama_autosens_min">Min autosens ratio</string>
   <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
@@ -1042,12 +1042,13 @@
   <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
   <string name="treatments_wizard_total_label">Total</string>
   <string name="calculation_short">Kalkyl</string>
-  <string name="handshaking">Handskakning</string>
+  <string name="handshaking">Verifierar anslutningen</string>
   <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
   <string name="maxbolusviolation">Max bolus nådd</string>
   <string name="commanderror">Kommandofel</string>
   <string name="speederror">Felaktig hastighet</string>
   <string name="insulinlimitviolation">Insulingräns nådd</string>
+  <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dagar</item>
