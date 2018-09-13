@@ -1016,8 +1016,10 @@
   <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
   <string name="custom">Personalizado</string>
   <string name="largetimedifftitle">Grande diferença Horária</string>
+  <string name="largetimediff">Grande diferença horária:\n A diferença de hora para a bomba é superior a 1.5h.\nPor favor ajuste manualmente a hora na bomba e certifique-se que a leitura do histórico da bomba não provoca problemas.\nSe possível apague o histórico da bomba antes de modificar a hora ou desabilite o loop durante toda a duração de acção da insulina (DIA) depois da ultima entrada no histórico da bomba ou mais um DIA desde o momento da correcção, qual delas seja a que mantenha o loop aberto durante mais tempo.</string>
   <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
   <string name="storedsettingsfound">Configurações encontradas</string>
+  <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e activar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil da app tem os mesmos valores que estão na bomba. Em caso contrario pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
   <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
   <string name="maintenance_settings">Configurações de manutenção</string>
   <string name="maintenance_email">Email</string>
@@ -1028,6 +1030,7 @@
   <string name="description_maintenance">Fornece várias funções para manutenção (ex. envio de relatórios, eliminação de relatórios).</string>
   <string name="send_all_logs">Enviar Logs por e-mail</string>
   <string name="delete_logs">Eliminar registos</string>
+  <string name="error_adding_treatment_message">Um tratamento (insulina: %1$.2f, hidratos: %2$d, às: %3$s) não ficou gravado. Por favor verifique se foi realmente efectuado e se sim adicione manualmente aos tratamentos.</string>
   <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), atraso: %3$d m</string>
   <string name="openaps_noasdata">Sem dados Autosens disponíveis</string>
   <string name="nav_logsettings">Definições de registo</string>
@@ -1046,6 +1049,7 @@
   <string name="speederror">Erro velocidade</string>
   <string name="insulinlimitviolation">Transgressão limite insulina</string>
   <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
+  <string name="loop_openmode_min_change_summary">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor. O valor padrão é 20%</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dia</item>
     <item quantity="other">%1$d dias</item>
