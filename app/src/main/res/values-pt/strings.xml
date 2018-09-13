@@ -619,7 +619,7 @@
   <string name="valuesnotstored">Valores não guardados!</string>
   <string name="ns_localbroadcasts">Activar partilha para outras aplicações (como xDrip).</string>
   <string name="ns_localbroadcasts_title">Activar partilha local.</string>
-  <string name="careportal_activity_label">FEEDBACK ACTIVIDADE &amp;</string>
+  <string name="careportal_activity_label">ACTIVIDADE &amp; FEEDBACK</string>
   <string name="careportal_carbsandbolus_label">HIDRATOS &amp; BÓLUS</string>
   <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
   <string name="careportal_pump_label">BOMBA</string>
