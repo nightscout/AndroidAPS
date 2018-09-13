@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.PumpInsight.history;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -29,11 +27,11 @@ class HistoryLogAdapter {
 
     private static final long MAX_TIME_DIFFERENCE = T.secs(61).msecs();
 
-    void createTBRrecord(Date eventDate, int percent, int duration, long record_id) {
+    void createTBRrecord(long eventDate, int percent, int duration, long record_id) {
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal().date(eventDate.getTime());
+        TemporaryBasal temporaryBasal = new TemporaryBasal().date(eventDate);
 
-        final TemporaryBasal temporaryBasalFromHistory = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(eventDate.getTime());
+        final TemporaryBasal temporaryBasalFromHistory = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(eventDate);
 
         if (temporaryBasalFromHistory == null) {
             if (L.isEnabled(L.PUMP))
@@ -41,7 +39,7 @@ class HistoryLogAdapter {
         } else {
             if (L.isEnabled(L.PUMP))
                 log.debug("Loaded existing TBR record: " + temporaryBasalFromHistory.toString());
-            if (Math.abs(eventDate.getTime() - temporaryBasalFromHistory.date) < MAX_TIME_DIFFERENCE) {
+            if (Math.abs(eventDate - temporaryBasalFromHistory.date) < MAX_TIME_DIFFERENCE) {
                 if (temporaryBasalFromHistory.source != Source.PUMP) {
                     if (temporaryBasalFromHistory.percentRate == percent) {
                         if (L.isEnabled(L.PUMP))
@@ -64,7 +62,7 @@ class HistoryLogAdapter {
                 }
             } else {
                 if (L.isEnabled(L.PUMP))
-                    log.debug("Time difference too big! : " + (eventDate.getTime() - temporaryBasalFromHistory.date));
+                    log.debug("Time difference too big! : " + (eventDate - temporaryBasalFromHistory.date));
             }
         }
 
@@ -76,9 +74,9 @@ class HistoryLogAdapter {
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
     }
 
-    void createExtendedBolusRecord(Date eventDate, double insulin, int durationInMinutes, long record_id) {
+    void createExtendedBolusRecord(long eventDate, double insulin, int durationInMinutes, long record_id) {
 
-        final ExtendedBolus extendedBolusFromHistory = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(eventDate.getTime());
+        final ExtendedBolus extendedBolusFromHistory = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(eventDate);
 
         if (extendedBolusFromHistory == null) {
             if (L.isEnabled(L.PUMP))
@@ -86,10 +84,10 @@ class HistoryLogAdapter {
         } else {
             if (L.isEnabled(L.PUMP))
                 log.debug("Loaded existing EB record: " + extendedBolusFromHistory.toString());
-            if (Math.abs(eventDate.getTime() - extendedBolusFromHistory.date) < MAX_TIME_DIFFERENCE) {
+            if (Math.abs(eventDate - extendedBolusFromHistory.date) < MAX_TIME_DIFFERENCE) {
                 if (extendedBolusFromHistory.source != Source.PUMP) {
                     if (L.isEnabled(L.PUMP))
-                        log.debug("Date seem to match: " + DateUtil.dateAndTimeFullString(eventDate.getTime()));
+                        log.debug("Date seem to match: " + DateUtil.dateAndTimeFullString(eventDate));
                     String _id = extendedBolusFromHistory._id;
                     if (NSUpload.isIdValid(_id)) {
                         NSUpload.removeCareportalEntryFromNS(_id);
@@ -103,7 +101,7 @@ class HistoryLogAdapter {
                 }
             } else {
                 if (L.isEnabled(L.PUMP))
-                    log.debug("Time difference too big! : " + (eventDate.getTime() - extendedBolusFromHistory.date));
+                    log.debug("Time difference too big! : " + (eventDate - extendedBolusFromHistory.date));
             }
         }
 
@@ -112,7 +110,7 @@ class HistoryLogAdapter {
         // TODO (mike) find and remove ending record with Source.USER
 
         ExtendedBolus extendedBolus = new ExtendedBolus()
-                .date(eventDate.getTime())
+                .date(eventDate)
                 .insulin(insulin)
                 .durationInMinutes(durationInMinutes)
                 .source(Source.PUMP)
@@ -122,14 +120,14 @@ class HistoryLogAdapter {
             TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
     }
 
-    void createStandardBolusRecord(Date eventDate, double insulin, long record_id) {
+    void createStandardBolusRecord(long eventDate, double insulin, long record_id) {
 
         //DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(eventDate.getTime());
 
         // TODO do we need to do the same delete + insert that we are doing for temporary basals here too?
 
         final DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-        detailedBolusInfo.date = eventDate.getTime();
+        detailedBolusInfo.date = eventDate;
         detailedBolusInfo.source = Source.PUMP;
         detailedBolusInfo.pumpId = record_id;
         detailedBolusInfo.insulin = insulin;
