@@ -961,13 +961,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
             if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
-                ExtendedBolus extendedBolus = new ExtendedBolus();
-                extendedBolus.source = Source.NIGHTSCOUT;
-                extendedBolus.date = trJson.getLong("mills");
-                extendedBolus.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
-                extendedBolus.durationInMinutes = trJson.getInt("duration");
-                extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
-                extendedBolus._id = trJson.getString("_id");
+                ExtendedBolus extendedBolus = new ExtendedBolus()
+                        .source(Source.NIGHTSCOUT)
+                        .date(trJson.getLong("mills"))
+                        .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0)
+                        .durationInMinutes(trJson.getInt("duration"))
+                        .insulin(trJson.getDouble("originalExtendedAmount"))
+                        ._id(trJson.getString("_id"));
                 // if faking found in NS, adapt AAPS to use it too
                 if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
                     VirtualPumpPlugin.getPlugin().setFakingStatus(true);

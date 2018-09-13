@@ -609,12 +609,12 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             extendedBolusMessage.setAmount(insulin);
             extendedBolusMessage.setDuration(durationInMinutes);
             BolusMessage bolusMessage = fetchSingleMessage(extendedBolusMessage, BolusMessage.class);
-            final ExtendedBolus extendedBolus = new ExtendedBolus();
-            extendedBolus.date = System.currentTimeMillis();
-            extendedBolus.insulin = insulin;
-            extendedBolus.durationInMinutes = durationInMinutes;
-            extendedBolus.source = Source.USER;
-            extendedBolus.pumpId = getRecordUniqueID(bolusMessage.getBolusId());
+            final ExtendedBolus extendedBolus = new ExtendedBolus()
+                    .date(System.currentTimeMillis())
+                    .insulin(insulin)
+                    .durationInMinutes(durationInMinutes)
+                    .source(Source.USER)
+                    .pumpId(getRecordUniqueID(bolusMessage.getBolusId()));
             TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
             updateGui();
             connector.requestHistorySync(30000);

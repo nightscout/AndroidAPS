@@ -15,6 +15,8 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.T;
 
 /**
  * Created by jamorham on 27/01/2018.
@@ -25,7 +27,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 class HistoryLogAdapter {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
 
-    private static final long MAX_TIME_DIFFERENCE = 61000;
+    private static final long MAX_TIME_DIFFERENCE = T.secs(61).msecs();
 
     void createTBRrecord(Date eventDate, int percent, int duration, long record_id) {
 
@@ -62,7 +64,7 @@ class HistoryLogAdapter {
                 }
             } else {
                 if (L.isEnabled(L.PUMP))
-                    log.debug("Time difference too great! : " + (eventDate.getTime() - temporaryBasalFromHistory.date));
+                    log.debug("Time difference too big! : " + (eventDate.getTime() - temporaryBasalFromHistory.date));
             }
         }
 
@@ -76,14 +78,45 @@ class HistoryLogAdapter {
 
     void createExtendedBolusRecord(Date eventDate, double insulin, int durationInMinutes, long record_id) {
 
+        final ExtendedBolus extendedBolusFromHistory = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(eventDate.getTime());
+
+        if (extendedBolusFromHistory == null) {
+            if (L.isEnabled(L.PUMP))
+                log.debug("Create new EB: " + eventDate + " " + insulin + " " + durationInMinutes);
+        } else {
+            if (L.isEnabled(L.PUMP))
+                log.debug("Loaded existing EB record: " + extendedBolusFromHistory.toString());
+            if (Math.abs(eventDate.getTime() - extendedBolusFromHistory.date) < MAX_TIME_DIFFERENCE) {
+                if (extendedBolusFromHistory.source != Source.PUMP) {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("Date seem to match: " + DateUtil.dateAndTimeFullString(eventDate.getTime()));
+                    String _id = extendedBolusFromHistory._id;
+                    if (NSUpload.isIdValid(_id)) {
+                        NSUpload.removeCareportalEntryFromNS(_id);
+                    } else {
+                        UploadQueue.removeID("dbAdd", _id);
+                    }
+                    MainApp.getDbHelper().delete(extendedBolusFromHistory);
+                } else {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("This record is already a pump record!");
+                }
+            } else {
+                if (L.isEnabled(L.PUMP))
+                    log.debug("Time difference too big! : " + (eventDate.getTime() - extendedBolusFromHistory.date));
+            }
+        }
+
         // TODO trap items below minimum period
 
-        final ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = eventDate.getTime();
-        extendedBolus.insulin = insulin;
-        extendedBolus.durationInMinutes = durationInMinutes;
-        extendedBolus.source = Source.PUMP;
-        extendedBolus.pumpId = record_id;
+        // TODO (mike) find and remove ending record with Source.USER
+
+        ExtendedBolus extendedBolus = new ExtendedBolus()
+                .date(eventDate.getTime())
+                .insulin(insulin)
+                .durationInMinutes(durationInMinutes)
+                .source(Source.PUMP)
+                .pumpId(record_id);
 
         if (ProfileFunctions.getInstance().getProfile(extendedBolus.date) != null) // actual basal rate is needed for absolute rate calculation
             TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);

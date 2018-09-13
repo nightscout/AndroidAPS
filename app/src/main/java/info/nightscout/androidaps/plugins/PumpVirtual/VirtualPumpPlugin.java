@@ -315,11 +315,11 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         if (!result.success)
             return result;
 
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = System.currentTimeMillis();
-        extendedBolus.insulin = insulin;
-        extendedBolus.durationInMinutes = durationInMinutes;
-        extendedBolus.source = Source.USER;
+        ExtendedBolus extendedBolus = new ExtendedBolus()
+                .date(System.currentTimeMillis())
+                .insulin(insulin)
+                .durationInMinutes(durationInMinutes)
+                .source(Source.USER);
         result.success = true;
         result.enacted = true;
         result.bolusDelivered = insulin;
