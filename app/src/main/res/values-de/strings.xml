@@ -1037,6 +1037,9 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
   <string name="time_offset">Zeit Verschiebung</string>
   <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
   <string name="treatments_wizard_total_label">Gesamt</string>
+  <string name="sendlogfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
+Unerwartetes Verhalten.</string>
+  <string name="commanderror">Fehler bei Befehl</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d Tag</item>
     <item quantity="other">%1$d Tage</item>
