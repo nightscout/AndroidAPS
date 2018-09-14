@@ -105,6 +105,7 @@ public class TemporaryBasal implements Interval {
         this.isFakeExtended = true;
         this.netExtendedRate = extendedBolus.absoluteRate();
         this.absoluteRate = basal + extendedBolus.absoluteRate();
+        this.pumpId = extendedBolus.pumpId;
     }
 
     public TemporaryBasal clone() {

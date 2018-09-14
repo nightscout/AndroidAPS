@@ -83,7 +83,7 @@ class HistoryLogAdapter {
                 log.debug("Create new EB: " + eventDate + " " + insulin + " " + durationInMinutes);
         } else {
             if (L.isEnabled(L.PUMP))
-                log.debug("Loaded existing EB record: " + extendedBolusFromHistory.toString());
+                log.debug("Loaded existing EB record: " + extendedBolusFromHistory.log());
             if (Math.abs(eventDate - extendedBolusFromHistory.date) < MAX_TIME_DIFFERENCE) {
                 if (extendedBolusFromHistory.source != Source.PUMP) {
                     if (L.isEnabled(L.PUMP))
