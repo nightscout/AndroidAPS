@@ -480,7 +480,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Profile specificProfile;
         if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active))) {
             specificProfile = ProfileFunctions.getInstance().getProfile();
-            selectedAlternativeProfile = MainApp.getConfigBuilder().getActiveProfileInterface().getProfileName();
+            selectedAlternativeProfile = ProfileFunctions.getInstance().getProfileName();
         } else
             specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);
 
