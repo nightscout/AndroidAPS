@@ -31,12 +31,12 @@
   <string name="description_profile_local">인터넷 연결없이 사용가능한 프로파일</string>
   <string name="description_profile_nightscout">Nightscout에서 정의한 프로필을 사용합니다.</string>
   <string name="description_profile_simple">하나의 시간대만 설정 가능한 단순 프로파일</string>
-  <string name="description_pump_combo">Accu-Chek Combo 펌프와 연동, ruffy 설치 필요</string>
+  <string name="description_pump_combo">아큐-첵 Combo 펌프와 연동, ruffy 설치 필요</string>
   <string name="description_pump_dana_r">다나R 펌프와 연동(다나 RN)</string>
   <string name="description_pump_dana_r_korean">내수용 다나R 펌프와 연동(다나 R)</string>
   <string name="description_pump_dana_r_v2">업그레이드 펌웨어가 설치된 다나R 펌프와 연동</string>
   <string name="description_pump_dana_rs">다나RS 펌프와 연동</string>
-  <string name="description_pump_insight">Accu-Chek Insight 펌프와 연동, SightRemote 설치 필요</string>
+  <string name="description_pump_insight">아큐-첵 Insight 펌프와 연동, SightRemote 설치 필요</string>
   <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
   <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
   <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
