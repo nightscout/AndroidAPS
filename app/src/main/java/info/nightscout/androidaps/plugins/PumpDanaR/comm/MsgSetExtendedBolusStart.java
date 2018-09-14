@@ -26,7 +26,8 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         if (constrainedAmount != null) {
             AddParamInt((int) (constrainedAmount.value() * 100));
         } else {
-            log.debug("constrainedAmount of insulin is null!!");
+            log.error("constrainedAmount of insulin is null!!");
+            AddParamInt(0);
         }
         AddParamByte(halfhours);
         if (L.isEnabled(L.PUMPCOMM))
