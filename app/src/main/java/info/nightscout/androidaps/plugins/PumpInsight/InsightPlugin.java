@@ -573,7 +573,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         if (L.isEnabled(L.PUMP))
-            log.debug("Cancel TBR");
+            log.debug("Cancel TBR called");
 
         try {
             cancelExtendedBolus();
@@ -581,7 +581,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             realTBRCancel();
             SystemClock.sleep(1100); // to be sure db records are at least 1 sec off (for NS)
             updateGui();
-            if (L.isEnabled(L.PUMP)) log.debug("Canceling temp basal");
             connector.requestHistorySync(5000);
             connector.tryToGetPumpStatusAgain();
             return new PumpEnactResult().success(true).enacted(true).isTempCancel(true);
@@ -609,18 +608,16 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
             extendedBolusMessage.setAmount(insulin);
             extendedBolusMessage.setDuration(durationInMinutes);
             BolusMessage bolusMessage = fetchSingleMessage(extendedBolusMessage, BolusMessage.class);
-            final ExtendedBolus extendedBolus = new ExtendedBolus();
-            extendedBolus.date = System.currentTimeMillis();
-            extendedBolus.insulin = insulin;
-            extendedBolus.durationInMinutes = durationInMinutes;
-            extendedBolus.source = Source.USER;
-            extendedBolus.pumpId = getRecordUniqueID(bolusMessage.getBolusId());
+            final ExtendedBolus extendedBolus = new ExtendedBolus()
+                    .date(System.currentTimeMillis())
+                    .insulin(insulin)
+                    .durationInMinutes(durationInMinutes)
+                    .source(Source.USER)
+                    .pumpId(getRecordUniqueID(bolusMessage.getBolusId()));
             TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
             updateGui();
             connector.requestHistorySync(30000);
             connector.tryToGetPumpStatusAgain();
-            if (L.isEnabled(L.PUMP))
-                log.debug("Setting extended bolus: " + insulin + " mins:" + durationInMinutes);
             return new PumpEnactResult().success(true).enacted(true).duration(durationInMinutes).bolusDelivered(insulin);
         } catch (Exception e) {
             return pumpEnactFailure();
@@ -630,7 +627,7 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         if (L.isEnabled(L.PUMP))
-            log.debug("Cancel Extended bolus");
+            log.debug("Cancel Extended bolus called");
 
         Integer bolusId = null;
 
@@ -641,7 +638,6 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
                 exStop.source = Source.USER;
                 TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(exStop);
             }
-            if (L.isEnabled(L.PUMP)) log.debug("Cancel extended bolus:");
             if (bolusId != null) connector.requestHistorySync(5000);
             connector.tryToGetPumpStatusAgain();
             updateGui();

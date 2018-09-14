@@ -89,10 +89,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
 
         TemporaryBasal temporaryBasal = new TemporaryBasal().date(datetime).source(Source.PUMP).pumpId(datetime);
 
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = datetime;
-        extendedBolus.source = Source.PUMP;
-        extendedBolus.pumpId = datetime;
+        ExtendedBolus extendedBolus = new ExtendedBolus().date(datetime).source(Source.PUMP).pumpId(datetime);
 
         String status;
 

@@ -67,10 +67,10 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 .source(Source.PUMP)
                 .pumpId(datetime);
 
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = datetime;
-        extendedBolus.source = Source.PUMP;
-        extendedBolus.pumpId = datetime;
+        ExtendedBolus extendedBolus = new ExtendedBolus()
+                .date(datetime)
+                .source(Source.PUMP)
+                .pumpId(datetime);
 
         String status = "";
 

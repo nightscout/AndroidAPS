@@ -39,7 +39,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
             if (!bundles.containsKey("action")) return;
 
             if (L.isEnabled(L.NSCLIENT))
-                BundleLogger.log(bundles);
+                log.debug(BundleLogger.log(bundles));
 
             String collection = null;
             String _id = null;
@@ -49,16 +49,21 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 collection = bundles.getString("collection");
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
+                return;
             }
             try {
-                _id = bundles.getString("_id");
+                if (!action.equals("dbAdd"))
+                    _id = bundles.getString("_id");
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
+                return;
             }
             try {
-                data = new JSONObject(bundles.getString("data"));
+                if (!action.equals("dbRemove"))
+                    data = new JSONObject(bundles.getString("data"));
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
+                return;
             }
 
             if (data == null && !action.equals("dbRemove") || _id == null && action.equals("dbRemove")) {
@@ -87,7 +92,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                     DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id);
                     UploadQueue.add(dbr);
                 }
-            } else  if (action.equals("dbUpdate")) {
+            } else if (action.equals("dbUpdate")) {
                 if (shouldUpload()) {
                     DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id, data);
                     UploadQueue.add(dbr);

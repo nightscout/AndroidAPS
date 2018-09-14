@@ -961,13 +961,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
             if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
-                ExtendedBolus extendedBolus = new ExtendedBolus();
-                extendedBolus.source = Source.NIGHTSCOUT;
-                extendedBolus.date = trJson.getLong("mills");
-                extendedBolus.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
-                extendedBolus.durationInMinutes = trJson.getInt("duration");
-                extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
-                extendedBolus._id = trJson.getString("_id");
+                ExtendedBolus extendedBolus = new ExtendedBolus()
+                        .source(Source.NIGHTSCOUT)
+                        .date(trJson.getLong("mills"))
+                        .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0)
+                        .durationInMinutes(trJson.getInt("duration"))
+                        .insulin(trJson.getDouble("originalExtendedAmount"))
+                        ._id(trJson.getString("_id"));
+                // if faking found in NS, adapt AAPS to use it too
                 if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
                     VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
@@ -982,6 +983,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
+                // if faking found in NS, adapt AAPS to use it too
                 if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
                     VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
@@ -1047,23 +1049,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public boolean createOrUpdate(ExtendedBolus extendedBolus) {
         try {
+            if (L.isEnabled(L.DATABASE))
+                log.debug("EXTENDEDBOLUS: createOrUpdate: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+
             ExtendedBolus old;
             extendedBolus.date = roundDateToSec(extendedBolus.date);
 
             if (extendedBolus.source == Source.PUMP) {
-                // check for changed from pump change in NS
-                QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
-                Where where = queryBuilder.where();
-                where.eq("pumpId", extendedBolus.pumpId);
-                PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
-                List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
-                if (trList.size() > 0) {
-                    // do nothing, pump history record cannot be changed
-                    return false;
+                // if pumpId == 0 do not check for existing pumpId
+                // used with pumps without history
+                // and insight where record as added first without pumpId
+                // and then is record updated with pumpId
+                if (extendedBolus.pumpId == 0) {
+                    getDaoExtendedBolus().createOrUpdate(extendedBolus);
+                } else {
+                    QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
+                    Where where = queryBuilder.where();
+                    where.eq("pumpId", extendedBolus.pumpId);
+                    PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+                    List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
+                    if (trList.size() > 1) {
+                        log.error("EXTENDEDBOLUS: Multiple records found for pumpId: " + extendedBolus.pumpId);
+                        return false;
+                    }
+                    getDaoExtendedBolus().createOrUpdate(extendedBolus);
                 }
-                getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1077,7 +1089,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         old.copyFrom(extendedBolus);
                         getDaoExtendedBolus().create(old);
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.toString());
+                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.log());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
                         scheduleExtendedBolusChange();
@@ -1100,7 +1112,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             old.copyFrom(extendedBolus);
                             getDaoExtendedBolus().create(old);
                             if (L.isEnabled(L.DATABASE))
-                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.toString());
+                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.log());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
                             scheduleExtendedBolusChange();
@@ -1110,7 +1122,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1118,7 +1130,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (extendedBolus.source == Source.USER) {
                 getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;

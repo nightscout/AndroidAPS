@@ -79,27 +79,27 @@ public class MsgStatusBolusExtended extends MessageBase {
                     exStop.source = Source.USER;
                     treatmentsInterface.addToHistoryExtendedBolus(exStop);
                     // Create new
-                    ExtendedBolus newExtended = new ExtendedBolus();
-                    newExtended.date = pump.extendedBolusStart;
-                    newExtended.insulin = pump.extendedBolusAmount;
-                    newExtended.durationInMinutes = pump.extendedBolusMinutes;
-                    newExtended.source = Source.USER;
+                    ExtendedBolus newExtended = new ExtendedBolus()
+                            .date(pump.extendedBolusStart)
+                            .insulin(pump.extendedBolusAmount)
+                            .durationInMinutes(pump.extendedBolusMinutes)
+                            .source(Source.USER);
                     treatmentsInterface.addToHistoryExtendedBolus(newExtended);
                 }
             } else {
                 // Close curent temp basal
-                ExtendedBolus exStop = new ExtendedBolus(now);
-                exStop.source = Source.USER;
+                ExtendedBolus exStop = new ExtendedBolus(now)
+                        .source(Source.USER);
                 treatmentsInterface.addToHistoryExtendedBolus(exStop);
             }
         } else {
             if (pump.isExtendedInProgress) {
                 // Create new
-                ExtendedBolus newExtended = new ExtendedBolus();
-                newExtended.date = pump.extendedBolusStart;
-                newExtended.insulin = pump.extendedBolusAmount;
-                newExtended.durationInMinutes = pump.extendedBolusMinutes;
-                newExtended.source = Source.USER;
+                ExtendedBolus newExtended = new ExtendedBolus()
+                        .date(pump.extendedBolusStart)
+                        .insulin(pump.extendedBolusAmount)
+                        .durationInMinutes(pump.extendedBolusMinutes)
+                        .source(Source.USER);
                 treatmentsInterface.addToHistoryExtendedBolus(newExtended);
             }
         }
