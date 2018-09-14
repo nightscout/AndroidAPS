@@ -241,6 +241,7 @@
     <string name="el_lang" translatable="false">Greek</string>
     <string name="it_lang" translatable="false">Italian</string>
     <string name="ro_lang" translatable="false">Romanian</string>
+    <string name="pt_lang" translatable="false">Portuguese</string>
     <string name="ru_lang" translatable="false">Russian</string>
     <string name="sk_lang" translatable="false">Slovak</string>
     <string name="sv_lang" translatable="false">Swedish</string>
