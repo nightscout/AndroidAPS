@@ -53,17 +53,26 @@ public class MsgSettingBasalProfileAll extends MessageBase {
         if (L.isEnabled(L.PUMPCOMM)) {
             if (pump.basal48Enable) {
                 for (int profile = 0; profile < 4; profile++) {
-                    for (int index = 0; index < 24; index++) {
-                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
+                    for (int index = 0; index < 48; index++) {
+                        try {
+                            log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
+                        } catch (Exception e){
+                            log.error("Unhandled exception" , e);
+                        }
                     }
                 }
             } else {
                 for (int profile = 0; profile < 4; profile++) {
-                    for (int index = 0; index < 48; index++) {
-                        log.debug("Basal profile " + profile + ": " +
-                                String.format("%02d", (index / 2)) +
-                                ":" + String.format("%02d", (index % 2) * 30) + " : " +
-                                pump.pumpProfiles[profile][index]);
+                    for (int index = 0; index < 24; index++) {
+                        //this is absurd  pump.pumpProfiles[profile][index] returns nullPointerException
+                        try {
+                            log.debug("Basal profile " + profile + ": " +
+                                    String.format("%02d", (index / 2)) +
+                                    ":" + String.format("%02d", (index % 2) * 30) + " : " +
+                                    pump.pumpProfiles[profile][index]);
+                        } catch (Exception e){
+                            log.error("Unhandled exception" , e);
+                        }
                     }
                 }
             }

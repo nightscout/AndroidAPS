@@ -39,6 +39,8 @@ public class MsgInitConnStatusOption extends MessageBase {
             DanaRPump.getInstance().password = intFromBuff(bytes, 9, 2) ^ 0x3463;
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump password: " + DanaRPump.getInstance().password);
+        } else {
+            failed = true;
         }
 
         if (!DanaRPump.getInstance().isPasswordOK()) {
@@ -49,7 +51,8 @@ public class MsgInitConnStatusOption extends MessageBase {
         }
 
         // This is last message of initial sequence
-        ConfigBuilderPlugin.getPlugin().getActivePump().finishHandshaking();
+        if (ConfigBuilderPlugin.getPlugin().getActivePump() != null )
+            ConfigBuilderPlugin.getPlugin().getActivePump().finishHandshaking();
     }
 
 }

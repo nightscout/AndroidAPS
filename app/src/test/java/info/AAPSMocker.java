@@ -2,6 +2,7 @@ package info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 
 import com.squareup.otto.Bus;
 
@@ -25,6 +26,8 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.utils.SP;
 
@@ -103,6 +106,7 @@ public class AAPSMocker {
         PowerMockito.mockStatic(MainApp.class);
         MainApp mainApp = mock(MainApp.class);
         when(MainApp.instance()).thenReturn(mainApp);
+
         return mainApp;
     }
 
@@ -135,13 +139,15 @@ public class AAPSMocker {
         when(L.isEnabled(any())).thenReturn(true);
     }
 
-    public static void mockNSUpload() {
+    public static void mockNSUpload(){
         PowerMockito.mockStatic(NSUpload.class);
     }
 
     public static void mockApplicationContext() {
-        Context context = mock(Context.class);
-        when(MainApp.instance().getApplicationContext()).thenReturn(context);
+        Context mockedContext = mock(Context.class);
+        Resources mResources = mock(Resources.class);
+        when(MainApp.instance().getApplicationContext()).thenReturn(mockedContext);
+        when(mockedContext.getResources()).thenReturn(mResources);
     }
 
     public static DatabaseHelper mockDatabaseHelper() {
@@ -165,6 +171,15 @@ public class AAPSMocker {
     public static void mockTreatmentService() throws Exception {
         TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
         PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+    }
+
+    public static DanaRPlugin mockDanaRPlugin() {
+        PowerMockito.mockStatic(DanaRPlugin.class);
+        DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
+        DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
+        when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
+        when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
+        return danaRPlugin;
     }
 
     public static Profile getValidProfile() {
