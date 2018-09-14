@@ -184,7 +184,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             if (insulinAfterConstraints > 0) {
                 confirmMessage.add(MainApp.gs(R.string.fillwarning));
                 confirmMessage.add("");
-                confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>");
+                confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>");
                 if (!insulinAfterConstraints.equals(insulin))
                     confirmMessage.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
             }
