@@ -50,7 +50,10 @@ public class MsgInitConnStatusTime extends MessageBase {
             MainApp.getConfigBuilder().storeSettings("ChangingDanaDriver");
             MainApp.bus().post(new EventRefreshGui());
             ConfigBuilderPlugin.getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
+            failed = false;
             return;
+        } else {
+            failed = true;
         }
 
         long time = dateTimeSecFromBuff(bytes, 0);

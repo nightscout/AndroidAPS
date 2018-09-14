@@ -141,6 +141,9 @@ public class MsgHistoryAll extends MessageBase {
                     strRecordValue = "On";
                 danaRHistoryRecord.stringRecordValue = strRecordValue;
                 break;
+            case 17:
+                failed = true;
+                break;
         }
 
         MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord);
