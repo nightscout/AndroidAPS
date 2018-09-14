@@ -238,11 +238,20 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     public boolean isConnecting() {
-
         if (!isServiceSet())
             return true;
         else
             return !medtronicService.isInitialized();
+    }
+
+    @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+
     }
 
 
@@ -429,12 +438,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public Date lastDataTime() {
-        if (pumpStatusLocal != null && pumpStatusLocal.lastDataTime != null) {
-            return pumpStatusLocal.lastDataTime.toDate();
+    public long lastDataTime() {
+        if (pumpStatusLocal.lastConnection!=0) {
+            return pumpStatusLocal.lastConnection;
         }
 
-        return new Date();
+        return System.currentTimeMillis();
     }
 
 

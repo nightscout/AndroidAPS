@@ -20,11 +20,16 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -33,7 +38,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -41,6 +46,7 @@ import info.nightscout.utils.SP;
  */
 
 public class TreatmentsProfileSwitchFragment extends SubscriberFragment implements View.OnClickListener {
+    private Logger log = LoggerFactory.getLogger(L.UI);
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -64,7 +70,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
 
         @Override
         public void onBindViewHolder(ProfileSwitchViewHolder holder, int position) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null) return;
             ProfileSwitch profileSwitch = profileSwitchList.get(position);
             holder.ph.setVisibility(profileSwitch.source == Source.PUMP ? View.VISIBLE : View.GONE);
@@ -128,6 +134,10 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             @Override
             public void onClick(View v) {
                 final ProfileSwitch profileSwitch = (ProfileSwitch) v.getTag();
+                if (profileSwitch == null) {
+                    log.error("profileSwitch == null");
+                    return;
+                }
                 switch (v.getId()) {
                     case R.id.profileswitch_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);

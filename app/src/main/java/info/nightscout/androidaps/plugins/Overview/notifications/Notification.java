@@ -20,8 +20,6 @@ import info.nightscout.utils.SP;
  */
 
 public class Notification {
-    private static Logger log = LoggerFactory.getLogger(Notification.class);
-
     public static final int URGENT = 0;
     public static final int NORMAL = 1;
     public static final int LOW = 2;
@@ -67,7 +65,11 @@ public class Notification {
     public static final int PERMISSION_BATTERY = 37;
     public static final int PERMISSION_SMS = 38;
     public static final int MAXIMUM_BASAL_VALUE_REPLACED = 39;
-    public static final int MEDTRONIC_PUMP_ALARM = 40;
+    public static final int NSMALFUNCTION = 40;
+    public static final int NEWVERSIONDETECTED = 41;
+    public static final int SENDLOGFILES = 42;
+    public static final int MEDTRONIC_PUMP_ALARM = 44;
+
 
     public int id;
     public Date date;

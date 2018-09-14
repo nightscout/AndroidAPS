@@ -3,8 +3,6 @@ package info.nightscout.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -13,7 +11,9 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -33,8 +33,8 @@ public class LocalAlertUtils {
         return T.mins(SP.getInt(MainApp.gs(R.string.key_pump_unreachable_threshold), 30)).msecs();
     }
 
-    public static void checkPumpUnreachableAlarm(Date lastConnection, boolean isStatusOutdated) {
-        boolean alarmTimeoutExpired = lastConnection.getTime() + pumpUnreachableThreshold() < System.currentTimeMillis();
+    public static void checkPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated) {
+        boolean alarmTimeoutExpired = lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis();
         boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis();
 
         if (Config.APS && SP.getBoolean(MainApp.gs(R.string.key_enable_pump_unreachable_alert), true)
@@ -79,10 +79,10 @@ public class LocalAlertUtils {
         //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
 
         final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
-            Date lastConnection = pump.lastDataTime();
-            long earliestAlarmTime = lastConnection.getTime() + pumpUnreachableThreshold();
+            long lastConnection = pump.lastDataTime();
+            long earliestAlarmTime = lastConnection + pumpUnreachableThreshold();
             if (SP.getLong("nextPumpDisconnectedAlarm", 0l) < earliestAlarmTime) {
                 SP.putLong("nextPumpDisconnectedAlarm", earliestAlarmTime);
             }

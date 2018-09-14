@@ -6,11 +6,12 @@ import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.utils.DateUtil;
 
 public class DetermineBasalResultAMA extends APSResult {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalResultAMA.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private double eventualBG;
     private double snoozeBG;
@@ -47,28 +48,17 @@ public class DetermineBasalResultAMA extends APSResult {
         bolusRequested = false;
     }
 
-    public DetermineBasalResultAMA() {
+    private DetermineBasalResultAMA() {
         hasPredictions = true;
     }
 
     @Override
     public DetermineBasalResultAMA clone() {
         DetermineBasalResultAMA newResult = new DetermineBasalResultAMA();
-        newResult.reason = reason;
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.tempBasalRequested = tempBasalRequested;
-        newResult.rate = rate;
-        newResult.duration = duration;
+        doClone(newResult);
 
-        try {
-            newResult.json = new JSONObject(json.toString());
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
-        newResult.date = date;
         return newResult;
     }
 

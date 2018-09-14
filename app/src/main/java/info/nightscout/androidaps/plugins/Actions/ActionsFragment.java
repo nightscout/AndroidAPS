@@ -14,10 +14,10 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.HistoryBrowseActivity;
+import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.TDDStatsActivity;
+import info.nightscout.androidaps.activities.TDDStatsActivity;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SingleClickButton;
@@ -87,7 +88,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             tempBasalCancel.setOnClickListener(this);
             fill.setOnClickListener(this);
             history.setOnClickListener(this);
-            history.setVisibility(MainApp.devBranch ? View.VISIBLE : View.GONE);
             tddStats.setOnClickListener(this);
 
             updateGUI();
@@ -132,7 +132,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         profileSwitch.setVisibility(View.GONE);
                     }
 
-                    if (MainApp.getConfigBuilder().getProfile() == null) {
+                    if (ProfileFunctions.getInstance().getProfile() == null) {
                         tempTarget.setVisibility(View.GONE);
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);

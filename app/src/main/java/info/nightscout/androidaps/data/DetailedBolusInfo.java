@@ -57,6 +57,7 @@ public class DetailedBolusInfo {
     @Override
     public String toString() {
         return new Date(date).toLocaleString() +
+                " date: " + date +
                 " insulin: " + insulin +
                 " carbs: " + carbs +
                 " isValid: " + isValid +

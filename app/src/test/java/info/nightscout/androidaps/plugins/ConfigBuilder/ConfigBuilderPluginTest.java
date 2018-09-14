@@ -12,11 +12,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.utils.SP;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class})
+@PrepareForTest({MainApp.class, SP.class})
 public class ConfigBuilderPluginTest {
 
     @Test
@@ -41,9 +42,10 @@ public class ConfigBuilderPluginTest {
     }
 
     @Before
-    public void prepareMock() throws Exception {
-        MainApp mainApp = mock(MainApp.class);
-        PowerMockito.mockStatic(MainApp.class);
+    public void prepareMock() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
         AAPSMocker.prepareMockedBus();
     }
 

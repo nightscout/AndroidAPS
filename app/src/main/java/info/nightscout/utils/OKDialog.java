@@ -1,7 +1,9 @@
 package info.nightscout.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
@@ -20,9 +22,9 @@ import info.nightscout.androidaps.R;
 public class OKDialog {
     private static Logger log = LoggerFactory.getLogger(OKDialog.class);
 
-    public static void show(final Activity activity, String title, String message, final Runnable runnable) {
+    public static void show(final Context context, String title, String message, final Runnable runnable) {
         try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme));
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme));
             builder.setTitle(title);
             builder.setMessage(message);
             builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
@@ -30,7 +32,7 @@ public class OKDialog {
                     dialog.dismiss();
                     if (runnable != null) {
                         SystemClock.sleep(100);
-                        activity.runOnUiThread(runnable);
+                        runOnUiThread(runnable);
                     }
                 }
             });
@@ -39,6 +41,11 @@ public class OKDialog {
         } catch (Exception e) {
             log.debug("show_dialog exception: " + e);
         }
+    }
+
+    public static boolean runOnUiThread(Runnable theRunnable) {
+        final Handler mainHandler = new Handler(MainApp.instance().getApplicationContext().getMainLooper());
+        return mainHandler.post(theRunnable);
     }
 
    public static void show(final Activity activity, String title, Spanned message, final Runnable runnable) {

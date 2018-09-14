@@ -110,9 +110,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="-15dp"
-                    android:paddingLeft="-5dp"
-                    android:paddingRight="-5dp"
+                    android:layout_marginTop="-5dp"
+                    android:paddingLeft="-2dp"
+                    android:paddingRight="-2dp"
                     android:text="→"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -351,19 +351,6 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="2dp"
-                            android:text="@string/pump"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="14sp" />
-
-                        <TextView
                             android:id="@+id/overview_pump"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -389,18 +376,6 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/openaps_short"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="14sp" />
-
-                        <TextView
                             android:id="@+id/overview_openaps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -424,18 +399,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/uploader_short"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/overview_uploader"

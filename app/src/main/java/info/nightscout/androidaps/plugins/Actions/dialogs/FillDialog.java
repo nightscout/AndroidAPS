@@ -39,7 +39,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -91,7 +91,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.actions_fill_dialog, null, false);
+        View view = inflater.inflate(R.layout.actions_fill_dialog, container, false);
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
@@ -184,7 +184,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             if (insulinAfterConstraints > 0) {
                 confirmMessage.add(MainApp.gs(R.string.fillwarning));
                 confirmMessage.add("");
-                confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + insulinAfterConstraints + "U" + "</font>");
+                confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>");
                 if (!insulinAfterConstraints.equals(insulin))
                     confirmMessage.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
             }

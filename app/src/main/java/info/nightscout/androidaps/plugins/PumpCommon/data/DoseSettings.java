@@ -6,14 +6,14 @@ package info.nightscout.androidaps.plugins.PumpCommon.data;
 
 public class DoseSettings {
 
-    private float step;
+    private double step;
     private int durationStep;
     private int maxDuration;
-    private float minDose;
-    private Float maxDose;
+    private double minDose;
+    private Double maxDose;
 
-
-    public DoseSettings(float step, int durationStep, int maxDuration, float minDose, Float maxDose) {
+    public DoseSettings(double step, int durationStep, int maxDuration, double minDose, Double maxDose)
+    {
         this.step = step;
         this.durationStep = durationStep;
         this.maxDuration = maxDuration;
@@ -21,33 +21,29 @@ public class DoseSettings {
         this.maxDose = maxDose;
     }
 
-
-    public DoseSettings(float step, int durationStep, int maxDuration, float minDose) {
-        this(step, durationStep, maxDuration, minDose, null);
+    public DoseSettings(double step, int durationStep, int maxDuration, double minDose)
+    {
+        this(step, durationStep, maxDuration, minDose, Double.MAX_VALUE);
     }
 
 
-    public float getStep() {
+    public double getStep() {
         return step;
     }
-
 
     public int getDurationStep() {
         return durationStep;
     }
 
-
     public int getMaxDuration() {
         return maxDuration;
     }
 
-
-    public float getMinDose() {
+    public double getMinDose() {
         return minDose;
     }
 
-
-    public Float getMaxDose() {
+    public Double getMaxDose() {
         return maxDose;
     }
 }

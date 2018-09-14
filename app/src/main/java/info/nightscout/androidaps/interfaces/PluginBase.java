@@ -7,14 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.CommandQueue;
 
 /**
  * Created by mike on 09.06.2016.
  */
 public abstract class PluginBase {
-    private static Logger log = LoggerFactory.getLogger(PluginBase.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     public enum State {
         NOT_INITIALIZED,
@@ -113,15 +115,17 @@ public abstract class PluginBase {
                 if (state != State.ENABLED) {
                     onStateChange(type, state, State.ENABLED);
                     state = State.ENABLED;
-                    log.debug("Starting: " + getName());
+                    if (L.isEnabled(L.CORE))
+                        log.debug("Starting: " + getName());
                     onStart();
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
-                    onStateChange(type, state, State.ENABLED);
+                    onStateChange(type, state, State.DISABLED);
                     state = State.DISABLED;
                     onStop();
-                    log.debug("Stopping: " + getName());
+                    if (L.isEnabled(L.CORE))
+                        log.debug("Stopping: " + getName());
                 }
             }
         } else if (type == PluginType.PROFILE) {
@@ -165,7 +169,9 @@ public abstract class PluginBase {
         if (getType() == PluginType.PUMP) {
             new Thread(() -> {
                 SystemClock.sleep(3000);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("Pump driver changed.", null);
+                CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+                if (commandQueue != null)
+                    commandQueue.readStatus("Pump driver changed.", null);
             }).start();
         }
     }

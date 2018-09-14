@@ -37,9 +37,7 @@ repositories {
 }
 
 def generateGitBuild = { ->
-
     StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append('"')
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -51,9 +49,12 @@ def generateGitBuild = { ->
     } catch (ignored) {
         stringBuilder.append('NoGitSystemAvailable')
     }
-    stringBuilder.append('-')
+    return stringBuilder.toString()
+}
+
+def generateDate = { ->
+    StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append((new Date()).format('yyyy.MM.dd-HH:mm'))
-    stringBuilder.append('"')
     return stringBuilder.toString()
 }
 
@@ -66,14 +67,14 @@ android {
     compileSdkVersion 27
 
     defaultConfig {
-        applicationId "info.nightscout.androidaps"
         minSdkVersion 21
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "2.0a-dev"
+        version "2.0g-medtronic"
         buildConfigField "String", "VERSION", '"' + version + '"'
-        buildConfigField "String", "BUILDVERSION", generateGitBuild()
+        buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
+        buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -103,6 +104,7 @@ android {
     productFlavors {
         flavorDimensions "standard"
         full {
+            applicationId "info.nightscout.androidaps"
             dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
             versionName version
@@ -110,13 +112,9 @@ android {
                     appIcon: "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
-            buildConfigField "boolean", "APS", "true"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
         pumpcontrol {
+            applicationId "info.nightscout.androidaps"
             dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
             versionName version
@@ -124,13 +122,9 @@ android {
                     appIcon: "@mipmap/blueowl",
                     appIconRound: "@null"
             ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "true"
         }
         nsclient {
+            applicationId "info.nightscout.nsclient"
             dimension "standard"
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
@@ -138,25 +132,16 @@ android {
                     appIcon: "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "NSCLIENTOLNY", "true"
-            buildConfigField "boolean", "G5UPLOADER", "false"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
-        g5uploader {
+        nsclient2 {
+            applicationId "info.nightscout.nsclient2"
             dimension "standard"
-            resValue "string", "app_name", "NSClient"
+            resValue "string", "app_name", "NSClient2"
             versionName version + "-nsclient"
             manifestPlaceholders = [
                     appIcon: "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "NSCLIENTOLNY", "false"
-            buildConfigField "boolean", "G5UPLOADER", "true"
-            buildConfigField "boolean", "PUMPCONTROL", "false"
         }
     }
     compileOptions {
@@ -168,6 +153,8 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
     }
+
+    useLibrary  "org.apache.http.legacy"
 }
 
 allprojects {
@@ -196,6 +183,7 @@ dependencies {
     libs "MilosKozak:danars-support-lib:master@zip"
 
     implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
+    implementation "com.android.support:support-v13:${supportLibraryVersion}"
     implementation "com.android.support:support-v4:${supportLibraryVersion}"
     implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
     implementation "com.android.support:recyclerview-v7:${supportLibraryVersion}"

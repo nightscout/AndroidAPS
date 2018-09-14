@@ -15,6 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
@@ -32,14 +33,14 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
+    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
 
     private static ObjectivesPlugin objectivesPlugin;
 
-    public static List<Objective> objectives = new ArrayList<>();
-    public static boolean bgIsAvailableInNS = false;
-    public static boolean pumpStatusIsAvailableInNS = false;
-    public static Integer manualEnacts = 0;
+    public List<Objective> objectives = new ArrayList<>();
+    public boolean bgIsAvailableInNS = false;
+    public boolean pumpStatusIsAvailableInNS = false;
+    public Integer manualEnacts = 0;
 
     public static ObjectivesPlugin getPlugin() {
         if (objectivesPlugin == null) {
@@ -52,8 +53,8 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
                 .fragmentClass(ObjectivesFragment.class.getName())
-                .alwaysEnabled(!Config.NSCLIENT && !Config.G5UPLOADER)
-                .showInList(!Config.NSCLIENT && !Config.G5UPLOADER)
+                .alwaysEnabled(!Config.NSCLIENT)
+                .showInList(!Config.NSCLIENT)
                 .pluginName(R.string.objectives)
                 .shortName(R.string.objectives_shortname)
                 .description(R.string.description_objectives)
@@ -90,11 +91,11 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         saveProgress();
     }
 
-    public static void saveProgress() {
+    public void saveProgress() {
         SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
         SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
         SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives stored");
         MainApp.bus().post(new EventObjectivesSaved());
     }
@@ -107,11 +108,11 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives loaded");
     }
 
-    public static List<Objective> getObjectives() {
+    public List<Objective> getObjectives() {
         return objectives;
     }
 

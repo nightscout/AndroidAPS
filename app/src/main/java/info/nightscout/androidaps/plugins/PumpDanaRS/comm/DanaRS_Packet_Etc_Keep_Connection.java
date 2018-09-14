@@ -3,16 +3,18 @@ package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 
 import com.cozmo.danar.util.BleCommandUtil;
 
 public class DanaRS_Packet_Etc_Keep_Connection extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Etc_Keep_Connection.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_Etc_Keep_Connection() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_ETC__KEEP_CONNECTION;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -20,7 +22,9 @@ public class DanaRS_Packet_Etc_Keep_Connection extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         int error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-        if (Config.logDanaMessageDetail) {
+        if (error!=0)
+            failed=true;
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
         }
     }

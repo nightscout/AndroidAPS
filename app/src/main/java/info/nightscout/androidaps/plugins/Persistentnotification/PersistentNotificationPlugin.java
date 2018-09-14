@@ -37,6 +37,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -108,9 +109,9 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         String line1 = "";
 
-        if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !MainApp.getConfigBuilder().isProfileValid("Notificiation"))
+        if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !ProfileFunctions.getInstance().isProfileValid("Notificiation"))
             return null;
-        String units = MainApp.getConfigBuilder().getProfileUnits();
+        String units = ProfileFunctions.getInstance().getProfileUnits();
 
 
         BgReading lastBG = DatabaseHelper.lastBg();
@@ -147,14 +148,14 @@ public class PersistentNotificationPlugin extends PluginBase {
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h";
 
 
-        line3 += " - " + MainApp.getConfigBuilder().getProfileName();
+        line3 += " - " + ProfileFunctions.getInstance().getProfileName();
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         builder.setOngoing(true);
         builder.setOnlyAlertOnce(true);
         builder.setCategory(NotificationCompat.CATEGORY_STATUS);
-        if (Config.NSCLIENT || Config.G5UPLOADER){
+        if (Config.NSCLIENT){
             builder.setSmallIcon(R.drawable.nsclient_smallicon);
             Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.yellowowl);
             builder.setLargeIcon(largeIcon);

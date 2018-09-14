@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpDanaRv2.comm;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
@@ -13,8 +10,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
  * Created by mike on 28.05.2016.
  */
 public class MessageHashTable_v2 {
-    private static Logger log = LoggerFactory.getLogger(MessageHashTable_v2.class);
-
     public static HashMap<Integer, MessageBase> messages = null;
 
     static {

@@ -13,7 +13,7 @@
             android:defaultValue="1"
             android:entries="@array/virtualPumpTypes"
             android:entryValues="@array/virtualPumpTypes"
-            android:key="virtualpump_type"
+            android:key="@string/key_virtualpump_type"
             android:title="@string/virtualpump_type" />
     </PreferenceCategory>
 

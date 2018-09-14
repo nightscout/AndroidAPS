@@ -50,12 +50,12 @@ public abstract class PumpDriverAbstract implements PumpDriverInterface {
     }
 
 
-    @Override
-    public Date lastDataTime() {
-        if (this.pumpStatusData == null || this.pumpStatusData.lastDataTime == null) {
-            return new Date();
-        }
-
-        return this.pumpStatusData.lastDataTime.toDate();
-    }
+//    @Override
+//    public Date lastDataTime() {
+//        if (this.pumpStatusData == null || this.pumpStatusData.lastDataTime == null) {
+//            return new Date();
+//        }
+//
+//        return this.pumpStatusData.lastDataTime.toDate();
+//    }
 }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.utils.T;
 
 public class Objective7 extends Objective {
 
@@ -12,6 +13,6 @@ public class Objective7 extends Objective {
 
     @Override
     protected void setupTasks(List<Task> tasks) {
-        tasks.add(new MinimumDurationTask(28L * 24L * 60L * 60L * 1000L));
+        tasks.add(new MinimumDurationTask(T.days(28).msecs()));
     }
 }

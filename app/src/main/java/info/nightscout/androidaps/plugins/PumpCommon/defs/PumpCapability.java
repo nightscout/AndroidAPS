@@ -6,35 +6,47 @@ package info.nightscout.androidaps.plugins.PumpCommon.defs;
 
 public enum PumpCapability {
 
-    Bolus, //
-    ExtendedBolus, //
-    TBR, //
-    BasalProfileSet, //
-    Refill, //
-    StoreCarbInfo, //
+    Bolus, // isBolusCapable
+    ExtendedBolus, // isExtendedBolusCapable
+    TempBasal, // isTempBasalCapable
+    BasalProfileSet, // isSetBasalProfileCapable
+    Refill, // isRefillingCapable
+    StoreCarbInfo, // storesCarbInfo
+    TDD, // supportsTDDs
+    ManualTDDLoad, // needsManualTDDLoad
+    BasalRate30min, // is30minBasalRatesCapable
 
-    // grouped
-    VirtualPump(Bolus, ExtendedBolus, TBR, BasalProfileSet, StoreCarbInfo), //
+    // grouped by pump
+    VirtualPumpCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill), //
+    ComboCapabilities(Bolus, TempBasal, BasalProfileSet, Refill, TDD, ManualTDDLoad), //
+    DanaCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, TDD, ManualTDDLoad), //
+    DanaWithHistoryCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, StoreCarbInfo, TDD, ManualTDDLoad), //
+    InsightCapabilities(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill,TDD,BasalRate30min), //
 
-    Bolus_TBR_Basal_Refill_Carb(Bolus, TBR, BasalProfileSet, Refill, StoreCarbInfo), //
-    Bolus_Extended_TBR_Basal_Carb(Bolus, ExtendedBolus, TBR, BasalProfileSet, StoreCarbInfo), //
-    Bolus_Extended_TBR_Basal_Refill_Carb(Bolus, ExtendedBolus, TBR, BasalProfileSet, Refill, StoreCarbInfo), //
 
-    None;
+    // BasalRates (separately grouped)
+    BasalRate_Duration15minAllowed, //
+    BasalRate_Duration30minAllowed, //
+    BasalRate_Duration15and30minAllowed(BasalRate_Duration15minAllowed, BasalRate_Duration30minAllowed), //
+    BasalRate_Duration15and30minNotAllowed, //
+    ;
 
     PumpCapability[] children;
 
 
-    PumpCapability() {
+    PumpCapability()
+    {
     }
 
 
-    PumpCapability(PumpCapability... children) {
+    PumpCapability(PumpCapability...children)
+    {
         this.children = children;
     }
 
 
-    public boolean hasCapability(PumpCapability capability) {
+    public boolean hasCapability(PumpCapability capability)
+    {
         // we can only check presense of simple capabilities
         if (capability.children != null)
             return false;
@@ -42,15 +54,18 @@ public enum PumpCapability {
         if (this == capability)
             return true;
 
-        if (this.children != null) {
+        if (this.children!=null)  {
             for (PumpCapability child : children) {
                 if (child == capability)
                     return true;
             }
 
             return false;
-        } else
+        }
+        else
             return false;
     }
+
+
 
 }

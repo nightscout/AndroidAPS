@@ -10,6 +10,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpDriver;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -78,7 +79,7 @@ public class MedtronicPumpDriver extends VirtualPumpDriver /* implements PumpInt
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMP))
             LOG.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         getPumpStatusData().setLastCommunicationToNow();

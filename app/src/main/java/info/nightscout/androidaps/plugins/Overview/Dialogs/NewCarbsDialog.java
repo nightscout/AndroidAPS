@@ -21,7 +21,8 @@ import android.widget.RadioButton;
 
 import com.google.common.base.Joiner;
 
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,19 +158,41 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
 
         BgReading bgReading = DatabaseHelper.actualBg();
         if (bgReading != null && bgReading.value < 72) {
-            startHypoTTCheckbox.setOnCheckedChangeListener(null);
             startHypoTTCheckbox.setChecked(true);
+            // see #onCheckedChanged why listeners are registered like this
+            startHypoTTCheckbox.setOnClickListener(this);
+        } else {
+            startHypoTTCheckbox.setOnCheckedChangeListener(this);
         }
-        startHypoTTCheckbox.setOnClickListener(this);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
+
+        //recovering state if there is something
+        if (savedInstanceState != null) {
+            editCarbs.setValue(savedInstanceState.getDouble("editCarbs"));
+            editTime.setValue(savedInstanceState.getDouble("editTime"));
+            editDuration.setValue(savedInstanceState.getDouble("editDuration"));
+        }
         return view;
     }
 
     private String toSignedString(int value) {
         return value > 0 ? "+" + value : String.valueOf(value);
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle carbsDialogState) {
+        carbsDialogState.putBoolean("startActivityTTCheckbox",startActivityTTCheckbox.isChecked());
+        carbsDialogState.putBoolean("startEatingSoonTTCheckbox", startEatingSoonTTCheckbox.isChecked());
+        carbsDialogState.putBoolean("startHypoTTCheckbox", startHypoTTCheckbox.isChecked());
+        carbsDialogState.putDouble("editTime", editTime.getValue());
+        carbsDialogState.putDouble("editDuration", editDuration.getValue());
+        carbsDialogState.putDouble("editCarbs", editCarbs.getValue());
+        super.onSaveInstanceState(carbsDialogState);
+    }
+
 
     @Override
     public synchronized void onClick(View view) {
@@ -228,6 +251,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         }
     }
 
+
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         // Logic to disable a selected radio when pressed: when a checked radio
@@ -285,7 +310,7 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         }
         okClicked = true;
         try {
-            final Profile currentProfile = MainApp.getConfigBuilder().getProfile();
+            final Profile currentProfile = ProfileFunctions.getInstance().getProfile();
             if (currentProfile == null) {
                 return;
             }

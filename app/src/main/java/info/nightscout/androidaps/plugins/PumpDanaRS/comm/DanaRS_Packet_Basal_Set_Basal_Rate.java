@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 
 import com.cozmo.danar.util.BleCommandUtil;
 
 public class DanaRS_Packet_Basal_Set_Basal_Rate extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Set_Basal_Rate.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private double[] profileBasalRate;
 
@@ -20,7 +20,7 @@ public class DanaRS_Packet_Basal_Set_Basal_Rate extends DanaRS_Packet {
     public DanaRS_Packet_Basal_Set_Basal_Rate(double[] profileBasalRate) {
         this();
         this.profileBasalRate = profileBasalRate;
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Setting new basal rates");
         }
     }
@@ -39,7 +39,9 @@ public class DanaRS_Packet_Basal_Set_Basal_Rate extends DanaRS_Packet {
     @Override
     public void handleMessage(byte[] data) {
         int result = intFromBuff(data, 0, 1);
-        if (Config.logDanaMessageDetail) {
+        if(result != 0)
+            failed = true;
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (result == 0)
                 log.debug("Result OK");
             else

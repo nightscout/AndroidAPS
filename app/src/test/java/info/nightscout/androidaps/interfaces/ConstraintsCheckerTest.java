@@ -75,7 +75,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isClosedLoopAllowedTest() throws Exception {
-        when(SP.getString("aps_mode", "open")).thenReturn("closed");
+        when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("closed");
         objectivesPlugin.objectives.get(3).setStartedOn(null);
 
         Constraint<Boolean> c = constraintChecker.isClosedLoopAllowed();
@@ -83,7 +83,7 @@ public class ConstraintsCheckerTest {
         Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 2); // Safety & Objectives
         Assert.assertEquals(Boolean.FALSE, c.value());
 
-        when(SP.getString("aps_mode", "open")).thenReturn("open");
+        when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("open");
         c = constraintChecker.isClosedLoopAllowed();
         Assert.assertEquals(true, c.getReasonList().size() == 3); // 2x Safety & Objectives
         Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 3); // 2x Safety & Objectives
@@ -156,7 +156,7 @@ public class ConstraintsCheckerTest {
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxBasalAllowed(AAPSMocker.getValidProfile());
         Assert.assertEquals(0.8d, d.value());
-        Assert.assertEquals(true, d.getReasonList().size() == 6);
+        Assert.assertEquals(6, d.getReasonList().size());
         Assert.assertEquals("DanaR: Limiting basal rate to 0.80 U/h because of pump limit", d.getMostLimitedReasons());
 
     }
@@ -183,7 +183,7 @@ public class ConstraintsCheckerTest {
         // Apply all limits
         Constraint<Integer> i = constraintChecker.getMaxBasalPercentAllowed(AAPSMocker.getValidProfile());
         Assert.assertEquals((Integer) 100, i.value());
-        Assert.assertEquals(true, i.getReasonList().size() == 9); // 6x Safety & RS & R & Insight
+        Assert.assertEquals(9, i.getReasonList().size()); // 6x Safety & RS & R & Insight
         Assert.assertEquals("Safety: Limiting percent rate to 100% because of pump limit", i.getMostLimitedReasons());
 
     }

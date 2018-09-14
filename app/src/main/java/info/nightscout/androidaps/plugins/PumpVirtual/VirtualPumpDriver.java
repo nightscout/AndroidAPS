@@ -19,6 +19,9 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -26,7 +29,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverAbstract;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -77,7 +79,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return (Config.NSCLIENT || Config.G5UPLOADER) && fromNSAreCommingFakedExtendedBoluses;
+        return (Config.NSCLIENT) && fromNSAreCommingFakedExtendedBoluses;
     }
 
 
@@ -101,6 +103,19 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         return true;
     }
 
+    public boolean isHandshakeInProgress()
+    {
+        return false;
+    } // true if BT is connected but initial handshake is still in progress
+
+
+    public void finishHandshaking()
+    {
+
+    }// set initial handshake completed
+
+
+
     @Override
     public boolean isConnecting() {
         return false;
@@ -108,7 +123,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
 
     @Override
     public void connect(String reason) {
-        if (!Config.NSCLIENT && !Config.G5UPLOADER)
+        if (!Config.NSCLIENT)
             NSUpload.uploadDeviceStatus();
         pumpStatusData.setLastCommunicationToNow();
     }
@@ -143,13 +158,13 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
     }
 
     @Override
-    public Date lastDataTime() {
-        return pumpStatusData.lastDataTime.toDate();
+    public long lastDataTime() {
+        return pumpStatusData.lastConnection;
     }
 
     @Override
     public double getBaseBasalRate() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile != null)
             return profile.getBasal();
         else
@@ -182,7 +197,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         bolusingEvent.percent = 100;
         MainApp.bus().post(bolusingEvent);
         SystemClock.sleep(1000);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             LOG.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         pumpStatusData.setLastCommunicationToNow();
@@ -212,7 +227,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             LOG.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         pumpStatusData.setLastCommunicationToNow();
@@ -241,7 +256,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             LOG.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         pumpStatusData.setLastCommunicationToNow();
@@ -266,7 +281,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         result.duration = durationInMinutes;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             LOG.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         pumpStatusData.setLastCommunicationToNow();
@@ -285,7 +300,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
             TemporaryBasal tempStop = new TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStop);
             //tempBasal = null;
-            if (Config.logPumpComm)
+            if (L.isEnabled(L.PUMPCOMM))
                 LOG.debug("Canceling temp basal: " + result);
             MainApp.bus().post(new EventVirtualPumpUpdateGui());
         }
@@ -306,7 +321,7 @@ public class VirtualPumpDriver extends PumpDriverAbstract {
         result.enacted = true;
         result.isTempCancel = true;
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        if (Config.logPumpComm)
+        if (L.isEnabled(L.PUMPCOMM))
             LOG.debug("Canceling extended basal: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         pumpStatusData.setLastCommunicationToNow();

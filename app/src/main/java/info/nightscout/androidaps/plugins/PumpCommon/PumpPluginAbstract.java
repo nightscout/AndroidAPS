@@ -27,11 +27,11 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.PumpUtil;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -90,7 +90,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
         LOG.error("Before Init Pump Statis Data called.");
 
-        PumpUtil.setPumpDescription(getPumpDescription(), pumpType);
+        pumpDescription.setPumpDescription(pumpType);
 
         initPumpStatusData();
 
@@ -217,7 +217,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    public Date lastDataTime() {
+    public long lastDataTime() {
         return pumpDriver.lastDataTime();
     }
 
@@ -376,7 +376,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
             status.put("status", pumpStatus.pumpStatusType != null ? pumpStatus.pumpStatusType.getStatus() : "normal");
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+                extended.put("ActiveProfile", profileName);
             } catch (Exception e) {
             }
 

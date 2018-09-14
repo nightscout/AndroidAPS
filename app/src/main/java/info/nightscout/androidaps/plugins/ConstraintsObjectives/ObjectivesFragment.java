@@ -1,18 +1,15 @@
 package info.nightscout.androidaps.plugins.ConstraintsObjectives;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,28 +18,15 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.squareup.otto.Subscribe;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
 import info.nightscout.utils.FabricPrivacy;
 
 public class ObjectivesFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
-
     RecyclerView recyclerView;
     CheckBox enableFake;
     TextView reset;
@@ -71,7 +55,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             enableFake.setOnClickListener(v -> updateGUI());
             reset.setOnClickListener(v -> {
                 ObjectivesPlugin.getPlugin().reset();
-                ObjectivesPlugin.saveProgress();
+                ObjectivesPlugin.getPlugin().saveProgress();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 scrollToCurrentObjective();
             });
@@ -93,7 +77,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
     private void startUpdateTimer() {
         handler.removeCallbacks(objectiveUpdater);
-        for (Objective objective : ObjectivesPlugin.getObjectives()) {
+        for (Objective objective : ObjectivesPlugin.getPlugin().getObjectives()) {
             if (objective.isStarted() && !objective.isAccomplished()) {
                 long timeTillNextMinute = (System.currentTimeMillis() - objective.getStartedOn().getTime()) % (60 * 1000);
                 handler.postDelayed(objectiveUpdater, timeTillNextMinute);
@@ -103,8 +87,8 @@ public class ObjectivesFragment extends SubscriberFragment {
     }
 
     private void scrollToCurrentObjective() {
-        for (int i = 0; i < ObjectivesPlugin.getObjectives().size(); i++) {
-            Objective objective = ObjectivesPlugin.getObjectives().get(i);
+        for (int i = 0; i < ObjectivesPlugin.getPlugin().getObjectives().size(); i++) {
+            Objective objective = ObjectivesPlugin.getPlugin().getObjectives().get(i);
             if (!objective.isStarted() || !objective.isAccomplished()) {
                 RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
                     @Override
@@ -134,7 +118,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Objective objective = ObjectivesPlugin.getObjectives().get(position);
+            Objective objective = ObjectivesPlugin.getPlugin().getObjectives().get(position);
             holder.title.setText(MainApp.gs(R.string.nth_objective, position + 1));
             if (objective.getObjective() != 0) {
                 holder.objective.setVisibility(View.VISIBLE);
@@ -148,7 +132,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.gate.setTextColor(0xFFFFFFFF);
                 holder.verify.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.GONE);
-                if (position == 0 || ObjectivesPlugin.getObjectives().get(position - 1).isAccomplished())
+                if (position == 0 || ObjectivesPlugin.getPlugin().getObjectives().get(position - 1).isAccomplished())
                     holder.start.setVisibility(View.VISIBLE);
                 else holder.start.setVisibility(View.GONE);
             } else if (objective.isAccomplished()) {
@@ -189,7 +173,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         @Override
         public int getItemCount() {
-            return ObjectivesPlugin.getObjectives().size();
+            return ObjectivesPlugin.getPlugin().getObjectives().size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

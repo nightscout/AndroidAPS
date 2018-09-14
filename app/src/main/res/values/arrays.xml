@@ -22,8 +22,10 @@
         <item>@string/el_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
+        <item>@string/pt_lang</item>
         <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
+        <item>@string/sk_lang</item>
         <item>@string/sv_lang</item>
         <item>@string/pl_lang</item>
         <item>@string/zh_lang</item>
@@ -40,11 +42,13 @@
         <item>el</item>
         <item>it</item>
         <item>ko</item>
+        <item>pt</item>
         <item>ro</item>
         <item>ru</item>
+        <item>sk</item>
         <item>sv</item>
         <item>pl</item>
-        <item>zh-rCN</item>
+        <item>zh</item>
     </string-array>
 
     <string-array name="ageArray">
@@ -112,11 +116,12 @@
 
     <string-array name="virtualPumpTypes">
         <item>Generic AAPS</item>
-        <item>Cellnovo</item>
         <item>Accu-Chek Spirit</item>
         <item>Accu-Chek Combo</item>
+        <item>Accu-Chek Insight</item>
         <item>Animas Ping</item>
         <item>Animas Vibe</item>
+        <item>Cellnovo</item>
         <item>DanaR</item>
         <item>DanaR Korean</item>
         <item>DanaRS</item>
@@ -125,8 +130,7 @@
         <item>Medtronic 512/712</item>
         <item>Medtronic 515/715</item>
         <item>Medtronic 522/722</item>
-        <item>Medtronic 523/723</item>
-        <item>Medtronic 553/753 (Revel)</item>
+        <item>Medtronic 523/723 (Revel)</item>
         <item>Medtronic 554/754 (Veo)</item>
         <item>Medtronic 640G</item>
         <item>Tandem t:slim</item>

@@ -28,12 +28,13 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 
 
 public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
@@ -84,7 +85,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes, " min"));
                 if (tempBasal.isAbsolute) {
-                    Profile profile = MainApp.getConfigBuilder().getProfile(tempBasal.date);
+                    Profile profile = ProfileFunctions.getInstance().getProfile(tempBasal.date);
                     if (profile != null) {
                         holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile), " U/h"));
                         holder.percent.setText("");
@@ -99,7 +100,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration(), " min"));
                 long now = DateUtil.now();
                 IobTotal iob = new IobTotal(now);
-                Profile profile = MainApp.getConfigBuilder().getProfile(now);
+                Profile profile = ProfileFunctions.getInstance().getProfile(now);
                 if (profile != null)
                     iob = tempBasal.iobCalc(now, profile);
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob, " U"));

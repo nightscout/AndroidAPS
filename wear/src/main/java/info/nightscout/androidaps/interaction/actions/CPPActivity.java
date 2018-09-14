@@ -29,7 +29,7 @@ public class CPPActivity extends ViewSelectorActivity {
     PlusMinusEditText editTimeshift;
 
     int percentage = -1;
-    int timeshift = -1;
+    int timeshift = -25;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +39,11 @@ public class CPPActivity extends ViewSelectorActivity {
         percentage = extras.getInt("percentage", -1);
         timeshift = extras.getInt("timeshift", -1);
 
-        if (percentage ==-1 || timeshift ==-1){
+        if (percentage ==-1 || timeshift ==-25){
             finish(); return;
         }
+
+        if(timeshift < 0) timeshift += 24;
 
         setContentView(R.layout.grid_layout);
         final Resources res = getResources();

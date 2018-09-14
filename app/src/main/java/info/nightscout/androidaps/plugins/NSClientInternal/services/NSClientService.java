@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
-
+import android.os.SystemClock;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.ArrayList;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -34,6 +34,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
@@ -58,6 +59,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -65,12 +67,13 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class NSClientService extends Service {
-    private static Logger log = LoggerFactory.getLogger(NSClientService.class);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     static public PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new NSClientService.LocalBinder();
@@ -102,6 +105,11 @@ public class NSClientService extends Service {
     private String nsAPIhashCode = "";
 
     public static UploadQueue uploadQueue = new UploadQueue();
+
+    private ArrayList<Long> reconnections = new ArrayList<>();
+    private int WATCHDOG_INTERVAL_MINUTES = 2;
+    private int WATCHDOG_RECONNECT_IN = 15;
+    private int WATCHDOG_MAXCONNECTIONS = 5;
 
     public NSClientService() {
         registerBus();
@@ -156,14 +164,12 @@ public class NSClientService extends Service {
 
     @Subscribe
     public void onStatusEvent(EventAppExit event) {
-        if (Config.logFunctionCalls)
+        if (L.isEnabled(L.NSCLIENT))
             log.debug("EventAppExit received");
 
         destroy();
 
         stopSelf();
-        if (Config.logFunctionCalls)
-            log.debug("EventAppExit finished");
     }
 
     @Subscribe
@@ -242,20 +248,50 @@ public class NSClientService extends Service {
         @Override
         public void call(Object... args) {
             connectCounter++;
-            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + mSocket.id()));
-            sendAuthMessage(new NSAuthAck());
+            String socketId = mSocket != null ? mSocket.id() : "NULL";
+            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + socketId));
+            if (mSocket != null)
+                sendAuthMessage(new NSAuthAck());
+            watchdog();
         }
     };
+
+    void watchdog() {
+        synchronized (reconnections) {
+            long now = DateUtil.now();
+            reconnections.add(now);
+            for (int i = 0; i < reconnections.size(); i++) {
+                Long r = reconnections.get(i);
+                if (r < now - T.mins(WATCHDOG_INTERVAL_MINUTES).msecs()) {
+                    reconnections.remove(r);
+                }
+            }
+            MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAXCONNECTIONS));
+            if (reconnections.size() >= WATCHDOG_MAXCONNECTIONS) {
+                Notification n = new Notification(Notification.NSMALFUNCTION, MainApp.gs(R.string.nsmalfunction), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(n));
+                MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
+                NSClientPlugin.getPlugin().pause(true);
+                MainApp.bus().post(new EventNSClientUpdateGUI());
+                new Thread(() -> {
+                    SystemClock.sleep(T.mins(WATCHDOG_RECONNECT_IN).msecs());
+                    MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "reenabling NSClient"));
+                    NSClientPlugin.getPlugin().pause(false);
+                }).start();
+            }
+        }
+    }
 
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            log.debug("disconnect reason: {}", args);
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug("disconnect reason: {}", args);
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
     };
 
-    public void destroy() {
+    public synchronized void destroy() {
         if (mSocket != null) {
             mSocket.off(Socket.EVENT_CONNECT);
             mSocket.off(Socket.EVENT_DISCONNECT);
@@ -288,7 +324,8 @@ public class NSClientService extends Service {
             return;
         }
         MainApp.bus().post(new EventNSClientNewLog("AUTH", "requesting auth"));
-        mSocket.emit("authorize", authMessage, ack);
+        if (mSocket != null)
+            mSocket.emit("authorize", authMessage, ack);
     }
 
     @Subscribe
@@ -326,8 +363,7 @@ public class NSClientService extends Service {
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("PING", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("PING", "received"));
             // send data if there is something waiting
             resend("Ping received");
         }
@@ -352,16 +388,18 @@ public class NSClientService extends Service {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong Announcement from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
-            if (Config.detailedLog)
-                try {
-                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
-                } catch (Exception e) {
-                    FabricPrivacy.logException(e);
-                }
+            try {
+                MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(data, "message", "received")));
+            } catch (Exception e) {
+                FabricPrivacy.logException(e);
+                log.error("Unhandled exception", e);
+            }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
-            log.debug(data.toString());
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug(data.toString());
         }
     };
 
@@ -381,17 +419,18 @@ public class NSClientService extends Service {
          */
         @Override
         public void call(final Object... args) {
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("ALARM", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("ALARM", "received"));
             JSONObject data;
             try {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong alarm from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
             BroadcastAlarm.handleAlarm(data, getApplicationContext());
-            log.debug(data.toString());
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug(data.toString());
         }
     };
 
@@ -416,12 +455,13 @@ public class NSClientService extends Service {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong Urgent alarm from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
             BroadcastUrgentAlarm.handleUrgentAlarm(data, getApplicationContext());
-            log.debug(data.toString());
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug(data.toString());
         }
     };
 
@@ -441,12 +481,13 @@ public class NSClientService extends Service {
                 data = (JSONObject) args[0];
             } catch (Exception e) {
                 FabricPrivacy.log("Wrong Urgent alarm from NS: " + args[0]);
+                log.error("Unhandled exception", e);
                 return;
             }
-            if (Config.detailedLog)
-                MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
+            MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
             BroadcastClearAlarm.handleClearAlarm(data, getApplicationContext());
-            log.debug(data.toString());
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug(data.toString());
         }
     };
 
@@ -743,17 +784,6 @@ public class NSClientService extends Service {
         }
     }
 
-    private boolean isCurrent(NSTreatment treatment) {
-        long now = (new Date()).getTime();
-        long minPast = now - nsHours * 60L * 60 * 1000;
-        if (treatment.getMills() == null) {
-            log.debug("treatment.getMills() == null " + treatment.getData().toString());
-            return false;
-        }
-        if (treatment.getMills() > minPast) return true;
-        return false;
-    }
-
     public void resend(final String reason) {
         if (UploadQueue.size() == 0)
             return;
@@ -766,7 +796,8 @@ public class NSClientService extends Service {
                 if (mSocket == null || !mSocket.connected()) return;
 
                 if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                    log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
+                    if (L.isEnabled(L.NSCLIENT))
+                        log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                     return;
                 }
                 lastResendTime = System.currentTimeMillis();

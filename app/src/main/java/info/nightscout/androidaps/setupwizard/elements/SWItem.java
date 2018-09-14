@@ -6,13 +6,22 @@ import android.widget.LinearLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.utils.SP;
 
 public class SWItem {
     private static Logger log = LoggerFactory.getLogger(SWItem.class);
+
+    private static final ScheduledExecutorService eventWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledEventPost = null;
 
     public enum Type {
         NONE,
@@ -66,10 +75,9 @@ public class SWItem {
         return this;
     }
 
-     public void save(String value) {
+    public void save(String value, int updateDelay) {
         SP.putString(preferenceId, value);
-        MainApp.bus().post(new EventPreferenceChange(preferenceId));
-        MainApp.bus().post(new EventSWUpdate());
+        scheduleChange(updateDelay);
     }
 
     public static LinearLayout generateLayout(View view) {
@@ -82,5 +90,23 @@ public class SWItem {
     }
 
     public void processVisibility() {
+    }
+
+    private void scheduleChange(int updateDelay) {
+        class PostRunnable implements Runnable {
+            public void run() {
+                if (L.isEnabled(L.CORE))
+                    log.debug("Firing EventPreferenceChange");
+                MainApp.bus().post(new EventPreferenceChange(preferenceId));
+                MainApp.bus().post(new EventSWUpdate());
+                scheduledEventPost = null;
+            }
+        }
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledEventPost != null)
+            scheduledEventPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = updateDelay;
+        scheduledEventPost = eventWorker.schedule(task, sec, TimeUnit.SECONDS);
     }
 }

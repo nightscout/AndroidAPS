@@ -54,10 +54,6 @@ public class HistoryReceiver {
 
     // History
 
-    private static void log(String msg) {
-        android.util.Log.e("INSIGHTPUMPHR", msg);
-    }
-
     public static String getStatusString() {
         return status.toString();
     }

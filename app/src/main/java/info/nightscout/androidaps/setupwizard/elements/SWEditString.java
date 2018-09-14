@@ -21,6 +21,7 @@ public class SWEditString extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWEditString.class);
 
     private SWTextValidator validator = null;
+    private int updateDelay = 0;
 
     public SWEditString() {
         super(Type.STRING);
@@ -58,7 +59,7 @@ public class SWEditString extends SWItem {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (validator != null && validator.isValid(s.toString()))
-                    save(s.toString());
+                    save(s.toString(), updateDelay);
             }
 
             @Override
@@ -74,6 +75,11 @@ public class SWEditString extends SWItem {
 
     public SWEditString validator(SWTextValidator validator) {
         this.validator = validator;
+        return this;
+    }
+
+    public SWEditString updateDelay(int updateDelay) {
+        this.updateDelay = updateDelay;
         return this;
     }
 }

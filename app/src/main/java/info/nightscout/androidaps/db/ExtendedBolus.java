@@ -21,6 +21,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -36,7 +37,7 @@ import info.nightscout.utils.Round;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_EXTENDEDBOLUSES)
 public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(ExtendedBolus.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -69,6 +70,36 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         this.date = date;
     }
 
+    public ExtendedBolus date(long date) {
+        this.date = date;
+        return this;
+    }
+
+    public ExtendedBolus insulin(double insulin) {
+        this.insulin = insulin;
+        return this;
+    }
+
+    public ExtendedBolus pumpId(long pumpId) {
+        this.pumpId = pumpId;
+        return this;
+    }
+
+    public ExtendedBolus source(int source) {
+        this.source = source;
+        return this;
+    }
+
+    public ExtendedBolus durationInMinutes(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+        return this;
+    }
+
+    public ExtendedBolus _id(String _id) {
+        this._id = _id;
+        return this;
+    }
+
     public boolean isEqual(ExtendedBolus other) {
         if (date != other.date) {
             return false;
@@ -93,13 +124,13 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public static ExtendedBolus createFromJson(JSONObject json) {
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.source = Source.NIGHTSCOUT;
-        extendedBolus.date = JsonHelper.safeGetLong(json, "mills");
-        extendedBolus.durationInMinutes = JsonHelper.safeGetInt(json, "duration");
-        extendedBolus.insulin = JsonHelper.safeGetDouble(json, "relative") / 60 * extendedBolus.durationInMinutes;
-        extendedBolus._id = JsonHelper.safeGetString(json, "_id");
-        extendedBolus.pumpId = JsonHelper.safeGetLong(json, "pumpId");
+        ExtendedBolus extendedBolus = new ExtendedBolus()
+                .source(Source.NIGHTSCOUT)
+                .date(JsonHelper.safeGetLong(json, "mills"))
+                .durationInMinutes(JsonHelper.safeGetInt(json, "duration"))
+                .insulin(JsonHelper.safeGetDouble(json, "relative") / 60 * JsonHelper.safeGetInt(json, "duration"))
+                ._id(JsonHelper.safeGetString(json, "_id"))
+                .pumpId(JsonHelper.safeGetLong(json, "pumpId"));
         return extendedBolus;
     }
     // -------- Interval interface ---------
@@ -166,7 +197,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     // -------- Interval interface end ---------
 
     public String log() {
-        return "Bolus{" +
+        return "ExtendedBolus{" +
                 "date= " + date +
                 ", date= " + DateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
