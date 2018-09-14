@@ -135,7 +135,6 @@ public class ImportExportPrefs {
                         }
                         reader.close();
                         editor.commit();
-                        ConfigBuilderPlugin.getPlugin().storeSettings("importSharedPreferences"); // process potentially missing plugins
                         OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
                             log.debug("Exiting");
                             MainApp.instance().stopKeepAliveService();
