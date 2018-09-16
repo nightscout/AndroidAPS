@@ -1049,6 +1049,8 @@
   <string name="commanderror">Chyba príkazu</string>
   <string name="speederror">Chyba rýchlosti</string>
   <string name="insulinlimitviolation">Prekročený limit inzulínu</string>
+  <string name="loop_openmode_min_change">Minimálna požiadavka na zmenu [%]</string>
+  <string name="loop_openmode_min_change_summary">Uzavretý okruh si vyžiada iba vtedy, ak je zmena väčšia ako táto hodnota. Štandardná hodnota je 20%</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d deň</item>
     <item quantity="few">%1$d dní</item>

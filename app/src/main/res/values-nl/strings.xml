@@ -928,6 +928,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="nav_setupwizard">Setup Wizard</string>
   <string name="setupwizard_finish">FINISH</string>
   <string name="setupwizard_language_prompt">Selecteer uw taal</string>
+  <string name="boluserrorcode">Gevraagd: %1$.2fU Toegediend: %2$.2fE Error code: %3$s</string>
   <string name="firstinsulinincrement">Eerste insuline increment</string>
   <string name="secondinsulinincrement">Tweede insuline increment</string>
   <string name="thirdinsulinincrement">Derde  insuline increment</string>
