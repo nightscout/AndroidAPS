@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/danars_paringprogress_status"
+            android:id="@+id/danars_pairingprogress_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -18,7 +18,7 @@
             android:text="STATUS" />
 
         <ProgressBar
-            android:id="@+id/danars_paringprogress_progressbar"
+            android:id="@+id/danars_pairingprogress_progressbar"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="20dp"
