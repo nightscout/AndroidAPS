@@ -42,7 +42,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private BgSourceInterface activeBgSource;
     private PumpInterface activePump;
-    private static ProfileInterface activeProfile;
+    private ProfileInterface activeProfile;
     private static APSInterface activeAPS;
     private static InsulinInterface activeInsulin;
     private static SensitivityInterface activeSensitivity;
