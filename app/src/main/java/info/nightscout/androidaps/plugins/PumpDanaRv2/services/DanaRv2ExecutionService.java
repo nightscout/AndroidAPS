@@ -186,7 +186,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
-                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
                     MainApp.bus().post(new EventProfileSwitchChange());
                 }
             }
@@ -409,7 +409,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             SystemClock.sleep(1000);
         }
         // do not call loadEvents() directly, reconnection may be needed
-        ConfigBuilderPlugin.getCommandQueue().loadEvents(new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().loadEvents(new Callback() {
             @Override
             public void run() {
                 // load last bolus status

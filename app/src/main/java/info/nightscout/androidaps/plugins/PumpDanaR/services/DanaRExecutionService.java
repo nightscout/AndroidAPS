@@ -164,7 +164,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
-                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
                     MainApp.bus().post(new EventProfileSwitchChange());
                 }
             }
@@ -332,7 +332,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
                 final Object o = new Object();
                 synchronized (o) {
-                    ConfigBuilderPlugin.getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().independentConnect("bolusingInterrupted", new Callback() {
                         @Override
                         public void run() {
                             if (mDanaRPump.lastBolusTime > System.currentTimeMillis() - 60 * 1000L) { // last bolus max 1 min old
@@ -355,7 +355,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     }
                 }
             } else {
-                ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("bolusOK", null);
             }
         }
         return !start.failed;

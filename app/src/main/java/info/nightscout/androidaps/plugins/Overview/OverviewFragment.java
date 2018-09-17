@@ -499,7 +499,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             loopPlugin.setFragmentVisible(PluginType.LOOP, false);
             MainApp.getConfigBuilder().storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -519,7 +519,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.gs(R.string.resume))) {
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
-            ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -682,7 +682,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.overview_pumpstatus:
                 if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized())
-                    ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("RefreshClicked", null);
                 break;
         }
 
@@ -815,7 +815,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     loopPlugin.superBolusTo(System.currentTimeMillis() + T.hours(2).msecs());
                                     MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                 }
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
+                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                     @Override
                                     public void run() {
                                         if (!result.success) {
@@ -837,7 +837,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             detailedBolusInfo.boluscalc = boluscalcJSON;
                             detailedBolusInfo.source = Source.USER;
                             if (finalInsulinAfterConstraints > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
-                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                     @Override
                                     public void run() {
                                         if (!result.success) {

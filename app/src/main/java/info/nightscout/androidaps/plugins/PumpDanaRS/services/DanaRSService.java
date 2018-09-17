@@ -148,7 +148,7 @@ public class DanaRSService extends Service {
             if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
-                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
                     MainApp.bus().post(new EventProfileSwitchChange());
                 }
             }
@@ -331,7 +331,7 @@ public class DanaRSService extends Service {
             SystemClock.sleep(1000);
         }
         // do not call loadEvents() directly, reconnection may be needed
-        ConfigBuilderPlugin.getCommandQueue().loadEvents(new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().loadEvents(new Callback() {
             @Override
             public void run() {
                 // reread bolus status

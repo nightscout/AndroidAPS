@@ -55,7 +55,7 @@ public class ProfileViewDialog extends DialogFragment {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfigBuilderPlugin.getCommandQueue().readStatus("ProfileViewDialog", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("ProfileViewDialog", null);
                 dismiss();
             }
         });

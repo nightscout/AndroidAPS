@@ -327,7 +327,7 @@ public class SWDefinition {
                         .visibility(() -> ((PluginBase) ConfigBuilderPlugin.getPlugin().getActivePump()).getPreferencesId() > 0))
                 .add(new SWButton()
                         .text(R.string.readstatus)
-                        .action(() -> ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null))
+                        .action(() -> ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked connect to pump", null))
                         .visibility(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null))
                 .add(new SWEventListener(this)
                         .listener(new Object() {

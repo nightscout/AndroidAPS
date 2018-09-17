@@ -148,7 +148,7 @@ public class DanaRFragment extends SubscriberFragment {
         if (L.isEnabled(L.PUMP))
             log.debug("Clicked connect to pump");
         DanaRPump.getInstance().lastConnection = 0;
-        ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked connect to pump", null);
     }
 
     @Subscribe
@@ -265,7 +265,7 @@ public class DanaRFragment extends SubscriberFragment {
                     bolusStepView.setText("" + pump.bolusStep);
                     serialNumberView.setText("" + pump.serialNumber);
                     if (queueView != null) {
-                        Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
+                        Spanned status = ConfigBuilderPlugin.getPlugin().getCommandQueue().spannedStatus();
                         if (status.toString().equals("")) {
                             queueView.setVisibility(View.GONE);
                         } else {

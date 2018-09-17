@@ -169,7 +169,7 @@ public abstract class PluginBase {
         if (getType() == PluginType.PUMP) {
             new Thread(() -> {
                 SystemClock.sleep(3000);
-                CommandQueue commandQueue = ConfigBuilderPlugin.getCommandQueue();
+                CommandQueue commandQueue = ConfigBuilderPlugin.getPlugin().getCommandQueue();
                 if (commandQueue != null)
                     commandQueue.readStatus("Pump driver changed.", null);
             }).start();

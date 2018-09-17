@@ -168,7 +168,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
-                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
                     MainApp.bus().post(new EventProfileSwitchChange());
                 }
             }
@@ -294,7 +294,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             SystemClock.sleep(300);
 
             mBolusingTreatment = null;
-            ConfigBuilderPlugin.getCommandQueue().readStatus("bolusOK", null);
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("bolusOK", null);
         }
 
         return !start.failed;

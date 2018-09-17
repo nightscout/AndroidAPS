@@ -293,7 +293,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                             } else {
                                 detailedBolusInfo.date = now();
-                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                     @Override
                                     public void run() {
                                         if (!result.success) {

@@ -159,7 +159,7 @@ public class AAPSMocker {
 
     public static void mockCommandQueue() {
         CommandQueue queue = mock(CommandQueue.class);
-        when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
+        when(ConfigBuilderPlugin.getPlugin().getCommandQueue()).thenReturn(queue);
     }
 
     public static TreatmentsPlugin mockTreatmentPlugin() {

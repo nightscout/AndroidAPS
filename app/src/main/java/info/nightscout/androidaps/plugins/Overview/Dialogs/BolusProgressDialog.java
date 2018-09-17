@@ -73,7 +73,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         super.onResume();
         if (L.isEnabled(L.UI))
             log.debug("onResume");
-        if (!ConfigBuilderPlugin.getCommandQueue().bolusInQueue()) {
+        if (!ConfigBuilderPlugin.getPlugin().getCommandQueue().bolusInQueue()) {
             bolusEnded = true;
         }
         if (bolusEnded) {
@@ -123,7 +123,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 stopPressed = true;
                 stopPressedView.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.INVISIBLE);
-                ConfigBuilderPlugin.getCommandQueue().cancelAllBoluses();
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelAllBoluses();
                 break;
         }
     }

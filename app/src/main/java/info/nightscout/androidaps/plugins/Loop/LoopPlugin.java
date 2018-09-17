@@ -358,8 +358,8 @@ public class LoopPlugin extends PluginBase {
 
             if (closedLoopEnabled.value()) {
                 if (resultAfterConstraints.isChangeRequested()
-                        && !ConfigBuilderPlugin.getCommandQueue().bolusInQueue()
-                        && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
+                        && !ConfigBuilderPlugin.getPlugin().getCommandQueue().bolusInQueue()
+                        && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)

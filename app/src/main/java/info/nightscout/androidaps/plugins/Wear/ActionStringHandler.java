@@ -313,7 +313,7 @@ public class ActionStringHandler {
                     } else {
                         rMessage += "trying to fetch data from pump.";
 
-                        ConfigBuilderPlugin.getCommandQueue().loadTDDs(new Callback() {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs(new Callback() {
                             @Override
                             public void run() {
                                 List<TDD> dummies = new LinkedList<TDD>();
@@ -715,7 +715,7 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.isValid = false;
         detailedBolusInfo.source = Source.USER;
-        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {
@@ -733,7 +733,7 @@ public class ActionStringHandler {
         detailedBolusInfo.carbs = carbs;
         detailedBolusInfo.source = Source.USER;
         if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
-            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {

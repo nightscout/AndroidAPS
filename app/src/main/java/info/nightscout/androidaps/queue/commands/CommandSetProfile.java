@@ -33,7 +33,7 @@ public class CommandSetProfile extends Command {
 
     @Override
     public void execute() {
-        if (ConfigBuilderPlugin.getCommandQueue().isThisProfileSet(profile)) {
+        if (ConfigBuilderPlugin.getPlugin().getCommandQueue().isThisProfileSet(profile)) {
             if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Correct profile already set. profile: " + profile.toString());
             if (callback != null)

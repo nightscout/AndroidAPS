@@ -47,9 +47,9 @@ public class ConfigBuilderPlugin extends PluginBase {
     private InsulinInterface activeInsulin;
     private SensitivityInterface activeSensitivity;
 
-    private static ArrayList<PluginBase> pluginList;
+    private ArrayList<PluginBase> pluginList;
 
-    private static CommandQueue commandQueue = new CommandQueue();
+    private CommandQueue commandQueue = new CommandQueue();
 
     public ConfigBuilderPlugin() {
         super(new PluginDescription()
@@ -228,7 +228,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         }
     }
 
-    public static CommandQueue getCommandQueue() {
+    public CommandQueue getCommandQueue() {
         return commandQueue;
     }
 

@@ -898,7 +898,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                             Notification.URGENT);
                     n.soundId = R.raw.alarm;
                     MainApp.bus().post(new EventNewNotification(n));
-                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
                 }
                 updateLocalData(commandResult);
             }
@@ -1077,7 +1077,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
-                ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
             }
         }
     }

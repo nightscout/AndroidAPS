@@ -239,7 +239,7 @@ public class TDDStatsActivity extends Activity {
                         statsMessage.setText(MainApp.gs(R.string.danar_stats_warning_Message));
                     }
                 });
-                ConfigBuilderPlugin.getCommandQueue().loadTDDs( new Callback() {
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs( new Callback() {
                     @Override
                     public void run() {
                         loadDataFromDB();

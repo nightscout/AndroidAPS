@@ -223,7 +223,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                             detailedBolusInfo.source = Source.USER;
                             detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
                             detailedBolusInfo.notes = notes;
-                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                 @Override
                                 public void run() {
                                     if (!result.success) {

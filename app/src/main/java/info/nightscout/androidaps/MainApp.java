@@ -200,7 +200,7 @@ public class MainApp extends Application {
         if (pump != null) {
             new Thread(() -> {
                 SystemClock.sleep(5000);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("Initialization", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Initialization", null);
                 startKeepAliveService();
             }).start();
         }

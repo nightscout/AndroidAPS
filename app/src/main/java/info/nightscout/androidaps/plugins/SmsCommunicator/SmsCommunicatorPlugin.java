@@ -242,7 +242,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginType.LOOP)) {
                                     loopPlugin.setPluginEnabled(PluginType.LOOP, false);
-                                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                                         @Override
                                         public void run() {
                                             MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
@@ -345,7 +345,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     break;
                 case "PUMP":
                 case "DANAR":
-                    ConfigBuilderPlugin.getCommandQueue().readStatus("SMS", new Callback() {
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("SMS", new Callback() {
                         @Override
                         public void run() {
                             PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
@@ -449,7 +449,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                         detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
                         detailedBolusInfo.source = Source.USER;
-                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                             @Override
                             public void run() {
                                 PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
@@ -474,7 +474,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         tempBasalWaitingForConfirmation.processed = true;
                         Profile profile = ProfileFunctions.getInstance().getProfile();
                         if (profile != null)
-                            ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true, profile, new Callback() {
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true, profile, new Callback() {
                                 @Override
                                 public void run() {
                                     if (result.success) {
@@ -491,7 +491,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     } else if (cancelTempBasalWaitingForConfirmation != null && !cancelTempBasalWaitingForConfirmation.processed &&
                             cancelTempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - cancelTempBasalWaitingForConfirmation.date < Constants.SMS_CONFIRM_TIMEOUT) {
                         cancelTempBasalWaitingForConfirmation.processed = true;
-                        ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                             @Override
                             public void run() {
                                 if (result.success) {
@@ -519,7 +519,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     } else if (suspendWaitingForConfirmation != null && !suspendWaitingForConfirmation.processed &&
                             suspendWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - suspendWaitingForConfirmation.date < Constants.SMS_CONFIRM_TIMEOUT) {
                         suspendWaitingForConfirmation.processed = true;
-                        ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                             @Override
                             public void run() {
                                 if (result.success) {

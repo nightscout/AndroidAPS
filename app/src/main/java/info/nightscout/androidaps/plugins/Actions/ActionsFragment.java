@@ -223,13 +223,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 break;
             case R.id.actions_extendedbolus_cancel:
                 if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
-                    ConfigBuilderPlugin.getCommandQueue().cancelExtended(null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(null);
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
                 if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
-                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;

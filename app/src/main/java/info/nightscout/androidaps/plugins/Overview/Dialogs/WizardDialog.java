@@ -369,7 +369,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
-                                        ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
@@ -395,7 +395,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                     detailedBolusInfo.source = Source.USER;
                                     detailedBolusInfo.notes = finalNotes;
                                     if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
-                                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
