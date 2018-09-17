@@ -43,7 +43,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     private BgSourceInterface activeBgSource;
     private PumpInterface activePump;
     private ProfileInterface activeProfile;
-    private static APSInterface activeAPS;
+    private APSInterface activeAPS;
     private static InsulinInterface activeInsulin;
     private static SensitivityInterface activeSensitivity;
 
@@ -244,7 +244,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeInsulin;
     }
 
-    public static APSInterface getActiveAPS() {
+    public APSInterface getActiveAPS() {
         return activeAPS;
     }
 

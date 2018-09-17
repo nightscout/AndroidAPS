@@ -512,7 +512,7 @@ public class ActionStringHandler {
             } else {
                 ret += "OPEN LOOP\n";
             }
-            final APSInterface aps = ConfigBuilderPlugin.getActiveAPS();
+            final APSInterface aps = ConfigBuilderPlugin.getPlugin().getActiveAPS();
             ret += "APS: " + ((aps == null) ? "NO APS SELECTED!" : ((PluginBase) aps).getName());
             if (LoopPlugin.lastRun != null) {
                 if (LoopPlugin.lastRun.lastAPSRun != null)
@@ -566,7 +566,7 @@ public class ActionStringHandler {
             return "No profile set :(";
         }
 
-        APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+        APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
         if (usedAPS == null) {
             return "No active APS :(!";
         }

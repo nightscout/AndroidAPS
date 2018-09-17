@@ -293,7 +293,7 @@ public class LoopPlugin extends PluginBase {
             // Check if pump info is loaded
             if (pump.getBaseBasalRate() < 0.01d) return;
 
-            APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+            APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
                 usedAPS.invoke(initiator, tempBasalFallback);
                 result = usedAPS.getLastAPSResult();
