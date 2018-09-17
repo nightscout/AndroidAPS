@@ -109,7 +109,7 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         String line1 = "";
 
-        if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || !ProfileFunctions.getInstance().isProfileValid("Notificiation"))
+        if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() == null || !ProfileFunctions.getInstance().isProfileValid("Notificiation"))
             return null;
         String units = ProfileFunctions.getInstance().getProfileUnits();
 

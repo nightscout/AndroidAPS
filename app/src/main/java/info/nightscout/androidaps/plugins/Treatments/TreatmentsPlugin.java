@@ -115,7 +115,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTreatmentData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
             dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
         synchronized (treatments) {
@@ -128,7 +128,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTempBasalData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
             dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
@@ -142,7 +142,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeExtendedBolusData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
             dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
@@ -182,7 +182,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profile == null)
             return total;
 
-        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
             return  total;
 
@@ -370,7 +370,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public IobTotal getCalculationToTimeTempBasals(long time, Profile profile, boolean truncate, long truncateTime) {
         IobTotal total = new IobTotal(time);
 
-        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
             return  total;
 

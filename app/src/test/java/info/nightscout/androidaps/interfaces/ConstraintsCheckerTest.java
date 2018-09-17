@@ -113,7 +113,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isAdvancedFilteringEnabledTest() throws Exception {
-        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+        when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
 
         Constraint<Boolean> c = constraintChecker.isAdvancedFilteringEnabled();
         Assert.assertEquals(true, c.getReasonList().size() == 1); // Safety

@@ -20,6 +20,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
@@ -204,7 +205,7 @@ public class DanaRUserOptionsActivity extends Activity {
         } else
             pump.lowReservoirRate = 10;
 
-        MainApp.getConfigBuilder().getCommandQueue().setUserOptions(null);
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().setUserOptions(null);
         finish();
     }
 

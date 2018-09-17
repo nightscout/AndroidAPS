@@ -113,7 +113,6 @@ public class AAPSMocker {
     public static void mockConfigBuilder() {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
-        when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
         when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 

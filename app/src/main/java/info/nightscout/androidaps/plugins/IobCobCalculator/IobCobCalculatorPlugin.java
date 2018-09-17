@@ -597,7 +597,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 log.debug("Ignoring event for non default instance");
             return;
         }
-        if (MainApp.getConfigBuilder() == null)
+        if (ConfigBuilderPlugin.getPlugin() == null)
             return; // app still initializing
         Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null)

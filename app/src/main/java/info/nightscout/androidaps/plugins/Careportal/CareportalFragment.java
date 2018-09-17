@@ -24,6 +24,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.utils.FabricPrivacy;
@@ -100,7 +101,7 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
             noProfileView = view.findViewById(R.id.profileview_noprofile);
             butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
 
-            ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
+            ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null ? ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() : null;
             if (profileStore == null) {
                 noProfileView.setVisibility(View.VISIBLE);
                 butonsLayout.setVisibility(View.GONE);

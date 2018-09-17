@@ -520,7 +520,7 @@ public class LoopPlugin extends PluginBase {
                 if (activeTemp != null) {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: cancelTempBasal()");
-                    MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(false, callback);
                 } else {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: Basal set correctly");
@@ -543,14 +543,14 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (L.isEnabled(L.APS))
                     log.debug("applyAPSRequest: tempBasalPercent()");
-                MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
             }
         } else {
             if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
                 if (activeTemp != null) {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: cancelTempBasal()");
-                    MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(false, callback);
                 } else {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: Basal set correctly");
@@ -573,7 +573,7 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (L.isEnabled(L.APS))
                     log.debug("applyAPSRequest: setTempBasalAbsolute()");
-                MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
             }
         }
     }
@@ -629,7 +629,7 @@ public class LoopPlugin extends PluginBase {
         detailedBolusInfo.deliverAt = request.deliverAt;
         if (L.isEnabled(L.APS))
             log.debug("applyAPSRequest: bolus()");
-        MainApp.getConfigBuilder().getCommandQueue().bolus(detailedBolusInfo, callback);
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, callback);
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
@@ -637,7 +637,7 @@ public class LoopPlugin extends PluginBase {
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
-        MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {
@@ -646,7 +646,7 @@ public class LoopPlugin extends PluginBase {
             }
         });
         if (pump.getPumpDescription().isExtendedBolusCapable && activeTreatments.isInHistoryExtendedBoluslInProgress()) {
-            MainApp.getConfigBuilder().getCommandQueue().cancelExtended(new Callback() {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -660,7 +660,7 @@ public class LoopPlugin extends PluginBase {
 
     public void suspendLoop(int durationInMinutes) {
         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
-        MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {

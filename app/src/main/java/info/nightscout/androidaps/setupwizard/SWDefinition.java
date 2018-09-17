@@ -230,15 +230,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.insulinsourcesetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveInsulin();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveInsulin();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveInsulin()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveInsulin()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveInsulin() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveInsulin()!= null  && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveInsulin()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveInsulin() != null)
         )
         .add(new SWScreen(R.string.configbuilder_bgsource)
                 .skippable(false)
@@ -249,15 +249,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.bgsourcesetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveBgSource();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveBgSource();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveBgSource()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveBgSource()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveBgSource() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveBgSource()!= null  && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveBgSource()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveBgSource() != null)
         )
         .add(new SWScreen(R.string.configbuilder_profile)
                         .skippable(false)
@@ -267,7 +267,7 @@ public class SWDefinition {
                         .add(new SWPlugin()
                                 .option(PluginType.PROFILE, R.string.configbuilder_profile_description)
                                 .label(R.string.configbuilder_profile))
-                        .validator(() -> MainApp.getConfigBuilder().getActiveProfileInterface() != null)
+                        .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null)
                 )
         .add(new SWScreen(R.string.nsprofile)
                         .skippable(false)
@@ -353,15 +353,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.apssetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveAPS();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveAPS();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveAPS() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveAPS()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveAPS() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveAPS() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveAPS()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveAPS() != null)
                 .visibility(() -> Config.APS)
         )
         .add(new SWScreen(R.string.apsmode_title)
@@ -405,15 +405,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.sensitivitysetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveSensitivity();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveSensitivity();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveSensitivity()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveSensitivity() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveSensitivity()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveSensitivity() != null)
         )
         .add(new SWScreen(R.string.objectives)
                 .skippable(false)
@@ -563,15 +563,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.bgsourcesetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveBgSource();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveBgSource();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveBgSource()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveBgSource()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveBgSource() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveBgSource()!= null  && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveBgSource()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveBgSource() != null)
         )
         .add(new SWScreen(R.string.patientage)
                 .skippable(false)
@@ -598,15 +598,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.insulinsourcesetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveInsulin();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveInsulin();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveInsulin()!= null  && ((PluginBase) MainApp.getConfigBuilder().getActiveInsulin()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveInsulin() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveInsulin()!= null  && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveInsulin()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveInsulin() != null)
         )
         .add(new SWScreen(R.string.configbuilder_sensitivity)
                 .skippable(false)
@@ -622,15 +622,15 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.sensitivitysetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActiveSensitivity();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveSensitivity();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null && ((PluginBase) MainApp.getConfigBuilder().getActiveSensitivity()).getPreferencesId() > 0))
-                .validator(() -> MainApp.getConfigBuilder().getActiveSensitivity() != null)
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveSensitivity() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveSensitivity()).getPreferencesId() > 0))
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActiveSensitivity() != null)
         )
         ;
     }

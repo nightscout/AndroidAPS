@@ -115,7 +115,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         return result;

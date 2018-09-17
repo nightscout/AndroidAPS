@@ -24,6 +24,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
@@ -76,7 +77,7 @@ public class IobCobThread extends Thread {
         try {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("AUTOSENSDATA thread started: " + from);
-            if (MainApp.getConfigBuilder() == null) {
+            if (ConfigBuilderPlugin.getPlugin() == null) {
                 if (L.isEnabled(L.AUTOSENS))
                     log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
                 return; // app still initializing

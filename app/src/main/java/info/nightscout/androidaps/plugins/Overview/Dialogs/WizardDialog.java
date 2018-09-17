@@ -429,7 +429,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void initDialog() {
         Profile profile = ProfileFunctions.getInstance().getProfile();
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
+        ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null ? ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() : null;
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
@@ -473,7 +473,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void calculateInsulin() {
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile();
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null || profileStore == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();

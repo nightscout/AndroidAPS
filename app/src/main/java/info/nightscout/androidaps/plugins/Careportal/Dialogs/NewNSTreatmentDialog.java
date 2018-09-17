@@ -49,14 +49,15 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.JsonHelper;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -173,7 +174,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
         // profile
         profile = ProfileFunctions.getInstance().getProfile();
-        profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile();
         if (profileStore == null) {
             if (options.eventType == R.id.careportal_profileswitch) {
                 log.error("Profile switch called but plugin doesn't contain valid profile");
@@ -767,7 +768,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.source = Source.USER;
         profileSwitch.profileName = profileName;
         profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
-        profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
+        profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
         profileSwitch.durationInMinutes = duration;
         profileSwitch.isCPP = percentage != 100 || timeshift != 0;
         profileSwitch.timeshift = timeshift;
@@ -789,7 +790,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = ProfileFunctions.getInstance().getProfileName(System.currentTimeMillis(), false);
             profileSwitch.profileJson = ProfileFunctions.getInstance().getProfile().getData().toString();
-            profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
+            profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeshift != 0;
             profileSwitch.timeshift = timeshift;

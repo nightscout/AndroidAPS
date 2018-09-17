@@ -473,7 +473,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.gs(R.string.profile));
             menu.add(MainApp.gs(R.string.danar_viewprofile));
-            if (MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
+            if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null) {
                 menu.add(MainApp.gs(R.string.careportal_profileswitch));
             }
         } else if (v == tempTargetView) {
@@ -497,7 +497,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (item.getTitle().equals(MainApp.gs(R.string.disableloop))) {
             loopPlugin.setPluginEnabled(PluginType.LOOP, false);
             loopPlugin.setFragmentVisible(PluginType.LOOP, false);
-            MainApp.getConfigBuilder().storeSettings("DisablingLoop");
+            ConfigBuilderPlugin.getPlugin().storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
@@ -512,7 +512,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.gs(R.string.enableloop))) {
             loopPlugin.setPluginEnabled(PluginType.LOOP, true);
             loopPlugin.setFragmentVisible(PluginType.LOOP, true);
-            MainApp.getConfigBuilder().storeSettings("EnablingLoop");
+            ConfigBuilderPlugin.getPlugin().storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
