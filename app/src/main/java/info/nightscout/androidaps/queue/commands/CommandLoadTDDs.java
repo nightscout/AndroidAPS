@@ -24,7 +24,7 @@ public class CommandLoadTDDs extends Command {
 
     @Override
     public void execute() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         PumpEnactResult r = pump.loadTDDs();
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted);

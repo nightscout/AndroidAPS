@@ -231,7 +231,7 @@ public class SafetyPluginTest {
         AAPSMocker.mockBus();
 
 
-        when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         safetyPlugin = SafetyPlugin.getPlugin();
     }

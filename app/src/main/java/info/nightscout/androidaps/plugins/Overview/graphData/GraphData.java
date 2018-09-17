@@ -303,7 +303,7 @@ public class GraphData {
         }
 
         // Extended bolus
-        if (!ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
             List<ExtendedBolus> extendedBoluses = TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().getList();
 
             for (int tx = 0; tx < extendedBoluses.size(); tx++) {

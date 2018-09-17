@@ -317,18 +317,18 @@ public class SWDefinition {
                 .add(new SWButton()
                         .text(R.string.pumpsetup)
                         .action(() -> {
-                            final PluginBase plugin = (PluginBase) MainApp.getConfigBuilder().getActivePump();
+                            final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActivePump();
                             PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
                             }, null);
                         })
-                        .visibility(() -> ((PluginBase) MainApp.getConfigBuilder().getActivePump()).getPreferencesId() > 0))
+                        .visibility(() -> ((PluginBase) ConfigBuilderPlugin.getPlugin().getActivePump()).getPreferencesId() > 0))
                 .add(new SWButton()
                         .text(R.string.readstatus)
                         .action(() -> ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null))
-                        .visibility(() -> MainApp.getConfigBuilder().getActivePump() != null))
+                        .visibility(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null))
                 .add(new SWEventListener(this)
                         .listener(new Object() {
                             @Subscribe
@@ -337,7 +337,7 @@ public class SWDefinition {
                             }
                         })
                 )
-                .validator(() -> MainApp.getConfigBuilder().getActivePump() != null && MainApp.getConfigBuilder().getActivePump().isInitialized())
+                .validator(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null && ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized())
         )
         .add(new SWScreen(R.string.configbuilder_aps)
                 .skippable(false)

@@ -196,7 +196,7 @@ public class MainApp extends Application {
 
         NSUpload.uploadAppStart();
 
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump != null) {
             new Thread(() -> {
                 SystemClock.sleep(5000);

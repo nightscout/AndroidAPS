@@ -32,7 +32,7 @@ public class CommandTempBasalPercent extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalPercent(percent, durationInMinutes, profile, enforceNew);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().setTempBasalPercent(percent, durationInMinutes, profile, enforceNew);
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result percent: " + percent + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)

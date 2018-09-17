@@ -27,7 +27,7 @@ public class CommandExtendedBolus extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setExtendedBolus(insulin, durationInMinutes);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().setExtendedBolus(insulin, durationInMinutes);
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result rate: " + insulin + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)

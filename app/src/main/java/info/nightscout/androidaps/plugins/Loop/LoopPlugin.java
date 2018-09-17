@@ -140,7 +140,7 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -275,7 +275,7 @@ public class LoopPlugin extends PluginBase {
                 MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
             }
-            final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+            final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             APSResult result = null;
 
             if (!isEnabled(PluginType.LOOP))
@@ -489,7 +489,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         if (!pump.isInitialized()) {
@@ -583,7 +583,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         long lastBolusTime = activeTreatments.getLastBolusTime();
@@ -633,7 +633,7 @@ public class LoopPlugin extends PluginBase {
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);

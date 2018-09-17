@@ -160,7 +160,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             mDanaRPump.lastConnection = now;
 
             Profile profile = ProfileFunctions.getInstance().getProfile();
-            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());

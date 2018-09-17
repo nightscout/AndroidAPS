@@ -52,7 +52,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
      **/
     @Override
     public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
-        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable)
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().isTempBasalCapable)
             value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable), this);
         return value;
     }
@@ -124,7 +124,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(MainApp.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), MainApp.gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         // check for pump max
         if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
@@ -150,7 +150,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         applyBasalConstraints(absoluteConstraint, profile);
         percentRate.copyReasons(absoluteConstraint);
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         Integer percentRateAfterConst = Double.valueOf(absoluteConstraint.value() / currentBasal * 100).intValue();
         if (pump != null) {
@@ -179,7 +179,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump != null) {
             double rounded = Round.roundTo(insulin.value(), pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value()));
             insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
@@ -196,7 +196,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingextendedbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump != null) {
             double rounded = Round.roundTo(insulin.value(), pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value()));
             insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);

@@ -60,7 +60,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     }
 
     private void checkPump() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
             long lastConnection = pump.lastDataTime();

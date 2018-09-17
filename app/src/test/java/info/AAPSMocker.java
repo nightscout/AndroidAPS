@@ -114,6 +114,7 @@ public class AAPSMocker {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+        when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
     public static ConstraintChecker mockConstraintsChecker() {

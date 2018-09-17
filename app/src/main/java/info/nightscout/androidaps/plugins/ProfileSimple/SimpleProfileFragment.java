@@ -55,7 +55,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
         profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
         invalidProfile = (TextView) layout.findViewById(R.id.invalidprofile);
 
-        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().isTempBasalCapable) {
             layout.findViewById(R.id.simpleprofile_basalrate).setVisibility(View.GONE);
             layout.findViewById(R.id.simpleprofile_basalrate_label).setVisibility(View.GONE);
         }
@@ -136,7 +136,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
         if (activity != null)
             activity.runOnUiThread(() -> {
                 boolean isValid = SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile));
-                if (!ConfigBuilderPlugin.getActivePump().isInitialized() || ConfigBuilderPlugin.getActivePump().isSuspended() || !isValid) {
+                if (!ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized() || ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !isValid) {
                     profileswitchButton.setVisibility(View.GONE);
                 } else {
                     profileswitchButton.setVisibility(View.VISIBLE);

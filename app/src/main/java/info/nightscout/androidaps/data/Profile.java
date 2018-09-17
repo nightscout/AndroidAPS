@@ -12,12 +12,12 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
@@ -221,7 +221,7 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (pump != null && !pump.getPumpDescription().is30minBasalRatesCapable) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);

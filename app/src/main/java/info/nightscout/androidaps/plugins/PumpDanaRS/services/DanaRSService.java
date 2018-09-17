@@ -144,7 +144,7 @@ public class DanaRSService extends Service {
             danaRPump.lastConnection = System.currentTimeMillis();
 
             Profile profile = ProfileFunctions.getInstance().getProfile();
-            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal

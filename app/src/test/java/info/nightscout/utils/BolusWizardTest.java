@@ -7,6 +7,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -76,10 +77,10 @@ public class BolusWizardTest {
         PowerMockito.mockStatic(MainApp.class);
         when(TreatmentsPlugin.getPlugin()).thenReturn(treatment);
 
-        PowerMockito.mockStatic(ConfigBuilderPlugin.class);
+        AAPSMocker.mockConfigBuilder();
         PumpInterface pump = MDIPlugin.getPlugin();
         pump.getPumpDescription().bolusStep = PUMP_BOLUS_STEP;
-        when(ConfigBuilderPlugin.getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         return profile;
     }

@@ -446,7 +446,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
-            final PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
+            final PumpDescription pumpDescription = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
             if (!ProfileFunctions.getInstance().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.gs(R.string.loop));
@@ -681,7 +681,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 new NewCarbsDialog().show(manager, "CarbsDialog");
                 break;
             case R.id.overview_pumpstatus:
-                if (ConfigBuilderPlugin.getActivePump().isSuspended() || !ConfigBuilderPlugin.getActivePump().isInitialized())
+                if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized())
                     ConfigBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
                 break;
         }
@@ -836,7 +836,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             detailedBolusInfo.context = context;
                             detailedBolusInfo.boluscalc = boluscalcJSON;
                             detailedBolusInfo.source = Source.USER;
-                            if (finalInsulinAfterConstraints > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
+                            if (finalInsulinAfterConstraints > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
                                 ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                     @Override
                                     public void run() {
@@ -1043,7 +1043,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         final Profile profile = ProfileFunctions.getInstance().getProfile();
 
@@ -1248,7 +1248,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // **** Various treatment buttons ****
         if (carbsButton != null) {
             if (SP.getBoolean(R.string.key_show_carbs_button, true)
-                    && (!ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    && (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo ||
                     (pump.isInitialized() && !pump.isSuspended()))) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {

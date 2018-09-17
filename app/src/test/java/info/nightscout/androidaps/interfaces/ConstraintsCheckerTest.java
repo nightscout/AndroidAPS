@@ -280,7 +280,7 @@ public class ConstraintsCheckerTest {
         when(SP.getString(R.string.key_danars_address, "")).thenReturn("");
 
         //SafetyPlugin
-        when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         constraintChecker = new ConstraintChecker(mainApp);
 

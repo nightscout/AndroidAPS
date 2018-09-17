@@ -35,7 +35,7 @@ public class CarbsGenerator {
         carbInfo.context = MainApp.instance();
         carbInfo.source = Source.USER;
         carbInfo.notes = notes;
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
+        if (ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
             ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
                 @Override
                 public void run() {
