@@ -38,7 +38,7 @@ public enum PumpType {
             new DoseSettings(0.1d, 15, 12*60, 0.1d), //
             PumpTempBasalType.Percent,
             new DoseSettings(10,  15, 12*60,0d, 500d), PumpCapability.BasalRate_Duration15and30minAllowed, //
-            0.01d, 0.1d, DoseStepSize.ComboBasal, PumpCapability.ComboCapabilities), //
+            0.01d, 0.01d, DoseStepSize.ComboBasal, PumpCapability.ComboCapabilities), //
 
     AccuChekSpirit("Accu-Chek Spirit", 0.1d, null, //
             new DoseSettings(0.1d, 15, 12*60, 0.1d), //
@@ -50,7 +50,7 @@ public enum PumpType {
             new DoseSettings(0.05d, 15, 24*60, 0.05d), //
             PumpTempBasalType.Percent,
             new DoseSettings(10,  15, 12*60,0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
-            0.02d, 0.1d, null, PumpCapability.InsightCapabilities), //
+            0.02d, 0.01d, null, PumpCapability.InsightCapabilities), //
 
     // Animas
     AnimasVibe("Animas Vibe", 0.05d, null, // AnimasBolus?
