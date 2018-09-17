@@ -640,8 +640,6 @@
   <string name="date">Fecha</string>
   <string name="invalid">INVALIDO</string>
   <string name="waitingforpairing">Esperando para conectar con bomba</string>
-  <string name="pairingok">Conexión OK</string>
-  <string name="pairingtimedout">Conexión fuera de tiempo</string>
   <string name="pairing">CONECTANDO</string>
   <string name="danars_nodeviceavailable">Aparato no encontrado</string>
   <string name="emptyreservoir">Deposito vacío</string>

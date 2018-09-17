@@ -641,7 +641,7 @@
   <string name="date">Дата</string>
   <string name="invalid">НЕВАЛИДНО</string>
   <string name="waitingforpairing">Очаква сдвояване с помпа</string>
-  <string name="pairingok">Сдвоени</string>
+  <string name="pairingok">Сдвояване - ОК</string>
   <string name="pairingtimedout">Времето за сдвояване изтече</string>
   <string name="pairing">СДВОЯВАНЕ</string>
   <string name="danars_nodeviceavailable">Все още устройството не е намерено</string>

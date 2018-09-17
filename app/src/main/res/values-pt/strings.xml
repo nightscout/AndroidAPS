@@ -7,7 +7,7 @@
   <string name="nav_preferences">Preferências</string>
   <string name="nav_refreshtreatments">Atualizar tratamentos do NS</string>
   <string name="nav_resetdb">Reinicializar base de dados</string>
-  <string name="reset_db_confirm">Quer realmente repor a base de dados?</string>
+  <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
   <string name="nav_exit">Sair</string>
   <string name="danar_useextended_title">Usar bolus prolongado de &gt;200%</string>
   <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
@@ -642,7 +642,7 @@
   <string name="invalid">INVÁLIDO</string>
   <string name="waitingforpairing">Aguardando emparelhamento na bomba</string>
   <string name="pairingok">Emparelhamento OK</string>
-  <string name="pairingtimedout">Tempo limite emparelhamento</string>
+  <string name="pairingtimedout">Tempo emparelhamento excedido</string>
   <string name="pairing">A EMPARELHAR</string>
   <string name="danars_nodeviceavailable">Nenhum dispositivo encontrado até agora</string>
   <string name="emptyreservoir">Reservatório vazio</string>
