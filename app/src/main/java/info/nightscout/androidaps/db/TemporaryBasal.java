@@ -228,7 +228,7 @@ public class TemporaryBasal implements Interval {
         }
 
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
         int realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
