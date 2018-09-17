@@ -45,7 +45,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     private ProfileInterface activeProfile;
     private APSInterface activeAPS;
     private InsulinInterface activeInsulin;
-    private static SensitivityInterface activeSensitivity;
+    private SensitivityInterface activeSensitivity;
 
     private static ArrayList<PluginBase> pluginList;
 
@@ -252,7 +252,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activePump;
     }
 
-    public static SensitivityInterface getActiveSensitivity() {
+    public SensitivityInterface getActiveSensitivity() {
         return activeSensitivity;
     }
 

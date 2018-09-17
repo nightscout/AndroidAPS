@@ -530,7 +530,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     public AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(this, fromTime, toTime);
+            return ConfigBuilderPlugin.getPlugin().getActiveSensitivity().detectSensitivity(this, fromTime, toTime);
         }
     }
 
