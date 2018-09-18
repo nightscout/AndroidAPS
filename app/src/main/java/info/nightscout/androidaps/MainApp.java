@@ -75,6 +75,7 @@ import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
@@ -187,6 +188,7 @@ public class MainApp extends Application {
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
             pluginsList.add(MaintenancePlugin.initPlugin(this));
+            pluginsList.add(AutomationPlugin.getPlugin());
 
             pluginsList.add(ConfigBuilderPlugin.getPlugin());
 

@@ -1205,6 +1205,9 @@
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
+    <string name="automation">Automation</string>
+    <string name="automation_short">Auto</string>
+    <string name="automation_description">User defined automation tasks</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
