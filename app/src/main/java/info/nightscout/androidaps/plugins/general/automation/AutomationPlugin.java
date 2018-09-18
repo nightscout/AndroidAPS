@@ -19,7 +19,7 @@ public class AutomationPlugin extends PluginBase {
         return plugin;
     }
 
-    List<Action> actions = new ArrayList<>();
+    List<AutomationEvent> automationEvents = new ArrayList<>();
 
     private AutomationPlugin() {
         super(new PluginDescription()

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.squareup.otto.Bus;
 
@@ -16,6 +16,8 @@ import java.util.GregorianCalendar;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.T;
 
@@ -51,7 +53,7 @@ public class TriggerTimeTest {
 
     }
 
-    String timeJson = "{\"data\":\"{\\\"saturday\\\":true,\\\"runAt\\\":1514766840000,\\\"lastRun\\\":0,\\\"recurring\\\":false,\\\"thursday\\\":true,\\\"minute\\\":0,\\\"sunday\\\":true,\\\"tuesday\\\":true,\\\"hour\\\":0,\\\"wednesday\\\":true,\\\"friday\\\":true,\\\"monday\\\":true,\\\"validTo\\\":0}\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerTime\"}";
+    String timeJson = "{\"data\":\"{\\\"saturday\\\":true,\\\"runAt\\\":1514766840000,\\\"lastRun\\\":0,\\\"recurring\\\":false,\\\"thursday\\\":true,\\\"minute\\\":0,\\\"sunday\\\":true,\\\"tuesday\\\":true,\\\"hour\\\":0,\\\"wednesday\\\":true,\\\"friday\\\":true,\\\"monday\\\":true,\\\"validTo\\\":0}\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime\"}";
 
     @Test
     public void toJSONTest() {

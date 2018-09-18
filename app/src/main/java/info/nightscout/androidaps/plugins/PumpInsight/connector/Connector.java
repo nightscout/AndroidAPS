@@ -421,7 +421,7 @@ public class Connector {
         }
 
         if (lastStatus == null) {
-            return MainApp.gs(R.string.insight_unknown);
+            return MainApp.gs(R.string.unknown);
         }
 
         switch (lastStatus) {

@@ -797,7 +797,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="insight_not_connected_to_companion_app">Niet verbonden met de Companion app!</string>
   <string name="insight_companion_app_not_installed">Companion app lijkt niet geïnstalleerd!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Incompatiebele Companion app, we hebben deze versie nodig</string>
-  <string name="insight_unknown">Onbekend</string>
+  <string name="unknown">Onbekend</string>
   <string name="insight_waiting_for_code">Wacht op confirmatie van code</string>
   <string name="insight_code_rejected">Code geweigerd</string>
   <string name="insight_app_binding">app koppeling</string>

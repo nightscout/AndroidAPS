@@ -1,8 +1,10 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
@@ -18,7 +20,7 @@ public class TriggerBg extends Trigger {
     synchronized boolean shouldRun() {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if (glucoseStatus == null && comparator == NOTAVAILABLE)
+        if (glucoseStatus == null && comparator == ISNOTAVAILABLE)
             return true;
         if (glucoseStatus == null)
             return false;
@@ -61,10 +63,23 @@ public class TriggerBg extends Trigger {
             threshold = JsonHelper.safeGetDouble(d, "threshold");
             comparator = JsonHelper.safeGetInt(d, "comparator");
             units = JsonHelper.safeGetString(d, "units");
-         } catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return this;
+    }
+
+    @Override
+    int friendlyName() {
+        return R.string.glucose;
+    }
+
+    @Override
+    String friendlyDescription() {
+        if (comparator == Trigger.ISNOTAVAILABLE)
+            return MainApp.gs(R.string.glucoseisnotavailable);
+        else
+            return MainApp.gs(R.string.glucosecompared, Trigger.toComparatorString(comparator), threshold, units);
     }
 
     TriggerBg threshold(double threshold) {

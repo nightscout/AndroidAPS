@@ -796,7 +796,7 @@
   <string name="insight_not_connected_to_companion_app">Нет подключения к сопутствующему приложению!</string>
   <string name="insight_companion_app_not_installed">Сопутствующее приложение по-видимому не установлено!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Несовместимое сопутствующее приложение, нужна версия</string>
-  <string name="insight_unknown">Неизвестно</string>
+  <string name="unknown">Неизвестно</string>
   <string name="insight_waiting_for_code">Ожидание подтверждения кода</string>
   <string name="insight_code_rejected">Код отклонен</string>
   <string name="insight_app_binding">Соединение с приложением</string>

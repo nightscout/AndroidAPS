@@ -796,7 +796,7 @@
   <string name="insight_not_connected_to_companion_app">Aplicația nu este conectată!</string>
   <string name="insight_companion_app_not_installed">Aplicația pare să nu fie instalată!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Aplicație incompatibila, este necesară versiunea</string>
-  <string name="insight_unknown">Necunoscut</string>
+  <string name="unknown">Necunoscut</string>
   <string name="insight_waiting_for_code">Se așteaptă confirmarea codului</string>
   <string name="insight_code_rejected">Cod respins</string>
   <string name="insight_app_binding">Conectare aplicație</string>

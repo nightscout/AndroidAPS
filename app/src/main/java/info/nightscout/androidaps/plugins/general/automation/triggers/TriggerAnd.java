@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import info.nightscout.androidaps.R;
 
 public class TriggerAnd extends Trigger {
 
@@ -49,6 +51,22 @@ public class TriggerAnd extends Trigger {
             e.printStackTrace();
         }
         return this;
+    }
+
+    @Override
+    int friendlyName() {
+        return R.string.and;
+    }
+
+    @Override
+    String friendlyDescription() {
+        int counter = 0;
+        StringBuilder result = new StringBuilder();
+        for (Trigger t : list) {
+            if (counter++ > 0) result.append(R.string.and);
+            result.append(t.friendlyDescription());
+        }
+        return result.toString();
     }
 
     synchronized void add(Trigger t) {

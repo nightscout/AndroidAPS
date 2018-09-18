@@ -1,10 +1,12 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.JsonHelper;
 import info.nightscout.utils.T;
@@ -113,6 +115,21 @@ public class TriggerTime extends Trigger {
             e.printStackTrace();
         }
         return this;
+    }
+
+    @Override
+    int friendlyName() {
+        return R.string.time;
+    }
+
+    @Override
+    String friendlyDescription() {
+        if (recurring) {
+            // TODO
+            return "Every ";
+        } else {
+            return MainApp.gs(R.string.atspecifiedtime, DateUtil.dateAndTimeString(runAt));
+        }
     }
 
     @Override

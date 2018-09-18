@@ -242,6 +242,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginType.LOOP)) {
                                     loopPlugin.setPluginEnabled(PluginType.LOOP, false);
+                                    ConfigBuilderPlugin.getPlugin().storeSettings("SMS_LOOP_STOP");
                                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                                         @Override
                                         public void run() {
@@ -260,6 +261,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && !loopPlugin.isEnabled(PluginType.LOOP)) {
                                     loopPlugin.setPluginEnabled(PluginType.LOOP, true);
+                                    ConfigBuilderPlugin.getPlugin().storeSettings("SMS_LOOP_START");
                                     reply = MainApp.gs(R.string.smscommunicator_loophasbeenenabled);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, System.currentTimeMillis()));
                                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_START"));

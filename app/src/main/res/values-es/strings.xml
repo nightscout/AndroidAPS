@@ -793,7 +793,7 @@
   <string name="insight_not_connected_to_companion_app">No conectado a la aplicación companion!</string>
   <string name="insight_companion_app_not_installed">¡La aplicación Companion no parece estar instalada!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Aplicación Companion incompatible, necesitamos la versión</string>
-  <string name="insight_unknown">Desconocido</string>
+  <string name="unknown">Desconocido</string>
   <string name="insight_waiting_for_code">Esperando código de confirmación</string>
   <string name="insight_code_rejected">Código rechazado</string>
   <string name="insight_app_binding">Vincular con aplicación</string>

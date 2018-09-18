@@ -796,7 +796,7 @@
   <string name="insight_not_connected_to_companion_app">Nepřipojen k podpůrné aplikaci!</string>
   <string name="insight_companion_app_not_installed">Podpůrná aplikace patrně není nainstalovaná!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Nekompatibilní podpůrná aplikace, je požadována verze</string>
-  <string name="insight_unknown">Neznámý</string>
+  <string name="unknown">Neznámý</string>
   <string name="insight_waiting_for_code">Čekám na potvrzení kódu</string>
   <string name="insight_code_rejected">Kód odmítnut</string>
   <string name="insight_app_binding">Připojování aplikace</string>

@@ -755,7 +755,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
   <string name="insight_not_connected_to_companion_app">Non connectée à l\'application compagnon</string>
   <string name="insight_companion_app_not_installed">L\'application compagnon ne semble pas être installée</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Application compagnon incompatible, besoin d\'une autre version</string>
-  <string name="insight_unknown">Inconnue</string>
+  <string name="unknown">Inconnue</string>
   <string name="insight_waiting_for_code">Attente du code de confirmation</string>
   <string name="insight_code_rejected">Code rejeté</string>
   <string name="insight_app_binding">Liaison avec app</string>

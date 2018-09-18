@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.squareup.otto.Bus;
 
@@ -58,11 +58,11 @@ public class TriggerBgTest {
         when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(new ArrayList<>());
         t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.ISEQUALORLOWER);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerBg().comparator(Trigger.NOTAVAILABLE);
+        t = new TriggerBg().comparator(Trigger.ISNOTAVAILABLE);
         Assert.assertTrue(t.shouldRun());
     }
 
-    String bgJson = "{\"data\":\"{\\\"comparator\\\":0,\\\"threshold\\\":4.1,\\\"units\\\":\\\"mmol\\\"}\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerBg\"}";
+    String bgJson = "{\"data\":\"{\\\"comparator\\\":0,\\\"threshold\\\":4.1,\\\"units\\\":\\\"mmol\\\"}\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}";
 
     @Test
     public void toJSONTest() {

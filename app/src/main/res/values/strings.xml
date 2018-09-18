@@ -893,7 +893,7 @@
     <string name="insight_not_connected_to_companion_app">Not connected to companion app!</string>
     <string name="insight_companion_app_not_installed">Companion app does not appear to be installed!</string>
     <string name="insight_incompatible_compantion_app_we_need_version">Incompatible companion app, we need version</string>
-    <string name="insight_unknown">Unknown</string>
+    <string name="unknown">Unknown</string>
     <string name="insight_waiting_for_code">Waiting for code confirmation</string>
     <string name="insight_code_rejected">Code rejected</string>
     <string name="insight_app_binding">App binding</string>
@@ -1208,6 +1208,23 @@
     <string name="automation">Automation</string>
     <string name="automation_short">Auto</string>
     <string name="automation_description">User defined automation tasks</string>
+    <string name="alreadyenabled">Already enabled</string>
+    <string name="alreadydisabled">Already disabled</string>
+    <string name="alreadysuspended">Already suspended</string>
+    <string name="resumeloop">Resume loop</string>
+    <string name="notsuspended">Not suspended</string>
+    <string name="starttemptarget">Start temp target</string>
+    <string name="islower">is lower than</string>
+    <string name="isequalorlower">is equal or lower than</string>
+    <string name="isequal">is equal to</string>
+    <string name="isequalorgreater">is equal or greater than</string>
+    <string name="isgreater">is greater than</string>
+    <string name="isnotavailable">is not available</string>
+    <string name="glucoseisnotavailable">Glucose is not available</string>
+    <string name="glucosecompared">Glucose %1$s %2$.2f %3$s</string>
+    <string name="and">And</string>
+    <string name="or">Or</string>
+    <string name="atspecifiedtime">At %1$s</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

@@ -796,7 +796,7 @@
   <string name="insight_not_connected_to_companion_app">没有连接到companion app!</string>
   <string name="insight_companion_app_not_installed">好像没有安装companion app！</string>
   <string name="insight_incompatible_compantion_app_we_need_version">和companion app不兼容，我们需要版本</string>
-  <string name="insight_unknown">未知的</string>
+  <string name="unknown">未知的</string>
   <string name="insight_waiting_for_code">正在等待代码确认</string>
   <string name="insight_code_rejected">代码被拒绝</string>
   <string name="insight_app_binding">Ａｐｐ绑定中</string>

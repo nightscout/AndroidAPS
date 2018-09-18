@@ -1,13 +1,15 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerOr;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({})
@@ -37,8 +39,8 @@ public class TriggerOrTest {
         Assert.assertFalse(t.shouldRun());
     }
 
-    String empty = "{\"data\":\"[]\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerOr\"}";
-    String oneItem = "{\"data\":\"[\\\"{\\\\\\\"data\\\\\\\":\\\\\\\"[]\\\\\\\",\\\\\\\"type\\\\\\\":\\\\\\\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerOr\\\\\\\"}\\\"]\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerOr\"}";
+    String empty = "{\"data\":\"[]\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerOr\"}";
+    String oneItem = "{\"data\":\"[\\\"{\\\\\\\"data\\\\\\\":\\\\\\\"[]\\\\\\\",\\\\\\\"type\\\\\\\":\\\\\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerOr\\\\\\\"}\\\"]\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerOr\"}";
 
     @Test
     public void toJSONTest() {

@@ -797,7 +797,7 @@
   <string name="insight_not_connected_to_companion_app">Brak połączenia z aplikacją towarzyszącą!</string>
   <string name="insight_companion_app_not_installed">Aplikacja towarzysząca prawdopodobnie nie jest zainstalowana!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">Niezgodna aplikacja towarzysząca, potrzebujemy wersji</string>
-  <string name="insight_unknown">Nieznany</string>
+  <string name="unknown">Nieznany</string>
   <string name="insight_waiting_for_code">Oczekuję na potwierdzenie kodu</string>
   <string name="insight_code_rejected">Kod odrzucony</string>
   <string name="insight_app_binding">Wiązanie aplikacji</string>

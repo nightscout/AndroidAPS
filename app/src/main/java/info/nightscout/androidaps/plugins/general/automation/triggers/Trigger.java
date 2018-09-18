@@ -1,9 +1,11 @@
-package info.nightscout.androidaps.plugins.general.automation.actions;
+package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-abstract class Trigger {
+import info.nightscout.androidaps.R;
+
+public abstract class Trigger {
 
     protected static final int ISLOWER = -2;
     protected static final int ISEQUALORLOWER = -1;
@@ -11,7 +13,7 @@ abstract class Trigger {
     protected static final int ISEQUALORGREATER = 1;
     protected static final int ISGREATER = 2;
 
-    protected static final int NOTAVAILABLE = 10;
+    protected static final int ISNOTAVAILABLE = 10;
 
     Trigger() {
     }
@@ -21,6 +23,10 @@ abstract class Trigger {
     abstract String toJSON();
 
     abstract Trigger fromJSON(String data);
+
+    abstract int friendlyName();
+
+    abstract String friendlyDescription();
 
     void notifyAboutRun(long time) {
     }
@@ -38,4 +44,21 @@ abstract class Trigger {
 
     }
 
+    public static int toComparatorString(int comparator) {
+        switch (comparator) {
+            case ISLOWER:
+                return R.string.islower;
+            case ISEQUALORLOWER:
+                return R.string.isequalorlower;
+            case ISEQUAL:
+                return R.string.isequal;
+            case ISEQUALORGREATER:
+                return R.string.isequalorgreater;
+            case ISGREATER:
+                return R.string.isgreater;
+            case ISNOTAVAILABLE:
+                return R.string.isnotavailable;
+        }
+        return R.string.unknown;
+    }
 }

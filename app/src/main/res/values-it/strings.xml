@@ -796,7 +796,7 @@
   <string name="insight_not_connected_to_companion_app">Non collegato all\'app!</string>
   <string name="insight_companion_app_not_installed">Gruppo dell\'app non sembra essere installato!</string>
   <string name="insight_incompatible_compantion_app_we_need_version">App incompatibili, abbiamo bisogno di versione</string>
-  <string name="insight_unknown">Sconosciuto</string>
+  <string name="unknown">Sconosciuto</string>
   <string name="insight_waiting_for_code">In attesa di conferma</string>
   <string name="insight_code_rejected">Codice rifiutato</string>
   <string name="insight_app_binding">App di unione</string>
