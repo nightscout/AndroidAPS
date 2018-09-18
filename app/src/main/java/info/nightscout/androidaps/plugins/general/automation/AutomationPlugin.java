@@ -1,9 +1,13 @@
 package info.nightscout.androidaps.plugins.general.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 
 public class AutomationPlugin extends PluginBase {
 
@@ -14,6 +18,8 @@ public class AutomationPlugin extends PluginBase {
             plugin = new AutomationPlugin();
         return plugin;
     }
+
+    List<Action> actions = new ArrayList<>();
 
     private AutomationPlugin() {
         super(new PluginDescription()
