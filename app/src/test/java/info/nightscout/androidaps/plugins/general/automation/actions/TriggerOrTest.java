@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +30,30 @@ public class TriggerOrTest {
         Assert.assertEquals(t2, t.get(0));
         Assert.assertEquals(t3, t.get(1));
 
-        t.remove(t2);
+        Assert.assertTrue(t.remove(t2));
         Assert.assertTrue(t.size() == 1);
         Assert.assertEquals(t3, t.get(0));
 
         Assert.assertFalse(t.shouldRun());
+    }
+
+    String empty = "{\"data\":\"[]\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerOr\"}";
+    String oneItem = "{\"data\":\"[\\\"{\\\\\\\"data\\\\\\\":\\\\\\\"[]\\\\\\\",\\\\\\\"type\\\\\\\":\\\\\\\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerOr\\\\\\\"}\\\"]\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.TriggerOr\"}";
+
+    @Test
+    public void toJSONTest() {
+        TriggerOr t = new TriggerOr();
+        Assert.assertEquals(empty, t.toJSON());
+        t.add(new TriggerOr());
+        Assert.assertEquals(oneItem, t.toJSON());
+    }
+    @Test
+    public void fromJSONTest() throws JSONException {
+        TriggerOr t = new TriggerOr();
+        t.add(new TriggerOr());
+
+        TriggerOr t2 = (TriggerOr) Trigger.instantiate(new JSONObject(t.toJSON()));
+        Assert.assertEquals(1, t2.size());
+        Assert.assertTrue(t2.get(0) instanceof TriggerOr);
     }
 }
