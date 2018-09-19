@@ -952,7 +952,7 @@
   <string name="virtualpump_type">Виртуална помпа тип</string>
   <string name="virtualpump_definition">Описание на помпата</string>
   <string name="virtualpump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Диапазонни стойности за базал/болус не се поддържат от Виртиална Помпа.</string>
+  <string name="virtualpump_pump_def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
   <string name="ns_autobackfill_title">Изтегляне КЗ от Найтскаут</string>
   <string name="wear_wizard_settings">Настройки на съветник</string>
   <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>

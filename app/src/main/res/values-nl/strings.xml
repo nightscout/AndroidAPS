@@ -953,7 +953,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="virtualpump_type">Virtuele pomp Type</string>
   <string name="virtualpump_definition">Pomp definitie</string>
   <string name="virtualpump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Basaal- /boluswaarden worden niet ondersteund door virtuele pomp.</string>
   <string name="ns_autobackfill_title">Automatische BG aanvullen</string>
   <string name="wear_wizard_settings">Wizard instellingen</string>
   <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>

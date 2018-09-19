@@ -952,7 +952,6 @@
   <string name="virtualpump_type">Micro virtuale</string>
   <string name="virtualpump_definition">Definizione del micro</string>
   <string name="virtualpump_pump_def">Bolo: Passo =%1$s\n bolo esteso: [step =%2$s, durata =%3$smin -%4$sh] \n Basale: Step =%5$s\nTBR: %6$s (di %7$s), durata =%8$smin -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Target basale/bolo non sono supportati dal micro di virtuale.</string>
   <string name="ns_autobackfill_title">Autobackfill BG</string>
   <string name="wear_wizard_settings">Impostazioni della procedura guidata</string>
   <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato della procedura guidata:</string>

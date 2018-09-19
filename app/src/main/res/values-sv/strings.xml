@@ -691,7 +691,7 @@
   <string name="pumpdrivercorrected">Pumpdrivrutin justerad</string>
   <string name="pump_unreachable">Pumpen kan inte nås</string>
   <string name="missed_bg_readings">BG-värden saknas</string>
-  <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm och info</string>
+  <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
   <string name="localalertsettings_title">Lokala larm</string>
   <string name="enable_missed_bg_readings_alert">Varna om BG-data saknas</string>
   <string name="enable_pump_unreachable_alert">Varna om pumpen inte går att nå</string>
@@ -952,7 +952,7 @@
   <string name="virtualpump_type">Typ av virtuell pump</string>
   <string name="virtualpump_definition">Pumpdefinition</string>
   <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Den virtuella pumpen kräver fasta värden för basal/bolus.</string>
+  <string name="virtualpump_pump_def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
   <string name="ns_autobackfill_title">Auto Backfill BG</string>
   <string name="wear_wizard_settings">Kalkylatorinställningar</string>
   <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
@@ -1042,7 +1042,7 @@
   <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
   <string name="treatments_wizard_total_label">Total</string>
   <string name="calculation_short">Kalkyl</string>
-  <string name="handshaking">Verifierar anslutningen</string>
+  <string name="handshaking">Anslutningen verifieras</string>
   <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
   <string name="maxbolusviolation">Max bolus nådd</string>
   <string name="commanderror">Kommandofel</string>

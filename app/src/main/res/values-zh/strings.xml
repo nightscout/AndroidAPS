@@ -952,7 +952,6 @@
   <string name="virtualpump_type">虚拟泵类型</string>
   <string name="virtualpump_definition">泵定义</string>
   <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* 虚拟泵不支持远程修改基础率或输注大剂量</string>
   <string name="ns_autobackfill_title">Autobackfill 血糖</string>
   <string name="wear_wizard_settings">向导设置</string>
   <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>

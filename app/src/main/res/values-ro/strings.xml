@@ -952,7 +952,7 @@
   <string name="virtualpump_type">Tipul pompei virtuale</string>
   <string name="virtualpump_definition">Definirea pompei</string>
   <string name="virtualpump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">Valorile bazalei/bolusului variate nu sunt suportate de căter Pompa Virtuală.</string>
+  <string name="virtualpump_pump_def_extended_note">* Doar valorile discrete, nu şi intervalele de valori sunt suportate ca şi incremente în pompa virtuală.</string>
   <string name="ns_autobackfill_title">Autocompletează glicemiile lipsă</string>
   <string name="wear_wizard_settings">Asistent setări</string>
   <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>

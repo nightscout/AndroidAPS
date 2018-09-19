@@ -952,7 +952,6 @@
   <string name="virtualpump_type">Tipo da Bomba Virtual</string>
   <string name="virtualpump_definition">Definição da Bomba</string>
   <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Estendido: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nTBR: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">*Intervalo dos valores basal/bólus não são suportados pela Bomba Virtual.</string>
   <string name="ns_autobackfill_title">Preenchimentoauto Glicemia</string>
   <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
   <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>

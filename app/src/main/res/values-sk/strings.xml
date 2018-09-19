@@ -953,7 +953,7 @@
   <string name="virtualpump_type">Typ virtuálnej pumpy</string>
   <string name="virtualpump_definition">Definícia pumpy</string>
   <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Rozdielne hodnoty podľa rozsahu nie sú podporované.</string>
+  <string name="virtualpump_pump_def_extended_note">* Iba diskrétne hodnoty a nie rozsahy sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
   <string name="ns_autobackfill_title">Automatické doplňovanie glykémií z NS</string>
   <string name="wear_wizard_settings">Nastavenie wizardu</string>
   <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>

@@ -953,7 +953,7 @@
   <string name="virtualpump_type">Pompa wirtualna</string>
   <string name="virtualpump_definition">Definicja Pompy</string>
   <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBasal: krok =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Wartości baza-bolus nie są obsługiwane przez wirtualną pompę w danym zakresie.</string>
+  <string name="virtualpump_pump_def_extended_note">*Tylko wartości dyskretne, nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
   <string name="ns_autobackfill_title">Automatycznie uzupełnij BG</string>
   <string name="wear_wizard_settings">Ustawienia kreatora</string>
   <string name="wear_wizard_settings_summary">Obliczenia uwzględnione w wynikach kreatora:</string>

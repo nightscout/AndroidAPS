@@ -952,7 +952,6 @@
   <string name="virtualpump_type">Тип виртуальной помпы</string>
   <string name="virtualpump_definition">Определение помпы</string>
   <string name="virtualpump_pump_def">Болюс: Шаг =%1$s\nПродленный Болюс: [Шаг =%2$s, Длительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\ nTBR: %6$s (на %7$s), Длительность =%8$sмин -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Величины в данных диапазонах не поддерживаются Виртуальной Помпой.</string>
   <string name="ns_autobackfill_title">Автозаполнение пропущенных данных СК</string>
   <string name="wear_wizard_settings">Параметры мастера настройки смарт-часов wear</string>
   <string name="wear_wizard_settings_summary">Расчеты, включены в результат мастера настройки смарт-часов wear:</string>
