@@ -12,32 +12,20 @@ import info.nightscout.utils.JsonHelper;
 
 public class TriggerBg extends Trigger {
 
-    double threshold;
-    int comparator = ISEQUAL;
-    String units = ProfileFunctions.getInstance().getProfileUnits();
+    protected double threshold;
+    protected Comparator comparator = Comparator.IS_EQUAL;
+    protected String units = ProfileFunctions.getInstance().getProfileUnits();
 
     @Override
     synchronized boolean shouldRun() {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if (glucoseStatus == null && comparator == ISNOTAVAILABLE)
+        if (glucoseStatus == null && comparator.equals(Comparator.IS_NOT_AVAILABLE))
             return true;
         if (glucoseStatus == null)
             return false;
 
-        switch (comparator) {
-            case ISLOWER:
-                return glucoseStatus.glucose < Profile.toMgdl(threshold, units);
-            case ISEQUALORLOWER:
-                return glucoseStatus.glucose <= Profile.toMgdl(threshold, units);
-            case ISEQUAL:
-                return glucoseStatus.glucose == Profile.toMgdl(threshold, units);
-            case ISEQUALORGREATER:
-                return glucoseStatus.glucose >= Profile.toMgdl(threshold, units);
-            case ISGREATER:
-                return glucoseStatus.glucose > Profile.toMgdl(threshold, units);
-        }
-        return false;
+        return comparator.check(glucoseStatus.glucose, Profile.toMgdl(threshold, units));
     }
 
     @Override
@@ -47,7 +35,7 @@ public class TriggerBg extends Trigger {
             o.put("type", TriggerBg.class.getName());
             JSONObject data = new JSONObject();
             data.put("threshold", threshold);
-            data.put("comparator", comparator);
+            data.put("comparator", comparator.toString());
             data.put("units", units);
             o.put("data", data.toString());
         } catch (JSONException e) {
@@ -61,7 +49,7 @@ public class TriggerBg extends Trigger {
         try {
             JSONObject d = new JSONObject(data);
             threshold = JsonHelper.safeGetDouble(d, "threshold");
-            comparator = JsonHelper.safeGetInt(d, "comparator");
+            comparator = Comparator.valueOf(JsonHelper.safeGetString(d, "comparator"));
             units = JsonHelper.safeGetString(d, "units");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -76,10 +64,10 @@ public class TriggerBg extends Trigger {
 
     @Override
     String friendlyDescription() {
-        if (comparator == Trigger.ISNOTAVAILABLE)
+        if (comparator.equals(Comparator.IS_NOT_AVAILABLE))
             return MainApp.gs(R.string.glucoseisnotavailable);
         else
-            return MainApp.gs(R.string.glucosecompared, Trigger.toComparatorString(comparator), threshold, units);
+            return MainApp.gs(R.string.glucosecompared, comparator.getStringRes(), threshold, units);
     }
 
     TriggerBg threshold(double threshold) {
@@ -87,7 +75,7 @@ public class TriggerBg extends Trigger {
         return this;
     }
 
-    TriggerBg comparator(int comparator) {
+    TriggerBg comparator(Comparator comparator) {
         this.comparator = comparator;
         return this;
     }

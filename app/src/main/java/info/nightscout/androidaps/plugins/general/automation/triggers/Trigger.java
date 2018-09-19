@@ -7,13 +7,54 @@ import info.nightscout.androidaps.R;
 
 public abstract class Trigger {
 
-    protected static final int ISLOWER = -2;
-    protected static final int ISEQUALORLOWER = -1;
-    protected static final int ISEQUAL = 0;
-    protected static final int ISEQUALORGREATER = 1;
-    protected static final int ISGREATER = 2;
+    public enum Comparator {
+        IS_LOWER,
+        IS_EQUAL_OR_LOWER,
+        IS_EQUAL,
+        IS_EQUAL_OR_GREATER,
+        IS_GREATER,
+        IS_NOT_AVAILABLE;
 
-    protected static final int ISNOTAVAILABLE = 10;
+        public int getStringRes() {
+            switch (this) {
+                case IS_LOWER:
+                    return R.string.islower;
+                case IS_EQUAL_OR_LOWER:
+                    return R.string.isequalorlower;
+                case IS_EQUAL:
+                    return R.string.isequal;
+                case IS_EQUAL_OR_GREATER:
+                    return R.string.isequalorgreater;
+                case IS_GREATER:
+                    return R.string.isgreater;
+                case IS_NOT_AVAILABLE:
+                    return R.string.isnotavailable;
+                default:
+                    return R.string.unknown;
+            }
+        }
+
+        public <T extends Comparable> boolean check(T obj1, T obj2) {
+            if (obj1 == null || obj2 == null)
+                return this.equals(Comparator.IS_NOT_AVAILABLE);
+
+            int comparison = obj1.compareTo(obj2);
+            switch (this) {
+                case IS_LOWER:
+                    return comparison < 0;
+                case IS_EQUAL_OR_LOWER:
+                    return comparison <= 0;
+                case IS_EQUAL:
+                    return comparison == 0;
+                case IS_EQUAL_OR_GREATER:
+                    return comparison >= 0;
+                case IS_GREATER:
+                    return comparison > 0;
+                default:
+                    return false;
+            }
+        }
+    }
 
     Trigger() {
     }
@@ -42,23 +83,5 @@ public abstract class Trigger {
         }
         return null;
 
-    }
-
-    public static int toComparatorString(int comparator) {
-        switch (comparator) {
-            case ISLOWER:
-                return R.string.islower;
-            case ISEQUALORLOWER:
-                return R.string.isequalorlower;
-            case ISEQUAL:
-                return R.string.isequal;
-            case ISEQUALORGREATER:
-                return R.string.isequalorgreater;
-            case ISGREATER:
-                return R.string.isgreater;
-            case ISNOTAVAILABLE:
-                return R.string.isnotavailable;
-        }
-        return R.string.unknown;
     }
 }
