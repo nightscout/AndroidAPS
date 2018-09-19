@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service;
 
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
@@ -20,7 +21,7 @@ public class RileyLinkServiceData {
     // bt version
     public String versionBLE113;
     // radio version
-    public String versionCC110;
+    public RileyLinkFirmwareVersion versionCC110;
 
     public RileyLinkTargetDevice targetDevice;
 

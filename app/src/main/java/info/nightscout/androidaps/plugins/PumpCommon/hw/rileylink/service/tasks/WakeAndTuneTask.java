@@ -8,6 +8,9 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtron
  */
 public class WakeAndTuneTask extends PumpTask {
 
+    private static final String TAG = "WakeAndTuneTask";
+
+
     public WakeAndTuneTask() {
     }
 

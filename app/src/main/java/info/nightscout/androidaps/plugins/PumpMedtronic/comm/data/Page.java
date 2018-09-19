@@ -40,11 +40,11 @@ import android.util.Log;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.PumpTimeStamp;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.Record;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.RecordTypeEnum;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.TimeFormat;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.record.IgnoredHistoryEntry;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.PumpTimeStamp;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.Record;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.RecordTypeEnum;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.TimeFormat;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.record.IgnoredHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 
 @Deprecated

@@ -115,6 +115,7 @@ public class RileyLinkBLE {
                 if (status == 133) {
                     LOG.error("Got the status 133 bug, closing gatt");
                     disconnect();
+                    SystemClock.sleep(500);
                     return;
                 }
 
@@ -363,6 +364,7 @@ public class RileyLinkBLE {
     // This function must be run on UI thread.
     public void connectGatt() {
         bluetoothConnectionGatt = rileyLinkDevice.connectGatt(context, true, bluetoothGattCallback);
+        // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null) {
             LOG.error("Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter.getAddress());
             Toast.makeText(context, "No Rileylink at " + bluetoothAdapter.getAddress(), Toast.LENGTH_SHORT).show();

@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data;
 
+import org.apache.commons.lang3.NotImplementedException;
+
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFTools;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
@@ -30,10 +33,22 @@ public class RadioPacket {
 
 
     public byte[] getEncoded() {
-        byte[] withCRC = ByteUtil.concat(pkt, CRC.crc8(pkt));
-        byte[] encoded = RFTools.encode4b6b(withCRC);
-        byte[] withNullTerm = ByteUtil.concat(encoded, (byte)0);
-        return withNullTerm;
+
+        switch (RileyLinkUtil.getEncoding()) {
+            case Manchester: { // We have this encoding in RL firmware
+                return pkt;
+            }
+
+            case FourByteSixByte: {
+                byte[] withCRC = getWithCRC();
+
+                byte[] encoded = RFTools.encode4b6b(withCRC);
+                return ByteUtil.concat(encoded, (byte)0);
+            }
+
+            default:
+                throw new NotImplementedException(("Encoding not supported: " + RileyLinkUtil.getEncoding().toString()));
+        }
     }
 
 }

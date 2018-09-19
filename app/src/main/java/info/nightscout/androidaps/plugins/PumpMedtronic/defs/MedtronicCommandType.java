@@ -109,8 +109,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     GetHistoryData(128, "History data", MinimedTargetType.PumpData, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.SubCommands, 1024, 36, 0), // 0x80
     // new MinimedCommandHistoryData(36)
 
-    GetBasalProfileSTD(146, "Get Profile Standard", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8, 7), // 146
-                                                                                                                                                                                              // FIXME
+    GetBasalProfileSTD(146, "Get Profile Standard", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8, 1), // 146
 
     GetBasalProfileA(147, "Get Profile A", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 9), // 147
                                                                                                                                                                                   // FIXME

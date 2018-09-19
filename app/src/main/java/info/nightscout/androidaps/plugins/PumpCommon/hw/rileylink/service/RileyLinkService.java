@@ -19,6 +19,8 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkEncodingType;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
@@ -61,8 +63,12 @@ public abstract class RileyLinkService extends Service {
         determineRileyLinkTargetFrequency();
         RileyLinkUtil.setRileyLinkService(this);
         RileyLinkUtil.setRileyLinkTargetFrequency(rileyLinkTargetFrequency);
+        RileyLinkUtil.setEncoding(getEncoding());
         initRileyLinkServiceData();
     }
+
+
+    public abstract RileyLinkEncodingType getEncoding();
 
 
     /**
@@ -148,13 +154,15 @@ public abstract class RileyLinkService extends Service {
                             rileyLinkBLE.enableNotifications();
                             rfspy.startReader(); // call startReader from outside?
 
-                            String data = rfspy.getVersion();
-                            LOG.debug("RfSpy version (BLE113): " + data);
-                            rileyLinkServiceData.versionBLE113 = data;
+                            rfspy.initializeRileyLink();
+                            String bleVersion = rfspy.getBLEVersionCached();
+                            RileyLinkFirmwareVersion rlVersion = rfspy.getRLVersionCached();
 
-                            data = rfspy.getRadioVersion();
-                            LOG.debug("RfSpy Radio version (CC110): " + data);
-                            rileyLinkServiceData.versionCC110 = data;
+                            LOG.debug("RfSpy version (BLE113): " + bleVersion);
+                            rileyLinkServiceData.versionBLE113 = bleVersion;
+
+                            LOG.debug("RfSpy Radio version (CC110): " + rlVersion.name());
+                            rileyLinkServiceData.versionCC110 = rlVersion;
 
                             ServiceTask task = new InitializePumpManagerTask();
                             ServiceTaskExecutor.startTask(task);
@@ -187,6 +195,8 @@ public abstract class RileyLinkService extends Service {
                                 reconfigureRileyLink(RileylinkBLEAddress);
                                 // MainApp.getServiceClientConnection().setThisRileylink(RileylinkBLEAddress);
                             }
+                        } else if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnect)) {
+                            disconnectRileyLink();
                         }
 
                         /*
@@ -248,6 +258,7 @@ public abstract class RileyLinkService extends Service {
         intentFilter.addAction(RileyLinkConst.Intents.RileyLinkDisconnected);
         intentFilter.addAction(RileyLinkConst.Intents.BluetoothReconnected);
         intentFilter.addAction(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+        intentFilter.addAction(RileyLinkConst.Intents.RileyLinkDisconnect);
         // intentFilter.addAction(RT2Const.serviceLocal.ipcBound);
         // intentFilter.addAction(RT2Const.IPC.MSG_BLE_accessGranted);
         // intentFilter.addAction(RT2Const.IPC.MSG_BLE_accessDenied);
@@ -460,7 +471,11 @@ public abstract class RileyLinkService extends Service {
 
 
     public void disconnectRileyLink() {
-        this.rileyLinkBLE.disconnect();
+
+        if (this.rileyLinkBLE.isConnected()) {
+            this.rileyLinkBLE.disconnect();
+            rileyLinkServiceData.rileylinkAddress = null;
+        }
     }
 
 

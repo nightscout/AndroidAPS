@@ -1230,7 +1230,7 @@
     <string name="rileylink_mac_address">RileyLink MAC Address</string>
     <string name="rileylink_scanner_selected_device">Selected</string>
     <string name="rileylink_scanner_scan">Scan</string>
-    <string name="rileylink_scanner_title">RileyLink BLE Scan</string>
+    <string name="rileylink_scanner_title">RileyLink Scan</string>
     <string name="rileylink_scanner_scan_menu">Scan for RileyLink</string>
 
     <!-- RL Status Page -->
@@ -1307,7 +1307,6 @@
 
     <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string>
     <string name="medtronic_cmd_cancel_bolus_not_supported">Remote cancel of Bolus is not supported. If you wish to cancel bolus, go to pump put it in suspend and then resume. This will cancel the bolus.</string>
-
 
 
     <plurals name="objective_days">

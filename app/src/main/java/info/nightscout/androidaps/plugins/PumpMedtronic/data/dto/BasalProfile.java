@@ -63,6 +63,11 @@ public class BasalProfile {
             LOG.error("setRawData: buffer is null!");
             return false;
         }
+
+        if (data.length == 1) {
+            data = MedtronicUtil.createByteArray(data[0], (byte)0, (byte)0);
+        }
+
         // int len = Math.min(MAX_RAW_DATA_SIZE, data.length);
         mRawData = data;
         // System.arraycopy(data, 0, mRawData, 0, len);

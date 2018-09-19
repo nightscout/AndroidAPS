@@ -23,6 +23,7 @@ public class RileyLinkConst {
 
         public static final String INTENT_NEW_rileylinkAddressKey = Prefix + "INTENT_NEW_rileylinkAddressKey";
         public static final String INTENT_NEW_pumpIDKey = Prefix + "INTENT_NEW_pumpIDKey";
+        public static final String RileyLinkDisconnect = Prefix + "RileyLink_Disconnect";
     }
 
     public class Prefs {

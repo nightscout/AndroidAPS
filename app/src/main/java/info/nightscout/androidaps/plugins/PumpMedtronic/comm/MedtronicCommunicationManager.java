@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.Riley
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.Page;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history.Record;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.Record;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.ButtonPressCarelinkMessageBody;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.CarelinkLongMessageBody;
@@ -686,6 +686,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             LOG.debug("Length: " + data.length);
 
             if (data.length >= BasalProfile.MAX_RAW_DATA_SIZE) {
+                return false;
+            }
+
+            if (responseRaw.length == 1) {
                 return false;
             }
 
