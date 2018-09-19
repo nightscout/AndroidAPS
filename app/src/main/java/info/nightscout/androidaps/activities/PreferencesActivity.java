@@ -41,6 +41,7 @@ import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
@@ -182,6 +183,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(AutomationPlugin.getPlugin(), PluginType.GENERAL);
 
                 addPreferencesFromResource(R.xml.pref_others);
                 addPreferencesFromResource(R.xml.pref_datachoices);
