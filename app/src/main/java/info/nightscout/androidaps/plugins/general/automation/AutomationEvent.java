@@ -8,9 +8,23 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 
 public class AutomationEvent {
 
-    Trigger trigger;
-    List<Action> actions = new ArrayList<>();
+    private Trigger trigger;
+    private List<Action> actions = new ArrayList<>();
+    private String title;
 
-    AutomationEvent() {
+    AutomationEvent(String title) {
+        this.title = title;
+    }
+
+    public Trigger getTrigger() {
+        return trigger;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
