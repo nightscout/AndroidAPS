@@ -19,6 +19,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
@@ -119,4 +121,32 @@ public class VirtualPumpFragment extends SubscriberFragment {
                 }
             });
     }
+
+
+    enum VirtualActions implements CustomActionType
+    {
+
+        TestAction1(R.string.en_lang),
+        TestAction2(R.string.ga_lang),
+
+
+        ;
+
+
+        CustomAction customAction;
+
+
+        VirtualActions(int nameResourceId)
+        {
+            this.customAction = new CustomAction(nameResourceId, this);
+        }
+
+        @Override
+        public String getKey() {
+            return this.name();
+        }
+    }
+
+
+
 }

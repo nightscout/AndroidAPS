@@ -1,24 +1,28 @@
 package info.nightscout.androidaps.plugins.Actions.defs;
 
+import info.nightscout.androidaps.R;
+
 /**
  * Created by andy on 9/20/18.
  */
 
 public class CustomAction {
 
-    private String name;
+    private int name;
     private String iconName;
     private CustomActionType customActionType;
 
 
-    public String getName() {
-
-        return name;
+    public CustomAction(int nameResourceId, CustomActionType actionType)
+    {
+        this.name = nameResourceId;
+        this.customActionType = actionType;
     }
 
-    public void setName(String name) {
 
-        this.name = name;
+    public int getName() {
+
+        return name;
     }
 
     public String getIconName() {

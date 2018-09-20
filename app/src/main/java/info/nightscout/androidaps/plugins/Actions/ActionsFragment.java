@@ -254,13 +254,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             LinearLayout ll = (LinearLayout)actionsFragmentView.findViewById(R.id.action_buttons_layout);
 
             for (CustomAction customAction : customActions) {
-                // TODO
-
 
                 SingleClickButton btn = new SingleClickButton(MainApp.instance().getApplicationContext());
-                btn.setText(customAction.getName());
+                btn.setText(MainApp.gs(customAction.getName()));
 
+                // TODO style and drawableTop
                 //btn.setTextAppearance(R.style.buttonStyle);
+
 
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -273,11 +273,10 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
                 ll.addView(btn);
 
-                this.currentCustomActions.put(customAction.getName(), customAction);
+                this.currentCustomActions.put(MainApp.gs(customAction.getName()), customAction);
                 this.customButtons.add(btn);
 
 
-                // TODO add to map
 
 
 //                <info.nightscout.utils.SingleClickButton
