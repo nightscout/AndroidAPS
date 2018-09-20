@@ -9,9 +9,15 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
@@ -25,6 +31,8 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
@@ -49,6 +57,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         return actionsPlugin;
     }
 
+    View actionsFragmentView;
     SingleClickButton profileSwitch;
     SingleClickButton tempTarget;
     SingleClickButton extendedBolus;
@@ -89,6 +98,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             fill.setOnClickListener(this);
             history.setOnClickListener(this);
             tddStats.setOnClickListener(this);
+
+            actionsFragmentView = view;
 
             updateGUI();
             return view;
@@ -194,8 +205,118 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
                     if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().supportsTDDs) tddStats.setVisibility(View.GONE);
                     else tddStats.setVisibility(View.VISIBLE);
+
+                    checkCustomActions();
+
                 }
             });
+    }
+
+
+    private String activePumpName;
+    private Map<String,CustomAction> currentCustomActions = new HashMap<>();
+    private List<SingleClickButton> customButtons = new ArrayList<>();
+
+    View.OnClickListener customActionsListener = v -> {
+
+        SingleClickButton btn = (SingleClickButton)v;
+
+        CustomAction customAction = this.currentCustomActions.get(btn.getText().toString());
+
+        ConfigBuilderPlugin.getActivePump().executeCustomAction(customAction.getCustomActionType());
+
+    };
+
+
+
+    private void checkCustomActions() {
+
+        PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
+
+        if (activePump==null) {
+            removeCustomActions();
+            return;
+        }
+
+        String newPump = activePump.getClass().getSimpleName();
+
+        if (newPump.equals(activePumpName))
+            return;
+
+        removeCustomActions();
+
+        // add new actions
+        List<CustomAction> customActions = activePump.getCustomActions();
+
+        if (customActions!=null)
+        {
+
+            LinearLayout ll = (LinearLayout)actionsFragmentView.findViewById(R.id.action_buttons_layout);
+
+            for (CustomAction customAction : customActions) {
+                // TODO
+
+
+                SingleClickButton btn = new SingleClickButton(MainApp.instance().getApplicationContext());
+                btn.setText(customAction.getName());
+
+                //btn.setTextAppearance(R.style.buttonStyle);
+
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f);
+                layoutParams.setMargins(10, 3, 10, 3);
+
+                btn.setLayoutParams(layoutParams);
+                btn.setOnClickListener(customActionsListener);
+
+
+                ll.addView(btn);
+
+                this.currentCustomActions.put(customAction.getName(), customAction);
+                this.customButtons.add(btn);
+
+
+                // TODO add to map
+
+
+//                <info.nightscout.utils.SingleClickButton
+//                android:id="@+id/actions_profileswitch"
+//                style="?android:attr/buttonStyle"
+
+//                android:layout_width="fill_parent"
+//                android:layout_height="wrap_content"
+//                android:layout_marginBottom="3dp"
+//                android:layout_marginLeft="10dp"
+//                android:layout_marginRight="10dp"
+//                android:layout_marginTop="3dp"
+//                android:layout_weight="0.5"
+//                android:drawableTop="@drawable/icon_actions_profileswitch"
+//                android:text="@string/careportal_profileswitch" />
+
+
+
+
+
+            }
+        }
+
+        activePumpName = newPump;
+    }
+
+    private void removeCustomActions() {
+
+        if (currentCustomActions.size()==0)
+            return;
+
+        LinearLayout ll = (LinearLayout)actionsFragmentView.findViewById(R.id.action_buttons_layout);
+
+        for (SingleClickButton customButton : customButtons) {
+            ll.removeView(customButton);
+        }
+
+        customButtons.clear();
+        currentCustomActions.clear();
     }
 
 
