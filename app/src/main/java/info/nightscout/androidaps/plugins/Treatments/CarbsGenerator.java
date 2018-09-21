@@ -11,6 +11,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.DateUtil;
 
 import static info.nightscout.utils.DateUtil.now;
 
@@ -28,8 +29,11 @@ public class CarbsGenerator {
     }
 
     public static void createCarb(int carbs, long time, String eventType, @Nullable String notes) {
+        long now = DateUtil.now();
+        int carbTime = (int) ((time - now) / 1000 / 60);
         DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-        carbInfo.date = time;
+        carbInfo.date = now;
+        carbInfo.carbTime = carbTime;
         carbInfo.eventType = eventType;
         carbInfo.carbs = carbs;
         carbInfo.context = MainApp.instance();
