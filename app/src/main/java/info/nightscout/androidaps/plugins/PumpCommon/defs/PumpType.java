@@ -56,7 +56,7 @@ public enum PumpType {
     AnimasVibe("Animas Vibe", 0.05d, null, // AnimasBolus?
             new DoseSettings(0.05d, 30, 12*60, 0.05d), //
             PumpTempBasalType.Percent, //
-            new DoseSettings(10, 30, 24*60, 0d, 200d), PumpCapability.BasalRate_Duration30minAllowed, //
+            new DoseSettings(10, 30, 24*60, 0d, 300d), PumpCapability.BasalRate_Duration30minAllowed, //
             0.025d, 5d, 0d, null, PumpCapability.VirtualPumpCapabilities), //
 
     AnimasPing("Animas Ping", AnimasVibe),
