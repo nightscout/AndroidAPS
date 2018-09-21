@@ -188,7 +188,7 @@
   <string name="careportal_cgmsensorinsert">Insertion Capteur MCG</string>
   <string name="careportal_cgmsensorstart">Début Capteur MCG</string>
   <string name="careportal_insulincartridgechange">Changement du Réservoir</string>
-  <string name="careportal_profileswitch">Changement de profil</string>
+  <string name="careportal_profileswitch">Changement profil</string>
   <string name="careportal_snackbolus">Bolus Goûter</string>
   <string name="careportal_mealbolus">Bolus Repas</string>
   <string name="careportal_correctionbolus">Bolus de correction</string>
@@ -366,7 +366,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
   <string name="primefill">Amorcer/Remplir</string>
   <string name="fillwarning">Veuillez à ce que la quantité corresponde aux caractéristiques de votre cathéter !</string>
   <string name="othersettings_title">Autres</string>
-  <string name="fillbolus_title">Remplir/Amorcer des quantités standard d’insuline</string>
+  <string name="fillbolus_title">Valeurs prédéfinies pour remplir&amp;amorcer</string>
   <string name="button1">Bouton 1</string>
   <string name="button2">Bouton 2</string>
   <string name="button3">Bouton 3</string>
@@ -447,7 +447,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
   <string name="wear_shortname">WEAR</string>
   <string name="smscommunicator_shortname">SMS</string>
   <string name="short_tabtitles">Raccourcir les titres des onglets</string>
-  <string name="always_use_shortavg">Utiliser un delta basé sur une moyenne plus courte</string>
+  <string name="always_use_shortavg">Utiliser delta basé sur moyenne courte</string>
   <string name="always_use_shortavg_summary">Utiliser toujours un delta basé sur une moyenne courte au lieu d’une moyenne normale. Utile lorsque les données provenant de sources non filtrées comme xDrip devient incohérentes.</string>
   <string name="advancedsettings_title">Paramètres Avancés</string>
   <string name="danar_model">Modèle: %1$02X Protocole: %2$02X Code: %3$02X</string>
@@ -523,7 +523,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
   <string name="loopsuspended">La Boucle est suspendue</string>
   <string name="loopsuspendedfor">Suspendu (%1$d m)</string>
   <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
-  <string name="suspendloopfor1h">Suspendre Loop pour 1h</string>
+  <string name="suspendloopfor1h">Suspendre la Boucle pour 1h</string>
   <string name="suspendloopfor2h">Suspendre la Boucle pour 2h</string>
   <string name="suspendloopfor3h">Suspendre la Boucle pour 3h</string>
   <string name="suspendloopfor10h">Suspendre la Boucle pour 10h</string>
@@ -692,7 +692,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
   <string name="pumpdrivercorrected">Pilote pompe corrigé</string>
   <string name="pump_unreachable">Pompe hors de portée</string>
   <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
-  <string name="raise_notifications_as_android_notifications">Utiliser le système de notification pour les alertes et les notifications</string>
+  <string name="raise_notifications_as_android_notifications">Utiliser le système des notifications</string>
   <string name="localalertsettings_title">Alertes locales</string>
   <string name="enable_missed_bg_readings_alert">Alerte pas nouvelle donnée glycémique</string>
   <string name="enable_pump_unreachable_alert">Alerte si la pompe est hors de portée</string>

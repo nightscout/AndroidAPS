@@ -952,6 +952,7 @@
   <string name="virtualpump_type">가성펌프 종류</string>
   <string name="virtualpump_definition">펌프 정의</string>
   <string name="virtualpump_pump_def">Bolus: 스텝=%1$s\n확장Bolus: [Step=%2$s, 기간=%3$s분-%4$s시]\nBasal: 스텝=%5$s\n임시Basal: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
+  <string name="virtualpump_pump_def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
   <string name="ns_autobackfill_title">혈당 자동채움</string>
   <string name="wear_wizard_settings">마법사 설정</string>
   <string name="wear_wizard_settings_summary">마법사 결과에 사용 된 계산:</string>
