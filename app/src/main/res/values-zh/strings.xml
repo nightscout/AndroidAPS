@@ -34,7 +34,7 @@
   <string name="description_pump_combo">与Accu-Check Combo 胰岛素泵集成，需要安装ruffy软件</string>
   <string name="description_pump_dana_r">与丹纳R泵集成</string>
   <string name="description_pump_dana_r_korean">与韩版丹纳R泵集成</string>
-  <string name="description_pump_dana_r_v2">与升级固件后的丹纳R泵集成</string>
+  <string name="description_pump_dana_r_v2">与 DanaRv2 泵集成</string>
   <string name="description_pump_dana_rs">与丹纳RS泵集成</string>
   <string name="description_pump_insight">与Accu-Check Insight 胰岛素泵集成，需要安装 SightRemote软件</string>
   <string name="description_pump_mdi">与用于糖尿病治疗的多次每日注射的泵集成</string>

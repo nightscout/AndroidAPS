@@ -9,10 +9,7 @@
   <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
   <string name="description_ma">Estado del algoritmo en 2016</string>
   <string name="description_ama">Estado del algoritmo en 2017</string>
-  <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
-  <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
-  <string name="description_profile_local">Define un perfil que estará disponible sin conexión.</string>
-  <string name="description_profile_nightscout">Usa el perfil introducido en Nightscout</string>
+  <string name="description_profile_nightscout">Proporciona el perfil definidos en Nightscout</string>
   <string name="description_profile_simple">Definir un perfil con un solo bloque de tiempo.</string>
   <string name="description_pump_combo">Integración de bombas de insulina Accu-Check Combo, necesita tener ruffy instalado</string>
   <string name="description_pump_dana_r">Integración de bombas de insulina de DANA Diabecare R</string>
