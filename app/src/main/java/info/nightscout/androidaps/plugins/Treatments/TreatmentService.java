@@ -506,14 +506,26 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return null;
     }
 
-    public class UpdateReturn {
+    public static class UpdateReturn {
+
+        boolean newRecord;
+        boolean success;
+
+        public UpdateReturn() {
+            success = false;
+            newRecord = false;
+        }
+
+
         public UpdateReturn(boolean success, boolean newRecord) {
             this.success = success;
             this.newRecord = newRecord;
         }
 
-        boolean newRecord;
-        boolean success;
+        public void or(UpdateReturn ur) {
+            success = success || ur.success;
+            newRecord = newRecord || ur.newRecord;
+        }
     }
 
 }
