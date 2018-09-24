@@ -1,8 +1,15 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
+import android.view.LayoutInflater;
+import android.view.View;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 
 public abstract class Trigger {
@@ -15,7 +22,7 @@ public abstract class Trigger {
         IS_GREATER,
         IS_NOT_AVAILABLE;
 
-        public int getStringRes() {
+        public @StringRes int getStringRes() {
             switch (this) {
                 case IS_LOWER:
                     return R.string.islower;
@@ -56,18 +63,26 @@ public abstract class Trigger {
         }
     }
 
+    protected ViewHolder viewHolder = null;
+
+    protected TriggerConnector connector = null;
+
     Trigger() {
     }
 
-    abstract boolean shouldRun();
+    public Trigger getConnector() {
+        return connector;
+    }
+
+    public abstract boolean shouldRun();
 
     abstract String toJSON();
 
     abstract Trigger fromJSON(String data);
 
-    abstract int friendlyName();
+    public abstract int friendlyName();
 
-    abstract String friendlyDescription();
+    public abstract String friendlyDescription();
 
     void notifyAboutRun(long time) {
     }
@@ -82,6 +97,33 @@ public abstract class Trigger {
             e.printStackTrace();
         }
         return null;
+    }
 
+    public abstract ViewHolder createViewHolder(LayoutInflater inflater);
+
+    public ViewHolder getViewHolder() {
+        return viewHolder;
+    }
+
+    public void destroyViewHolder() {
+        if (viewHolder != null) {
+            viewHolder.destroy();
+        }
+    }
+
+    public static abstract class ViewHolder {
+        final View view;
+        final Unbinder unbinder;
+
+        public ViewHolder(LayoutInflater inflater, @LayoutRes int layout) {
+            view = inflater.inflate(layout, null);
+            unbinder = ButterKnife.bind(this, view);
+        }
+
+        public void destroy() {
+            unbinder.unbind();
+        }
+
+        public View getView() { return view; }
     }
 }

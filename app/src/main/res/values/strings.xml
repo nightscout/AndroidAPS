@@ -1230,6 +1230,20 @@
     <string name="use_passive_location">Use passive location</string>
     <string name="locationservice">Location service</string>
     <string name="key_location" translatable="false">location</string>
+    <string name="weekday_monday">Monday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_saturday">Saturday</string>
+    <string name="weekday_sunday">Sunday</string>
+    <string name="weekday_monday_short">Mon</string>
+    <string name="weekday_tuesday_short">Tue</string>
+    <string name="weekday_wednesday_short">Wed</string>
+    <string name="weekday_thursday_short">Thu</string>
+    <string name="weekday_friday_short">Fri</string>
+    <string name="weekday_saturday_short">Sat</string>
+    <string name="weekday_sunday_short">Sun</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

@@ -1,10 +1,18 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.support.annotation.StringRes;
+import android.view.LayoutInflater;
+
+import com.dpro.widgets.WeekdaysPicker;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
+import butterknife.BindView;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.utils.DateUtil;
@@ -13,6 +21,68 @@ import info.nightscout.utils.T;
 
 public class TriggerTime extends Trigger {
 
+    public enum DayOfWeek {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY;
+
+        private static final int[] calendarInts = new int[] {
+                Calendar.MONDAY,
+                Calendar.TUESDAY,
+                Calendar.WEDNESDAY,
+                Calendar.THURSDAY,
+                Calendar.FRIDAY,
+                Calendar.SATURDAY,
+                Calendar.SUNDAY
+        };
+
+        private static final int[] fullNames = new int[] {
+                R.string.weekday_monday,
+                R.string.weekday_tuesday,
+                R.string.weekday_wednesday,
+                R.string.weekday_thursday,
+                R.string.weekday_friday,
+                R.string.weekday_saturday,
+                R.string.weekday_sunday
+        };
+
+        private static final int[] shortNames = new int[] {
+                R.string.weekday_monday_short,
+                R.string.weekday_tuesday_short,
+                R.string.weekday_wednesday_short,
+                R.string.weekday_thursday_short,
+                R.string.weekday_friday_short,
+                R.string.weekday_saturday_short,
+                R.string.weekday_sunday_short
+        };
+
+        public int toCalendarInt() {
+            return calendarInts[ordinal()];
+        }
+
+        public static DayOfWeek fromCalendarInt(int day) {
+            for(int i = 0; i < calendarInts.length; ++i) {
+                if (calendarInts[i] == day)
+                    return values()[i];
+            }
+            return null;
+        }
+
+        public @StringRes int getFullName() {
+            return fullNames[ordinal()];
+        }
+
+        public @StringRes int getShortName() {
+            return shortNames[ordinal()];
+        }
+    }
+
+    private final boolean[] weekdays = new boolean[DayOfWeek.values().length];
+
     long lastRun;
 
     // Single execution
@@ -20,20 +90,28 @@ public class TriggerTime extends Trigger {
 
     // Recurring
     boolean recurring;
-    boolean monday = true;
-    boolean tuesday = true;
-    boolean wednesday = true;
-    boolean thursday = true;
-    boolean friday = true;
-    boolean saturday = true;
-    boolean sunday = true;
     int hour;
     int minute;
 
     long validTo;
 
+    public TriggerTime() {
+        for(DayOfWeek day : DayOfWeek.values()) {
+            set(day, true);
+        }
+    }
+
+    public TriggerTime set(DayOfWeek day, boolean value) {
+        weekdays[day.ordinal()] = value;
+        return this;
+    }
+
+    public boolean isSet(DayOfWeek day) {
+        return weekdays[day.ordinal()];
+    }
+
     @Override
-    boolean shouldRun() {
+    public boolean shouldRun() {
         if (recurring) {
             if (validTo != 0 && DateUtil.now() > validTo)
                 return false;
@@ -46,13 +124,7 @@ public class TriggerTime extends Trigger {
             scheduledCal.set(Calendar.SECOND, 0);
             long scheduled = scheduledCal.getTimeInMillis();
 
-            if (monday && scheduledDayOfWeek == Calendar.MONDAY ||
-                    tuesday && scheduledDayOfWeek == Calendar.TUESDAY ||
-                    wednesday && scheduledDayOfWeek == Calendar.WEDNESDAY ||
-                    thursday && scheduledDayOfWeek == Calendar.THURSDAY ||
-                    friday && scheduledDayOfWeek == Calendar.FRIDAY ||
-                    saturday && scheduledDayOfWeek == Calendar.SATURDAY ||
-                    sunday && scheduledDayOfWeek == Calendar.SUNDAY) {
+            if (isSet(DayOfWeek.fromCalendarInt(scheduledDayOfWeek))) {
                 if (DateUtil.now() >= scheduled && DateUtil.now() - scheduled < T.mins(5).msecs()) {
                     if (lastRun < scheduled)
                         return true;
@@ -75,13 +147,9 @@ public class TriggerTime extends Trigger {
             data.put("lastRun", lastRun);
             data.put("runAt", runAt);
             data.put("recurring", recurring);
-            data.put("monday", monday);
-            data.put("tuesday", tuesday);
-            data.put("wednesday", wednesday);
-            data.put("thursday", thursday);
-            data.put("friday", friday);
-            data.put("saturday", saturday);
-            data.put("sunday", sunday);
+            for(int i = 0; i < weekdays.length; ++i) {
+                data.put(DayOfWeek.values()[i].name(), weekdays[i]);
+            }
             data.put("hour", hour);
             data.put("minute", minute);
             data.put("validTo", validTo);
@@ -101,13 +169,9 @@ public class TriggerTime extends Trigger {
             lastRun = JsonHelper.safeGetLong(o, "lastRun");
             runAt = JsonHelper.safeGetLong(o, "runAt");
             recurring = JsonHelper.safeGetBoolean(o, "recurring");
-            monday = JsonHelper.safeGetBoolean(o, "monday");
-            tuesday = JsonHelper.safeGetBoolean(o, "tuesday");
-            wednesday = JsonHelper.safeGetBoolean(o, "wednesday");
-            thursday = JsonHelper.safeGetBoolean(o, "thursday");
-            friday = JsonHelper.safeGetBoolean(o, "friday");
-            saturday = JsonHelper.safeGetBoolean(o, "saturday");
-            sunday = JsonHelper.safeGetBoolean(o, "sunday");
+            for(int i = 0; i < weekdays.length; ++i) {
+                weekdays[i] = JsonHelper.safeGetBoolean(o, DayOfWeek.values()[i].name());
+            }
             hour = JsonHelper.safeGetInt(o, "hour");
             minute = JsonHelper.safeGetInt(o, "minute");
             validTo = JsonHelper.safeGetLong(o, "validTo");
@@ -118,12 +182,12 @@ public class TriggerTime extends Trigger {
     }
 
     @Override
-    int friendlyName() {
+    public int friendlyName() {
         return R.string.time;
     }
 
     @Override
-    String friendlyDescription() {
+    public String friendlyDescription() {
         if (recurring) {
             // TODO
             return "Every ";
@@ -152,41 +216,6 @@ public class TriggerTime extends Trigger {
         return this;
     }
 
-    TriggerTime monday(boolean monday) {
-        this.monday = monday;
-        return this;
-    }
-
-    TriggerTime tuesday(boolean tuesday) {
-        this.tuesday = tuesday;
-        return this;
-    }
-
-    TriggerTime wednesday(boolean wednesday) {
-        this.wednesday = wednesday;
-        return this;
-    }
-
-    TriggerTime thursday(boolean thursday) {
-        this.thursday = thursday;
-        return this;
-    }
-
-    TriggerTime friday(boolean friday) {
-        this.friday = friday;
-        return this;
-    }
-
-    TriggerTime saturday(boolean saturday) {
-        this.saturday = saturday;
-        return this;
-    }
-
-    TriggerTime sunday(boolean sunday) {
-        this.sunday = sunday;
-        return this;
-    }
-
     TriggerTime validTo(long validTo) {
         this.validTo = validTo;
         return this;
@@ -200,6 +229,36 @@ public class TriggerTime extends Trigger {
     TriggerTime minute(int minute) {
         this.minute = minute;
         return this;
+    }
+
+    @Override
+    public ViewHolder createViewHolder(LayoutInflater inflater) {
+        ViewHolder v = new ViewHolder(inflater);
+        viewHolder = v;
+        return v;
+    }
+
+    class ViewHolder extends Trigger.ViewHolder {
+
+        @BindView(R.id.weekdays)
+        WeekdaysPicker weekdaysPicker;
+
+        public ViewHolder(LayoutInflater inflater) {
+            super(inflater, R.layout.automation_trigger_time);
+
+            List<Integer> selectedDays = new ArrayList<>();
+            for(int i = 0; i < weekdays.length; ++i) {
+                DayOfWeek day = DayOfWeek.values()[i];
+                boolean selected = weekdays[i];
+                if (selected) selectedDays.add(day.toCalendarInt());
+            }
+            weekdaysPicker.setSelectedDays(selectedDays);
+
+            weekdaysPicker.setOnWeekdaysChangeListener((view, i, list) -> {
+                set(DayOfWeek.fromCalendarInt(i), list.contains(i));
+            });
+        }
+
     }
 
 }

@@ -12,9 +12,9 @@ public class AutomationEvent {
     private List<Action> actions = new ArrayList<>();
     private String title;
 
-    AutomationEvent(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) { this.title = title; }
+
+    public void setTrigger(Trigger trigger) { this.trigger = trigger; }
 
     public Trigger getTrigger() {
         return trigger;

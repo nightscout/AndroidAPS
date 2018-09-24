@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.view.LayoutInflater;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +19,7 @@ public class TriggerBg extends Trigger {
     protected String units = ProfileFunctions.getInstance().getProfileUnits();
 
     @Override
-    synchronized boolean shouldRun() {
+    public synchronized boolean shouldRun() {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if (glucoseStatus == null && comparator.equals(Comparator.IS_NOT_AVAILABLE))
@@ -58,16 +60,21 @@ public class TriggerBg extends Trigger {
     }
 
     @Override
-    int friendlyName() {
+    public int friendlyName() {
         return R.string.glucose;
     }
 
     @Override
-    String friendlyDescription() {
+    public String friendlyDescription() {
         if (comparator.equals(Comparator.IS_NOT_AVAILABLE))
             return MainApp.gs(R.string.glucoseisnotavailable);
         else
             return MainApp.gs(R.string.glucosecompared, comparator.getStringRes(), threshold, units);
+    }
+
+    @Override
+    public ViewHolder createViewHolder(LayoutInflater inflater) {
+        return null;
     }
 
     TriggerBg threshold(double threshold) {

@@ -8,9 +8,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerOr;
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({})
 public class TriggerOrTest {
