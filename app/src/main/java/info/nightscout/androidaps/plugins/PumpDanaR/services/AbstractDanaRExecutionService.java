@@ -55,7 +55,6 @@ public abstract class AbstractDanaRExecutionService extends Service {
     protected BluetoothSocket mRfcommSocket;
     protected BluetoothDevice mBTDevice;
 
-    protected DanaRPump mDanaRPump = DanaRPump.getInstance();
     protected Treatment mBolusingTreatment = null;
 
     protected boolean mConnectionInProgress = false;
