@@ -14,7 +14,7 @@
   <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
   <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
   <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
-  <string name="description_careportal">Mata in avancerade poster i loggboken.</string>
+  <string name="description_careportal">Mata in avancerade poster i loggboken</string>
   <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
   <string name="description_objectives">Inlärningsprogram</string>
   <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
@@ -43,14 +43,14 @@
   <string name="description_sensitivity_oref0">Känsligheten beräknas från 24 timmars data från historiken och kolhydrater som inte redan tagits upp, ignoreras efter tiden som ställts in i inställningarna.</string>
   <string name="description_sensitivity_oref1">Känsligheten beräknas från 8 timmars data från historiken och kolhydrater som ännu inte tagits upp ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
   <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
-  <string name="description_source_dexcom_g5">Ta emot BG-data från den modifierade Dexcom G5-appen.</string>
-  <string name="description_source_glimp">Ta emot BG-data från Glimp.</string>
+  <string name="description_source_dexcom_g5">Ta emot BG-data från den modifierade Dexcom G5-appen</string>
+  <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
   <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
   <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
   <string name="description_source_xdrip">Ta emot BG-data från xDrip</string>
   <string name="description_treatments">Spara alla behandlingar som gjorts</string>
-  <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka.</string>
-  <string name="description_xdrip_status_line">Visa information om din loop på din urtavla från xDrip.</string>
+  <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka</string>
+  <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip-urtavla</string>
   <string name="description_sms_communicator">Fjärrstyr AndroidAPS med SMS-kommandon.</string>
   <string name="objectives_button_start">Starta</string>
   <string name="objectives_button_verify">Godkänn</string>
@@ -117,7 +117,7 @@
   <string name="virtualpump">Virtuell pump</string>
   <string name="careportal">Careportal</string>
   <string name="configbuilder_pump">Pump</string>
-  <string name="configbuilder_pump_description">Vilken pump skulle du vilja använda med AndroidAPS?</string>
+  <string name="configbuilder_pump_description">Vilken pump vill du använda med AndroidAPS?</string>
   <string name="configbuilder_treatments">Behandlingar</string>
   <string name="configbuilder_treatments_description">Vilket insticksprogram ska användas för att hantera behandlingar?</string>
   <string name="configbuilder_profile">Profil</string>
@@ -156,7 +156,7 @@
   <string name="sms_bolus">Bolus:</string>
   <string name="basal">Basal</string>
   <string name="sms_basal">Basal:</string>
-  <string name="carbs">Kolhydrater</string>
+  <string name="carbs">KH</string>
   <string name="changeyourinput">Ändra inmatning</string>
   <string name="setextendedbolusquestion">Ställ in ny förlängd bolus:</string>
   <string name="configbuilder_bgsource">BG-källa</string>
@@ -470,7 +470,7 @@
   <string name="xdripnotinstalled">xDrip+ inte installerat</string>
   <string name="calibrationsent">Kalibrering skickad till xDrip</string>
   <string name="smscommunicator_remotecalibrationnotallowed">Kalibrering från andra källor inte tillåtna</string>
-  <string name="smscommunicator_calibrationsent">Kalibrering skickad. xDrip måste tillåta att ta emot kalibrering i inställningarna.</string>
+  <string name="smscommunicator_calibrationsent">Kalibrering skickad. Observera att xDrip måste vara inställd att ta emot kalibreringar.</string>
   <string name="smscommunicator_calibrationfailed">xDrip tar inte emot kalibreringar</string>
   <string name="pumpsuspended">Pump pausad</string>
   <string name="gettingpumpstatus">Hämtar pumpstatus</string>
@@ -610,7 +610,7 @@
   <string name="basal_short">BAS</string>
   <string name="virtualpump_extendedbolus_label_short">EXT</string>
   <string name="keep_screen_on_title">Håll skärmen igång</string>
-  <string name="keep_screen_on_summary">Förhindrar Android att stänga av skärmen. Det kommer att förbruka mer batteri.</string>
+  <string name="keep_screen_on_summary">Förhindrar att skärmen stängs av. Förbrukar mer batteri.</string>
   <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
   <string name="sensitivityweightedaverage">WeightedAverage</string>
   <string name="mdtp_ok">OK</string>
@@ -923,7 +923,7 @@
   <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
   <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
   <string name="time">Tid</string>
-  <string name="overview_show_notes_field_in_dialogs_title">Visa anteckningar i behandlingsdialogerna</string>
+  <string name="overview_show_notes_field_in_dialogs_title">Anteckning i behandlingsdialoger</string>
   <string name="next_button">Nästa</string>
   <string name="previous_button">Föregående</string>
   <string name="nav_setupwizard">Installationsguide</string>
