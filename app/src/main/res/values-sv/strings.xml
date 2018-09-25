@@ -20,7 +20,7 @@
   <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
   <string name="description_insulin_rapid">Insulininställning för Humalog, Apidra och Novorapid/Novolog</string>
   <string name="description_insulin_ultra_rapid">Insulininställning för Fiasp</string>
-  <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet och ska bara användas av avancerade användare</string>
+  <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet. Bör bara användas av avancerade användare</string>
   <string name="description_loop">Aktivera eller avaktivera implementationen som kör loopen.</string>
   <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
   <string name="description_ma">Så som algoritmen var definierad år 2016</string>
@@ -45,9 +45,9 @@
   <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
   <string name="description_source_dexcom_g5">Ta emot BG-data från den modifierade Dexcom G5-appen.</string>
   <string name="description_source_glimp">Ta emot BG-data från Glimp.</string>
-  <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader.</string>
+  <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
   <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
-  <string name="description_source_xdrip">Ta emot BG-data från xDrip.</string>
+  <string name="description_source_xdrip">Ta emot BG-data från xDrip</string>
   <string name="description_treatments">Spara alla behandlingar som gjorts</string>
   <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka.</string>
   <string name="description_xdrip_status_line">Visa information om din loop på din urtavla från xDrip.</string>
@@ -439,7 +439,7 @@
   <string name="danarpump_shortname">Dana</string>
   <string name="overview_shortname">Hem</string>
   <string name="virtualpump_shortname">vPump</string>
-  <string name="profileviewer_shortname">NSProfil</string>
+  <string name="profileviewer_shortname">Profil</string>
   <string name="treatments_shortname">Beh</string>
   <string name="careportal_shortname">CP</string>
   <string name="objectives_shortname">Mål</string>
@@ -588,7 +588,7 @@
   <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
   <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
   <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (absorptionstid för KH är exkluderad)</string>
-  <string name="pump">Pump</string>
+  <string name="pump">P</string>
   <string name="openaps">OpenAPS</string>
   <string name="uploader">Uppladdare</string>
   <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
@@ -605,8 +605,8 @@
   <string name="careportal_insulinage_label_short">IAGE</string>
   <string name="careportal_canulaage_label_short">CAGE</string>
   <string name="careportal_pbage_label_short">PBAGE</string>
-  <string name="openaps_short">OAPS</string>
-  <string name="uploader_short">UPLD</string>
+  <string name="openaps_short">APS</string>
+  <string name="uploader_short">Upld batt</string>
   <string name="basal_short">BAS</string>
   <string name="virtualpump_extendedbolus_label_short">EXT</string>
   <string name="keep_screen_on_title">Håll skärmen igång</string>
