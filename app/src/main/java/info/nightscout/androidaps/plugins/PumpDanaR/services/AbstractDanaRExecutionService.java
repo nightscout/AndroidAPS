@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -235,5 +236,16 @@ public abstract class AbstractDanaRExecutionService extends Service {
         result.success = true;
         result.comment = "OK";
         return result;
+    }
+
+    protected void waitForWholeMinute() {
+        while (true) {
+            long time = DateUtil.now();
+            long timeToWholeMinute = (60000 - time % 60000);
+            if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
+                break;
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
+            SystemClock.sleep(Math.min(timeToWholeMinute, 100));
+        }
     }
 }
