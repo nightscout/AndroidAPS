@@ -43,7 +43,6 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -51,6 +50,7 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.T;
 
@@ -184,7 +184,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
-            return total;
+            return  total;
 
         double dia = profile.getDia();
 
@@ -259,7 +259,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 if (t > absorptionTime_ago && t <= now) {
                     if (treatment.carbs >= 1) {
                         result.carbs += treatment.carbs;
-                        if (t > result.lastCarbTime)
+                        if(t > result.lastCarbTime)
                             result.lastCarbTime = t;
                     }
                 }
@@ -312,7 +312,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
         }
         if (L.isEnabled(L.DATATREATMENTS))
-            log.debug("Last bolus time: " + new Date(last).toLocaleString());
+        log.debug("Last bolus time: " + new Date(last).toLocaleString());
         return last;
     }
 
@@ -341,7 +341,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Subscribe
     public void onStatusEvent(final EventReloadTreatmentData ev) {
         if (L.isEnabled(L.DATATREATMENTS))
-            log.debug("EventReloadTreatmentData");
+        log.debug("EventReloadTreatmentData");
         initializeTreatmentData();
         initializeExtendedBolusData();
         updateTotalIOBTreatments();
@@ -352,7 +352,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @SuppressWarnings("unused")
     public void onStatusEvent(final EventReloadTempBasalData ev) {
         if (L.isEnabled(L.DATATREATMENTS))
-            log.debug("EventReloadTempBasalData");
+        log.debug("EventReloadTempBasalData");
         initializeTempBasalData();
         updateTotalIOBTempBasals();
     }
@@ -372,14 +372,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
-            return total;
+            return  total;
 
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
                 TemporaryBasal t = tempBasals.get(pos);
                 if (t.date > time) continue;
                 IobTotal calc;
-                if (truncate && t.end() > truncateTime) {
+                if(truncate && t.end() > truncateTime){
                     TemporaryBasal dummyTemp = new TemporaryBasal();
                     dummyTemp.copyFrom(t);
                     dummyTemp.cutEndTo(truncateTime);
@@ -398,7 +398,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
                     IobTotal calc;
-                    if (truncate && e.end() > truncateTime) {
+                    if(truncate && e.end() > truncateTime){
                         ExtendedBolus dummyExt = new ExtendedBolus();
                         dummyExt.copyFrom(e);
                         dummyExt.cutEndTo(truncateTime);
@@ -495,12 +495,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     // return true if new record is created
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
-
-        if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
-            log.error("Not valid record");
-            return false;
-        }
-
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
         treatment.source = detailedBolusInfo.source;
@@ -513,27 +507,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
         treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
-        TreatmentService.UpdateReturn creatOrUpdateResult = new TreatmentService.UpdateReturn();
-        TreatmentService.UpdateReturn creatOrUpdateResultCarbs = new TreatmentService.UpdateReturn();
-        if (treatment.insulin > 0) {
-            creatOrUpdateResult = getService().createOrUpdate(treatment);
-            //log.debug("Adding new Treatment record" + treatment.toString());
-        }
-
-        if (detailedBolusInfo.carbTime != 0 && detailedBolusInfo.carbs > 0) {
+        TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment);
+        boolean newRecordCreated = creatOrUpdateResult.newRecord;
+        //log.debug("Adding new Treatment record" + treatment.toString());
+        if (detailedBolusInfo.carbTime != 0) {
             Treatment carbsTreatment = new Treatment();
             carbsTreatment.source = detailedBolusInfo.source;
             carbsTreatment.pumpId = detailedBolusInfo.pumpId; // but this should never happen
-            carbsTreatment.date = detailedBolusInfo.date + T.mins(detailedBolusInfo.carbTime).msecs() + T.secs(1).msecs(); // add 1 sec to make them different records
+            carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
             carbsTreatment.source = detailedBolusInfo.source;
-            creatOrUpdateResultCarbs = getService().createOrUpdate(carbsTreatment);
+            getService().createOrUpdate(carbsTreatment);
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
-
-        creatOrUpdateResult.or(creatOrUpdateResultCarbs);
-        boolean newRecordCreated = creatOrUpdateResult.newRecord;
-
         if (newRecordCreated && detailedBolusInfo.isValid)
             NSUpload.uploadTreatmentRecord(detailedBolusInfo);
 
