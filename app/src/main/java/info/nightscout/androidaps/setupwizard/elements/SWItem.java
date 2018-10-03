@@ -81,7 +81,7 @@ public class SWItem {
     }
 
     public static LinearLayout generateLayout(View view) {
-        LinearLayout layout = (LinearLayout) view.findViewById(view.getId());
+        LinearLayout layout = (LinearLayout) view;
         layout.removeAllViews();
         return layout;
     }
