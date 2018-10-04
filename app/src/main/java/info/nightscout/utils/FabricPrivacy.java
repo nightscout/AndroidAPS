@@ -110,6 +110,7 @@ public class FabricPrivacy {
         CustomEvent pluginStats = new CustomEvent("PluginStats");
         pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
         pluginStats.putCustomAttribute("HEAD", BuildConfig.HEAD);
+        pluginStats.putCustomAttribute("language", SP.getString(R.string.key_language,"default"));
         for (PluginBase plugin : MainApp.getPluginsList()) {
             if (!plugin.pluginDescription.alwaysEnabled) {
                 if (plugin.isEnabled(plugin.getType()))
