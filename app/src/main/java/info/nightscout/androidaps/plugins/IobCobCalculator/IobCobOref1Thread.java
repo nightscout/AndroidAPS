@@ -148,7 +148,7 @@ public class IobCobOref1Thread extends Thread {
                     AutosensData autosensData = new AutosensData();
                     autosensData.time = bgTime;
                     if (previous != null)
-                        autosensData.activeCarbsList = new ArrayList<>(previous.activeCarbsList);
+                        autosensData.activeCarbsList = previous.cloneCarbsList();
                     else
                         autosensData.activeCarbsList = new ArrayList<>();
 

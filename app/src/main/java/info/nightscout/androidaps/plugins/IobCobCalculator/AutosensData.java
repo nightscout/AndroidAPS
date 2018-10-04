@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 /**
@@ -40,7 +41,7 @@ public class AutosensData implements DataPointWithLabelInterface {
         double min5minCarbImpact = 0d;
         double remaining = 0d;
 
-        public CarbsInPast(Treatment t) {
+        CarbsInPast(Treatment t) {
             time = t.date;
             carbs = t.carbs;
             remaining = t.carbs;
@@ -55,6 +56,18 @@ public class AutosensData implements DataPointWithLabelInterface {
             } else {
                 min5minCarbImpact = SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
             }
+        }
+
+       CarbsInPast (CarbsInPast other) {
+            this.time = other.time;
+            this.carbs = other.carbs;
+            this.min5minCarbImpact = other.min5minCarbImpact;
+            this.remaining = other.remaining;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", new Date(time).toLocaleString(), carbs, min5minCarbImpact, remaining);
         }
     }
 
@@ -89,11 +102,18 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public String toString() {
-        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " avgDelta=" + avgDelta + " Bgi=" + bgi + " Deviation=" + deviation + " avgDeviation=" + avgDeviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensResult.ratio + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation;
+        return String.format("AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
+                new Date(time).toLocaleString(), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
     }
 
-    public int minOld() {
-        return (int) ((System.currentTimeMillis() - time) / 1000 / 60);
+    public List<CarbsInPast> cloneCarbsList() {
+        List<CarbsInPast> newActiveCarbsList = new ArrayList<>();
+
+        for(CarbsInPast c: activeCarbsList) {
+            newActiveCarbsList.add(new CarbsInPast(c));
+        }
+
+        return newActiveCarbsList;
     }
 
     // remove carbs older than timeframe
@@ -111,7 +131,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 if (c.remaining > 0)
                     cob -= c.remaining;
                 if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Removing carbs at " + new Date(toTime).toLocaleString() + " + after " + maxAbsorptionHours + "h :" + new Date(c.time).toLocaleString());
+                    log.debug("Removing carbs at " + new Date(toTime).toLocaleString() + " + after " + maxAbsorptionHours + "h > " + c.toString());
             }
         }
     }
