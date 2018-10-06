@@ -147,7 +147,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }
             }
             double averageDiff = totalDiff / (bgReadings.size() - 1) / 1000d;
-            boolean is5mindata = averageDiff < 10;
+            boolean is5mindata = averageDiff < 1;
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Interval detection: values: " + bgReadings.size() + " averageDiff: " + averageDiff + "[s] is5minData: " + is5mindata);
             return is5mindata;
@@ -294,6 +294,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
             long adjusted = (msecDiff - T.mins(5).msecs()) / 1000;
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
+            if (Math.abs(adjusted) > 90) {
+                // too big adjustment, fallback to non 5 min data
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Fallback to non 5 min data");
+                createBucketedData();
+                return;
+            }
             current.date = previous.date + T.mins(5).msecs();
         }
 
