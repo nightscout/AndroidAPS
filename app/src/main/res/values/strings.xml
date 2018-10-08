@@ -1631,6 +1631,9 @@
     <string name="medtronic_history_group_unknown">Unknowns</string>
     <string name="medtronic_history_group_all">All</string>
     <string name="medtronic_pump_history">Medtronic Pump History</string>
+    <string name="autotune">Autotune</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="tuneprofile_name">Autotune</string>
 
 
     <!-- MDT Pump Status -->
