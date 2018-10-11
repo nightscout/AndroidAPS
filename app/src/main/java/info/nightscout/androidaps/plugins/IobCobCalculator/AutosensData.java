@@ -131,7 +131,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 if (c.remaining > 0)
                     cob -= c.remaining;
                 if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Removing carbs at " + new Date(toTime).toLocaleString() + " + after " + maxAbsorptionHours + "h > " + c.toString());
+                    log.debug("Removing carbs at " + new Date(toTime).toLocaleString() + " after " + maxAbsorptionHours + "h > " + c.toString());
             }
         }
     }
