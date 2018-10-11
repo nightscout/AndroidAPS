@@ -665,15 +665,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
-            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
-            if (!treatmentCreated) {
-                log.error("Adding treatment record overrode an existing record: " + dbi);
-                if (dbi.isSMB) {
-                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
-                return false;
-            }
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true);
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
             if (dbi.isSMB) {
@@ -1158,8 +1150,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) == null) {
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
+            if (TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }
         }
