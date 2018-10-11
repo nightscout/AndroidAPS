@@ -1036,8 +1036,7 @@
   <string name="nav_logsettings">Настройки на логовете</string>
   <string name="resettodefaults">Възстанови настройките по подразбиране</string>
   <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
-  <string name="as">като
-</string>
+  <string name="as">АS</string>
   <string name="versionavailable">Има налично обновяване до версия %1$s </string>
   <string name="time_offset">времево отместване</string>
   <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
