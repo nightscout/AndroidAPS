@@ -96,7 +96,7 @@ public class CommandQueue {
     }
 
     private synchronized void removeAll(Command.CommandType type) {
-        for (int i = 0; i < queue.size(); i++) {
+        for (int i = queue.size() - 1; i >= 0; i--) {
             if (queue.get(i).commandType == type) {
                 queue.remove(i);
             }
