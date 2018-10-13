@@ -21,8 +21,6 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -37,16 +35,19 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.T;
@@ -56,7 +57,7 @@ import info.nightscout.utils.XdripCalibrations;
  * Created by mike on 05.08.2016.
  */
 public class SmsCommunicatorPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(SmsCommunicatorPlugin.class);
+    private static Logger log = LoggerFactory.getLogger(L.SMS);
 
     private static SmsCommunicatorPlugin smsCommunicatorPlugin;
 
@@ -70,46 +71,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private List<String> allowedNumbers = new ArrayList<>();
 
-    class Sms {
-        String phoneNumber;
-        String text;
-        long date;
-        boolean received = false;
-        boolean sent = false;
-        boolean processed = false;
-
-        String confirmCode;
-        double bolusRequested = 0d;
-        double tempBasal = 0d;
-        double calibrationRequested = 0d;
-        int duration = 0;
-
-        Sms(SmsMessage message) {
-            phoneNumber = message.getOriginatingAddress();
-            text = message.getMessageBody();
-            date = message.getTimestampMillis();
-            received = true;
-        }
-
-        Sms(String phoneNumber, String text, long date) {
-            this.phoneNumber = phoneNumber;
-            this.text = text;
-            this.date = date;
-            sent = true;
-        }
-
-        Sms(String phoneNumber, String text, long date, String confirmCode) {
-            this.phoneNumber = phoneNumber;
-            this.text = text;
-            this.date = date;
-            this.confirmCode = confirmCode;
-            sent = true;
-        }
-
-        public String toString() {
-            return "SMS from " + phoneNumber + ": " + text;
-        }
-    }
+    private AuthRequest messageToConfirm = null;
 
     private Sms cancelTempBasalWaitingForConfirmation = null;
     private Sms tempBasalWaitingForConfirmation = null;
@@ -443,6 +405,10 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     }
                     break;
                 default: // expect passCode here
+                    if (messageToConfirm != null) {
+                        messageToConfirm.action(splited[0]);
+                        messageToConfirm = null;
+                    }
                     if (bolusWaitingForConfirmation != null && !bolusWaitingForConfirmation.processed &&
                             bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - bolusWaitingForConfirmation.date < Constants.SMS_CONFIRM_TIMEOUT) {
                         bolusWaitingForConfirmation.processed = true;
@@ -561,12 +527,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
     }
 
-    private void sendSMS(Sms sms) {
+    void sendSMS(Sms sms) {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
         if (sms.text.length() > 140) sms.text = sms.text.substring(0, 139);
         try {
-            log.debug("Sending SMS to " + sms.phoneNumber + ": " + sms.text);
+            if (L.isEnabled(L.SMS))
+                log.debug("Sending SMS to " + sms.phoneNumber + ": " + sms.text);
             smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
             messages.add(sms);
         } catch (IllegalArgumentException e) {
