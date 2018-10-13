@@ -42,6 +42,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isSMBModeEnabled(new Constraint<>(true));
     }
 
+    public Constraint<Boolean> isUAMEnabled() {
+        return isUAMEnabled(new Constraint<>(true));
+    }
+
     public Constraint<Boolean> isAdvancedFilteringEnabled() {
         return isAdvancedFilteringEnabled(new Constraint<>(true));
     }
@@ -126,6 +130,18 @@ public class ConstraintChecker implements ConstraintsInterface {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isSMBModeEnabled(value);
+        }
+        return value;
+    }
+
+    @Override
+    public Constraint<Boolean> isUAMEnabled(Constraint<Boolean> value) {
+
+        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
+            constraint.isUAMEnabled(value);
         }
         return value;
     }
