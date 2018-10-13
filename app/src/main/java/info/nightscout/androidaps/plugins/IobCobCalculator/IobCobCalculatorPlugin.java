@@ -298,7 +298,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 // too big adjustment, fallback to non 5 min data
                 if (L.isEnabled(L.AUTOSENS))
                     log.debug("Fallback to non 5 min data");
-                createBucketedData();
+                createBucketedDataRecalculated();
                 return;
             }
             current.date = previous.date + T.mins(5).msecs();
