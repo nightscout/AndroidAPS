@@ -519,12 +519,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     } else if (suspendWaitingForConfirmation != null && !suspendWaitingForConfirmation.processed &&
                             suspendWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - suspendWaitingForConfirmation.date < Constants.SMS_CONFIRM_TIMEOUT) {
                         suspendWaitingForConfirmation.processed = true;
+                        final int dur =  suspendWaitingForConfirmation.duration;
                         ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                             @Override
                             public void run() {
                                 if (result.success) {
-                                    LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
-                                    NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
+                                    LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + dur * 60L * 1000);
+                                    NSUpload.uploadOpenAPSOffline(dur * 60);
                                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                                     String reply = MainApp.gs(R.string.smscommunicator_loopsuspended) + " " +
                                             MainApp.gs(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
