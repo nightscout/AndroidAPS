@@ -231,13 +231,15 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
         bucketed_data = new ArrayList<>();
         bucketed_data.add(bgReadings.get(0));
+        if (L.isEnabled(L.AUTOSENS))
+            log.debug("Adding. bgTime: " + DateUtil.toISOString(bgReadings.get(0).date) + " lastbgTime: " + "none-first-value" + " " + bgReadings.get(0).toString());
         int j = 0;
         for (int i = 1; i < bgReadings.size(); ++i) {
             long bgTime = bgReadings.get(i).date;
             long lastbgTime = bgReadings.get(i - 1).date;
             //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + bgReadings.get(i).value + "   Previous: " + new Date(lastbgTime).toString() + " " + bgReadings.get(i - 1).value);
             if (bgReadings.get(i).value < 39 || bgReadings.get(i - 1).value < 39) {
-                continue;
+                throw new IllegalStateException("<39");
             }
 
             long elapsed_minutes = (bgTime - lastbgTime) / (60 * 1000);
