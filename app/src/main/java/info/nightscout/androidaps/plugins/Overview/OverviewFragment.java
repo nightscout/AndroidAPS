@@ -1364,7 +1364,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // Sensitivity
         if (sensitivityView != null) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("Overview");
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Overview");
             if (autosensData != null)
                 sensitivityView.setText(String.format("%.0f%%", autosensData.autosensResult.ratio * 100));
             else
