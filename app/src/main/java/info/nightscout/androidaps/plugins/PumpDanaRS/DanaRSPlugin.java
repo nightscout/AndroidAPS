@@ -415,6 +415,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             if (!result.success) {
                 String error = "" + DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode;
                 switch (DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode) {
+                    // 4 reported as max bolus violation. Check later
                     case 0x10:
                         error = MainApp.gs(R.string.maxbolusviolation);
                         break;
