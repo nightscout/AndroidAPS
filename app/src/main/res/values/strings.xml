@@ -1007,6 +1007,8 @@
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
+    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
+    <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
