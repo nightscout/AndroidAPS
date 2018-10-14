@@ -889,6 +889,8 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
   <string name="autosensdisabledinpreferences">Autosens gedeactiveerd in de voorkeuren</string>
   <string name="smbdisabledinpreferences">SMB gedeactiveerd in de voorkeuren</string>
+  <string name="uamdisabledinpreferences">UAM gedeactiveerd in configuratie</string>
+  <string name="uamdisabledoref1notselected">UAM gedeactiveerd omdat het Oref1 gevoeligheid plugin nodig heeft</string>
   <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
   <string name="pumplimit">Pomp limiet</string>
   <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>

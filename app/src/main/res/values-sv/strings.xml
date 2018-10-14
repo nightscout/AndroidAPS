@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
   <string name="autosensdisabledinpreferences">Autosens inaktiverat i Inställningar</string>
   <string name="smbdisabledinpreferences">SMB inaktiverat i Inställningar</string>
+  <string name="uamdisabledinpreferences">UAM är inaktiverat i inställningarna</string>
+  <string name="uamdisabledoref1notselected">UAM är inaktiverat eftersom det kräver Oref1 känslighetsplugin</string>
   <string name="limitingbasalratio">Begränsar max basal till %1$.2f E/h pga %2$s</string>
   <string name="pumplimit">pumpbegränsning</string>
   <string name="itmustbepositivevalue">det måste vara ett positivt värde</string>

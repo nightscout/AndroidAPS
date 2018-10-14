@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
   <string name="autosensdisabledinpreferences">Autosens zakázán v nastavení</string>
   <string name="smbdisabledinpreferences">SMB zakázáno v nastavení</string>
+  <string name="uamdisabledinpreferences">UAM zakázáno v nastavení</string>
+  <string name="uamdisabledoref1notselected">UAM zakázáno protože není povolen Oref1 plugin</string>
   <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
   <string name="pumplimit">limit pumpy</string>
   <string name="itmustbepositivevalue">požadována kladná hodnota</string>
