@@ -146,7 +146,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     return false;
                 }
             }
-            double averageDiff = totalDiff / (bgReadings.size() - 1) / 1000d;
+            long averageDiff = totalDiff / bgReadings.size() / 1000;
             boolean is5mindata = averageDiff < 1;
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Interval detection: values: " + bgReadings.size() + " averageDiff: " + averageDiff + "[s] is5minData: " + is5mindata);

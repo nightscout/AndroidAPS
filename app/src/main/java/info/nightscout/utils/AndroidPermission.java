@@ -44,7 +44,7 @@ public class AndroidPermission {
     }
 
     public static synchronized void notifyForSMSPermissions(Activity activity) {
-        if (SP.getBoolean(R.string.smscommunicator_remotecommandsallowed, false)) {
+        if (SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
                 if (!checkForPermission(activity, Manifest.permission.RECEIVE_SMS)) {
                     NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SMS, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT);
