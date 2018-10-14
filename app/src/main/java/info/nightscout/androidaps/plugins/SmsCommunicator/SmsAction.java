@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.SmsCommunicator;
 
 abstract class SmsAction implements Runnable {
-    Double d;
-    Integer i;
+    Double aDouble;
+    Integer anInteger;
 
     SmsAction()  {}
 
-    SmsAction(Double d) {
-        this.d = d;
+    SmsAction(Double aDouble) {
+        this.aDouble = aDouble;
     }
 
-    SmsAction(Integer i) {
-        this.i = i;
+    SmsAction(Integer anInteger) {
+        this.anInteger = anInteger;
     }
 }
