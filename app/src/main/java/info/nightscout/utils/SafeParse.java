@@ -11,6 +11,7 @@ public class SafeParse {
     public static Double stringToDouble(String input) {
         Double result = 0d;
         input = input.replace(",", ".");
+        input = input.replace("−", "-");
         if (input.equals(""))
             return 0d;
         try {
@@ -24,6 +25,7 @@ public class SafeParse {
     public static Integer stringToInt(String input) {
         Integer result = 0;
         input = input.replace(",", ".");
+        input = input.replace("−", "-");
         if (input.equals(""))
             return 0;
         try {
@@ -37,6 +39,7 @@ public class SafeParse {
    public static Long stringToLong(String input) {
         Long result = 0L;
         input = input.replace(",", ".");
+        input = input.replace("−", "-");
        if (input.equals(""))
            return 0L;
         try {
