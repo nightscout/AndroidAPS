@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
+import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog;
 import info.nightscout.utils.JsonHelper;
 
 public class TriggerConnector extends Trigger {
@@ -207,7 +209,10 @@ public class TriggerConnector extends Trigger {
         Button buttonAdd = new Button(context);
         buttonAdd.setText("+");
         buttonAdd.setOnClickListener(v -> {
-            addTrigger(adapter, new TriggerTime(), getConnectorType());
+            ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
+            FragmentManager manager = AutomationFragment.fragmentManager();
+            dialog.show(manager, "ChooseTriggerDialog");
+            dialog.setOnClickListener(newTriggerObject -> addTrigger(adapter, newTriggerObject, getConnectorType()));
         });
         buttonLayout.addView(buttonAdd);
 

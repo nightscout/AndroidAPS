@@ -31,6 +31,12 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCon
 
 public class AutomationFragment extends SubscriberFragment {
 
+    public static FragmentManager fragmentManager() {
+        return mFragmentManager;
+    }
+
+    private static FragmentManager mFragmentManager = null;
+
     @BindView(R.id.eventListView)
     RecyclerView mEventListView;
 
@@ -39,6 +45,9 @@ public class AutomationFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mFragmentManager = getFragmentManager();
+
         View view = inflater.inflate(R.layout.automation_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
 
