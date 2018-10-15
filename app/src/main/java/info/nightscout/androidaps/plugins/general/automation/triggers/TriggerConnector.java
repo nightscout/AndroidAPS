@@ -102,11 +102,17 @@ public class TriggerConnector extends Trigger {
 
     @Override
     public synchronized boolean shouldRun() {
-        boolean result = false;
+        boolean result = true;
 
-        for (Trigger t : list) {
-            result = connectorType.apply(result, t.shouldRun());
+        // check first trigger
+        if (list.size() > 0)
+            result = list.get(0).shouldRun();
+
+        // check all others
+        for (int i = 1; i < list.size(); ++i) {
+            result = connectorType.apply(result, list.get(i).shouldRun());
         }
+
         return result;
     }
 
