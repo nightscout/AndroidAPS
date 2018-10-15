@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -9,7 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,10 +22,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 public class AutomationFragment extends SubscriberFragment {
 
@@ -110,35 +116,98 @@ public class AutomationFragment extends SubscriberFragment {
      */
     public static class TriggerListAdapter {
         private final LinearLayout mRootLayout;
-        private final LayoutInflater mInflater;
+        private final Context mContext;
         private final List<Trigger> mTriggerList;
 
-        public TriggerListAdapter(LayoutInflater inflater, LinearLayout rootLayout, List<Trigger> triggers) {
+        public TriggerListAdapter(Context context, LinearLayout rootLayout, List<Trigger> triggers) {
             mRootLayout = rootLayout;
-            mInflater = inflater;
+            mContext = context;
             mTriggerList = triggers;
             build();
         }
 
-        public TriggerListAdapter(LayoutInflater inflater, LinearLayout rootLayout, Trigger trigger) {
+        public TriggerListAdapter(Context context, LinearLayout rootLayout, Trigger trigger) {
             mRootLayout = rootLayout;
-            mInflater = inflater;
+            mContext = context;
             mTriggerList = new ArrayList<>();
             mTriggerList.add(trigger);
             build();
         }
 
+
         public void destroy() {
             mRootLayout.removeAllViews();
-            for(Trigger trigger : mTriggerList) {
-                trigger.destroyViewHolder();
-            }
+        }
+
+        private Spinner createSpinner() {
+            Spinner spinner = new Spinner(mContext);
+            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, TriggerConnector.Type.labels());
+            spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(spinnerArrayAdapter);
+            return spinner;
         }
 
         private void build() {
+            boolean isFirstItem = true;
             for(Trigger trigger : mTriggerList) {
-                Trigger.ViewHolder viewHolder = trigger.createViewHolder(mInflater);
-                mRootLayout.addView(viewHolder.getView());
+                if (!isFirstItem) {
+                    final TriggerConnector connector = trigger.getConnector();
+                    final int initialPosition = connector.getConnectorType().ordinal();
+                    Spinner spinner = createSpinner();
+                    spinner.setSelection(initialPosition);
+                    spinner.setBackgroundColor(MainApp.gc(R.color.black_overlay));
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(0, MainApp.dpToPx(8), 0, MainApp.dpToPx(8));
+                    spinner.setLayoutParams(params);
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (position != initialPosition) {
+                                // conector type changed
+                                final TriggerConnector.Type newConnectorType = TriggerConnector.Type.values()[position];
+
+                                if (connector.size() > 2) {
+                                    // split connector
+                                    int pos = connector.pos(trigger) - 1;
+
+                                    TriggerConnector newConnector = new TriggerConnector(newConnectorType);
+                                    {
+                                        Trigger t = connector.get(pos);
+                                        newConnector.add(t);
+                                        connector.remove(t);
+                                    }
+
+                                    TriggerConnector subConnector = new TriggerConnector(connector.getConnectorType());
+                                    int count = connector.size() - pos;
+                                    for (int i = 0; i < count; ++i) {
+                                        Trigger t = connector.get(pos);
+                                        subConnector.add(t);
+                                        connector.remove(t);
+                                    }
+                                    newConnector.add(subConnector);
+                                    connector.add(newConnector);
+                                } else {
+                                    connector.changeConnectorType(newConnectorType);
+                                }
+
+                                connector.simplify().rebuildView();
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                    mRootLayout.addView(spinner);
+                } else {
+                    isFirstItem = false;
+                }
+
+                mRootLayout.addView(trigger.createView(mContext));
             }
         }
 

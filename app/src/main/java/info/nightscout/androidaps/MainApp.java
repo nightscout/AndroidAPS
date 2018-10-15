@@ -397,4 +397,9 @@ public class MainApp extends Application {
             sDatabaseHelper = null;
         }
     }
+
+    public static int dpToPx(int dp) {
+        float scale = sResources.getDisplayMetrics().density;
+        return (int) (dp*scale + 0.5f);
+    }
 }

@@ -1,10 +1,11 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.content.Context;
 import android.support.annotation.StringRes;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,8 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.utils.JsonHelper;
@@ -22,7 +22,8 @@ import info.nightscout.utils.JsonHelper;
 public class TriggerConnector extends Trigger {
     public enum Type {
         AND,
-        OR;
+        OR,
+        XOR;
 
         public boolean apply(boolean a, boolean b) {
             switch (this) {
@@ -30,6 +31,8 @@ public class TriggerConnector extends Trigger {
                     return a && b;
                 case OR:
                     return a || b;
+                case XOR:
+                    return a ^ b;
             }
             return false;
         }
@@ -38,11 +41,21 @@ public class TriggerConnector extends Trigger {
             switch (this) {
                 case OR:
                     return R.string.or;
+                case XOR:
+                    return R.string.xor;
 
                 default:
                 case AND:
                     return R.string.and;
             }
+        }
+
+        public static List<String> labels() {
+            List<String> list = new ArrayList<>();
+            for(Type t : values()) {
+                list.add(MainApp.gs(t.getStringRes()));
+            }
+            return list;
         }
     }
 
@@ -76,6 +89,13 @@ public class TriggerConnector extends Trigger {
 
     public Trigger get(int i) {
         return list.get(i);
+    }
+
+    public int pos(Trigger trigger) {
+        for(int i = 0; i < list.size(); ++i) {
+            if (list.get(i) == trigger) return i;
+        }
+        return -1;
     }
 
     @Override
@@ -139,67 +159,104 @@ public class TriggerConnector extends Trigger {
         return result.toString();
     }
 
-    @Override
-    public ViewHolder createViewHolder(LayoutInflater inflater) {
-        ViewHolder v = new ViewHolder(inflater);
-        viewHolder = v;
-        return v;
+    private AutomationFragment.TriggerListAdapter adapter;
+
+    public void rebuildView() {
+        if (adapter != null)
+            adapter.rebuild();
     }
 
+    @Override
+    public View createView(Context context) {
+        final int padding = MainApp.dpToPx(5);
 
-    class ViewHolder extends Trigger.ViewHolder {
+        LinearLayout root = new LinearLayout(context);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        root.setPadding(padding,padding,padding,padding);
+        root.setBackgroundResource(R.drawable.border_automation_unit);
 
-        @BindView(R.id.triggerListLayout)
-        LinearLayout triggerListLayout;
+        LinearLayout triggerListLayout = new LinearLayout(context);
+        triggerListLayout.setOrientation(LinearLayout.VERTICAL);
+        triggerListLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(triggerListLayout);
 
-        @BindView(R.id.title)
-        TextView titleView;
+        adapter = new AutomationFragment.TriggerListAdapter(context, triggerListLayout, list);
 
-        AutomationFragment.TriggerListAdapter adapter;
+        LinearLayout buttonLayout = new LinearLayout(context);
+        buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
+        buttonLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        root.addView(buttonLayout);
 
-        public ViewHolder(LayoutInflater inflater) {
-            super(inflater, R.layout.automation_trigger_connector);
-            titleView.setText(friendlyName());
-            adapter = new AutomationFragment.TriggerListAdapter(inflater, triggerListLayout, list);
-        }
-
-        @OnClick(R.id.buttonRemove)
-        public void onButtonClickRemove(View view) {
+        Button buttonRemove = new Button(context);
+        buttonRemove.setText("-");
+        buttonRemove.setOnClickListener(v -> {
             if (connector != null) {
                 connector.remove(TriggerConnector.this);
-                ((TriggerConnector.ViewHolder)connector.getViewHolder()).adapter.rebuild();
+                connector.simplify();
+                connector.adapter.rebuild();
             } else {
                 // no parent
                 list.clear();
+                simplify();
                 adapter.rebuild();
             }
+        });
+        buttonLayout.addView(buttonRemove);
+
+        Button buttonAdd = new Button(context);
+        buttonAdd.setText("+");
+        buttonAdd.setOnClickListener(v -> {
+            addTrigger(adapter, new TriggerTime(), getConnectorType());
+        });
+        buttonLayout.addView(buttonAdd);
+
+        return root;
+    }
+
+    private void addTrigger(AutomationFragment.TriggerListAdapter adapter, Trigger trigger, Type connection) {
+        if (getConnectorType().equals(connection)) {
+            add(trigger);
+        } else {
+            TriggerConnector t = new TriggerConnector(connection);
+            t.add(trigger);
+            add(t);
+        }
+        adapter.rebuild();
+    }
+
+    public TriggerConnector simplify() {
+        // simplify children
+        for(int i = 0; i < size(); ++i) {
+            if (get(i) instanceof TriggerConnector) {
+                TriggerConnector t = (TriggerConnector) get(i);
+                t.simplify();
+            }
         }
 
-        @OnClick(R.id.buttonAddAnd)
-        public void onButtonClickAnd(View view) {
-            addTrigger(new TriggerTime(), Type.AND);
-        }
-
-        @OnClick(R.id.buttonAddOr)
-        public void onButtonClickOr(View view) {
-            addTrigger(new TriggerTime(), Type.OR);
-        }
-
-        private void addTrigger(Trigger trigger, Type connection) {
-            if (getConnectorType().equals(connection)) {
-                add(trigger);
-            } else {
-                TriggerConnector t = new TriggerConnector(connection);
-                t.add(trigger);
+        // drop connector with only 1 element
+        if (size() == 1 && get(0) instanceof TriggerConnector) {
+            TriggerConnector c = (TriggerConnector) get(0);
+            remove(c);
+            changeConnectorType(c.getConnectorType());
+            for (Trigger t : c.list) {
                 add(t);
             }
-            adapter.rebuild();
+            c.list.clear();
+            return simplify();
         }
 
-        @Override
-        public void destroy() {
-            adapter.destroy();
-            super.destroy();
+        // merge connectors
+        if (connector != null && (connector.getConnectorType().equals(connectorType) || size() == 1)) {
+            connector.remove(this);
+            for (Trigger t : list) {
+                connector.add(t);
+            }
+            list.clear();
+            return connector.simplify();
         }
+
+        return this;
     }
+
 }

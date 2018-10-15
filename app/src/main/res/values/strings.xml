@@ -1224,6 +1224,7 @@
     <string name="glucosecompared">Glucose %1$s %2$.2f %3$s</string>
     <string name="and">And</string>
     <string name="or">Or</string>
+    <string name="xor">Exclusive or</string>
     <string name="atspecifiedtime">At %1$s</string>
     <string name="use_network_location">Use network location</string>
     <string name="use_gps_location">Use GPS location</string>

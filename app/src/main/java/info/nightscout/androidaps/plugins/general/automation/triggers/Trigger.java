@@ -1,15 +1,19 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.support.annotation.LayoutRes;
+import android.content.Context;
 import android.support.annotation.StringRes;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import java.util.ArrayList;
+import java.util.List;
+
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 public abstract class Trigger {
@@ -61,16 +65,22 @@ public abstract class Trigger {
                     return false;
             }
         }
-    }
 
-    protected ViewHolder viewHolder = null;
+        public static List<String> labels() {
+            List<String> list = new ArrayList<>();
+            for(Comparator c : values()) {
+                list.add(MainApp.gs(c.getStringRes()));
+            }
+            return list;
+        }
+    }
 
     protected TriggerConnector connector = null;
 
     Trigger() {
     }
 
-    public Trigger getConnector() {
+    public TriggerConnector getConnector() {
         return connector;
     }
 
@@ -99,31 +109,18 @@ public abstract class Trigger {
         return null;
     }
 
-    public abstract ViewHolder createViewHolder(LayoutInflater inflater);
+    public View createView(Context context) {
+        final int padding = MainApp.dpToPx(4);
 
-    public ViewHolder getViewHolder() {
-        return viewHolder;
-    }
+        LinearLayout root = new LinearLayout(context);
+        root.setPadding(padding, padding, padding, padding);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-    public void destroyViewHolder() {
-        if (viewHolder != null) {
-            viewHolder.destroy();
-        }
-    }
+        TextView title = new TextView(context);
+        title.setText(friendlyName());
+        root.addView(title);
 
-    public static abstract class ViewHolder {
-        final View view;
-        final Unbinder unbinder;
-
-        public ViewHolder(LayoutInflater inflater, @LayoutRes int layout) {
-            view = inflater.inflate(layout, null);
-            unbinder = ButterKnife.bind(this, view);
-        }
-
-        public void destroy() {
-            unbinder.unbind();
-        }
-
-        public View getView() { return view; }
+        return root;
     }
 }

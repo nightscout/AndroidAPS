@@ -1,7 +1,10 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.content.Context;
 import android.support.annotation.StringRes;
-import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.dpro.widgets.WeekdaysPicker;
 
@@ -12,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import butterknife.BindView;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.utils.DateUtil;
@@ -97,7 +99,7 @@ public class TriggerTime extends Trigger {
 
     public TriggerTime() {
         for(DayOfWeek day : DayOfWeek.values()) {
-            set(day, true);
+            set(day, false);
         }
     }
 
@@ -231,34 +233,27 @@ public class TriggerTime extends Trigger {
         return this;
     }
 
-    @Override
-    public ViewHolder createViewHolder(LayoutInflater inflater) {
-        ViewHolder v = new ViewHolder(inflater);
-        viewHolder = v;
-        return v;
-    }
-
-    class ViewHolder extends Trigger.ViewHolder {
-
-        @BindView(R.id.weekdays)
-        WeekdaysPicker weekdaysPicker;
-
-        public ViewHolder(LayoutInflater inflater) {
-            super(inflater, R.layout.automation_trigger_time);
-
-            List<Integer> selectedDays = new ArrayList<>();
-            for(int i = 0; i < weekdays.length; ++i) {
-                DayOfWeek day = DayOfWeek.values()[i];
-                boolean selected = weekdays[i];
-                if (selected) selectedDays.add(day.toCalendarInt());
-            }
-            weekdaysPicker.setSelectedDays(selectedDays);
-
-            weekdaysPicker.setOnWeekdaysChangeListener((view, i, list) -> {
-                set(DayOfWeek.fromCalendarInt(i), list.contains(i));
-            });
+    private List<Integer> getSelectedDays() {
+        List<Integer> selectedDays = new ArrayList<>();
+        for(int i = 0; i < weekdays.length; ++i) {
+            DayOfWeek day = DayOfWeek.values()[i];
+            boolean selected = weekdays[i];
+            if (selected) selectedDays.add(day.toCalendarInt());
         }
-
+        return selectedDays;
     }
 
+    @Override
+    public View createView(Context context) {
+        LinearLayout root = (LinearLayout) super.createView(context);
+
+        WeekdaysPicker weekdaysPicker = new WeekdaysPicker(context);
+        weekdaysPicker.setEditable(true);
+        weekdaysPicker.setSelectedDays(getSelectedDays());
+        weekdaysPicker.setOnWeekdaysChangeListener((view, i, list) -> set(DayOfWeek.fromCalendarInt(i), list.contains(i)));
+        weekdaysPicker.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        root.addView(weekdaysPicker);
+        return root;
+    }
 }

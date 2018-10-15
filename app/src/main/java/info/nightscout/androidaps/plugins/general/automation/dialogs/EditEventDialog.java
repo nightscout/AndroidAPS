@@ -17,6 +17,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
 
@@ -50,21 +51,19 @@ public class EditEventDialog extends DialogFragment {
 
         // dummy initialization
         TriggerConnector to = new TriggerConnector(TriggerConnector.Type.OR);
+        to.add(new TriggerBg());
         to.add(new TriggerTime());
-        to.add(new TriggerTime());
-        TriggerConnector ta = new TriggerConnector();
-        ta.add(to);
-        mEvent.setTrigger(ta);
+        mEvent.setTrigger(to);
 
         // display triggers
-        mTriggerListAdapter = new AutomationFragment.TriggerListAdapter(getLayoutInflater(), mLayoutTrigger, mEvent.getTrigger());
+        mTriggerListAdapter = new AutomationFragment.TriggerListAdapter(getContext(), mLayoutTrigger, mEvent.getTrigger());
 
         return view;
     }
 
     @Override
     public void onDestroyView() {
-        mTriggerListAdapter.destroy();
+        //mTriggerListAdapter.destroy();
         mUnbinder.unbind();
         super.onDestroyView();
     }
