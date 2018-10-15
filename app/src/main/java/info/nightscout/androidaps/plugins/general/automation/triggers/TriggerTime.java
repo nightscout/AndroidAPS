@@ -98,8 +98,12 @@ public class TriggerTime extends Trigger {
     long validTo;
 
     public TriggerTime() {
+        setAll(false);
+    }
+
+    public void setAll(boolean value) {
         for(DayOfWeek day : DayOfWeek.values()) {
-            set(day, false);
+            set(day, value);
         }
     }
 
