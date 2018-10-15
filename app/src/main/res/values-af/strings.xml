@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
   <string name="autosensdisabledinpreferences">Autosens gedeaktiveer in voorkeure</string>
   <string name="smbdisabledinpreferences">SMB gedeaktiveer in voorkeure</string>
+  <string name="uamdisabledinpreferences">UAM in voorkeure gedeaktiveer</string>
+  <string name="uamdisabledoref1notselected">UAM versper omdat dit staatmaak op Oref1 sensitiwiteit plugin</string>
   <string name="limitingbasalratio">Max basale koers beperk tot %1$.2f U/h as gevolg van %2$s</string>
   <string name="pumplimit">pomp limiet</string>
   <string name="itmustbepositivevalue">dit moet \'n positiewe waarde wees</string>

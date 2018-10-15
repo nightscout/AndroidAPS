@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
   <string name="autosensdisabledinpreferences">Autosens deshabilitado en preferencias</string>
   <string name="smbdisabledinpreferences">SMB deshabilitado en preferencias</string>
+  <string name="uamdisabledinpreferences">UAM, comidas no previstas, no habilitadas en las preferencias</string>
+  <string name="uamdisabledoref1notselected">UAM deshabilitado al usar el plugin de sensibilidad Oref1</string>
   <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
   <string name="pumplimit">límite de la bomba</string>
   <string name="itmustbepositivevalue">tiene que ser un valor positivo</string>

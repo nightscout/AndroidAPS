@@ -51,7 +51,7 @@
   <string name="description_treatments">Ukládá všechny ošetření do databáze</string>
   <string name="description_wear">Zobrazování stavu a řízení AndroidAPS z hodinek s WearOS</string>
   <string name="description_xdrip_status_line">Zobrazování informací o smyčce na xDrip+ watchface.</string>
-  <string name="description_sms_communicator">Vzdálené řizení pomocí SMS příkazů</string>
+  <string name="description_sms_communicator">Vzdálené řízení pomocí SMS příkazů</string>
   <string name="objectives_button_start">Začátek</string>
   <string name="objectives_button_verify">Kontrola</string>
   <string name="nsprofileview_units_label">Jednotky</string>
@@ -889,7 +889,7 @@
   <string name="autosensdisabledinpreferences">Autosens zakázán v nastavení</string>
   <string name="smbdisabledinpreferences">SMB zakázáno v nastavení</string>
   <string name="uamdisabledinpreferences">UAM zakázáno v nastavení</string>
-  <string name="uamdisabledoref1notselected">UAM zakázáno protože není povolen Oref1 plugin</string>
+  <string name="uamdisabledoref1notselected">UAM zakázáno, protože není povolen Oref1 plugin</string>
   <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
   <string name="pumplimit">limit pumpy</string>
   <string name="itmustbepositivevalue">požadována kladná hodnota</string>

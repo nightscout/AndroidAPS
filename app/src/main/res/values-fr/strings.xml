@@ -889,6 +889,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
   <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
   <string name="autosensdisabledinpreferences">Autosens désactivé dans les préférences</string>
   <string name="smbdisabledinpreferences">SMB désactivée dans les préférences</string>
+  <string name="uamdisabledinpreferences">Repas Non Prévu (UAM) désactivé dans les préférences</string>
+  <string name="uamdisabledoref1notselected">Repas Non Prévu (UAM) désactivé car il utilise le plugin Sensibilité de Oref1</string>
   <string name="limitingbasalratio">Limiter le taux basal max à %1$.2f U/h en raison de %2$s</string>
   <string name="pumplimit">Limite de la pompe</string>
   <string name="itmustbepositivevalue">la valeur doit être positive</string>

@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
   <string name="autosensdisabledinpreferences">Аутосенс е забранен в настройките</string>
   <string name="smbdisabledinpreferences">SMB е забранен в настройките</string>
+  <string name="uamdisabledinpreferences">UAM е забранен в настройките</string>
+  <string name="uamdisabledoref1notselected">UAM изключен, защото му трябва Oref1 плъгин за чувствителност </string>
   <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
   <string name="pumplimit">лимит на помпата</string>
   <string name="itmustbepositivevalue">трябва да бъде положително число</string>
