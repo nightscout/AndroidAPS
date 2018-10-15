@@ -156,7 +156,7 @@ public class TriggerTime extends Trigger {
             data.put("minute", minute);
             data.put("validTo", validTo);
             object.put("type", TriggerTime.class.getName());
-            object.put("data", data.toString());
+            object.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();
         }

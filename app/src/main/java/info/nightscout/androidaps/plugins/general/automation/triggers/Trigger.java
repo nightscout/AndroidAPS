@@ -100,9 +100,9 @@ public abstract class Trigger {
     static Trigger instantiate(JSONObject object) {
         try {
             String type = object.getString("type");
-            String data = object.getString("data");
+            JSONObject data = object.getJSONObject("data");
             Class clazz = Class.forName(type);
-            return ((Trigger) clazz.newInstance()).fromJSON(data);
+            return ((Trigger) clazz.newInstance()).fromJSON(data.toString());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
             e.printStackTrace();
         }

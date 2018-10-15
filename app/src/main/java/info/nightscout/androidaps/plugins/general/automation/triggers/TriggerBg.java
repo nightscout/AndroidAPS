@@ -66,7 +66,7 @@ public class TriggerBg extends Trigger {
             data.put("threshold", threshold);
             data.put("comparator", comparator.toString());
             data.put("units", units);
-            o.put("data", data.toString());
+            o.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();
         }
