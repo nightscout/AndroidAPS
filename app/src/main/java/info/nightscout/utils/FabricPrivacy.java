@@ -112,11 +112,11 @@ public class FabricPrivacy {
         pluginStats.putCustomAttribute("HEAD", BuildConfig.HEAD);
         pluginStats.putCustomAttribute("language", SP.getString(R.string.key_language,"default"));
         for (PluginBase plugin : MainApp.getPluginsList()) {
-            if (!plugin.pluginDescription.alwaysEnabled) {
-                if (plugin.isEnabled(plugin.getType()))
-                    pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
-                else
-                    pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "disabled");
+            if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
+                // Fabric allows no more than 20 attributes attached to an event. By reporting disabled plugins as
+                // well, we would exceed that threshold, so only report what is enabled
+                // TODO >2.0: consider reworking this to upload an event per enabled plugin instead.
+                pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
             }
         }
 
