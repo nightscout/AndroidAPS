@@ -27,11 +27,10 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpCommon.driver.PumpDriverInterface;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -47,17 +46,20 @@ import info.nightscout.utils.DecimalFormatter;
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
-        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump));
+        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
     protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
         .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
     // protected PumpStatus pumpStatusData;
     private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
     protected PumpDescription pumpDescription = new PumpDescription();
-    protected PumpDriverInterface pumpDriver;
+    // protected PumpDriverInterface pumpDriver;
     protected PumpStatus pumpStatus;
     protected String internalName;
     protected ServiceConnection serviceConnection = null;
     protected boolean serviceRunning = false;
+    protected boolean isInitialized = false;
+    protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
+    protected boolean displayConnectionMessages = false;
 
 
     // protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
@@ -77,15 +79,13 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // );
     // }
 
-    protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
-            String internalName, //
-            PluginDescription pluginDescription, PumpType pumpType //
-    ) {
+    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType) {
+
         super(pluginDescription);
 
         LOG.error("After super called.");
 
-        this.pumpDriver = pumpDriverInterface;
+        // this.pumpDriver = pumpDriverInterface;
         this.internalName = internalName;
 
         LOG.error("Before Init Pump Statis Data called.");
@@ -98,7 +98,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
         LOG.error("Before pumpDriver");
 
-        this.pumpDriver.initDriver(this.pumpStatus, this.pumpDescription);
+        // this.pumpDriver.initDriver(this.pumpStatus, this.pumpDescription);
+
+        // initPumpStatusData();
+
     }
 
 
@@ -157,101 +160,126 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public PumpStatus getPumpStatusData() {
-        return pumpDriver.getPumpStatusData();
+        return pumpStatus;
     }
 
 
     public boolean isInitialized() {
-        return pumpDriver.isInitialized();
+        return pumpState != PumpDriverState.NotInitialized;
     }
 
 
     public boolean isSuspended() {
-        return pumpDriver.isSuspended();
+        return pumpState == PumpDriverState.Suspended;
     }
 
 
     public boolean isBusy() {
-        return pumpDriver.isBusy();
+        return pumpState == PumpDriverState.Busy;
     }
 
 
     public boolean isConnected() {
-        return pumpDriver.isConnected();
+        if (displayConnectionMessages)
+            LOG.warn("isConnected [PumpPluginAbstract].");
+        return PumpDriverState.isConnected(pumpState);
     }
 
 
     public boolean isConnecting() {
-        return pumpDriver.isConnecting();
+        if (displayConnectionMessages)
+            LOG.warn("isConnecting [PumpPluginAbstract].");
+        return pumpState == PumpDriverState.Connecting;
     }
 
 
     public void connect(String reason) {
-        pumpDriver.connect(reason);
+        if (displayConnectionMessages)
+            LOG.warn("connect (reason={}) [PumpPluginAbstract] - Not implemented.", reason);
     }
 
 
     public void disconnect(String reason) {
-        pumpDriver.disconnect(reason);
+        if (displayConnectionMessages)
+            LOG.warn("disconnect (reason={}) [PumpPluginAbstract] - Not implemented.", reason);
     }
 
 
     public void stopConnecting() {
-        pumpDriver.stopConnecting();
+        if (displayConnectionMessages)
+            LOG.warn("stopConnecting [PumpPluginAbstract] - Not implemented.");
+    }
+
+
+    @Override
+    public boolean isHandshakeInProgress() {
+        if (displayConnectionMessages)
+            LOG.warn("isHandshakeInProgress [PumpPluginAbstract] - Not implemented.");
+        return false;
+    }
+
+
+    @Override
+    public void finishHandshaking() {
+        if (displayConnectionMessages)
+            LOG.warn("finishHandshaking [PumpPluginAbstract] - Not implemented.");
     }
 
 
     public void getPumpStatus() {
-        pumpDriver.getPumpStatus();
+        LOG.warn("getPumpStatus [PumpPluginAbstract] - Not implemented.");
     }
 
 
     // Upload to pump new basal profile
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        return pumpDriver.setNewBasalProfile(profile);
+        LOG.warn("setNewBasalProfile [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public boolean isThisProfileSet(Profile profile) {
-        return pumpDriver.isThisProfileSet(profile);
+        LOG.warn("isThisProfileSet [PumpPluginAbstract] - Not implemented.");
+        return true;
     }
 
 
     public long lastDataTime() {
-        return pumpDriver.lastDataTime();
+        LOG.warn("lastDataTime [PumpPluginAbstract].");
+        return pumpStatus.lastConnection;
     }
 
 
     public double getBaseBasalRate() {
-        return pumpDriver.getBaseBasalRate();
+        LOG.warn("getBaseBasalRate [PumpPluginAbstract] - Not implemented.");
+        return 0.0d;
     } // base basal rate, not temp basal
 
 
-    // public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-    // return pumpDriver.deliverTreatment(detailedBolusInfo);
-    // }
-
     public void stopBolusDelivering() {
-        pumpDriver.stopBolusDelivering();
+        LOG.warn("stopBolusDelivering [PumpPluginAbstract] - Not implemented.");
     }
 
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
             boolean enforceNew) {
-        return pumpDriver.setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
+        LOG.warn("setTempBasalAbsolute [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
             boolean enforceNew) {
-        return pumpDriver.setTempBasalPercent(percent, durationInMinutes, profile, enforceNew);
+        LOG.warn("setTempBasalPercent [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        return pumpDriver.setExtendedBolus(insulin, durationInMinutes);
+        LOG.warn("setExtendedBolus [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
@@ -259,13 +287,14 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        return pumpDriver.cancelTempBasal(enforceNew);
+        LOG.warn("cancelTempBasal [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public PumpEnactResult cancelExtendedBolus() {
-        LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
-        return OPERATION_NOT_YET_SUPPORTED;
+        LOG.warn("cancelExtendedBolus [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
@@ -298,66 +327,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     public PumpEnactResult loadTDDs() {
-        return this.pumpDriver.loadTDDs();
+        LOG.warn("loadTDDs [PumpPluginAbstract] - Not implemented.");
+        return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
-
-    // Constraints interface
-
-    // @Override
-    // public boolean isLoopEnabled() {
-    // return true;
-    // }
-    //
-    // @Override
-    // public boolean isClosedModeEnabled() {
-    // return true;
-    // }
-    //
-    // @Override
-    // public boolean isAutosensModeEnabled() {
-    // return true;
-    // }
-    //
-    // @Override
-    // public boolean isAMAModeEnabled() {
-    // return true;
-    // }
-    //
-    // @Override
-    // public boolean isSMBModeEnabled() {
-    // return true;
-    // }
-    //
-    // @Override
-    // public Double applyBasalConstraints(Double absoluteRate) {
-    // this.pumpStatus.constraintBasalRateAbsolute = absoluteRate;
-    // return absoluteRate;
-    // }
-    //
-    // @Override
-    // public Integer applyBasalConstraints(Integer percentRate) {
-    // this.pumpStatus.constraintBasalRatePercent = percentRate;
-    // return percentRate;
-    // }
-    //
-    // @Override
-    // public Double applyBolusConstraints(Double insulin) {
-    // this.pumpStatus.constraintBolus = insulin;
-    // return insulin;
-    // }
-    //
-    // @Override
-    // public Integer applyCarbsConstraints(Integer carbs) {
-    // this.pumpStatus.constraintCarbs = carbs;
-    // return carbs;
-    // }
-    //
-    // @Override
-    // public Double applyMaxIOBConstraints(Double maxIob) {
-    // this.pumpStatus.constraintMaxIob = maxIob;
-    // return maxIob;
-    // }
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
@@ -483,23 +456,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     protected abstract void triggerUIChange();
 
 
-    public PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
+    public static PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(resourceId));
     }
-
-    // Profile interface
-
-    // @Nullable
-    // public ProfileStore getProfile() {
-    // return this.pumpStatus.profileStore;
-    // }
-    //
-    // public String getUnits() {
-    // return this.pumpStatus.units;
-    // }
-    //
-    // public String getProfileName() {
-    // return this.pumpStatus.activeProfileName;
-    // }
 
 }

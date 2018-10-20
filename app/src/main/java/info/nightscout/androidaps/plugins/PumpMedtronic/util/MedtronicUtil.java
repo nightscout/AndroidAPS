@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
@@ -20,6 +23,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.MessageType
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicNotificationType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
@@ -188,6 +192,47 @@ public class MedtronicUtil extends RileyLinkUtil {
 
     }
 
+
+    public static void sendNotification(MedtronicNotificationType notificationType) {
+        Notification notification = new Notification( //
+            notificationType.getNotificationType(), //
+            MainApp.gs(notificationType.getResourceId()), //
+            notificationType.getNotificationUrgency());
+        MainApp.bus().post(new EventNewNotification(notification));
+    }
+
+
+    public static void sendNotification(MedtronicNotificationType notificationType, Object... parameters) {
+        Notification notification = new Notification( //
+            notificationType.getNotificationType(), //
+            MainApp.gs(notificationType.getResourceId(), parameters), //
+            notificationType.getNotificationUrgency());
+        MainApp.bus().post(new EventNewNotification(notification));
+    }
+
+
+    public static void dismissNotification(MedtronicNotificationType notificationType) {
+        MainApp.bus().post(new EventDismissNotification(notificationType.getNotificationType()));
+    }
+
+
+    // @Deprecated
+    // public static void sendNotification(int resourceId, int notificationUrgencyType) {
+    // Notification notification = new Notification( //
+    // Notification.MEDTRONIC_PUMP_ALARM, //
+    // MainApp.gs(resourceId), //
+    // notificationUrgencyType);
+    // MainApp.bus().post(new EventNewNotification(notification));
+    // }
+
+    // @Deprecated
+    // public static void sendNotification(int resourceId, int notificationUrgencyType, Object... parameters) {
+    // Notification notification = new Notification( //
+    // Notification.MEDTRONIC_PUMP_ALARM, //
+    // MainApp.gs(resourceId, parameters), //
+    // notificationUrgencyType);
+    // MainApp.bus().post(new EventNewNotification(notification));
+    // }
 
     public static byte[] buildCommandPayload(MessageType commandType, byte[] parameters) {
         return buildCommandPayload(commandType.getValue(), parameters);

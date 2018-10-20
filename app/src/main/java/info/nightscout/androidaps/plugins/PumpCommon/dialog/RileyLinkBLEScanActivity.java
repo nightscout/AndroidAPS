@@ -21,6 +21,7 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,19 +37,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.LocationHelper;
+import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpConfigurationChanged;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.utils.SP;
 
+// IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
     private static final Logger LOG = LoggerFactory.getLogger(RileyLinkBLEScanActivity.class);
@@ -85,38 +90,36 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         listBTScan = (ListView)findViewById(R.id.rileylink_listBTScan);
         listBTScan.setAdapter(mLeDeviceListAdapter);
-        listBTScan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listBTScan.setOnItemClickListener((parent, view, position, id) -> {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textview = (TextView)view.findViewById(R.id.rileylink_device_address);
-                String bleAddress = textview.getText().toString();
-
-                SP.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
-
-                // Context applicationContext = MainApp.instance().getApplicationContext();
-                // applicationContext.get
-
-                // RileyLinkBLEScanActivity.this.findPreference("pref_key");
-
-                // EditTextPreference viewById =
-                // (EditTextPreference)super.findPreference(R.id.rileylink_mac_address_mdt);
-
-                // //Notify that we have a new rileylinkAddressKey
-                // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_rileylinkAddressKey);
-                //
-                // LOG.debug("New rileylinkAddressKey: " + bleAddress);
-                //
-                // //Notify that we have a new pumpIDKey
-                // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.INTENT_NEW_pumpIDKey);
-                finish();
+            // stop scanning if still active
+            if (mScanning) {
+                mScanning = false;
+                mLEScanner.stopScan(mScanCallback2);
             }
+
+            TextView textview = (TextView)view.findViewById(R.id.rileylink_device_address);
+            String bleAddress = textview.getText().toString();
+
+            SP.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
+
+            RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
+
+            MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
+            pumpStatus.verifyConfiguration(); // force reloading of address
+
+            MainApp.bus().post(new EventMedtronicPumpConfigurationChanged());
+
+            // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+
+            finish();
         });
 
         toolbarBTScan = (Toolbar)findViewById(R.id.rileylink_toolbarBTScan);
         toolbarBTScan.setTitle(R.string.rileylink_scanner_title);
         setSupportActionBar(toolbarBTScan);
 
+        // TODO remove snackbar, stop needs to be on same button as start
         snackbar = Snackbar.make(findViewById(R.id.RileyLinkScan), "Scanning...", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("STOP", new View.OnClickListener() {
 
@@ -179,7 +182,9 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Will request that GPS be enabled for devices running Marshmallow or newer.
-                    LocationHelper.requestLocationForBluetooth(this);
+                    if (!isLocationEnabled(this)) {
+                        LocationHelper.requestLocationForBluetooth(this);
+                    }
                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -195,6 +200,20 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
         }
 
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
+    }
+
+
+    public boolean isLocationEnabled(Context context) {
+
+        final LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        if (manager != null
+            && (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) || manager
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
+            return true;
+        }
+        // otherwise return false
+        return false;
     }
 
 
@@ -304,6 +323,9 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
 
     private void scanLeDevice(final boolean enable) {
+
+        // FIXME
+
         if (enable) {
 
             mLeDeviceListAdapter.clear();

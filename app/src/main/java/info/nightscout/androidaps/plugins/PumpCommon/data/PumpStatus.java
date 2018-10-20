@@ -18,6 +18,8 @@ public abstract class PumpStatus {
     // connection
     public LocalDateTime lastDataTime;
     public long lastConnection = 0L;
+    public long previousConnection = 0L; // here should be stored last connection of previous session (so needs to be
+                                         // read before lastConnection is modified for first time).
 
     // last bolus
     public Date lastBolusTime;

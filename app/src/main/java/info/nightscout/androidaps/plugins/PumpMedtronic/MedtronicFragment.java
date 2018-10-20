@@ -5,7 +5,6 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,6 +42,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandTyp
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
+import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -55,6 +55,7 @@ import info.nightscout.utils.SetWarnColor;
 public class MedtronicFragment extends SubscriberFragment {
 
     private static Logger LOG = LoggerFactory.getLogger(MedtronicFragment.class);
+
     @BindView(R.id.medtronic_lastconnection)
     TextView lastConnectionView;
     @BindView(R.id.medtronic_lastbolus)
@@ -85,6 +86,10 @@ public class MedtronicFragment extends SubscriberFragment {
     @BindView(R.id.medtronic_refresh)
     Button refreshButton;
     private Handler loopHandler = new Handler();
+    private static Activity localActivity;
+
+    static Button refreshButtonStatic;
+
     private Runnable refreshLoop = new Runnable() {
 
         @Override
@@ -128,6 +133,8 @@ public class MedtronicFragment extends SubscriberFragment {
             pumpStatusIconView.setTextSize(14);
             pumpStatusIconView.setText("{fa-bed}");
 
+            refreshButtonStatic = refreshButton;
+
             return view;
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -152,7 +159,13 @@ public class MedtronicFragment extends SubscriberFragment {
 
             @Override
             public void run() {
-                refreshButton.setEnabled(true);
+                Activity activity = getActivity();
+
+                if (activity != null) {
+                    activity.runOnUiThread(() -> {
+                        refreshButton.setEnabled(true);
+                    });
+                }
             }
         });
     }
@@ -170,23 +183,34 @@ public class MedtronicFragment extends SubscriberFragment {
     }
 
 
+    public static void refreshButtonEnabled(boolean enable) {
+        if (localActivity != null) {
+            localActivity.runOnUiThread(() -> {
+                if (refreshButtonStatic != null) {
+                    refreshButtonStatic.setEnabled(enable);
+                }
+            });
+        }
+    }
+
+
+    public static Activity getCustomActivity() {
+        return localActivity;
+    }
+
+
     @Subscribe
     public void onStatusEvent(final EventMedtronicDeviceStatusChange eventStatusChange) {
         LOG.info("onStatusEvent(EventMedtronicDeviceStatusChange): {}", eventStatusChange);
         Activity activity = getActivity();
-        // final String status = c.textStatus();
+
         if (activity != null) {
-            activity.runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
-                    setDeviceStatus(pumpStatus);
-                }
+            localActivity = activity;
+            activity.runOnUiThread(() -> {
+                MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
+                setDeviceStatus(pumpStatus);
             });
         }
-
     }
 
 
@@ -235,7 +259,7 @@ public class MedtronicFragment extends SubscriberFragment {
 
                 case NeverContacted:
                 case WakingUp:
-                case ProblemContacting:
+                case PumpUnreachable:
                 case ErrorWhenCommunicating:
                 case TimeoutWhenCommunicating:
                 case InvalidConfiguration:
@@ -312,6 +336,15 @@ public class MedtronicFragment extends SubscriberFragment {
 
 
     @Subscribe
+    public void onStatusEvent(final EventMedtronicPumpConfigurationChanged s) {
+        LOG.error("EventMedtronicPumpConfigurationChanged triggered");
+        MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
+        pumpStatus.verifyConfiguration();
+        updateGUI();
+    }
+
+
+    @Subscribe
     public void onStatusEvent(final EventTempBasalChange s) {
         updateGUI();
     }
@@ -334,85 +367,97 @@ public class MedtronicFragment extends SubscriberFragment {
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null && basaBasalRateView != null)
-            activity.runOnUiThread(new Runnable() {
+            activity.runOnUiThread(() -> {
 
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void run() {
+                localActivity = activity;
+                MedtronicPumpPlugin plugin = (MedtronicPumpPlugin)MedtronicPumpPlugin.getPlugin();
+                MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
 
-                    MedtronicPumpPlugin plugin = (MedtronicPumpPlugin)MedtronicPumpPlugin.getPlugin();
-                    MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
+                setDeviceStatus(pumpStatus);
 
-                    setDeviceStatus(pumpStatus);
+                // last connection
+                String minAgo = DateUtil.minAgo(pumpStatus.lastConnection);
+                long min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60;
+                if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
+                    lastConnectionView.setText(R.string.combo_pump_connected_now);
+                    lastConnectionView.setTextColor(Color.WHITE);
+                } else if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
-                    // last connection
-                    String minAgo = DateUtil.minAgo(pumpStatus.lastConnection);
-                    long min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60;
-                    if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
-                        lastConnectionView.setText(R.string.combo_pump_connected_now);
-                        lastConnectionView.setTextColor(Color.WHITE);
-                    } else if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
-                        lastConnectionView.setText(MainApp.gs(R.string.combo_no_pump_connection, min));
-                        lastConnectionView.setTextColor(Color.RED);
+                    if (min < 60) {
+                        lastConnectionView.setText(MainApp.gs(R.string.minago, min));
+                    } else if (min < 1440) {
+                        int h = (int)(min / 60);
+
+                        lastConnectionView.setText(MainApp.gq(R.plurals.objective_hours, h, h) + " "
+                            + MainApp.gs(R.string.ago));
                     } else {
-                        lastConnectionView.setText(minAgo);
-                        lastConnectionView.setTextColor(Color.WHITE);
+
+                        int h = (int)(min / 60);
+                        int d = h / 24;
+                        // h = h - (d * 24);
+
+                        lastConnectionView.setText(MainApp.gq(R.plurals.objective_days, d, d) + " "
+                            + MainApp.gs(R.string.ago));
                     }
-
-                    // last bolus
-                    Double bolus = pumpStatus.lastBolusAmount;
-                    Date bolusTime = pumpStatus.lastBolusTime;
-                    if (bolus != null && bolusTime != null) {
-                        long agoMsc = System.currentTimeMillis() - pumpStatus.lastBolusTime.getTime();
-                        double bolusMinAgo = agoMsc / 60d / 1000d;
-                        String unit = MainApp.gs(R.string.insulin_unit_shortname);
-                        String ago;
-                        if ((agoMsc < 60 * 1000)) {
-                            ago = MainApp.gs(R.string.combo_pump_connected_now);
-                        } else if (bolusMinAgo < 60) {
-                            ago = DateUtil.minAgo(pumpStatus.lastBolusTime.getTime());
-                        } else {
-                            ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.getTime());
-                        }
-                        lastBolusView.setText(MainApp.gs(R.string.combo_last_bolus, bolus, unit, ago));
-                    } else {
-                        lastBolusView.setText("");
-                    }
-
-                    // base basal rate
-                    basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  "
-                        + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
-
-                    // FIXME temp basal - check - maybe set as combo ??
-                    if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
-                        if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
-                            tempBasalView.setText(TreatmentsPlugin.getPlugin()
-                                .getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
-                        } else {
-                            tempBasalView.setText("");
-                        }
-                    } else {
-                        // v2 plugin
-                        if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
-                            tempBasalView.setText(TreatmentsPlugin.getPlugin()
-                                .getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
-                        } else {
-                            tempBasalView.setText("");
-                        }
-                    }
-
-                    // battery
-                    batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}");
-                    SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 51d, 26d);
-
-                    // reservoir
-                    reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / "
-                        + pumpStatus.reservoirFullUnits + " " + MainApp.gs(R.string.insulin_unit_shortname));
-                    SetWarnColor.setColorInverse(reservoirView, pumpStatus.reservoirRemainingUnits, 50d, 20d);
-
-                    errorsView.setText(pumpStatus.getErrorInfo());
-
+                    lastConnectionView.setTextColor(Color.RED);
+                } else {
+                    lastConnectionView.setText(minAgo);
+                    lastConnectionView.setTextColor(Color.WHITE);
                 }
+
+                // last bolus
+                Double bolus = pumpStatus.lastBolusAmount;
+                Date bolusTime = pumpStatus.lastBolusTime;
+                if (bolus != null && bolusTime != null) {
+                    long agoMsc = System.currentTimeMillis() - pumpStatus.lastBolusTime.getTime();
+                    double bolusMinAgo = agoMsc / 60d / 1000d;
+                    String unit = MainApp.gs(R.string.insulin_unit_shortname);
+                    String ago;
+                    if ((agoMsc < 60 * 1000)) {
+                        ago = MainApp.gs(R.string.combo_pump_connected_now);
+                    } else if (bolusMinAgo < 60) {
+                        ago = DateUtil.minAgo(pumpStatus.lastBolusTime.getTime());
+                    } else {
+                        ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.getTime());
+                    }
+                    lastBolusView.setText(MainApp.gs(R.string.combo_last_bolus, bolus, unit, ago));
+                } else {
+                    lastBolusView.setText("");
+                }
+
+                // base basal rate
+                basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  "
+                    + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
+
+                // FIXME temp basal - check - maybe set as combo ??
+                if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+                    if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
+                        tempBasalView.setText(TreatmentsPlugin.getPlugin()
+                            .getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                    } else {
+                        tempBasalView.setText("");
+                    }
+                } else {
+                    // v2 plugin
+                    if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
+                        tempBasalView.setText(TreatmentsPlugin.getPlugin()
+                            .getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                    } else {
+                        tempBasalView.setText("");
+                    }
+                }
+
+                // battery
+                batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}");
+                SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 51d, 26d);
+
+                // reservoir
+                reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / "
+                    + pumpStatus.reservoirFullUnits + " " + MainApp.gs(R.string.insulin_unit_shortname));
+                SetWarnColor.setColorInverse(reservoirView, pumpStatus.reservoirRemainingUnits, 50d, 20d);
+
+                errorsView.setText(pumpStatus.getErrorInfo());
+
             });
     }
 

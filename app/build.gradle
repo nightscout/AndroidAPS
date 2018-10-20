@@ -71,7 +71,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "2.0g-medtronic"
+        version "2.0g-medtronic-0.3-snapshot"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
@@ -109,7 +109,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_launcher",
+                    appIcon     : "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
         }
@@ -119,7 +119,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/blueowl",
+                    appIcon     : "@mipmap/blueowl",
                     appIconRound: "@null"
             ]
         }
@@ -129,7 +129,7 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl",
+                    appIcon     : "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -139,7 +139,7 @@ android {
             resValue "string", "app_name", "NSClient2"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl",
+                    appIcon     : "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -154,7 +154,7 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    useLibrary  "org.apache.http.legacy"
+    useLibrary "org.apache.http.legacy"
 }
 
 allprojects {

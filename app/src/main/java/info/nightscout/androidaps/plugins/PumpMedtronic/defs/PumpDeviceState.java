@@ -14,7 +14,8 @@ public enum PumpDeviceState {
     Active(R.string.medtronic_pump_status_active), //
     ErrorWhenCommunicating(R.string.medtronic_pump_status_error_comm), //
     TimeoutWhenCommunicating(R.string.medtronic_pump_status_timeout_comm), //
-    ProblemContacting(R.string.medtronic_pump_status_problem_contacting), //
+    // ProblemContacting(R.string.medtronic_pump_status_problem_contacting), //
+    PumpUnreachable(R.string.medtronic_pump_status_pump_unreachable), //
     InvalidConfiguration(R.string.medtronic_pump_status_invalid_config);
 
     Integer resourceId = null;

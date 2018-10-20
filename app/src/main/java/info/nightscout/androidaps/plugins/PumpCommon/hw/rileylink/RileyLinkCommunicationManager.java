@@ -75,12 +75,12 @@ public abstract class RileyLinkCommunicationManager {
 
         E response = createResponseMessage(rfSpyResponse.getRadioResponse().getPayload(), clazz);
 
-        // PumpMessage rval = new PumpMessage(resp.getRadioResponse().getPayload());
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
             rememberLastGoodDeviceCommunicationTime();
         } else {
-            LOG.warn("Response is invalid. !!! - ", rfSpyResponse.wasInterrupted(), rfSpyResponse.wasTimeout());
+            LOG.warn("Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
+                rfSpyResponse.wasTimeout());
 
             if (rfSpyResponse.wasTimeout()) {
                 timeoutCount++;
@@ -98,6 +98,7 @@ public abstract class RileyLinkCommunicationManager {
         if (showPumpMessages) {
             LOG.info("Received:" + ByteUtil.shortHexString(rfSpyResponse.getRadioResponse().getPayload()));
         }
+
         return response;
     }
 

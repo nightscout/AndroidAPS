@@ -16,9 +16,6 @@ import android.os.IBinder;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
@@ -52,15 +49,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     private static RileyLinkMedtronicService instance;
     private static ServiceTask currentTask = null;
 
-    // saved settings
-    // private String pumpIDString;
-    // private byte[] pumpIDBytes;
-
     // cache of most recently received set of pump history pages. Probably shouldn't be here.
-    // ArrayList<Page> mHistoryPages;
-    // PumpHistoryManager pumpHistoryManager;
     public MedtronicCommunicationManager medtronicCommunicationManager;
-    MedtronicPumpStatus pumpStatus = (MedtronicPumpStatus)MedtronicPumpPlugin.getPlugin().getPumpStatusData();
+    MedtronicPumpStatus pumpStatus = null;
     private IBinder mBinder = new LocalBinder();
 
 
@@ -413,7 +404,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    // PumpInterface
+    // PumpInterface - REMOVE
 
     public boolean isInitialized() {
         return RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
@@ -440,47 +431,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    // FIXME to do 1st command
-    public void getPumpStatus() {
-
-    }
-
-
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        return null;
-    }
-
-
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
-            boolean enforceNew) {
-        return null;
-    }
-
-
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        return null;
-    }
-
-
-    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        return null;
-    }
-
-
-    public PumpEnactResult cancelExtendedBolus() {
-        return null;
-    }
-
-
-    public PumpEnactResult loadTDDs() {
-        return null;
-    }
-
-
-    public MedtronicCommunicationManager getPumpManager() {
-        return this.medtronicCommunicationManager;
-    }
-
+    // public MedtronicCommunicationManager getPumpManager() {
+    // return this.medtronicCommunicationManager;
+    // }
 
     // FIXME remove
     public void sendNotification(ServiceNotification serviceNotification, Object o) {

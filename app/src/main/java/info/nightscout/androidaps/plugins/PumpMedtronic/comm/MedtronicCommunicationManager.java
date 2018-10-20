@@ -9,11 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.Context;
-import android.os.SystemClock;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RFSpyResponse;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RLMessage;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RadioPacket;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
@@ -38,6 +41,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
+import info.nightscout.utils.SP;
 
 /**
  * Original file created by geoff on 5/30/16.
@@ -54,12 +58,16 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     String errorMessage;
     private MedtronicConverter medtronicConverter;
     private boolean debugSetCommands = true;
+    private boolean doWakeUpBeforeCommand = true;
+    private boolean firstConnection = true;
 
 
     public MedtronicCommunicationManager(Context context, RFSpy rfspy, RileyLinkTargetFrequency targetFrequency) {
         super(context, rfspy, targetFrequency);
         medtronicCommunicationManager = this;
         this.medtronicConverter = new MedtronicConverter();
+        MedtronicUtil.getPumpStatus().previousConnection = SP.getLong(
+            RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
 
 
@@ -81,31 +89,121 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
+    public void setDoWakeUpBeforeCommand(boolean doWakeUp) {
+        this.doWakeUpBeforeCommand = doWakeUp;
+    }
+
+
+    /**
+     * We do actual wakeUp and compare PumpModel with currently selected one. If returned model is not Unknown,
+     * pump is reachable.
+     *
+     * @return
+     */
+    public boolean isDeviceReachable() {
+
+        PumpDeviceState state = MedtronicUtil.getPumpDeviceState();
+
+        if (state != PumpDeviceState.PumpUnreachable)
+            MedtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
+
+        for (int retry = 0; retry < 5; retry++) {
+
+            LOG.error("isDeviceReachable. Waking pump... " + (retry != 0 ? " (retry " + retry + ")" : ""));
+
+            byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
+            RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0,
+                (byte)200, (byte)0, (byte)0, 25000, (byte)0);
+            LOG.info("wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+
+            if (rfSpyResponse.wasTimeout()) {
+                LOG.error("isDeviceReachable. Failed to find pump (timeout).");
+            } else if (rfSpyResponse.looksLikeRadioPacket()) {
+                RadioResponse radioResponse = new RadioResponse(rfSpyResponse.getRaw());
+                if (radioResponse.isValid()) {
+
+                    PumpMessage pumpResponse = createResponseMessage(radioResponse.getPayload(), PumpMessage.class);
+
+                    if (!pumpResponse.isValid()) {
+                        LOG.warn("Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
+                            rfSpyResponse.wasTimeout());
+                    } else {
+
+                        rememberLastGoodDeviceCommunicationTime();
+
+                        // radioResponse.rssi;
+                        Object dataResponse = medtronicConverter.convertResponse(MedtronicCommandType.PumpModel,
+                            pumpResponse.getRawContent());
+
+                        MedtronicDeviceType pumpModel = (MedtronicDeviceType)dataResponse;
+                        boolean valid = pumpModel != MedtronicDeviceType.Unknown_Device;
+
+                        LOG.debug("isDeviceReachable. PumpModel is {} - Valid: {} (rssi={})", pumpModel.name(), valid,
+                            radioResponse.rssi);
+
+                        if (valid) {
+                            if (state == PumpDeviceState.PumpUnreachable)
+                                MedtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
+
+                            if (firstConnection)
+                                checkFirstConnectionTime();
+
+                            rememberLastGoodDeviceCommunicationTime();
+
+                            return true;
+
+                        } else {
+                            if (state != PumpDeviceState.PumpUnreachable)
+                                MedtronicUtil.setPumpDeviceState(PumpDeviceState.PumpUnreachable);
+                        }
+
+                    }
+
+                } else {
+                    LOG.warn("isDeviceReachable. Failed to parse radio response: "
+                        + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+                }
+            } else {
+                LOG.warn("isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+            }
+
+        }
+
+        if (state != PumpDeviceState.PumpUnreachable)
+            MedtronicUtil.setPumpDeviceState(PumpDeviceState.PumpUnreachable);
+
+        return false;
+    }
+
+
     // FIXME must not call getPumpModel !!!!!!!!!!!!!
     @Override
     public boolean tryToConnectToDevice() {
 
-        wakeUp(true);
+        return isDeviceReachable();
 
-        MedtronicDeviceType pumpModel = getPumpModel();
-
-        // Andy (4.6.2018): we do retry if no data returned. We might need to do that everywhere, but that might require
-        // little bit of rewrite of RF Code.
-        if (pumpModel == MedtronicDeviceType.Unknown_Device) {
-
-            SystemClock.sleep(1000);
-
-            pumpModel = getPumpModel();
-        }
-
-        boolean connected = (pumpModel != MedtronicDeviceType.Unknown_Device);
-
-        if (connected) {
-            checkFirstConnectionTime();
-            setLastConnectionTime();
-        }
-
-        return (pumpModel != MedtronicDeviceType.Unknown_Device);
+        // wakeUp(true);
+        //
+        // MedtronicDeviceType pumpModel = getPumpModel();
+        //
+        // // Andy (4.6.2018): we do retry if no data returned. We might need to do that everywhere, but that might
+        // require
+        // // little bit of rewrite of RF Code.
+        // if (pumpModel == MedtronicDeviceType.Unknown_Device) {
+        //
+        // SystemClock.sleep(1000);
+        //
+        // pumpModel = getPumpModel();
+        // }
+        //
+        // boolean connected = (pumpModel != MedtronicDeviceType.Unknown_Device);
+        //
+        // if (connected) {
+        // checkFirstConnectionTime();
+        // rememberLastGoodDeviceCommunicationTime();
+        // }
+        //
+        // return (pumpModel != MedtronicDeviceType.Unknown_Device);
     }
 
 
@@ -121,6 +219,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     private void checkFirstConnectionTime() {
         // FIXME set to SP
+
+        firstConnection = false;
     }
 
 
@@ -217,7 +317,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     // TODO fix this with new code, and new response (Page)
     public Page getPumpHistoryPage(int pageNumber) {
         RawHistoryPage rval = new RawHistoryPage();
-        wakeUp(receiverDeviceAwakeForMinutes, false);
+
+        if (doWakeUpBeforeCommand)
+            wakeUp(receiverDeviceAwakeForMinutes, false);
+
         PumpMessage getHistoryMsg = makePumpMessage(MedtronicCommandType.GetHistoryData,
             new GetHistoryPageCarelinkMessageBody(pageNumber));
         // LOG.info("getPumpHistoryPage("+pageNumber+"): "+ByteUtil.shortHexString(getHistoryMsg.getTxData()));
@@ -325,7 +428,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     // See ButtonPressCarelinkMessageBody
     public void pressButton(int which) {
-        wakeUp(receiverDeviceAwakeForMinutes, false);
+        if (doWakeUpBeforeCommand)
+            wakeUp(receiverDeviceAwakeForMinutes, false);
+
         PumpMessage pressButtonMessage = makePumpMessage(MedtronicCommandType.PushButton,
             new ButtonPressCarelinkMessageBody(which));
         PumpMessage resp = sendAndListen(pressButtonMessage);
@@ -334,25 +439,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         }
     }
 
-
-    // FIXME
-    // @Override
-    // public RLMessage makeRLMessage(RLMessageType type, byte[] data) {
-    // switch (type) {
-    // case PowerOn:
-    // return makePumpMessage(MedtronicCommandType.RFPowerOn, new CarelinkShortMessageBody(data));
-    //
-    // case ReadSimpleData:
-    // return makePumpMessage(MedtronicCommandType.PumpModel, new GetPumpModelCarelinkMessageBody());
-    //
-    // }
-    // return null;
-    // }
-
-    // @Override
-    // public RLMessage makeRLMessage(byte[] data) {
-    // return makePumpMessage(data);
-    // }
 
     @Override
     public byte[] createPumpMessageContent(RLMessageType type) {
@@ -421,7 +507,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
      */
     private PumpMessage sendAndGetResponse(MedtronicCommandType commandType, byte[] bodyData, int timeoutMs) {
         // wakeUp
-        wakeUp(receiverDeviceAwakeForMinutes, false);
+        if (doWakeUpBeforeCommand)
+            wakeUp(receiverDeviceAwakeForMinutes, false);
 
         MedtronicUtil.setPumpDeviceState(PumpDeviceState.Active);
 
@@ -602,7 +689,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     public BasalProfile getBasalProfile() {
 
         // wakeUp
-        wakeUp(receiverDeviceAwakeForMinutes, false);
+        if (doWakeUpBeforeCommand)
+            wakeUp(receiverDeviceAwakeForMinutes, false);
 
         MedtronicUtil.setPumpDeviceState(PumpDeviceState.Active);
 
@@ -728,9 +816,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     // TODO test with values bigger than 30U
     public Boolean setBolus(double units) {
 
-        LOG.warn("setBolus: " + units);
+        LOG.info("setBolus: " + units);
 
-        wakeUp(false);
+        if (this.doWakeUpBeforeCommand)
+            wakeUp(false);
 
         byte[] body = MedtronicUtil.getBolusStrokes(units);
 
@@ -752,7 +841,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     // TODO WIP test
     public boolean setTBR(TempBasalPair tbr) {
 
-        wakeUp(false);
+        if (this.doWakeUpBeforeCommand)
+            wakeUp(false);
 
         byte[] body = tbr.getAsRawData();
 

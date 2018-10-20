@@ -31,8 +31,8 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
@@ -46,9 +46,10 @@ import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.SP;
 
-
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     MyPreferenceFragment myPreferenceFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         MainApp.bus().post(new EventPreferenceChange(key));
@@ -68,41 +70,47 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
             MainApp.bus().post(new EventRefreshGui(true));
-            //recreate() does not update language so better close settings
+            // recreate() does not update language so better close settings
             finish();
         }
         if (key.equals("short_tabtitles")) {
             MainApp.bus().post(new EventRefreshGui());
         }
-        if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
-            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
+        if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens))
+            && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
+            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity),
+                MainApp.gs(R.string.sensitivity_warning), null);
         }
+
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
 
+
     private static void updatePrefSummary(Preference pref) {
         if (pref instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) pref;
+            ListPreference listPref = (ListPreference)pref;
             pref.setSummary(listPref.getEntry());
         }
         if (pref instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) pref;
+            EditTextPreference editTextPref = (EditTextPreference)pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
             } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
                 pref.setSummary(SP.getString(R.string.key_danars_name, ""));
             } else if (editTextPref.getText() != null) {
-                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
+                ((EditTextPreference)pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {
+            } else if (pref.getKey().contains("smscommunicator_allowednumbers")
+                && TextUtils.isEmpty(editTextPref.getText().trim())) {
                 pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }
     }
 
+
     public static void initSummary(Preference p) {
         if (p instanceof PreferenceGroup) {
-            PreferenceGroup pGrp = (PreferenceGroup) p;
+            PreferenceGroup pGrp = (PreferenceGroup)p;
             for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
                 initSummary(pGrp.getPreference(i));
             }
@@ -112,7 +120,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment {
+
         private Integer id;
+
 
         @Override
         public void setArguments(Bundle args) {
@@ -120,10 +130,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             id = args.getInt("id");
         }
 
+
         void addPreferencesFromResourceIfEnabled(PluginBase p, PluginType type) {
             if (p.isEnabled(type) && p.getPreferencesId() != -1)
                 addPreferencesFromResource(p.getPreferencesId());
         }
+
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -156,7 +168,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
 
                 addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginType.SENSITIVITY);
-                addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginType.SENSITIVITY);
+                addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(),
+                    PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref1Plugin.getPlugin(), PluginType.SENSITIVITY);
 
@@ -170,9 +183,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
 
                     if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                            || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                            || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
-                            || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
+                        || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
+                        || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
+                        || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
                         addPreferencesFromResource(R.xml.pref_danarprofile);
                     }
                 }
@@ -180,8 +193,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (!Config.NSCLIENT) {
                     addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginType.PUMP);
                 }
-
-
 
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginType.INSULIN);
 
@@ -198,11 +209,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             initSummary(getPreferenceScreen());
         }
 
+
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putInt("id", id);
         }
+
 
         public Preference getPreference(String key) {
             return findPreference(key);

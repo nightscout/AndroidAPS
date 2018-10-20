@@ -42,6 +42,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     public Double maxBolus;
     public Double maxBasal;
     public boolean inPreInit = true;
+
     // statuses
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     public RileyLinkError rileyLinkError;
@@ -224,6 +225,8 @@ public class MedtronicPumpStatus extends PumpStatus {
 
 
     private boolean startService() {
+
+        LOG.debug("MedtronicPumpStatus::startService");
 
         if (serialChanged && !inPreInit && MedtronicUtil.getMedtronicService() != null) {
             MedtronicUtil.getMedtronicService().setPumpIDString(this.serialNumber); // short operation

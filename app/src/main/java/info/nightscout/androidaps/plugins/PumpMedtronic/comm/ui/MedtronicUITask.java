@@ -7,6 +7,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
@@ -15,6 +16,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  * Created by andy on 6/14/18.
  */
 
+// FIXME we could refactor this and create sperate class for each command, perhaps
 public class MedtronicUITask {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicUITask.class);
@@ -25,6 +27,7 @@ public class MedtronicUITask {
     boolean invalid = false;
     private Object[] parameters;
     private boolean received;
+    MedtronicUIResponseType responseType;
 
 
     public MedtronicUITask(MedtronicCommandType commandType) {
@@ -137,16 +140,19 @@ public class MedtronicUITask {
             default: {
                 LOG.warn("This commandType is not supported (yet) - {}.", commandType);
                 invalid = true;
+                responseType = MedtronicUIResponseType.Invalid;
             }
 
         }
 
-        if (returnData == null) {
-            if (!invalid)
-                errorDescription = communicationManager.getErrorResponse();
-            received = true;
-        } else {
-            received = true;
+        if (responseType != null) {
+            if (returnData == null) {
+                if (!invalid)
+                    errorDescription = communicationManager.getErrorResponse();
+                received = true;
+            } else {
+                received = true;
+            }
         }
 
     }

@@ -1207,7 +1207,7 @@
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
 
     <!-- Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump">Operation not supported by pump.</string>
+    <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
@@ -1217,6 +1217,7 @@
     <!-- Medtronic (MDT) - Base -->
     <string name="medtronic_name" translatable="false">Medtronic</string>
     <string name="medtronic_name_short" translatable="false">MDT</string>
+    <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
 
     <!-- MDT Configuration -->
@@ -1271,6 +1272,7 @@
     <string name="rileylink_error_tuneup_failed">TuneUp Failed</string>
     <string name="rileylink_error_pump_unreachable">Pump unreachable</string>
     <string name="rileylink_error_pod_unreachable">Pod unreachable</string>
+    <string name="rileylink_error_address_not_set_short">Not set</string>
 
     <!-- RL Target Device -->
     <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
@@ -1301,12 +1303,18 @@
     <string name="medtronic_pump_status_error_comm">Error with communication</string>
     <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>
     <string name="medtronic_pump_status_problem_contacting">Problem contacting Pump</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>
     <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>
     <string name="medtronic_pump_status_active">Active</string>
     <string name="medtronic_pump_status_sleeping">Sleeping</string>
 
     <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string>
     <string name="medtronic_cmd_cancel_bolus_not_supported">Remote cancel of Bolus is not supported. If you wish to cancel bolus, go to pump put it in suspend and then resume. This will cancel the bolus.</string>
+    <string name="medtronic_cmd_cant_read_tbr">Could not read current TBR.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Could not cancel current TBR. Stopping operation.</string>
+
+    <string name="pump_no_connection_h">No connection for %1$d hour(s) %2$d min</string>
+    <string name="pump_no_connection_d">No connection for %1$d day(s) %2$d hours</string>
 
 
     <plurals name="objective_days">

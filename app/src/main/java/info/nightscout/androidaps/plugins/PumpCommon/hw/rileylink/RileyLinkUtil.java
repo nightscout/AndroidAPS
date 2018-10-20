@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.S
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTask;
+import info.nightscout.androidaps.plugins.PumpCommon.ui.RileyLinkSelectPreference;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
 
@@ -56,6 +57,7 @@ public class RileyLinkUtil {
     // Broadcasts: RileyLinkBLE, RileyLinkService,
     private static RileyLinkTargetDevice targetDevice;
     private static RileyLinkEncodingType encoding;
+    private static RileyLinkSelectPreference rileyLinkSelectPreference;
 
 
     public static void setContext(Context contextIn) {
@@ -276,6 +278,18 @@ public class RileyLinkUtil {
 
     public static void setTargetDevice(RileyLinkTargetDevice targetDevice) {
         RileyLinkUtil.targetDevice = targetDevice;
+    }
+
+
+    public static void setRileyLinkSelectPreference(RileyLinkSelectPreference rileyLinkSelectPreference) {
+
+        RileyLinkUtil.rileyLinkSelectPreference = rileyLinkSelectPreference;
+    }
+
+
+    public static RileyLinkSelectPreference getRileyLinkSelectPreference() {
+
+        return rileyLinkSelectPreference;
     }
 
 }

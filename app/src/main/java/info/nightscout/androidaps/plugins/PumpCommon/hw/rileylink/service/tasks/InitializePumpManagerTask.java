@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.utils.SP;
 
@@ -17,10 +18,12 @@ import info.nightscout.utils.SP;
 public class InitializePumpManagerTask extends ServiceTask {
 
     private static final String TAG = "InitPumpManagerTask";
+    private RileyLinkTargetDevice targetDevice;
 
 
-    public InitializePumpManagerTask() {
+    public InitializePumpManagerTask(RileyLinkTargetDevice targetDevice) {
         super();
+        this.targetDevice = targetDevice;
     }
 
 
@@ -32,7 +35,6 @@ public class InitializePumpManagerTask extends ServiceTask {
     @Override
     public void run() {
 
-        // FIXME
         double lastGoodFrequency = SP.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
         lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
 
@@ -41,18 +43,20 @@ public class InitializePumpManagerTask extends ServiceTask {
         if ((lastGoodFrequency > 0.0d)
             && RileyLinkUtil.getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
 
+            RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkReady);
+
             Log.i(TAG, String.format("Setting radio frequency to %.2fMHz", lastGoodFrequency));
             RileyLinkUtil.getRileyLinkCommunicationManager().setRadioFrequencyForPump(lastGoodFrequency);
 
             boolean foundThePump = RileyLinkUtil.getRileyLinkCommunicationManager().tryToConnectToDevice();
 
-            // FIXME maybe remove in AAPS
             if (foundThePump) {
                 RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
                 // RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_PUMP_pumpFound), null);
             } else {
                 RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError,
                     RileyLinkError.NoContactWithDevice);
+                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
                 // RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_PUMP_pumpLost), null);
             }
 

@@ -81,20 +81,7 @@ public class RFSpy {
     // Here should go generic RL initialisation + protocol adjustments depending on
     // firmware version
     public void initializeRileyLink() {
-        // We have to call raw version of communication to get firmware version
-        // So that we can adjust other commands accordingly afterwords
-        byte[] getVersionRaw = getByteArray(RileyLinkCommandType.GetVersion.code);
-        byte[] response = writeToDataRaw(getVersionRaw, 5000);
-        if (response != null) { // && response[0] == (byte) 0xDD) {
-
-            // This throws an exception if version not supported, we should treat exceptions somehow
-            // and show "Not supported firmware" message in UI
-            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
-                .fromBytes(response));
-
-            this.firmwareVersion = version;
-
-        }
+        firmwareVersion = getFirmwareVersion();
         bleVersion = getVersion();
     }
 
@@ -116,6 +103,31 @@ public class RFSpy {
             LOG.error("getVersion failed with code: " + result.resultCode);
             return "(null)";
         }
+    }
+
+
+    public RileyLinkFirmwareVersion getFirmwareVersion() {
+        for (int i = 0; i < 5; i++) {
+            // We have to call raw version of communication to get firmware version
+            // So that we can adjust other commands accordingly afterwords
+            byte[] getVersionRaw = getByteArray(RileyLinkCommandType.GetVersion.code);
+            byte[] response = writeToDataRaw(getVersionRaw, 5000);
+            if (response != null) { // && response[0] == (byte) 0xDD) {
+
+                String versionString = StringUtil.fromBytes(response);
+                RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
+                    .fromBytes(response));
+
+                LOG.trace("Firmware Version string: {}, resolved to {}.", versionString, version);
+
+                if (version != RileyLinkFirmwareVersion.UnknownVersion)
+                    return version;
+
+                SystemClock.sleep(1000);
+            }
+        }
+
+        return RileyLinkFirmwareVersion.UnknownVersion;
     }
 
 

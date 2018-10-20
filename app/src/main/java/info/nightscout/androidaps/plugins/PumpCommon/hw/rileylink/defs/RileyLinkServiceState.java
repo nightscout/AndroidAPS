@@ -58,7 +58,7 @@ public enum RileyLinkServiceState {
 
 
     public static boolean isReady(RileyLinkServiceState serviceState) {
-        return (serviceState == RileyLinkReady || serviceState == PumpConnectorReady);
+        return (/* serviceState == RileyLinkReady || */serviceState == PumpConnectorReady);
     }
 
 
@@ -79,7 +79,8 @@ public enum RileyLinkServiceState {
         return (this == RileyLinkServiceState.BluetoothInitializing || //
             // this == RileyLinkServiceState.BluetoothError || //
             this == RileyLinkServiceState.BluetoothReady || //
-        this == RileyLinkServiceState.RileyLinkInitializing //
+            this == RileyLinkServiceState.RileyLinkInitializing || //
+        this == RileyLinkReady
         // this == RileyLinkServiceState.RileyLinkError
         );
     }
