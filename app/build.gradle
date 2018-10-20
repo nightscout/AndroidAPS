@@ -71,7 +71,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "2.0g-medtronic-0.3-snapshot"
+        version "2.0g-medtronic-0.3.1-snapshot"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
