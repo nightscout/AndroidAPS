@@ -229,7 +229,7 @@
   <string name="openapsma_maxbasal_summary">Cette valeur est appelée Basal Maximum dans le contexte OpenAPS</string>
   <string name="openapsma_maxiob_title">Le Basal IA maximum que l\'OpenAPS pourra délivrer [U]</string>
   <string name="openapsma_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nC\'estlle maximum d\'insuline en [U] que APS peut délivrer en une seule fois.</string>
-  <string name="dismiss">REJETER</string>
+  <string name="dismiss">FERMER</string>
   <string name="danarpump">DanaR</string>
   <string name="connecting">Connection en cours</string>
   <string name="connected">Connectée</string>

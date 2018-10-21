@@ -917,7 +917,7 @@
   <string name="loopdisconnectedfor">Odpojeno (%1$d m)</string>
   <string name="automatic_careportal_events">Automatické vkládání péče</string>
   <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automaticky vloží výměnu inzulínu, setu, baterie a alarmů pumpy do NS</string>
-  <string name="openapssmb_maxiob_title">Maximální celkové IOB, které OpenAPS nemůže překročit [U]</string>
+  <string name="openapssmb_maxiob_title">Maximální celková hodnota IOB, kterou OpenAPS nemůže překročit [U]</string>
   <string name="openapssmb_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána Max IOB.\nOpenAPS nikdy nepřidá inzulín, pokud je současné IOB větší než tato hodnota</string>
   <string name="pump_stopped">Pumpa zastavena</string>
   <string name="pump_started">Pumpa spuštěna</string>
@@ -966,7 +966,7 @@
   <string name="readstatus">Načíst status</string>
   <string name="adjustprofileinns">Změny musí být prováděny v NS</string>
   <string name="exitwizard">Přeskočit průvodce</string>
-  <string name="setupwizard_loop_description">Stiskněte tlačítko níže pro povolení AndroidAPS navrhovat nebo provádět změny bazálu</string>
+  <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AndroidAPS povolit navrhovat nebo provádět změny bazálu</string>
   <string name="setupwizard_objectives_description">Stiskněte tlačítko níže pro povolení Cílů. Po ukončení průvodce přejděte na záložku Cílů, abyste získali všechny funkce AndroidAPS.\n</string>
   <string name="enableobjectives">Povolit Cíle</string>
   <string name="apssetup">Nastavení APS</string>
