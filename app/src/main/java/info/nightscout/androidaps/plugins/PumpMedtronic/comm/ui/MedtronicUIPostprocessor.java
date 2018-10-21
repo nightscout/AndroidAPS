@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BatteryStatusDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicNotificationType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
@@ -36,16 +37,24 @@ public class MedtronicUIPostprocessor {
     // where responses won't be directly used
     public void postProcessData(MedtronicUITask uiTask) {
 
-        if (!uiTask.haveData()) {
-            LOG.error("Error reading data [{}]: {}", uiTask.commandType, uiTask.errorDescription);
-            return;
-        }
+        // if (!uiTask.haveData()) {
+        // LOG.error("Error reading data [{}]: {}", uiTask.commandType, uiTask.errorDescription);
+        // return;
+        // }
 
         switch (uiTask.commandType) {
 
             case GetBasalProfileSTD: {
                 BasalProfile basalProfile = (BasalProfile)uiTask.returnData;
-                pumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+
+                Double[] profilesByHour = basalProfile.getProfilesByHour();
+
+                if (profilesByHour != null) {
+                    pumpStatus.basalsByHour = profilesByHour;
+                } else {
+                    uiTask.responseType = MedtronicUIResponseType.Error;
+                    uiTask.errorDescription = "No profile found.";
+                }
             }
                 break;
 

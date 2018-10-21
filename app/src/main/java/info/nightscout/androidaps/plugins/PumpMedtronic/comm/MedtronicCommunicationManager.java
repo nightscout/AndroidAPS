@@ -144,6 +144,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                         if (valid) {
                             if (state == PumpDeviceState.PumpUnreachable)
                                 MedtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
+                            else
+                                MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
                             if (firstConnection)
                                 checkFirstConnectionTime();
@@ -680,7 +682,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public BasalProfile getBasalProfile_Old() {
 
-        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetBasalProfileA);
+        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetBasalProfileSTD);
 
         return responseObject == null ? null : (BasalProfile)responseObject;
     }
@@ -748,14 +750,17 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 errorMessage = check;
             }
 
-            Object dataResponse = medtronicConverter.convertResponse(commandType, data);
+            BasalProfile basalProfile = (BasalProfile)medtronicConverter.convertResponse(commandType, data);
 
-            LOG.debug("Converted response for {} is {}.", commandType.name(), dataResponse);
+            LOG.debug("Converted response for {} is {}.", commandType.name(), basalProfile);
 
             MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
-            return (BasalProfile)dataResponse;
+            return basalProfile;
         }
+
+        LOG.warn("Error reading profile in max retries.");
+        MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         return null;
 

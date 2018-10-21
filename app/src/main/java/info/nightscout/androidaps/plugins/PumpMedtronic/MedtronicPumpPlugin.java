@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -489,7 +490,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             Double[] basalsByHour = getMDTPumpStatus().basalsByHour;
 
+            LOG.debug("Basals by hour: " + (basalsByHour == null ? "null" : StringUtils.join(basalsByHour, " ")));
+
             int index = 0;
+
+            if (basalsByHour == null)
+                return true;
 
             for (Profile.BasalValue basalValue : profile.getBasalValues()) {
 

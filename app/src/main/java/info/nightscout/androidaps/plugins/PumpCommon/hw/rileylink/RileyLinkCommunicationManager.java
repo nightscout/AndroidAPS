@@ -210,13 +210,14 @@ public abstract class RileyLinkCommunicationManager {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
                 RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0, (byte)0,
-                    (byte)0, (byte)0, SCAN_TIMEOUT, (byte)0);
+                    (byte)0, (byte)0, 500, (byte)0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
                     RadioResponse radioResponse = new RadioResponse(resp.getRaw());
                     if (radioResponse.isValid()) {
                         sumRSSI += radioResponse.rssi;
+                        trial.rssiList.add(radioResponse.rssi);
                         trial.successes++;
                     } else {
                         LOG.warn("Failed to parse radio response: " + ByteUtil.shortHexString(resp.getRaw()));
@@ -227,9 +228,14 @@ public abstract class RileyLinkCommunicationManager {
                 trial.tries++;
             }
             sumRSSI += -99.0 * (trial.tries - trial.successes);
-            trial.averageRSSI = (double)(sumRSSI) / (double)(trial.tries);
+            trial.averageRSSI2 = (double)(sumRSSI) / (double)(trial.tries);
+
+            trial.calculateAverage();
+
             results.trials.add(trial);
         }
+
+        results.dateTime = System.currentTimeMillis();
 
         StringBuilder stringBuilder = new StringBuilder("Scan results:\n");
 
@@ -237,7 +243,8 @@ public abstract class RileyLinkCommunicationManager {
             FrequencyTrial one = results.trials.get(k);
 
             stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, ""
-                + one.frequencyMHz, "" + one.averageRSSI));
+                + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList + ", averageRSSI_Old="
+                + one.averageRSSI2));
         }
 
         LOG.debug(stringBuilder.toString());
@@ -248,6 +255,7 @@ public abstract class RileyLinkCommunicationManager {
         results.bestFrequencyMHz = bestTrial.frequencyMHz;
         if (bestTrial.successes > 0) {
             rfspy.setBaseFrequency(results.bestFrequencyMHz);
+            LOG.debug("Best frequency found: " + results.bestFrequencyMHz);
             return results.bestFrequencyMHz;
         } else {
             LOG.error("No pump response during scan.");

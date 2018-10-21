@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
+import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicFragment;
 import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtronicService;
 
 /**
@@ -22,7 +23,9 @@ public class WakeAndTuneTask extends PumpTask {
 
     @Override
     public void run() {
+        MedtronicFragment.refreshButtonEnabled(false);
         RileyLinkMedtronicService.getInstance().doTuneUpDevice();
+        MedtronicFragment.refreshButtonEnabled(true);
     }
 
 }

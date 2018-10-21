@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandTyp
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
+import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
@@ -24,9 +25,9 @@ public class MedtronicUITask {
     public MedtronicCommandType commandType;
     public Object returnData;
     String errorDescription;
-    boolean invalid = false;
+    // boolean invalid = false;
     private Object[] parameters;
-    private boolean received;
+    // private boolean received;
     MedtronicUIResponseType responseType;
 
 
@@ -117,7 +118,7 @@ public class MedtronicUITask {
 
             case SetBasalProfileSTD:
             case SetBasalProfileA: {
-
+                // returnData = communicationManager.setBasalProfile(profile);
                 // Float amount = getAmount();
                 //
                 // if (amount != null) {
@@ -139,19 +140,18 @@ public class MedtronicUITask {
 
             default: {
                 LOG.warn("This commandType is not supported (yet) - {}.", commandType);
-                invalid = true;
+                // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid;
             }
 
         }
 
-        if (responseType != null) {
+        if (responseType == null) {
             if (returnData == null) {
-                if (!invalid)
-                    errorDescription = communicationManager.getErrorResponse();
-                received = true;
+                errorDescription = communicationManager.getErrorResponse();
+                this.responseType = MedtronicUIResponseType.Error;
             } else {
-                received = true;
+                this.responseType = MedtronicUIResponseType.Data;
             }
         }
 
@@ -202,21 +202,20 @@ public class MedtronicUITask {
         EventMedtronicDeviceStatusChange statusChange;
         LOG.warn("@@@ In execute. {}", commandType);
 
-        // should never happen
-        if (invalid) {
+        if (responseType == MedtronicUIResponseType.Data) {
+            postprocessor.postProcessData(this);
+        }
+
+        if (responseType == MedtronicUIResponseType.Invalid) {
             statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
                 "Unsupported command in MedtronicUITask");
             MainApp.bus().post(statusChange);
-        }
-
-        if (errorDescription != null) {
+        } else if (responseType == MedtronicUIResponseType.Error) {
             statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
                 errorDescription);
             MainApp.bus().post(statusChange);
-        }
-
-        if (returnData != null) {
-            postprocessor.postProcessData(this);
+        } else {
+            MainApp.bus().post(new EventMedtronicPumpValuesChanged());
         }
 
         MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
@@ -226,6 +225,6 @@ public class MedtronicUITask {
 
 
     public boolean hasData() {
-        return (returnData != null);
+        return (responseType == MedtronicUIResponseType.Data);
     }
 }

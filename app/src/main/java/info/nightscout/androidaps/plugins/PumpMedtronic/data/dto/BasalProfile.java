@@ -64,16 +64,13 @@ public class BasalProfile {
             return false;
         }
 
+        // if we have just one entry through all day it looks like just length 1
         if (data.length == 1) {
             data = MedtronicUtil.createByteArray(data[0], (byte)0, (byte)0);
         }
 
-        // int len = Math.min(MAX_RAW_DATA_SIZE, data.length);
         mRawData = data;
-        // System.arraycopy(data, 0, mRawData, 0, len);
-        if (DEBUG_BASALPROFILE) {
-            LOG.debug(String.format("setRawData: copied raw data buffer of %d bytes.", data.length));
-        }
+
         return true;
     }
 
@@ -159,7 +156,7 @@ public class BasalProfile {
     public List<BasalProfileEntry> getEntries() {
         List<BasalProfileEntry> entries = new ArrayList<>();
 
-        if (mRawData[2] == 0x3f) {
+        if (mRawData == null || mRawData[2] == 0x3f) {
             LOG.warn("Raw Data is empty.");
             return entries; // an empty list
         }
@@ -212,10 +209,13 @@ public class BasalProfile {
     }
 
 
-    // TODO extend to be done by half hour
     public Double[] getProfilesByHour() {
 
         List<BasalProfileEntry> entries = getEntries();
+
+        if (entries.size() == 0) {
+            return null;
+        }
 
         Double[] basalByHour = new Double[24];
 
@@ -260,5 +260,10 @@ public class BasalProfile {
 
     public byte[] getRawData() {
         return this.mRawData;
+    }
+
+
+    public String toString() {
+        return getBasalProfileAsString();
     }
 }

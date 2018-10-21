@@ -31,6 +31,9 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.InitializePumpManagerTask;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.utils.SP;
 
 /**
@@ -177,7 +180,8 @@ public abstract class RileyLinkService extends Service {
                     } else if (action.equals(RileyLinkConst.IPC.MSG_PUMP_tunePump) || //
                         action.equals(RileyLinkConst.IPC.MSG_PUMP_quickTune)) {
                         if (getRileyLinkTargetDevice().isTuneUpEnabled()) {
-                            doTuneUpDevice();
+                            // doTuneUpDevice();
+                            ServiceTaskExecutor.startTask(new WakeAndTuneTask());
                         }
                     } else if (action.startsWith("MSG_PUMP_")) {
                         handlePumpSpecificIntents(intent);
@@ -387,6 +391,7 @@ public abstract class RileyLinkService extends Service {
     public void doTuneUpDevice() {
 
         RileyLinkUtil.setServiceState(RileyLinkServiceState.TuneUpDevice);
+        MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         double lastGoodFrequency = 0.0d;
 
@@ -426,6 +431,8 @@ public abstract class RileyLinkService extends Service {
             // error tuning pump, pump not present ??
             RileyLinkUtil
                 .setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
+        } else {
+            RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
         }
     }
 
@@ -436,6 +443,8 @@ public abstract class RileyLinkService extends Service {
             this.rileyLinkBLE.disconnect();
             rileyLinkServiceData.rileylinkAddress = null;
         }
+
+        RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
     }
 
 
