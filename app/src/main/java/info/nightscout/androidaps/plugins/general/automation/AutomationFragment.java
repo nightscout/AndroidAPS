@@ -176,33 +176,7 @@ public class AutomationFragment extends SubscriberFragment {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if (position != initialPosition) {
                                 // conector type changed
-                                final TriggerConnector.Type newConnectorType = TriggerConnector.Type.values()[position];
-
-                                if (connector.size() > 2) {
-                                    // split connector
-                                    int pos = connector.pos(trigger) - 1;
-
-                                    TriggerConnector newConnector = new TriggerConnector(newConnectorType);
-                                    {
-                                        Trigger t = connector.get(pos);
-                                        newConnector.add(t);
-                                        connector.remove(t);
-                                    }
-
-                                    TriggerConnector subConnector = new TriggerConnector(connector.getConnectorType());
-                                    int count = connector.size() - pos;
-                                    for (int i = 0; i < count; ++i) {
-                                        Trigger t = connector.get(pos);
-                                        subConnector.add(t);
-                                        connector.remove(t);
-                                    }
-                                    newConnector.add(subConnector);
-                                    connector.add(newConnector);
-                                } else {
-                                    connector.changeConnectorType(newConnectorType);
-                                }
-
-                                connector.simplify().rebuildView();
+                                changeConnector(trigger, connector, TriggerConnector.Type.values()[position]);
                             }
                         }
 
@@ -218,6 +192,34 @@ public class AutomationFragment extends SubscriberFragment {
 
                 mRootLayout.addView(trigger.createView(mContext));
             }
+        }
+
+        public static void changeConnector(final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
+            if (connector.size() > 2) {
+                // split connector
+                int pos = connector.pos(trigger) - 1;
+
+                TriggerConnector newConnector = new TriggerConnector(newConnectorType);
+                {
+                    Trigger t = connector.get(pos);
+                    newConnector.add(t);
+                    connector.remove(t);
+                }
+
+                TriggerConnector subConnector = new TriggerConnector(connector.getConnectorType());
+                int count = connector.size() - pos;
+                for (int i = 0; i < count; ++i) {
+                    Trigger t = connector.get(pos);
+                    subConnector.add(t);
+                    connector.remove(t);
+                }
+                newConnector.add(subConnector);
+                connector.add(newConnector);
+            } else {
+                connector.changeConnectorType(newConnectorType);
+            }
+
+            connector.simplify().rebuildView();
         }
 
         public void rebuild() {
