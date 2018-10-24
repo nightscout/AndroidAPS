@@ -12,39 +12,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({})
 public class TriggerConnectorTest {
 
-    private static class TriggerBoolean extends Trigger {
-        private boolean result;
-
-        TriggerBoolean(boolean result) {
-            this.result = result;
-        }
-
-        @Override
-        public boolean shouldRun() {
-            return result;
-        }
-
-        @Override
-        String toJSON() {
-            return null;
-        }
-
-        @Override
-        Trigger fromJSON(String data) {
-            return null;
-        }
-
-        @Override
-        public int friendlyName() {
-            return 0;
-        }
-
-        @Override
-        public String friendlyDescription() {
-            return null;
-        }
-    }
-
     @Test
     public void testTriggerList() {
         TriggerConnector t = new TriggerConnector();
@@ -72,40 +39,40 @@ public class TriggerConnectorTest {
     @Test
     public void testListTriggerOR() {
         TriggerConnector t = new TriggerConnector(TriggerConnector.Type.OR);
-        t.add(new TriggerBoolean(false));
-        t.add(new TriggerBoolean(false));
+        t.add(new DummyTrigger(false));
+        t.add(new DummyTrigger(false));
         Assert.assertFalse(t.shouldRun());
 
-        t.add(new TriggerBoolean(true));
-        t.add(new TriggerBoolean(false));
+        t.add(new DummyTrigger(true));
+        t.add(new DummyTrigger(false));
         Assert.assertTrue(t.shouldRun());
     }
 
     @Test
     public void testListTriggerXOR() {
         TriggerConnector t = new TriggerConnector(TriggerConnector.Type.XOR);
-        t.add(new TriggerBoolean(false));
-        t.add(new TriggerBoolean(false));
+        t.add(new DummyTrigger(false));
+        t.add(new DummyTrigger(false));
         Assert.assertFalse(t.shouldRun());
 
-        t.add(new TriggerBoolean(true));
-        t.add(new TriggerBoolean(false));
+        t.add(new DummyTrigger(true));
+        t.add(new DummyTrigger(false));
         Assert.assertTrue(t.shouldRun());
 
-        t.add(new TriggerBoolean(true));
-        t.add(new TriggerBoolean(false));
+        t.add(new DummyTrigger(true));
+        t.add(new DummyTrigger(false));
         Assert.assertFalse(t.shouldRun());
     }
 
     @Test
     public void testListTriggerAND() {
         TriggerConnector t = new TriggerConnector(TriggerConnector.Type.AND);
-        t.add(new TriggerBoolean(true));
-        t.add(new TriggerBoolean(true));
+        t.add(new DummyTrigger(true));
+        t.add(new DummyTrigger(true));
         Assert.assertTrue(t.shouldRun());
 
-        t.add(new TriggerBoolean(true));
-        t.add(new TriggerBoolean(false));
+        t.add(new DummyTrigger(true));
+        t.add(new DummyTrigger(false));
         Assert.assertFalse(t.shouldRun());
     }
 
