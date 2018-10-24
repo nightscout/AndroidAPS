@@ -25,7 +25,11 @@ public class LocationHelper {
      */
     public static boolean isLocationEnabled(Context context) {
         LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return (locationManager != null && //
+        (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || //
+        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)));
+
+        // return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
 

@@ -38,11 +38,6 @@ public class MedtronicConverter {
 
         this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
 
-        // if (this.pumpModel == null) {
-        // LOG.warn("Pump model was not identified. Defaulting to 522.");
-        // this.pumpModel = MedtronicDeviceType.Medtronic_522;
-        // }
-
         switch (commandType) {
 
             case PumpModel: {

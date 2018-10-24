@@ -126,7 +126,7 @@ public class PumpMessage implements RLMessage {
 
         System.arraycopy(messageBody.getTxData(), 1, arrayOut, 0, length);
 
-        Log.v("PumpMessage", "Length: " + length + ", Original Length: " + originalLength + ", CommandType: "
+        Log.d("PumpMessage", "Length: " + length + ", Original Length: " + originalLength + ", CommandType: "
             + commandType);
 
         return arrayOut;

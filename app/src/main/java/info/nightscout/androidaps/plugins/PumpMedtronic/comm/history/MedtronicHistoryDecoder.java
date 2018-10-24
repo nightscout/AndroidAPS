@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
@@ -43,6 +44,7 @@ public abstract class MedtronicHistoryDecoder {
     protected boolean statisticsEnabled = true;
     protected Map<Integer, Integer> unknownOpCodes;
     protected Map<RecordDecodeStatus, Map<String, String>> mapStatistics;
+    protected MedtronicDeviceType deviceType;
 
 
     public MedtronicHistoryDecoder() {
@@ -57,42 +59,57 @@ public abstract class MedtronicHistoryDecoder {
 
     // public abstract void refreshOutputWriter();
 
-    public boolean decodePage(RawHistoryPage dataPage) throws Exception {
-        // refreshOutputWriter();
+    // public List<? extends MedtronicHistoryEntry> decodePage(RawHistoryPage dataPage) throws Exception {
+    // // refreshOutputWriter();
+    //
+    // List<? extends MedtronicHistoryEntry> minimedHistoryRecords = processPageAndCreateRecords(dataPage);
+    //
+    // for (MedtronicHistoryEntry record : minimedHistoryRecords) {
+    // decodeRecord(record);
+    // }
+    //
+    // runPostDecodeTasks();
+    //
+    // return minimedHistoryRecords;
+    // }
 
-        List<? extends MedtronicHistoryEntry> minimedHistoryRecords = processPageAndCreateRecords(dataPage);
-
-        for (MedtronicHistoryEntry record : minimedHistoryRecords) {
-            decodeRecord(record);
-        }
-
-        runPostDecodeTasks();
-
-        return true;
-    }
-
+    // public List<? extends MedtronicHistoryEntry> decodePartialPage(RawHistoryPage dataPage) throws Exception {
+    // // refreshOutputWriter();
+    //
+    // List<? extends MedtronicHistoryEntry> minimedHistoryRecords = processPageAndCreateRecords(dataPage, true);
+    //
+    // for (MedtronicHistoryEntry record : minimedHistoryRecords) {
+    // decodeRecord(record);
+    // }
+    //
+    // runPostDecodeTasks();
+    //
+    // return minimedHistoryRecords;
+    // }
 
     protected abstract void runPostDecodeTasks();
 
 
     // TODO_ extend this to also use bigger pages (for now we support only 1024
     // pages)
-    public List<Byte> checkPage(RawHistoryPage page) throws RuntimeException {
+    public List<Byte> checkPage(RawHistoryPage page, boolean partial) throws RuntimeException {
         List<Byte> byteList = new ArrayList<Byte>();
 
-        if (page.getData().length != 1024 /* page.commandType.getRecordLength() */) {
-            LOG.error("Page size is not correct. Size should be {}, but it was {} instead.", 1024,
-                page.getData().length);
-            // throw exception perhaps
-            return byteList;
-        }
+        // if (!partial && page.getData().length != 1024 /* page.commandType.getRecordLength() */) {
+        // LOG.error("Page size is not correct. Size should be {}, but it was {} instead.", 1024,
+        // page.getData().length);
+        // // throw exception perhaps
+        // return byteList;
+        // }
 
         if (MedtronicUtil.getMedtronicPumpModel() == null) {
             LOG.error("Device Type is not defined.");
             return byteList;
         }
 
-        if (page.isChecksumOK()) {
+        if (page.getData().length != 1024) {
+            return ByteUtil.getListFromByteArray(page.getData());
+        } else if (page.isChecksumOK()) {
             return ByteUtil.getListFromByteArray(page.getOnlyData());
         } else {
             return null;
@@ -100,9 +117,13 @@ public abstract class MedtronicHistoryDecoder {
     }
 
 
-    public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page)
-            throws Exception;
-
+    // public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page,
+    // boolean partial) throws Exception;
+    //
+    //
+    // public List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) throws Exception {
+    // return processPageAndCreateRecords(page, false);
+    // }
 
     protected void prepareStatistics() {
         if (!statisticsEnabled)
@@ -190,4 +211,27 @@ public abstract class MedtronicHistoryDecoder {
         return StringUtil.getFormatedValueUS(value, decimals);
     }
 
+
+    // public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
+    // boolean partial) {
+    // return (processPageAndCreateRecords(
+    // rawHistoryPage, partial, clazz);
+    // }
+
+    public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
+            boolean partial, Class<E> clazz) {
+        List<Byte> dataClear = checkPage(rawHistoryPage, partial);
+        List<E> records = createRecords(dataClear, clazz);
+
+        for (MedtronicHistoryEntry record : records) {
+            decodeRecord(record);
+        }
+
+        runPostDecodeTasks();
+
+        return records;
+    }
+
+
+    protected abstract <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClear, Class<E> clazz);
 }

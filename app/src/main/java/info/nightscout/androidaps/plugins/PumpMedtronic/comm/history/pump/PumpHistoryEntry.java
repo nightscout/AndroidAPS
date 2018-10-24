@@ -1,5 +1,11 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump;
 
+import java.util.Objects;
+
+import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
@@ -26,6 +32,8 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHi
  */
 
 public class PumpHistoryEntry extends MedtronicHistoryEntry {
+
+    private static Logger LOG = LoggerFactory.getLogger(PumpHistoryEntry.class);
 
     private PumpHistoryEntryType entryType;
     private Integer opCode; // this is set only when we have unknown entry...
@@ -97,5 +105,43 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     @Override
     public int getDateLength() {
         return this.entryType.getDateLength();
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof PumpHistoryEntry))
+            return false;
+
+        PumpHistoryEntry that = (PumpHistoryEntry)o;
+
+        return entryType == that.entryType && //
+            Objects.equals(this.dateTime, that.dateTime); // && //
+        // Objects.equals(this.decodedData, that.decodedData);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entryType, opCode, offset);
+    }
+
+
+    public boolean isAfter(LocalDateTime dateTimeIn) {
+        // LOG.debug("Entry: " + this.dateTime);
+        // LOG.debug("Datetime: " + dateTimeIn);
+        // LOG.debug("Item after: " + this.dateTime.isAfter(dateTimeIn));
+        return this.dateTime.isAfter(dateTimeIn);
+    }
+
+    public static class Comparator implements java.util.Comparator<PumpHistoryEntry> {
+
+        @Override
+        public int compare(PumpHistoryEntry o1, PumpHistoryEntry o2) {
+            return o2.dateTime.compareTo(o1.dateTime);
+        }
     }
 }

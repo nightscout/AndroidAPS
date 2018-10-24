@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.util;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,8 @@ public class MedtronicUtil extends RileyLinkUtil {
     private static MedtronicPumpStatus medtronicPumpStatus;
     private static MedtronicCommandType currentCommand;
     private static Map<String, PumpSettingDTO> settings;
+    private static int BIG_FRAME_LENGTH = 65;
+    private static int doneBit = 1 << 7;
 
 
     public static LocalTime getTimeFrom30MinInterval(int interval) {
@@ -282,6 +285,105 @@ public class MedtronicUtil extends RileyLinkUtil {
         // sendPayloadBuffer.put((byte) crc);
 
         return sendPayloadBuffer.array();
+    }
+
+
+    // Note: at the moment supported only for 24 items, if you will use it for more than
+    // that you will need to add
+    public static List<List<Byte>> getBasalProfileFrames(byte[] data) {
+
+        boolean done = false;
+        int start = 0;
+        int frame = 1;
+
+        List<List<Byte>> frames = new ArrayList<>();
+        boolean lastFrame = false;
+
+        do {
+            int frameLength = BIG_FRAME_LENGTH - 1;
+
+            if (start + frameLength > data.length) {
+                frameLength = data.length - start;
+            }
+
+            // System.out.println("Framelength: " + frameLength);
+
+            byte[] substring = ByteUtil.substring(data, start, frameLength);
+
+            // System.out.println("Subarray: " + ByteUtil.getCompactString(substring));
+            // System.out.println("Subarray Lenths: " + substring.length);
+
+            List<Byte> frameData = ByteUtil.getListFromByteArray(substring);
+
+            if (isEmptyFrame(frameData)) {
+                byte b = (byte)frame;
+                // b |= 0x80;
+                // b |= 0b1000_0000;
+                b |= doneBit;
+
+                frameData.add(0, b);
+
+                checkAndAppenLastFrame(frameData);
+
+                lastFrame = true;
+
+                done = true;
+            } else {
+                frameData.add(0, (byte)frame);
+            }
+
+            // System.out.println("Subarray: " + ByteUtil.getCompactString(substring));
+
+            frames.add(frameData);
+
+            frame++;
+            start += (BIG_FRAME_LENGTH - 1);
+
+            if (start == data.length) {
+                done = true;
+            }
+
+        } while (!done);
+
+        if (!lastFrame) {
+            List<Byte> frameData = new ArrayList<>();
+
+            byte b = (byte)frame;
+            // b |= 0b1000_0000;
+            b |= doneBit;
+
+            frameData.add(b);
+
+            checkAndAppenLastFrame(frameData);
+        }
+
+        return frames;
+
+    }
+
+
+    private static void checkAndAppenLastFrame(List<Byte> frameData) {
+
+        if (frameData.size() == BIG_FRAME_LENGTH)
+            return;
+
+        int missing = BIG_FRAME_LENGTH - frameData.size();
+
+        for (int i = 0; i < missing; i++) {
+            frameData.add((byte)0x00);
+        }
+    }
+
+
+    private static boolean isEmptyFrame(List<Byte> frameData) {
+
+        for (Byte frameDateEntry : frameData) {
+            if (frameDateEntry != 0x00) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 

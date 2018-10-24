@@ -55,6 +55,7 @@ public class RileyLinkUtil {
     private static RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
     // Broadcasts: RileyLinkBLE, RileyLinkService,
+    //private static RileyLinkIPCConnection rileyLinkIPCConnection;
     private static RileyLinkTargetDevice targetDevice;
     private static RileyLinkEncodingType encoding;
     private static RileyLinkSelectPreference rileyLinkSelectPreference;

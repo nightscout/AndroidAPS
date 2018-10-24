@@ -109,8 +109,10 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     GetBasalProfileSTD(146, "Get Profile Standard", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8, 1), // 146
 
     GetBasalProfileA(147, "Get Profile A", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 9), // 147
+                                                                                                                                                                                  // FIXME
 
     GetBasalProfileB(148, "Get Profile B", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 10), // 148
+                                                                                                                                                                                   // FIXME
 
     SetBasalProfileSTD(0x6f, "Set Profile Standard", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8), // 111
 

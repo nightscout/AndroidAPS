@@ -75,8 +75,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
 
     public void addPumpSpecificIntents(IntentFilter intentFilter) {
-        intentFilter.addAction(RileyLinkConst.IPC.MSG_PUMP_fetchHistory);
-        intentFilter.addAction(RileyLinkConst.IPC.MSG_PUMP_fetchSavedHistory);
+        //intentFilter.addAction(RileyLinkConst.IPC.MSG_PUMP_fetchHistory);
+        //intentFilter.addAction(RileyLinkConst.IPC.MSG_PUMP_fetchSavedHistory);
     }
 
 
@@ -430,10 +430,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         return !RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
     }
 
-
-    // public MedtronicCommunicationManager getPumpManager() {
-    // return this.medtronicCommunicationManager;
-    // }
 
     // FIXME remove
     public void sendNotification(ServiceNotification serviceNotification, Object o) {

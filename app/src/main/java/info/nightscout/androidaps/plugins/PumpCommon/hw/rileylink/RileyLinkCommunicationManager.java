@@ -18,6 +18,8 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.Riley
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
@@ -89,8 +91,7 @@ public abstract class RileyLinkCommunicationManager {
                     RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError,
                         RileyLinkError.NoContactWithDevice);
                     timeoutCount = 0;
-                    tuneForDevice();
-                    // RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_quickTune);
+                    ServiceTaskExecutor.startTask(new WakeAndTuneTask());
                 }
             }
         }

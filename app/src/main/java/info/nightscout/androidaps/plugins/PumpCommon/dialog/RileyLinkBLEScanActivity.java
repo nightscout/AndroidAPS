@@ -21,7 +21,6 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -182,7 +181,7 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Will request that GPS be enabled for devices running Marshmallow or newer.
-                    if (!isLocationEnabled(this)) {
+                    if (!LocationHelper.isLocationEnabled(this)) {
                         LocationHelper.requestLocationForBluetooth(this);
                     }
                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -200,20 +199,6 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
         }
 
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
-    }
-
-
-    public boolean isLocationEnabled(Context context) {
-
-        final LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        if (manager != null
-            && (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) || manager
-                .isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-            return true;
-        }
-        // otherwise return false
-        return false;
     }
 
 

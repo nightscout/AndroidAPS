@@ -345,4 +345,34 @@ public class ByteUtil {
         BIG_ENDIAN // 0 0 0 20 = normal - java
     }
 
+
+    public static String getCompactString(byte[] data) {
+        String vval2 = ByteUtil.getHex(data);
+        vval2 = vval2.replace(" 0x", "");
+        vval2 = vval2.replace("0x", "");
+        return vval2;
+    }
+
+
+    public static byte[] createByteArray(String dataFull, int startIndex) {
+        return createByteArray(dataFull, startIndex, dataFull.length());
+    }
+
+
+    public static byte[] createByteArray(String dataFull, int startIndex, int length) {
+
+        String data = dataFull.substring(startIndex);
+
+        data = data.substring(0, length);
+
+        int len = data.length();
+        byte[] outArray = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            outArray[i / 2] = (byte)((Character.digit(data.charAt(i), 16) << 4) + Character.digit(data.charAt(i + 1),
+                16));
+        }
+
+        return outArray;
+    }
+
 }

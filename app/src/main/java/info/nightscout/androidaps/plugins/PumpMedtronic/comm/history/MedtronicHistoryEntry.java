@@ -43,7 +43,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     protected LocalDateTime dateTime;
     // protected PumpTimeStampedRecord historyEntryDetails;
 
-    private Map<String, Object> decodedData;
+    protected Map<String, Object> decodedData;
 
 
     public void setData(List<Byte> listRawData, boolean doNotProcess) {

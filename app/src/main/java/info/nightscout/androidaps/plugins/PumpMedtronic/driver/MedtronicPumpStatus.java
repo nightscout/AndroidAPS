@@ -255,7 +255,7 @@ public class MedtronicPumpStatus extends PumpStatus {
         }
 
         if (val > defaultValueDouble) {
-            SP.putString(MedtronicConst.Prefs.MaxBolus, "25.0");
+            SP.putString(MedtronicConst.Prefs.MaxBolus, defaultValue);
             val = defaultValueDouble;
         }
 

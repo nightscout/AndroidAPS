@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RecordDecodeStatus;
 
 /**
@@ -111,14 +110,13 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    @Override
-    public List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) throws Exception {
-        List<Byte> dataClear = checkPage(page);
-        return createRecords(dataClear);
-    }
+    // @Override
+    // public List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) throws Exception {
+    // List<Byte> dataClear = checkPage(page, false);
+    // return createRecords(dataClear);
+    // }
 
-
-    private List<? extends MedtronicHistoryEntry> createRecords(List<Byte> dataClearInput) {
+    protected <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClearInput, Class<E> clazz) {
         // List<MinimedHistoryEntry> listRecords = new
         // ArrayList<MinimedHistoryEntry>();
 
@@ -134,7 +132,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
         int counter = 0;
         int record = 0;
 
-        List<MedtronicHistoryEntry> outList = new ArrayList<MedtronicHistoryEntry>();
+        List<E> outList = new ArrayList<E>();
 
         // create CGMS entries (without dates)
         do {
@@ -164,7 +162,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
 
                     // System.out.println("Record: " + pe);
 
-                    outList.add(pe);
+                    outList.add((E)pe);
                 } else {
                     List<Byte> listRawData = new ArrayList<Byte>();
                     listRawData.add((byte)opCode);
@@ -182,7 +180,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
 
                     // System.out.println("Record: " + pe);
 
-                    outList.add(pe);
+                    outList.add((E)pe);
                 }
             } else {
                 CGMSHistoryEntry pe = new CGMSHistoryEntry();
@@ -196,7 +194,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
 
                 // System.out.println("Record: " + pe);
 
-                outList.add(pe);
+                outList.add((E)pe);
             }
 
         } while (counter < dataClear.size());
