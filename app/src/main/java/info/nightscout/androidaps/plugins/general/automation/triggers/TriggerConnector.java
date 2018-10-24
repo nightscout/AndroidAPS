@@ -264,9 +264,11 @@ public class TriggerConnector extends Trigger {
 
         // merge connectors
         if (connector != null && (connector.getConnectorType().equals(connectorType) || size() == 1)) {
+            final int pos = connector.pos(this);
             connector.remove(this);
-            for (Trigger t : list) {
-                connector.add(t);
+            // move triggers of child connector into parent connector
+            for (int i = size()-1; i >= 0; --i) {
+                connector.add(pos, get(i));
             }
             list.clear();
             return connector.simplify();
