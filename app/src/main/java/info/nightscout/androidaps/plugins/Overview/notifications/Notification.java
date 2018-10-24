@@ -69,6 +69,8 @@ public class Notification {
     public static final int NEWVERSIONDETECTED = 41;
     public static final int SENDLOGFILES = 42;
     public static final int DEVICENOTPAIRED = 43;
+    public static final int MEDTRONIC_PUMP_ALARM = 44;
+    public static final int RILEYLINK_CONNECTION = 45;
 
 
     public int id;
