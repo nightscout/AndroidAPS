@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
@@ -290,7 +288,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
 
     void addSpecialRuleHead(SpecialRule rule) {
-        if (CollectionUtils.isEmpty(specialRulesHead)) {
+        if (isEmpty(specialRulesHead)) {
             specialRulesHead = new ArrayList<SpecialRule>();
         }
 
@@ -300,7 +298,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
 
     void addSpecialRuleBody(SpecialRule rule) {
-        if (CollectionUtils.isEmpty(specialRulesBody)) {
+        if (isEmpty(specialRulesBody)) {
             specialRulesBody = new ArrayList<SpecialRule>();
         }
 
@@ -321,7 +319,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     public int getHeadLength() {
         if (hasSpecialRules) {
-            if (CollectionUtils.isNotEmpty(specialRulesHead)) {
+            if (isNotEmpty(specialRulesHead)) {
                 return determineSizeByRule(headLength, specialRulesHead);
             } else {
                 return headLength;
@@ -339,7 +337,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     public int getBodyLength() {
         if (hasSpecialRules) {
-            if (CollectionUtils.isNotEmpty(specialRulesBody)) {
+            if (isNotEmpty(specialRulesBody)) {
                 return determineSizeByRule(bodyLength, specialRulesBody);
             } else {
                 return bodyLength;
@@ -347,6 +345,16 @@ public enum PumpHistoryEntryType // implements CodeEnum
         } else {
             return bodyLength;
         }
+    }
+
+
+    private boolean isNotEmpty(List list) {
+        return list != null && !list.isEmpty();
+    }
+
+
+    private boolean isEmpty(List list) {
+        return list == null || list.isEmpty();
     }
 
 

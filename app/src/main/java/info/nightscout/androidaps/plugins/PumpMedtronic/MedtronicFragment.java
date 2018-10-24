@@ -155,7 +155,7 @@ public class MedtronicFragment extends SubscriberFragment {
         refreshButton.setEnabled(false);
         MedtronicPumpPlugin.getPlugin().resetStatusState();
 
-        ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked refresh", new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked refresh", new Callback() {
 
             @Override
             public void run() {
@@ -295,7 +295,7 @@ public class MedtronicFragment extends SubscriberFragment {
         }
 
         if (queueView != null) {
-            Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
+            Spanned status = ConfigBuilderPlugin.getPlugin().getCommandQueue().spannedStatus();
             if (status.toString().equals("")) {
                 queueView.setVisibility(View.GONE);
             } else {
@@ -430,7 +430,7 @@ public class MedtronicFragment extends SubscriberFragment {
                     + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
 
                 // FIXME temp basal - check - maybe set as combo ??
-                if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+                if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
                     if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
                         tempBasalView.setText(TreatmentsPlugin.getPlugin()
                             .getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());

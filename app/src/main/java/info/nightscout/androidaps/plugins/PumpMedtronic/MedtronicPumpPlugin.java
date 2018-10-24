@@ -183,7 +183,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 SystemClock.sleep(60000);
 
                 if (doWeHaveAnyStatusNeededRefereshing()) {
-                    ConfigBuilderPlugin.getCommandQueue().readStatus("Manual Status Refresh", null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Manual Status Refresh", null);
                 }
 
             } while (serviceRunning);
