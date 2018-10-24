@@ -81,6 +81,11 @@ public class TriggerConnector extends Trigger {
         t.connector = this;
     }
 
+    public synchronized void add(int pos, Trigger t) {
+        list.add(pos, t);
+        t.connector = this;
+    }
+
     public synchronized boolean remove(Trigger t) {
         return list.remove(t);
     }
@@ -218,14 +223,14 @@ public class TriggerConnector extends Trigger {
             ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
             FragmentManager manager = AutomationFragment.fragmentManager();
             dialog.show(manager, "ChooseTriggerDialog");
-            dialog.setOnClickListener(newTriggerObject -> addTrigger(adapter, newTriggerObject, getConnectorType()));
+            dialog.setOnClickListener(newTriggerObject -> addNewTrigger(adapter, newTriggerObject, getConnectorType()));
         });
         buttonLayout.addView(buttonAdd);
 
         return root;
     }
 
-    private void addTrigger(AutomationFragment.TriggerListAdapter adapter, Trigger trigger, Type connection) {
+    private void addNewTrigger(AutomationFragment.TriggerListAdapter adapter, Trigger trigger, Type connection) {
         if (getConnectorType().equals(connection)) {
             add(trigger);
         } else {

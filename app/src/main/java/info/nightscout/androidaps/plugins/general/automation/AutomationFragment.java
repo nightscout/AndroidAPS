@@ -200,21 +200,15 @@ public class AutomationFragment extends SubscriberFragment {
                 int pos = connector.pos(trigger) - 1;
 
                 TriggerConnector newConnector = new TriggerConnector(newConnectorType);
-                {
+
+                // move trigger from pos and pos+1 into new connector
+                for(int i = 0; i < 2; ++i) {
                     Trigger t = connector.get(pos);
                     newConnector.add(t);
                     connector.remove(t);
                 }
 
-                TriggerConnector subConnector = new TriggerConnector(connector.getConnectorType());
-                int count = connector.size() - pos;
-                for (int i = 0; i < count; ++i) {
-                    Trigger t = connector.get(pos);
-                    subConnector.add(t);
-                    connector.remove(t);
-                }
-                newConnector.add(subConnector);
-                connector.add(newConnector);
+                connector.add(pos, newConnector);
             } else {
                 connector.changeConnectorType(newConnectorType);
             }
