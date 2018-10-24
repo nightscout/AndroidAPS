@@ -59,9 +59,9 @@ public class MsgCheckValue_v2 extends MessageBase {
                 (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setPluginEnabled(PluginType.PROFILE, true);
             }
 
-            MainApp.getConfigBuilder().storeSettings("ChangingDanaRv2Driver");
+            ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaRv2Driver");
             MainApp.bus().post(new EventRefreshGui());
-            ConfigBuilderPlugin.getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }
 
@@ -82,9 +82,9 @@ public class MsgCheckValue_v2 extends MessageBase {
                 (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginType.PROFILE, true);
             }
 
-            MainApp.getConfigBuilder().storeSettings("ChangingDanaRv2Driver");
+            ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaRv2Driver");
             MainApp.bus().post(new EventRefreshGui());
-            ConfigBuilderPlugin.getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }
         if (L.isEnabled(L.PUMPCOMM)) {

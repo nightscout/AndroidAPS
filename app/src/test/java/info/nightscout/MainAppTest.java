@@ -10,6 +10,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 
@@ -52,11 +53,6 @@ public class MainAppTest {
     public void closeDbHelperTest() {
         mainApp.closeDbHelper();
         Assert.assertNull(mainApp.getDbHelper());
-    }
-
-    @Test
-    public void getConfigBuilderTest() {
-        Assert.assertNotNull(mainApp.getConfigBuilder());
     }
 
     @Test

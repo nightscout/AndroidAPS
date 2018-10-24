@@ -65,7 +65,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 

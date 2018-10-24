@@ -86,7 +86,7 @@ public class APSResult {
 
     @Override
     public String toString() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -115,7 +115,7 @@ public class APSResult {
     }
 
     public Spanned toSpanned() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -304,7 +304,7 @@ public class APSResult {
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (usePercent) {

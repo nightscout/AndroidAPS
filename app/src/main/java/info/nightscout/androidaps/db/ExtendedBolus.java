@@ -218,7 +218,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
         int realDuration = getDurationToTime(time);
 

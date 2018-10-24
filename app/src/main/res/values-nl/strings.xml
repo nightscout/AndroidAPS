@@ -459,6 +459,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="openapsama_autosens_adjusttargets">Autosens past de streefwaardes ook aan</string>
   <string name="openapsama_autosens_adjusttargets_summary">Standaardwaarde: waar Dit wordt gebruikt om autosens de bevoegdheid te geven BG doelen aan te passen alsook ISF en basalen</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Standaard waarde: 2\nBolus snooze is actief nadat je een maaltijd bolus toegediend hebt, zodat de loop geen tegenvoorstel met een verlaagd tijdelijk basaal doet nadat je gegeten hebt. Het voorbeeld hier van van standaard 2; dus een 3 u DIA betekent dat de bolus snooze gemiddeld 1.5u actief is (3DIA/2).</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaard koolhydraten absorptie-impact per 5 minuten. De standaard is een verwachte 3mg / dl / 5min. Dit is van invloed op hoe snel COB zijn opgenomen en hoeveel koolhydraten absorptie wordt verwacht, bij het voorspellen van toekomstige BG, wanneer BG meer dan verwacht daalt of niet zoveel stijgt als verwacht.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Opgelet!\n Onderstaande waardes moeten normaal gezien niet worden aangepast. KLIK HIER en LEES de tekst zodat je alles volledig BEGRIJPT voordat je een waarde wijzigt.</string>
   <string name="error_only_numeric_digits_allowed">Alleen numerieke waarden toegelaten.</string>
   <string name="error_only_numeric_digits_range_allowed">Alleen numerieke waarden binnen het bereik %1$s - %2$s toegelaten.</string>
@@ -888,6 +889,8 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
   <string name="autosensdisabledinpreferences">Autosens gedeactiveerd in de voorkeuren</string>
   <string name="smbdisabledinpreferences">SMB gedeactiveerd in de voorkeuren</string>
+  <string name="uamdisabledinpreferences">UAM gedeactiveerd in configuratie</string>
+  <string name="uamdisabledoref1notselected">UAM gedeactiveerd omdat het Oref1 gevoeligheid plugin nodig heeft</string>
   <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
   <string name="pumplimit">Pomp limiet</string>
   <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
@@ -897,6 +900,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="basal_set_correctly">Basaal correct ingesteld</string>
   <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% want de %2$s</string>
   <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
+  <string name="limitingextendedbolus">Beperken van extended bolus op %1$.1f E vanwege %2$s</string>
   <string name="limitingmaxiob">Max IOB wordt beperkt tot %1$.1f E doordat %2$s</string>
   <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
   <string name="limitingiob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
@@ -928,6 +932,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="nav_setupwizard">Setup Wizard</string>
   <string name="setupwizard_finish">FINISH</string>
   <string name="setupwizard_language_prompt">Selecteer uw taal</string>
+  <string name="boluserrorcode">Gevraagd: %1$.2fU Toegediend: %2$.2fE Error code: %3$s</string>
   <string name="firstinsulinincrement">Eerste insuline increment</string>
   <string name="secondinsulinincrement">Tweede insuline increment</string>
   <string name="thirdinsulinincrement">Derde  insuline increment</string>
@@ -950,7 +955,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="virtualpump_type">Virtuele pomp Type</string>
   <string name="virtualpump_definition">Pomp definitie</string>
   <string name="virtualpump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Basaal- /boluswaarden worden niet ondersteund door virtuele pomp.</string>
+  <string name="virtualpump_pump_def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
   <string name="ns_autobackfill_title">Automatische BG aanvullen</string>
   <string name="wear_wizard_settings">Wizard instellingen</string>
   <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
@@ -1042,6 +1047,12 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
   <string name="calculation_short">Calc</string>
   <string name="handshaking">Handshaking</string>
   <string name="sendlogfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>
+  <string name="maxbolusviolation">Max bolus overschreiding</string>
+  <string name="commanderror">Opdracht fout</string>
+  <string name="speederror">Snelheid fout</string>
+  <string name="insulinlimitviolation">Insuline limiet overschreiding</string>
+  <string name="loop_openmode_min_change">Minimale verzoek voor aanpassing [%]</string>
+  <string name="loop_openmode_min_change_summary">Loop zal popup met nieuwe veranderingsverzoek alleen geven als verandering groter is dan deze waarde. Standaardwaarde is 20%</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dag</item>

@@ -458,6 +458,7 @@
   <string name="openapsama_autosens_adjusttargets">Autosens ajustează țintele la</string>
   <string name="openapsama_autosens_adjusttargets_summary">Valoare implicită: adevărat\nAceasta se folosește pentru a permite autosens să ajusteze țintele de glicemie, pe lângă modificările asupra ISF și bazalelor.</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">Valoare implicită: 2\nAmânarea bolusului este aplicată după ce ați făcut un bolus de masă, astfel încât bucla să nu reacționeze cu ținte bazale temporare scăzute atunci când tocmai ați mâncat. Exemplul de față și valoarea implicită sunt 2; astfel o durată de acțiune a insulinei (DIA) de 3 ore duce la o eliminare treptată a întârzierii setării bazalelor temporare după 1.5 ore (3DIA/2).</string>
+  <string name="openapsama_min_5m_carbimpact_summary">Valoarea implicită: 3.0 (AMA) sau 8.0 (SMB). Aceasta este o setare pentru impactul implicit al carbohidraţilor pe 5 minute. Valoarea implicită este 3mg/dl la 5min. Aceasta influenţează rapiditatea cu care se scade COB şi modul în care se ia în calcul absorbţia carbohidraţilor în calcularea valorilor estimate ale glicemiei, atunci când glicemia este în scădere mai mare decât se aştepta sau nu creşte atât de repede pe cât se aştepta.</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">Atenție!\nÎn mod normal nu este nevoie să modificați valorile de mai jos. Vă rog să APĂSAȚI AICI și să CITIȚI textul și să vă asigurați că l-ați ÎNȚELES înainte de a schimba valorile.</string>
   <string name="error_only_numeric_digits_allowed">Se acceptă numai valori numerice.</string>
   <string name="error_only_numeric_digits_range_allowed">Se acceptă numai valori numerice între %1$s - %2$s.</string>
@@ -896,6 +897,7 @@
   <string name="basal_set_correctly">Bazala setată corect</string>
   <string name="limitingpercentrate">Se limitează procentul ratei maxime la %1$d%% datorită %2$s</string>
   <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
+  <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U datorită %2$s</string>
   <string name="limitingmaxiob">Se limitează max IOB la %1$.1f U datorită %2$s</string>
   <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
   <string name="limitingiob">Se limitează IOB la %1$.1f U datorită %2$s</string>
@@ -927,6 +929,7 @@
   <string name="nav_setupwizard">Asistent de configurare</string>
   <string name="setupwizard_finish">TERMINARE</string>
   <string name="setupwizard_language_prompt">Alegeți limba</string>
+  <string name="boluserrorcode">Solicitat: %1$.2fU Livrat: %2$.2fU Cod eroare: %3$s</string>
   <string name="firstinsulinincrement">Primul increment de insulină</string>
   <string name="secondinsulinincrement">Al doilea increment de insulină</string>
   <string name="thirdinsulinincrement">Al treilea increment de insulină</string>
@@ -949,7 +952,7 @@
   <string name="virtualpump_type">Tipul pompei virtuale</string>
   <string name="virtualpump_definition">Definirea pompei</string>
   <string name="virtualpump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">Valorile bazalei/bolusului variate nu sunt suportate de căter Pompa Virtuală.</string>
+  <string name="virtualpump_pump_def_extended_note">* Doar valorile discrete, nu şi intervalele de valori sunt suportate ca şi incremente în pompa virtuală.</string>
   <string name="ns_autobackfill_title">Autocompletează glicemiile lipsă</string>
   <string name="wear_wizard_settings">Asistent setări</string>
   <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
@@ -1041,6 +1044,12 @@
   <string name="calculation_short">Calc</string>
   <string name="handshaking">Împerechere</string>
   <string name="sendlogfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>
+  <string name="maxbolusviolation">Încălcare a valorii maxime a bolusului</string>
+  <string name="commanderror">Eroare de comandă</string>
+  <string name="speederror">Eroare de viteză</string>
+  <string name="insulinlimitviolation">Încălcare a limitării cantităţii de insulină</string>
+  <string name="loop_openmode_min_change">Cerere de schimbare minimală [%]</string>
+  <string name="loop_openmode_min_change_summary">Bucla va afişa o nouă cerere de schimbare doar dacă schimbarea are o valoare decât aceasta. Valoarea implicită este 20%</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d zi</item>
     <item quantity="few">%1$d zi</item>

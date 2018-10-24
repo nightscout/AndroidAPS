@@ -148,7 +148,7 @@ public class DanaRHistoryActivity extends Activity {
                 statusView.setVisibility(View.VISIBLE);
             });
             clearCardView();
-            ConfigBuilderPlugin.getCommandQueue().loadHistory(selected.type, new Callback() {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().loadHistory(selected.type, new Callback() {
                 @Override
                 public void run() {
                     loadDataFromDB(selected.type);

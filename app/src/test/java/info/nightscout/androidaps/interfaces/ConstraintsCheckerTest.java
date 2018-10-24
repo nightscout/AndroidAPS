@@ -113,7 +113,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isAdvancedFilteringEnabledTest() throws Exception {
-        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+        when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
 
         Constraint<Boolean> c = constraintChecker.isAdvancedFilteringEnabled();
         Assert.assertEquals(true, c.getReasonList().size() == 1); // Safety
@@ -280,7 +280,7 @@ public class ConstraintsCheckerTest {
         when(SP.getString(R.string.key_danars_address, "")).thenReturn("");
 
         //SafetyPlugin
-        when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         constraintChecker = new ConstraintChecker(mainApp);
 

@@ -2,25 +2,17 @@ buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
         jcenter()
-
-        google()
-        maven {
-            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
-        }
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
-        //classpath 'io.realm:realm-gradle-plugin:1.1.1'
-        classpath 'io.realm:realm-gradle-plugin:4.0.0'
     }
 }
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
 apply plugin: "jacoco-android"
 apply plugin: 'com.jakewharton.butterknife'
-apply plugin: 'realm-android'
 
 ext {
     supportLibraryVersion = "27.1.0"
@@ -71,12 +63,12 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        // dev_version: 2.0g
+        // dev_version: 2.0i
         version "medtronic-0.4.0-snapshot"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
-        buildConfigField "String", "DEV_VERSION", '"2.0g"'
+        buildConfigField "String", "DEV_VERSION", '"2.0i"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -111,7 +103,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon     : "@mipmap/ic_launcher",
+                    appIcon: "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
         }
@@ -121,7 +113,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon     : "@mipmap/blueowl",
+                    appIcon: "@mipmap/blueowl",
                     appIconRound: "@null"
             ]
         }
@@ -131,7 +123,7 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon     : "@mipmap/yellowowl",
+                    appIcon: "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -141,7 +133,7 @@ android {
             resValue "string", "app_name", "NSClient2"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon     : "@mipmap/yellowowl",
+                    appIcon: "@mipmap/yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -156,7 +148,7 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    useLibrary "org.apache.http.legacy"
+    useLibrary  "org.apache.http.legacy"
 }
 
 allprojects {
@@ -201,15 +193,12 @@ dependencies {
         exclude group: "com.google.android", module: "android"
     }
     implementation "org.apache.commons:commons-lang3:3.6"
-    implementation "commons-collections:commons-collections:3.2.1"
     implementation "org.slf4j:slf4j-api:1.7.12"
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
     implementation "com.google.android.gms:play-services-wearable:7.5.0"
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation(name: "sightparser-release", ext: "aar")
-
-    implementation "com.android.support:support-core-utils:${supportLibraryVersion}"
 
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"

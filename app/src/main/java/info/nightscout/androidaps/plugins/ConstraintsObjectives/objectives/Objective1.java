@@ -68,7 +68,7 @@ public class Objective1 extends Objective {
         tasks.add(new Task(R.string.apsselected) {
             @Override
             public boolean isCompleted() {
-                APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+                APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS))
                     return true;
                 return false;

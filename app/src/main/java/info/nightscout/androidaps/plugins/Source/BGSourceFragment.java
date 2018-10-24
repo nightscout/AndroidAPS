@@ -15,9 +15,6 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -26,6 +23,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
@@ -57,8 +55,8 @@ public class BGSourceFragment extends SubscriberFragment {
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false));
             recyclerView.setAdapter(adapter);
 
-            if (MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getDefaultProfile() != null)
-                units = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getDefaultProfile().getUnits();
+            if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile() != null)
+                units = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile().getUnits();
 
             return view;
         } catch (Exception e) {

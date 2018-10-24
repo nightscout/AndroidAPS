@@ -105,7 +105,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
 
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
         recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newtreatment_record_only);
 
@@ -126,7 +126,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                 okClicked = true;
 
                 try {
-                    final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                    final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
                     if (pump == null)
                         return;
@@ -177,8 +177,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                     detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                                     detailedBolusInfo.context = context;
                                     detailedBolusInfo.source = Source.USER;
-                                    if (!(recordOnlyCheckbox.isChecked() && (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo))) {
-                                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    if (!(recordOnlyCheckbox.isChecked() && (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo))) {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {

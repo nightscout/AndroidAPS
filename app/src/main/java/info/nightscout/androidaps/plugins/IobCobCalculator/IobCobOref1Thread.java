@@ -26,6 +26,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalculationProgress;
@@ -35,6 +36,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
@@ -77,7 +79,7 @@ public class IobCobOref1Thread extends Thread {
         try {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("AUTOSENSDATA thread started: " + from);
-            if (MainApp.getConfigBuilder() == null) {
+            if (ConfigBuilderPlugin.getPlugin() == null) {
                 if (L.isEnabled(L.AUTOSENS))
                     log.debug("Aborting calculation thread (ConfigBuilder not ready): " + from);
                 return; // app still initializing
@@ -147,7 +149,7 @@ public class IobCobOref1Thread extends Thread {
                     AutosensData autosensData = new AutosensData();
                     autosensData.time = bgTime;
                     if (previous != null)
-                        autosensData.activeCarbsList = new ArrayList<>(previous.activeCarbsList);
+                        autosensData.activeCarbsList = previous.cloneCarbsList();
                     else
                         autosensData.activeCarbsList = new ArrayList<>();
 
@@ -241,6 +243,7 @@ public class IobCobOref1Thread extends Thread {
                     for (int ir = 0; ir < recentTreatments.size(); ir++) {
                         autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
                         autosensData.activeCarbsList.add(new AutosensData.CarbsInPast(recentTreatments.get(ir)));
+                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentTreatments.get(ir).carbs) + "g]";
                     }
 
 
@@ -338,19 +341,19 @@ public class IobCobOref1Thread extends Thread {
                     // Exclude meal-related deviations (carb absorption) from autosens
                     if (autosensData.type.equals("non-meal")) {
                         if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
-                            autosensData.pastSensitivity = "=";
+                            autosensData.pastSensitivity += "=";
                             autosensData.validDeviation = true;
                         } else if (deviation > 0) {
-                            autosensData.pastSensitivity = "+";
+                            autosensData.pastSensitivity += "+";
                             autosensData.validDeviation = true;
                         } else {
-                            autosensData.pastSensitivity = "-";
+                            autosensData.pastSensitivity += "-";
                             autosensData.validDeviation = true;
                         }
                     } else if (autosensData.type.equals("uam")) {
-                        autosensData.pastSensitivity = "u";
+                        autosensData.pastSensitivity += "u";
                     } else {
-                        autosensData.pastSensitivity = "x";
+                        autosensData.pastSensitivity += "x";
                     }
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 

@@ -49,7 +49,7 @@ public class ProfileFunctions {
     public void onProfileSwitch(EventProfileSwitchChange ignored) {
         if (L.isEnabled(L.PROFILE))
             log.debug("onProfileSwitch");
-        MainApp.getConfigBuilder().getCommandQueue().setProfile(getProfile(), new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().setProfile(getProfile(), new Callback() {
             @Override
             public void run() {
                 if (!result.success) {
@@ -79,7 +79,7 @@ public class ProfileFunctions {
 
     public String getProfileName(long time, boolean customized) {
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
-        ProfileInterface activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+        ProfileInterface activeProfile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
 
         ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
@@ -114,7 +114,7 @@ public class ProfileFunctions {
     @Nullable
     public Profile getProfile(long time) {
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
-        ProfileInterface activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+        ProfileInterface activeProfile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
 
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(time);

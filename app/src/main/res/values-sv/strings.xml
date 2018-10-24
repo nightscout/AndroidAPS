@@ -14,13 +14,13 @@
   <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
   <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
   <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
-  <string name="description_careportal">Mata in avancerade poster i loggboken.</string>
+  <string name="description_careportal">Mata in avancerade poster i loggboken</string>
   <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
   <string name="description_objectives">Inlärningsprogram</string>
   <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
   <string name="description_insulin_rapid">Insulininställning för Humalog, Apidra och Novorapid/Novolog</string>
   <string name="description_insulin_ultra_rapid">Insulininställning för Fiasp</string>
-  <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet och ska bara användas av avancerade användare</string>
+  <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet. Bör bara användas av avancerade användare</string>
   <string name="description_loop">Aktivera eller avaktivera implementationen som kör loopen.</string>
   <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
   <string name="description_ma">Så som algoritmen var definierad år 2016</string>
@@ -43,14 +43,14 @@
   <string name="description_sensitivity_oref0">Känsligheten beräknas från 24 timmars data från historiken och kolhydrater som inte redan tagits upp, ignoreras efter tiden som ställts in i inställningarna.</string>
   <string name="description_sensitivity_oref1">Känsligheten beräknas från 8 timmars data från historiken och kolhydrater som ännu inte tagits upp ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
   <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
-  <string name="description_source_dexcom_g5">Ta emot BG-data från den modifierade Dexcom G5-appen.</string>
-  <string name="description_source_glimp">Ta emot BG-data från Glimp.</string>
-  <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader.</string>
+  <string name="description_source_dexcom_g5">Ta emot BG-data från den modifierade Dexcom G5-appen</string>
+  <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
+  <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
   <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
-  <string name="description_source_xdrip">Ta emot BG-data från xDrip.</string>
+  <string name="description_source_xdrip">Ta emot BG-data från xDrip</string>
   <string name="description_treatments">Spara alla behandlingar som gjorts</string>
-  <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka.</string>
-  <string name="description_xdrip_status_line">Visa information om din loop på din urtavla från xDrip.</string>
+  <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka</string>
+  <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip-urtavla</string>
   <string name="description_sms_communicator">Fjärrstyr AndroidAPS med SMS-kommandon.</string>
   <string name="objectives_button_start">Starta</string>
   <string name="objectives_button_verify">Godkänn</string>
@@ -117,7 +117,7 @@
   <string name="virtualpump">Virtuell pump</string>
   <string name="careportal">Careportal</string>
   <string name="configbuilder_pump">Pump</string>
-  <string name="configbuilder_pump_description">Vilken pump skulle du vilja använda med AndroidAPS?</string>
+  <string name="configbuilder_pump_description">Vilken pump vill du använda med AndroidAPS?</string>
   <string name="configbuilder_treatments">Behandlingar</string>
   <string name="configbuilder_treatments_description">Vilket insticksprogram ska användas för att hantera behandlingar?</string>
   <string name="configbuilder_profile">Profil</string>
@@ -156,7 +156,7 @@
   <string name="sms_bolus">Bolus:</string>
   <string name="basal">Basal</string>
   <string name="sms_basal">Basal:</string>
-  <string name="carbs">Kolhydrater</string>
+  <string name="carbs">KH</string>
   <string name="changeyourinput">Ändra inmatning</string>
   <string name="setextendedbolusquestion">Ställ in ny förlängd bolus:</string>
   <string name="configbuilder_bgsource">BG-källa</string>
@@ -439,7 +439,7 @@
   <string name="danarpump_shortname">Dana</string>
   <string name="overview_shortname">Hem</string>
   <string name="virtualpump_shortname">vPump</string>
-  <string name="profileviewer_shortname">NSProfil</string>
+  <string name="profileviewer_shortname">Profil</string>
   <string name="treatments_shortname">Beh</string>
   <string name="careportal_shortname">CP</string>
   <string name="objectives_shortname">Mål</string>
@@ -470,7 +470,7 @@
   <string name="xdripnotinstalled">xDrip+ inte installerat</string>
   <string name="calibrationsent">Kalibrering skickad till xDrip</string>
   <string name="smscommunicator_remotecalibrationnotallowed">Kalibrering från andra källor inte tillåtna</string>
-  <string name="smscommunicator_calibrationsent">Kalibrering skickad. xDrip måste tillåta att ta emot kalibrering i inställningarna.</string>
+  <string name="smscommunicator_calibrationsent">Kalibrering skickad. Observera att xDrip måste vara inställd att ta emot kalibreringar.</string>
   <string name="smscommunicator_calibrationfailed">xDrip tar inte emot kalibreringar</string>
   <string name="pumpsuspended">Pump pausad</string>
   <string name="gettingpumpstatus">Hämtar pumpstatus</string>
@@ -588,7 +588,7 @@
   <string name="nsalarm_urgent_staledatavalue_label">Akut varning efter [min]</string>
   <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
   <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (absorptionstid för KH är exkluderad)</string>
-  <string name="pump">Pump</string>
+  <string name="pump">P</string>
   <string name="openaps">OpenAPS</string>
   <string name="uploader">Uppladdare</string>
   <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
@@ -605,12 +605,12 @@
   <string name="careportal_insulinage_label_short">IAGE</string>
   <string name="careportal_canulaage_label_short">CAGE</string>
   <string name="careportal_pbage_label_short">PBAGE</string>
-  <string name="openaps_short">OAPS</string>
-  <string name="uploader_short">UPLD</string>
+  <string name="openaps_short">APS</string>
+  <string name="uploader_short">Upld batt</string>
   <string name="basal_short">BAS</string>
   <string name="virtualpump_extendedbolus_label_short">EXT</string>
   <string name="keep_screen_on_title">Håll skärmen igång</string>
-  <string name="keep_screen_on_summary">Förhindrar Android att stänga av skärmen. Det kommer att förbruka mer batteri.</string>
+  <string name="keep_screen_on_summary">Förhindrar att skärmen stängs av. Förbrukar mer batteri.</string>
   <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
   <string name="sensitivityweightedaverage">WeightedAverage</string>
   <string name="mdtp_ok">OK</string>
@@ -691,7 +691,7 @@
   <string name="pumpdrivercorrected">Pumpdrivrutin justerad</string>
   <string name="pump_unreachable">Pumpen kan inte nås</string>
   <string name="missed_bg_readings">BG-värden saknas</string>
-  <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm och info</string>
+  <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
   <string name="localalertsettings_title">Lokala larm</string>
   <string name="enable_missed_bg_readings_alert">Varna om BG-data saknas</string>
   <string name="enable_pump_unreachable_alert">Varna om pumpen inte går att nå</string>
@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
   <string name="autosensdisabledinpreferences">Autosens inaktiverat i Inställningar</string>
   <string name="smbdisabledinpreferences">SMB inaktiverat i Inställningar</string>
+  <string name="uamdisabledinpreferences">UAM är inaktiverat i inställningarna</string>
+  <string name="uamdisabledoref1notselected">UAM är inaktiverat eftersom det kräver Oref1 känslighetsplugin</string>
   <string name="limitingbasalratio">Begränsar max basal till %1$.2f E/h pga %2$s</string>
   <string name="pumplimit">pumpbegränsning</string>
   <string name="itmustbepositivevalue">det måste vara ett positivt värde</string>
@@ -923,7 +925,7 @@
   <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
   <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
   <string name="time">Tid</string>
-  <string name="overview_show_notes_field_in_dialogs_title">Visa anteckningar i behandlingsdialogerna</string>
+  <string name="overview_show_notes_field_in_dialogs_title">Anteckning i behandlingsdialoger</string>
   <string name="next_button">Nästa</string>
   <string name="previous_button">Föregående</string>
   <string name="nav_setupwizard">Installationsguide</string>
@@ -952,7 +954,7 @@
   <string name="virtualpump_type">Typ av virtuell pump</string>
   <string name="virtualpump_definition">Pumpdefinition</string>
   <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Den virtuella pumpen kräver fasta värden för basal/bolus.</string>
+  <string name="virtualpump_pump_def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
   <string name="ns_autobackfill_title">Auto Backfill BG</string>
   <string name="wear_wizard_settings">Kalkylatorinställningar</string>
   <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
@@ -1042,7 +1044,7 @@
   <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
   <string name="treatments_wizard_total_label">Total</string>
   <string name="calculation_short">Kalkyl</string>
-  <string name="handshaking">Verifierar anslutningen</string>
+  <string name="handshaking">Anslutningen verifieras</string>
   <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
   <string name="maxbolusviolation">Max bolus nådd</string>
   <string name="commanderror">Kommandofel</string>

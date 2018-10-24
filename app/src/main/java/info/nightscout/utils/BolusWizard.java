@@ -136,7 +136,7 @@ public class BolusWizard {
             calculatedTotalInsulin = 0d;
         }
 
-        double bolusStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
+        double bolusStep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
         log.debug(log());

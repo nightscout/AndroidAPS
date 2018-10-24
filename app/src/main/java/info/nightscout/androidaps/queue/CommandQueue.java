@@ -96,7 +96,7 @@ public class CommandQueue {
     }
 
     private synchronized void removeAll(Command.CommandType type) {
-        for (int i = 0; i < queue.size(); i++) {
+        for (int i = queue.size() - 1; i >= 0; i--) {
             if (queue.get(i).commandType == type) {
                 queue.remove(i);
             }
@@ -245,7 +245,7 @@ public class CommandQueue {
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);
-        ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
+        ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering();
     }
 
     // returns true if command is queued
@@ -369,7 +369,7 @@ public class CommandQueue {
 
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         for (Profile.BasalValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
@@ -508,7 +508,7 @@ public class CommandQueue {
     }
 
     public boolean isThisProfileSet(Profile profile) {
-        PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
         Profile current = ProfileFunctions.getInstance().getProfile();
         if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);

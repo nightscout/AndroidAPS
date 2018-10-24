@@ -25,7 +25,7 @@ public class CommandCancelTempBasal extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().cancelTempBasal(enforceNew);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().cancelTempBasal(enforceNew);
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)

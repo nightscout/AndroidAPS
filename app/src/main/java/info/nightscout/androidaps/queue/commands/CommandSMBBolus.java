@@ -37,7 +37,7 @@ public class CommandSMBBolus extends Command {
                 log.debug("SMB requsted but still in 3 min interval");
             r = new PumpEnactResult().enacted(false).success(false).comment("SMB requsted but still in 3 min interval");
         } else if (detailedBolusInfo.deliverAt != 0 && detailedBolusInfo.deliverAt + T.mins(1).msecs() > System.currentTimeMillis()) {
-            r = ConfigBuilderPlugin.getActivePump().deliverTreatment(detailedBolusInfo);
+            r = ConfigBuilderPlugin.getPlugin().getActivePump().deliverTreatment(detailedBolusInfo);
         } else {
             r = new PumpEnactResult().enacted(false).success(false).comment("SMB request too old");
             if (L.isEnabled(L.PUMPQUEUE))

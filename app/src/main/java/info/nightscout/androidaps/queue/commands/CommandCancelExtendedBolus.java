@@ -22,7 +22,7 @@ public class CommandCancelExtendedBolus extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().cancelExtendedBolus();
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().cancelExtendedBolus();
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)

@@ -30,7 +30,7 @@ public class CommandBolus extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().deliverTreatment(detailedBolusInfo);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().deliverTreatment(detailedBolusInfo);
 
         BolusProgressDialog.bolusEnded = true;
         MainApp.bus().post(new EventDismissBolusprogressIfRunning(r));

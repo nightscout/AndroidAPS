@@ -140,7 +140,7 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -275,7 +275,7 @@ public class LoopPlugin extends PluginBase {
                 MainApp.bus().post(new EventLoopSetLastRunGui(message));
                 return;
             }
-            final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+            final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             APSResult result = null;
 
             if (!isEnabled(PluginType.LOOP))
@@ -293,7 +293,7 @@ public class LoopPlugin extends PluginBase {
             // Check if pump info is loaded
             if (pump.getBaseBasalRate() < 0.01d) return;
 
-            APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+            APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
                 usedAPS.invoke(initiator, tempBasalFallback);
                 result = usedAPS.getLastAPSResult();
@@ -358,8 +358,8 @@ public class LoopPlugin extends PluginBase {
 
             if (closedLoopEnabled.value()) {
                 if (resultAfterConstraints.isChangeRequested()
-                        && !ConfigBuilderPlugin.getCommandQueue().bolusInQueue()
-                        && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
+                        && !ConfigBuilderPlugin.getPlugin().getCommandQueue().bolusInQueue()
+                        && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)
@@ -489,7 +489,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         if (!pump.isInitialized()) {
@@ -520,7 +520,7 @@ public class LoopPlugin extends PluginBase {
                 if (activeTemp != null) {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: cancelTempBasal()");
-                    MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(false, callback);
                 } else {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: Basal set correctly");
@@ -543,14 +543,14 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (L.isEnabled(L.APS))
                     log.debug("applyAPSRequest: tempBasalPercent()");
-                MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
             }
         } else {
             if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
                 if (activeTemp != null) {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: cancelTempBasal()");
-                    MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(false, callback);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(false, callback);
                 } else {
                     if (L.isEnabled(L.APS))
                         log.debug("applyAPSRequest: Basal set correctly");
@@ -573,7 +573,7 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (L.isEnabled(L.APS))
                     log.debug("applyAPSRequest: setTempBasalAbsolute()");
-                MainApp.getConfigBuilder().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
             }
         }
     }
@@ -583,7 +583,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         long lastBolusTime = activeTreatments.getLastBolusTime();
@@ -629,15 +629,15 @@ public class LoopPlugin extends PluginBase {
         detailedBolusInfo.deliverAt = request.deliverAt;
         if (L.isEnabled(L.APS))
             log.debug("applyAPSRequest: bolus()");
-        MainApp.getConfigBuilder().getCommandQueue().bolus(detailedBolusInfo, callback);
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, callback);
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
-        MainApp.getConfigBuilder().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {
@@ -646,7 +646,7 @@ public class LoopPlugin extends PluginBase {
             }
         });
         if (pump.getPumpDescription().isExtendedBolusCapable && activeTreatments.isInHistoryExtendedBoluslInProgress()) {
-            MainApp.getConfigBuilder().getCommandQueue().cancelExtended(new Callback() {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -660,7 +660,7 @@ public class LoopPlugin extends PluginBase {
 
     public void suspendLoop(int durationInMinutes) {
         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
-        MainApp.getConfigBuilder().getCommandQueue().cancelTempBasal(true, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {

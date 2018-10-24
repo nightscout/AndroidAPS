@@ -34,7 +34,7 @@
   <string name="description_pump_combo">与Accu-Check Combo 胰岛素泵集成，需要安装ruffy软件</string>
   <string name="description_pump_dana_r">与丹纳R泵集成</string>
   <string name="description_pump_dana_r_korean">与韩版丹纳R泵集成</string>
-  <string name="description_pump_dana_r_v2">与升级固件后的丹纳R泵集成</string>
+  <string name="description_pump_dana_r_v2">与 DanaRv2 泵集成</string>
   <string name="description_pump_dana_rs">与丹纳RS泵集成</string>
   <string name="description_pump_insight">与Accu-Check Insight 胰岛素泵集成，需要安装 SightRemote软件</string>
   <string name="description_pump_mdi">与用于糖尿病治疗的多次每日注射的泵集成</string>
@@ -458,6 +458,7 @@
   <string name="openapsama_autosens_adjusttargets">Autosens 也调整目标血糖</string>
   <string name="openapsama_autosens_adjusttargets_summary">缺省值：是\n　这是用来允许 autosens调整血糖目标，还有 ISF胰岛素敏感系数和基础率这些参数。</string>
   <string name="openapsama_bolussnooze_dia_divisor_summary">默认值: 2 \n大剂量snooze是在输注餐时大剂量后开始生效的, 所以在你刚吃完饭的时候, 闭环不会因为你输注了大剂量而减少或停基础。这里的例子和缺省是 2; 因此, 3 小时的DIA(胰岛素持续作用时间) 意味着大剂量snooze将逐步在１. ５小时 (3 DIA/2) 后失效。</string>
+  <string name="openapsama_min_5m_carbimpact_summary">默认值: 3.0  (AMA) 或者 8.0 (SMB)。这是默认的每5分钟碳水化合物吸收量。默认值为3毫克/dl/5 分钟。 当血糖的下降超过预期时, 或者不像预期的上升的那么多时，这个值就影响了活性碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量,</string>
   <string name="openapsama_link_to_preferncejson_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
   <string name="error_only_numeric_digits_allowed">只允许数字。</string>
   <string name="error_only_numeric_digits_range_allowed">仅允许在范围 %1$s - %2$s 内的数字。</string>
@@ -896,6 +897,7 @@
   <string name="basal_set_correctly">正确地设置基础率</string>
   <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
   <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
+  <string name="limitingextendedbolus">由于 %2$s, 将扩展大剂量限制为 %1$.1f U</string>
   <string name="limitingmaxiob">由于 %2$s, 将最大 IOB(活性胰岛素) 限制为 %1$.1f U</string>
   <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
   <string name="limitingiob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
@@ -927,6 +929,7 @@
   <string name="nav_setupwizard">设置向导</string>
   <string name="setupwizard_finish">完成</string>
   <string name="setupwizard_language_prompt">选择你的语言</string>
+  <string name="boluserrorcode">已请求: %1$.2fU 已输注: %2$.2fU 错误代码: %3$s</string>
   <string name="firstinsulinincrement">第一胰岛素增量</string>
   <string name="secondinsulinincrement">第二胰岛素增量</string>
   <string name="thirdinsulinincrement">第三胰岛素增量</string>
@@ -949,7 +952,6 @@
   <string name="virtualpump_type">虚拟泵类型</string>
   <string name="virtualpump_definition">泵定义</string>
   <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* 虚拟泵不支持远程修改基础率或输注大剂量</string>
   <string name="ns_autobackfill_title">Autobackfill 血糖</string>
   <string name="wear_wizard_settings">向导设置</string>
   <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
@@ -1041,6 +1043,12 @@
   <string name="calculation_short">计算</string>
   <string name="handshaking">握手</string>
   <string name="sendlogfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
+  <string name="maxbolusviolation">超出最大大剂量的限制</string>
+  <string name="commanderror">命令错误</string>
+  <string name="speederror">速度错误</string>
+  <string name="insulinlimitviolation">违反胰岛素限制</string>
+  <string name="loop_openmode_min_change">最小请求更改[%]</string>
+  <string name="loop_openmode_min_change_summary">只有当更改值大于此值时, 闭环才会弹出新的更改请求。默认值为20%</string>
   <plurals name="objective_days">
     <item quantity="other">%1$d　天</item>
   </plurals>

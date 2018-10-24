@@ -113,7 +113,7 @@ public class AAPSMocker {
     public static void mockConfigBuilder() {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
-        when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+        when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
     public static ConstraintChecker mockConstraintsChecker() {
@@ -158,7 +158,7 @@ public class AAPSMocker {
 
     public static void mockCommandQueue() {
         CommandQueue queue = mock(CommandQueue.class);
-        when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
+        when(ConfigBuilderPlugin.getPlugin().getCommandQueue()).thenReturn(queue);
     }
 
     public static TreatmentsPlugin mockTreatmentPlugin() {

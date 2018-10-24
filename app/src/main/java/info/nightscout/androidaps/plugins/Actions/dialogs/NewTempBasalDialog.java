@@ -64,7 +64,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         absoluteRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_absolute_radio);
         typeSelectorLayout = (LinearLayout) view.findViewById(R.id.overview_newtempbasal_typeselector_layout);
 
-        PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
+        PumpDescription pumpDescription = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
 
         basalPercent = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
         double maxTempPercent = pumpDescription.maxTempPercent;
@@ -163,9 +163,9 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                 }
                             };
                             if (setAsPercent) {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, profile, callback);
+                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(finalBasalPercent, finalDurationInMinutes, true, profile, callback);
                             } else {
-                                ConfigBuilderPlugin.getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, profile, callback);
+                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(finalBasal, finalDurationInMinutes, true, profile, callback);
                             }
                             FabricPrivacy.getInstance().logCustom(new CustomEvent("TempBasal"));
                         }

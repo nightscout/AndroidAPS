@@ -641,7 +641,7 @@
   <string name="date">Дата</string>
   <string name="invalid">НЕВАЛИДНО</string>
   <string name="waitingforpairing">Очаква сдвояване с помпа</string>
-  <string name="pairingok">Сдвоени</string>
+  <string name="pairingok">Сдвояване - ОК</string>
   <string name="pairingtimedout">Времето за сдвояване изтече</string>
   <string name="pairing">СДВОЯВАНЕ</string>
   <string name="danars_nodeviceavailable">Все още устройството не е намерено</string>
@@ -888,6 +888,8 @@
   <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
   <string name="autosensdisabledinpreferences">Аутосенс е забранен в настройките</string>
   <string name="smbdisabledinpreferences">SMB е забранен в настройките</string>
+  <string name="uamdisabledinpreferences">UAM е забранен в настройките</string>
+  <string name="uamdisabledoref1notselected">UAM изключен, защото му трябва Oref1 плъгин за чувствителност </string>
   <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
   <string name="pumplimit">лимит на помпата</string>
   <string name="itmustbepositivevalue">трябва да бъде положително число</string>
@@ -952,7 +954,7 @@
   <string name="virtualpump_type">Виртуална помпа тип</string>
   <string name="virtualpump_definition">Описание на помпата</string>
   <string name="virtualpump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
-  <string name="virtualpump_pump_def_extended_note">* Диапазонни стойности за базал/болус не се поддържат от Виртиална Помпа.</string>
+  <string name="virtualpump_pump_def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
   <string name="ns_autobackfill_title">Изтегляне КЗ от Найтскаут</string>
   <string name="wear_wizard_settings">Настройки на съветник</string>
   <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
@@ -1036,8 +1038,7 @@
   <string name="nav_logsettings">Настройки на логовете</string>
   <string name="resettodefaults">Възстанови настройките по подразбиране</string>
   <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
-  <string name="as">като
-</string>
+  <string name="as">АS</string>
   <string name="versionavailable">Има налично обновяване до версия %1$s </string>
   <string name="time_offset">времево отместване</string>
   <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>

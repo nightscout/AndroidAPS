@@ -183,6 +183,7 @@
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="af_lang" translatable="false">Afrikaans</string>
     <string name="cs_lang" translatable="false">Czech</string>
     <string name="en_lang" translatable="false">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -247,7 +248,7 @@
     <string name="sv_lang" translatable="false">Swedish</string>
     <string name="fr_lang" translatable="false">French</string>
     <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="pl_lang" translatable="false">Polski</string>
+    <string name="pl_lang" translatable="false">Polish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
@@ -715,10 +716,10 @@
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
     <string name="waitingforpairing">Waiting for pairing on pump</string>
-    <string name="pairingok">Paring OK</string>
-    <string name="pairingtimedout">Paring timed out</string>
+    <string name="pairingok">Pairing OK</string>
+    <string name="pairingtimedout">Pairing timed out</string>
     <string name="pairing">PAIRING</string>
-    <string name="key_danars_pairingkey" translatable="false">danars_paring_key_</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="danars_nodeviceavailable">No device found so far</string>
@@ -1006,6 +1007,8 @@
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
+    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
+    <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
@@ -1089,7 +1092,7 @@
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtualpump_pump_def_extended_note">* Ranged basal/bolus values are not supported by Virtual Pump.</string>
+    <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
@@ -1171,9 +1174,10 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email</string>
-    <string name="key_maintenance_logs_email" translatable="false">email</string>
+    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="invalid_email_message">Invalid Email</string>
-    <string name="key_maintenance_logs_amount" translatable="false">amount of logs to send</string>
+    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
+    <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
     <string name="maintenance_amount">No of Logs to send</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1205,6 +1209,7 @@
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
+    <string name="pairfirst">Please pair your pump with your phone!</string>
 
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>

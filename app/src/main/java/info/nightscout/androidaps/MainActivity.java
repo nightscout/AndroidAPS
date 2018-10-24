@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        String lang = SP.getString("language", "en");
+        String lang = SP.getString(R.string.key_language, "en");
         LocaleHelper.setLocale(getApplicationContext(), lang);
         runOnUiThread(() -> {
             if (ev.recreate) {

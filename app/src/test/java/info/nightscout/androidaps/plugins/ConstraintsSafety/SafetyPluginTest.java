@@ -91,7 +91,7 @@ public class SafetyPluginTest {
 
     @Test
     public void bgsourceShouldPreventSMBAlways() throws Exception {
-        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+        when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = safetyPlugin.isAdvancedFilteringEnabled(c);
@@ -231,7 +231,7 @@ public class SafetyPluginTest {
         AAPSMocker.mockBus();
 
 
-        when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         safetyPlugin = SafetyPlugin.getPlugin();
     }

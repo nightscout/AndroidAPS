@@ -48,8 +48,8 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         editInsulin = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_insulin);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
-        double extendedDurationStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().extendedBolusDurationStep;
-        double extendedMaxDuration = ConfigBuilderPlugin.getActivePump().getPumpDescription().extendedBolusMaxDuration;
+        double extendedDurationStep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().extendedBolusDurationStep;
+        double extendedMaxDuration = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().extendedBolusMaxDuration;
         editDuration = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_duration);
         editDuration.setParams(extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false);
 
@@ -87,7 +87,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            ConfigBuilderPlugin.getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
                                 @Override
                                 public void run() {
                                     if (!result.success) {
