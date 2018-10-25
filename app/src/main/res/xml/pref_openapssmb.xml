@@ -93,6 +93,20 @@
                 validate:minNumber="15"
                 validate:testType="numericRange" />
 
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="0.1"
+                android:digits="0123456789."
+                android:inputType="numberDecimal"
+                android:maxLines="20"
+                android:key="key_bolus_increment"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/bolus_increment_summary"
+                validate:maxNumber='1'
+                validate:minNumber='0'
+                validate:testType="floatNumericRange" />
+
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_use_uam"
