@@ -44,6 +44,7 @@ public class DetermineBasalAdapterSMBJS {
     private JSONObject mMealData;
     private JSONObject mCurrentTemp;
     private JSONObject mAutosensData = null;
+    private long mCurrentTime;
     private boolean mMicrobolusAllowed;
     private boolean mSMBAlwaysAllowed;
 
@@ -255,6 +256,8 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering);
         mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
+        mProfile.put("maxUAMSMBBasalMinutes", SP.getInt("key_uamsmbmaxminutes", SMBDefaults.maxUAMSMBBasalMinutes));
+        mProfile.put("bolus_increment", SMBDefaults.bolus_increment);
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
         mProfile.put("current_basal", basalrate);

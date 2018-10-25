@@ -995,8 +995,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     // eventual BG is at/above target
     // if iob is over max, just cancel any temps
-    // if we're not here because of SMB, eventual BG is at/above target
-    if (! (microBolusAllowed && rT.COB)) {
+    if ( eventualBG >= max_bg ) {
         rT.reason += "Eventual BG " + convert_bg(eventualBG, profile) + " >= " +  convert_bg(max_bg, profile) + ", ";
     }
     if (iob_data.iob > max_iob) {
@@ -1047,20 +1046,27 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             // if IOB covers more than COB, limit maxBolus to 30m of basal
             } else if ( iob_data.iob > mealInsulinReq && iob_data.iob > 0 ) {
                 console.error("IOB",iob_data.iob,"> COB",meal_data.mealCOB+"; mealInsulinReq =",mealInsulinReq);
-                maxBolus = round( profile.current_basal * 30 / 60 ,1);
+                if (profile.maxUAMSMBBasalMinutes) {
+                    console.error("profile.maxUAMSMBBasalMinutes:",profile.maxUAMSMBBasalMinutes,"profile.current_basal:",profile.current_basal);
+                    maxBolus = round( profile.current_basal * profile.maxUAMSMBBasalMinutes / 60 ,1);
+                } else {
+                    console.error("profile.maxUAMSMBBasalMinutes undefined: defaulting to 30m");
+                    maxBolus = round( profile.current_basal * 30 / 60 ,1);
+                }
             } else {
                 console.error("profile.maxSMBBasalMinutes:",profile.maxSMBBasalMinutes,"profile.current_basal:",profile.current_basal);
                 maxBolus = round( profile.current_basal * profile.maxSMBBasalMinutes / 60 ,1);
             }
-            // bolus 1/2 the insulinReq, up to maxBolus, rounding down to nearest 0.1U
-            microBolus = Math.floor(Math.min(insulinReq/2,maxBolus)*10)/10;
+            // bolus 1/2 the insulinReq, up to maxBolus, rounding down to nearest bolus increment
+            var roundSMBTo = 1 / profile.bolus_increment;
+            microBolus = Math.floor(Math.min(insulinReq/2,maxBolus)*roundSMBTo)/roundSMBTo;
             // calculate a long enough zero temp to eventually correct back up to target
             var smbTarget = target_bg;
             var worstCaseInsulinReq = (smbTarget - (naive_eventualBG + minIOBPredBG)/2 ) / sens;
             var durationReq = round(60*worstCaseInsulinReq / profile.current_basal);
 
             // if insulinReq > 0 but not enough for a microBolus, don't set an SMB zero temp
-            if (insulinReq > 0 && microBolus < 0.1) {
+            if (insulinReq > 0 && microBolus < profile.bolus_increment) {
                 durationReq = 0;
             }
 

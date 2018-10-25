@@ -56,9 +56,11 @@ public class SMBDefaults {
     //public final static boolean enableSMB_after_carbs = false; // enable supermicrobolus for 6h after carbs, even with 0 COB
     //public final static boolean allowSMB_with_high_temptarget = false; // allow supermicrobolus (if otherwise enabled) even with high temp targets
     public final static int maxSMBBasalMinutes = 30; // maximum minutes of basal that can be delivered as a single SMB with uncovered COB
+    public final static int maxUAMSMBBasalMinutes = 30; // maximum minutes of basal that can be delivered as a single SMB when IOB exceeds COB
     // curve:"rapid-acting" // Supported curves: "bilinear", "rapid-acting" (Novolog, Novorapid, Humalog, Apidra) and "ultra-rapid" (Fiasp)
     // useCustomPeakTime:false // allows changing insulinPeakTime
     // insulinPeakTime:75 // number of minutes after a bolus activity peaks.  defaults to 55m for Fiasp if useCustomPeakTime: false
     public final static int carbsReqThreshold = 1; // grams of carbsReq to trigger a pushover
     // offline_hotspot:false // enabled an offline-only local wifi hotspot if no Internet available
+    public final static double bolus_increment = 0.1; // minimum bolus that can be delivered as an SMB
 }
