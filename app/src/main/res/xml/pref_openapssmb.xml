@@ -96,7 +96,7 @@
         <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:defaultValue="0.1"
                 android:digits="0123456789."
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:maxLines="20"
                 android:key="key_bolus_increment"
                 android:selectAllOnFocus="true"
