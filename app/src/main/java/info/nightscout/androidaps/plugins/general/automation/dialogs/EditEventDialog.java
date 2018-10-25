@@ -17,9 +17,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
 
 public class EditEventDialog extends DialogFragment {
 
@@ -49,14 +47,12 @@ public class EditEventDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_event, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        // dummy initialization
-        TriggerConnector to = new TriggerConnector(TriggerConnector.Type.OR);
-        to.add(new TriggerBg());
-        to.add(new TriggerTime());
-        mEvent.setTrigger(to);
+        // initialization
+        TriggerConnector rootTrigger = new TriggerConnector(TriggerConnector.Type.OR);
+        mEvent.setTrigger(rootTrigger);
 
-        // display triggers
-        mTriggerListAdapter = new AutomationFragment.TriggerListAdapter(getContext(), mLayoutTrigger, mEvent.getTrigger());
+        // display root trigger
+        mLayoutTrigger.addView(rootTrigger.createView(getContext()));
 
         return view;
     }

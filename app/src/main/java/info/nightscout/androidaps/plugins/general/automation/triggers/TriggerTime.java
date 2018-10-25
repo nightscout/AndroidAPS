@@ -85,20 +85,35 @@ public class TriggerTime extends Trigger {
 
     private final boolean[] weekdays = new boolean[DayOfWeek.values().length];
 
-    long lastRun;
+    private long lastRun;
 
     // Single execution
-    long runAt;
+    private long runAt;
 
     // Recurring
-    boolean recurring;
-    int hour;
-    int minute;
+    private boolean recurring;
+    private int hour;
+    private int minute;
 
-    long validTo;
+    private long validTo;
 
     public TriggerTime() {
+        super();
         setAll(false);
+    }
+
+    private TriggerTime(TriggerTime triggerTime) {
+        super();
+        lastRun = triggerTime.lastRun;
+        runAt = triggerTime.runAt;
+        recurring = triggerTime.recurring;
+        hour = triggerTime.hour;
+        minute = triggerTime.minute;
+        validTo = triggerTime.validTo;
+
+        for(int i = 0; i < weekdays.length; ++i) {
+            weekdays[i] = triggerTime.weekdays[i];
+        }
     }
 
     public void setAll(boolean value) {
@@ -207,6 +222,11 @@ public class TriggerTime extends Trigger {
         lastRun = time;
     }
 
+    @Override
+    public Trigger duplicate() {
+        return new TriggerTime(this);
+    }
+
     TriggerTime lastRun(long lastRun) {
         this.lastRun = lastRun;
         return this;
@@ -251,6 +271,7 @@ public class TriggerTime extends Trigger {
     public View createView(Context context) {
         LinearLayout root = (LinearLayout) super.createView(context);
 
+        // TODO: Replace external tool WeekdaysPicker with a self-made GUI element
         WeekdaysPicker weekdaysPicker = new WeekdaysPicker(context);
         weekdaysPicker.setEditable(true);
         weekdaysPicker.setSelectedDays(getSelectedDays());

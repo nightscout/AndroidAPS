@@ -2,10 +2,8 @@ package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.json.JSONArray;
@@ -18,7 +16,6 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
-import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog;
 import info.nightscout.utils.JsonHelper;
 
 public class TriggerConnector extends Trigger {
@@ -172,6 +169,11 @@ public class TriggerConnector extends Trigger {
         return result.toString();
     }
 
+    @Override
+    public Trigger duplicate() {
+        return null;
+    }
+
     private AutomationFragment.TriggerListAdapter adapter;
 
     public void rebuildView() {
@@ -194,51 +196,9 @@ public class TriggerConnector extends Trigger {
         triggerListLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(triggerListLayout);
 
-        adapter = new AutomationFragment.TriggerListAdapter(context, triggerListLayout, list);
-
-        LinearLayout buttonLayout = new LinearLayout(context);
-        buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
-        buttonLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        root.addView(buttonLayout);
-
-        Button buttonRemove = new Button(context);
-        buttonRemove.setText("-");
-        buttonRemove.setOnClickListener(v -> {
-            if (connector != null) {
-                connector.remove(TriggerConnector.this);
-                connector.simplify();
-                connector.adapter.rebuild();
-            } else {
-                // no parent
-                list.clear();
-                simplify();
-                adapter.rebuild();
-            }
-        });
-        buttonLayout.addView(buttonRemove);
-
-        Button buttonAdd = new Button(context);
-        buttonAdd.setText("+");
-        buttonAdd.setOnClickListener(v -> {
-            ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
-            FragmentManager manager = AutomationFragment.fragmentManager();
-            dialog.show(manager, "ChooseTriggerDialog");
-            dialog.setOnClickListener(newTriggerObject -> addNewTrigger(adapter, newTriggerObject, getConnectorType()));
-        });
-        buttonLayout.addView(buttonAdd);
+        adapter = new AutomationFragment.TriggerListAdapter(context, triggerListLayout, this);
 
         return root;
-    }
-
-    private void addNewTrigger(AutomationFragment.TriggerListAdapter adapter, Trigger trigger, Type connection) {
-        if (getConnectorType().equals(connection)) {
-            add(trigger);
-        } else {
-            TriggerConnector t = new TriggerConnector(connection);
-            t.add(trigger);
-            add(t);
-        }
-        adapter.rebuild();
     }
 
     public TriggerConnector simplify() {

@@ -45,6 +45,17 @@ public class TriggerBg extends Trigger {
         }
     };
 
+    public TriggerBg() {
+        super();
+    }
+
+    private TriggerBg(TriggerBg triggerBg) {
+        super();
+        comparator = triggerBg.comparator;
+        units = triggerBg.units;
+        threshold = triggerBg.threshold;
+    }
+
     @Override
     public synchronized boolean shouldRun() {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
@@ -97,6 +108,11 @@ public class TriggerBg extends Trigger {
             return MainApp.gs(R.string.glucoseisnotavailable);
         else
             return MainApp.gs(R.string.glucosecompared, comparator.getStringRes(), threshold, units);
+    }
+
+    @Override
+    public Trigger duplicate() {
+        return new TriggerBg(this);
     }
 
     TriggerBg threshold(double threshold) {

@@ -97,6 +97,8 @@ public abstract class Trigger {
     void notifyAboutRun(long time) {
     }
 
+    public abstract Trigger duplicate();
+
     static Trigger instantiate(JSONObject object) {
         try {
             String type = object.getString("type");
