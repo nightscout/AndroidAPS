@@ -95,15 +95,14 @@
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:defaultValue="0.1"
-                android:digits="0123456789."
-                android:inputType="number"
+                android:inputType="numberDecimal"
+                android:key="@string/bolus_increment"
                 android:maxLines="20"
-                android:key="key_bolus_increment"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:title="@string/bolus_increment_summary"
-                validate:maxNumber='1'
-                validate:minNumber='0'
+                validate:floatmaxNumber="1.0"
+                validate:floatminNumber="0.05"
                 validate:testType="floatNumericRange" />
 
 
