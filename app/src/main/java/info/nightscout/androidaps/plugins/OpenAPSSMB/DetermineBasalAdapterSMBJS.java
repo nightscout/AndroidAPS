@@ -44,7 +44,6 @@ public class DetermineBasalAdapterSMBJS {
     private JSONObject mMealData;
     private JSONObject mCurrentTemp;
     private JSONObject mAutosensData = null;
-    private long mCurrentTime;
     private boolean mMicrobolusAllowed;
     private boolean mSMBAlwaysAllowed;
 
