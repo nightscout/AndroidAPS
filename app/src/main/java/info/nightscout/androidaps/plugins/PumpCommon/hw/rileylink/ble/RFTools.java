@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
 /**
  * Created by geoff on 7/31/15.
  */
+// TODO refactor this DRY
 public class RFTools {
 
     public static final byte[] codes = new byte[] { 21, 49, 50, 35, 52, 37, 38, 22, 26, 25, 42, 11, 44, 13, 14, 28 };

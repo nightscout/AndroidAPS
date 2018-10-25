@@ -211,7 +211,7 @@ public abstract class RileyLinkCommunicationManager {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
                 RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0, (byte)0,
-                    (byte)0, (byte)0, 500, (byte)0);
+                    (byte)0, (byte)0, 1000, (byte)0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {

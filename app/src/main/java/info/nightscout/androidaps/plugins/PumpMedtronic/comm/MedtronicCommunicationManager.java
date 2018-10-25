@@ -343,15 +343,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             LOG.debug("Run command with Frames: Got ACK response for Attention packet");
         }
 
-        int start = 0;
         int frameNr = 1;
-        int len = 0;
 
         for (List<Byte> frame : frames) {
 
             byte[] frameData = MedtronicUtil.createByteArray(frame);
 
-            LOG.debug("Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
+            // LOG.debug("Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
 
             PumpMessage msg = makePumpMessage(commandType, new CarelinkLongMessageBody(frameData));
 
@@ -374,10 +372,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
 
     public PumpHistoryResult getPumpHistory(PumpHistoryEntry lastEntry, LocalDateTime targetDate) {
-
-        // int pageNumber = 0;
-
-        // TODO multiple history pages
 
         PumpHistoryResult pumpTotalResult = new PumpHistoryResult(lastEntry, targetDate);
 
@@ -480,14 +474,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         return pumpTotalResult;
 
-        // Page page = new Page();
-        // // page.parseFrom(rval.getData(),PumpModel.MM522);
-        // // FIXME
-        // page.parseFrom(rawHistoryPage.getData(), MedtronicDeviceType.Medtronic_522);
-        //
-        // // return page;
-        //
-        // return null;
     }
 
 
@@ -774,40 +760,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    // TODO remove not needed - probably
-    // @Deprecated
-    // private void executeSetCommand(MedtronicCommandType commandType, byte[] bodyData) {
-    //
-    // LOG.debug("Executing Set for {} - 1st call", commandType.name());
-    //
-    // // first we send command without paramters and wait for ACK
-    // PumpMessage pumpMessage = sendAndGetACK(commandType, null, 4000);
-    //
-    // // FIXME check if ACK
-    // LOG.debug("Response 1 - {}", HexDump.toHexStringDisplayable(pumpMessage.getRawContent()));
-    //
-    //
-    // LOG.debug("Executing Set for {} - 2nd call", commandType.name());
-    // // second we send command with parameters and full package 64 bits with zeroed empty places
-    //
-    // byte newBodyData[] = new byte[64];
-    // for(int i = 0; i < 64; i++) {
-    // newBodyData[i] = 0x00;
-    // }
-    //
-    // newBodyData[0] = (byte) bodyData.length;
-    //
-    // for(int i = 0; i < bodyData.length; i++) {
-    // newBodyData[i + 1] = bodyData[i];
-    // }
-    //
-    // PumpMessage pumpMessage2 = sendAndGetACK(commandType, newBodyData, 4000);
-    //
-    //
-    // LOG.debug("Response 2 - {}", HexDump.toHexStringDisplayable(pumpMessage.getRawContent()));
-    //
-    // }
-
     // PUMP SPECIFIC COMMANDS
 
     public Float getRemainingInsulin() {
@@ -827,14 +779,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         }
 
         return responseObject == null ? null : (MedtronicDeviceType)responseObject;
-    }
-
-
-    public BasalProfile getBasalProfile_Old() {
-
-        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetBasalProfileSTD);
-
-        return responseObject == null ? null : (BasalProfile)responseObject;
     }
 
 
@@ -992,7 +936,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    // TODO WIP test
     public boolean setTBR(TempBasalPair tbr) {
 
         if (this.doWakeUpBeforeCommand)
@@ -1025,6 +968,19 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetBatteryStatus);
 
         return responseObject == null ? null : (BatteryStatusDTO)responseObject;
+    }
+
+
+    public Boolean setBasalProfile(BasalProfile basalProfile) {
+
+        List<List<Byte>> basalProfileFrames = MedtronicUtil.getBasalProfileFrames(basalProfile.getRawData());
+
+        PumpMessage responseMessage = runCommandWithFrames(MedtronicCommandType.SetBasalProfileSTD, basalProfileFrames);
+
+        // LOG.debug("Set Basal Profile: {}", HexDump.toHexStringDisplayable(responseMessage.getRawContent()));
+
+        return responseMessage.commandType == MedtronicCommandType.CommandACK;
+
     }
 
 
@@ -1061,145 +1017,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    // TODO generateRawData (check if it works correctly) and test
-    public Boolean setBasalProfile(BasalProfile basalProfile) {
-
-        // [RileyLinkDevice] ======================== Save Basal Profile ===========================
-        // [PumpMessageSender] getResponse(PumpMessage(carelink, setBasalProfileStandard, 3 bytes, 1 bytes), 0,
-        // 0.180000, 3)
-        // [PeripheralManager+RileyLink] RL Send: 19050000000000000000b4030000a9659a6b19b199c555b2c000
-        // [PeripheralManager+RileyLink] RL Recv(single): bb
-        // [PeripheralManager+RileyLink] RileyLink response: PacketResponse(code:
-        // RileyLinkBLEKit.ResponseCode.commandInterrupted, packet: nil)
-        // [PeripheralManager+RileyLink] RL Recv(single): dd0dbca9659a6b19b156655534d500
-        // [PumpMessageSender] getResponse(PumpMessage(carelink, setBasalProfileStandard, 3 bytes, 65 bytes), 0,
-        // 0.180000, 3)
-        // [PeripheralManager+RileyLink] RL Send:
-        // 79050000000000000000b4030000a9659a6b19b199c571c9a555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555556000
-        // 2018-06-30 15:03:13.333962-0500 Loop[24609:13622692] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd10bda9659a6b19b156655534d500
-        // 2018-06-30 15:03:13.334927-0500 Loop[24609:13622484] [PumpMessageSender] getResponse(PumpMessage(carelink,
-        // setBasalProfileStandard, 3 bytes, 65 bytes), 0, 0.180000, 3)
-        // 2018-06-30 15:03:13.337923-0500 Loop[24609:13622484] [PeripheralManager+RileyLink] RL Send:
-        // 79050000000000000000b4030000a9659a6b19b199c5725555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ac000
-        // 2018-06-30 15:03:14.114024-0500 Loop[24609:13622486] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd0ebea9659a6b19b156655534d500
-        // 2018-06-30 15:03:14.115017-0500 Loop[24609:13622484] [PumpMessageSender] getResponse(PumpMessage(carelink,
-        // setBasalProfileStandard, 3 bytes, 65 bytes), 0, 0.180000, 3)
-        // 2018-06-30 15:03:14.117600-0500 Loop[24609:13622484] [PeripheralManager+RileyLink] RL Send:
-        // 79050000000000000000b4030000a9659a6b19b199c6a355555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555570e000
-        // 2018-06-30 15:03:15.644502-0500 Loop[24609:13622692] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd0ebfa9659a6b19b156655534d500
-        // 2018-06-30 15:03:15.645388-0500 Loop[24609:13622484] [RileyLinkDevice] ------------------------ Save Basal
-        // Profile ---------------------------
-
-        // 2018-06-30 15:03:12.167767-0500 Loop[24609:13622484] [RileyLinkDevice] ======================== Save Basal
-        // Profile ===========================
-        // 2018-06-30 15:03:12.168652-0500 Loop[24609:13622484] [PumpMessageSender] getResponse(PumpMessage(carelink,
-        // setBasalProfileStandard, 3 bytes, 1 bytes), 0, 0.180000, 3)
-        // 2018-06-30 15:03:12.169518-0500 Loop[24609:13622484] [PeripheralManager+RileyLink] RL Send:
-        // 19050000000000000000b4030000a9659a6b19b199c555b2c000
-        // 2018-06-30 15:03:12.463546-0500 Loop[24609:13622486] [PeripheralManager+RileyLink] RL Recv(single): bb
-        // 2018-06-30 15:03:12.463954-0500 Loop[24609:13622486] [PeripheralManager+RileyLink] RileyLink response:
-        // PacketResponse(code: RileyLinkBLEKit.ResponseCode.commandInterrupted, packet: nil)
-        // 2018-06-30 15:03:12.554051-0500 Loop[24609:13622486] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd0dbca9659a6b19b156655534d500
-        // 2018-06-30 15:03:12.555175-0500 Loop[24609:13622484] [PumpMessageSender] getResponse(PumpMessage(carelink,
-        // setBasalProfileStandard, 3 bytes, 65 bytes), 0, 0.180000, 3)
-        // 2018-06-30 15:03:12.557953-0500 Loop[24609:13622484] [PeripheralManager+RileyLink] RL Send:
-        // 79050000000000000000b4030000a9659a6b19b199c571c9a555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555556000
-        // 2018-06-30 15:03:13.333962-0500 Loop[24609:13622692] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd10bda9659a6b19b156655534d500
-        // 2018-06-30 15:03:13.334927-0500 Loop[24609:13622484] [PumpMessageSender] getResponse(PumpMessage(carelink,
-        // setBasalProfileStandard, 3 bytes, 65 bytes), 0, 0.180000, 3)
-        // 2018-06-30 15:03:13.337923-0500 Loop[24609:13622484] [PeripheralManager+RileyLink] RL Send:
-        // 79050000000000000000b4030000a9659a6b19b199c5725555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555ac000
-        // 2018-06-30 15:03:14.114024-0500 Loop[24609:13622486] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd0ebea9659a6b19b156655534d500
-        // 2018-06-30 15:03:14.115017-0500 Loop[24609:13622484] [PumpMessageSender] getResponse(PumpMessage(carelink,
-        // setBasalProfileStandard, 3 bytes, 65 bytes), 0, 0.180000, 3)
-        // 2018-06-30 15:03:14.117600-0500 Loop[24609:13622484] [PeripheralManager+RileyLink] RL Send:
-        // 79050000000000000000b4030000a9659a6b19b199c6a355555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555570e000
-        // 2018-06-30 15:03:15.644502-0500 Loop[24609:13622692] [PeripheralManager+RileyLink] RL Recv(single):
-        // dd0ebfa9659a6b19b156655534d500
-        // 2018-06-30 15:03:15.645388-0500 Loop[24609:13622484] [RileyLinkDevice] ------------------------ Save Basal
-        // Profile ---------------------------
-
-        // byte[] body = basalProfile.generateRawData();
-
-        // byte[] body = new byte[] { 32, 0, 0, 38, 0, 13, 44, 0, 19, 38, 0, 28 };
-
-        byte[] body = ByteUtil
-            .createByteArray(
-                "06000052000178050202000304000402000504000602000704000802000904000a02000b04000c02000d02000e02000f040010020011040012020013040014020015040016020017040018020019000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-                0);
-
-        List<List<Byte>> basalProfileFrames = MedtronicUtil.getBasalProfileFrames(body);
-
-        PumpMessage responseMessage = runCommandWithFrames(MedtronicCommandType.SetBasalProfileA, basalProfileFrames);
-
-        // PumpMessage responseMessage;
-        //
-        // if (debugSetCommands)
-        // LOG.debug("Set Basal Profile: Body [{}] - {}", body.length, HexDump.toHexStringDisplayable(body));
-        //
-        // for (List<Byte> basalProfileFrame : basalProfileFrames) {
-        //
-        // PumpMessage msg = makePumpMessage(MedtronicCommandType.SetBasalProfileA, //
-        // new CarelinkLongMessageBody(ByteUtil.concat((byte)body.length, body)));
-        //
-        // responseMessage = runCommandWithArgs(msg);
-        //
-        // }
-
-        // if (body.length <= 64) {
-        //
-        // PumpMessage msg = makePumpMessage(MedtronicCommandType.SetBasalProfileA, //
-        // new CarelinkLongMessageBody(ByteUtil.concat((byte) body.length, body)));
-        //
-        // responseMessage = runCommandWithArgs(msg);
-        // } else
-        // {
-        //
-        // responseMessage = runCommandWithArgsLong(MedtronicCommandType.SetBasalProfileA, body);
-        // }
-
-        // if (debugSetCommands)
-        // LOG.debug("Set Basal Profile: {}", HexDump.toHexStringDisplayable(responseMessage.getRawContent()));
-
-        LOG.debug("Set Basal Profile: {}", HexDump.toHexStringDisplayable(responseMessage.getRawContent()));
-
-        return responseMessage.commandType == MedtronicCommandType.CommandACK;
-
-    }
-
-
-    // public byte[] getFullMessageBody(byte[] bodyData, int length) {
-    // byte newBodyData[] = getEmptyMessage(length);
-    //
-    // newBodyData[0] = (byte) bodyData.length;
-    //
-    // for (int i = 0; i < bodyData.length; i++) {
-    // newBodyData[i + 1] = bodyData[i];
-    // }
-    //
-    // return newBodyData;
-    // }
-
-    // public byte[] getEmptyMessage(int length) {
-    // byte newBodyData[] = new byte[length];
-    // for (int i = 0; i < length; i++) {
-    // newBodyData[i] = 0x00;
-    // }
-    //
-    // return newBodyData;
-    // }
-
     public PumpMessage cancelBolus() {
         // ? maybe suspend and resume
         return null;
     }
-
 
     // Set TBR 100%
     // Cancel TBR (set TBR 100%) 100%
@@ -1214,43 +1035,5 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     // Set Basal Profile 0% -- NOT SUPPORTED
     // Read History 60%
     // Load TDD ?
-
-    // FIXME remove - each part needs to be gotten manually
-    public void updatePumpManagerStatus() {
-        // Integer resp = getRemainingBattery();
-        // pumpStatus.batteryRemaining = resp == null ? -1 : resp;
-
-        // pumpStatus.remainUnits = getRemainingInsulin();
-
-        /* current basal */
-        // TempBasalPair basalRate = getCurrentBasalRate();
-
-        // FIXME
-        // byte[] basalRateBytes = resp.getContents();
-        // if (basalRateBytes != null) {
-        // if (basalRateBytes.length == 2) {
-        // /**
-        // * 0x98 0x06
-        // * 0x98 is "basal rate"
-        // * 0x06 is what? Not currently running a temp basal, current basal is "standard" at 0
-        // */
-        // double basalRate = ByteUtil.asUINT8(basalRateBytes[1]);
-        // pumpStatus.currentBasal = basalRate;
-        // }
-        // }
-        // get last bolus amount
-        // get last bolus time
-        // get tempBasalInProgress
-        // get tempBasalRatio
-        // get tempBasalRemainMin
-        // get tempBasalStart
-        // get pump time
-        LocalDateTime clockResult = getPumpTime();
-        if (clockResult != null) {
-            // pumpStatus.time = clockResult.toDate();
-        }
-        // get last sync time
-
-    }
 
 }

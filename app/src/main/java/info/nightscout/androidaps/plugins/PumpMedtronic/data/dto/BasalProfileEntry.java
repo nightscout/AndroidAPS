@@ -25,6 +25,24 @@ public class BasalProfileEntry {
     }
 
 
+    public BasalProfileEntry(double rate, int hour, int minutes) {
+        byte[] data = MedtronicUtil.getBasalStrokes(rate, true);
+
+        rate_raw = new byte[2];
+        rate_raw[0] = data[1];
+        rate_raw[1] = data[0];
+
+        int interval = hour * 2;
+
+        if (minutes == 30) {
+            interval++;
+        }
+
+        startTime_raw = (byte)interval;
+        startTime = new LocalTime(hour, minutes == 30 ? 30 : 0);
+    }
+
+
     public BasalProfileEntry(int rateStrokes, int startTimeInterval) {
         // rateByte is insulin delivery rate, U/hr, in 0.025 U increments
         // startTimeByte is time-of-day, in 30 minute increments

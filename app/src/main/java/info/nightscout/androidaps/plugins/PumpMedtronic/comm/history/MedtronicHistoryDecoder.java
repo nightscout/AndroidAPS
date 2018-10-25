@@ -119,11 +119,12 @@ public abstract class MedtronicHistoryDecoder {
 
     // public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page,
     // boolean partial) throws Exception;
-    //
-    //
-    // public List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) throws Exception {
-    // return processPageAndCreateRecords(page, false);
-    // }
+
+    public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
+            Class<E> clazz) throws Exception {
+        return processPageAndCreateRecords(rawHistoryPage, false, clazz);
+    }
+
 
     protected void prepareStatistics() {
         if (!statisticsEnabled)
@@ -212,12 +213,6 @@ public abstract class MedtronicHistoryDecoder {
     }
 
 
-    // public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
-    // boolean partial) {
-    // return (processPageAndCreateRecords(
-    // rawHistoryPage, partial, clazz);
-    // }
-
     public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
             boolean partial, Class<E> clazz) {
         List<Byte> dataClear = checkPage(rawHistoryPage, partial);
@@ -234,4 +229,5 @@ public abstract class MedtronicHistoryDecoder {
 
 
     protected abstract <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClear, Class<E> clazz);
+
 }

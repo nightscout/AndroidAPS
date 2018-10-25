@@ -318,8 +318,8 @@ public class MedtronicUtil extends RileyLinkUtil {
             if (isEmptyFrame(frameData)) {
                 byte b = (byte)frame;
                 // b |= 0x80;
-                // b |= 0b1000_0000;
-                b |= doneBit;
+                b |= 0b1000_0000;
+                // b |= doneBit;
 
                 frameData.add(0, b);
 
@@ -349,8 +349,8 @@ public class MedtronicUtil extends RileyLinkUtil {
             List<Byte> frameData = new ArrayList<>();
 
             byte b = (byte)frame;
-            // b |= 0b1000_0000;
-            b |= doneBit;
+            b |= 0b1000_0000;
+            // b |= doneBit;
 
             frameData.add(b);
 

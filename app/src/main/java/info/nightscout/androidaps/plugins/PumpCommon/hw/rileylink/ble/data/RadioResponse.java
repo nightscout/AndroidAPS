@@ -100,8 +100,17 @@ public class RadioResponse {
                     decodedPayload = encodedPayload;
                     break;
                 case FourByteSixByte:
+                    LOG.debug("encodedPayload: {}", ByteUtil.getHex(encodedPayload));
                     byte[] decodeThis = RFTools.decode4b6b(encodedPayload);
+                    LOG.debug("decodedPayload: {}", ByteUtil.getHex(decodeThis));
                     decodedOK = true;
+
+                    if (decodeThis == null || decodeThis.length == 0) {
+                        LOG.error("Decoded payload length is zero.");
+                        decodedOK = false;
+                        return;
+                    }
+
                     decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
                     receivedCRC = decodeThis[decodeThis.length - 1];
                     byte calculatedCRC = CRC.crc8(decodedPayload);
@@ -114,7 +123,7 @@ public class RadioResponse {
                     throw new NotImplementedException("this {" + RileyLinkUtil.getEncoding().toString()
                         + "} encoding is not supported");
             }
-         } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             decodedOK = false;
             LOG.error("Failed to decode radio data: " + ByteUtil.shortHexString(encodedPayload));
         }

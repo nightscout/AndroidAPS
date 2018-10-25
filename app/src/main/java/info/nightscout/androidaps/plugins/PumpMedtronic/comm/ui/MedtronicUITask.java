@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicUIResponseType;
@@ -118,7 +119,9 @@ public class MedtronicUITask {
 
             case SetBasalProfileSTD:
             case SetBasalProfileA: {
-                // returnData = communicationManager.setBasalProfile(profile);
+                BasalProfile profile = (BasalProfile) parameters[0];
+
+                returnData = communicationManager.setBasalProfile(profile);
                 // Float amount = getAmount();
                 //
                 // if (amount != null) {
@@ -226,5 +229,9 @@ public class MedtronicUITask {
 
     public boolean hasData() {
         return (responseType == MedtronicUIResponseType.Data);
+    }
+
+    public Object getParameter(int index) {
+        return parameters[index];
     }
 }

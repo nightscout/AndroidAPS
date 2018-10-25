@@ -44,6 +44,17 @@ public class MedtronicUIPostprocessor {
 
         switch (uiTask.commandType) {
 
+            case SetBasalProfileSTD: {
+                Boolean response = (Boolean) uiTask.returnData;
+
+                if (response) {
+                    BasalProfile basalProfile = (BasalProfile) uiTask.getParameter(0);
+
+                    pumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+                }
+            }
+            break;
+
             case GetBasalProfileSTD: {
                 BasalProfile basalProfile = (BasalProfile)uiTask.returnData;
 

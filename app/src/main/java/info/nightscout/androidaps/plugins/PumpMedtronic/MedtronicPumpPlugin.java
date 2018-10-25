@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +41,12 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLink
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui.MedtronicUIComm;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui.MedtronicUITask;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.MedtronicHistoryData;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfileEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicNotificationType;
@@ -133,6 +138,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
+    private String getLogPrefix() {
+        return "MedtronicPumpPlugin::";
+    }
+
+
     @Override
     public void initPumpStatusData() {
 
@@ -141,6 +151,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         pumpStatusLocal.lastConnection = SP.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
         pumpStatusLocal.lastDataTime = new LocalDateTime(pumpStatusLocal.lastConnection);
+        pumpStatusLocal.previousConnection = pumpStatusLocal.lastConnection;
 
         pumpStatusLocal.refreshConfiguration();
 
@@ -151,10 +162,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         pumpDescription.maxTempAbsolute = (pumpStatusLocal.maxBasal != null) ? pumpStatusLocal.maxBasal : 35.0d;
 
         // needs to be changed in configuration, after all functionalities are done
-        pumpDescription.isBolusCapable = true;
+        pumpDescription.isBolusCapable = true; // WIP
         pumpDescription.isTempBasalCapable = true; // WIP
         pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.isSetBasalProfileCapable = false;
+        pumpDescription.isSetBasalProfileCapable = true;
 
         // unchangable
         pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
@@ -852,11 +863,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return new PumpEnactResult().success(response).enacted(response);
     }
 
+    // Gson gson = new Gson();
+    PumpHistoryEntry lastPumpHistoryEntry;
+
 
     private void readPumpHistory() {
         LOG.error("MedtronicPumpPlugin::readPumpHistory NOT IMPLEMENTED.");
 
-        // TODO read History
+        // readPumpHistoryLogic();
 
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpHistory);
 
@@ -865,6 +879,50 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         }
 
         // FIXME set last read
+    }
+
+
+    private void readPumpHistoryLogic() {
+
+        Long lastPumpHistoryEntryTime = null;
+
+        // TODO read History
+        if (lastPumpHistoryEntry == null) {
+            lastPumpHistoryEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, null);
+        }
+
+        if (firstRun) {
+            DateTime dt = new DateTime();
+            dt.minus(Hours.hours(36));
+
+            if (lastPumpHistoryEntry == null && lastPumpHistoryEntryTime == null) {
+
+            } else {
+
+            }
+
+        }
+
+        // determine if first run, if yes detrmine how much of update do we need
+        // first run:
+        // get last hiostory entry, if not there download 1.5 days of data
+        // - there: check if last entry is older than 1.5 days
+        // - yes: download 1.5 days
+        // - no: download with last entry
+        // - not there: download 1.5 days
+        //
+        // upload all new entries to NightScout (TBR, Bolus)
+        // determine pump status
+        //
+        // save last entry
+        //
+        // not first run:
+        // update to last entry
+        // - save
+        // - determine pump status
+
+        //
+
     }
 
 
@@ -931,8 +989,19 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
 
-        LOG.info("cancelTempBasal - started");
+        LOG.info("MedtronicPumpPlugin::cancelTempBasal - started");
 
+        if (isPumpNotReachable()) {
+
+            setRefreshButtonEnabled(true);
+
+            return new PumpEnactResult() //
+                .success(false) //
+                .enacted(false) //
+                .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
+        }
+
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
         setRefreshButtonEnabled(false);
 
         TempBasalPair tbrCurrent = readTBR();
@@ -969,12 +1038,89 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        LOG.warn("MedtronicPumpPlugin::setNewBasalProfile NOT IMPLEMENTED YET.");
+        LOG.error(getLogPrefix() + "setNewBasalProfile - WIP.");
 
-        // TODO implement this
+        setRefreshButtonEnabled(false);
 
-        return new PumpEnactResult().success(false).enacted(false)
-            .comment(MainApp.gs(R.string.medtronic_cmd_profile_not_set));
+        if (isPumpNotReachable()) {
+
+            setRefreshButtonEnabled(true);
+
+            return new PumpEnactResult() //
+                .success(false) //
+                .enacted(false) //
+                .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
+        }
+
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+
+        BasalProfile basalProfile = convertProfileToMedtronicProfile(profile);
+
+        String profileInvalid = isProfileValid(basalProfile);
+
+        if (profileInvalid != null) {
+            return new PumpEnactResult() //
+                .success(false) //
+                .enacted(false) //
+                .comment(MainApp.gs(R.string.medtronic_cmd_set_profile_pattern_overflow, profileInvalid));
+        }
+
+        MedtronicUITask responseTask = medtronicUIComm.executeCommand(MedtronicCommandType.SetBasalProfileSTD,
+            basalProfile);
+
+        Boolean response = (Boolean)responseTask.returnData;
+
+        LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
+
+        return new PumpEnactResult().success(response).enacted(response);
+    }
+
+
+    private String isProfileValid(BasalProfile basalProfile) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        MedtronicPumpStatus pumpStatus = getMDTPumpStatus();
+
+        if (pumpStatusLocal.maxBasal == null)
+            return null;
+
+        for (BasalProfileEntry profileEntry : basalProfile.getEntries()) {
+
+            if (profileEntry.rate > pumpStatusLocal.maxBasal) {
+
+                stringBuilder.append(profileEntry.startTime.toString("HH:mm") + "=" + profileEntry.rate);
+
+            }
+        }
+
+        return stringBuilder.length() == 0 ? null : stringBuilder.toString();
+
+    }
+
+
+    @NonNull
+    private BasalProfile convertProfileToMedtronicProfile(Profile profile) {
+
+        MedtronicPumpStatus pumpStatus = getMDTPumpStatus();
+
+        PumpType pumpType = pumpStatus.pumpType;
+
+        BasalProfile basalProfile = new BasalProfile();
+
+        for (int i = 0; i < 24; i++) {
+            double rate = profile.getBasalTimeFromMidnight(i * 60 * 60);
+
+            double v = pumpType.determineCorrectBasalSize(rate);
+
+            BasalProfileEntry basalEntry = new BasalProfileEntry(v, i, 0);
+            basalProfile.addEntry(basalEntry);
+
+        }
+
+        basalProfile.generateRawDataFromEntries();
+
+        return basalProfile;
     }
 
 

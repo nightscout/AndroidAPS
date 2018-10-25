@@ -55,7 +55,7 @@ public class RileyLinkUtil {
     private static RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
     // Broadcasts: RileyLinkBLE, RileyLinkService,
-    //private static RileyLinkIPCConnection rileyLinkIPCConnection;
+    // private static RileyLinkIPCConnection rileyLinkIPCConnection;
     private static RileyLinkTargetDevice targetDevice;
     private static RileyLinkEncodingType encoding;
     private static RileyLinkSelectPreference rileyLinkSelectPreference;
@@ -157,7 +157,8 @@ public class RileyLinkUtil {
 
 
     public static boolean sendNotification(ServiceNotification notification, Integer clientHashcode) {
-        return RileyLinkUtil.rileyLinkService.sendNotification(notification, clientHashcode);
+        // return RileyLinkUtil.rileyLinkIPCConnection.sendNotification(notification, clientHashcode);
+        return false;
     }
 
 
@@ -200,6 +201,10 @@ public class RileyLinkUtil {
     // RileyLinkUtil.rileyLinkIPCConnection = rileyLinkIPCConnection;
     // }
 
+    // public static RileyLinkIPCConnection getRileyLinkIPCConnection() {
+    // return RileyLinkUtil.rileyLinkIPCConnection;
+    // }
+
     public static RileyLinkTargetFrequency getRileyLinkTargetFrequency() {
         return RileyLinkUtil.rileyLinkTargetFrequency;
     }
@@ -217,6 +222,7 @@ public class RileyLinkUtil {
     }
 
 
+    @Deprecated
     public static BleAdvertisedData parseAdertisedData(byte[] advertisedData) {
         List<UUID> uuids = new ArrayList<UUID>();
         String name = null;

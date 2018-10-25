@@ -1,0 +1,129 @@
+RileyLinkAAPS
+=============
+
+
+Medtronic
+- set basal profile (try to get to work - see new Loop code)
+- read history
+
+
+Bugs:
+
+
+History: - parse pump history
+
+
+Device search/scan refactor
+
+
+CGMS [not in plan for now]:
+    - read history
+
+
+
+AAPS-Medtronic
+==============
+
+
+- history: - integrate
+           - basal change code
+           - settings change code
+
+- foolproofing: - bolus
+                - TBR
+                * connection (!!)
+
+- bolus: - progress
+         - cancel handling
+
+- What needs to be fixed: + button when clicked Refresh
+                          x basal profile by 1/2 hour (not supported by AAPS)
+
+* disconnect
+
+- MedtronicUIResponseType integration
+
+- add fabric code for following errors
+
+- tuneup not working correctly
+
+
+- BT Scan:
+   + display mac on calling Preference
+   + fix location problem
+   - fix start/stop of scan:
+        - remove toast button:
+        - Remove Refresh
+        - Add Scan Button
+        - Scan button is Stop button when search is running
+   - after change old error visible
+
+* Refresh button toggling
+
+
+Pages (RL Info):
+- Base: - display firmware version
+        - display current data (it doesn't work ATM)
+- RL history
+- Device page: - Add Commands:
+                      - get model
+                      - tune (with report)
+                      - get time
+                      - get remaining insulin
+               - Add Statistics:
+                     - Bolus,
+                     - TBR
+                     - Bolus SMB
+
+- Pump Tab: - fix 3 buttons
+
+==========================================================================================================
+
+DONE - AAPS-Medtronic
+=====================
+
++ status time
++ status all scheduling
++ status config
++ status power
+
++ Statistics in App:
+       + Bolus,
+       + TBR
+       + Bolus SMB
+
++ status error display: + time
+                        + basal profile enabled
+                        + basal profile incorrect
+                        + tbr type set
+                        + max bolus
+                        + max basal
+                        + wrong pump selected
+
++ Basal refactoring: - basal is read when history says there was a change
++ merge: bugs (3)
++ Code to determine number of users:
+
+
+DONE - RileyLinkAAPS
+=====================
+
+RileyLink
++ BT Disconnect and reconnect (change in RileyLinkBLE ??)
++ RL version
+
+
+Medtronic
+x extended bolus
+
+
+Firmware Support:
+    + version 2 support: + V1 works
+                         + V2 works
+
+Bugs:
+    + Bolus 554
+    + TBR (554) ?
+    + Remaining Insulin [554]
+    + Get Basal profile returns just part of profile
+    + Set TBR problem (after Bolus fixes)

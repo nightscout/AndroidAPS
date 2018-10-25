@@ -27,6 +27,7 @@ public class MedtronicConst {
         public static final String TBRsSet = StatsPrefix + "tbrs_set";
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
         public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
+        public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
     }
 
 }

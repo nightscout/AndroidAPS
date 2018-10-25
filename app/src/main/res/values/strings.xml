@@ -1313,10 +1313,12 @@
     <string name="medtronic_pump_status_active">Active</string>
     <string name="medtronic_pump_status_sleeping">Sleeping</string>
 
-    <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Remote cancel of Bolus is not supported. If you wish to cancel bolus, go to pump put it in suspend and then resume. This will cancel the bolus.</string>
     <string name="medtronic_cmd_cant_read_tbr">Could not read current TBR.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Could not cancel current TBR. Stopping operation.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Profile set failed, because following patterns, have too big basal rate: %1$s</string>
+
 
     <string name="pump_no_connection_h">No connection for %1$d hour(s) %2$d min</string>
     <string name="pump_no_connection_d">No connection for %1$d day(s) %2$d hours</string>

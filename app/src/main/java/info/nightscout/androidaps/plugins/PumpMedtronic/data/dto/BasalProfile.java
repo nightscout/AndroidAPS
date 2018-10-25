@@ -69,7 +69,13 @@ public class BasalProfile {
             data = MedtronicUtil.createByteArray(data[0], (byte)0, (byte)0);
         }
 
-        mRawData = data;
+        if (data.length == MAX_RAW_DATA_SIZE) {
+            mRawData = data;
+        } else {
+            int len = Math.min(MAX_RAW_DATA_SIZE, data.length);
+            mRawData = new byte[MAX_RAW_DATA_SIZE];
+            System.arraycopy(data, 0, mRawData, 0, len);
+        }
 
         return true;
     }
@@ -190,7 +196,7 @@ public class BasalProfile {
     }
 
 
-    public byte[] generateRawData() {
+    public void generateRawDataFromEntries() {
 
         List<Byte> outData = new ArrayList<>();
 
@@ -205,7 +211,7 @@ public class BasalProfile {
 
         this.setRawData(MedtronicUtil.createByteArray(outData));
 
-        return this.mRawData;
+        // return this.mRawData;
     }
 
 
