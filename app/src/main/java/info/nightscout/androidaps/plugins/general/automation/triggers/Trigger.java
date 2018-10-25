@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -111,7 +112,7 @@ public abstract class Trigger {
         return null;
     }
 
-    public View createView(Context context) {
+    public View createView(Context context, FragmentManager fragmentManager) {
         final int padding = MainApp.dpToPx(4);
 
         LinearLayout root = new LinearLayout(context);

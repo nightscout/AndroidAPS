@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -268,8 +269,8 @@ public class TriggerTime extends Trigger {
     }
 
     @Override
-    public View createView(Context context) {
-        LinearLayout root = (LinearLayout) super.createView(context);
+    public View createView(Context context, FragmentManager fragmentManager) {
+        LinearLayout root = (LinearLayout) super.createView(context, fragmentManager);
 
         // TODO: Replace external tool WeekdaysPicker with a self-made GUI element
         WeekdaysPicker weekdaysPicker = new WeekdaysPicker(context);

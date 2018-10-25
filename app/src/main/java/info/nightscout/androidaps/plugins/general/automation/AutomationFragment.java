@@ -32,12 +32,6 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCon
 
 public class AutomationFragment extends SubscriberFragment {
 
-    public static FragmentManager fragmentManager() {
-        return mFragmentManager;
-    }
-
-    private static FragmentManager mFragmentManager = null;
-
     @BindView(R.id.eventListView)
     RecyclerView mEventListView;
 
@@ -46,8 +40,6 @@ public class AutomationFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        mFragmentManager = getFragmentManager();
 
         View view = inflater.inflate(R.layout.automation_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
@@ -66,16 +58,13 @@ public class AutomationFragment extends SubscriberFragment {
     public void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> {
-                mEventListAdapter.notifyDataSetChanged();
-            });
+            activity.runOnUiThread(() -> mEventListAdapter.notifyDataSetChanged());
     }
 
     @OnClick(R.id.fabAddEvent)
     void onClickAddEvent(View v) {
         EditEventDialog dialog = EditEventDialog.newInstance(new AutomationEvent());
-        FragmentManager manager = getFragmentManager();
-        dialog.show(manager, "EditEventDialog");
+        dialog.show(getFragmentManager(), "EditEventDialog");
     }
 
     /**
@@ -128,10 +117,12 @@ public class AutomationFragment extends SubscriberFragment {
         private final LinearLayout mRootLayout;
         private final Context mContext;
         private final TriggerConnector mRootConnector;
+        private final FragmentManager mFragmentManager;
 
-        public TriggerListAdapter(Context context, LinearLayout rootLayout, TriggerConnector rootTrigger) {
+        public TriggerListAdapter(Context context, FragmentManager fragmentManager, LinearLayout rootLayout, TriggerConnector rootTrigger) {
             mRootLayout = rootLayout;
             mContext = context;
+            mFragmentManager = fragmentManager;
             mRootConnector = rootTrigger;
             build();
         }
@@ -151,7 +142,7 @@ public class AutomationFragment extends SubscriberFragment {
                 }
 
                 // trigger layout
-                mRootLayout.addView(trigger.createView(mContext));
+                mRootLayout.addView(trigger.createView(mContext, mFragmentManager));
 
                 // buttons
                 createButtons(trigger);
@@ -162,8 +153,7 @@ public class AutomationFragment extends SubscriberFragment {
                 buttonAdd.setText("Add New");
                 buttonAdd.setOnClickListener(v -> {
                     ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
-                    FragmentManager manager = AutomationFragment.fragmentManager();
-                    dialog.show(manager, "ChooseTriggerDialog");
+                    dialog.show(mFragmentManager, "ChooseTriggerDialog");
                     dialog.setOnClickListener(newTriggerObject -> {
                         mRootConnector.add(newTriggerObject);
                         rebuild();
@@ -235,8 +225,7 @@ public class AutomationFragment extends SubscriberFragment {
             buttonAdd.setText("add");
             buttonAdd.setOnClickListener(v -> {
                 ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
-                FragmentManager manager = AutomationFragment.fragmentManager();
-                dialog.show(manager, "ChooseTriggerDialog");
+                dialog.show(mFragmentManager, "ChooseTriggerDialog");
                 dialog.setOnClickListener(newTriggerObject -> {
                     TriggerConnector connector = trigger.getConnector();
                     connector.add(connector.pos(trigger)+1, newTriggerObject);

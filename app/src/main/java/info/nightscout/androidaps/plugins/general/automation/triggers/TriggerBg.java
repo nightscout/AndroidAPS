@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -26,9 +28,9 @@ import info.nightscout.utils.NumberPicker;
 
 public class TriggerBg extends Trigger {
 
-    protected double threshold;
-    protected Comparator comparator = Comparator.IS_EQUAL;
-    protected String units = ProfileFunctions.getInstance().getProfileUnits();
+    private double threshold = 100.0; // FIXME
+    private Comparator comparator = Comparator.IS_EQUAL;
+    private String units = ProfileFunctions.getInstance().getProfileUnits();
 
     final private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -107,7 +109,7 @@ public class TriggerBg extends Trigger {
         if (comparator.equals(Comparator.IS_NOT_AVAILABLE))
             return MainApp.gs(R.string.glucoseisnotavailable);
         else
-            return MainApp.gs(R.string.glucosecompared, comparator.getStringRes(), threshold, units);
+            return MainApp.gs(R.string.glucosecompared, MainApp.gs(comparator.getStringRes()), threshold, units);
     }
 
     @Override
@@ -131,8 +133,8 @@ public class TriggerBg extends Trigger {
     }
 
     @Override
-    public View createView(Context context) {
-        LinearLayout root = (LinearLayout) super.createView(context);
+    public View createView(Context context, FragmentManager fragmentManager) {
+        LinearLayout root = (LinearLayout) super.createView(context, fragmentManager);
 
         // spinner for comparator
         Spinner spinner = new Spinner(context);
@@ -145,6 +147,16 @@ public class TriggerBg extends Trigger {
         );
         spinnerParams.setMargins(0, MainApp.dpToPx(4), 0, MainApp.dpToPx(4));
         spinner.setLayoutParams(spinnerParams);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                comparator = Comparator.values()[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+        spinner.setSelection(comparator.ordinal());
         root.addView(spinner);
 
         // horizontal layout
@@ -156,7 +168,8 @@ public class TriggerBg extends Trigger {
         // input filed for threshold
         NumberPicker numberPicker = new NumberPicker(context, null);
         numberPicker.setParams(0d, 0d, (double) 500, 1d, new DecimalFormat("0"), false, textWatcher);
-        numberPicker.setValue(100.0);
+        numberPicker.setValue(threshold);
+        numberPicker.setOnValueChangedListener(value -> threshold = value);
         layout.addView(numberPicker);
 
         // text view for unit

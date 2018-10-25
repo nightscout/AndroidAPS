@@ -52,7 +52,7 @@ public class EditEventDialog extends DialogFragment {
         mEvent.setTrigger(rootTrigger);
 
         // display root trigger
-        mLayoutTrigger.addView(rootTrigger.createView(getContext()));
+        mLayoutTrigger.addView(rootTrigger.createView(getContext(), getFragmentManager()));
 
         return view;
     }
@@ -70,7 +70,6 @@ public class EditEventDialog extends DialogFragment {
         if (title.isEmpty()) return;
 
         mEvent.setTitle(title);
-
 
         final AutomationPlugin plugin = AutomationPlugin.getPlugin();
         plugin.getAutomationEvents().add(mEvent);

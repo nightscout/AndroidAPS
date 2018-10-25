@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -163,7 +164,7 @@ public class TriggerConnector extends Trigger {
         int counter = 0;
         StringBuilder result = new StringBuilder();
         for (Trigger t : list) {
-            if (counter++ > 0) result.append(friendlyName());
+            if (counter++ > 0) result.append(" " + MainApp.gs(friendlyName()) + " ");
             result.append(t.friendlyDescription());
         }
         return result.toString();
@@ -182,7 +183,7 @@ public class TriggerConnector extends Trigger {
     }
 
     @Override
-    public View createView(Context context) {
+    public View createView(Context context, FragmentManager fragmentManager) {
         final int padding = MainApp.dpToPx(5);
 
         LinearLayout root = new LinearLayout(context);
@@ -196,7 +197,7 @@ public class TriggerConnector extends Trigger {
         triggerListLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(triggerListLayout);
 
-        adapter = new AutomationFragment.TriggerListAdapter(context, triggerListLayout, this);
+        adapter = new AutomationFragment.TriggerListAdapter(context, fragmentManager, triggerListLayout, this);
 
         return root;
     }
