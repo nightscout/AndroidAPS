@@ -1052,6 +1052,7 @@
   <string name="insulinlimitviolation">Insulingräns nådd</string>
   <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
   <string name="loop_openmode_min_change_summary">Loopen kommer att be om justering endast om ändringen är större än detta värde. Standardvärde är 20%</string>
+  <string name="pairfirst">Vänligen para ihop pumpen med telefonen.</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dag</item>
     <item quantity="other">%1$d dagar</item>

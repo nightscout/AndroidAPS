@@ -1052,6 +1052,7 @@
   <string name="insulinlimitviolation">Insulien limiet skending</string>
   <string name="loop_openmode_min_change">Minimale versoek verandering [%]</string>
   <string name="loop_openmode_min_change_summary">Lus sal opspring en nuwe verandering versoek slegs as verandering is groter as hierdie waarde. Verstek waarde is 20%</string>
+  <string name="pairfirst">Verbind asseblief jou pomp met jou selfoon!</string>
   <plurals name="objective_days">
     <item quantity="one">%1$d dae</item>
     <item quantity="other">%1$d dae</item>

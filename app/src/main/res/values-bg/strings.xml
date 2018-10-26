@@ -1052,6 +1052,7 @@
   <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
   <string name="loop_openmode_min_change">Минимална стойност за промяна [%]</string>
   <string name="loop_openmode_min_change_summary">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
+  <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
   <plurals name="objective_days">
     <item quantity="one">%1$d дeн</item>
     <item quantity="other">%1$d дни</item>
