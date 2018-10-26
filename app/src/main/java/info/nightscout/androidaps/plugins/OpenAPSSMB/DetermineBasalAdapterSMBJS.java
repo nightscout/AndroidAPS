@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -215,7 +216,8 @@ public class DetermineBasalAdapterSMBJS {
     ) throws JSONException {
 
         String units = profile.getUnits();
-
+        Double bolusincrument = SP.getDouble("key_bolus_increment", SMBDefaults.bolus_increment);
+        Double pumpbolusstep = MainApp.getConfigBuilder().getActivePump().getPumpDescription().bolusStep;
         mProfile = new JSONObject();
 
         mProfile.put("max_iob", maxIob);
@@ -256,7 +258,11 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("maxUAMSMBBasalMinutes", SP.getInt("key_uamsmbmaxminutes", SMBDefaults.maxUAMSMBBasalMinutes));
-        mProfile.put("bolus_increment", SP.getDouble("key_bolus_increment", SMBDefaults.bolus_increment));
+        if (bolusincrument < pumpbolusstep){
+          //the bolus incrument is less than what the pump can support (by pump settings or pump restriction), set to value supported by the pump
+          bolusincrument = pumpbolusstep;
+        }
+        mProfile.put("bolus_increment", bolusincrument);
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
         mProfile.put("current_basal", basalrate);
