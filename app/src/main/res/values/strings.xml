@@ -800,6 +800,8 @@
     <string name="poctech_upload">Poctech upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
+    <string name="key_smbinterval" translatable="false">key_smbinterval</string>
+    <string name="smbinterval_summary">How frequently SMBs will be given in min</string>
     <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>

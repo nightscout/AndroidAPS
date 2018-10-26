@@ -249,6 +249,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", SP.getBoolean(R.string.key_use_uam, false));
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
+        mProfile.put("SMBInterval", SP.getInt("key_smbinterval", SMBDefaults.SMBInterval));
         mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
         mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));

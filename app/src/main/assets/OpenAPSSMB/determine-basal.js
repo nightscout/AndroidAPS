@@ -1085,17 +1085,23 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             }
             rT.reason += ". ";
 
-            //allow SMBs every 3 minutes
-            var nextBolusMins = round(3-lastBolusAge,1);
+            //allow SMBs every 3 minutes by default
+            var SMBInterval = 3;
+            if (profile.SMBInterval) {
+                // allow SMBIntervals between 1 and 10 minutes
+                SMBInterval = Math.min(10,Math.max(1,profile.SMBInterval));
+            }
+            var nextBolusMins = round(SMBInterval-lastBolusAge,0);
+            var nextBolusSeconds = round((SMBInterval - lastBolusAge) * 60, 0) % 60;
             //console.error(naive_eventualBG, insulinReq, worstCaseInsulinReq, durationReq);
             console.error("naive_eventualBG",naive_eventualBG+",",durationReq+"m "+smbLowTempReq+"U/h temp needed; last bolus",lastBolusAge+"m ago; maxBolus: "+maxBolus);
-            if (lastBolusAge > 3) {
+            if (lastBolusAge > SMBInterval) {
                 if (microBolus > 0) {
                     rT.units = microBolus;
                     rT.reason += "Microbolusing " + microBolus + "U. ";
                 }
             } else {
-                rT.reason += "Waiting " + nextBolusMins + "m to microbolus again. ";
+                rT.reason += "Waiting " + nextBolusMins + "m " + nextBolusSeconds + "s to microbolus again. ";
             }
             //rT.reason += ". ";
 
