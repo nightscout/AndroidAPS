@@ -96,7 +96,7 @@
         <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:defaultValue="0.1"
                 android:inputType="numberDecimal"
-                android:key="@string/bolus_increment"
+                android:key="key_bolus_increment"
                 android:maxLines="20"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
