@@ -256,7 +256,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("maxUAMSMBBasalMinutes", SP.getInt("key_uamsmbmaxminutes", SMBDefaults.maxUAMSMBBasalMinutes));
-        mProfile.put("bolus_increment", SP.getDouble("bolus_increment", SMBDefaults.bolus_increment));
+        mProfile.put("bolus_increment", SP.getDouble("key_bolus_increment", SMBDefaults.bolus_increment));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
         mProfile.put("current_basal", basalrate);

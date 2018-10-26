@@ -804,7 +804,7 @@
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
     <string name="uamsmbmaxminutes" translatable="false">45 60 75 90 105 120</string>
     <string name="uamsmbmaxminutes_summary">Max minutes of basal to limit SMB to for UAM</string>
-    <string name="bolus_increment" translatable="false">0.1</string>
+    <string name="key_bolus_increment" translatable="false">bolus_increment</string>
     <string name="bolus_increment_summary">Minimum bolus that can be delivered as an SMB</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
