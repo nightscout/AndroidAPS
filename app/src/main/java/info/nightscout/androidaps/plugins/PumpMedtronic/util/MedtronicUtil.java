@@ -422,9 +422,9 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static void setMedtronicPumpModel(MedtronicDeviceType medtronicPumpModel) {
-        if (medtronicPumpModel != null && medtronicPumpModel != MedtronicDeviceType.Unknown_Device) {
-            MedtronicUtil.medtronicPumpModel = medtronicPumpModel;
-        }
+        // if (medtronicPumpModel != null && medtronicPumpModel != MedtronicDeviceType.Unknown_Device) {
+        MedtronicUtil.medtronicPumpModel = medtronicPumpModel;
+        // }
     }
 
 

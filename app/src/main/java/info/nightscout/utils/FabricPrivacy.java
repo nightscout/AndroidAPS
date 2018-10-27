@@ -1,5 +1,7 @@
 package info.nightscout.utils;
 
+import java.util.Date;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -10,14 +12,12 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 
-import java.util.Date;
-
 /**
  * Created by jamorham on 21/02/2018.
  * <p>
- * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way
- * to disable them and make calls from a potentially invalid singleton reference. This wrapper
- * emulates the methods but ignores the request if the instance is null or invalid.
+ * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way to disable them and
+ * make calls from a potentially invalid singleton reference. This wrapper emulates the methods but ignores the request
+ * if the instance is null or invalid.
  */
 
 public class FabricPrivacy {
@@ -33,11 +33,13 @@ public class FabricPrivacy {
         return instance;
     }
 
+
     private static synchronized void initSelf() {
         if (instance == null) {
             instance = new FabricPrivacy();
         }
     }
+
 
     // Crashlytics logException
     public static void logException(Throwable throwable) {
@@ -49,6 +51,7 @@ public class FabricPrivacy {
         }
     }
 
+
     // Crashlytics log
     public static void log(String msg) {
         try {
@@ -58,6 +61,7 @@ public class FabricPrivacy {
             android.util.Log.d(TAG, "Ignoring opted out non-initialized log: " + msg);
         }
     }
+
 
     // Crashlytics log
     public static void log(int priority, String tag, String msg) {
@@ -69,9 +73,14 @@ public class FabricPrivacy {
         }
     }
 
+
     public static boolean fabricEnabled() {
+        if (MainApp.isEngineeringMode())
+            return true;
+
         return SP.getBoolean("enable_fabric", true);
     }
+
 
     // Answers logCustom
     public void logCustom(CustomEvent event) {
@@ -87,8 +96,10 @@ public class FabricPrivacy {
         }
     }
 
+
     public static void uploadDailyStats() {
-        if (!fabricEnabled()) return;
+        if (!fabricEnabled())
+            return;
 
         long lastUploadDay = SP.getLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), 0L);
 
@@ -106,11 +117,12 @@ public class FabricPrivacy {
         }
     }
 
+
     private static void uploadPluginStats() {
         CustomEvent pluginStats = new CustomEvent("PluginStats");
         pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
         pluginStats.putCustomAttribute("HEAD", BuildConfig.HEAD);
-        pluginStats.putCustomAttribute("language", SP.getString(R.string.key_language,"default"));
+        pluginStats.putCustomAttribute("language", SP.getString(R.string.key_language, "default"));
         for (PluginBase plugin : MainApp.getPluginsList()) {
             if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
                 // Fabric allows no more than 20 attributes attached to an event. By reporting disabled plugins as
@@ -122,6 +134,7 @@ public class FabricPrivacy {
 
         getInstance().logCustom(pluginStats);
     }
+
 
     private static void uploadAppUsageType() {
         CustomEvent type = new CustomEvent("AppUsageType");

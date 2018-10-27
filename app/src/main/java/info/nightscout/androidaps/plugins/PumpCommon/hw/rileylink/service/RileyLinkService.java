@@ -7,11 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
@@ -19,19 +17,12 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkEncodingType;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceNotification;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.DiscoverGattServicesTask;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.InitializePumpManagerTask;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTask;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 import info.nightscout.utils.SP;
@@ -254,20 +245,22 @@ public abstract class RileyLinkService extends Service {
         }
 
         double newFrequency;
-        if ((lastGoodFrequency > 0.0d) && getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
-            LOG.info("Checking for pump near last saved frequency of {}MHz", lastGoodFrequency);
-            // we have an old frequency, so let's start there.
-            newFrequency = getDeviceCommunicationManager().quickTuneForPump(lastGoodFrequency);
-            if (newFrequency == 0.0) {
-                // quick scan failed to find pump. Try full scan
-                LOG.warn("Failed to find pump near last saved frequency, doing full scan");
-                newFrequency = getDeviceCommunicationManager().tuneForDevice();
-            }
-        } else {
-            LOG.warn("No saved frequency for pump, doing full scan.");
-            // we don't have a saved frequency, so do the full scan.
-            newFrequency = getDeviceCommunicationManager().tuneForDevice();
-        }
+        // if ((lastGoodFrequency > 0.0d) && getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
+        // LOG.info("Checking for pump near last saved frequency of {}MHz", lastGoodFrequency);
+        // // we have an old frequency, so let's start there.
+        // newFrequency = getDeviceCommunicationManager().quickTuneForPump(lastGoodFrequency);
+        // if (newFrequency == 0.0) {
+        // // quick scan failed to find pump. Try full scan
+        // LOG.warn("Failed to find pump near last saved frequency, doing full scan");
+        // newFrequency = getDeviceCommunicationManager().tuneForDevice();
+        // }
+        // } else {
+        // LOG.warn("No saved frequency for pump, doing full scan.");
+        // // we don't have a saved frequency, so do the full scan.
+        // newFrequency = getDeviceCommunicationManager().tuneForDevice();
+        // }
+
+        newFrequency = getDeviceCommunicationManager().tuneForDevice();
 
         if ((newFrequency != 0.0) && (newFrequency != lastGoodFrequency)) {
             LOG.info("Saving new pump frequency of {}MHz", newFrequency);
@@ -277,13 +270,12 @@ public abstract class RileyLinkService extends Service {
             rileyLinkServiceData.lastTuneUpTime = System.currentTimeMillis();
         }
 
-        getRileyLinkCommunicationManager().clearNotConnectedCount();
-
         if (newFrequency == 0.0d) {
             // error tuning pump, pump not present ??
             RileyLinkUtil
                 .setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
         } else {
+            getRileyLinkCommunicationManager().clearNotConnectedCount();
             RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
         }
     }

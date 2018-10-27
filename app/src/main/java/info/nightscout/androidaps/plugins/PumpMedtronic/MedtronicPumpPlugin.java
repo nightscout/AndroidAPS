@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +38,10 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryResult;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui.MedtronicUIComm;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui.MedtronicUITask;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.MedtronicHistoryData;
@@ -884,24 +884,51 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private void readPumpHistoryLogic() {
 
-        Long lastPumpHistoryEntryTime = null;
+        LocalDateTime targetDate = null;
 
         // TODO read History
+        // if (lastPumpHistoryEntry == null) {
+        // lastPumpHistoryEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, null);
+        // }
+
         if (lastPumpHistoryEntry == null) {
-            lastPumpHistoryEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, null);
-        }
 
-        if (firstRun) {
-            DateTime dt = new DateTime();
-            dt.minus(Hours.hours(36));
+            Long lastPumpHistoryEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, null);
 
-            if (lastPumpHistoryEntry == null && lastPumpHistoryEntryTime == null) {
+            LocalDateTime timeMinus36h = new LocalDateTime();
+            timeMinus36h = timeMinus36h.minusHours(36);
 
+            if (lastPumpHistoryEntryTime == null) {
+                targetDate = timeMinus36h;
             } else {
+                LocalDateTime lastHistoryRecordTime = DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime);
 
+                medtronicHistoryData.setLastHistoryRecordTime(DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime));
+
+                lastHistoryRecordTime = lastHistoryRecordTime.minusHours(12); // we get last 12 hours of history to
+                                                                              // determine pump state
+                // (we don't process that data), we process only
+
+                if (timeMinus36h.isAfter(lastHistoryRecordTime)) {
+                    targetDate = timeMinus36h;
+                }
+
+                targetDate = (timeMinus36h.isAfter(lastHistoryRecordTime) ? timeMinus36h : lastHistoryRecordTime);
             }
-
         }
+
+        // FIXME read history
+
+        PumpHistoryResult historyResult = new PumpHistoryResult(null, null);
+
+        PumpHistoryEntry latestEntry = historyResult.getLatestEntry();
+
+        if (latestEntry == null) // no new history to read
+            return;
+
+        this.lastPumpHistoryEntry = latestEntry;
+        SP.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry,
+            DateTimeUtil.toATechDate(latestEntry.getLocalDateTime()));
 
         // determine if first run, if yes detrmine how much of update do we need
         // first run:

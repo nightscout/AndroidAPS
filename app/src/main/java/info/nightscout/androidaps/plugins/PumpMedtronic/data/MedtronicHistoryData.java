@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
+
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 
 /**
@@ -15,6 +17,7 @@ public class MedtronicHistoryData {
     private boolean suspended = false;
     private boolean relevantConfigurationChanged = false;
     private boolean basalProfileChanged = true;
+    private LocalDateTime lastHistoryRecordTime;
 
 
     public MedtronicHistoryData() {
@@ -49,4 +52,15 @@ public class MedtronicHistoryData {
         basalProfileChanged = true; // FIXME when this works this should reset to false
     }
 
+
+    public void setLastHistoryRecordTime(LocalDateTime lastHistoryRecordTime) {
+
+        this.lastHistoryRecordTime = lastHistoryRecordTime;
+    }
+
+
+    public LocalDateTime getLastHistoryRecordTime() {
+
+        return lastHistoryRecordTime;
+    }
 }

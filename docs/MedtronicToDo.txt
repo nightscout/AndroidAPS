@@ -3,7 +3,7 @@ RileyLinkAAPS
 
 
 Medtronic
-- set basal profile (try to get to work - see new Loop code)
++ set basal profile (try to get to work - see new Loop code)
 - read history
 
 

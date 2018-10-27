@@ -156,7 +156,13 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         } else {
             LOG.info("Using pump ID " + pumpID);
 
+            String oldId = rileyLinkServiceData.pumpID;
+
             rileyLinkServiceData.setPumpID(pumpID, pumpIDBytes);
+
+            if (oldId != null && !oldId.equals(pumpID)) {
+                MedtronicUtil.setMedtronicPumpModel(null); // if we change pumpId, model probably changed too
+            }
 
             return;
         }

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,6 +161,63 @@ public class RFTools {
     }
 
 
+    public static byte[] encode4b6b_newtest(byte[] data) {
+
+        List<Byte> buffer = new ArrayList<Byte>();
+        int bitAccumulator = 0x0;
+        int bitcount = 0;
+
+        for (byte element : data) {
+            bitAccumulator <<= 6;
+            bitAccumulator |= codes[element >> 4];
+            bitcount += 6;
+
+            bitAccumulator <<= 6;
+            bitAccumulator |= codes[element & 0x0f];
+            bitcount += 6;
+
+            while (bitcount >= 8) {
+                buffer.add((byte)((bitAccumulator >> (bitcount - 8)) & 0xff));
+                bitcount -= 8;
+                bitAccumulator &= (0xffff >> (16 - bitcount));
+            }
+        }
+
+        if (bitcount > 0) {
+            bitAccumulator <<= (8 - bitcount);
+            buffer.add((byte)((bitAccumulator) & 0xff));
+        }
+
+        return ByteUtil.getByteArrayFromList(buffer);
+    }
+
+
+    // public func encode4b6b() -> [UInt8] {
+    // var buffer = [UInt8]()
+    // var bitAccumulator = 0x0
+    // var bitcount = 0
+    // for byte in self {
+    // bitAccumulator <<= 6
+    // bitAccumulator |= codes[Int(byte >> 4)]
+    // bitcount += 6
+    //
+    // bitAccumulator <<= 6
+    // bitAccumulator |= codes[Int(byte & 0x0f)]
+    // bitcount += 6
+    //
+    // while bitcount >= 8 {
+    // buffer.append(UInt8(bitAccumulator >> (bitcount-8)) & 0xff)
+    // bitcount -= 8
+    // bitAccumulator &= (0xffff >> (16-bitcount))
+    // }
+    // }
+    // if bitcount > 0 {
+    // bitAccumulator <<= (8-bitcount)
+    // buffer.append(UInt8(bitAccumulator) & 0xff)
+    // }
+    // return buffer
+    // }
+
     public static void test() {
         /*
          * {0xa7} -> {0xa9, 0x60}
@@ -272,6 +330,96 @@ public class RFTools {
     }
 
 
+    public static DecodeResponseDto decode4b6bWithoutException(byte[] raw) {
+        /*
+         * if ((raw.length % 2) != 0) {
+         * LOG.error("Warning: data is odd number of bytes");
+         * }
+         */
+
+        DecodeResponseDto response = new DecodeResponseDto();
+
+        StringBuilder errorMessageBuilder = new StringBuilder();
+
+        errorMessageBuilder.append("Input data: " + ByteUtil.getHex(raw) + "\n");
+
+        if ((raw.length % 2) != 0) {
+            errorMessageBuilder.append("Warn: odd number of bytes.");
+        }
+
+        byte[] rval = new byte[] {};
+        int availableBits = 0;
+        int codingErrors = 0;
+        int x = 0;
+        // Log.w(TAG,"decode4b6b: untested code");
+        // Log.w(TAG,String.format("Decoding %d bytes: %s",raw.length,ByteUtil.shortHexString(raw)));
+        for (int i = 0; i < raw.length; i++) {
+            int unsignedValue = raw[i];
+            if (unsignedValue < 0) {
+                unsignedValue += 256;
+            }
+            x = (x << 8) + unsignedValue;
+            availableBits += 8;
+            if (availableBits >= 12) {
+                // take top six
+                int highcode = (x >> (availableBits - 6)) & 0x3F;
+                int highIndex = codeIndex((byte)(highcode));
+                // take bottom six
+                int lowcode = (x >> (availableBits - 12)) & 0x3F;
+                int lowIndex = codeIndex((byte)(lowcode));
+                // special case at end of transmission on uneven boundaries:
+                if ((highIndex >= 0) && (lowIndex >= 0)) {
+                    byte decoded = (byte)((highIndex << 4) + lowIndex);
+                    rval = ByteUtil.concat(rval, decoded);
+                    /*
+                     * LOG.debug(String.format(
+                     * "i=%d,x=0x%08X,0x%02X->0x%02X, 0x%02X->0x%02X, result: 0x%02X, %d bits remaining, errors %d, bytes remaining: %s"
+                     * ,
+                     * i,x,highcode,highIndex, lowcode,
+                     * lowIndex,decoded,availableBits,codingErrors,ByteUtil.shortHexString
+                     * (ByteUtil.substring(raw,i+1,raw.length-i-1))));
+                     */
+                } else {
+                    // LOG.debug(String.format("i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining",i,x,highcode,lowcode,availableBits));
+                    errorMessageBuilder.append(String.format(
+                        "decode4b6b: i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining.\n",
+                        i, x, highcode, lowcode, availableBits));
+                    codingErrors++;
+                }
+
+                availableBits -= 12;
+                x = x & (0x0000ffff >> (16 - availableBits));
+            } else {
+                // LOG.debug(String.format("i=%d, skip: x=0x%08X, available bits %d",i,x,availableBits));
+            }
+        }
+
+        if (availableBits != 0) {
+            if ((availableBits == 4) && (x == 0x05)) {
+                // normal end
+            } else {
+                LOG.error("decode4b6b: failed clean decode -- extra bits available (not marker)(" + availableBits + ")");
+                errorMessageBuilder.append("decode4b6b: failed clean decode -- extra bits available (not marker)("
+                    + availableBits + ")\n");
+                codingErrors++;
+            }
+        } else {
+            // also normal end.
+        }
+
+        if (codingErrors > 0) {
+            LOG.error("decode4b6b: " + codingErrors + " coding errors encountered.");
+            errorMessageBuilder.append("decode4b6b: " + codingErrors + " coding errors encountered.");
+
+            response.errorData = errorMessageBuilder.toString();
+        } else {
+            response.data = rval;
+        }
+
+        return response;
+    }
+
+
     public static String toHexString(byte[] array) {
         return toHexString(array, 0, array.length);
     }
@@ -288,6 +436,12 @@ public class RFTools {
         }
 
         return new String(buf);
+    }
+
+    public static class DecodeResponseDto {
+
+        public byte[] data;
+        public String errorData;
     }
 
 }

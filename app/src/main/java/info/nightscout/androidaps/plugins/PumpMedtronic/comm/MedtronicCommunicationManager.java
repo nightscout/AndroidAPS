@@ -135,7 +135,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                             rfSpyResponse.wasTimeout());
                     } else {
 
-                        rememberLastGoodDeviceCommunicationTime();
+                        // rememberLastGoodDeviceCommunicationTime();
 
                         // radioResponse.rssi;
                         Object dataResponse = medtronicConverter.convertResponse(MedtronicCommandType.PumpModel,
@@ -774,9 +774,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.PumpModel);
 
-        if (!MedtronicUtil.isModelSet()) {
-            MedtronicUtil.setMedtronicPumpModel((MedtronicDeviceType)responseObject);
-        }
+        // if (!MedtronicUtil.isModelSet()) {
+        // MedtronicUtil.setMedtronicPumpModel((MedtronicDeviceType)responseObject);
+        // }
 
         return responseObject == null ? null : (MedtronicDeviceType)responseObject;
     }

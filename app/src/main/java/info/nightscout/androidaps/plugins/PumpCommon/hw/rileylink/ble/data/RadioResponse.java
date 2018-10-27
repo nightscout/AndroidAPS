@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.Riley
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.FabricUtil;
 
 /**
  * Created by geoff on 5/30/16.
@@ -100,13 +101,19 @@ public class RadioResponse {
                     decodedPayload = encodedPayload;
                     break;
                 case FourByteSixByte:
-                    LOG.debug("encodedPayload: {}", ByteUtil.getHex(encodedPayload));
-                    byte[] decodeThis = RFTools.decode4b6b(encodedPayload);
-                    LOG.debug("decodedPayload: {}", ByteUtil.getHex(decodeThis));
+                    RFTools.DecodeResponseDto decodeResponseDto = RFTools.decode4b6bWithoutException(encodedPayload);
+                    byte[] decodeThis = decodeResponseDto.data;
                     decodedOK = true;
 
-                    if (decodeThis == null || decodeThis.length == 0) {
-                        LOG.error("Decoded payload length is zero.");
+                    if (decodeThis == null || decodeThis.length == 0 || decodeResponseDto.errorData != null) {
+                        LOG.error("=============================================================================");
+                        LOG.error(" Decoded payload length is zero.");
+                        LOG.error(" encodedPayload: {}", ByteUtil.getHex(encodedPayload));
+                        LOG.error(" errors: {}", decodeResponseDto.errorData);
+                        LOG.error("=============================================================================");
+
+                        FabricUtil.createEvent("MedtronicDecode4b6bError", null);
+
                         decodedOK = false;
                         return;
                     }

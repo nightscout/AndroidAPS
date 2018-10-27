@@ -347,6 +347,9 @@ public class ByteUtil {
 
 
     public static String getCompactString(byte[] data) {
+        if (data == null)
+            return "null";
+
         String vval2 = ByteUtil.getHex(data);
         vval2 = vval2.replace(" 0x", "");
         vval2 = vval2.replace("0x", "");

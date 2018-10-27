@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 
 /**
- * History page contains data, sorted from oldest to newest
+ * History page contains data, sorted from newest to oldest (0=newest..n=oldest)
  */
 public class PumpHistoryResult {
 
@@ -104,6 +104,19 @@ public class PumpHistoryResult {
 
         } // switch
 
+    }
+
+
+    /**
+     * Return latest entry (entry with highest date time)
+     * 
+     * @return
+     */
+    public PumpHistoryEntry getLatestEntry() {
+        if (this.validEntries == null || this.validEntries.size() == 0)
+            return null;
+        else
+            return this.validEntries.get(0);
     }
 
 

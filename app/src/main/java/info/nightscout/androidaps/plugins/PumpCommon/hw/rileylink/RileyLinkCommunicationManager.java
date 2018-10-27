@@ -222,9 +222,11 @@ public abstract class RileyLinkCommunicationManager {
                         trial.successes++;
                     } else {
                         LOG.warn("Failed to parse radio response: " + ByteUtil.shortHexString(resp.getRaw()));
+                        trial.rssiList.add(-99);
                     }
                 } else {
                     LOG.error("scanForPump: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
+                    trial.rssiList.add(-99);
                 }
                 trial.tries++;
             }

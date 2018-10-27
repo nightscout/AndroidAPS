@@ -16,7 +16,15 @@ public class FrequencyScanResults {
 
 
     public void sort() {
-        Collections.sort(trials, (trial1, trial2) -> trial1.averageRSSI.compareTo(trial2.averageRSSI));
+        Collections.sort(trials, (trial1, trial2) -> {
+            int res = trial1.averageRSSI.compareTo(trial2.averageRSSI);
+
+            if (res == 0) {
+                return (int)(trial1.frequencyMHz - trial2.frequencyMHz);
+            } else
+                return res;
+
+        });
     }
 
 }

@@ -7,6 +7,9 @@ import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.FabricUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
@@ -104,6 +107,22 @@ public class BasalProfile {
 
             sb.append(String.format("Entry %d, rate=%.3f, start=%s\n", i + 1, entry.rate, startString));
         }
+
+        return sb.toString();
+    }
+
+
+    public String basalProfileToString() {
+        StringBuffer sb = new StringBuffer("Basal Profile [");
+        List<BasalProfileEntry> entries = getEntries();
+        for (int i = 0; i < entries.size(); i++) {
+            BasalProfileEntry entry = entries.get(i);
+            String startString = entry.startTime.toString("HH:mm");
+
+            sb.append(String.format("%s=%.3f, ", startString, entry.rate));
+        }
+
+        sb.append("]");
 
         return sb.toString();
     }
@@ -217,13 +236,26 @@ public class BasalProfile {
 
     public Double[] getProfilesByHour() {
 
-        List<BasalProfileEntry> entries = getEntries();
+        List<BasalProfileEntry> entries = null;
 
-        if (entries.size() == 0) {
+        try {
+            entries = getEntries();
+        } catch (Exception ex) {
+            LOG.error("=============================================================================");
+            LOG.error("  Error generating entries. Ex.: " + ex, ex);
+            LOG.error("  rawBasalValues: " + ByteUtil.getHex(this.getRawData()));
+            LOG.error("=============================================================================");
+
+            FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
+        }
+
+        if (entries == null || entries.size() == 0) {
             return null;
         }
 
         Double[] basalByHour = new Double[24];
+
+        PumpType pumpType = MedtronicUtil.getPumpStatus().pumpType;
 
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry current = entries.get(i);
@@ -247,7 +279,10 @@ public class BasalProfile {
             // System.out.println("Current time: " + currentTime + " Next Time: " + lastHour);
 
             for (int j = currentTime; j < lastHour; j++) {
-                basalByHour[j] = current.rate;
+                if (pumpType == null)
+                    basalByHour[j] = current.rate;
+                else
+                    basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate);
             }
         }
 
@@ -270,6 +305,6 @@ public class BasalProfile {
 
 
     public String toString() {
-        return getBasalProfileAsString();
+        return basalProfileToString();
     }
 }

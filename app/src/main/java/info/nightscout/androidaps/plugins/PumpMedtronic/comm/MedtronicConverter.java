@@ -34,6 +34,12 @@ public class MedtronicConverter {
 
     public Object convertResponse(MedtronicCommandType commandType, byte[] rawContent) {
 
+        if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
+            LOG.warn("Content is empty or too shor, no data to convert (type={},isNull={},length={})",
+                commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
+            return null;
+        }
+
         LOG.debug("Raw response before convert: " + HexDump.toHexStringDisplayable(rawContent));
 
         this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
@@ -53,7 +59,7 @@ public class MedtronicConverter {
             }
 
             case GetBatteryStatus: {
-                return decodeBatteryStatus(rawContent);
+                return decodeBatteryStatus(rawContent); // 1
             }
 
             case GetBasalProfileSTD:
@@ -63,7 +69,7 @@ public class MedtronicConverter {
             }
 
             case ReadTemporaryBasal: {
-                return new TempBasalPair(rawContent);
+                return new TempBasalPair(rawContent); // 5
             }
 
             case Settings_512: {
@@ -75,7 +81,7 @@ public class MedtronicConverter {
             }
 
             case SetBolus: {
-                return rawContent;
+                return rawContent; // 1
             }
 
             default: {
@@ -88,12 +94,20 @@ public class MedtronicConverter {
 
 
     private MedtronicDeviceType decodeModel(byte[] rawContent) {
+
+        if ((rawContent == null || rawContent.length < 4)) {
+            LOG.warn("Error reading PumpModel, returning Unknown_Device");
+            return MedtronicDeviceType.Unknown_Device;
+        }
+
         String rawModel = StringUtil.fromBytes(ByteUtil.substring(rawContent, 1, 3));
         MedtronicDeviceType pumpModel = MedtronicDeviceType.getByDescription(rawModel);
         LOG.debug("PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
 
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
-            MedtronicUtil.setMedtronicPumpModel(pumpModel);
+            if (!MedtronicUtil.isModelSet()) {
+                MedtronicUtil.setMedtronicPumpModel(pumpModel);
+            }
         }
 
         return pumpModel;

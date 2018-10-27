@@ -83,11 +83,6 @@ public class RileyLinkUtil {
     }
 
 
-    public static RileyLinkServiceState getServiceState() {
-        return RileyLinkUtil.rileyLinkServiceData.serviceState;
-    }
-
-
     public static void setServiceState(RileyLinkServiceState newState) {
         setServiceState(newState, null);
     }
@@ -98,16 +93,38 @@ public class RileyLinkUtil {
     }
 
 
+    public static RileyLinkServiceState getServiceState() {
+        return workWithServiceState(null, null, false);
+    }
+
+
     public static void setServiceState(RileyLinkServiceState newState, RileyLinkError errorCode) {
-        RileyLinkUtil.rileyLinkServiceData.serviceState = newState;
-        RileyLinkUtil.rileyLinkServiceData.errorCode = errorCode;
+        workWithServiceState(newState, errorCode, true);
+    }
 
-        LOG.warn("RileyLink State Changed: {} {}", newState,
-            errorCode == null ? "" : " - Error State: " + errorCode.name());
 
-        RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
-            RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
-        MainApp.bus().post(new EventMedtronicDeviceStatusChange(newState, errorCode));
+    private static synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState,
+            RileyLinkError errorCode, boolean set) {
+
+        if (set) {
+
+            RileyLinkUtil.rileyLinkServiceData.serviceState = newState;
+            RileyLinkUtil.rileyLinkServiceData.errorCode = errorCode;
+
+            LOG.warn("RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
+                + errorCode.name());
+
+            RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
+                RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
+            MainApp.bus().post(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            return null;
+
+        } else {
+
+            return RileyLinkUtil.rileyLinkServiceData.serviceState;
+
+        }
+
     }
 
 

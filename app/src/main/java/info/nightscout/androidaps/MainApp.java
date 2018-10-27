@@ -469,6 +469,11 @@ public class MainApp extends Application {
     }
 
 
+    public static boolean isEngineeringMode() {
+        return engineeringMode;
+    }
+
+
     public static boolean isDev() {
         return devBranch;
     }

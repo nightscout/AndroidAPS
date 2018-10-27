@@ -119,25 +119,9 @@ public class MedtronicUITask {
 
             case SetBasalProfileSTD:
             case SetBasalProfileA: {
-                BasalProfile profile = (BasalProfile) parameters[0];
+                BasalProfile profile = (BasalProfile)parameters[0];
 
                 returnData = communicationManager.setBasalProfile(profile);
-                // Float amount = getAmount();
-                //
-                // if (amount != null) {
-                //
-                // BasalProfile profile = new BasalProfile();
-                //
-                // int basalStrokes1 = MedtronicUtil.getBasalStrokesInt(amount);
-                // int basalStrokes2 = MedtronicUtil.getBasalStrokesInt(amount * 2);
-                //
-                // for (int i = 0; i < 24; i++) {
-                // profile.addEntry(new BasalProfileEntry(i % 2 == 0 ? basalStrokes1 : basalStrokes2, i * 2));
-                // }
-                //
-                // returnData = communicationManager.setBasalProfile(profile);
-                // }
-
             }
                 break;
 
@@ -230,6 +214,7 @@ public class MedtronicUITask {
     public boolean hasData() {
         return (responseType == MedtronicUIResponseType.Data);
     }
+
 
     public Object getParameter(int index) {
         return parameters[index];
