@@ -45,6 +45,12 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
     public DanaRS_Packet_APS_History_Events(long from) {
         this();
         GregorianCalendar cal = new GregorianCalendar();
+
+        if (from > DateUtil.now()) {
+            log.debug("Asked to load from the future");
+            from = 0;
+        }
+
         if (from != 0)
             cal.setTimeInMillis(from);
         else
