@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.MidnightTime;
 
 public class Profile {
     private static Logger log = LoggerFactory.getLogger(Profile.class);
@@ -381,7 +382,7 @@ public class Profile {
     }
 
     public double getIsf() {
-        return getIsfTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getIsfTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getIsf(long time) {
@@ -401,7 +402,7 @@ public class Profile {
     }
 
     public double getIc() {
-        return getIcTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getIcTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getIc(long time) {
@@ -421,7 +422,7 @@ public class Profile {
     }
 
     public double getBasal() {
-        return getBasalTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getBasalTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getBasal(long time) {
@@ -465,7 +466,7 @@ public class Profile {
     }
 
     public double getTarget() {
-        return getTarget(secondsFromMidnight(System.currentTimeMillis()));
+        return getTarget(secondsFromMidnight());
     }
 
     protected double getTarget(int timeAsSeconds) {
@@ -473,7 +474,7 @@ public class Profile {
     }
 
     public double getTargetLow() {
-        return getTargetLowTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getTargetLowTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getTargetLow(long time) {
@@ -487,7 +488,7 @@ public class Profile {
     }
 
     public double getTargetHigh() {
-        return getTargetHighTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getTargetHighTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getTargetHigh(long time) {
@@ -518,24 +519,13 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        Calendar c = Calendar.getInstance();
-        long now = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = now - c.getTimeInMillis();
+        long passed = DateUtil.now() - MidnightTime.calc();
         return (int) (passed / 1000);
     }
 
     public static int secondsFromMidnight(long date) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(date);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = date - c.getTimeInMillis();
+        long midnight = MidnightTime.calc(date);
+        long passed = date - midnight;
         return (int) (passed / 1000);
     }
 

@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.MidnightTime;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.SP;
 
@@ -322,8 +323,10 @@ public class IobCobThread extends Thread {
         } finally {
             mWakeLock.release();
             MainApp.bus().post(new EventIobCalculationProgress(""));
-            if (L.isEnabled(L.AUTOSENS))
+            if (L.isEnabled(L.AUTOSENS)) {
                 log.debug("AUTOSENSDATA thread ended: " + from);
+                log.debug("Midnights: " + MidnightTime.log());
+            }
             Profiler.log(log, "IobCobThread", start);
         }
     }
