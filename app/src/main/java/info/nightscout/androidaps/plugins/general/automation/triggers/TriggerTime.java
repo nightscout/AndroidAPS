@@ -132,6 +132,18 @@ public class TriggerTime extends Trigger {
         return weekdays[day.ordinal()];
     }
 
+    public long getLastRun() {
+        return lastRun;
+    }
+
+    public long getRunAt() {
+        return runAt;
+    }
+
+    public boolean isRecurring() {
+        return recurring;
+    }
+
     @Override
     public boolean shouldRun() {
         if (recurring) {

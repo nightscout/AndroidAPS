@@ -17,9 +17,7 @@ public class DummyTrigger extends Trigger {
     }
 
     @Override
-    String toJSON() {
-        return null;
-    }
+    public String toJSON() { return null; }
 
     @Override
     Trigger fromJSON(String data) {
@@ -35,4 +33,7 @@ public class DummyTrigger extends Trigger {
     public String friendlyDescription() {
         return null;
     }
+
+    @Override
+    public Trigger duplicate() { return new DummyTrigger(result); }
 }

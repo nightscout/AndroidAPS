@@ -75,9 +75,9 @@ public class TriggerBgTest {
         TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.Comparator.IS_EQUAL);
 
         TriggerBg t2 = (TriggerBg) Trigger.instantiate(new JSONObject(t.toJSON()));
-        Assert.assertEquals(Trigger.Comparator.IS_EQUAL, t2.comparator);
-        Assert.assertEquals(4.1d, t2.threshold, 0.01d);
-        Assert.assertEquals(Constants.MMOL, t2.units);
+        Assert.assertEquals(Trigger.Comparator.IS_EQUAL, t2.getComparator());
+        Assert.assertEquals(4.1d, t2.getThreshold(), 0.01d);
+        Assert.assertEquals(Constants.MMOL, t2.getUnits());
     }
 
     @Before

@@ -58,6 +58,18 @@ public class TriggerBg extends Trigger {
         threshold = triggerBg.threshold;
     }
 
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public Comparator getComparator() {
+        return comparator;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
     @Override
     public synchronized boolean shouldRun() {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();

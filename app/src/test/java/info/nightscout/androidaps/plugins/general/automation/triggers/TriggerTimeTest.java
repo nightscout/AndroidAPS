@@ -70,8 +70,8 @@ public class TriggerTimeTest {
         TriggerTime t = new TriggerTime().runAt(now - T.mins(1).msecs());
 
         TriggerTime t2 = (TriggerTime) Trigger.instantiate(new JSONObject(t.toJSON()));
-        Assert.assertEquals(now - T.mins(1).msecs(), t2.runAt);
-        Assert.assertEquals(false, t2.recurring);
+        Assert.assertEquals(now - T.mins(1).msecs(), t2.getRunAt());
+        Assert.assertEquals(false, t2.isRecurring());
     }
 
     @Before
