@@ -144,9 +144,9 @@ public class BLEComm {
 
         if (L.isEnabled(L.PUMPBTCOMM))
             log.debug("Trying to create a new connection from: " + from);
+        mBluetoothDeviceName = device.getName();
         mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
-        mBluetoothDeviceName = device.getName();
         return true;
     }
 
