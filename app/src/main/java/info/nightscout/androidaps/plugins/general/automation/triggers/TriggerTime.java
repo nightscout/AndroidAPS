@@ -162,7 +162,7 @@ public class TriggerTime extends Trigger {
     }
 
     @Override
-    String toJSON() {
+    public String toJSON() {
         JSONObject object = new JSONObject();
         JSONObject data = new JSONObject();
         try {

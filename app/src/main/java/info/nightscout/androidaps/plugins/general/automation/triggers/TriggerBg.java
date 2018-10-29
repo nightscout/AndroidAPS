@@ -71,7 +71,7 @@ public class TriggerBg extends Trigger {
     }
 
     @Override
-    synchronized String toJSON() {
+    public synchronized String toJSON() {
         JSONObject o = new JSONObject();
         try {
             o.put("type", TriggerBg.class.getName());

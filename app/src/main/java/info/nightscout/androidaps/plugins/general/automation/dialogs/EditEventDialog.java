@@ -15,7 +15,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
-import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
@@ -30,7 +29,6 @@ public class EditEventDialog extends DialogFragment {
     LinearLayout mLayoutTrigger;
 
     private Unbinder mUnbinder;
-    private AutomationFragment.TriggerListAdapter mTriggerListAdapter;
 
     public static EditEventDialog newInstance(AutomationEvent event) {
         mEvent = event;
@@ -47,12 +45,16 @@ public class EditEventDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_event, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        // initialization
-        TriggerConnector rootTrigger = new TriggerConnector(TriggerConnector.Type.OR);
-        mEvent.setTrigger(rootTrigger);
+        // load data from bundle
+        if (savedInstanceState != null) {
+            String eventData = savedInstanceState.getString("event");
+            if (eventData != null) mEvent.fromJSON(eventData);
+        } else {
+            mEvent.setTrigger(new TriggerConnector(TriggerConnector.Type.OR));
+        }
 
         // display root trigger
-        mLayoutTrigger.addView(rootTrigger.createView(getContext(), getFragmentManager()));
+        mLayoutTrigger.addView(mEvent.getTrigger().createView(getContext(), getFragmentManager()));
 
         return view;
     }
@@ -82,5 +84,9 @@ public class EditEventDialog extends DialogFragment {
         dismiss();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        bundle.putString("event", mEvent.toJSON());
+    }
 
 }

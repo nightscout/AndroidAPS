@@ -87,9 +87,9 @@ public abstract class Trigger {
 
     public abstract boolean shouldRun();
 
-    abstract String toJSON();
+    public abstract String toJSON();
 
-    abstract Trigger fromJSON(String data);
+    /*package*/ abstract Trigger fromJSON(String data);
 
     public abstract int friendlyName();
 
@@ -100,7 +100,16 @@ public abstract class Trigger {
 
     public abstract Trigger duplicate();
 
-    static Trigger instantiate(JSONObject object) {
+    public static Trigger instantiate(String json) {
+        try {
+            return instantiate(new JSONObject(json));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Trigger instantiate(JSONObject object) {
         try {
             String type = object.getString("type");
             JSONObject data = object.getJSONObject("data");

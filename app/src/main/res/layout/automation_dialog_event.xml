@@ -22,11 +22,36 @@
                 android:layout_height="wrap_content"
                 android:hint="Event Name" />
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/listdelimiter" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Triggers:"/>
+
             <LinearLayout
                 android:id="@+id/layoutTrigger"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginVertical="10dp"
                 android:orientation="vertical" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/listdelimiter" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Actions:"/>
 
             <include layout="@layout/mdtp_done_button" />
 
