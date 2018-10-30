@@ -435,7 +435,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("date", mills).and().gt("value", 38).and().eq("isValid", true);
+            where.ge("date", mills).and().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
@@ -452,7 +452,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.between("date", start, end).and().gt("value", 38).and().eq("isValid", true);
+            where.between("date", start, end).and().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
