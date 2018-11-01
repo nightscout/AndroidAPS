@@ -217,7 +217,7 @@ public class DetermineBasalAdapterSMBJS {
     ) throws JSONException {
 
         String units = profile.getUnits();
-        Double bolusincrument = SP.getDouble("key_bolus_increment", SMBDefaults.bolus_increment);
+        Double bolusincrement = SP.getDouble("key_bolus_increment", SMBDefaults.bolus_increment);
         Double pumpbolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         mProfile = new JSONObject();
 
@@ -259,11 +259,11 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("maxUAMSMBBasalMinutes", SP.getInt("key_uamsmbmaxminutes", SMBDefaults.maxUAMSMBBasalMinutes));
-        if (bolusincrument < pumpbolusstep){
+        if (bolusincrement < pumpbolusstep){
           //the bolus incrument is less than what the pump can support (by pump settings or pump restriction), set to value supported by the pump
-          bolusincrument = pumpbolusstep;
+          bolusincrement = pumpbolusstep;
         }
-        mProfile.put("bolus_increment", bolusincrument);
+        mProfile.put("bolus_increment", bolusincrement);
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
         mProfile.put("current_basal", basalrate);
