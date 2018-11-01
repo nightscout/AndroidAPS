@@ -27,6 +27,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
@@ -217,7 +218,7 @@ public class DetermineBasalAdapterSMBJS {
 
         String units = profile.getUnits();
         Double bolusincrument = SP.getDouble("key_bolus_increment", SMBDefaults.bolus_increment);
-        Double pumpbolusstep = MainApp.getConfigBuilder().getActivePump().getPumpDescription().bolusStep;
+        Double pumpbolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         mProfile = new JSONObject();
 
         mProfile.put("max_iob", maxIob);
