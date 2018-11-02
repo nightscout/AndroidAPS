@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 
 import com.cozmo.danar.util.BleCommandUtil;
 
 public class DanaRS_Packet_Etc_Set_History_Save extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Etc_Set_History_Save.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int historyType;
     private int historyYear;
@@ -36,6 +36,8 @@ public class DanaRS_Packet_Etc_Set_History_Save extends DanaRS_Packet {
         this.historySecond = historySecond;
         this.historyCode = historyCode;
         this.historyValue = historyValue;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -59,7 +61,9 @@ public class DanaRS_Packet_Etc_Set_History_Save extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         int error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-        if (Config.logDanaMessageDetail) {
+        if (error != 0)
+            failed = true;
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
         }
     }

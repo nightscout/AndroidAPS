@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.interfaces;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 
 /**
@@ -9,7 +7,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
  */
 public interface APSInterface {
     public APSResult getLastAPSResult();
-    public Date getLastAPSRun();
+    public long getLastAPSRun();
 
-    public void invoke(String initiator);
+    public void invoke(String initiator, boolean tempBasalFallback);
 }

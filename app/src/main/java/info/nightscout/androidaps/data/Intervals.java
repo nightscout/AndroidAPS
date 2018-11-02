@@ -16,7 +16,11 @@ import info.nightscout.androidaps.interfaces.Interval;
 
 public abstract class Intervals<T extends Interval> {
 
-    LongSparseArray<T> rawData = new LongSparseArray<T>(); // oldest at index 0
+    LongSparseArray<T> rawData; // oldest at index 0
+
+    public Intervals() {
+        rawData = new LongSparseArray<T>();
+    }
 
     public synchronized Intervals reset() {
         rawData = new LongSparseArray<T>();
@@ -27,8 +31,7 @@ public abstract class Intervals<T extends Interval> {
 
     /**
      * The List must be sorted by `T.start()` in ascending order
-     *
-     * */
+     */
     public synchronized void add(List<T> list) {
         for (T interval : list) {
             rawData.put(interval.start(), interval);
@@ -36,6 +39,10 @@ public abstract class Intervals<T extends Interval> {
         merge();
     }
 
+    public synchronized void add(T interval) {
+        rawData.put(interval.start(), interval);
+        merge();
+    }
 
 
     public synchronized List<T> getList() {
@@ -47,7 +54,7 @@ public abstract class Intervals<T extends Interval> {
 
     public synchronized List<T> getReversedList() {
         List<T> list = new ArrayList<>();
-        for (int i = rawData.size() -1; i>=0; i--)
+        for (int i = rawData.size() - 1; i >= 0; i--)
             list.add(rawData.valueAt(i));
         return list;
     }
@@ -84,7 +91,6 @@ public abstract class Intervals<T extends Interval> {
     public synchronized T getReversed(int index) {
         return rawData.valueAt(size() - 1 - index);
     }
-
 
 
 }

@@ -3,20 +3,22 @@ package info.nightscout.androidaps.plugins.PumpDanaRKorean.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 public class MsgInitConnStatusBasic_k extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBasic_k.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgInitConnStatusBasic_k() {
         SetCommand(0x0303);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -30,7 +32,7 @@ public class MsgInitConnStatusBasic_k extends MessageBase {
         pump.isEasyModeEnabled = intFromBuff(bytes, 2, 1) == 1;
         int easyUIMode = intFromBuff(bytes, 3, 1);
         pump.password = intFromBuff(bytes, 4, 2) ^ 0x3463;
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("isStatusSuspendOn: " + pump.pumpSuspended);
             log.debug("isUtilityEnable: " + isUtilityEnable);
             log.debug("Is EasyUI Enabled: " + pump.isEasyModeEnabled);
@@ -39,10 +41,17 @@ public class MsgInitConnStatusBasic_k extends MessageBase {
         }
 
         if (pump.isEasyModeEnabled) {
-            Notification notification = new Notification(Notification.EASYMODE_ENABLED, MainApp.sResources.getString(R.string.danar_disableeasymode), Notification.URGENT);
+            Notification notification = new Notification(Notification.EASYMODE_ENABLED, MainApp.gs(R.string.danar_disableeasymode), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EASYMODE_ENABLED));
+        }
+
+        if (!DanaRPump.getInstance().isPasswordOK()) {
+            Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
         }
     }
 }

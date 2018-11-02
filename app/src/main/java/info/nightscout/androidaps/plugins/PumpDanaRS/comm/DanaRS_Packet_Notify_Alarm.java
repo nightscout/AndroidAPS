@@ -1,18 +1,17 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-
-import com.cozmo.danar.util.BleCommandUtil;
-
-import info.nightscout.utils.NSUpload;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 
 public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Notify_Alarm.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private int alarmCode;
 
@@ -20,6 +19,8 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
         super();
         type = BleCommandUtil.DANAR_PACKET__TYPE_NOTIFY;
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_NOTIFY__ALARM;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -30,23 +31,23 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
         switch (alarmCode) {
             case 0x01:
                 // Battery 0% Alarm
-                errorString = MainApp.sResources.getString(R.string.batterydischarged);
+                errorString = MainApp.gs(R.string.batterydischarged);
                 break;
             case 0x02:
                 // Pump Error
-                errorString = MainApp.sResources.getString(R.string.pumperror) + " " + alarmCode;
+                errorString = MainApp.gs(R.string.pumperror) + " " + alarmCode;
                 break;
             case 0x03:
                 // Occlusion
-                errorString = MainApp.sResources.getString(R.string.occlusion);
+                errorString = MainApp.gs(R.string.occlusion);
                 break;
             case 0x04:
                 // LOW BATTERY
-                errorString = MainApp.sResources.getString(R.string.lowbattery);
+                errorString = MainApp.gs(R.string.lowbattery);
                 break;
             case 0x05:
                 // Shutdown
-                errorString = MainApp.sResources.getString(R.string.lowbattery);
+                errorString = MainApp.gs(R.string.lowbattery);
                 break;
             case 0x06:
                 // Basal Compare
@@ -54,20 +55,20 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
                 break;
             case 0x09:
                 // Empty Reservoir
-                errorString = MainApp.sResources.getString(R.string.emptyreservoir);
+                errorString = MainApp.gs(R.string.emptyreservoir);
                 break;
 
             // BT
             case 0x07:
             case 0xFF:
                 // Blood sugar measurement alert
-                errorString = MainApp.sResources.getString(R.string.bloodsugarmeasurementalert);
+                errorString = MainApp.gs(R.string.bloodsugarmeasurementalert);
                 break;
 
             case 0x08:
             case 0xFE:
                 // Remaining insulin level
-                errorString = MainApp.sResources.getString(R.string.remaininsulinalert);
+                errorString = MainApp.gs(R.string.remaininsulinalert);
                 break;
 
             case 0xFD:
@@ -75,9 +76,14 @@ public class DanaRS_Packet_Notify_Alarm extends DanaRS_Packet {
                 errorString = "Blood sugar check miss alarm ???";
                 break;
         }
+        // No error no need to upload anything
+        if(errorString == "") {
+            failed = true;
 
-        if (Config.logDanaMessageDetail)
-            log.debug("Error detected: " + errorString);
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Error detected: " + errorString);
+            return;
+        }
         NSUpload.uploadError(errorString);
     }
 

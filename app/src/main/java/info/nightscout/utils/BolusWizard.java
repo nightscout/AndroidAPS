@@ -1,47 +1,54 @@
 package info.nightscout.utils;
 
-import info.nightscout.androidaps.MainApp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
  * Created by mike on 11.10.2016.
  */
 
 public class BolusWizard {
+    private Logger log = LoggerFactory.getLogger(L.CORE);
     // Inputs
     private Profile specificProfile = null;
     private TempTarget tempTarget;
     public Integer carbs = 0;
     private Double bg = 0d;
+    private Double cob = 0d;
     private Double correction;
+    private Double percentageCorrection;
     private Boolean includeBolusIOB = true;
     private Boolean includeBasalIOB = true;
     public Boolean superBolus = false;
     private Boolean trend = false;
 
     // Intermediate
-    public Double sens = 0d;
-    public Double ic = 0d;
+    public double sens = 0d;
+    public double ic = 0d;
 
     public GlucoseStatus glucoseStatus;
 
-    public Double targetBGLow = 0d;
-    public Double targetBGHigh = 0d;
-    public Double bgDiff = 0d;
+    public double targetBGLow = 0d;
+    public double targetBGHigh = 0d;
+    public double bgDiff = 0d;
 
-    public Double insulinFromBG = 0d;
-    public Double insulinFromCarbs = 0d;
-    public Double insulingFromBolusIOB = 0d;
-    public Double insulingFromBasalsIOB = 0d;
-    public Double insulinFromCorrection = 0d;
-    public Double insulinFromSuperBolus = 0d;
-    public Double insulinFromCOB = 0d;
-    public Double insulinFromTrend = 0d;
+    public double insulinFromBG = 0d;
+    public double insulinFromCarbs = 0d;
+    public double insulingFromBolusIOB = 0d;
+    public double insulingFromBasalsIOB = 0d;
+    public double insulinFromCorrection = 0d;
+    public double insulinFromSuperBolus = 0d;
+    public double insulinFromCOB = 0d;
+    public double insulinFromTrend = 0d;
 
     // Result
     public Double calculatedTotalInsulin = 0d;
@@ -57,7 +64,9 @@ public class BolusWizard {
         this.tempTarget = tempTarget;
         this.carbs = carbs;
         this.bg = bg;
+        this.cob = cob;
         this.correction = correction;
+        this.percentageCorrection = percentageCorrection;
         this.includeBolusIOB = includeBolusIOB;
         this.includeBasalIOB = includeBasalIOB;
         this.superBolus = superBolus;
@@ -93,7 +102,7 @@ public class BolusWizard {
 
         // Insulin from IOB
         // IOB calculation
-        TreatmentsInterface treatments = MainApp.getConfigBuilder();
+        TreatmentsInterface treatments = TreatmentsPlugin.getPlugin();
         treatments.updateTotalIOBTreatments();
         IobTotal bolusIob = treatments.getLastCalculationTreatments().round();
         treatments.updateTotalIOBTempBasals();
@@ -109,7 +118,7 @@ public class BolusWizard {
         if (superBolus) {
             insulinFromSuperBolus = specificProfile.getBasal();
             long timeAfter1h = System.currentTimeMillis();
-            timeAfter1h += 60L * 60 * 1000;
+            timeAfter1h += T.hours(1).msecs();
             insulinFromSuperBolus += specificProfile.getBasal(timeAfter1h);
         }
 
@@ -127,9 +136,48 @@ public class BolusWizard {
             calculatedTotalInsulin = 0d;
         }
 
-        double bolusStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
+        double bolusStep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
+        log.debug(log());
+
         return calculatedTotalInsulin;
+    }
+
+    public String log() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("TempTarget=").append(tempTarget != null ? tempTarget.toString() : "null").append("; ");
+        sb.append("Carbs=").append(carbs != null ? carbs : null).append("; ");
+        sb.append("Bg=").append(bg).append("; ");
+        sb.append("Cob=").append(cob).append("; ");
+        sb.append("Correction=").append(correction).append("; ");
+        sb.append("PercentageCorrection=").append(percentageCorrection).append("; ");
+        sb.append("IncludeBolusIOB=").append(includeBolusIOB).append("; ");
+        sb.append("IncludeBasalIOB=").append(includeBasalIOB).append("; ");
+        sb.append("Superbolus=").append(superBolus).append("; ");
+        sb.append("Trend=").append(trend).append("; ");
+        sb.append("Profile=").append(specificProfile != null && specificProfile.getData() != null ? specificProfile.getData().toString() : "null").append("; ");
+        sb.append("\n");
+
+        sb.append("targetBGLow=").append(targetBGLow).append("; ");
+        sb.append("targetBGHigh=").append(targetBGHigh).append("; ");
+        sb.append("bgDiff=").append(bgDiff).append("; ");
+        sb.append("insulinFromBG=").append(insulinFromBG).append("; ");
+        sb.append("insulinFromCarbs=").append(insulinFromCarbs).append("; ");
+        sb.append("insulingFromBolusIOB=").append(insulingFromBolusIOB).append("; ");
+        sb.append("insulingFromBasalsIOB=").append(insulingFromBasalsIOB).append("; ");
+        sb.append("insulinFromCorrection=").append(insulinFromCorrection).append("; ");
+        sb.append("insulinFromSuperBolus=").append(insulinFromSuperBolus).append("; ");
+        sb.append("insulinFromCOB=").append(insulinFromCOB).append("; ");
+        sb.append("insulinFromTrend=").append(insulinFromTrend).append("; ");
+        sb.append("\n");
+
+
+        sb.append("calculatedTotalInsulin=").append(calculatedTotalInsulin).append("; ");
+        sb.append("totalBeforePercentageAdjustment=").append(totalBeforePercentageAdjustment).append("; ");
+        sb.append("carbsEquivalent=").append(carbsEquivalent).append("; ");
+
+        return sb.toString();
     }
 }

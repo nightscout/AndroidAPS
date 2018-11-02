@@ -6,7 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
@@ -16,7 +15,10 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
@@ -27,7 +29,7 @@ import info.nightscout.utils.SP;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPORARYBASALS)
 public class TemporaryBasal implements Interval {
-    private static Logger log = LoggerFactory.getLogger(TemporaryBasal.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -60,12 +62,40 @@ public class TemporaryBasal implements Interval {
     public TemporaryBasal() {
     }
 
-    public TemporaryBasal(long date) {
+    public TemporaryBasal date(long date) {
         this.date = date;
+        return this;
+    }
+
+    public TemporaryBasal duration(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+        return this;
+    }
+
+    public TemporaryBasal absolute(double absoluteRate) {
+        this.absoluteRate = absoluteRate;
+        this.isAbsolute = true;
+        return this;
+    }
+
+    public TemporaryBasal percent(int percentRate) {
+        this.percentRate = percentRate;
+        this.isAbsolute = false;
+        return this;
+    }
+
+    public TemporaryBasal source(int source) {
+        this.source = source;
+        return this;
+    }
+
+    public TemporaryBasal pumpId(long pumpId) {
+        this.pumpId = pumpId;
+        return this;
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
-        double basal = MainApp.getConfigBuilder().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
+        double basal = ProfileFunctions.getInstance().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
         this.date = extendedBolus.date;
         this.isValid = extendedBolus.isValid;
         this.source = extendedBolus.source;
@@ -75,6 +105,7 @@ public class TemporaryBasal implements Interval {
         this.isFakeExtended = true;
         this.netExtendedRate = extendedBolus.absoluteRate();
         this.absoluteRate = basal + extendedBolus.absoluteRate();
+        this.pumpId = extendedBolus.pumpId;
     }
 
     public TemporaryBasal clone() {
@@ -189,18 +220,17 @@ public class TemporaryBasal implements Interval {
 
     // -------- Interval interface end ---------
 
-    public IobTotal iobCalc(long time) {
+    public IobTotal iobCalc(long time, Profile profile) {
 
-        if(isFakeExtended){
+        if (isFakeExtended) {
             log.error("iobCalc should only be called on Extended boluses separately");
             return new IobTotal(time);
         }
 
         IobTotal result = new IobTotal(time);
-        Profile profile = MainApp.getConfigBuilder().getProfile(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
-       int realDuration = getDurationToTime(time);
+        int realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
 
         if (realDuration > 0) {
@@ -262,13 +292,23 @@ public class TemporaryBasal implements Interval {
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
-    public double tempBasalConvertedToAbsolute(long time) {
-        if(isFakeExtended){
-            return MainApp.getConfigBuilder().getProfile(time).getBasal(time) + netExtendedRate;
+    public double tempBasalConvertedToAbsolute(long time, Profile profile) {
+        if (isFakeExtended) {
+            return profile.getBasal(time) + netExtendedRate;
         } else if (isAbsolute) {
             return absoluteRate;
         } else {
-             return MainApp.getConfigBuilder().getProfile(time).getBasal(time) * percentRate / 100;
+            return profile.getBasal(time) * percentRate / 100;
+        }
+    }
+
+    public int tempBasalConvertedToPercent(long time, Profile profile) {
+        if (isFakeExtended) {
+            return (int) ((profile.getBasal(time) + netExtendedRate) / profile.getBasal(time)) * 100;
+        } else if (isAbsolute) {
+            return (int) (absoluteRate / profile.getBasal(time)) * 100;
+        } else {
+            return percentRate;
         }
     }
 
@@ -289,12 +329,12 @@ public class TemporaryBasal implements Interval {
     }
 
     public String toStringFull() {
-        if(isFakeExtended){
+        if (isFakeExtended) {
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             Double currentBasalRate = profile.getBasal();
-            double rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h ("+DecimalFormatter.to2Decimal(netExtendedRate)+"E) @" +
+            double rate = (currentBasalRate == null) ? 0d : (currentBasalRate + netExtendedRate);
+            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h (" + DecimalFormatter.to2Decimal(netExtendedRate) + "E) @" +
                     DateUtil.timeString(date) +
                     " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else if (isAbsolute) {
@@ -311,48 +351,48 @@ public class TemporaryBasal implements Interval {
     public String toStringShort() {
         if (isAbsolute || isFakeExtended) {
 
-            double rate  = 0d;
+            double rate = 0d;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 Double currentBasalRate = profile.getBasal();
-                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            } else if (isAbsolute){
+                rate = (currentBasalRate == null) ? 0d : (currentBasalRate + netExtendedRate);
+            } else if (isAbsolute) {
                 rate = absoluteRate;
             }
 
-            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                if(profile != null) {
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
+                Profile profile = ProfileFunctions.getInstance().getProfile();
+                if (profile != null) {
                     double basal = profile.getBasal();
-                    if(basal != 0){
-                        return Math.round(rate*100d/basal) + "% ";
+                    if (basal != 0) {
+                        return Math.round(rate * 100d / basal) + "%";
                     }
                 }
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h ";
+            return DecimalFormatter.to2Decimal(rate) + "U/h";
         } else { // percent
-            return percentRate + "% ";
+            return percentRate + "%";
         }
     }
 
-    private String getCalcuatedPercentageIfNeeded(){
+    private String getCalcuatedPercentageIfNeeded() {
         if (isAbsolute || isFakeExtended) {
 
-            double rate  = 0d;
+            double rate = 0d;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 Double currentBasalRate = profile.getBasal();
-                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            } else if (isAbsolute){
+                rate = (currentBasalRate == null) ? 0d : (currentBasalRate + netExtendedRate);
+            } else if (isAbsolute) {
                 rate = absoluteRate;
             }
 
-            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                if(profile != null) {
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
+                Profile profile = ProfileFunctions.getInstance().getProfile();
+                if (profile != null) {
                     double basal = profile.getBasal();
-                    if(basal != 0){
-                        return Math.round(rate*100d/basal) + "% ";
+                    if (basal != 0) {
+                        return Math.round(rate * 100d / basal) + "% ";
                     }
                 }
             }
@@ -363,12 +403,12 @@ public class TemporaryBasal implements Interval {
     public String toStringVeryShort() {
         if (isAbsolute || isFakeExtended) {
 
-            double rate  = 0d;
+            double rate = 0d;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Profile profile = ProfileFunctions.getInstance().getProfile();
                 Double currentBasalRate = profile.getBasal();
-                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            } else if (isAbsolute){
+                rate = (currentBasalRate == null) ? 0d : (currentBasalRate + netExtendedRate);
+            } else if (isAbsolute) {
                 rate = absoluteRate;
             }
             return DecimalFormatter.to2Decimal(rate) + "U/h ";

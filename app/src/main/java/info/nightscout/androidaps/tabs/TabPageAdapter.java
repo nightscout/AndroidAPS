@@ -1,12 +1,10 @@
 package info.nightscout.androidaps.tabs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import org.slf4j.Logger;
@@ -14,19 +12,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 30.05.2016.
  */
-public class TabPageAdapter extends FragmentStatePagerAdapter {
+public class TabPageAdapter extends FragmentPagerAdapter {
 
     ArrayList<PluginBase> visibleFragmentList = new ArrayList<>();
 
     Context context;
 
-    private static Logger log = LoggerFactory.getLogger(TabPageAdapter.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     public TabPageAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -37,24 +37,27 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     @Nullable
     public Fragment getItem(int position) {
         //Fragment fragment = (Fragment) visibleFragmentList.get(position);
-        return Fragment.instantiate(context, visibleFragmentList.get(position).getFragmentClass());
+        return Fragment.instantiate(context, visibleFragmentList.get(position).pluginDescription.getFragmentClass());
+    }
+
+    public PluginBase getPluginAt(int position) {
+        return visibleFragmentList.get(position);
     }
 
     @Override
     public void finishUpdate(ViewGroup container) {
-        try{
+        try {
             super.finishUpdate(container);
-        } catch (NullPointerException nullPointerException){
+        } catch (NullPointerException nullPointerException) {
             System.out.println("Catch the NullPointerException in FragmentStatePagerAdapter.finishUpdate");
-        } catch (IllegalStateException e){
-            log.error(e.getMessage());
+        } catch (IllegalStateException e) {
+            log.error("Unhandled exception", e);
         }
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if(preferences.getBoolean("short_tabtitles", false)){
+        if (SP.getBoolean(R.string.key_short_tabtitles, false)) {
             return visibleFragmentList.get(position).getNameShort();
         }
         return visibleFragmentList.get(position).getName();
@@ -67,11 +70,14 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     }
 
     public void registerNewFragment(PluginBase plugin) {
-        if (plugin.hasFragment() && plugin.isVisibleInTabs(plugin.getType())) {
+        if (plugin.hasFragment() && plugin.isFragmentVisible()) {
             visibleFragmentList.add(plugin);
             notifyDataSetChanged();
         }
     }
 
-
+    @Override
+    public long getItemId(int position) {
+        return System.identityHashCode(visibleFragmentList.get(position));
+    }
 }

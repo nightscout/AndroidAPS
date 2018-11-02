@@ -10,9 +10,6 @@ import info.nightscout.utils.SP;
 
 public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
-
     private static InsulinOrefFreePeakPlugin plugin = null;
 
     public static InsulinOrefFreePeakPlugin getPlugin() {
@@ -21,56 +18,28 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
         return plugin;
     }
 
-    public static final int DEFAULT_PEAK = 75;
+    private static final int DEFAULT_PEAK = 75;
+
+    private InsulinOrefFreePeakPlugin() {
+        super();
+        pluginDescription
+                .pluginName(R.string.free_peak_oref)
+                .preferencesId(R.xml.pref_insulinoreffreepeak)
+                .description(R.string.description_insulin_free_peak);
+    }
 
     @Override
     public int getId() {
         return OREF_FREE_PEAK;
     }
 
-    @Override
-    public String getName() {
-        return MainApp.sResources.getString(R.string.free_peak_oref);
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return InsulinFragment.class.getName();
-    }
-
-    @Override
     public String getFriendlyName() {
-        return MainApp.sResources.getString(R.string.free_peak_oref);
+        return MainApp.gs(R.string.free_peak_oref);
     }
 
     @Override
     public String commentStandardText() {
-        return MainApp.sResources.getString(R.string.insulin_peak_time) + ": " + getPeak();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == INSULIN && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == INSULIN && fragmentVisible;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == INSULIN) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == INSULIN) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_insulinoreffreepeak;
+        return MainApp.gs(R.string.insulin_peak_time) + ": " + getPeak();
     }
 
     @Override

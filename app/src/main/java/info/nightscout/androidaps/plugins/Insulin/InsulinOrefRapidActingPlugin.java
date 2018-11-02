@@ -9,9 +9,6 @@ import info.nightscout.androidaps.R;
 
 public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
 
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = false;
-
     private static InsulinOrefRapidActingPlugin plugin = null;
 
     public static InsulinOrefRapidActingPlugin getPlugin() {
@@ -20,7 +17,14 @@ public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
         return plugin;
     }
 
-    public static final int PEAK = 75;
+    private static final int PEAK = 75;
+
+    private InsulinOrefRapidActingPlugin() {
+        super();
+        pluginDescription
+                .pluginName(R.string.rapid_acting_oref)
+                .description(R.string.description_insulin_rapid);
+    }
 
     @Override
     public int getId() {
@@ -28,48 +32,13 @@ public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
     }
 
     @Override
-    public String getName() {
-        return MainApp.sResources.getString(R.string.rapid_acting_oref);
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return InsulinFragment.class.getName();
-    }
-
-    @Override
     public String getFriendlyName() {
-        return MainApp.sResources.getString(R.string.rapid_acting_oref);
+        return MainApp.gs(R.string.rapid_acting_oref);
     }
 
     @Override
     public String commentStandardText() {
-        return MainApp.sResources.getString(R.string.fastactinginsulincomment);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == INSULIN && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == INSULIN && fragmentVisible;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == INSULIN) this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == INSULIN) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
+        return MainApp.gs(R.string.fastactinginsulincomment);
     }
 
     @Override

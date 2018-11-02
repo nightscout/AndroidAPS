@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:key="ns_api"
-        android:title="@string/nsclientinternal_title">
+
+    <PreferenceCategory android:title="@string/nsclientinternal_title">
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
             android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
@@ -15,7 +14,6 @@
             validate:testType="webUrl" />
 
         <EditTextPreference
-            android:defaultValue=""
             android:dialogMessage="@string/nsclientinternal_secret_dialogmessage"
             android:dialogTitle="@string/nsclientinternal_secret_dialogtitle"
             android:inputType="textPassword"
@@ -27,70 +25,129 @@
             android:key="@string/key_ns_logappstartedevent"
             android:title="@string/ns_logappstartedevent" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_ns_localbroadcasts"
-            android:title="@string/ns_localbroadcasts_title"
-            android:summary="@string/ns_localbroadcasts"/>
-
-
         <PreferenceScreen android:title="@string/ns_alarmoptions">
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_nsalarm_urgent_high"
-                android:title="@string/nsalarm_urgenthigh"/>
+                android:title="@string/nsalarm_urgenthigh" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_nsalarm_high"
-                android:title="@string/nsalarm_high"/>
+                android:title="@string/nsalarm_high" />
 
-           <SwitchPreference
+            <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_nsalarm_low"
-                android:title="@string/nsalarm_low"/>
+                android:title="@string/nsalarm_low" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_nsalarm_urgent_low"
-                android:title="@string/nsalarm_urgentlow"/>
+                android:title="@string/nsalarm_urgentlow" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_nsalarm_staledata"
-                android:title="@string/nsalarm_staledata"/>
+                android:title="@string/nsalarm_staledata" />
 
             <com.andreabaccega.widget.ValidatingEditTextPreference
-                validate:testType="numericRange"
-                validate:minNumber="15"
-                validate:maxNumber="120"
-                android:digits="0123456789"
                 android:defaultValue="16"
+                android:digits="0123456789"
+                android:inputType="number"
+                android:key="@string/key_nsalarm_staledatavalue"
+                android:maxLines="20"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="number"
-                android:maxLines="20"
                 android:title="@string/nsalarm_staledatavalue_label"
-                android:key="@string/key_nsalarm_staledatavalue" />
+                validate:maxNumber="120"
+                validate:minNumber="15"
+                validate:testType="numericRange" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_nsalarm_urgent_staledata"
-                android:title="@string/nsalarm_urgentstaledata"/>
+                android:title="@string/nsalarm_urgentstaledata" />
 
             <com.andreabaccega.widget.ValidatingEditTextPreference
-                validate:testType="numericRange"
-                validate:minNumber="30"
-                validate:maxNumber="180"
-                android:digits="0123456789"
                 android:defaultValue="31"
+                android:digits="0123456789"
+                android:inputType="number"
+                android:key="@string/key_nsalarm_urgent_staledatavalue"
+                android:maxLines="20"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:inputType="number"
-                android:maxLines="20"
                 android:title="@string/nsalarm_urgent_staledatavalue_label"
-                android:key="@string/key_nsalarm_urgent_staledatavalue" />
+                validate:maxNumber="180"
+                validate:minNumber="30"
+                validate:testType="numericRange" />
+
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="@string/connectionsettings_title">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_wifionly"
+                android:disableDependentsState="true"
+                android:title="@string/ns_wifionly" />
+
+            <EditTextPreference
+                android:dialogMessage="@string/ns_wifi_allowedssids"
+                android:inputType="text"
+                android:key="@string/key_ns_wifi_ssids"
+                android:title="@string/ns_wifi_ssids" />
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_ns_wifionly"
+                android:key="@string/key_ns_allowroaming"
+                android:title="@string/ns_allowroaming" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_chargingonly"
+                android:title="@string/ns_chargingonly" />
+
+        </PreferenceScreen>
+
+       <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_ns_autobackfill"
+                android:title="@string/ns_autobackfill_title"
+                android:summary="@string/ns_autobackfill_summary" />
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_ns_create_announcements_from_errors"
+                android:summary="@string/ns_create_announcements_from_errors_summary"
+                android:title="@string/ns_create_announcements_from_errors_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsclient_localbroadcasts"
+                android:summary="@string/ns_localbroadcasts"
+                android:title="@string/ns_localbroadcasts_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_upload_only"
+                android:summary="@string/ns_upload_only_summary"
+                android:title="@string/ns_upload_only" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_ns_noupload"
+                android:summary="@string/ns_noupload_summary"
+                android:title="@string/ns_noupload" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="ns_sync_use_absolute"
+                android:title="@string/ns_sync_use_absolute_title" />
 
         </PreferenceScreen>
 

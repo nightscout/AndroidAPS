@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
-
-import com.cozmo.danar.util.BleCommandUtil;
+import info.nightscout.androidaps.logging.L;
 
 public class DanaRS_Packet_Option_Set_Pump_Time extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Option_Set_Pump_Time.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     private Date date;
     public int error;
 
@@ -22,7 +22,7 @@ public class DanaRS_Packet_Option_Set_Pump_Time extends DanaRS_Packet {
     public DanaRS_Packet_Option_Set_Pump_Time(Date date) {
         this();
         this.date = date;
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Setting pump time " + date.toLocaleString());
         }
     }
@@ -44,7 +44,8 @@ public class DanaRS_Packet_Option_Set_Pump_Time extends DanaRS_Packet {
         int dataIndex = DATA_START;
         int dataSize = 1;
         error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-        if (Config.logDanaMessageDetail) {
+        failed = error != 0;
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (error == 0)
                 log.debug("Result OK");
             else

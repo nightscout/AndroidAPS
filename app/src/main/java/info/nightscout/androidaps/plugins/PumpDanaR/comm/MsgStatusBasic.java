@@ -3,15 +3,17 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 
 public class MsgStatusBasic extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusBasic.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgStatusBasic() {
         SetCommand(0x020A);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -30,7 +32,7 @@ public class MsgStatusBasic extends MessageBase {
         //pump.isTempBasalInProgress = intFromBuff(bytes, 15, 1) == 1;
         pump.batteryRemaining = intFromBuff(bytes, 20, 1);
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Pump suspended: " + pump.pumpSuspended);
             log.debug("Calculator enabled: " + pump.calculatorEnabled);
             log.debug("Daily total units: " + pump.dailyTotalUnits);

@@ -22,8 +22,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/bolus"
+                android:text="@string/overview_treatment_label"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <CheckBox
+                android:id="@+id/newtreatment_record_only"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/do_not_bolus_record_only" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="aps_general"
+        android:title="@string/loop">
+
+        <ListPreference
+            android:title="@string/apsmode_title"
+            android:key="@string/key_aps_mode"
+            android:defaultValue="open"
+            android:entries="@array/aps_modeArray"
+            android:entryValues="@array/aps_modeValues"/>
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:defaultValue="20"
+            android:dialogMessage="@string/loop_openmode_min_change_summary"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_loop_openmode_min_change"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/loop_openmode_min_change"
+            validate:maxNumber="50"
+            validate:minNumber="0"
+            validate:testType="numericRange" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

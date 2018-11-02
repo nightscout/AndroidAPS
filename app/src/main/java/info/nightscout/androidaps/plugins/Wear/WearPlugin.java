@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.squareup.otto.Subscribe;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventBolusRequested;
@@ -17,7 +16,10 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterService;
@@ -27,10 +29,8 @@ import info.nightscout.utils.SP;
  * Created by adrian on 17/11/16.
  */
 
-public class WearPlugin implements PluginBase {
+public class WearPlugin extends PluginBase {
 
-    private static boolean fragmentEnabled = true;
-    private boolean fragmentVisible = true;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
 
@@ -39,6 +39,7 @@ public class WearPlugin implements PluginBase {
     public static WearPlugin getPlugin() {
         return wearPlugin;
     }
+
     public static WearPlugin initPlugin(Context ctx) {
 
         if (wearPlugin == null) {
@@ -49,79 +50,29 @@ public class WearPlugin implements PluginBase {
     }
 
     WearPlugin(Context ctx) {
+        super(new PluginDescription()
+                .mainType(PluginType.GENERAL)
+                .fragmentClass(WearFragment.class.getName())
+                .pluginName(R.string.wear)
+                .shortName(R.string.wear_shortname)
+                .preferencesId(R.xml.pref_wear)
+                .description(R.string.description_wear)
+        );
         this.ctx = ctx;
+    }
+
+    @Override
+    protected void onStart() {
         MainApp.bus().register(this);
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.GENERAL;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return WearFragment.class.getName();
-    }
-
-    @Override
-    public String getName() {
-        return ctx.getString(R.string.wear);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.wear_shortname);
-        if (!name.trim().isEmpty()){
-            //only if translation exists
-            return name;
+        if (watchUS != null) {
+            watchUS.setSettings();
         }
-        // use long name as fallback
-        return getName();
+        super.onStart();
     }
 
     @Override
-    public boolean isEnabled(int type) {
-        return type == GENERAL && fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == GENERAL && fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == GENERAL) {
-            this.fragmentEnabled = fragmentEnabled;
-            if (watchUS != null) {
-                watchUS.setSettings();
-            }
-        }
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == GENERAL) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return R.xml.pref_wear;
+    protected void onStop() {
+        MainApp.bus().unregister(this);
     }
 
     private void sendDataToWatch(boolean status, boolean basals, boolean bgValue) {
@@ -149,6 +100,12 @@ public class WearPlugin implements PluginBase {
         ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS));
     }
 
+    void requestNotificationCancel(String actionstring) {
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
+        intent.putExtra("actionstring", actionstring);
+        ctx.startService(intent);
+    }
+
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
@@ -169,6 +126,11 @@ public class WearPlugin implements PluginBase {
     }
 
     @Subscribe
+    public void onStatusEvent(final EventOpenAPSUpdateGui ev) {
+        sendDataToWatch(true, true, false);
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
         sendDataToWatch(true, true, false);
     }
@@ -185,11 +147,7 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
-
-        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-        if (activeloop == null) return;
-
-        if(WatchUpdaterService.shouldReportLoopStatus(activeloop.isEnabled(PluginBase.LOOP))) {
+        if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))) {
             sendDataToWatch(true, false, false);
         }
     }
@@ -197,15 +155,17 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-        intent.putExtra("progresspercent", ev.percent);
-        intent.putExtra("progressstatus", ev.status);
-        ctx.startService(intent);
+        if (!ev.isSMB() || SP.getBoolean("wear_notifySMB", true)) {
+            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+            intent.putExtra("progresspercent", ev.percent);
+            intent.putExtra("progressstatus", ev.status);
+            ctx.startService(intent);
+        }
     }
 
     @Subscribe
     public void onStatusEvent(final EventBolusRequested ev) {
-        String status = String.format(MainApp.sResources.getString(R.string.bolusrequested), ev.getAmount());
+        String status = String.format(MainApp.gs(R.string.bolusrequested), ev.getAmount());
         Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
         intent.putExtra("progresspercent", 0);
         intent.putExtra("progressstatus", status);
@@ -215,13 +175,13 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
-        if(ev.result == null) return;
+        if (ev.result == null) return;
 
         String status;
-        if(ev.result.success){
-            status = MainApp.sResources.getString(R.string.success);
+        if (ev.result.success) {
+            status = MainApp.gs(R.string.success);
         } else {
-            status = MainApp.sResources.getString(R.string.nosuccess);
+            status = MainApp.gs(R.string.nosuccess);
         }
         Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
         intent.putExtra("progresspercent", 100);
@@ -229,7 +189,7 @@ public class WearPlugin implements PluginBase {
         ctx.startService(intent);
     }
 
-    public void requestActionConfirmation(String title, String message, String actionstring){
+    public void requestActionConfirmation(String title, String message, String actionstring) {
 
         Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_ACTIONCONFIRMATIONREQUEST);
         intent.putExtra("title", title);
@@ -238,8 +198,13 @@ public class WearPlugin implements PluginBase {
         ctx.startService(intent);
     }
 
-    public static boolean isEnabled() {
-        return fragmentEnabled;
+    public void requestChangeConfirmation(String title, String message, String actionstring) {
+
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_CHANGECONFIRMATIONREQUEST);
+        intent.putExtra("title", title);
+        intent.putExtra("message", message);
+        intent.putExtra("actionstring", actionstring);
+        ctx.startService(intent);
     }
 
     public static void registerWatchUpdaterService(WatchUpdaterService wus) {
@@ -249,11 +214,4 @@ public class WearPlugin implements PluginBase {
     public static void unRegisterWatchUpdaterService() {
         watchUS = null;
     }
-
-    public void overviewNotification(int id, String message) {
-        if(SP.getBoolean("wear_overview_notification", false)){
-            ActionStringHandler.expectNotificationAction(message, id);
-        }
-    }
-
 }

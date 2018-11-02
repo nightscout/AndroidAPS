@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -17,13 +18,18 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
@@ -31,8 +37,11 @@ import info.nightscout.androidaps.queue.commands.CommandCancelTempBasal;
 import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
+import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
 import info.nightscout.androidaps.queue.commands.CommandReadStatus;
+import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
+import info.nightscout.androidaps.queue.commands.CommandSetUserSettings;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
@@ -69,15 +78,15 @@ import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
  */
 
 public class CommandQueue {
-    private static Logger log = LoggerFactory.getLogger(CommandQueue.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
-    private LinkedList<Command> queue = new LinkedList<>();
-    protected Command performing;
+    private final LinkedList<Command> queue = new LinkedList<>();
+    Command performing;
 
     private QueueThread thread = null;
 
     private PumpEnactResult executingNowError() {
-        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.sResources.getString(R.string.executingrightnow));
+        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.executingrightnow));
     }
 
     public boolean isRunning(Command.CommandType type) {
@@ -87,7 +96,7 @@ public class CommandQueue {
     }
 
     private synchronized void removeAll(Command.CommandType type) {
-        for (int i = 0; i < queue.size(); i++) {
+        for (int i = queue.size() - 1; i >= 0; i--) {
             if (queue.get(i).commandType == type) {
                 queue.remove(i);
             }
@@ -103,10 +112,14 @@ public class CommandQueue {
 
     private synchronized void inject(Command command) {
         // inject as a first command
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.addFirst(command);
     }
 
     private synchronized void add(Command command) {
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Adding: " + command.getClass().getSimpleName() + " - " + command.status());
         queue.add(command);
     }
 
@@ -138,49 +151,106 @@ public class CommandQueue {
     // After new command added to the queue
     // start thread again if not already running
     protected synchronized void notifyAboutNewCommand() {
+        while (thread != null && thread.getState() != Thread.State.TERMINATED && thread.waitingForDisconnect) {
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("Waiting for previous thread finish");
+            SystemClock.sleep(500);
+        }
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
             thread = new QueueThread(this);
             thread.start();
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("Starting new thread");
+        } else {
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("Thread is already running");
         }
     }
 
-    public static void independentConnect(String reason, Callback callback) {
+    public void independentConnect(String reason, Callback callback) {
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Starting new queue");
         CommandQueue tempCommandQueue = new CommandQueue();
         tempCommandQueue.readStatus(reason, callback);
     }
 
+    public synchronized boolean bolusInQueue() {
+        if (isRunning(Command.CommandType.BOLUS)) return true;
+        for (int i = 0; i < queue.size(); i++) {
+            if (queue.get(i).commandType == Command.CommandType.BOLUS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // returns true if command is queued
-    public boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
-        if (isRunning(Command.CommandType.BOLUS)) {
-            if (callback != null)
-                callback.result(executingNowError()).run();
-            return false;
+    public synchronized boolean bolus(DetailedBolusInfo detailedBolusInfo, Callback callback) {
+        Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
+
+        if (type == Command.CommandType.SMB_BOLUS) {
+            if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
+                if (L.isEnabled(L.PUMPQUEUE))
+                    log.debug("Rejecting SMB since a bolus is queue/running");
+                return false;
+            }
+            if (detailedBolusInfo.lastKnownBolusTime < TreatmentsPlugin.getPlugin().getLastBolusTime()) {
+                if (L.isEnabled(L.PUMPQUEUE))
+                    log.debug("Rejecting bolus, another bolus was issued since request time");
+                return false;
+            }
         }
 
-        // remove all unfinished boluses
-        removeAll(Command.CommandType.BOLUS);
+
+        if (type.equals(Command.CommandType.BOLUS) && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0) {
+            type = Command.CommandType.CARBS_ONLY_TREATMENT;
+            //Carbs only can be added in parallel as they can be "in the future".
+        } else {
+            if (isRunning(type)) {
+                if (callback != null)
+                    callback.result(executingNowError()).run();
+                return false;
+            }
+
+            // remove all unfinished boluses
+            removeAll(type);
+        }
 
         // apply constraints
-        detailedBolusInfo.insulin = MainApp.getConfigBuilder().applyBolusConstraints(detailedBolusInfo.insulin);
-        detailedBolusInfo.carbs = MainApp.getConfigBuilder().applyCarbsConstraints((int) detailedBolusInfo.carbs);
+        detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.carbs = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>((int) detailedBolusInfo.carbs)).value();
 
         // add new command to queue
-        add(new CommandBolus(detailedBolusInfo, callback));
+        if (detailedBolusInfo.isSMB) {
+            add(new CommandSMBBolus(detailedBolusInfo, callback));
+        } else {
+            add(new CommandBolus(detailedBolusInfo, callback, type));
+            if (type.equals(Command.CommandType.BOLUS)) {
+                // Bring up bolus progress dialog (start here, so the dialog is shown when the bolus is requested,
+                // not when the Bolus command is starting. The command closes the dialog upon completion).
+                showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
+                // Notify Wear about upcoming bolus
+                MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+            }
+        }
 
         notifyAboutNewCommand();
-
-        // Notify Wear about upcoming bolus
-        MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
-
-        // Bring up bolus progress dialog
-        showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
 
         return true;
     }
 
+    public synchronized void cancelAllBoluses() {
+        if (!isRunning(Command.CommandType.BOLUS)) {
+            MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
+        }
+        removeAll(Command.CommandType.BOLUS);
+        removeAll(Command.CommandType.SMB_BOLUS);
+        ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering();
+    }
+
     // returns true if command is queued
-    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
-        if (isRunning(Command.CommandType.TEMPBASAL)) {
+    public boolean tempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
+        if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -189,10 +259,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(absoluteRate);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalAbsolute(rateAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -200,8 +270,8 @@ public class CommandQueue {
     }
 
     // returns true if command is queued
-    public boolean tempBasalPercent(int percent, int durationInMinutes, boolean enforceNew, Callback callback) {
-        if (isRunning(Command.CommandType.TEMPBASAL)) {
+    public boolean tempBasalPercent(Integer percent, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
+        if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -210,10 +280,10 @@ public class CommandQueue {
         // remove all unfinished 
         removeAll(Command.CommandType.TEMPBASAL);
 
-        Integer percentAfterConstraints = MainApp.getConfigBuilder().applyBasalConstraints(percent);
+        Integer percentAfterConstraints = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
 
         // add new command to queue
-        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, callback));
+        add(new CommandTempBasalPercent(percentAfterConstraints, durationInMinutes, enforceNew, profile, callback));
 
         notifyAboutNewCommand();
 
@@ -228,7 +298,7 @@ public class CommandQueue {
             return false;
         }
 
-        Double rateAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+        Double rateAfterConstraints = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
 
         // remove all unfinished
         removeAll(Command.CommandType.EXTENDEDBOLUS);
@@ -243,7 +313,7 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean cancelTempBasal(boolean enforceNew, Callback callback) {
-        if (isRunning(Command.CommandType.TEMPBASAL)) {
+        if (!enforceNew && isRunning(Command.CommandType.TEMPBASAL)) {
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -281,34 +351,37 @@ public class CommandQueue {
 
     // returns true if command is queued
     public boolean setProfile(Profile profile, Callback callback) {
-        if (isRunning(Command.CommandType.BASALPROFILE)) {
+        if (isThisProfileSet(profile)) {
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("Correct profile already set");
             if (callback != null)
-                callback.result(executingNowError()).run();
+                callback.result(new PumpEnactResult().success(true).enacted(false)).run();
+            return false;
+        }
+
+        if (!MainApp.isEngineeringModeOrRelease()) {
+            Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.gs(R.string.not_eng_mode_or_release), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
             return false;
         }
 
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-        for (int index = 0; index < basalValues.length; index++) {
-            if (basalValues[index].value < pump.getPumpDescription().basalMinimumRate) {
-                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
+        for (Profile.BasalValue basalValue : basalValues) {
+            if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
+                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
-                    callback.result(new PumpEnactResult().success(false).comment(MainApp.sResources.getString(R.string.basalvaluebelowminimum))).run();
+                    callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
                 return false;
             }
         }
 
         MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
-
-        if (isThisProfileSet(profile)) {
-            log.debug("Correct profile already set");
-            if (callback != null)
-                callback.result(new PumpEnactResult().success(true).enacted(false)).run();
-            return false;
-        }
 
         // remove all unfinished
         removeAll(Command.CommandType.BASALPROFILE);
@@ -324,7 +397,8 @@ public class CommandQueue {
     // returns true if command is queued
     public boolean readStatus(String reason, Callback callback) {
         if (isLastScheduled(Command.CommandType.READSTATUS)) {
-            log.debug("QUEUE: READSTATUS " + reason + " ignored as duplicated");
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("READSTATUS " + reason + " ignored as duplicated");
             if (callback != null)
                 callback.result(executingNowError()).run();
             return false;
@@ -354,6 +428,44 @@ public class CommandQueue {
 
         // add new command to queue
         add(new CommandLoadHistory(type, callback));
+
+        notifyAboutNewCommand();
+
+        return true;
+    }
+
+    // returns true if command is queued
+    public boolean setUserOptions(Callback callback) {
+        if (isRunning(Command.CommandType.SETUSERSETTINGS)) {
+            if (callback != null)
+                callback.result(executingNowError()).run();
+            return false;
+        }
+
+        // remove all unfinished
+        removeAll(Command.CommandType.SETUSERSETTINGS);
+
+        // add new command to queue
+        add(new CommandSetUserSettings(callback));
+
+        notifyAboutNewCommand();
+
+        return true;
+    }
+
+    // returns true if command is queued
+    public boolean loadTDDs(Callback callback) {
+        if (isRunning(Command.CommandType.LOADHISTORY)) {
+            if (callback != null)
+                callback.result(executingNowError()).run();
+            return false;
+        }
+
+        // remove all unfinished
+        removeAll(Command.CommandType.LOADHISTORY);
+
+        // add new command to queue
+        add(new CommandLoadTDDs(callback));
 
         notifyAboutNewCommand();
 
@@ -396,12 +508,15 @@ public class CommandQueue {
     }
 
     public boolean isThisProfileSet(Profile profile) {
-        PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
-        if (activePump != null) {
+        PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        Profile current = ProfileFunctions.getInstance().getProfile();
+        if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);
             if (!result) {
-                log.debug("Current profile: " + MainApp.getConfigBuilder().getProfile().getData().toString());
-                log.debug("New profile: " + profile.getData().toString());
+                if (L.isEnabled(L.PUMPQUEUE)) {
+                    log.debug("Current profile: " + current.toString());
+                    log.debug("New profile: " + profile.toString());
+                }
             }
             return result;
         } else return true;

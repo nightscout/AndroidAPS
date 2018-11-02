@@ -20,13 +20,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
@@ -34,6 +35,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPairingSuccess;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -41,15 +43,15 @@ import info.nightscout.utils.SP;
  */
 
 public class BLEComm {
-    private static Logger log = LoggerFactory.getLogger(BLEComm.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
-    private static final long WRITE_DELAY_MILLIS = 50;
+    private final long WRITE_DELAY_MILLIS = 50;
 
-    public static String UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
-    public static String UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb";
+    private String UART_READ_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
+    private String UART_WRITE_UUID = "0000fff2-0000-1000-8000-00805f9b34fb";
 
-    private byte PACKET_START_BYTE = (byte) 0xA5;
-    private byte PACKET_END_BYTE = (byte) 0x5A;
+    private final byte PACKET_START_BYTE = (byte) 0xA5;
+    private final byte PACKET_END_BYTE = (byte) 0x5A;
     private static BLEComm instance = null;
 
     public static BLEComm getInstance(DanaRSService service) {
@@ -58,16 +60,13 @@ public class BLEComm {
         return instance;
     }
 
-    private final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledDisconnection = null;
 
     private DanaRS_Packet processsedMessage = null;
-    private ArrayList<byte[]> mSendQueue = new ArrayList<>();
+    private final ArrayList<byte[]> mSendQueue = new ArrayList<>();
 
     private BluetoothManager mBluetoothManager = null;
     private BluetoothAdapter mBluetoothAdapter = null;
-    private BluetoothDevice mBluetoothDevice = null;
-    private String mBluetoothDeviceAddress = null;
     private String mBluetoothDeviceName = null;
     private BluetoothGatt mBluetoothGatt = null;
 
@@ -79,25 +78,26 @@ public class BLEComm {
 
     private DanaRSService service;
 
-    BLEComm(DanaRSService service) {
+    private BLEComm(DanaRSService service) {
         this.service = service;
         initialize();
     }
 
     private boolean initialize() {
-        log.debug("Initializing BLEComm.");
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("Initializing BLEComm.");
 
         if (mBluetoothManager == null) {
             mBluetoothManager = ((BluetoothManager) MainApp.instance().getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE));
             if (mBluetoothManager == null) {
-                log.debug("Unable to initialize BluetoothManager.");
+                log.error("Unable to initialize BluetoothManager.");
                 return false;
             }
         }
 
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            log.debug("Unable to obtain a BluetoothAdapter.");
+            log.error("Unable to obtain a BluetoothAdapter.");
             return false;
         }
 
@@ -130,7 +130,7 @@ public class BLEComm {
         }
 
         if (address == null) {
-            log.debug("unspecified address.");
+            log.error("unspecified address.");
             return false;
         }
 
@@ -138,16 +138,15 @@ public class BLEComm {
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
-            log.debug("Device not found.  Unable to connect.");
+            log.error("Device not found.  Unable to connect from: " + from);
             return false;
         }
 
-        log.debug("Trying to create a new connection.");
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("Trying to create a new connection from: " + from);
+        mBluetoothDeviceName = device.getName();
         mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
-        mBluetoothDevice = device;
-        mBluetoothDeviceAddress = address;
-        mBluetoothDeviceName = device.getName();
         return true;
     }
 
@@ -155,8 +154,9 @@ public class BLEComm {
         isConnecting = false;
     }
 
-    public void disconnect(String from) {
-        log.debug("disconnect from: " + from);
+    public synchronized void disconnect(String from) {
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("disconnect from: " + from);
 
         // cancel previous scheduled disconnection to prevent closing upcomming connection
         if (scheduledDisconnection != null)
@@ -164,8 +164,8 @@ public class BLEComm {
         scheduledDisconnection = null;
 
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-            log.debug("disconnect not possible: (mBluetoothAdapter == null) " + (mBluetoothAdapter == null));
-            log.debug("disconnect not possible: (mBluetoothGatt == null) " + (mBluetoothGatt == null));
+            log.error("disconnect not possible: (mBluetoothAdapter == null) " + (mBluetoothAdapter == null));
+            log.error("disconnect not possible: (mBluetoothGatt == null) " + (mBluetoothGatt == null));
             return;
         }
         setCharacteristicNotification(getUARTReadBTGattChar(), false);
@@ -174,8 +174,9 @@ public class BLEComm {
         SystemClock.sleep(2000);
     }
 
-    public void close() {
-        log.debug("BluetoothAdapter close");
+    public synchronized void close() {
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("BluetoothAdapter close");
         if (mBluetoothGatt == null) {
             return;
         }
@@ -184,35 +185,19 @@ public class BLEComm {
         mBluetoothGatt = null;
     }
 
-    public BluetoothDevice getConnectDevice() {
-        return mBluetoothDevice;
-    }
 
-    public String getConnectDeviceAddress() {
-        return mBluetoothDeviceAddress;
-    }
-
-    public String getConnectDeviceName() {
+    private String getConnectDeviceName() {
         return mBluetoothDeviceName;
     }
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            log.debug("onConnectionStateChange");
-
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                mBluetoothGatt.discoverServices();
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                close();
-                isConnected = false;
-                isConnecting = false;
-                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
-                log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
-            }
+            onConnectionStateChangeSynchronized(gatt, status, newState); // call it synchronized
         }
 
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            log.debug("onServicesDiscovered");
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug("onServicesDiscovered");
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic();
             }
@@ -221,44 +206,40 @@ public class BLEComm {
         }
 
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            log.debug("onCharacteristicRead" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug("onCharacteristicRead" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
             addToReadBuffer(characteristic.getValue());
             readDataParsing();
         }
 
         public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
-            log.debug("onCharacteristicChanged" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug("onCharacteristicChanged" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
             addToReadBuffer(characteristic.getValue());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    readDataParsing();
-                }
-            }).start();
+            new Thread(() -> readDataParsing()).start();
         }
 
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            log.debug("onCharacteristicWrite" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (mSendQueue) {
-                        // after message sent, check if there is the rest of the message waiting and send it
-                        if (mSendQueue.size() > 0) {
-                            byte[] bytes = mSendQueue.get(0);
-                            mSendQueue.remove(0);
-                            writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
-                        }
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug("onCharacteristicWrite" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
+            new Thread(() -> {
+                synchronized (mSendQueue) {
+                    // after message sent, check if there is the rest of the message waiting and send it
+                    if (mSendQueue.size() > 0) {
+                        byte[] bytes = mSendQueue.get(0);
+                        mSendQueue.remove(0);
+                        writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
                     }
                 }
             }).start();
         }
     };
 
-    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
-        log.debug("setCharacteristicNotification");
+    private synchronized void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("setCharacteristicNotification");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-            log.debug("BluetoothAdapter not initialized_ERROR");
+            log.error("BluetoothAdapter not initialized_ERROR");
             isConnecting = false;
             isConnected = false;
             return;
@@ -266,10 +247,11 @@ public class BLEComm {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
     }
 
-    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
-        log.debug("readCharacteristic");
+    public synchronized void readCharacteristic(BluetoothGattCharacteristic characteristic) {
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("readCharacteristic");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-            log.debug("BluetoothAdapter not initialized_ERROR");
+            log.error("BluetoothAdapter not initialized_ERROR");
             isConnecting = false;
             isConnected = false;
             return;
@@ -277,43 +259,44 @@ public class BLEComm {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
-    public void writeCharacteristic_NO_RESPONSE(final BluetoothGattCharacteristic characteristic, final byte[] data) {
-        if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-            log.debug("BluetoothAdapter not initialized_ERROR");
-            isConnecting = false;
-            isConnected = false;
-            return;
-        }
+    private synchronized void writeCharacteristic_NO_RESPONSE(final BluetoothGattCharacteristic characteristic, final byte[] data) {
+        new Thread(() -> {
+            SystemClock.sleep(WRITE_DELAY_MILLIS);
 
-        new Thread(new Runnable() {
-            public void run() {
-                SystemClock.sleep(WRITE_DELAY_MILLIS);
-                characteristic.setValue(data);
-                characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-                log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
-                mBluetoothGatt.writeCharacteristic(characteristic);
+            if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
+                log.error("BluetoothAdapter not initialized_ERROR");
+                isConnecting = false;
+                isConnected = false;
+                return;
             }
+
+            characteristic.setValue(data);
+            characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
+            mBluetoothGatt.writeCharacteristic(characteristic);
         }).start();
     }
 
-    public BluetoothGattCharacteristic getUARTReadBTGattChar() {
+    private BluetoothGattCharacteristic getUARTReadBTGattChar() {
         if (UART_Read == null) {
             UART_Read = new BluetoothGattCharacteristic(UUID.fromString(UART_READ_UUID), BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY, 0);
         }
         return UART_Read;
     }
 
-    public BluetoothGattCharacteristic getUARTWriteBTGattChar() {
+    private BluetoothGattCharacteristic getUARTWriteBTGattChar() {
         if (UART_Write == null) {
             UART_Write = new BluetoothGattCharacteristic(UUID.fromString(UART_WRITE_UUID), BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE, 0);
         }
         return UART_Write;
     }
 
-    public List<BluetoothGattService> getSupportedGattServices() {
-        log.debug("getSupportedGattServices");
+    private List<BluetoothGattService> getSupportedGattServices() {
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("getSupportedGattServices");
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {
-            log.debug("BluetoothAdapter not initialized_ERROR");
+            log.error("BluetoothAdapter not initialized_ERROR");
             isConnecting = false;
             isConnected = false;
             return null;
@@ -328,7 +311,7 @@ public class BLEComm {
         if (gattServices == null) {
             return;
         }
-        String uuid = null;
+        String uuid;
 
         for (BluetoothGattService gattService : gattServices) {
             List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
@@ -345,7 +328,23 @@ public class BLEComm {
         }
     }
 
-    private byte[] readBuffer = new byte[1024];
+    private synchronized void onConnectionStateChangeSynchronized(BluetoothGatt gatt, int status, int newState) {
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug("onConnectionStateChange");
+
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+            mBluetoothGatt.discoverServices();
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            close();
+            isConnected = false;
+            isConnecting = false;
+            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+            if (L.isEnabled(L.PUMPBTCOMM))
+                log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
+        }
+    }
+
+    private final byte[] readBuffer = new byte[1024];
     private int bufferLength = 0;
 
     private void addToReadBuffer(byte[] buffer) {
@@ -376,7 +375,8 @@ public class BLEComm {
                         if ((readBuffer[idxStartByte] == PACKET_START_BYTE) && (readBuffer[idxStartByte + 1] == PACKET_START_BYTE)) {
                             if (idxStartByte > 0) {
                                 // if buffer doesn't start with signature remove the leading trash
-                                log.debug("Shifting the input buffer by " + idxStartByte + " bytes");
+                                if (L.isEnabled(L.PUMPBTCOMM))
+                                    log.debug("Shifting the input buffer by " + idxStartByte + " bytes");
                                 System.arraycopy(readBuffer, idxStartByte, readBuffer, 0, bufferLength - idxStartByte);
                                 bufferLength -= idxStartByte;
                             }
@@ -406,7 +406,7 @@ public class BLEComm {
                     try {
                         System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7));
                     } catch (Exception e) {
-                        log.debug("length: " + length + "bufferLength: " + bufferLength);
+                        log.error("length: " + length + "bufferLength: " + bufferLength);
                         throw e;
                     }
                     bufferLength -= (length + 7);
@@ -419,7 +419,7 @@ public class BLEComm {
                     inputBuffer = BleCommandUtil.getInstance().getDecryptedPacket(inputBuffer);
 
                     if (inputBuffer == null) {
-                        log.debug("Null decryptedInputBuffer");
+                        log.error("Null decryptedInputBuffer");
                         return;
                     }
 
@@ -430,33 +430,51 @@ public class BLEComm {
                                 // 1st packet
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK:
                                     if (inputBuffer.length == 4 && inputBuffer[2] == 'O' && inputBuffer[3] == 'K') {
-                                        log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                        if (L.isEnabled(L.PUMPBTCOMM))
+                                            log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         // Grab pairing key from preferences if exists
-                                        String pairingKey = SP.getString(MainApp.sResources.getString(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, null);
-                                        log.debug("Using stored pairing key: " + pairingKey);
+                                        String pairingKey = SP.getString(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, null);
+                                        if (L.isEnabled(L.PUMPBTCOMM))
+                                            log.debug("Using stored pairing key: " + pairingKey);
                                         if (pairingKey != null) {
                                             byte[] encodedPairingKey = DanaRS_Packet.hexToBytes(pairingKey);
                                             byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY, encodedPairingKey, null);
-                                            log.debug(">>>>> " + "ENCRYPTION__CHECK_PASSKEY" + " " + DanaRS_Packet.toHexString(bytes));
+                                            if (L.isEnabled(L.PUMPBTCOMM))
+                                                log.debug(">>>>> " + "ENCRYPTION__CHECK_PASSKEY" + " " + DanaRS_Packet.toHexString(bytes));
                                             writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
                                         } else {
                                             // Stored pairing key does not exists, request pairing
                                             SendPairingRequest();
                                         }
 
+                                    } else if (inputBuffer.length == 6 && inputBuffer[2] == 'P' && inputBuffer[3] == 'U' && inputBuffer[4] == 'M' && inputBuffer[5] == 'P') {
+                                        if (L.isEnabled(L.PUMPBTCOMM))
+                                            log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                        mSendQueue.clear();
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumperror)));
+                                        NSUpload.uploadError(MainApp.gs(R.string.pumperror));
+                                        Notification n = new Notification(Notification.PUMPERROR, MainApp.gs(R.string.pumperror), Notification.URGENT);
+                                        MainApp.bus().post(new EventNewNotification(n));
                                     } else if (inputBuffer.length == 6 && inputBuffer[2] == 'B' && inputBuffer[3] == 'U' && inputBuffer[4] == 'S' && inputBuffer[5] == 'Y') {
-                                        log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                        if (L.isEnabled(L.PUMPBTCOMM))
+                                            log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.sResources.getString(R.string.pumpbusy)));
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
                                     } else {
-                                        log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                        // ERROR in response, wrong serial number
+                                        if (L.isEnabled(L.PUMPBTCOMM))
+                                            log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.sResources.getString(R.string.connectionerror)));
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
+                                        SP.remove(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName);
+                                        Notification n = new Notification(Notification.WRONGSERIALNUMBER, MainApp.gs(R.string.wrongpassword), Notification.URGENT);
+                                        MainApp.bus().post(new EventNewNotification(n));
                                     }
                                     break;
                                 // 2nd packet, pairing key
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY:
-                                    log.debug("<<<<< " + "ENCRYPTION__CHECK_PASSKEY" + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("<<<<< " + "ENCRYPTION__CHECK_PASSKEY" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                     if (inputBuffer[2] == (byte) 0x00) {
                                         // Paring is not requested, sending time info
                                         SendTimeInfo();
@@ -466,35 +484,41 @@ public class BLEComm {
                                     }
                                     break;
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST:
-                                    log.debug("<<<<< " + "ENCRYPTION__PASSKEY_REQUEST " + DanaRS_Packet.toHexString(inputBuffer));
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("<<<<< " + "ENCRYPTION__PASSKEY_REQUEST " + DanaRS_Packet.toHexString(inputBuffer));
                                     if (inputBuffer[2] != (byte) 0x00) {
                                         disconnect("passkey request failed");
                                     }
                                     break;
                                 // Paring response, OK button on pump pressed
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN:
-                                    log.debug("<<<<< " + "ENCRYPTION__PASSKEY_RETURN " + DanaRS_Packet.toHexString(inputBuffer));
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("<<<<< " + "ENCRYPTION__PASSKEY_RETURN " + DanaRS_Packet.toHexString(inputBuffer));
                                     // Paring is successfull, sending time info
                                     MainApp.bus().post(new EventDanaRSPairingSuccess());
                                     SendTimeInfo();
                                     byte[] pairingKey = {inputBuffer[2], inputBuffer[3]};
                                     // store pairing key to preferences
-                                    SP.putString(MainApp.sResources.getString(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey));
-                                    log.debug("Got pairing key: " + DanaRS_Packet.bytesToHex(pairingKey));
+                                    SP.putString(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey));
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("Got pairing key: " + DanaRS_Packet.bytesToHex(pairingKey));
                                     break;
                                 // time and user password information. last packet in handshake
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION:
-                                    log.debug("<<<<< " + "ENCRYPTION__TIME_INFORMATION " + /*message.getMessageName() + " " + */ DanaRS_Packet.toHexString(inputBuffer));
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("<<<<< " + "ENCRYPTION__TIME_INFORMATION " + /*message.getMessageName() + " " + */ DanaRS_Packet.toHexString(inputBuffer));
                                     int size = inputBuffer.length;
                                     int pass = ((inputBuffer[size - 1] & 0x000000FF) << 8) + ((inputBuffer[size - 2] & 0x000000FF));
                                     pass = pass ^ 3463;
                                     DanaRPump.getInstance().rs_password = Integer.toHexString(pass);
-                                    log.debug("Pump user password: " + Integer.toHexString(pass));
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("Pump user password: " + Integer.toHexString(pass));
 
                                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
                                     isConnected = true;
                                     isConnecting = false;
-                                    log.debug("RS connected and status read");
+                                    if (L.isEnabled(L.PUMPBTCOMM))
+                                        log.debug("RS connected and status read");
                                     break;
                             }
                             break;
@@ -512,7 +536,8 @@ public class BLEComm {
                                 message = DanaRSMessageHashTable.findMessage(receivedCommand);
                             }
                             if (message != null) {
-                                log.debug("<<<<< " + message.getFriendlyName() + " " + DanaRS_Packet.toHexString(inputBuffer));
+                                if (L.isEnabled(L.PUMPBTCOMM))
+                                    log.debug("<<<<< " + message.getFriendlyName() + " " + DanaRS_Packet.toHexString(inputBuffer));
                                 // process received data
                                 message.handleMessage(inputBuffer);
                                 message.setReceived();
@@ -549,7 +574,8 @@ public class BLEComm {
 
         byte[] command = {(byte) message.getType(), (byte) message.getOpCode()};
         byte[] params = message.getRequestParams();
-        log.debug(">>>>> " + message.getFriendlyName() + " " + DanaRS_Packet.toHexString(command) + " " + DanaRS_Packet.toHexString(params));
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug(">>>>> " + message.getFriendlyName() + " " + DanaRS_Packet.toHexString(command) + " " + DanaRS_Packet.toHexString(params));
         byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(message.getOpCode(), params, null);
         // If there is another message not completely sent, add to queue only
         if (mSendQueue.size() > 0) {
@@ -629,20 +655,29 @@ public class BLEComm {
         MainApp.instance().startActivity(i);
 
         byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST, null, null);
-        log.debug(">>>>> " + "ENCRYPTION__PASSKEY_REQUEST" + " " + DanaRS_Packet.toHexString(bytes));
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug(">>>>> " + "ENCRYPTION__PASSKEY_REQUEST" + " " + DanaRS_Packet.toHexString(bytes));
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
     }
 
-    protected void SendPumpCheck() {
+    private void SendPumpCheck() {
         // 1st message sent to pump after connect
-        byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, getConnectDeviceName());
-        log.debug(">>>>> " + "ENCRYPTION__PUMP_CHECK (0x00)" + " " + DanaRS_Packet.toHexString(bytes));
+        String devicename = getConnectDeviceName();
+        if(devicename == null || devicename.equals("")){
+            Notification n = new Notification(Notification.DEVICENOTPAIRED, MainApp.gs(R.string.pairfirst), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(n));
+            return;
+        }
+        byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, devicename);
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug(">>>>> " + "ENCRYPTION__PUMP_CHECK (0x00)" + " " + DanaRS_Packet.toHexString(bytes));
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
     }
 
     private void SendTimeInfo() {
         byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION, null, null);
-        log.debug(">>>>> " + "ENCRYPTION__TIME_INFORMATION" + " " + DanaRS_Packet.toHexString(bytes));
+        if (L.isEnabled(L.PUMPBTCOMM))
+            log.debug(">>>>> " + "ENCRYPTION__TIME_INFORMATION" + " " + DanaRS_Packet.toHexString(bytes));
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
     }
 

@@ -5,20 +5,17 @@ import android.support.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 public class MsgStatusBolusExtended_v2 extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusBolusExtended_v2.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgStatusBolusExtended_v2() {
         SetCommand(0x0207);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     public void handleMessage(byte[] bytes) {
@@ -34,7 +31,7 @@ public class MsgStatusBolusExtended_v2 extends MessageBase {
 
         int extendedBolusSoFarInMinutes = extendedBolusSoFarInSecs / 60;
         double extendedBolusAbsoluteRate = isExtendedInProgress ? extendedBolusAmount / extendedBolusMinutes * 60 : 0d;
-        Date extendedBolusStart = isExtendedInProgress ? getDateFromSecAgo(extendedBolusSoFarInSecs) : new Date(0);
+        long extendedBolusStart = isExtendedInProgress ? getDateFromSecAgo(extendedBolusSoFarInSecs) : 0;
         int extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes;
 
         DanaRPump pump = DanaRPump.getInstance();
@@ -46,7 +43,7 @@ public class MsgStatusBolusExtended_v2 extends MessageBase {
         pump.extendedBolusStart = extendedBolusStart;
         pump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes;
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Is extended bolus running: " + isExtendedInProgress);
             log.debug("Extended bolus min: " + extendedBolusMinutes);
             log.debug("Extended bolus amount: " + extendedBolusAmount);
@@ -58,8 +55,8 @@ public class MsgStatusBolusExtended_v2 extends MessageBase {
     }
 
     @NonNull
-    private Date getDateFromSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
+    private long getDateFromSecAgo(int tempBasalAgoSecs) {
+        return (long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000;
     }
 
 }

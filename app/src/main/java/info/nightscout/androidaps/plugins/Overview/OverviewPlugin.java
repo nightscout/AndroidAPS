@@ -9,9 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
@@ -20,13 +25,12 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class OverviewPlugin implements PluginBase {
-    private static Logger log = LoggerFactory.getLogger(OverviewPlugin.class);
+public class OverviewPlugin extends PluginBase {
+    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
 
     public static OverviewPlugin getPlugin() {
-
         if (overviewPlugin == null)
             overviewPlugin = new OverviewPlugin();
         return overviewPlugin;
@@ -40,92 +44,67 @@ public class OverviewPlugin implements PluginBase {
     public NotificationStore notificationStore = new NotificationStore();
 
     public OverviewPlugin() {
+        super(new PluginDescription()
+                .mainType(PluginType.GENERAL)
+                .fragmentClass(OverviewFragment.class.getName())
+                .alwayVisible(true)
+                .alwaysEnabled(true)
+                .pluginName(R.string.overview)
+                .shortName(R.string.overview_shortname)
+                .preferencesId(R.xml.pref_overview)
+                .description(R.string.description_overview)
+        );
         String storedData = SP.getString("QuickWizard", "[]");
         try {
             quickWizard.setData(new JSONArray(storedData));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
+    }
+
+    @Override
+    protected void onStart() {
         MainApp.bus().register(this);
+        super.onStart();
     }
 
     @Override
-    public String getFragmentClass() {
-        return OverviewFragment.class.getName();
+    protected void onStop() {
+        MainApp.bus().unregister(this);
     }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.overview);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.overview_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == GENERAL;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return false;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return false;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        // Always enabled
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        // Always visible
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.GENERAL;
-    }
-
 
     @Subscribe
     public void onStatusEvent(final EventNewNotification n) {
-        notificationStore.add(n.notification);
-        MainApp.bus().post(new EventRefreshOverview("EventNewNotification"));
+        if (notificationStore.add(n.notification))
+            MainApp.bus().post(new EventRefreshOverview("EventNewNotification"));
     }
 
     @Subscribe
     public void onStatusEvent(final EventDismissNotification n) {
         if (notificationStore.remove(n.id))
             MainApp.bus().post(new EventRefreshOverview("EventDismissNotification"));
+    }
+
+    public double determineHighLine(String units) {
+        double highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units));
+        if (highLineSetting < 1)
+            highLineSetting = Profile.fromMgdlToUnits(180d, units);
+        return highLineSetting;
+    }
+
+    public double determineLowLine() {
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+        if (profile == null) {
+            return bgTargetLow;
+        }
+        return determineLowLine(profile.getUnits());
+    }
+
+    public double determineLowLine(String units) {
+        double lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units));
+        if (lowLineSetting < 1)
+            lowLineSetting = Profile.fromMgdlToUnits(76d, units);
+        return lowLineSetting;
     }
 
 }

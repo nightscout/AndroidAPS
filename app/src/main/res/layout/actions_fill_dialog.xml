@@ -1,110 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    android:padding="10dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-     <LinearLayout
-        android:id="@+id/careportal_newnstreatment_insulin_layout"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <TextView
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_cp_pump_canula" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/primefill"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/colorInsulinButton" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:width="120dp"
-            android:padding="10dp"
-            android:text="@string/treatments_newtreatment_insulinamount_label"
-            android:textAppearance="@android:style/TextAppearance.Material.Small"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <info.nightscout.utils.NumberPicker
-            android:id="@+id/treatments_newtreatment_insulinamount"
-            android:layout_width="130dp"
-            android:layout_height="40dp" />
+            <CheckBox
+                android:id="@+id/fill_catheter_change"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:text="@string/careportal_pumpsitechange" />
 
-        <TextView
+            <CheckBox
+                android:id="@+id/fill_cartridge_change"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/careportal_insulincartridgechange" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="left"
-            android:minWidth="45dp"
-            android:paddingLeft="5dp"
-            android:text="U"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textStyle="bold"
+                android:text="@string/overview_insulin_label" />
+
+            <info.nightscout.utils.NumberPicker
+                android:id="@+id/fill_insulinamount"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/insulin_unit_shortname" />
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/fill_preset_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0.3U" />
+
+            <Button
+                android:id="@+id/fill_preset_button2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0.7U" />
+
+            <Button
+                android:id="@+id/fill_preset_button3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="1.2U" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fill_notes_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:width="60dp"
+                android:padding="2dp"
+                android:text="@string/careportal_newnstreatment_notes_label"
+                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/fill_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textCapSentences" />
+
+        </LinearLayout>
+
+        <include layout="@layout/mdtp_done_button" />
 
     </LinearLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        android:padding="10dp">
 
-        <Button
-            android:id="@+id/treatments_newtreatment_deliverbutton"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:text="@string/primefill"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/fill_preset_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/fill_preset_button1"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:padding="10dp"
-            android:text="0.3U"
-            android:textSize="20sp" />
-        <Button
-            android:id="@+id/fill_preset_button2"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:padding="10dp"
-            android:text="0.7U"
-            android:textSize="20sp" />
-        <Button
-            android:id="@+id/fill_preset_button3"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:padding="10dp"
-            android:text="1.2U"
-            android:textSize="20sp" />
-
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

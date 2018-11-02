@@ -5,12 +5,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
+
 /**
  * Created by mike on 11.06.2017.
  */
 
 public class NSAlarm {
-    private static Logger log = LoggerFactory.getLogger(NSAlarm.class);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     JSONObject data;
 

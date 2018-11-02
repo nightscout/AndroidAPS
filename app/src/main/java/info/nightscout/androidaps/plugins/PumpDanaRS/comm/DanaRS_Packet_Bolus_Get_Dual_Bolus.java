@@ -1,18 +1,21 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import com.cozmo.danar.util.BleCommandUtil;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Bolus_Get_Dual_Bolus extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Bolus_Get_Dual_Bolus.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public DanaRS_Packet_Bolus_Get_Dual_Bolus() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BOLUS__GET_DUAL_BOLUS;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -38,8 +41,9 @@ public class DanaRS_Packet_Bolus_Get_Dual_Bolus extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 1;
         double bolusIncrement = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d;
-
-        if (Config.logDanaMessageDetail) {
+        if (error != 0)
+            failed = true;
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Result: " + error);
             log.debug("Bolus step: " + pump.bolusStep + " U");
             log.debug("Extended bolus running: " + pump.extendedBolusAbsoluteRate + " U/h");

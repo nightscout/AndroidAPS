@@ -7,20 +7,98 @@
 
         <EditTextPreference
             android:defaultValue="1"
-            android:key="openapsma_max_basal"
-            android:numeric="decimal"
             android:dialogMessage="@string/openapsma_maxbasal_summary"
+            android:key="@string/key_openapsma_max_basal"
+            android:numeric="decimal"
             android:title="@string/openapsma_maxbasal_title" />
+
         <EditTextPreference
             android:defaultValue="1.5"
-            android:key="openapsma_max_iob"
-            android:numeric="decimal"
             android:dialogMessage="@string/openapsma_maxiob_summary"
+            android:key="@string/key_openapsma_max_iob"
+            android:numeric="decimal"
             android:title="@string/openapsma_maxiob_title" />
+
         <SwitchPreference
             android:defaultValue="false"
-            android:key="openapsama_useautosens"
+            android:key="@string/key_openapsama_useautosens"
             android:title="@string/openapsama_useautosens" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_openapsama_autosens_adjusttargets"
+            android:summary="@string/openapsama_autosens_adjusttargets_summary"
+            android:title="@string/openapsama_autosens_adjusttargets" />
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:defaultValue="3.0"
+            android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
+            android:inputType="numberDecimal"
+            android:key="@string/key_openapsama_min_5m_carbimpact"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/openapsama_min_5m_carbimpact"
+            validate:floatmaxNumber="12.0"
+            validate:floatminNumber="0.1"
+            validate:testType="floatNumericRange" />
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <Preference android:summary="@string/openapsama_link_to_preferncejson_doc_txt">
+                <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="@string/openapsama_link_to_preferncejson_doc" />
+            </Preference>
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_always_use_shortavg"
+                android:summary="@string/always_use_shortavg_summary"
+                android:title="@string/always_use_shortavg" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="3"
+                android:dialogMessage="@string/openapsama_max_daily_safety_multiplier_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_max_daily_safety_multiplier"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:title="@string/openapsama_max_daily_safety_multiplier"
+                validate:maxNumber="10"
+                validate:minNumber="1"
+                validate:testType="numericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="4"
+                android:dialogMessage="@string/openapsama_current_basal_safety_multiplier_summary"
+                android:digits="0123456789.,"
+                android:inputType="number"
+                android:key="@string/key_openapsama_current_basal_safety_multiplier"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_current_basal_safety_multiplier"
+                validate:floatmaxNumber="10"
+                validate:floatminNumber="1"
+                validate:testType="floatNumericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="2"
+                android:dialogMessage="@string/openapsama_bolussnooze_dia_divisor_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_bolussnooze_dia_divisor"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_bolussnooze_dia_divisor"
+                validate:maxNumber="10"
+                validate:minNumber="1"
+                validate:testType="floatNumericRange" />
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
 

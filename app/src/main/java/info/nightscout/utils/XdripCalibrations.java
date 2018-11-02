@@ -10,14 +10,13 @@ import android.support.v7.app.AlertDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.services.Intents;
 
 /**
  * Created by mike on 10.02.2017.
@@ -28,17 +27,17 @@ public class XdripCalibrations {
 
     public static void confirmAndSendCalibration(final Double bg, Context parentContext) {
         if (parentContext != null) {
-            String confirmMessage = String.format(MainApp.sResources.getString(R.string.send_calibration), bg);
+            String confirmMessage = String.format(MainApp.gs(R.string.send_calibration), bg);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
-            builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
+            builder.setTitle(MainApp.gs(R.string.confirmation));
             builder.setMessage(confirmMessage);
-            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     sendIntent(bg);
                 }
             });
-            builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
             builder.show();
         }
     }
@@ -47,7 +46,7 @@ public class XdripCalibrations {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putDouble("glucose_number", bg);
-        bundle.putString("units", MainApp.getConfigBuilder().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
+        bundle.putString("units", ProfileFunctions.getInstance().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
         bundle.putLong("timestamp", System.currentTimeMillis());
         Intent intent = new Intent(Intents.ACTION_REMOTE_CALIBRATION);
         intent.putExtras(bundle);
@@ -55,12 +54,12 @@ public class XdripCalibrations {
         context.sendBroadcast(intent);
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.xdripnotinstalled));
-            log.debug(MainApp.sResources.getString(R.string.xdripnotinstalled));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.xdripnotinstalled));
+            log.debug(MainApp.gs(R.string.xdripnotinstalled));
             return false;
         } else {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.calibrationsent));
-            log.debug(MainApp.sResources.getString(R.string.calibrationsent));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.calibrationsent));
+            log.debug(MainApp.gs(R.string.calibrationsent));
             return true;
         }
     }

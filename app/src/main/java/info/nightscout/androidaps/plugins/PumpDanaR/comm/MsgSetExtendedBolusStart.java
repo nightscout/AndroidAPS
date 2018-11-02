@@ -3,16 +3,17 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.utils.HardLimits;
+import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.logging.L;
 
 public class MsgSetExtendedBolusStart extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSetExtendedBolusStart.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgSetExtendedBolusStart() {
         SetCommand(0x0407);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     public MsgSetExtendedBolusStart(double amount, byte halfhours) {
@@ -21,13 +22,15 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         // HARDCODED LIMITS
         if (halfhours < 1) halfhours = 1;
         if (halfhours > 16) halfhours = 16;
-        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
-        if (amount < 0d) amount = 0d;
-        if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
-
-        AddParamInt((int) (amount * 100));
+        Constraint<Double> constrainedAmount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount));
+        if (constrainedAmount != null) {
+            AddParamInt((int) (constrainedAmount.value() * 100));
+        } else {
+            log.error("constrainedAmount of insulin is null!!");
+            AddParamInt(0);
+        }
         AddParamByte(halfhours);
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Set extended bolus start: " + (((int) (amount * 100)) / 100d) + "U halfhours: " + (int) halfhours);
     }
 
@@ -36,9 +39,10 @@ public class MsgSetExtendedBolusStart extends MessageBase {
         int result = intFromBuff(bytes, 0, 1);
         if (result != 1) {
             failed = true;
-            log.debug("Set extended bolus start result: " + result + " FAILED!!!");
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Set extended bolus start result: " + result + " FAILED!!!");
         } else {
-            if (Config.logDanaMessageDetail)
+            if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Set extended bolus start result: " + result);
         }
     }

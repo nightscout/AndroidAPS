@@ -11,12 +11,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -24,10 +26,11 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.T;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
 public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(ProfileSwitch.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -60,6 +63,31 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public int durationInMinutes = 0;
 
     private Profile profile = null;
+
+    public ProfileSwitch date(long date) {
+        this.date = date;
+        return this;
+    }
+
+    public ProfileSwitch profileName(String profileName) {
+        this.profileName = profileName;
+        return this;
+    }
+
+    public ProfileSwitch profile(Profile profile) {
+        this.profile = profile;
+        return this;
+    }
+
+   public ProfileSwitch source(int source) {
+        this.source = source;
+        return this;
+    }
+
+   public ProfileSwitch duration(int duration) {
+        this.durationInMinutes = duration;
+        return this;
+    }
 
     @Nullable
     public Profile getProfileObject() {
@@ -190,6 +218,26 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public void createNotificationInvalidProfile(String detail) {
         Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, String.format(MainApp.gs(R.string.zerovalueinprofile), detail), Notification.LOW, 5);
         MainApp.bus().post(new EventNewNotification(notification));
+    }
+
+    public static boolean isEvent5minBack(List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {
+        for (int i = 0; i < list.size(); i++) {
+            ProfileSwitch event = list.get(i);
+            if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
+                if (zeroDurationOnly) {
+                    if (event.durationInMinutes == 0) {
+                        if (L.isEnabled(L.DATABASE))
+                            log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                        return true;
+                    }
+                } else {
+                    if (L.isEnabled(L.DATABASE))
+                        log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // -------- Interval interface end ---------

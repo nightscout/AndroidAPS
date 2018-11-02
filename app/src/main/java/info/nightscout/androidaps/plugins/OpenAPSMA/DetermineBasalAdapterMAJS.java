@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.OpenAPSMA;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeJSON;
@@ -16,20 +15,22 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
-    private ScriptReader mScriptReader = null;
+    private ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
     private JSONObject mIobData;
@@ -37,12 +38,12 @@ public class DetermineBasalAdapterMAJS {
     private JSONObject mCurrentTemp;
 
     private String storedCurrentTemp = null;
-    public String storedIobData = null;
+    private String storedIobData = null;
     private String storedGlucoseStatus = null;
     private String storedProfile = null;
     private String storedMeal_data = null;
 
-    public DetermineBasalAdapterMAJS(ScriptReader scriptReader) throws IOException {
+    DetermineBasalAdapterMAJS(ScriptReader scriptReader) {
         mScriptReader = scriptReader;
     }
 
@@ -95,7 +96,7 @@ public class DetermineBasalAdapterMAJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (Config.logAPSResult)
+                if (L.isEnabled(L.APS))
                     log.debug("Result: " + result);
                 try {
                     determineBasalResultMA = new DetermineBasalResultMA(jsResult, new JSONObject(result));
@@ -106,14 +107,10 @@ public class DetermineBasalAdapterMAJS {
                 log.debug("Problem loading JS Functions");
             }
         } catch (IOException e) {
-            log.debug("IOException");
+            log.error("IOException");
         } catch (RhinoException e) {
             log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
-        } catch (IllegalAccessException e) {
-            log.error(e.toString());
-        } catch (InstantiationException e) {
-            log.error(e.toString());
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             log.error(e.toString());
         } finally {
             Context.exit();
@@ -171,7 +168,7 @@ public class DetermineBasalAdapterMAJS {
         mProfile.put("max_bg", maxBg);
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
-        mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
+        mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
 
         mProfile.put("current_basal", basalRate);
 
@@ -179,9 +176,12 @@ public class DetermineBasalAdapterMAJS {
             mProfile.put("out_units", "mmol/L");
         }
 
+        long now = System.currentTimeMillis();
+        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+
         mCurrentTemp = new JSONObject();
-        mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
-        mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
+        mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);
+        mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         mIobData = new JSONObject();
         mIobData.put("iob", iobData.iob); //netIob
@@ -193,7 +193,7 @@ public class DetermineBasalAdapterMAJS {
 
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
-        if (SP.getBoolean("always_use_shortavg", false)) {
+        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);
@@ -205,7 +205,7 @@ public class DetermineBasalAdapterMAJS {
         mMealData.put("boluses", mealData.boluses);
     }
 
-    public String readFile(String filename) throws IOException {
+    private String readFile(String filename) throws IOException {
         byte[] bytes = mScriptReader.readFile(filename);
         String string = new String(bytes, "UTF-8");
         if (string.startsWith("#!/usr/bin/env node")) {
@@ -214,13 +214,8 @@ public class DetermineBasalAdapterMAJS {
         return string;
     }
 
-    public Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
-        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), new Callable() {
-            @Override
-            public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
-                return objects[1];
-            }
-        });
+    private Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
+        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
         return param;
     }
 

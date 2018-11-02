@@ -15,10 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.services.AlarmSoundService;
 
 public class ErrorDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(ErrorDialog.class);
+    Button muteButton;
     Button okButton;
     TextView statusView;
     ErrorHelperActivity helperActivity;
@@ -52,14 +53,14 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         getDialog().setTitle(title);
         View view = inflater.inflate(R.layout.overview_error_dialog, container, false);
+        muteButton = (Button) view.findViewById(R.id.overview_error_mute);
         okButton = (Button) view.findViewById(R.id.overview_error_ok);
         statusView = (TextView) view.findViewById(R.id.overview_error_status);
+        muteButton.setOnClickListener(this);
         okButton.setOnClickListener(this);
         setCancelable(false);
 
-        Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
-        alarm.putExtra("soundid", soundId);
-        MainApp.instance().startService(alarm);
+        startAlarm();
         return view;
     }
 
@@ -73,17 +74,20 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        super.dismissAllowingStateLoss();
         if (helperActivity != null) {
             helperActivity.finish();
         }
-        Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
-        MainApp.instance().stopService(alarm);
+        stopAlarm();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.overview_error_mute:
+                log.debug("Error dialog mute button pressed");
+                stopAlarm();
+                break;
             case R.id.overview_error_ok:
                 log.debug("Error dialog ok button pressed");
                 dismiss();
@@ -91,4 +95,14 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
         }
     }
 
+    private void startAlarm() {
+        Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+        alarm.putExtra("soundid", soundId);
+        MainApp.instance().startService(alarm);
+    }
+
+    private void stopAlarm() {
+        Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+        MainApp.instance().stopService(alarm);
+    }
 }

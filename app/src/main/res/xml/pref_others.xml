@@ -25,6 +25,16 @@
                 android:inputType="numberDecimal"
                 android:key="@string/key_activity_target"
                 android:title="@string/activity_target"></EditTextPreference>
+            <EditTextPreference
+                android:defaultValue="0"
+                android:inputType="number"
+                android:key="@string/key_hypo_duration"
+                android:title="@string/hypo_duration"></EditTextPreference>
+            <EditTextPreference
+                android:defaultValue="0"
+                android:inputType="numberDecimal"
+                android:key="@string/key_hypo_target"
+                android:title="@string/hypo_target"></EditTextPreference>
         </PreferenceScreen>
         <PreferenceScreen android:title="@string/fillbolus_title">
             <EditTextPreference
@@ -59,7 +69,7 @@
         </PreferenceScreen>
         <SwitchPreference
             android:defaultValue="false"
-            android:key="short_tabtitles"
+            android:key="@string/key_short_tabtitles"
             android:title="@string/short_tabtitles" />
     </PreferenceCategory>
     <PreferenceScreen android:title="@string/localalertsettings_title">

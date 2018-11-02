@@ -2,13 +2,19 @@
 <resources>
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
-    <color name="iob">#FFFB8C00</color>
-    <color name="bolus">#FFFFCC03</color>
-    <color name="cob">#8BC34A</color>
+    <color name="iob">#1e88e5</color>
+    <color name="bolus">#1ea3e5</color>
+    <color name="cob">#FFFB8C00</color>
+    <color name="carbs">#FFFB8C00</color>
+    <color name="uam">#c9bd60</color>
+    <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
+    <color name="devslopepos">#FFFFFF00</color>
+    <color name="devslopeneg">#FFFF00FF</color>
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
+    <color name="actionsConfirm">#FFFF00</color>
     <color name="listdelimiter">#505050</color>
     <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
@@ -17,18 +23,21 @@
     <color name="basebasal">#C83F51B5</color>
     <color name="tempbasal">#C803A9F4</color>
     <color name="graphgrid">#757575</color>
-    <color name="updating">#50ffffff</color>
     <color name="colorLightGray">#d8d8d8</color>
+    <color name="warning">#ff1a1a</color>
 
     <color name="defaultbackground">#424242</color>
+    <color name="defaulttext">#BBBBBB</color>
 
     <color name="tempTargetBackground">#77dd77</color>
+    <color name="tempTargetConfirmation">#77dd77</color>
     <color name="tempTargetDisabledBackground">#303F9F</color>
 
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#40bbaa</color>
+    <color name="mdtp_accent_color">#40bbaa</color>
     <color name="colorInitializingBorder">#00695c</color>
 
     <color name="cardColorBackground">#121212</color>
@@ -39,21 +48,17 @@
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>
+    <color name="colorInsulinButton">#67dfe8</color>
+    <color name="colorCarbsButton">#ffae01</color>
     <color name="colorCalibrationButton">#e93057</color>
     <color name="colorCalculatorButton">#67e86a</color>
     <color name="colorQuickWizardButton">#ffae01</color>
-    <color name="colorCancelTempButton">#d08cff</color>
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
-    <color name="colorTempTargetButton">#d43429</color>
 
-    <color name="colorInProgress">#c45026</color>
-    <color name="colorActive">#1b5e20</color>
-    <color name="colorNotEnded">#190084</color>
-
-    <color name="colorPumpLabel">#779ECB</color>
-    <color name="cardItemLabel">#FF478EFF</color>
+    <color name="colorScheduled">#de7550</color>
+    <color name="colorActive">#25912e</color>
 
     <color name="loopenabled">#47c8ff</color>
     <color name="loopdisabled">#FFDD7792</color>
@@ -65,4 +70,11 @@
     <color name="notificationLow">#ff827c</color>
     <color name="notificationInfo">#009705</color>
 
+    <color name="black_overlay">#66000000</color>
+    <color name="deviationgrey">#c8666666</color>
+    <color name="deviationgreen">#7200FF00</color>
+    <color name="deviationred">#72FF0000</color>
+    <color name="deviationblack">#72000000</color>
+
+    <color name="ic_launcher_background">#424242</color>
 </resources>

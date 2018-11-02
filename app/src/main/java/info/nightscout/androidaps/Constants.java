@@ -1,6 +1,6 @@
 package info.nightscout.androidaps;
 
-import com.j256.ormlite.stmt.query.In;
+import info.nightscout.utils.T;
 
 /**
  * Created by mike on 07.06.2016.
@@ -12,12 +12,13 @@ public class Constants {
     public static final double MMOLL_TO_MGDL = 18; // 18.0182;
     public static final double MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL;
 
-    public static final double defaultDIA = 3d;
+    public static final double defaultDIA = 5d;
 
-    public static final double basalAbsoluteOnlyForCheckLimit = 10101010d;
-    public static final Integer basalPercentOnlyForCheckLimit = 10101010;
-    public static final double bolusOnlyForCheckLimit = 10101010d;
-    public static final Integer carbsOnlyForCheckLimit = 10101010;
+    public static final Double REALLYHIGHBASALRATE = 1111111d;
+    public static final Integer REALLYHIGHPERCENTBASALRATE = 1111111;
+    public static final double REALLYHIGHBOLUS = 1111111d;
+    public static final Integer REALLYHIGHCARBS = 1111111;
+    public static final double REALLYHIGHIOB = 1111111d;
 
     public static final Integer notificationID = 556677;
 
@@ -35,19 +36,19 @@ public class Constants {
     public static final int CPP_MIN_TIMESHIFT = -6;
     public static final int CPP_MAX_TIMESHIFT = 23;
 
-    // Very Hard Limits Ranges
-    // First value is the Lowest and second value is the Highest a Limit can define
-    public static final int[] VERY_HARD_LIMIT_MIN_BG = {72,180};
-    public static final int[] VERY_HARD_LIMIT_MAX_BG = {90,270};
-    public static final int[] VERY_HARD_LIMIT_TARGET_BG = {80,200};
-
-    // Very Hard Limits Ranges for Temp Targets
-    public static final int[] VERY_HARD_LIMIT_TEMP_MIN_BG = {72,180};
-    public static final int[] VERY_HARD_LIMIT_TEMP_MAX_BG = {72,270};
-    public static final int[] VERY_HARD_LIMIT_TEMP_TARGET_BG = {72,200};
-
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
+
+    // Temp targets
+    public static final int defaultActivityTTDuration = 90; // min
+    public static final double defaultActivityTTmgdl = 140d;
+    public static final double defaultActivityTTmmol = 8d;
+    public static final int defaultEatingSoonTTDuration = 45; // min
+    public static final double defaultEatingSoonTTmgdl = 90d;
+    public static final double defaultEatingSoonTTmmol = 5d;
+    public static final int defaultHypoTTDuration = 30; // min
+    public static final double defaultHypoTTmgdl = 120d;
+    public static final double defaultHypoTTmmol = 6.5d;
 
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;
@@ -58,8 +59,13 @@ public class Constants {
 
     //Autosens
     public static final double DEVIATION_TO_BE_EQUAL = 2.0;
+    public static final double DEFAULT_MAX_ABSORPTION_TIME = 6.0;
 
     // Pump
     public static final int PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1;
     public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
+
+    //SMS Communicator
+    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
+
 }

@@ -15,8 +15,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -25,15 +25,18 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -50,6 +53,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     //one shot guards
     private boolean accepted;
     private boolean okClicked;
+
+    private CheckBox recordOnlyCheckbox;
 
     public NewTreatmentDialog() {
     }
@@ -73,12 +78,12 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         Integer carbs = SafeParse.stringToInt(editCarbs.getText());
         if (carbs > maxCarbs) {
             editCarbs.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
         }
         Double insulin = SafeParse.stringToDouble(editInsulin.getText());
         if (insulin > maxInsulin) {
             editInsulin.setValue(0d);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.bolusconstraintapplied));
         }
     }
 
@@ -93,14 +98,16 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
-        maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
+        maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
         editCarbs = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_carbsamount);
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
 
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+
+        recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newtreatment_record_only);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -119,18 +126,29 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                 okClicked = true;
 
                 try {
+                    final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+
+                    if (pump == null)
+                        return;
+
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
 
-                    String confirmMessage = getString(R.string.entertreatmentquestion) + "<br/>";
+                    String confirmMessage = MainApp.gs(R.string.entertreatmentquestion) + "<br/>";
 
-                    Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
-                    Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
+                    Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+                    Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
-                    confirmMessage += getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + insulinAfterConstraints + "U" + "</font>";
-                    confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-                    if (insulinAfterConstraints - insulin != 0 || !Objects.equals(carbsAfterConstraints, carbs))
-                        confirmMessage += "<br/>" + getString(R.string.constraintapllied);
+                    if (insulin > 0) {
+                        confirmMessage += MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>";
+                        if (recordOnlyCheckbox.isChecked()) {
+                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
+                        }
+                        if (Math.abs(insulinAfterConstraints - insulin) > pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints) || !Objects.equals(carbsAfterConstraints, carbs))
+                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
+                    }
+                    if (carbsAfterConstraints > 0)
+                        confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";
 
 
                     final double finalInsulinAfterConstraints = insulinAfterConstraints;
@@ -139,9 +157,9 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     final Context context = getContext();
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                    builder.setTitle(this.getContext().getString(R.string.confirmation));
+                    builder.setTitle(MainApp.gs(R.string.confirmation));
                     builder.setMessage(Html.fromHtml(confirmMessage));
-                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             synchronized (builder) {
                                 if (accepted) {
@@ -159,31 +177,29 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                     detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                                     detailedBolusInfo.context = context;
                                     detailedBolusInfo.source = Source.USER;
-                                    if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
-                                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    if (!(recordOnlyCheckbox.isChecked() && (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo))) {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
                                                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                                                     i.putExtra("soundid", R.raw.boluserror);
                                                     i.putExtra("status", result.comment);
-                                                    i.putExtra("title", MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
                                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     MainApp.instance().startActivity(i);
                                                 }
                                             }
                                         });
                                     } else {
-                                        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                                     }
-                                    Answers.getInstance().logCustom(new CustomEvent("Bolus"));
+                                    FabricPrivacy.getInstance().logCustom(new CustomEvent("Bolus"));
                                 }
                             }
                         }
                     });
-                    builder.setNegativeButton(
-
-                            getString(R.string.cancel), null);
+                    builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                     builder.show();
 
                     dismiss();

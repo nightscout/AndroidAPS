@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,58 +50,49 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.danars_pairingprogressdialog, container, false);
-        getDialog().setTitle(MainApp.sResources.getString(R.string.pairing));
-        statusView = (TextView) view.findViewById(R.id.danars_paringprogress_status);
-        progressBar = (ProgressBar) view.findViewById(R.id.danars_paringprogress_progressbar);
+        getDialog().setTitle(MainApp.gs(R.string.pairing));
+        statusView = (TextView) view.findViewById(R.id.danars_pairingprogress_status);
+        progressBar = (ProgressBar) view.findViewById(R.id.danars_pairingprogress_progressbar);
         button = (Button) view.findViewById(R.id.ok);
 
         progressBar.setMax(100);
         progressBar.setProgress(0);
-        statusView.setText(MainApp.sResources.getString(R.string.waitingforpairing));
+        statusView.setText(MainApp.gs(R.string.waitingforpairing));
         button.setVisibility(View.GONE);
         button.setOnClickListener(this);
         setCancelable(false);
 
-        sHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 20; i++) {
-                    if (pairingEnded) {
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressBar.setProgress(100);
-                                    statusView.setText(R.string.pairingok);
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                    }
-                                    dismiss();
-                                }
-                            });
-                        } else
-                            dismiss();
-                        return;
-                    }
-                    progressBar.setProgress(i * 5);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-                Activity activity = getActivity();
-                if (activity != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+        sHandler.post(() -> {
+            for (int i = 0; i < 20; i++) {
+                if (pairingEnded) {
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(() -> {
                             progressBar.setProgress(100);
-                            statusView.setText(R.string.pairingtimedout);
-                            button.setVisibility(View.VISIBLE);
-                        }
-                    });
+                            statusView.setText(R.string.pairingok);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ignored) {
+                            }
+                            dismiss();
+                        });
+                    } else
+                        dismiss();
+                    return;
                 }
+                progressBar.setProgress(i * 5);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+                }
+            }
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(() -> {
+                    progressBar.setProgress(100);
+                    statusView.setText(R.string.pairingtimedout);
+                    button.setVisibility(View.VISIBLE);
+                });
             }
         });
         return view;

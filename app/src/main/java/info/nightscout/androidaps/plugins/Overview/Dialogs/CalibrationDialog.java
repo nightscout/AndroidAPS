@@ -11,7 +11,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import org.slf4j.Logger;
@@ -24,6 +23,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.XdripCalibrations;
@@ -63,7 +64,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
 
-        String units = MainApp.getConfigBuilder().getProfileUnits();
+        String units = ProfileFunctions.getInstance().getProfileUnits();
         Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
 
         bgNumber = (NumberPicker) view.findViewById(R.id.overview_calibration_bg);
@@ -88,7 +89,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
                 final Double bg = SafeParse.stringToDouble(bgNumber.getText());
                 XdripCalibrations.confirmAndSendCalibration(bg, context);
                 dismiss();
-                Answers.getInstance().logCustom(new CustomEvent("Calibration"));
+                FabricPrivacy.getInstance().logCustom(new CustomEvent("Calibration"));
                 break;
             case R.id.cancel:
                 dismiss();

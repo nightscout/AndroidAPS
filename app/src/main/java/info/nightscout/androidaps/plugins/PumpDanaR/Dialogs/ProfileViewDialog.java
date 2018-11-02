@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.Dialogs;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,30 +8,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
  * Created by mike on 10.07.2016.
  */
 public class ProfileViewDialog extends DialogFragment {
-    private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
-
     private  TextView noProfile;
     private  TextView units;
     private  TextView dia;
@@ -42,6 +29,8 @@ public class ProfileViewDialog extends DialogFragment {
     private  TextView isf;
     private  TextView basal;
     private  TextView target;
+    private ProfileGraph basalGraph;
+
 
     private  Button refreshButton;
 
@@ -66,11 +55,11 @@ public class ProfileViewDialog extends DialogFragment {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfigBuilderPlugin.getCommandQueue().readStatus("ProfileViewDialog", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("ProfileViewDialog", null);
                 dismiss();
             }
         });
-
+        basalGraph = (ProfileGraph) layout.findViewById(R.id.basal_graph);
         setContent();
         return layout;
     }
@@ -82,23 +71,18 @@ public class ProfileViewDialog extends DialogFragment {
     }
 
     private void setContent() {
-//        if (profile == null) {
-//            noProfile.setVisibility(View.VISIBLE);
-//            return;
-//        } else {
-//            noProfile.setVisibility(View.GONE);
-//        }
-        ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
+        ProfileStore store = ((ProfileInterface)ConfigBuilderPlugin.getPlugin().getActivePump()).getProfile();
         if (store != null) {
             noProfile.setVisibility(View.GONE);
             Profile profile = store.getDefaultProfile();
             units.setText(profile.getUnits());
             dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-            activeProfile.setText(((ProfileInterface) MainApp.getConfigBuilder().getActivePump()).getProfileName());
+            activeProfile.setText(((ProfileInterface) ConfigBuilderPlugin.getPlugin().getActivePump()).getProfileName());
             ic.setText(profile.getIcList());
             isf.setText(profile.getIsfList());
             basal.setText(profile.getBasalList());
             target.setText(profile.getTargetList());
+            basalGraph.show(store.getDefaultProfile());
         } else {
             noProfile.setVisibility(View.VISIBLE);
         }

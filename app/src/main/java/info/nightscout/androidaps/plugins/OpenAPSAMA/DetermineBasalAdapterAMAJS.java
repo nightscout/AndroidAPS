@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.OpenAPSAMA;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeJSON;
@@ -18,21 +17,24 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterAMAJS {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterAMAJS.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
 
     private ScriptReader mScriptReader = null;
@@ -53,23 +55,24 @@ public class DetermineBasalAdapterAMAJS {
 
     private String scriptDebug = "";
 
-    public DetermineBasalAdapterAMAJS(ScriptReader scriptReader) throws IOException {
+    public DetermineBasalAdapterAMAJS(ScriptReader scriptReader) {
         mScriptReader = scriptReader;
     }
 
     public DetermineBasalResultAMA invoke() {
 
-
-        log.debug(">>> Invoking detemine_basal <<<");
-        log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
-        log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
-        log.debug("Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
-        log.debug("Profile:        " + (storedProfile = mProfile.toString()));
-        log.debug("Meal data:      " + (storedMeal_data = mMealData.toString()));
-        if (mAutosensData != null)
-            log.debug("Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
-        else
-            log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
+        if (L.isEnabled(L.APS)) {
+            log.debug(">>> Invoking detemine_basal <<<");
+            log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
+            log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
+            log.debug("Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
+            log.debug("Profile:        " + (storedProfile = mProfile.toString()));
+            log.debug("Meal data:      " + (storedMeal_data = mMealData.toString()));
+            if (mAutosensData != null)
+                log.debug("Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
+            else
+                log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
+        }
 
         DetermineBasalResultAMA determineBasalResultAMA = null;
 
@@ -116,7 +119,7 @@ public class DetermineBasalAdapterAMAJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (Config.logAPSResult)
+                if (L.isEnabled(L.APS))
                     log.debug("Result: " + result);
                 try {
                     determineBasalResultAMA = new DetermineBasalResultAMA(jsResult, new JSONObject(result));
@@ -124,17 +127,13 @@ public class DetermineBasalAdapterAMAJS {
                     log.error("Unhandled exception", e);
                 }
             } else {
-                log.debug("Problem loading JS Functions");
+                log.error("Problem loading JS Functions");
             }
         } catch (IOException e) {
-            log.debug("IOException");
+            log.error("IOException");
         } catch (RhinoException e) {
             log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
-        } catch (IllegalAccessException e) {
-            log.error(e.toString());
-        } catch (InstantiationException e) {
-            log.error(e.toString());
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             log.error(e.toString());
         } finally {
             Context.exit();
@@ -189,8 +188,7 @@ public class DetermineBasalAdapterAMAJS {
                         GlucoseStatus glucoseStatus,
                         MealData mealData,
                         double autosensDataRatio,
-                        boolean tempTargetSet,
-                        double min_5m_carbimpact) throws JSONException {
+                        boolean tempTargetSet) throws JSONException {
 
         String units = profile.getUnits();
 
@@ -204,27 +202,34 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("max_bg", maxBg);
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
-        mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
-        mProfile.put("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
-        mProfile.put("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
+        mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
+        mProfile.put("max_daily_safety_multiplier", SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
+        mProfile.put("current_basal_safety_multiplier", SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
         mProfile.put("skip_neutral_temps", true);
         mProfile.put("current_basal", basalrate);
         mProfile.put("temptargetSet", tempTargetSet);
-        mProfile.put("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
-        mProfile.put("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", 3d));
+        mProfile.put("autosens_adjust_targets", SP.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true));
+        //align with max-absorption model in AMA sensitivity
+        if (mealData.usedMinCarbsImpact > 0) {
+            mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
+        } else {
+            mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
+        }
 
         if (units.equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
-        
+
+        long now = System.currentTimeMillis();
+        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
-        mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
-        mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
+        mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);
+        mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         // as we have non default temps longer than 30 mintues
-        TemporaryBasal tempBasal = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal tempBasal = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (tempBasal != null) {
             mCurrentTemp.put("minutesrunning", tempBasal.getRealDuration());
         }
@@ -234,7 +239,7 @@ public class DetermineBasalAdapterAMAJS {
         mGlucoseStatus = new JSONObject();
         mGlucoseStatus.put("glucose", glucoseStatus.glucose);
 
-        if (SP.getBoolean("always_use_shortavg", false)) {
+        if (SP.getBoolean(R.string.key_always_use_shortavg, false)) {
             mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta);
@@ -247,40 +252,30 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.put("boluses", mealData.boluses);
         mMealData.put("mealCOB", mealData.mealCOB);
 
-        if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
+        if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
             mAutosensData = new JSONObject();
             mAutosensData.put("ratio", autosensDataRatio);
         } else {
-           mAutosensData = null;
+            mAutosensData = null;
         }
     }
 
 
-    public Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
+    private Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
 
-        if(jsonObject == null) return Undefined.instance;
+        if (jsonObject == null) return Undefined.instance;
 
-        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), new Callable() {
-            @Override
-            public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
-                return objects[1];
-            }
-        });
+        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
         return param;
     }
 
-    public Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
-            //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
-            Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), new Callable() {
-            @Override
-            public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
-                return objects[1];
-            }
-        });
+    private Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
+        //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
+        Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), (context, scriptable, scriptable1, objects) -> objects[1]);
         return param;
     }
 
-    public String readFile(String filename) throws IOException {
+    private String readFile(String filename) throws IOException {
         byte[] bytes = mScriptReader.readFile(filename);
         String string = new String(bytes, "UTF-8");
         if (string.startsWith("#!/usr/bin/env node")) {

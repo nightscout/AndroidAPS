@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -86,7 +86,7 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
         return this.peak;
     }
 
-    /**
+     /**
      * Userdefined Dia is implemented to allow tests of the getDia method
      *
      * @return
@@ -99,26 +99,9 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
         this.shortDiaNotificationSend = true;
     }
 
-
-    // the following methods are implemented, but not needed...
-    @Override
-    String commentStandardText() {
-        return null;
-    }
-
-    @Override
-    public String getFragmentClass() {
-        return null;
-    }
-
     @Override
     public int getId() {
         return 0;
-    }
-
-    @Override
-    public String getName() {
-        return null;
     }
 
     @Override
@@ -127,27 +110,10 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
     }
 
     @Override
-    public boolean isEnabled(int type) {
-        return false;
+    String commentStandardText() {
+        return null;
     }
 
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return false;
-    }
 
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return 0;
-    }
+    // the following methods are implemented, but not needed...
 }

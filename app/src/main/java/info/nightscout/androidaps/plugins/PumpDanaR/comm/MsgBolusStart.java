@@ -3,13 +3,14 @@ package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.utils.HardLimits;
+import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.logging.L;
 
 public class MsgBolusStart extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgBolusStart.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+
+    public static int errorCode;
 
     public MsgBolusStart() {
         SetCommand(0x0102);
@@ -19,25 +20,24 @@ public class MsgBolusStart extends MessageBase {
         this();
 
         // HARDCODED LIMIT
-        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
-        if (amount < 0) amount = 0d;
-        if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
+        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
 
         AddParamInt((int) (amount * 100));
 
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Bolus start : " + amount);
     }
 
     @Override
     public void handleMessage(byte[] bytes) {
-        int result = intFromBuff(bytes, 0, 1);
-        if (result != 2) {
+        errorCode = intFromBuff(bytes, 0, 1);
+        if (errorCode != 2) {
             failed = true;
-            log.debug("Messsage response: " + result + " FAILED!!");
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Messsage response: " + errorCode + " FAILED!!");
         } else {
-            if (Config.logDanaMessageDetail)
-                log.debug("Messsage response: " + result);
+            if (L.isEnabled(L.PUMPCOMM))
+                log.debug("Messsage response: " + errorCode + " OK");
         }
     }
 }

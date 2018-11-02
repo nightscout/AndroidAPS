@@ -13,33 +13,46 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
 public class MsgHistoryEvents_v2 extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgHistoryEvents_v2.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     public boolean done;
 
     public static long lastEventTimeLoaded = 0;
 
-    public MsgHistoryEvents_v2(long from) {
-        SetCommand(0xE003);
-        GregorianCalendar gfrom = new GregorianCalendar();
-        gfrom.setTimeInMillis(from);
-        AddParamDate(gfrom);
-        done = false;
+    public MsgHistoryEvents_v2() {
+        this(0);
     }
 
-    public MsgHistoryEvents_v2() {
+    public MsgHistoryEvents_v2(long from) {
         SetCommand(0xE003);
-        AddParamByte((byte) 0);
-        AddParamByte((byte) 1);
-        AddParamByte((byte) 1);
-        AddParamByte((byte) 0);
-        AddParamByte((byte) 0);
+
+        if (from > DateUtil.now()) {
+            log.debug("Asked to load from the future");
+            from = 0;
+        }
+
+        if (from == 0) {
+            AddParamByte((byte) 0);
+            AddParamByte((byte) 1);
+            AddParamByte((byte) 1);
+            AddParamByte((byte) 0);
+            AddParamByte((byte) 0);
+        } else {
+            GregorianCalendar gfrom = new GregorianCalendar();
+            gfrom.setTimeInMillis(from);
+            AddParamDate(gfrom);
+        }
+
         done = false;
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -52,123 +65,141 @@ public class MsgHistoryEvents_v2 extends MessageBase {
             return;
         }
 
-        Date datetime = dateTimeSecFromBuff(bytes, 1);             // 6 bytes
+        long datetime = dateTimeSecFromBuff(bytes, 1);             // 6 bytes
         int param1 = intFromBuff(bytes, 7, 2);
         int param2 = intFromBuff(bytes, 9, 2);
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
-        temporaryBasal.date = datetime.getTime();
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = datetime.getTime();
+        TemporaryBasal temporaryBasal = new TemporaryBasal()
+                .date(datetime)
+                .source(Source.PUMP)
+                .pumpId(datetime);
 
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = datetime.getTime();
-        extendedBolus.source = Source.PUMP;
-        extendedBolus.pumpId = datetime.getTime();
-
-        DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(datetime.getTime());
-        if (detailedBolusInfo == null) {
-            log.debug("Detailed bolus info not found for " + datetime.toLocaleString());
-            detailedBolusInfo = new DetailedBolusInfo();
-        } else {
-            log.debug("Detailed bolus info found: " + detailedBolusInfo);
-        }
-        detailedBolusInfo.date = datetime.getTime();
-        detailedBolusInfo.source = Source.PUMP;
-        detailedBolusInfo.pumpId = datetime.getTime();
+        ExtendedBolus extendedBolus = new ExtendedBolus()
+                .date(datetime)
+                .source(Source.PUMP)
+                .pumpId(datetime);
 
         String status = "";
 
         switch (recordCode) {
             case DanaRPump.TEMPSTART:
-                log.debug("EVENT TEMPSTART (" + recordCode + ") " + datetime.toLocaleString() + " Ratio: " + param1 + "% Duration: " + param2 + "min");
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT TEMPSTART (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min");
                 temporaryBasal.percentRate = param1;
                 temporaryBasal.durationInMinutes = param2;
-                MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
+                TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
                 status = "TEMPSTART " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.TEMPSTOP:
-                log.debug("EVENT TEMPSTOP (" + recordCode + ") " + datetime.toLocaleString());
-                MainApp.getConfigBuilder().addToHistoryTempBasal(temporaryBasal);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT TEMPSTOP (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime));
+                TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
                 status = "TEMPSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.EXTENDEDSTART:
-                log.debug("EVENT EXTENDEDSTART (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT EXTENDEDSTART (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 extendedBolus.insulin = param1 / 100d;
                 extendedBolus.durationInMinutes = param2;
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "EXTENDEDSTART " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.EXTENDEDSTOP:
-                log.debug("EVENT EXTENDEDSTOP (" + recordCode + ") " + datetime.toLocaleString() + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT EXTENDEDSTOP (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "EXTENDEDSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.BOLUS:
+                DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(datetime);
+                if (detailedBolusInfo == null) {
+                    detailedBolusInfo = new DetailedBolusInfo();
+                }
+                detailedBolusInfo.date = datetime;
+                detailedBolusInfo.source = Source.PUMP;
+                detailedBolusInfo.pumpId = datetime;
+
                 detailedBolusInfo.insulin = param1 / 100d;
-                boolean newRecord = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                log.debug((newRecord ? "**NEW** " : "") + "EVENT BOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
-                DetailedBolusInfoStorage.remove(detailedBolusInfo.date);
+                boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug((newRecord ? "**NEW** " : "") + "EVENT BOLUS (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 status = "BOLUS " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALBOLUS:
+                detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(datetime);
+                if (detailedBolusInfo == null) {
+                    detailedBolusInfo = new DetailedBolusInfo();
+                }
+                detailedBolusInfo.date = datetime;
+                detailedBolusInfo.source = Source.PUMP;
+                detailedBolusInfo.pumpId = datetime;
+
                 detailedBolusInfo.insulin = param1 / 100d;
-                newRecord = MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                log.debug((newRecord ? "**NEW** " : "") + "EVENT DUALBOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
-                DetailedBolusInfoStorage.remove(detailedBolusInfo.date);
+                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug((newRecord ? "**NEW** " : "") + "EVENT DUALBOLUS (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 status = "DUALBOLUS " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALEXTENDEDSTART:
-                log.debug("EVENT DUALEXTENDEDSTART (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT DUALEXTENDEDSTART (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 extendedBolus.insulin = param1 / 100d;
                 extendedBolus.durationInMinutes = param2;
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "DUALEXTENDEDSTART " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALEXTENDEDSTOP:
-                log.debug("EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + datetime.toLocaleString() + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
-                MainApp.getConfigBuilder().addToHistoryExtendedBolus(extendedBolus);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
+                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                 status = "DUALEXTENDEDSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.SUSPENDON:
-                log.debug("EVENT SUSPENDON (" + recordCode + ") " + datetime.toLocaleString());
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT SUSPENDON (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")");
                 status = "SUSPENDON " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.SUSPENDOFF:
-                log.debug("EVENT SUSPENDOFF (" + recordCode + ") " + datetime.toLocaleString());
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT SUSPENDOFF (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")");
                 status = "SUSPENDOFF " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.REFILL:
-                log.debug("EVENT REFILL (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + param1 / 100d + "U");
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT REFILL (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100d + "U");
                 status = "REFILL " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.PRIME:
-                log.debug("EVENT PRIME (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + param1 / 100d + "U");
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT PRIME (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100d + "U");
                 status = "PRIME " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.PROFILECHANGE:
-                log.debug("EVENT PROFILECHANGE (" + recordCode + ") " + datetime.toLocaleString() + " No: " + param1 + " CurrentRate: " + (param2 / 100d) + "U/h");
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("EVENT PROFILECHANGE (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " No: " + param1 + " CurrentRate: " + (param2 / 100d) + "U/h");
                 status = "PROFILECHANGE " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.CARBS:
                 DetailedBolusInfo emptyCarbsInfo = new DetailedBolusInfo();
                 emptyCarbsInfo.carbs = param1;
-                emptyCarbsInfo.date = datetime.getTime();
+                emptyCarbsInfo.date = datetime;
                 emptyCarbsInfo.source = Source.PUMP;
-                emptyCarbsInfo.pumpId = datetime.getTime();
-                newRecord = MainApp.getConfigBuilder().addToHistoryTreatment(emptyCarbsInfo);
-                log.debug((newRecord ? "**NEW** " : "") + "EVENT CARBS (" + recordCode + ") " + datetime.toLocaleString() + " Carbs: " + param1 + "g");
+                emptyCarbsInfo.pumpId = datetime;
+                newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(emptyCarbsInfo, false);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug((newRecord ? "**NEW** " : "") + "EVENT CARBS (" + recordCode + ") " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g");
                 status = "CARBS " + DateUtil.timeString(datetime);
                 break;
             default:
-                log.debug("Event: " + recordCode + " " + datetime.toLocaleString() + " Param1: " + param1 + " Param2: " + param2);
+                if (L.isEnabled(L.PUMPCOMM))
+                    log.debug("Event: " + recordCode + " " + DateUtil.dateAndTimeFullString(datetime) + " (" + datetime + ")" + " Param1: " + param1 + " Param2: " + param2);
                 status = "UNKNOWN " + DateUtil.timeString(datetime);
                 break;
         }
 
-        if (datetime.getTime() > lastEventTimeLoaded)
-            lastEventTimeLoaded = datetime.getTime();
+        if (datetime > lastEventTimeLoaded)
+            lastEventTimeLoaded = datetime;
 
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.processinghistory) + ": " + status));
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
     }
 }

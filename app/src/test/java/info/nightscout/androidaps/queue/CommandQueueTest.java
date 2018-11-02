@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.queue;
 
 import android.content.Context;
-import android.text.Html;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
 import junit.framework.Assert;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,16 +15,24 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Date;
+
+import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.utils.ToastUtils;
 
+import static info.nightscout.utils.DateUtil.now;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,10 +41,14 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, ToastUtils.class, Context.class, TreatmentsPlugin.class})
 public class CommandQueueTest extends CommandQueue {
 
-    String profileJson = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
+    String validProfile = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}";
+    Profile profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+
+    public CommandQueueTest() throws JSONException {
+    }
 
     @Test
     public void doTests() throws Exception {
@@ -62,11 +74,11 @@ public class CommandQueueTest extends CommandQueue {
         Assert.assertEquals(0, size());
 
         // add tempbasal
-        tempBasalAbsolute(0, 30, true, null);
+        tempBasalAbsolute(0, 30, true, profile, null);
         Assert.assertEquals(1, size());
 
         // add tempbasal percent. it should replace previous TEMPBASAL
-        tempBasalPercent(0, 30, true, null);
+        tempBasalPercent(0, 30, true, profile, null);
         Assert.assertEquals(1, size());
 
         // add extended bolus
@@ -82,7 +94,7 @@ public class CommandQueueTest extends CommandQueue {
         Assert.assertEquals(2, size());
 
         // add setProfile
-        setProfile(new Profile(new JSONObject(profileJson), Constants.MGDL), null);
+        setProfile(profile, null);
         Assert.assertEquals(3, size());
 
         // add loadHistory
@@ -94,7 +106,7 @@ public class CommandQueueTest extends CommandQueue {
         Assert.assertEquals(5, size());
 
         clear();
-        tempBasalAbsolute(0, 30, true, null);
+        tempBasalAbsolute(0, 30, true, profile, null);
         pickup();
         Assert.assertEquals(0, size());
         Assert.assertNotNull(performing);
@@ -104,18 +116,24 @@ public class CommandQueueTest extends CommandQueue {
     }
 
     private void prepareMock(Double insulin, Integer carbs) throws Exception {
-        ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
-        when(configBuilderPlugin.applyBolusConstraints(insulin)).thenReturn(insulin);
-        when(configBuilderPlugin.applyCarbsConstraints(carbs)).thenReturn(carbs);
+        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
 
-        PowerMockito.mockStatic(ConfigBuilderPlugin.class);
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockConfigBuilder();
         PumpInterface pump = MDIPlugin.getPlugin();
-        when(ConfigBuilderPlugin.getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
-        PowerMockito.mockStatic(MainApp.class);
-        MainApp mainApp = mock(MainApp.class);
-        when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
-        when(MainApp.instance()).thenReturn(mainApp);
+        when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
+        when(MainApp.isEngineeringModeOrRelease()).thenReturn(true);
+        Constraint<Double> bolusConstraint = new Constraint<>(0d);
+        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(bolusConstraint);
+        when(MainApp.getConstraintChecker().applyExtendedBolusConstraints(any())).thenReturn(bolusConstraint);
+        Constraint<Integer> carbsConstraint = new Constraint<>(0);
+        when(MainApp.getConstraintChecker().applyCarbsConstraints(any())).thenReturn(carbsConstraint);
+        Constraint<Double> rateConstraint = new Constraint<>(0d);
+        when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(rateConstraint);
+        Constraint<Integer> percentageConstraint = new Constraint<>(0);
+        when(MainApp.getConstraintChecker().applyBasalPercentConstraints(any(), any())).thenReturn(percentageConstraint);
 
         PowerMockito.mockStatic(ToastUtils.class);
         Context context = mock(Context.class);
@@ -126,6 +144,11 @@ public class CommandQueueTest extends CommandQueue {
 
         when(MainApp.bus()).thenReturn(bus);
         when(MainApp.gs(0)).thenReturn("");
+
+        PowerMockito.mockStatic(TreatmentsPlugin.class);
+        TreatmentsPlugin treatmentsPlugin = mock(TreatmentsPlugin.class);
+        when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
+        when(treatmentsPlugin.getLastBolusTime()).thenReturn(new Date(100, 0,1 ).getTime());
     }
 
     @Override
@@ -139,5 +162,61 @@ public class CommandQueueTest extends CommandQueue {
     @Override
     public boolean isThisProfileSet(Profile profile) {
         return false;
+    }
+
+    @Test
+    public void callingCancelAllBolusesClearsQueue() throws Exception {
+        // given
+        prepareMock(0d, 0);
+        Assert.assertEquals(0, size());
+
+        DetailedBolusInfo smb = new DetailedBolusInfo();
+        smb.lastKnownBolusTime = now();
+        smb.isSMB = true;
+        bolus(smb, null);
+
+        bolus(new DetailedBolusInfo(), null);
+        Assert.assertEquals(2, size());
+
+        // when
+        cancelAllBoluses();
+
+        // then
+        Assert.assertEquals(0, size());
+    }
+
+    @Test
+    public void smbIsRejectedIfABolusIsQueued() throws Exception {
+        // given
+        prepareMock(0d, 0);
+        Assert.assertEquals(0, size());
+
+        // when
+        bolus(new DetailedBolusInfo(), null);
+
+        DetailedBolusInfo smb = new DetailedBolusInfo();
+        smb.isSMB = true;
+        boolean queued = bolus(smb, null);
+
+        // then
+        Assert.assertFalse(queued);
+        Assert.assertEquals(size(), 1);
+    }
+
+    @Test
+    public void smbIsRejectedIfLastKnownBolusIsOutdated() throws Exception {
+        // given
+        prepareMock(0d, 0);
+        Assert.assertEquals(0, size());
+
+        // when
+        DetailedBolusInfo bolus = new DetailedBolusInfo();
+        bolus.isSMB = true;
+        bolus.lastKnownBolusTime = 0;
+        boolean queued = bolus(bolus, null);
+
+        // then
+        Assert.assertFalse(queued);
+        Assert.assertEquals(size(), 0);
     }
 }

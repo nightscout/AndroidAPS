@@ -1,37 +1,46 @@
 package info.nightscout.androidaps.plugins.ConstraintsObjectives;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective1;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective2;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective3;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective4;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective5;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective6;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective7;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective8;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
+public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface {
+    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
 
     private static ObjectivesPlugin objectivesPlugin;
+
+    public List<Objective> objectives = new ArrayList<>();
+    public boolean bgIsAvailableInNS = false;
+    public boolean pumpStatusIsAvailableInNS = false;
+    public Integer manualEnacts = 0;
 
     public static ObjectivesPlugin getPlugin() {
         if (objectivesPlugin == null) {
@@ -40,245 +49,58 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         return objectivesPlugin;
     }
 
-    public static List<Objective> objectives;
-
-    private boolean fragmentVisible = true;
-
     private ObjectivesPlugin() {
-        initializeData();
+        super(new PluginDescription()
+                .mainType(PluginType.CONSTRAINTS)
+                .fragmentClass(ObjectivesFragment.class.getName())
+                .alwaysEnabled(!Config.NSCLIENT)
+                .showInList(!Config.NSCLIENT)
+                .pluginName(R.string.objectives)
+                .shortName(R.string.objectives_shortname)
+                .description(R.string.description_objectives)
+        );
+        setupObjectives();
         loadProgress();
-        MainApp.bus().register(this);
     }
 
     @Override
-    public String getFragmentClass() {
-        return ObjectivesFragment.class.getName();
+    public boolean specialEnableCondition() {
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
-    @Override
-    public int getType() {
-        return PluginBase.CONSTRAINTS;
+    private void setupObjectives() {
+        objectives.add(new Objective1());
+        objectives.add(new Objective2());
+        objectives.add(new Objective3());
+        objectives.add(new Objective4());
+        objectives.add(new Objective5());
+        objectives.add(new Objective6());
+        objectives.add(new Objective7());
+        objectives.add(new Objective8());
     }
 
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.objectives);
-    }
-
-    @Override
-    public String getNameShort() {
-        String name = MainApp.sResources.getString(R.string.objectives_shortname);
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
+    public void reset() {
+        for (Objective objective : objectives) {
+            objective.setStartedOn(null);
+            objective.setAccomplishedOn(null);
         }
-        // use long name as fallback
-        return getName();
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return type == CONSTRAINTS && ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return type == CONSTRAINTS && fragmentVisible && !Config.NSCLIENT && !Config.G5UPLOADER;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean hasFragment() {
-        return true;
-    }
-
-    @Override
-    public boolean showInList(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == CONSTRAINTS) this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getPreferencesId() {
-        return -1;
-    }
-
-    class Objective {
-        Integer num;
-        String objective;
-        String gate;
-        Date started;
-        Integer durationInDays;
-        Date accomplished;
-
-        Objective(Integer num, String objective, String gate, Date started, Integer durationInDays, Date accomplished) {
-            this.num = num;
-            this.objective = objective;
-            this.gate = gate;
-            this.started = started;
-            this.durationInDays = durationInDays;
-            this.accomplished = accomplished;
-        }
-    }
-
-    // Objective 0
-    public static boolean bgIsAvailableInNS = false;
-    public static boolean pumpStatusIsAvailableInNS = false;
-    // Objective 1
-    public static Integer manualEnacts = 0;
-    private static final Integer manualEnactsNeeded = 20;
-
-    class RequirementResult {
-        boolean done = false;
-        String comment = "";
-
-        RequirementResult(boolean done, String comment) {
-            this.done = done;
-            this.comment = comment;
-        }
-    }
-
-    private String yesOrNo(boolean yes) {
-        if (yes) return "☺";
-        else return "---";
-    }
-
-    RequirementResult requirementsMet(Integer objNum) {
-        switch (objNum) {
-            case 0:
-                boolean isVirtualPump = VirtualPumpPlugin.getPlugin().isEnabled(PluginBase.PUMP);
-                boolean vpUploadEnabled = SP.getBoolean("virtualpump_uploadstatus", false);
-                boolean vpUploadNeeded = !isVirtualPump || vpUploadEnabled;
-                boolean hasBGData = DatabaseHelper.lastBg() != null;
-
-                boolean apsEnabled = false;
-                APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
-                if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS))
-                    apsEnabled = true;
-
-                return new RequirementResult(hasBGData && bgIsAvailableInNS && pumpStatusIsAvailableInNS && NSClientInternalPlugin.getPlugin().hasWritePermission() && LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP) && apsEnabled && vpUploadNeeded,
-                        MainApp.sResources.getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + "\n" + MainApp.sResources.getString(R.string.nsclienthaswritepermission) + ": " + yesOrNo(NSClientInternalPlugin.getPlugin().hasWritePermission())
-                                + (isVirtualPump ? "\n" + MainApp.sResources.getString(R.string.virtualpump_uploadstatus_title) + ": " + yesOrNo(vpUploadEnabled) : "")
-                                + "\n" + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS)
-                                + "\n" + MainApp.sResources.getString(R.string.hasbgdata) + ": " + yesOrNo(hasBGData)
-                                + "\n" + MainApp.sResources.getString(R.string.loopenabled) + ": " + yesOrNo(LoopPlugin.getPlugin().isEnabled(PluginBase.LOOP))
-                                + "\n" + MainApp.sResources.getString(R.string.apsselected) + ": " + yesOrNo(apsEnabled)
-                );
-            case 1:
-                return new RequirementResult(manualEnacts >= manualEnactsNeeded,
-                        MainApp.sResources.getString(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
-            case 2:
-                return new RequirementResult(true, "");
-            case 3:
-                boolean closedModeEnabled = SafetyPlugin.getPlugin().isClosedModeEnabled();
-                return new RequirementResult(closedModeEnabled, MainApp.sResources.getString(R.string.closedmodeenabled) + ": " + yesOrNo(closedModeEnabled));
-            case 4:
-                double maxIOB = MainApp.getConfigBuilder().applyMaxIOBConstraints(1000d);
-                boolean maxIobSet = maxIOB > 0;
-                return new RequirementResult(maxIobSet, MainApp.sResources.getString(R.string.maxiobset) + ": " + yesOrNo(maxIobSet));
-            default:
-                return new RequirementResult(true, "");
-        }
-    }
-
-
-    void initializeData() {
         bgIsAvailableInNS = false;
         pumpStatusIsAvailableInNS = false;
         manualEnacts = 0;
-
-        objectives = new ArrayList<>();
-        objectives.add(new Objective(0,
-                MainApp.sResources.getString(R.string.objectives_0_objective),
-                MainApp.sResources.getString(R.string.objectives_0_gate),
-                new Date(0),
-                0, // 0 day
-                new Date(0)));
-        objectives.add(new Objective(1,
-                MainApp.sResources.getString(R.string.objectives_1_objective),
-                MainApp.sResources.getString(R.string.objectives_1_gate),
-                new Date(0),
-                7, // 7 days
-                new Date(0)));
-        objectives.add(new Objective(2,
-                MainApp.sResources.getString(R.string.objectives_2_objective),
-                MainApp.sResources.getString(R.string.objectives_2_gate),
-                new Date(0),
-                0, // 0 days
-                new Date(0)));
-        objectives.add(new Objective(3,
-                MainApp.sResources.getString(R.string.objectives_3_objective),
-                MainApp.sResources.getString(R.string.objectives_3_gate),
-                new Date(0),
-                5, // 5 days
-                new Date(0)));
-        objectives.add(new Objective(4,
-                MainApp.sResources.getString(R.string.objectives_4_objective),
-                MainApp.sResources.getString(R.string.objectives_4_gate),
-                new Date(0),
-                1,
-                new Date(0)));
-        objectives.add(new Objective(5,
-                MainApp.sResources.getString(R.string.objectives_5_objective),
-                MainApp.sResources.getString(R.string.objectives_5_gate),
-                new Date(0),
-                7,
-                new Date(0)));
-        objectives.add(new Objective(6,
-                MainApp.sResources.getString(R.string.objectives_6_objective),
-                "",
-                new Date(0),
-                28,
-                new Date(0)));
-        objectives.add(new Objective(7,
-                MainApp.sResources.getString(R.string.objectives_7_objective),
-                "",
-                new Date(0),
-                28,
-                new Date(0)));
+        saveProgress();
     }
 
-    public static void saveProgress() {
-        if (objectives != null) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            SharedPreferences.Editor editor = settings.edit();
-            for (int num = 0; num < objectives.size(); num++) {
-                Objective o = objectives.get(num);
-                editor.putString("Objectives" + num + "started", Long.toString(o.started.getTime()));
-                editor.putString("Objectives" + num + "accomplished", Long.toString(o.accomplished.getTime()));
-            }
-            editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
-            editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
-            editor.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
-            editor.apply();
-            if (Config.logPrefsChange)
-                log.debug("Objectives stored");
-        }
+    public void saveProgress() {
+        SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
+        SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
+        SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
+        if (L.isEnabled(L.CONSTRAINTS))
+            log.debug("Objectives stored");
+        MainApp.bus().post(new EventObjectivesSaved());
     }
 
     private void loadProgress() {
-        for (int num = 0; num < objectives.size(); num++) {
-            Objective o = objectives.get(num);
-            try {
-                o.started = new Date(SP.getLong("Objectives" + num + "started", 0L));
-                o.accomplished = new Date(SP.getLong("Objectives" + num + "accomplished", 0L));
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
-        }
         bgIsAvailableInNS = SP.getBoolean("Objectives" + "bgIsAvailableInNS", false);
         pumpStatusIsAvailableInNS = SP.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
         try {
@@ -286,68 +108,57 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        if (Config.logPrefsChange)
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives loaded");
+    }
+
+    public List<Objective> getObjectives() {
+        return objectives;
     }
 
     /**
      * Constraints interface
      **/
     @Override
-    public boolean isLoopEnabled() {
-        return objectives.get(0).started.getTime() > 0;
+    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
+        if (!objectives.get(0).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1), this);
+        return value;
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return objectives.get(3).started.getTime() > 0;
+    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
+        if (!objectives.get(3).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4), this);
+        return value;
     }
 
     @Override
-    public boolean isAutosensModeEnabled() {
-        return objectives.get(5).started.getTime() > 0;
+    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
+        if (!objectives.get(5).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 6), this);
+        return value;
     }
 
     @Override
-    public boolean isAMAModeEnabled() {
-        return objectives.get(6).started.getTime() > 0;
+    public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
+        if (!objectives.get(6).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 7), this);
+        return value;
     }
 
     @Override
-    public boolean isSMBModeEnabled() {
-        return objectives.get(7).started.getTime() > 0;
+    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
+        if (!objectives.get(7).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 8), this);
+        return value;
     }
 
     @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        if (objectives.get(3).started.getTime() > 0 && objectives.get(3).accomplished.getTime() == 0) {
-            if (Config.logConstraintsChanges)
-                log.debug("Limiting maxIOB " + maxIob + " to " + 0 + "U");
-            return 0d;
-        } else {
-            return maxIob;
-        }
+    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+        if (objectives.get(3).isStarted() && !objectives.get(3).isAccomplished())
+            maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), 4), this);
+        return maxIob;
     }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        return absoluteRate;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        return percentRate;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        return insulin;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        return carbs;
-    }
-
 
 }

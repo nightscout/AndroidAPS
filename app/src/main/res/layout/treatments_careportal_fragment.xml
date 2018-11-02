@@ -9,13 +9,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/careportal_refreshfromnightscout"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/refresheventsfromnightscout" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/careportal_refreshfromnightscout"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="@string/refresheventsfromnightscout" />
+
+            <Button
+                android:id="@+id/careportal_removeandroidapsstartedevents"
+                style="?android:attr/buttonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="@string/careportal_removestartedevents" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/careportal_recyclerview"

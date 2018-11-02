@@ -14,15 +14,17 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.BundleLogger;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(DBAccessReceiver.class);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
 
     @Override
@@ -36,6 +38,9 @@ public class DBAccessReceiver extends BroadcastReceiver {
             if (bundles == null) return;
             if (!bundles.containsKey("action")) return;
 
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug(BundleLogger.log(bundles));
+
             String collection = null;
             String _id = null;
             JSONObject data = null;
@@ -43,18 +48,26 @@ public class DBAccessReceiver extends BroadcastReceiver {
             try {
                 collection = bundles.getString("collection");
             } catch (Exception e) {
+                log.error("Unhandled exception", e);
+                return;
             }
             try {
-                _id = bundles.getString("_id");
+                if (!action.equals("dbAdd"))
+                    _id = bundles.getString("_id");
             } catch (Exception e) {
+                log.error("Unhandled exception", e);
+                return;
             }
             try {
-                data = new JSONObject(bundles.getString("data"));
+                if (!action.equals("dbRemove"))
+                    data = new JSONObject(bundles.getString("data"));
             } catch (Exception e) {
+                log.error("Unhandled exception", e);
+                return;
             }
 
             if (data == null && !action.equals("dbRemove") || _id == null && action.equals("dbRemove")) {
-                log.debug("DBACCESS no data inside record");
+                log.error("DBACCESS no data inside record");
                 return;
             }
 
@@ -70,7 +83,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
             }
 
             if (!isAllowedCollection(collection)) {
-                log.debug("DBACCESS wrong collection specified");
+                log.error("DBACCESS wrong collection specified");
                 return;
             }
 
@@ -79,7 +92,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                     DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id);
                     UploadQueue.add(dbr);
                 }
-            } else  if (action.equals("dbUpdate")) {
+            } else if (action.equals("dbUpdate")) {
                 if (shouldUpload()) {
                     DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id, data);
                     UploadQueue.add(dbr);
@@ -94,7 +107,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                     UploadQueue.add(dbr);
                 }
                 if (collection.equals("treatments")) {
-                    genereateTreatmentOfflineBroadcast(dbr);
+                    generateTreatmentOfflineBroadcast(dbr);
                 }
             }
 
@@ -105,11 +118,11 @@ public class DBAccessReceiver extends BroadcastReceiver {
     }
 
     public boolean shouldUpload() {
-        NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
-        return nsClientInternalPlugin.isEnabled(PluginBase.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
+        NSClientPlugin nsClientPlugin = MainApp.getSpecificPlugin(NSClientPlugin.class);
+        return nsClientPlugin.isEnabled(PluginType.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
     }
 
-    public void genereateTreatmentOfflineBroadcast(DbRequest request) {
+    public void generateTreatmentOfflineBroadcast(DbRequest request) {
         if (request.action.equals("dbAdd")) {
             try {
                 JSONObject data = new JSONObject(request.data);

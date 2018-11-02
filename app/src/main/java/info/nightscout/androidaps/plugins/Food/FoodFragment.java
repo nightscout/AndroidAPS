@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -27,13 +26,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.Food;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.SpinnerHelper;
 
 /**
@@ -54,7 +54,7 @@ public class FoodFragment extends SubscriberFragment {
     ArrayList<CharSequence> categories;
     ArrayList<CharSequence> subcategories;
 
-    final String EMPTY = MainApp.sResources.getString(R.string.none);
+    final String EMPTY = MainApp.gs(R.string.none);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,7 +121,8 @@ public class FoodFragment extends SubscriberFragment {
                 }
             });
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().foodHelper.getFoodData());
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp
+                    .getSpecificPlugin(FoodPlugin.class).getService().getFoodData());
             recyclerView.setAdapter(adapter);
 
             loadData();
@@ -130,7 +131,7 @@ public class FoodFragment extends SubscriberFragment {
             filterData();
             return view;
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FabricPrivacy.logException(e);
         }
 
         return null;
@@ -144,21 +145,20 @@ public class FoodFragment extends SubscriberFragment {
     }
 
     void loadData() {
-        unfiltered = MainApp.getDbHelper().foodHelper.getFoodData();
+        unfiltered = MainApp.getSpecificPlugin(FoodPlugin.class).getService().getFoodData();
     }
 
     void fillCategories() {
-        categories = new ArrayList<>();
+        Set<CharSequence> catSet = new HashSet<>();
 
         for (Food f : unfiltered) {
             if (f.category != null && !f.category.equals(""))
-                categories.add(f.category);
+                catSet.add(f.category);
         }
 
         // make it unique
-        categories = new ArrayList<>(new HashSet<>(categories));
-
-        categories.add(0, MainApp.sResources.getString(R.string.none));
+        categories = new ArrayList<>(catSet);
+        categories.add(0, MainApp.gs(R.string.none));
 
         ArrayAdapter<CharSequence> adapterCategories = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_centered, categories);
@@ -167,20 +167,20 @@ public class FoodFragment extends SubscriberFragment {
 
     void fillSubcategories() {
         String categoryFilter = category.getSelectedItem().toString();
-        subcategories = new ArrayList<>();
+
+        Set<CharSequence> subCatSet = new HashSet<>();
 
         if (!categoryFilter.equals(EMPTY)) {
             for (Food f : unfiltered) {
                 if (f.category != null && f.category.equals(categoryFilter))
                     if (f.subcategory != null && !f.subcategory.equals(""))
-                        subcategories.add(f.subcategory);
+                        subCatSet.add(f.subcategory);
             }
         }
 
         // make it unique
-        subcategories = new ArrayList<>(new HashSet<>(subcategories));
-
-        subcategories.add(0, MainApp.sResources.getString(R.string.none));
+        subcategories = new ArrayList<>(subCatSet);
+        subcategories.add(0, MainApp.gs(R.string.none));
 
         ArrayAdapter<CharSequence> adapterSubcategories = new ArrayAdapter<>(getContext(),
                 R.layout.spinner_centered, subcategories);
@@ -242,14 +242,14 @@ public class FoodFragment extends SubscriberFragment {
             holder.ns.setVisibility(food._id != null ? View.VISIBLE : View.GONE);
             holder.name.setText(food.name);
             holder.portion.setText(food.portion + food.units);
-            holder.carbs.setText(food.carbs + MainApp.sResources.getString(R.string.shortgramm));
-            holder.fat.setText(MainApp.sResources.getString(R.string.shortfat) + ": " + food.fat + MainApp.sResources.getString(R.string.shortgramm));
+            holder.carbs.setText(food.carbs + MainApp.gs(R.string.shortgramm));
+            holder.fat.setText(MainApp.gs(R.string.shortfat) + ": " + food.fat + MainApp.gs(R.string.shortgramm));
             if (food.fat == 0)
                 holder.fat.setVisibility(View.INVISIBLE);
-            holder.protein.setText(MainApp.sResources.getString(R.string.shortprotein) + ": " + food.protein + MainApp.sResources.getString(R.string.shortgramm));
+            holder.protein.setText(MainApp.gs(R.string.shortprotein) + ": " + food.protein + MainApp.gs(R.string.shortgramm));
             if (food.protein == 0)
                 holder.protein.setVisibility(View.INVISIBLE);
-            holder.energy.setText(MainApp.sResources.getString(R.string.shortenergy) + ": " + food.energy + MainApp.sResources.getString(R.string.shortkilojoul));
+            holder.energy.setText(MainApp.gs(R.string.shortenergy) + ": " + food.energy + MainApp.gs(R.string.shortkilojoul));
             if (food.energy == 0)
                 holder.energy.setVisibility(View.INVISIBLE);
             holder.remove.setTag(food);
@@ -291,18 +291,18 @@ public class FoodFragment extends SubscriberFragment {
 
                     case R.id.food_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + food.name);
-                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        builder.setTitle(MainApp.gs(R.string.confirmation));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + food.name);
+                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = food._id;
                                 if (_id != null && !_id.equals("")) {
                                     NSUpload.removeFoodFromNS(_id);
                                 }
-                                MainApp.getDbHelper().foodHelper.delete(food);
+                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().delete(food);
                             }
                         });
-                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
                         break;
 

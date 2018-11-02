@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 
 /**

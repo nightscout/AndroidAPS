@@ -1,18 +1,18 @@
 package info.nightscout.androidaps.plugins.PumpDanaRS.comm;
 
+import com.cozmo.danar.util.BleCommandUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import com.cozmo.danar.util.BleCommandUtil;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 
 public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Notify_Delivery_Rate_Display.class);
-
+    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
     private static Treatment t;
     private static double amount;
 
@@ -29,6 +29,8 @@ public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
         this.amount = amount;
         this.t = t;
         lastReceive = System.currentTimeMillis();
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message: amount: " + amount + " treatment: " + t.toString());
     }
 
     @Override
@@ -39,13 +41,14 @@ public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
             lastReceive = System.currentTimeMillis();
             t.insulin = deliveredInsulin;
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), deliveredInsulin);
+            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), deliveredInsulin);
             bolusingEvent.t = t;
             bolusingEvent.percent = Math.min((int) (deliveredInsulin / amount * 100), 100);
+            failed = bolusingEvent.percent < 100? true: false;
             MainApp.bus().post(bolusingEvent);
         }
 
-        if (Config.logDanaMessageDetail)
+        if (L.isEnabled(L.PUMPCOMM))
             log.debug("Delivered insulin so far: " + deliveredInsulin);
     }
 

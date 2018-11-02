@@ -16,13 +16,14 @@ import java.sql.SQLException;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 
 /**
  * Created by mike on 21.02.2016.
  */
 public class UploadQueue {
-    private static Logger log = LoggerFactory.getLogger(UploadQueue.class);
+    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     public static String status() {
         return "QUEUE: " + MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);
@@ -43,15 +44,13 @@ public class UploadQueue {
     public static void add(final DbRequest dbr) {
         startService();
         if (NSClientService.handler != null) {
-            NSClientService.handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    log.debug("QUEUE adding: " + dbr.data);
-                    MainApp.getDbHelper().create(dbr);
-                    NSClientInternalPlugin plugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
-                    if (plugin != null) {
-                        plugin.resend("newdata");
-                    }
+            NSClientService.handler.post(() -> {
+                if (L.isEnabled(L.NSCLIENT))
+                    log.debug("Adding to queue: " + dbr.data);
+                MainApp.getDbHelper().create(dbr);
+                NSClientPlugin plugin = NSClientPlugin.getPlugin();
+                if (plugin != null) {
+                    plugin.resend("newdata");
                 }
             });
         }
@@ -60,13 +59,12 @@ public class UploadQueue {
     public static void clearQueue() {
         startService();
         if (NSClientService.handler != null) {
-            NSClientService.handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    log.debug("QUEUE ClearQueue");
-                    MainApp.getDbHelper().deleteAllDbRequests();
+            NSClientService.handler.post(() -> {
+                if (L.isEnabled(L.NSCLIENT))
+                    log.debug("ClearQueue");
+                MainApp.getDbHelper().deleteAllDbRequests();
+                if (L.isEnabled(L.NSCLIENT))
                     log.debug(status());
-                }
             });
         }
     }
@@ -74,22 +72,20 @@ public class UploadQueue {
     public static void removeID(final JSONObject record) {
         startService();
         if (NSClientService.handler != null) {
-            NSClientService.handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String id;
-                        if (record.has("NSCLIENT_ID")) {
-                            id = record.getString("NSCLIENT_ID");
-                        } else {
-                            return;
-                        }
-                        if (MainApp.getDbHelper().deleteDbRequest(id) == 1) {
-                            log.debug("Removed item from UploadQueue. " + UploadQueue.status());
-                        }
-                    } catch (JSONException e) {
-                        log.error("Unhandled exception", e);
+            NSClientService.handler.post(() -> {
+                try {
+                    String id;
+                    if (record.has("NSCLIENT_ID")) {
+                        id = record.getString("NSCLIENT_ID");
+                    } else {
+                        return;
                     }
+                    if (MainApp.getDbHelper().deleteDbRequest(id) == 1) {
+                        if (L.isEnabled(L.NSCLIENT))
+                            log.debug("Removed item from UploadQueue. " + UploadQueue.status());
+                    }
+                } catch (JSONException e) {
+                    log.error("Unhandled exception", e);
                 }
             });
         }
@@ -100,18 +96,17 @@ public class UploadQueue {
             return;
         startService();
         if (NSClientService.handler != null) {
-            NSClientService.handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
-                }
+            NSClientService.handler.post(() -> {
+                MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
+                if (L.isEnabled(L.NSCLIENT))
+                    log.debug("Removing " + _id + " from UploadQueue. " + UploadQueue.status());
             });
         }
     }
 
     public String textList() {
         String result = "";
-        CloseableIterator<DbRequest> iterator = null;
+        CloseableIterator<DbRequest> iterator;
         try {
             iterator = MainApp.getDbHelper().getDbRequestInterator();
             try {

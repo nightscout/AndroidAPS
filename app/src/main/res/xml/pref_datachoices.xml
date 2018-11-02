@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/data_choices">
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <PreferenceCategory android:title="@string/data_choices">
+
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="enable_fabric"
+                    android:summary="@string/allow_automated_crash_reporting"
+                    android:title="@string/fabric_upload" />
+
+            </PreferenceCategory>
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

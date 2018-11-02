@@ -3,23 +3,26 @@ package info.nightscout.androidaps.plugins.PumpDanaRKorean.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
 /**
  * Created by mike on 28.05.2016.
  */
 public class MsgInitConnStatusBolus_k extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBolus_k.class);
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public MsgInitConnStatusBolus_k() {
         SetCommand(0x0302);
+        if (L.isEnabled(L.PUMPCOMM))
+            log.debug("New message");
     }
 
     @Override
@@ -36,7 +39,7 @@ public class MsgInitConnStatusBolus_k extends MessageBase {
         //int bolusRate = intFromBuff(bytes, 4, 8);
         int deliveryStatus = intFromBuff(bytes, 12, 1);
 
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             log.debug("Is Extended bolus enabled: " + pump.isExtendedBolusEnabled);
             log.debug("Bolus increment: " + pump.bolusStep);
             log.debug("Bolus max: " + pump.maxBolus);
@@ -44,10 +47,14 @@ public class MsgInitConnStatusBolus_k extends MessageBase {
         }
 
         if (!pump.isExtendedBolusEnabled) {
-            Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.sResources.getString(R.string.danar_enableextendedbolus), Notification.URGENT);
+            Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.gs(R.string.danar_enableextendedbolus), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
+
+        // This is last message of initial sequence
+        if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
+            ConfigBuilderPlugin.getPlugin().getActivePump().finishHandshaking();
     }
 }

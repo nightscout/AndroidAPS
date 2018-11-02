@@ -6,6 +6,8 @@
 
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 
     <application
         android:allowBackup="true"
@@ -205,7 +207,16 @@
             android:label="CPP">
         </activity>
         <activity
+            android:name=".interaction.actions.AcceptActivity"
+            android:launchMode="singleInstance"
+            android:label="ACCEPT">
+        </activity>
+        <activity
             android:name=".interaction.actions.FillActivity"
+            android:label="Fill">
+        </activity>
+        <activity
+            android:name=".interaction.actions.ECarbActivity"
             android:label="Fill">
         </activity>
         <activity

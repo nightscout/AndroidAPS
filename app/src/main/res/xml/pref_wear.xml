@@ -13,23 +13,84 @@
                 android:summary="@string/wearcontrol_summary"
                 android:title="@string/wearcontrol_title" />
 
-            <SwitchPreference
-                android:defaultValue="true"
-                android:key="wear_detailediob"
-                android:summary="@string/wear_detailedIOB_summary"
-                android:title="@string/wear_detailedIOB_title" />
+            <PreferenceCategory
+                android:key="wearplugin"
+                android:title="@string/wear_wizard_settings"
+                android:summary="@string/wear_wizard_settings_summary"
+                android:dependency="wearcontrol">
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="wear_detailed_delta"
-                android:summary="@string/wear_detailed_delta_summary"
-                android:title="@string/wear_detailed_delta_title" />
+                <CheckBoxPreference
+                    android:key="@string/key_wearwizard_bg"
+                    android:title="@string/treatments_wizard_bg_label"
+                    android:defaultValue="true"
+                    android:dependency="wearcontrol"/>
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="wear_showbgi"
-                android:summary="@string/wear_showbgi_summary"
-                android:title="@string/wear_showbgi_title" />
+                <CheckBoxPreference
+                    android:key="@string/key_wearwizard_tt"
+                    android:title="@string/treatments_wizard_tt_label"
+                    android:defaultValue="false"
+                    android:dependency="@string/key_wearwizard_bg"/>
+
+                <CheckBoxPreference
+                    android:key="@string/key_wearwizard_trend"
+                    android:title="@string/treatments_wizard_bgtrend_label"
+                    android:defaultValue="false"
+                    android:dependency="wearcontrol"/>
+
+                <CheckBoxPreference
+                    android:key="@string/key_wearwizard_cob"
+                    android:title="@string/treatments_wizard_cob_label"
+                    android:defaultValue="true"
+                    android:dependency="wearcontrol"/>
+
+                <CheckBoxPreference
+                    android:key="@string/key_wearwizard_bolusiob"
+                    android:title="@string/treatments_wizard_bolusiob_label"
+                    android:defaultValue="true"
+                    android:dependency="wearcontrol"/>
+
+                <CheckBoxPreference
+                    android:key="@string/key_wearwizard_basaliob"
+                    android:title="@string/treatments_wizard_basaliob_label"
+                    android:defaultValue="true"
+                    android:dependency="wearcontrol"/>
+            </PreferenceCategory>
+
+            <PreferenceCategory
+                android:key="wearplugin"
+                android:title="@string/wear_display_settings">
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="wear_detailediob"
+                    android:summary="@string/wear_detailedIOB_summary"
+                    android:title="@string/wear_detailedIOB_title" />
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="wear_detailed_delta"
+                    android:summary="@string/wear_detailed_delta_summary"
+                    android:title="@string/wear_detailed_delta_title" />
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="wear_showbgi"
+                    android:summary="@string/wear_showbgi_summary"
+                    android:title="@string/wear_showbgi_title" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="wear_predictions"
+                    android:summary="@string/wear_predictions_summary"
+                    android:title="@string/wear_predictions_title" />
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:key="wearplugin"
+                android:title="@string/wear_general_settings">
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="wear_notifySMB"
+                    android:summary="@string/wear_notifysmb_summary"
+                    android:title="@string/wear_notifysmb_title" />
+            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

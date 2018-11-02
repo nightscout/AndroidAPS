@@ -1,35 +1,28 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.utils.DateUtil;
 
 public class DetermineBasalResultAMA extends APSResult {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalResultAMA.class);
+    private static Logger log = LoggerFactory.getLogger(L.APS);
 
-    public Date date;
-    public JSONObject json = new JSONObject();
-    public double eventualBG;
-    public double snoozeBG;
-    public IobTotal iob;
+    private double eventualBG;
+    private double snoozeBG;
 
-    public DetermineBasalResultAMA(NativeObject result, JSONObject j) {
-        date = new Date();
+    DetermineBasalResultAMA(NativeObject result, JSONObject j) {
+        this();
+        date = DateUtil.now();
         json = j;
         if (result.containsKey("error")) {
             reason = result.get("error").toString();
-            changeRequested = false;
+            tempBasalRequested = false;
             rate = -1;
             duration = -1;
         } else {
@@ -37,45 +30,35 @@ public class DetermineBasalResultAMA extends APSResult {
             if (result.containsKey("eventualBG")) eventualBG = (Double) result.get("eventualBG");
             if (result.containsKey("snoozeBG")) snoozeBG = (Double) result.get("snoozeBG");
             if (result.containsKey("rate")) {
-                rate =  (Double) result.get("rate");
+                rate = (Double) result.get("rate");
                 if (rate < 0d) rate = 0d;
-                changeRequested = true;
+                tempBasalRequested = true;
             } else {
                 rate = -1;
-                changeRequested = false;
+                tempBasalRequested = false;
             }
             if (result.containsKey("duration")) {
-                duration = ((Double)result.get("duration")).intValue();
+                duration = ((Double) result.get("duration")).intValue();
                 //changeRequested as above
             } else {
                 duration = -1;
-                changeRequested = false;
+                tempBasalRequested = false;
             }
         }
+        bolusRequested = false;
     }
 
-    public DetermineBasalResultAMA() {
+    private DetermineBasalResultAMA() {
+        hasPredictions = true;
     }
 
     @Override
     public DetermineBasalResultAMA clone() {
         DetermineBasalResultAMA newResult = new DetermineBasalResultAMA();
-        newResult.reason = new String(reason);
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.changeRequested = changeRequested;
+        doClone(newResult);
 
-        try {
-            newResult.json = new JSONObject(json.toString());
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
-        newResult.date = date;
         return newResult;
     }
 
@@ -90,72 +73,4 @@ public class DetermineBasalResultAMA extends APSResult {
         return null;
     }
 
-    public List<BgReading> getPredictions() {
-        List<BgReading> array = new ArrayList<>();
-        try {
-            long startTime = date.getTime();
-            if (json.has("predBGs")) {
-                JSONObject predBGs = json.getJSONObject("predBGs");
-                if (predBGs.has("IOB")) {
-                    JSONArray iob = predBGs.getJSONArray("IOB");
-                    for (int i = 1; i < iob.length(); i ++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
-                        array.add(bg);
-                    }
-                }
-                if (predBGs.has("aCOB")) {
-                    JSONArray iob = predBGs.getJSONArray("aCOB");
-                    for (int i = 1; i < iob.length(); i ++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
-                        array.add(bg);
-                    }
-                }
-                if (predBGs.has("COB")) {
-                    JSONArray iob = predBGs.getJSONArray("COB");
-                    for (int i = 1; i < iob.length(); i ++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
-                        array.add(bg);
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-        return array;
-    }
-
-    public long getLatestPredictionsTime() {
-        long latest = 0;
-        try {
-            long startTime = date.getTime();
-            if (json.has("predBGs")) {
-                JSONObject predBGs = json.getJSONObject("predBGs");
-                if (predBGs.has("IOB")) {
-                    JSONArray iob = predBGs.getJSONArray("IOB");
-                    latest = Math.max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L);
-                }
-                if (predBGs.has("aCOB")) {
-                    JSONArray iob = predBGs.getJSONArray("aCOB");
-                    latest = Math.max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L);
-                }
-                if (predBGs.has("COB")) {
-                    JSONArray iob = predBGs.getJSONArray("COB");
-                    latest = Math.max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L);
-                }
-            }
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-
-        return latest;
-    }
 }

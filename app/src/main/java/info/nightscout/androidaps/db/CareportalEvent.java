@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -23,16 +24,20 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.T;
 import info.nightscout.utils.Translator;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
-public class CareportalEvent implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(CareportalEvent.class);
+public class CareportalEvent implements DataPointWithLabelInterface, Interval {
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -86,18 +91,23 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     }
 
     public long getHoursFromStart() {
-        return (System.currentTimeMillis() - date) / (60 * 1000);
+        return (System.currentTimeMillis() - date) / (60 * 60 * 1000);
     }
 
     public String age() {
         Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
         if (OverviewFragment.shorttextmode)
-            return diff.get(TimeUnit.DAYS) +"d" + diff.get(TimeUnit.HOURS) + "h";
+            return diff.get(TimeUnit.DAYS) + "d" + diff.get(TimeUnit.HOURS) + "h";
         else
-            return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
+            return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
     }
 
-    public String log() {
+    public boolean isOlderThan(double hours) {
+        return getHoursFromStart() > hours;
+    }
+
+    @Override
+    public String toString() {
         return "CareportalEvent{" +
                 "date= " + date +
                 ", date= " + DateUtil.dateAndTimeString(date) +
@@ -124,6 +134,19 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         return result;
     }
 
+
+    public static boolean isEvent5minBack(List<CareportalEvent> list, long time) {
+        for (int i = 0; i < list.size(); i++) {
+            CareportalEvent event = list.get(i);
+            if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
+                if (L.isEnabled(L.DATABASE))
+                    log.debug("Found event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                return true;
+            }
+        }
+        return false;
+    }
+
     // -------- DataPointWithLabelInterface -------
 
     @Override
@@ -135,7 +158,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        String units = MainApp.getConfigBuilder().getProfileUnits();
+        String units = ProfileFunctions.getInstance().getProfileUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {
@@ -184,7 +207,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         try {
             JSONObject object = new JSONObject(json);
             if (object.has("notes"))
-                return object.getString("notes");
+                return StringUtils.abbreviate(object.getString("notes"), 40);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -204,14 +227,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
 
     @Override
     public long getDuration() {
-        try {
-            JSONObject object = new JSONObject(json);
-            if (object.has("duration"))
-                return object.getInt("duration") * 60 * 1000L;
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-        return 0;
+        return end() - start();
     }
 
     @Override
@@ -242,7 +258,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     @Override
     public int getColor() {
         if (eventType.equals(ANNOUNCEMENT))
-            return MainApp.sResources.getColor(R.color.notificationAnnouncement);
+            return MainApp.gc(R.color.notificationAnnouncement);
         if (eventType.equals(MBG))
             return Color.RED;
         if (eventType.equals(BGCHECK))
@@ -250,7 +266,79 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         if (eventType.equals(EXERCISE))
             return Color.BLUE;
         if (eventType.equals(OPENAPSOFFLINE))
-            return Color.GRAY;
+            return Color.GRAY & 0x80FFFFFF;
         return Color.GRAY;
     }
+
+    // Interval interface
+    Long cuttedEnd = null;
+
+    @Override
+    public long durationInMsec() {
+        try {
+            JSONObject object = new JSONObject(json);
+            if (object.has("duration"))
+                return object.getInt("duration") * 60 * 1000L;
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        return 0;
+    }
+
+    @Override
+    public long start() {
+        return date;
+    }
+
+    @Override
+    public long originalEnd() {
+        return date + durationInMsec();
+    }
+
+    @Override
+    public long end() {
+        if (cuttedEnd != null)
+            return cuttedEnd;
+        return originalEnd();
+    }
+
+    @Override
+    public void cutEndTo(long end) {
+        cuttedEnd = end;
+    }
+
+    @Override
+    public boolean match(long time) {
+        if (start() <= time && end() >= time)
+            return true;
+        return false;
+    }
+
+    public boolean before(long time) {
+        if (end() < time)
+            return true;
+        return false;
+    }
+
+    public boolean after(long time) {
+        if (start() > time)
+            return true;
+        return false;
+    }
+
+    @Override
+    public boolean isInProgress() {
+        return match(System.currentTimeMillis());
+    }
+
+    @Override
+    public boolean isEndingEvent() {
+        return durationInMsec() == 0;
+    }
+
+    @Override
+    public boolean isValid() {
+        return eventType.equals(OPENAPSOFFLINE);
+    }
+
 }

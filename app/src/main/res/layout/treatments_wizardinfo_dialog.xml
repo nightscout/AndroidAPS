@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="-15dp"
+            android:background="@color/listdelimiter" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:text="@string/wear_wizard_settings"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_bgcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="24dp"
+                android:text="@string/treatments_wizard_bg_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_ttcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="30dp"
+                android:text="@string/treatments_wizard_tt_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_bginsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_bgtrendcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/treatments_wizard_bgtrend_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_bgtrend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_bgtrendinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/treatments_wizard_cob_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_cobcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/treatments_wizard_cob_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_cob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_cobinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_bolusiobcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="130dp"
+                android:text="@string/treatments_wizard_bolusiob_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_bolusiob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_bolusiobinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_basaliobcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="130dp"
+                android:text="@string/treatments_wizard_basaliob_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_basaliob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_basaliobinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/treatments_wizard_sbcheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/superbolus"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_sb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_sbinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/treatments_wizard_carbs_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_carbs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_carbsinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/treatments_wizard_correction_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_correction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_correctioninsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/profile"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/careportal_newnstreatment_notes_label"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
+                android:text="@string/treatments_wizard_total_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_totalinsulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:background="@android:color/transparent"
+            android:gravity="end|right"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="8dp">
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                style="@style/mdtp_ActionButton.Text"
+                android:text="@string/mdtp_ok" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

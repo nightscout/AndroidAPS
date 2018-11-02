@@ -15,9 +15,11 @@
     <uses-permission android:name="android.permission.SEND_MMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="sugar.free.sightremote.HISTORY_BROADCASTS" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -28,45 +30,50 @@
         android:name=".MainApp"
         android:allowBackup="true"
         android:icon="${appIcon}"
+        android:roundIcon="${appIconRound}"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PreferencesActivity" />
+        <activity android:name=".activities.PreferencesActivity" />
         <activity
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".AgreementActivity" />
+        <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />
+        <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.BLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity" />
 
         <receiver
             android:name=".receivers.DataReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
+
                 <!-- Receive new SMS messages -->
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
@@ -77,6 +84,8 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from DexcomG5 -->
                 <action android:name="com.dexcom.cgm.DATA" />
+                <!-- Receiver from Poctech -->
+                <action android:name="com.china.poctech.data" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->
@@ -110,9 +119,27 @@
             </intent-filter>
         </receiver>
 
+        <!-- Network change local receiver -->
+        <receiver android:name=".receivers.NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
         <!-- Service processing incomming data -->
         <service
-            android:name=".Services.DataService"
+            android:name=".services.DataService"
             android:exported="false" />
         <service
             android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
@@ -129,7 +156,7 @@
         <service
             android:name=".plugins.PumpDanaRS.services.DanaRSService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".plugins.Wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -142,17 +169,28 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".Services.AlarmSoundService"
+            android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service
             android:name=".plugins.Overview.notifications.DismissNotificationService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <service android:name=".plugins.Persistentnotification.DummyService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
 
+        <activity
+            android:name=".setupwizard.SetupWizardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_activity_setup_wizard" />
+
+        <activity android:name=".activities.SingleFragmentActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".plugins.Maintenance.activities.LogSettingActivity"></activity>
     </application>
 
 </manifest>

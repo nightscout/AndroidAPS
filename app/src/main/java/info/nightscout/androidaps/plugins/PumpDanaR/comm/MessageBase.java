@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.CRC;
 
 /*
@@ -22,8 +22,8 @@ import info.nightscout.utils.CRC;
  */
 
 public class MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MessageBase.class);
-    private byte[] buffer = new byte[512];
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    protected byte[] buffer = new byte[512];
     private int position = 6;
 
     public boolean received = false;
@@ -32,6 +32,10 @@ public class MessageBase {
     public void SetCommand(int cmd) {
         this.buffer[4] = (byte) (cmd >> 8 & 0xFF);
         this.buffer[5] = (byte) (cmd & 0xFF);
+    }
+
+    public void resetBuffer() {
+        position = 6;
     }
 
     public void AddParamByte(byte data) {
@@ -91,7 +95,7 @@ public class MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        if (Config.logDanaMessageDetail) {
+        if (L.isEnabled(L.PUMPCOMM)) {
             if (bytes.length > 6) {
                 int command = (bytes[5] & 0xFF) | ((bytes[4] << 8) & 0xFF00);
                 log.debug("UNPROCESSED MSG: " + getMessageName() + " Command: " + String.format("%04X", command) + " Data: " + toHexString(bytes));
@@ -125,8 +129,8 @@ public class MessageBase {
         return 0;
     }
 
-    public static Date dateTimeFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static long dateTimeFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + intFromBuff(buff, offset, 1),
                         intFromBuff(buff, offset + 1, 1) - 1,
@@ -134,12 +138,11 @@ public class MessageBase {
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         0
-                );
-        return date;
+                ).getTime();
     }
 
-    public static Date dateTimeSecFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static synchronized long dateTimeSecFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + intFromBuff(buff, offset, 1),
                         intFromBuff(buff, offset + 1, 1) - 1,
@@ -147,18 +150,16 @@ public class MessageBase {
                         intFromBuff(buff, offset + 3, 1),
                         intFromBuff(buff, offset + 4, 1),
                         intFromBuff(buff, offset + 5, 1)
-                );
-        return date;
+                ).getTime();
     }
 
-    public static Date dateFromBuff(byte[] buff, int offset) {
-        Date date =
+    public static long dateFromBuff(byte[] buff, int offset) {
+        return
                 new Date(
                         100 + intFromBuff(buff, offset, 1),
                         intFromBuff(buff, offset + 1, 1) - 1,
                         intFromBuff(buff, offset + 2, 1)
-                );
-        return date;
+                ).getTime();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
