@@ -1,6 +1,6 @@
 Reporting bugs
 --------------
-- Note the precise time the problem occurred and describe the circumstances and steps that caused
+- **Note the precise time the problem occurred** and describe the circumstances and steps that caused
   the problem
 - Note the Build version (found in the About dialog in the app, when pressing the three dots in the
   upper-right corner).
