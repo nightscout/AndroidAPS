@@ -270,7 +270,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if (profile == null) {
             editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
             editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
-        } else if (profile.getUnits().equals(Constants.MMOL)) {
+        } else if (units.equals(Constants.MMOL)) {
             editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
             editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
         } else {
@@ -279,7 +279,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits());
+            Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
             if (savedInstanceState != null && savedInstanceState.getDouble("editBg") != bg1) {
                 editBg.setValue(savedInstanceState.getDouble("editBg"));
             } else {
@@ -459,7 +459,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if ((data.size() > 0) &&
                 (data.get(0).date > millis - 7 * 60 * 1000L) &&
                 (data.get(0).date < millis + 7 * 60 * 1000L)) {
-            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
+            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, units));
         }
     }
 
@@ -736,8 +736,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                         .reason(reason)
                         .source(Source.USER);
                 if (tempTarget.durationInMinutes != 0) {
-                    tempTarget.low(Profile.toMgdl(targetBottom, profile.getUnits()))
-                            .high(Profile.toMgdl(targetTop, profile.getUnits()));
+                    tempTarget.low(Profile.toMgdl(targetBottom, units))
+                            .high(Profile.toMgdl(targetTop, units));
                 } else {
                     tempTarget.low(0).high(0);
                 }

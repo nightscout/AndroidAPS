@@ -1054,4 +1054,5 @@ Context | Edit Context</string>
   <string name="insulinlimitviolation">Нарушение ограничения инсулина</string>
   <string name="loop_openmode_min_change">Минимальный запрос на изменения [%]</string>
   <string name="loop_openmode_min_change_summary">Алгоритм Ипж выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение. Значение по умолчанию — 20%</string>
+  <string name="pairfirst">Выполните сопряжение помпы с телефоном!</string>
 </resources>
