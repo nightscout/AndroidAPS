@@ -530,7 +530,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
-        } else if (item.getTitle().equals(MainApp.gs(R.string.resume))) {
+        } else if (item.getTitle().equals(MainApp.gs(R.string.resume)) ||
+                item.getTitle().equals(MainApp.gs(R.string.reconnect))) {
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
