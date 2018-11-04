@@ -446,7 +446,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
-            final PumpDescription pumpDescription = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
+            final PumpDescription pumpDescription =
+                    ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
             if (!ProfileFunctions.getInstance().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.gs(R.string.loop));
@@ -457,21 +458,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.gs(R.string.suspendloopfor2h));
                     menu.add(MainApp.gs(R.string.suspendloopfor3h));
                     menu.add(MainApp.gs(R.string.suspendloopfor10h));
-                    if (pumpDescription.tempDurationStep15mAllowed)
-                        menu.add(MainApp.gs(R.string.disconnectpumpfor15m));
-                    if (pumpDescription.tempDurationStep30mAllowed)
-                        menu.add(MainApp.gs(R.string.disconnectpumpfor30m));
-                } else {
+                }  else  {
                     menu.add(MainApp.gs(R.string.resume));
                 }
             }
             if (!loopPlugin.isEnabled(PluginType.LOOP))
                 menu.add(MainApp.gs(R.string.enableloop));
 
-            // menu-items visible even if loop is disabled  (#1449)
-            menu.add(MainApp.gs(R.string.disconnectpumpfor1h));
-            menu.add(MainApp.gs(R.string.disconnectpumpfor2h));
-            menu.add(MainApp.gs(R.string.disconnectpumpfor3h));
+            if (!ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended()) {
+                showSuspendtPump(menu, pumpDescription);
+            }
 
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.gs(R.string.profile));
@@ -489,6 +485,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 menu.add(MainApp.gs(R.string.cancel));
             }
         }
+    }
+
+    private void showSuspendtPump(ContextMenu menu,
+                                  PumpDescription pumpDescription) {
+        if (pumpDescription.tempDurationStep15mAllowed)
+            menu.add(MainApp.gs(R.string.disconnectpumpfor15m));
+        if (pumpDescription.tempDurationStep30mAllowed)
+            menu.add(MainApp.gs(R.string.disconnectpumpfor30m));
+        menu.add(MainApp.gs(R.string.disconnectpumpfor1h));
+        menu.add(MainApp.gs(R.string.disconnectpumpfor2h));
+        menu.add(MainApp.gs(R.string.disconnectpumpfor3h));
     }
 
     @Override
