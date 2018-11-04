@@ -462,11 +462,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.gs(R.string.resume));
                 }
             }
-            if (!loopPlugin.isEnabled(PluginType.LOOP))
-                menu.add(MainApp.gs(R.string.enableloop));
 
-            if (!ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended()) {
+            if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+                menu.add(MainApp.gs(R.string.enableloop));
+            }
+
+            if (!loopPlugin.isDisconnected()) {
                 showSuspendtPump(menu, pumpDescription);
+            }  else  {
+                menu.add(MainApp.gs(R.string.resume));
             }
 
         } else if (v == activeProfileView) {
@@ -1105,7 +1109,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
-            } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isDisconnected()) {
+            } else  if (loopPlugin.isDisconnected()) {
                 apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
