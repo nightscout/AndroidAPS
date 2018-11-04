@@ -469,8 +469,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             if (!loopPlugin.isDisconnected()) {
                 showSuspendtPump(menu, pumpDescription);
-            }  else  if (!loopPlugin.isSuspended()){
-                menu.add(MainApp.gs(R.string.resume));
+            }  else {
+                menu.add(MainApp.gs(R.string.reconnect));
             }
 
         } else if (v == activeProfileView) {
