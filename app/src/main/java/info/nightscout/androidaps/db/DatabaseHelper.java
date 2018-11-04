@@ -156,6 +156,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        log.info("Do nothing for downgrading...");
+        log.debug("oldVersion: {}, newVersion: {}", oldVersion, newVersion);
+    }
+
     public int getOldVersion() {
         return oldVersion;
     }
