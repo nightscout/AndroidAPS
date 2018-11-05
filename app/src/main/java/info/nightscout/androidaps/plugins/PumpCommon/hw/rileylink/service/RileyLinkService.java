@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkEncodingType;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
@@ -41,8 +40,9 @@ public abstract class RileyLinkService extends Service {
     protected Context context;
     protected RileyLinkBroadcastReceiver mBroadcastReceiver;
     protected RileyLinkServiceData rileyLinkServiceData;
-    protected RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
+
+    // protected RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
     // protected static final String WAKELOCKNAME = "com.gxwtech.roundtrip2.RoundtripServiceWakeLock";
     // protected static volatile PowerManager.WakeLock lockStatic = null;
@@ -57,7 +57,7 @@ public abstract class RileyLinkService extends Service {
         RileyLinkUtil.setContext(this.context);
         determineRileyLinkTargetFrequency();
         RileyLinkUtil.setRileyLinkService(this);
-        RileyLinkUtil.setRileyLinkTargetFrequency(rileyLinkTargetFrequency);
+        // RileyLinkUtil.setRileyLinkTargetFrequency(rileyLinkTargetFrequency);
         RileyLinkUtil.setEncoding(getEncoding());
         initRileyLinkServiceData();
     }

@@ -24,6 +24,13 @@ CGMS [not in plan for now]:
 AAPS-Medtronic
 ==============
 
+- ? history: TDD query
+             history retrive doesn't show whats happening
+             datetime parsimg problem
+             Invalid entry:
+             Entry: EndResultTotals = [0x07 0x00 0x00 0x05 0xFA 0xBF 0x12] PumpHistoryRecord [type=EndResultTotals      [7  , 0x07], DT: x                  , length=5,2,0(7), head=00 00 05 FA , datetime=BF 12 , rawData=07 00 00 05 FA BF 12 ]
+
+
 
 - history: - integrate
            - basal change code
@@ -127,3 +134,61 @@ Bugs:
     + Remaining Insulin [554]
     + Get Basal profile returns just part of profile
     + Set TBR problem (after Bolus fixes)
+
+
+
+
+
+
+
+========================================================================================================
+
+    None(0, "None", 1, 0, 0), // Bolus(0x01, "Bolus", 4, 5, 4), // 4,5,0 -> 4,5,4 Bolus(0x01, "Bolus", 2, 5, 4),
+
+	// Thear
+    Bolus(0x01, "Bolus", 4, DateFormat.LongDate, 0), // 523+[H=8]
+
+    TempBasalRate(0x33, "TempBasal", 2, 5, 1), //
+    TempBasalDuration(0x16, "TempBasalDuration"), //
+
+	// Status changes
+    Prime(0x03, "Prime", 5, 5, 0), //
+    PumpSuspend(0x1e, "PumpSuspend"), //
+    PumpResume(0x1f, "PumpResume"), //
+    Rewind(0x21, "Rewind"), //
+
+	// time change
+    ChangeTime(0x17, "ChangeTime"), //
+    NewTimeSet(0x18, "NewTimeSet"), //
+
+
+	// settings
+    ClearSettings(0x22, "ClearSettings"), // 8?
+    SaveSettings(0x5d), //
+
+    SelectBasalProfile(0x14, "SelectBasalProfile"), //
+    ChangeMaxBolus(0x24), // 8?
+    ChangeMaxBasal(0x2c), //
+    ChangeTempBasalType((byte)0x62), // ChangeTempBasalTypePumpEvent
+
+	// basal profile
+    //ChangeBasalProfile_OldProfile(0x08, 2, 5, 145), // // V1: 2,5,42 V2:2,5,145; V4: V5
+    ChangeBasalProfile_NewProfile(0x09, 2, 5, 145), //
+
+
+	// Daily Totals
+    DailyTotals512(0x6c, "Daily Totals 512", 0, 0, 36), //
+    DailyTotals522(0x6d, "Daily Totals 522", 1, 2, 41), // // hack1(0x6d, "hack1", 46, 5, 0),
+    DailyTotals523(0x6e, "Daily Totals 523", 1, 2, 49), // 1102014-03-17T00:00:00
+
+
+
+
+    ChangeVariableBolus(0x5e), //
+
+    EndResultTotals(0x07, "ResultTotals", 5, 2, 0), // V1: 5/5/41 V2: 5,2,3 V3, 5,2,0 V5: 7/10(523)
+
+    BasalProfileStart(0x7b, 2, 5, 3), // // 722
+
+
+

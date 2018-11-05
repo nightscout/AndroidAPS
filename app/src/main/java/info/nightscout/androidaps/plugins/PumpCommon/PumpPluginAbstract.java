@@ -42,71 +42,32 @@ import info.nightscout.utils.DecimalFormatter;
 
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
-// FIXME remove PumpDriver instances, just keep methods that do something here
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
 
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
         .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
     protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
         .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
-    // protected PumpStatus pumpStatusData;
-    private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
+
     protected PumpDescription pumpDescription = new PumpDescription();
-    // protected PumpDriverInterface pumpDriver;
     protected PumpStatus pumpStatus;
-    protected String internalName;
     protected ServiceConnection serviceConnection = null;
     protected boolean serviceRunning = false;
-    protected boolean isInitialized = false;
+    // protected boolean isInitialized = false;
     protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
     protected boolean displayConnectionMessages = false;
 
-
-    // protected PumpPluginAbstract(PumpDriverInterface pumpDriverInterface, //
-    // String internalName, //
-    // String fragmentClassName, //
-    // int pluginName, //
-    // int pluginShortName, //
-    // PumpType pumpType) {
-    // this(pumpDriverInterface, //
-    // internalName, //
-    // new PluginDescription() //
-    // .mainType(PluginType.PUMP) //
-    // .fragmentClass(fragmentClassName) //
-    // .pluginName(pluginName) //
-    // .shortName(pluginShortName), //
-    // pumpType //
-    // );
-    // }
 
     protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType) {
 
         super(pluginDescription);
 
-        LOG.error("After super called.");
-
-        // this.pumpDriver = pumpDriverInterface;
-        this.internalName = internalName;
-
-        LOG.error("Before Init Pump Statis Data called.");
-
         pumpDescription.setPumpDescription(pumpType);
 
         initPumpStatusData();
 
-        LOG.error("Before set description");
-
-        LOG.error("Before pumpDriver");
-
-        // this.pumpDriver.initDriver(this.pumpStatus, this.pumpDescription);
-
-        // initPumpStatusData();
-
-    }
-
-
-    protected String getInternalName() {
-        return this.internalName;
     }
 
 
@@ -165,7 +126,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public boolean isInitialized() {
-        return pumpState != PumpDriverState.NotInitialized;
+        return PumpDriverState.isInitialized(pumpState);
     }
 
 
@@ -195,26 +156,26 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     public void connect(String reason) {
         if (displayConnectionMessages)
-            LOG.warn("connect (reason={}) [PumpPluginAbstract] - Not implemented.", reason);
+            LOG.warn("connect (reason={}) [PumpPluginAbstract] - default (empty) implementation.", reason);
     }
 
 
     public void disconnect(String reason) {
         if (displayConnectionMessages)
-            LOG.warn("disconnect (reason={}) [PumpPluginAbstract] - Not implemented.", reason);
+            LOG.warn("disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation.", reason);
     }
 
 
     public void stopConnecting() {
         if (displayConnectionMessages)
-            LOG.warn("stopConnecting [PumpPluginAbstract] - Not implemented.");
+            LOG.warn("stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
 
     @Override
     public boolean isHandshakeInProgress() {
         if (displayConnectionMessages)
-            LOG.warn("isHandshakeInProgress [PumpPluginAbstract] - Not implemented.");
+            LOG.warn("isHandshakeInProgress [PumpPluginAbstract] - default (empty) implementation.");
         return false;
     }
 
@@ -222,7 +183,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     @Override
     public void finishHandshaking() {
         if (displayConnectionMessages)
-            LOG.warn("finishHandshaking [PumpPluginAbstract] - Not implemented.");
+            LOG.warn("finishHandshaking [PumpPluginAbstract] - default (empty) implementation.");
     }
 
 

@@ -61,8 +61,8 @@ public enum PumpHistoryEntryType // implements CodeEnum
     LowBattery(0x19, "LowBattery"), //
     BatteryActivity(0x1a, "Battery Activity"), //
     SetAutoOff(0x1b, "SetAutoOff"), //
-    PumpSuspend(0x1e, "PumpSuspend"), //
-    PumpResume(0x1f, "PumpResume"), //
+    PumpSuspend(0x1e, "Pump Suspend"), //
+    PumpResume(0x1f, "Pump Resume"), //
     SelfTest(0x20, "SelfTest"), //
     Rewind(0x21, "Rewind"), //
     ClearSettings(0x22, "ClearSettings"), // 8?
@@ -78,7 +78,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     EventUnknown_MM512_0x2f(0x2f), //
     ChangeBGReminderOffset(0x31), //
     ChangeAlarmClockTime(0x32), //
-    TempBasalRate(0x33, "TempBasal", 2, 5, 1), //
+    TempBasalRate(0x33, "Temp Basal Rate", 2, 5, 1), //
     LowReservoir(0x34), //
 
     ChangeMeterId(0x36), //
@@ -88,7 +88,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     EventUnknown_MM512_0x3b(0x3b), //
     ChangeParadigmLinkID(0x3c, 2, 5, 14), // V3 ? V6: 2,5,14
 
-    BGReceived(0x3f, "BGReceived", 2, 5, 3), // Ian3F
+    BGReceived(0x3f, "BG Received", 2, 5, 3), // Ian3F
     JournalEntryMealMarker(0x40, 2, 5, 2), //
     JournalEntryExerciseMarker(0x41, 2, 5, 1), // ?? JournalEntryExerciseMarkerPumpEvent
     JournalEntryInsulinMarker(0x42, 2, 5, 1), // ?? InsulinMarkerEvent
@@ -116,7 +116,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeBolusScrollStepSize(0x57), //
 
     // V4
-    // Andy58(0x58, "Unknown", 13, 5, 0), // TODO is this one really there ???
+    // Andy58(0x58, "Unknown", 13, 5, 0), // TO DO is this one really there ???
 
     BolusWizardChange(0x5a, "BolusWizard", 2, 5, 117), // V2: 522+[B=143]
     BolusWizardBolusEstimate(0x5b, "BolusWizardBolusEstimate", 2, 5, 13), // 15 // V2: 523+[B=15]
@@ -125,7 +125,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeVariableBolus(0x5e), //
     ChangeAudioBolus(0x5f, "EasyBolusEnabled"), // V3 ?
     ChangeBGReminderEnable(0x60), // questionable60
-    ChangeAlarmClockEnable((byte)0x61), //
+    ChangeAlarmClockEnable(0x61), //
     ChangeTempBasalType((byte)0x62), // ChangeTempBasalTypePumpEvent
     ChangeAlarmNotifyMode(0x63), //
     ChangeTimeFormat(0x64), //
@@ -134,10 +134,10 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeBolusReminderTime((byte)0x67, 2, 5, 2), // 9
     DeleteBolusReminderTime((byte)0x68, 2, 5, 2), // 9
     BolusReminder(0x69, 2, 5, 0), // Ian69
-    DeleteAlarmClockTime(0x6a, "DeleteAlarmClockTime", 2, 5, 7), // 14
+    DeleteAlarmClockTime(0x6a, "Delete Alarm Clock Time", 2, 5, 7), // 14
 
-    DailyTotals512(0x6c, "Daily Totals 512", 0, 0, 36), //
-    DailyTotals522(0x6d, "Daily Totals 522", 1, 2, 41), // // hack1(0x6d, "hack1", 46, 5, 0),
+    DailyTotals515(0x6c, "Daily Totals 515", 0, 0, 36), //
+    DailyTotals522(0x6d, "Daily Totals 522", 1, 2, 41), // // hack1(0x6d, "hack1", 46, 5, 0), // 1,2,41
     DailyTotals523(0x6e, "Daily Totals 523", 1, 2, 49), // 1102014-03-17T00:00:00
     ChangeCarbUnits((byte)0x6f), //
 
@@ -147,12 +147,12 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeWatchdogEnable((byte)0x7c), //
     ChangeOtherDeviceID((byte)0x7d, 2, 5, 30), //
 
-    ChangeWatchdogMarriageProfile((byte)0x81, 2, 5, 5), // 12
-    DeleteOtherDeviceID((byte)0x82, 2, 5, 5), //
-    ChangeCaptureEventEnable((byte)0x83), //
+    // ChangeWatchdogMarriageProfile(0x81, 2, 5, 5), // 12
+    // DeleteOtherDeviceID(0x82, 2, 5, 5), //
+    // ChangeCaptureEventEnable(0x83), //
 
-    EventUnknown_MM512_0x88((byte)0x88), //
-    EventUnknown_MM512_0x94((byte)0x94), //
+    EventUnknown_MM512_0x88(0x88), //
+    EventUnknown_MM512_0x94(0x94), //
     // IanA8(0xA8, "xx", 10, 5, 0), //
 
     // Andy90(0x90, "Unknown", 7, 5, 0),
@@ -165,6 +165,12 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     EventUnknown_MM522_0xE8(0xe8, 2, 5, 25), //
 
+    ReadOtherDevicesIDs(0xF0, ""), // ?
+    readCaptureEventEnabled(0xF1), // ?
+    changeCaptureEventEnable(0xF2), // ?
+    readOtherDevicesStatus(0xF3), // ?
+
+    TempBasalCombined(0xFE, "TempBasalCombined"), //
     UnknownBasePacket(0xFF, "Unknown Base Packet");
 
     // private PumpHistoryEntryType(String description, List<Integer> opCode,
@@ -262,6 +268,37 @@ public enum PumpHistoryEntryType // implements CodeEnum
     // this.totalLength = (head + date + body);
     // }
     //
+
+    public static boolean isAAPSRelevantEntry(PumpHistoryEntryType entryType) {
+        return (entryType == PumpHistoryEntryType.Bolus || // Treatments
+            entryType == PumpHistoryEntryType.TempBasalRate || //
+            entryType == PumpHistoryEntryType.TempBasalDuration || //
+
+            entryType == PumpHistoryEntryType.Prime || // Pump Status Change
+            entryType == PumpHistoryEntryType.PumpSuspend || //
+            entryType == PumpHistoryEntryType.PumpResume || //
+            entryType == PumpHistoryEntryType.Rewind || //
+            entryType == PumpHistoryEntryType.NoDeliveryAlarm || // no delivery
+            entryType == PumpHistoryEntryType.BasalProfileStart || //
+
+            entryType == PumpHistoryEntryType.ChangeTime || // Time Change
+            entryType == PumpHistoryEntryType.NewTimeSet || //
+
+            entryType == PumpHistoryEntryType.SelectBasalProfile || // Settings
+            entryType == PumpHistoryEntryType.ClearSettings || //
+            entryType == PumpHistoryEntryType.SaveSettings || //
+            entryType == PumpHistoryEntryType.ChangeMaxBolus || //
+            entryType == PumpHistoryEntryType.ChangeMaxBasal || //
+            entryType == PumpHistoryEntryType.ChangeTempBasalType || //
+
+            entryType == PumpHistoryEntryType.ChangeBasalProfile_NewProfile || // Basal profile
+
+            entryType == PumpHistoryEntryType.DailyTotals515 || // Daily Totals
+            entryType == PumpHistoryEntryType.DailyTotals522 || //
+            entryType == PumpHistoryEntryType.DailyTotals523 || //
+        entryType == PumpHistoryEntryType.EndResultTotals);
+    }
+
 
     public static boolean isRelevantEntry() {
         return true;

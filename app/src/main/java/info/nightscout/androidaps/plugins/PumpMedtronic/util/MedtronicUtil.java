@@ -219,24 +219,6 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    // @Deprecated
-    // public static void sendNotification(int resourceId, int notificationUrgencyType) {
-    // Notification notification = new Notification( //
-    // Notification.MEDTRONIC_PUMP_ALARM, //
-    // MainApp.gs(resourceId), //
-    // notificationUrgencyType);
-    // MainApp.bus().post(new EventNewNotification(notification));
-    // }
-
-    // @Deprecated
-    // public static void sendNotification(int resourceId, int notificationUrgencyType, Object... parameters) {
-    // Notification notification = new Notification( //
-    // Notification.MEDTRONIC_PUMP_ALARM, //
-    // MainApp.gs(resourceId, parameters), //
-    // notificationUrgencyType);
-    // MainApp.bus().post(new EventNewNotification(notification));
-    // }
-
     public static byte[] buildCommandPayload(MessageType commandType, byte[] parameters) {
         return buildCommandPayload(commandType.getValue(), parameters);
     }
@@ -463,6 +445,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
         if (currentCommand != null)
             historyRileyLink.add(new RLHistoryItem(currentCommand));
+
     }
 
 

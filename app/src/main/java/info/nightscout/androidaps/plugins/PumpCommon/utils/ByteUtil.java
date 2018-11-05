@@ -223,6 +223,11 @@ public class ByteUtil {
     }
 
 
+    public static int toInt(int b1, int b2, int b3) {
+        return toInt(b1, b2, b3, null, BitConversion.BIG_ENDIAN);
+    }
+
+
     public static int toInt(int b1, int b2, BitConversion flag) {
         return toInt(b1, b2, null, null, flag);
     }
@@ -282,6 +287,14 @@ public class ByteUtil {
 
 
     public static String getHex(byte abyte0[]) {
+        return abyte0 != null ? getHex(abyte0, abyte0.length) : null;
+    }
+
+
+    public static String getHex(List<Byte> list) {
+
+        byte[] abyte0 = getByteArrayFromList(list);
+
         return abyte0 != null ? getHex(abyte0, abyte0.length) : null;
     }
 

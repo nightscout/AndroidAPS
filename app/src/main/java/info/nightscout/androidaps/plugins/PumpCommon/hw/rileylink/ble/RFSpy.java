@@ -184,7 +184,7 @@ public class RFSpy {
                 if (resp.looksLikeRadioPacket()) {
                     // RadioResponse radioResp = resp.getRadioResponse();
                     // byte[] responsePayload = radioResp.getPayload();
-                    LOG.info("writeToData: received radio response. Will decode at upper level");
+                    LOG.trace("writeToData: received radio response. Will decode at upper level");
                     resetNotConnectedCount();
                 }
                 // Log.i(TAG, "writeToData: raw response is " + ByteUtil.shortHexString(rawResponse));

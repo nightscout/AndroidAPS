@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.ui;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
@@ -122,6 +124,12 @@ public class MedtronicUITask {
                 BasalProfile profile = (BasalProfile)parameters[0];
 
                 returnData = communicationManager.setBasalProfile(profile);
+            }
+                break;
+
+            case GetHistoryData: {
+                returnData = communicationManager.getPumpHistory((PumpHistoryEntry)parameters[0],
+                    (LocalDateTime)parameters[1]);
             }
                 break;
 

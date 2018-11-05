@@ -65,6 +65,8 @@ public class MedtronicPumpStatus extends PumpStatus {
     private boolean isFrequencyUS = false;
     private Map<String, PumpType> medtronicPumpMap = null;
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
+    private RileyLinkTargetFrequency targetFrequency;
+    private boolean targetFrequencyChanged = false;
 
 
     public MedtronicPumpStatus(PumpDescription pumpDescription) {
@@ -189,9 +191,15 @@ public class MedtronicPumpStatus extends PumpStatus {
                     this.pumpFrequency = pumpFrequency;
                     this.isFrequencyUS = pumpFrequency.equals(frequencies[0]);
 
-                    RileyLinkUtil.setRileyLinkTargetFrequency(this.isFrequencyUS ? //
+                    RileyLinkTargetFrequency newTargetFrequency = this.isFrequencyUS ? //
                     RileyLinkTargetFrequency.Medtronic_US
-                        : RileyLinkTargetFrequency.Medtronic_WorldWide);
+                        : RileyLinkTargetFrequency.Medtronic_WorldWide;
+
+                    if (targetFrequency == newTargetFrequency) {
+                        RileyLinkUtil.setRileyLinkTargetFrequency(newTargetFrequency);
+                        targetFrequencyChanged = true;
+                    }
+
                 }
             }
 
@@ -228,7 +236,9 @@ public class MedtronicPumpStatus extends PumpStatus {
 
         // LOG.debug("MedtronicPumpStatus::startService");
 
-        if (serialChanged && !inPreInit && MedtronicUtil.getMedtronicService() != null) {
+        boolean ready = (!inPreInit && MedtronicUtil.getMedtronicService() != null);
+
+        if (serialChanged && ready) {
             MedtronicUtil.getMedtronicService().setPumpIDString(this.serialNumber); // short operation
             serialChanged = false;
         }
@@ -238,7 +248,13 @@ public class MedtronicPumpStatus extends PumpStatus {
             rileyLinkAddressChanged = false;
         }
 
-        return (rileyLinkAddressChanged == false && serialChanged == false);
+        if (targetFrequencyChanged && !inPreInit && MedtronicUtil.getMedtronicService() != null) {
+            RileyLinkUtil.setRileyLinkTargetFrequency(targetFrequency);
+            RileyLinkUtil.getRileyLinkCommunicationManager().refreshRileyLinkTargetFrequency();
+            targetFrequencyChanged = false;
+        }
+
+        return (!rileyLinkAddressChanged && !serialChanged && !targetFrequencyChanged);
     }
 
 

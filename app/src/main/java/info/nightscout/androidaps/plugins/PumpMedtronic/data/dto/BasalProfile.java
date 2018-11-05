@@ -7,6 +7,8 @@ import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.annotations.Expose;
+
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.FabricUtil;
@@ -18,23 +20,24 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  * There are three basal profiles stored on the pump. (722 only?) They are all parsed the same, the user just has 3 to
  * choose from: Standard, A, and B
  * <p>
- * The byte array seems to be 21 three byte entries long, plus a zero? If the profile is completely empty, it should
- * have one entry: [0,0,0x3F] (?) The first entry of [0,0,0] marks the end of the used entries.
+ * The byte array is 48 times three byte entries long, plus a zero? If the profile is completely empty, it should have
+ * one entry: [0,0,0x3F]. The first entry of [0,0,0] marks the end of the used entries.
  * <p>
  * Each entry is assumed to span from the specified start time to the start time of the next entry, or to midnight if
  * there are no more entries.
  * <p>
  * Individual entries are of the form [r,z,m] where r is the rate (in 0.025 U increments) z is zero (?) m is the start
- * time-of-day for the basal rate period (in 30 minute increments?)
+ * time-of-day for the basal rate period (in 30 minute increments)
  */
 public class BasalProfile {
 
-    public static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
-    // private static final String TAG = "BasalProfile";
     private static final Logger LOG = LoggerFactory.getLogger(BasalProfile.class);
+
+    public static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
     private static final boolean DEBUG_BASALPROFILE = false;
-    protected byte[] mRawData; // store as byte array to make transport (via parcel) easier
-    List<BasalProfileEntry> listEntries;
+    @Expose
+    private byte[] mRawData; // store as byte array to make transport (via parcel) easier
+    private List<BasalProfileEntry> listEntries;
 
 
     public BasalProfile() {
@@ -285,15 +288,6 @@ public class BasalProfile {
                     basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate);
             }
         }
-
-        // StringBuilder sb = new StringBuilder();
-        //
-        // for (int i = 0; i < 24; i++) {
-        // sb.append("" + i + "=" + basalByHour[i]);
-        // sb.append("\n");
-        // }
-        //
-        // System.out.println("Basal Profile: \n" + sb.toString());
 
         return basalByHour;
     }

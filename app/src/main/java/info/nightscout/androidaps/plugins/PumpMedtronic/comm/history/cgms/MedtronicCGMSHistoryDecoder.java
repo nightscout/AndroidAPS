@@ -110,12 +110,6 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    // @Override
-    // public List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) throws Exception {
-    // List<Byte> dataClear = checkPage(page, false);
-    // return createRecords(dataClear);
-    // }
-
     protected <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClearInput, Class<E> clazz) {
         // List<MinimedHistoryEntry> listRecords = new
         // ArrayList<MinimedHistoryEntry>();

@@ -1,12 +1,11 @@
 package info.nightscout.androidaps.db;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
+import com.google.common.base.MoreObjects;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import info.nightscout.androidaps.logging.L;
 
@@ -14,9 +13,9 @@ import info.nightscout.androidaps.logging.L;
  * Created by mike on 20.09.2017.
  */
 
-
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TDDS)
 public class TDD {
+
     private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
@@ -32,17 +31,30 @@ public class TDD {
     public double total;
 
 
-    public double getTotal(){
-        return (total > 0d) ? total:(bolus+basal);
+    public double getTotal() {
+        return (total > 0d) ? total : (bolus + basal);
     }
 
 
-    public TDD() { }
+    public TDD() {
+    }
 
-    public TDD(long date, double bolus, double basal, double total){
+
+    public TDD(long date, double bolus, double basal, double total) {
         this.date = date;
         this.bolus = bolus;
         this.basal = basal;
         this.total = total;
+    }
+
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this) //
+            .add("date", date) //
+            .add("bolus", bolus) //
+            .add("basal", basal) //
+            .add("total", total) //
+            .toString();
     }
 }

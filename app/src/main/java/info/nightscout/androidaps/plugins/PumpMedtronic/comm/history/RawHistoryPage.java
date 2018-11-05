@@ -5,8 +5,6 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.util.Log;
-
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
@@ -16,9 +14,9 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
  */
 public class RawHistoryPage {
 
-    private static final String TAG = "RawHistoryPage";
     private static final Logger LOG = LoggerFactory.getLogger(RawHistoryPage.class);
-    byte[] data = new byte[0];
+
+    private byte[] data = new byte[0];
 
 
     public RawHistoryPage() {
@@ -69,14 +67,21 @@ public class RawHistoryPage {
     public void dumpToDebug() {
         int linesize = 80;
         int offset = 0;
+
+        StringBuffer sb = new StringBuffer();
+
         while (offset < data.length) {
             int bytesToLog = linesize;
             if (offset + linesize > data.length) {
                 bytesToLog = data.length - offset;
             }
-            Log.d(TAG, ByteUtil.shortHexString(ByteUtil.substring(data, offset, bytesToLog)));
+            sb.append(ByteUtil.shortHexString(ByteUtil.substring(data, offset, bytesToLog)) + " ");
+            // sb.append("\n");
+
             offset += linesize;
         }
+
+        LOG.debug("History Page Data:\n{}", sb.toString());
     }
 
 }

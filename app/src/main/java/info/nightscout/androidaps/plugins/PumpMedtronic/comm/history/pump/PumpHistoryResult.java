@@ -8,6 +8,8 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
+
 /**
  * Created by andy on 9/23/18.
  */
@@ -48,7 +50,7 @@ public class PumpHistoryResult {
 
     public void addHistoryEntries(List<PumpHistoryEntry> entries) {
         this.unprocessedEntries = entries;
-        LOG.debug("PumpHistoryResult. Unprocessed entries: {}", entries);
+        LOG.debug("PumpHistoryResult. Unprocessed entries: {}", MedtronicPumpPlugin.gsonInstance.toJson(entries));
         processEntries();
     }
 
@@ -115,8 +117,15 @@ public class PumpHistoryResult {
     public PumpHistoryEntry getLatestEntry() {
         if (this.validEntries == null || this.validEntries.size() == 0)
             return null;
-        else
+        else {
             return this.validEntries.get(0);
+            // PumpHistoryEntry pumpHistoryEntry = this.validEntries.get(0);
+            //
+            // if (pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.EndResultTotals)
+            // return pumpHistoryEntry;
+            // else
+            // return this.validEntries.get(1);
+        }
     }
 
 

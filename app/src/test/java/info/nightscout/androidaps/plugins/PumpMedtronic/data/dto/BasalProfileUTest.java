@@ -1,19 +1,57 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
+import static org.powermock.api.mockito.PowerMockito.when;
+
 import junit.framework.Assert;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.AAPSMocker;
+import info.SPMocker;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 
 /**
  * Created by andy on 6/16/18.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ MainApp.class, DatabaseHelper.class, DateUtil.class, SP.class })
 public class BasalProfileUTest {
+
+    // MainApp mainApp = new MainApp();
+    @Before
+    public void initMocking() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockStrings();
+        AAPSMocker.mockDatabaseHelper();
+
+        SPMocker.prepareMock();
+
+        PowerMockito.mockStatic(DateUtil.class);
+        when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());
+    }
+
 
     @Test
     public void getProfilesByHour() throws Exception {
+
+        MedtronicUtil.setPumpStatus(new MedtronicPumpStatus(new PumpDescription()));
+        MedtronicUtil.getPumpStatus().pumpType = PumpType.Medtronic_522_722;
+
+        PumpType pumpType = MedtronicUtil.getPumpStatus().pumpType;
 
         BasalProfile basalProfile = new BasalProfile();
         byte[] data = { //

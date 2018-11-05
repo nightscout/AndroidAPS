@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
+import com.google.gson.annotations.Expose;
+
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BatteryType;
 
 /**
@@ -8,6 +10,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BatteryType;
 
 public class BatteryStatusDTO {
 
+    @Expose
     public BatteryStatusType batteryStatusType;
     public double voltage;
 

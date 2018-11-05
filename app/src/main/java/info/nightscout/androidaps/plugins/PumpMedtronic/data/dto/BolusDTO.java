@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
+import com.google.gson.annotations.Expose;
+
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpBolusType;
 
@@ -26,10 +28,15 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpBolusType;
 
 public class BolusDTO extends PumpTimeStampedRecord {
 
+    @Expose
     private Float requestedAmount;
+    @Expose
     private Float deliveredAmount;
+    @Expose
     private Float immediateAmount; // when Multiwave this is used
+    @Expose
     private Integer duration;
+    @Expose
     private PumpBolusType bolusType;
     private Float insulinOnBoard;
 

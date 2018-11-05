@@ -29,15 +29,15 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-
 
 public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
+
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -49,15 +49,19 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
 
         Intervals<TemporaryBasal> tempBasalList;
 
+
         RecyclerViewAdapter(Intervals<TemporaryBasal> tempBasalList) {
             this.tempBasalList = tempBasalList;
         }
 
+
         @Override
         public TempBasalsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_tempbasals_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_tempbasals_item,
+                viewGroup, false);
             return new TempBasalsViewHolder(v);
         }
+
 
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
@@ -87,7 +91,8 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                 if (tempBasal.isAbsolute) {
                     Profile profile = ProfileFunctions.getInstance().getProfile(tempBasal.date);
                     if (profile != null) {
-                        holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile), " U/h"));
+                        holder.absolute.setText(DecimalFormatter.to2Decimal(
+                            tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile), " U/h"));
                         holder.percent.setText("");
                     } else {
                         holder.absolute.setText(MainApp.gs(R.string.noprofile));
@@ -115,10 +120,12 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
             holder.remove.setTag(tempBasal);
         }
 
+
         @Override
         public int getItemCount() {
             return tempBasalList.size();
         }
+
 
         @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -126,6 +133,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
         }
 
         public class TempBasalsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
             CardView cv;
             TextView date;
             TextView duration;
@@ -140,33 +148,36 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
             TextView ph;
             TextView ns;
 
+
             TempBasalsViewHolder(View itemView) {
                 super(itemView);
-                cv = (CardView) itemView.findViewById(R.id.tempbasals_cardview);
-                date = (TextView) itemView.findViewById(R.id.tempbasals_date);
-                duration = (TextView) itemView.findViewById(R.id.tempbasals_duration);
-                absolute = (TextView) itemView.findViewById(R.id.tempbasals_absolute);
-                percent = (TextView) itemView.findViewById(R.id.tempbasals_percent);
-                realDuration = (TextView) itemView.findViewById(R.id.tempbasals_realduration);
-                netRatio = (TextView) itemView.findViewById(R.id.tempbasals_netratio);
-                netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
-                iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
-                extendedFlag = (TextView) itemView.findViewById(R.id.tempbasals_extendedflag);
-                ph = (TextView) itemView.findViewById(R.id.pump_sign);
-                ns = (TextView) itemView.findViewById(R.id.ns_sign);
-                remove = (TextView) itemView.findViewById(R.id.tempbasals_remove);
+                cv = (CardView)itemView.findViewById(R.id.tempbasals_cardview);
+                date = (TextView)itemView.findViewById(R.id.tempbasals_date);
+                duration = (TextView)itemView.findViewById(R.id.tempbasals_duration);
+                absolute = (TextView)itemView.findViewById(R.id.tempbasals_absolute);
+                percent = (TextView)itemView.findViewById(R.id.tempbasals_percent);
+                realDuration = (TextView)itemView.findViewById(R.id.tempbasals_realduration);
+                netRatio = (TextView)itemView.findViewById(R.id.tempbasals_netratio);
+                netInsulin = (TextView)itemView.findViewById(R.id.tempbasals_netinsulin);
+                iob = (TextView)itemView.findViewById(R.id.tempbasals_iob);
+                extendedFlag = (TextView)itemView.findViewById(R.id.tempbasals_extendedflag);
+                ph = (TextView)itemView.findViewById(R.id.pump_sign);
+                ns = (TextView)itemView.findViewById(R.id.ns_sign);
+                remove = (TextView)itemView.findViewById(R.id.tempbasals_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             }
 
+
             @Override
             public void onClick(View v) {
-                final TemporaryBasal tempBasal = (TemporaryBasal) v.getTag();
+                final TemporaryBasal tempBasal = (TemporaryBasal)v.getTag();
                 switch (v.getId()) {
                     case R.id.tempbasals_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.gs(R.string.confirmation));
-                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.date));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n"
+                            + DateUtil.dateAndTimeString(tempBasal.date));
                         builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                             final String _id = tempBasal._id;
                             if (NSUpload.isIdValid(_id)) {
@@ -185,20 +196,21 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
         }
     }
 
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.treatments_tempbasals_fragment, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.tempbasals_recyclerview);
+        recyclerView = (RecyclerView)view.findViewById(R.id.tempbasals_recyclerview);
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin()
+            .getTemporaryBasalsFromHistory());
         recyclerView.setAdapter(adapter);
 
-        tempBasalTotalView = (TextView) view.findViewById(R.id.tempbasals_totaltempiob);
+        tempBasalTotalView = (TextView)view.findViewById(R.id.tempbasals_totaltempiob);
 
         context = getContext();
 
@@ -206,22 +218,26 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
         return view;
     }
 
+
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ignored) {
         updateGUI();
     }
+
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ignored) {
         updateGUI();
     }
 
+
     @Override
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {
-                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory()), false);
+                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin()
+                    .getTemporaryBasalsFromHistory()), false);
                 IobTotal tempBasalsCalculation = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals();
                 if (tempBasalsCalculation != null)
                     tempBasalTotalView.setText(DecimalFormatter.to2Decimal(tempBasalsCalculation.basaliob, " U"));

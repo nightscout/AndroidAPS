@@ -92,9 +92,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             MainApp.gs(R.string.medtronic_pump_frequency_us)).equals(MainApp.gs(R.string.medtronic_pump_frequency_us));
 
         if (hasUSFrequency)
-            this.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Medtronic_US;
+            RileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Medtronic_US);
         else
-            this.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Medtronic_WorldWide;
+            RileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Medtronic_WorldWide);
     }
 
 
@@ -120,7 +120,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
 
         // init rileyLinkCommunicationManager
-        medtronicCommunicationManager = new MedtronicCommunicationManager(context, rfspy, rileyLinkTargetFrequency);
+        medtronicCommunicationManager = new MedtronicCommunicationManager(context, rfspy);
     }
 
 

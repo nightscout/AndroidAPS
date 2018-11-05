@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
+import com.google.gson.annotations.Expose;
+
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 
@@ -34,6 +39,8 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     protected List<Byte> rawData;
 
+    protected static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
+
     protected int[] sizes = new int[3];
 
     protected byte[] head;
@@ -41,8 +48,14 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     protected byte[] body;
 
     protected LocalDateTime dateTime;
-    // protected PumpTimeStampedRecord historyEntryDetails;
 
+    @Expose
+    public String DT;
+
+    @Expose
+    public long atechDateTime;
+
+    @Expose
     protected Map<String, Object> decodedData;
 
 
@@ -231,6 +244,13 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     public void setLocalDateTime(LocalDateTime atdate) {
         this.dateTime = atdate;
+        // this.DT = atdate.toString(dateTimeFormatter);
+    }
+
+
+    public void setAtechDateTime(long dt) {
+        this.atechDateTime = dt;
+        this.DT = DateTimeUtil.toString(this.atechDateTime);
     }
 
 

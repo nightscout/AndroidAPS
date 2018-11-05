@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.Instant;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.Context;
+import android.os.SystemClock;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
@@ -19,11 +18,11 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RLMes
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RadioPacket;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RLMessageType;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.Page;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.data.history_old.Record;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
@@ -65,15 +64,17 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private MedtronicPumpHistoryDecoder pumpHistoryDecoder;
     private boolean doWakeUpBeforeCommand = true;
     private boolean firstConnection = true;
+    private boolean medtronicHistoryTesting = false; // TODO remove when not needed
 
 
-    public MedtronicCommunicationManager(Context context, RFSpy rfspy, RileyLinkTargetFrequency targetFrequency) {
-        super(context, rfspy, targetFrequency);
+    public MedtronicCommunicationManager(Context context, RFSpy rfspy) {
+        super(context, rfspy);
         medtronicCommunicationManager = this;
         this.medtronicConverter = new MedtronicConverter();
         this.pumpHistoryDecoder = new MedtronicPumpHistoryDecoder();
         MedtronicUtil.getPumpStatus().previousConnection = SP.getLong(
             RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+
     }
 
 
@@ -100,13 +101,18 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
+    public boolean isDeviceReachable() {
+        return isDeviceReachable(false);
+    }
+
+
     /**
      * We do actual wakeUp and compare PumpModel with currently selected one. If returned model is not Unknown,
      * pump is reachable.
      *
      * @return
      */
-    public boolean isDeviceReachable() {
+    public boolean isDeviceReachable(boolean canPreventTuneUp) {
 
         PumpDeviceState state = MedtronicUtil.getPumpDeviceState();
 
@@ -134,8 +140,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                         LOG.warn("Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
                             rfSpyResponse.wasTimeout());
                     } else {
-
-                        // rememberLastGoodDeviceCommunicationTime();
 
                         // radioResponse.rssi;
                         Object dataResponse = medtronicConverter.convertResponse(MedtronicCommandType.PumpModel,
@@ -175,10 +179,15 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 LOG.warn("isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
             }
 
+            SystemClock.sleep(1000);
+
         }
 
         if (state != PumpDeviceState.PumpUnreachable)
             MedtronicUtil.setPumpDeviceState(PumpDeviceState.PumpUnreachable);
+
+        if (!canPreventTuneUp)
+            ServiceTaskExecutor.startTask(new WakeAndTuneTask());
 
         return false;
     }
@@ -188,7 +197,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     @Override
     public boolean tryToConnectToDevice() {
 
-        return isDeviceReachable();
+        return isDeviceReachable(true);
 
         // wakeUp(true);
         //
@@ -378,6 +387,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (doWakeUpBeforeCommand)
             wakeUp(receiverDeviceAwakeForMinutes, false);
 
+        LOG.debug("Current command: " + MedtronicUtil.getCurrentCommand());
+
+        MedtronicUtil.setPumpDeviceState(PumpDeviceState.Active);
+
         for (int pageNumber = 0; pageNumber < 16; pageNumber++) {
 
             RawHistoryPage rawHistoryPage = new RawHistoryPage();
@@ -454,6 +467,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 LOG.error("getPumpHistory: checksum is wrong");
             }
 
+            // TODO handle error states
+
             rawHistoryPage.dumpToDebug();
 
             List<PumpHistoryEntry> medtronicHistoryEntries = pumpHistoryDecoder.processPageAndCreateRecords(
@@ -467,10 +482,14 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             LOG.debug("getPumpHistory: Search status: Search finished: {}", pumpTotalResult.isSearchFinished());
 
             if (pumpTotalResult.isSearchFinished()) {
+                MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
+
                 return pumpTotalResult;
             }
 
         }
+
+        MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         return pumpTotalResult;
 
@@ -558,31 +577,29 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    public ArrayList<Page> getAllHistoryPages() {
-        ArrayList<Page> pages = new ArrayList<>();
+    // public ArrayList<Page> getAllHistoryPages() {
+    // ArrayList<Page> pages = new ArrayList<>();
+    //
+    // for (int pageNum = 0; pageNum < 16; pageNum++) {
+    // pages.add(getPumpHistoryPage(pageNum));
+    // }
+    //
+    // return pages;
+    // }
 
-        for (int pageNum = 0; pageNum < 16; pageNum++) {
-            pages.add(getPumpHistoryPage(pageNum));
-        }
-
-        return pages;
-    }
-
-
-    public ArrayList<Page> getHistoryEventsSinceDate(Instant when) {
-        ArrayList<Page> pages = new ArrayList<>();
-        for (int pageNum = 0; pageNum < 16; pageNum++) {
-            pages.add(getPumpHistoryPage(pageNum));
-            for (Page page : pages) {
-                for (Record r : page.mRecordList) {
-                    LocalDateTime timestamp = r.getTimestamp().getLocalDateTime();
-                    LOG.info("Found record: (" + r.getClass().getSimpleName() + ") " + timestamp.toString());
-                }
-            }
-        }
-        return pages;
-    }
-
+    // public ArrayList<Page> getHistoryEventsSinceDate(Instant when) {
+    // ArrayList<Page> pages = new ArrayList<>();
+    // for (int pageNum = 0; pageNum < 16; pageNum++) {
+    // pages.add(getPumpHistoryPage(pageNum));
+    // for (Page page : pages) {
+    // for (Record r : page.mRecordList) {
+    // LocalDateTime timestamp = r.getTimestamp().getLocalDateTime();
+    // LOG.info("Found record: (" + r.getClass().getSimpleName() + ") " + timestamp.toString());
+    // }
+    // }
+    // }
+    // return pages;
+    // }
 
     public String getErrorResponse() {
         return this.errorMessage;

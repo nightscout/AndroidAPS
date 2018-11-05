@@ -214,7 +214,7 @@ public class MedtronicFragment extends SubscriberFragment {
     }
 
 
-    private void setDeviceStatus(MedtronicPumpStatus pumpStatus) {
+    private synchronized void setDeviceStatus(MedtronicPumpStatus pumpStatus) {
 
         pumpStatus.rileyLinkServiceState = (RileyLinkServiceState)checkStatusSet(pumpStatus.rileyLinkServiceState,
             RileyLinkUtil.getServiceState());
@@ -270,8 +270,10 @@ public class MedtronicFragment extends SubscriberFragment {
                 case Active: {
                     MedtronicCommandType cmd = MedtronicUtil.getCurrentCommand();
 
+                    LOG.debug("Command: " + cmd);
+
                     if (cmd == null)
-                        pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                        pumpStatusIconView.setText("   " + MainApp.gs(pumpStatus.pumpDeviceState.getResourceId()));
                     else
                         pumpStatusIconView.setText("   " + cmd.name());
 

@@ -6,6 +6,8 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.annotations.Expose;
+
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
@@ -35,9 +37,9 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
 
     private static Logger LOG = LoggerFactory.getLogger(PumpHistoryEntry.class);
 
+    @Expose
     private PumpHistoryEntryType entryType;
     private Integer opCode; // this is set only when we have unknown entry...
-    // private LocalDateTime timeOfEntry;
     private int offset;
 
 
@@ -76,15 +78,6 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
             + HexDump.getCorrectHexValue((byte)getOpCode()) + "]";
     }
 
-
-    // public PumpTimeStampedRecord getHistoryEntryDetails() {
-    // return historyEntryDetails;
-    // }
-    //
-    //
-    // public void setHistoryEntryDetails(PumpTimeStampedRecord historyEntryDetails) {
-    // this.historyEntryDetails = historyEntryDetails;
-    // }
 
     public int getOffset() {
         return offset;
@@ -137,11 +130,16 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
         return this.dateTime.isAfter(dateTimeIn);
     }
 
+
+    public boolean isAfter(long atechDateTime) {
+        return atechDateTime > this.atechDateTime;
+    }
+
     public static class Comparator implements java.util.Comparator<PumpHistoryEntry> {
 
         @Override
         public int compare(PumpHistoryEntry o1, PumpHistoryEntry o2) {
-            return o2.dateTime.compareTo(o1.dateTime);
+            return (int)(o2.atechDateTime - o1.atechDateTime);
         }
     }
 }

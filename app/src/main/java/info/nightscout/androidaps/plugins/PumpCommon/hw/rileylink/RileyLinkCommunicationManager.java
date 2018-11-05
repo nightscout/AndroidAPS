@@ -15,8 +15,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.Radio
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.WakeAndTuneTask;
@@ -35,6 +33,8 @@ public abstract class RileyLinkCommunicationManager {
     private static final Logger LOG = LoggerFactory.getLogger(RileyLinkCommunicationManager.class);
 
     private static final int SCAN_TIMEOUT = 1500;
+    private static final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
+
     protected final RFSpy rfspy;
     protected final Context context;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
@@ -51,10 +51,10 @@ public abstract class RileyLinkCommunicationManager {
     private int timeoutCount = 0;
 
 
-    public RileyLinkCommunicationManager(Context context, RFSpy rfspy, RileyLinkTargetFrequency targetFrequency) {
+    public RileyLinkCommunicationManager(Context context, RFSpy rfspy) {
         this.context = context;
         this.rfspy = rfspy;
-        this.targetFrequency = targetFrequency;
+        this.targetFrequency = RileyLinkUtil.getRileyLinkTargetFrequency();
         this.scanFrequencies = targetFrequency.getScanFrequencies();
         this.rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
         RileyLinkUtil.setRileyLinkCommunicationManager(this);
@@ -64,6 +64,15 @@ public abstract class RileyLinkCommunicationManager {
 
 
     protected abstract void configurePumpSpecificSettings();
+
+
+    public void refreshRileyLinkTargetFrequency() {
+        if (this.targetFrequency != RileyLinkUtil.getRileyLinkTargetFrequency()) {
+            this.targetFrequency = RileyLinkUtil.getRileyLinkTargetFrequency();
+            this.scanFrequencies = targetFrequency.getScanFrequencies();
+        }
+
+    }
 
 
     // All pump communications go through this function.
@@ -87,11 +96,12 @@ public abstract class RileyLinkCommunicationManager {
             if (rfSpyResponse.wasTimeout()) {
                 timeoutCount++;
 
-                if (timeoutCount >= 5) {
-                    RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError,
-                        RileyLinkError.NoContactWithDevice);
-                    timeoutCount = 0;
+                long diff = System.currentTimeMillis() - pumpStatus.lastConnection;
+
+                if (diff > ALLOWED_PUMP_UNREACHABLE) {
+                    LOG.warn("We reached max time that Pump can be unreachable. Starting Tuning.");
                     ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                    timeoutCount = 0;
                 }
             }
         }
@@ -114,6 +124,19 @@ public abstract class RileyLinkCommunicationManager {
 
     public int getNotConnectedCount() {
         return rfspy != null ? rfspy.notConnectedCount : 0;
+    }
+
+
+    public boolean changeTargetFrequency(RileyLinkTargetFrequency targetFrequency) {
+
+        if (this.targetFrequency == targetFrequency) {
+            return false;
+        }
+
+        this.targetFrequency = targetFrequency;
+        this.scanFrequencies = targetFrequency.getScanFrequencies();
+
+        return true;
     }
 
 
@@ -211,7 +234,7 @@ public abstract class RileyLinkCommunicationManager {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
                 RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0, (byte)0,
-                    (byte)0, (byte)0, 1000, (byte)0);
+                    (byte)0, (byte)0, 1500, (byte)0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {

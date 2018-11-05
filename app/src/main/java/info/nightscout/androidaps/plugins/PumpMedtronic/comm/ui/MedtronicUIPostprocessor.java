@@ -45,15 +45,15 @@ public class MedtronicUIPostprocessor {
         switch (uiTask.commandType) {
 
             case SetBasalProfileSTD: {
-                Boolean response = (Boolean) uiTask.returnData;
+                Boolean response = (Boolean)uiTask.returnData;
 
                 if (response) {
-                    BasalProfile basalProfile = (BasalProfile) uiTask.getParameter(0);
+                    BasalProfile basalProfile = (BasalProfile)uiTask.getParameter(0);
 
                     pumpStatus.basalsByHour = basalProfile.getProfilesByHour();
                 }
             }
-            break;
+                break;
 
             case GetBasalProfileSTD: {
                 BasalProfile basalProfile = (BasalProfile)uiTask.returnData;
@@ -119,7 +119,7 @@ public class MedtronicUIPostprocessor {
             // no postprocessing
 
             default:
-                LOG.warn("Post-processing not implemented for {}.", uiTask.commandType.name());
+                LOG.trace("Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
 
@@ -135,15 +135,14 @@ public class MedtronicUIPostprocessor {
         long currentTimeMillis = System.currentTimeMillis();
         long diff = Math.abs(d1.getTime() - currentTimeMillis);
 
-        LOG.warn("Pump Time: " + ldt + ", DeviceTime=" + d1 + //
-            // ", epoch: " + d1.getTime() + ", current: " + currentTimeMillis + //
+        LOG.debug("Pump Time: " + ldt + ", DeviceTime=" + d1 + //
             ", diff: " + diff / 1000 + " s");
 
         if (diff >= 10 * 60 * 1000) {
-            LOG.debug("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
+            LOG.warn("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
             sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
         } else if (diff >= 4 * 60 * 1000) {
-            LOG.debug("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
+            LOG.warn("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
             sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
         }
 

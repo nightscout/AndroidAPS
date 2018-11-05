@@ -69,6 +69,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
@@ -89,6 +90,7 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.SP;
 import io.fabric.sdk.android.Fabric;
 
 public class MainApp extends Application {
@@ -268,7 +270,7 @@ public class MainApp extends Application {
     private void setBTReceiver() {
 
         // SP.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, null);
-        // SP.remove(RileyLinkConst.Prefs.LastGoodDeviceFrequency);
+        SP.remove(MedtronicConst.Statistics.LastPumpHistoryEntry); // FIXME remove
 
         // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device
         btReceiver = new BroadcastReceiver() {

@@ -6,6 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.annotations.Expose;
+
+import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 /**
@@ -17,8 +20,11 @@ public class TempBasalPair {
 
     private static final Logger LOG = LoggerFactory.getLogger(TempBasalPair.class);
 
-    private double insulinRate = 0.0;
+    @Expose
+    private double insulinRate = 0.0d;
+    @Expose
     private int durationMinutes = 0;
+    @Expose
     private boolean isPercent = false;
 
 
@@ -34,10 +40,12 @@ public class TempBasalPair {
      * @param isPercent
      */
     public TempBasalPair(byte rateByte, int startTimeByte, boolean isPercent) {
+        int rateInt = ByteUtil.asUINT8(rateByte);
+
         if (isPercent)
             this.insulinRate = rateByte;
         else
-            this.insulinRate = rateByte * 0.025;
+            this.insulinRate = rateInt * 0.025;
         this.durationMinutes = startTimeByte * 30;
         this.isPercent = isPercent;
     }

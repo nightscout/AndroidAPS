@@ -1,13 +1,14 @@
 package info.nightscout.androidaps.plugins.PumpDanaR;
 
-import android.support.annotation.Nullable;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
+import android.support.annotation.Nullable;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -27,6 +28,8 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -44,6 +47,7 @@ import info.nightscout.utils.SP;
  */
 
 public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
+
     protected Logger log = LoggerFactory.getLogger(L.PUMP);
 
     protected AbstractDanaRExecutionService sExecutionService;
@@ -52,16 +56,13 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
 
     public PumpDescription pumpDescription = new PumpDescription();
 
+
     protected AbstractDanaRPlugin() {
-        super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .fragmentClass(DanaRFragment.class.getName())
-                .pluginName(R.string.danarspump)
-                .shortName(R.string.danarpump_shortname)
-                .preferencesId(R.xml.pref_danars)
-                .description(R.string.description_pump_dana_r)
-        );
+        super(new PluginDescription().mainType(PluginType.PUMP).fragmentClass(DanaRFragment.class.getName())
+            .pluginName(R.string.danarspump).shortName(R.string.danarpump_shortname).preferencesId(R.xml.pref_danars)
+            .description(R.string.description_pump_dana_r));
     }
+
 
     @Override
     public void onStateChange(PluginType type, State oldState, State newState) {
@@ -73,16 +74,20 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
     }
 
+
     @Override
     public boolean isSuspended() {
         return DanaRPump.getInstance().pumpSuspended;
     }
 
+
     @Override
     public boolean isBusy() {
-        if (sExecutionService == null) return false;
+        if (sExecutionService == null)
+            return false;
         return sExecutionService.isConnected() || sExecutionService.isConnecting();
     }
+
 
     // Pump interface
     @Override
@@ -96,7 +101,8 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
-            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
+                MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.pumpNotInitializedProfileNotSet);
             return result;
@@ -104,14 +110,16 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE,
+                MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.failedupdatebasalprofile);
             return result;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
+            Notification notification = new Notification(Notification.PROFILE_SET_OK,
+                MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
             MainApp.bus().post(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
@@ -119,6 +127,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             return result;
         }
     }
+
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
@@ -132,7 +141,8 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
             Double profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement);
-            if (profileValue == null) return true;
+            if (profileValue == null)
+                return true;
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
@@ -142,15 +152,18 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return true;
     }
 
+
     @Override
     public long lastDataTime() {
         return DanaRPump.getInstance().lastConnection;
     }
 
+
     @Override
     public double getBaseBasalRate() {
         return DanaRPump.getInstance().currentBasal;
     }
+
 
     @Override
     public void stopBolusDelivering() {
@@ -161,11 +174,14 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         sExecutionService.bolusStop();
     }
 
+
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
+            boolean enforceNew) {
         DanaRPump pump = DanaRPump.getInstance();
         PumpEnactResult result = new PumpEnactResult();
-        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
+        percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(percent), profile)
+            .value();
         if (percent < 0) {
             result.isTempCancel = false;
             result.enacted = false;
@@ -211,6 +227,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return result;
     }
 
+
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         DanaRPump pump = DanaRPump.getInstance();
@@ -230,11 +247,13 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             result.isPercent = false;
             result.isTempCancel = false;
             if (L.isEnabled(L.PUMP))
-                log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulin);
+                log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount
+                    + " Asked: " + insulin);
             return result;
         }
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
-        if (connectionOK && pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
+        if (connectionOK && pump.isExtendedInProgress
+            && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
@@ -254,6 +273,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         log.error("setExtendedBolus: Failed to extended bolus");
         return result;
     }
+
 
     @Override
     public PumpEnactResult cancelExtendedBolus() {
@@ -278,6 +298,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
     }
 
+
     @Override
     public void connect(String from) {
         if (sExecutionService != null) {
@@ -287,25 +308,32 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
     }
 
+
     @Override
     public boolean isConnected() {
         return sExecutionService != null && sExecutionService.isConnected();
     }
+
 
     @Override
     public boolean isConnecting() {
         return sExecutionService != null && sExecutionService.isConnecting();
     }
 
+
     @Override
     public void disconnect(String from) {
-        if (sExecutionService != null) sExecutionService.disconnect(from);
+        if (sExecutionService != null)
+            sExecutionService.disconnect(from);
     }
+
 
     @Override
     public void stopConnecting() {
-        if (sExecutionService != null) sExecutionService.stopConnecting();
+        if (sExecutionService != null)
+            sExecutionService.stopConnecting();
     }
+
 
     @Override
     public void getPumpStatus() {
@@ -315,6 +343,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             pumpDescription.bolusStep = DanaRPump.getInstance().bolusStep;
         }
     }
+
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profilename) {
@@ -358,7 +387,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             pumpjson.put("battery", battery);
             pumpjson.put("status", status);
             pumpjson.put("extended", extended);
-            pumpjson.put("reservoir", (int) pump.reservoirRemainingUnits);
+            pumpjson.put("reservoir", (int)pump.reservoirRemainingUnits);
             pumpjson.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -366,15 +395,18 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return pumpjson;
     }
 
+
     @Override
     public String deviceID() {
         return DanaRPump.getInstance().serialNumber;
     }
 
+
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
+
 
     /**
      * DanaR interface
@@ -385,34 +417,50 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return sExecutionService.loadHistory(type);
     }
 
+
     /**
      * Constraint interface
      */
 
     @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
-        absoluteRate.setIfSmaller(DanaRPump.getInstance().maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), DanaRPump.getInstance().maxBasal, MainApp.gs(R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(
+            DanaRPump.getInstance().maxBasal,
+            String.format(MainApp.gs(R.string.limitingbasalratio), DanaRPump.getInstance().maxBasal,
+                MainApp.gs(R.string.pumplimit)), this);
         return absoluteRate;
     }
 
+
     @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
-        percentRate.setIfGreater(0, String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, MainApp.gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(0,
+            String.format(MainApp.gs(R.string.limitingpercentrate), 0, MainApp.gs(R.string.itmustbepositivevalue)),
+            this);
+        percentRate.setIfSmaller(
+            getPumpDescription().maxTempPercent,
+            String.format(MainApp.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent,
+                MainApp.gs(R.string.pumplimit)), this);
 
         return percentRate;
     }
 
+
     @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(DanaRPump.getInstance().maxBolus, String.format(MainApp.gs(R.string.limitingbolus), DanaRPump.getInstance().maxBolus, MainApp.gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(
+            DanaRPump.getInstance().maxBolus,
+            String.format(MainApp.gs(R.string.limitingbolus), DanaRPump.getInstance().maxBolus,
+                MainApp.gs(R.string.pumplimit)), this);
         return insulin;
     }
+
 
     @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
         return applyBolusConstraints(insulin);
     }
+
 
     @Nullable
     @Override
@@ -422,20 +470,24 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return DanaRPump.getInstance().createConvertedProfile();
     }
 
+
     @Override
     public String getUnits() {
         return DanaRPump.getInstance().getUnits();
     }
+
 
     @Override
     public String getProfileName() {
         return DanaRPump.getInstance().createConvertedProfileName();
     }
 
+
     @Override
     public PumpEnactResult loadTDDs() {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
     }
+
 
     // Reply for sms communicator
     public String shortStatus(boolean veryShort) {
@@ -443,28 +495,44 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         String ret = "";
         if (pump.lastConnection != 0) {
             Long agoMsec = System.currentTimeMillis() - pump.lastConnection;
-            int agoMin = (int) (agoMsec / 60d / 1000d);
+            int agoMin = (int)(agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
         if (pump.lastBolusTime != 0) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
+            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @"
+                + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin()
+            .getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
+        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(
+            System.currentTimeMillis());
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         if (!veryShort) {
-            ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";
+            ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits
+                + " U\n";
         }
         ret += "IOB: " + pump.iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + pump.batteryRemaining + "\n";
         return ret;
     }
+
+
     // TODO: daily total constraint
 
+    @Override
+    public List<CustomAction> getCustomActions() {
+        return null;
+    }
+
+
+    @Override
+    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
+        return null;
+    }
 }

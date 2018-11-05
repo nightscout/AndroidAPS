@@ -95,4 +95,9 @@ public class StringUtil {
 
         return val.toString();
     }
+
+
+    public static void splitString(String s, int characters) {
+
+    }
 }

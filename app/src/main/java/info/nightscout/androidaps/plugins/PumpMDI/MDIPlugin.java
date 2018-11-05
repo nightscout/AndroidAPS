@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMDI;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.Actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
@@ -24,9 +28,11 @@ import info.nightscout.utils.DateUtil;
  * Created by mike on 05.08.2016.
  */
 public class MDIPlugin extends PluginBase implements PumpInterface {
+
     private static Logger log = LoggerFactory.getLogger(MDIPlugin.class);
 
     private static MDIPlugin plugin = null;
+
 
     public static MDIPlugin getPlugin() {
         if (plugin == null)
@@ -36,12 +42,10 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     private PumpDescription pumpDescription = new PumpDescription();
 
+
     private MDIPlugin() {
-        super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .pluginName(R.string.mdi)
-                .description(R.string.description_pump_mdi)
-        );
+        super(new PluginDescription().mainType(PluginType.PUMP).pluginName(R.string.mdi)
+            .description(R.string.description_pump_mdi));
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;
 
@@ -51,67 +55,81 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         pumpDescription.isRefillingCapable = false;
     }
 
+
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
     }
 
+
     @Override
     public PumpEnactResult loadTDDs() {
-        //no result, could read DB in the future?
+        // no result, could read DB in the future?
         PumpEnactResult result = new PumpEnactResult();
         return result;
     }
+
 
     @Override
     public boolean isInitialized() {
         return true;
     }
 
+
     @Override
     public boolean isSuspended() {
         return false;
     }
+
 
     @Override
     public boolean isBusy() {
         return false;
     }
 
+
     @Override
     public boolean isConnected() {
         return true;
     }
+
 
     @Override
     public boolean isConnecting() {
         return false;
     }
 
+
     @Override
     public boolean isHandshakeInProgress() {
         return false;
     }
 
+
     @Override
     public void finishHandshaking() {
     }
+
 
     @Override
     public void connect(String reason) {
     }
 
+
     @Override
     public void disconnect(String reason) {
     }
+
 
     @Override
     public void stopConnecting() {
     }
 
+
     @Override
     public void getPumpStatus() {
     }
+
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
@@ -121,20 +139,24 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return result;
     }
 
+
     @Override
     public boolean isThisProfileSet(Profile profile) {
         return false;
     }
+
 
     @Override
     public long lastDataTime() {
         return System.currentTimeMillis();
     }
 
+
     @Override
     public double getBaseBasalRate() {
         return 0d;
     }
+
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
@@ -147,12 +169,15 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return result;
     }
 
+
     @Override
     public void stopBolusDelivering() {
     }
 
+
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
+            boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.gs(R.string.pumperror);
@@ -161,8 +186,10 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return result;
     }
 
+
     @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
+            boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.gs(R.string.pumperror);
@@ -170,6 +197,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
             log.debug("Settings temp basal percent: " + result);
         return result;
     }
+
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
@@ -181,6 +209,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return result;
     }
 
+
     @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
@@ -191,6 +220,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return result;
     }
 
+
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
@@ -200,6 +230,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
             log.debug("Canceling extended bolus: " + result);
         return result;
     }
+
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
@@ -224,19 +255,33 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return pump;
     }
 
+
     @Override
     public String deviceID() {
         return "MDI";
     }
+
 
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
+
     @Override
     public String shortStatus(boolean veryShort) {
         return deviceID();
     }
 
+
+    @Override
+    public List<CustomAction> getCustomActions() {
+        return null;
+    }
+
+
+    @Override
+    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
+        return null;
+    }
 }

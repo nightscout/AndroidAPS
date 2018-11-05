@@ -9,16 +9,17 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.util.Log;
-
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RecordDecodeStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BolusDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BolusWizardDTO;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.DailyTotalsDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpBolusType;
@@ -48,7 +49,6 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpHistoryDecoder.class);
-    private static final String TAG = "MdtPump";
 
     // PumpValuesWriter pumpValuesWriter = null;
 
@@ -61,22 +61,10 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
 
     public MedtronicPumpHistoryDecoder() {
-        super();
     }
 
 
-    // public List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page) {
-    // List<Byte> dataClear = checkPage(page, false);
-    // return createRecords(dataClear);
-    // }
-
-    // public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
-    // boolean partial, Class<E> clazz) {
-    //
-    // return null;
-    // }
-
-    public <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClear, Class<E> clazz) {
+    protected <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClear, Class<E> clazz) {
         prepareStatistics();
 
         int counter = 0;
@@ -89,8 +77,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         int elementStart = 0;
 
         if (dataClear.size() == 0) {
-            Log.e(TAG, "Empty page.");
-            // return;
+            LOG.error("Empty page.");
+            return outList;
         }
 
         do {
@@ -107,7 +95,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 continue;
             } else {
                 if (skipped != null) {
-                    Log.v(TAG, " ... Skipped " + skipped);
+                    LOG.debug(" ... Skipped " + skipped);
                     skipped = null;
                 }
             }
@@ -148,7 +136,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                         listRawData.add(dataClear.get(counter));
                         counter++;
                     } catch (Exception ex) {
-                        Log.e(TAG, "OpCode: " + HexDump.getCorrectHexValue((byte)opCode) + ", Invalid package: "
+                        LOG.error("OpCode: " + HexDump.getCorrectHexValue((byte)opCode) + ", Invalid package: "
                             + HexDump.toHexStringDisplayable(listRawData));
                         // throw ex;
                         incompletePacket = true;
@@ -189,37 +177,15 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
                 RecordDecodeStatus decoded = decodeRecord(pe);
 
-                // if (pe.getEntryType() ==
-                // PumpHistoryEntryType.UnknownBasePacket)
-                // {
-                // decoded = RecordDecodeStatus.Unknown;
-                // }
-                // else
-                // {
-                // decoded = decodeRecord(pe);
-                // }
-
-                // System.out.println("Found entry: " + entryType.name() +
-                // " ["
-                // + bitUtils.getDebugByteListHex(listRawData) + "] ");
-
-                // FIXME
-
-                // if (!decoded)
-                // System.out.println("#" + record + " " + pe);
-
-                // if (decoded)
-                // LOG.info("#" + record + " " + pe);
-                // else
-                // LOG.warn("#" + record + " BAD: " + pe);
-
-                if ((decoded == RecordDecodeStatus.OK) || (decoded == RecordDecodeStatus.Ignored)) {
-                    LOG.info("#" + record + " " + decoded.getDescription() + " " + pe);
-                    Log.i(TAG, "#" + record + " " + decoded.getDescription() + " -- " + pe);
-                } else {
+                if (decoded == RecordDecodeStatus.WIP) {
                     LOG.warn("#" + record + " " + decoded.getDescription() + "  " + pe);
-                    Log.w(TAG, "#" + record + " " + decoded.getDescription() + " -- " + pe);
                 }
+
+                // if ((decoded == RecordDecodeStatus.OK) || (decoded == RecordDecodeStatus.Ignored)) {
+                // LOG.info("#" + record + " " + decoded.getDescription() + " " + pe);
+                // } else {
+                // LOG.warn("#" + record + " " + decoded.getDescription() + "  " + pe);
+                // }
 
                 addToStatistics(pe, decoded, null);
 
@@ -230,11 +196,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                     outList.add((E)pe);
                 }
             }
-
-            // System.out.println("Counter: " + counter);
-
-            // if (counter > 100)
-            // break;
 
         } while (counter < dataClear.size());
 
@@ -276,23 +237,26 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         }
 
         // LOG.debug("decodeRecord: type={}", entry.getEntryType());
-        decodeDateTime(entry);
+        // decodeDateTime(entry);
 
         switch (entry.getEntryType()) {
         // not implemented
-            case ChangeBasalProfile_NewProfile:
-            case ChangeBasalProfile_OldProfile:
-            case SelectBasalProfile:
-            case DailyTotals522:
 
-                // case IanA8:
+            case DailyTotals522:
             case DailyTotals523:
-            case DailyTotals512:
-                return RecordDecodeStatus.NotSupported;
+            case DailyTotals515:
+                return decodeDailyTotals(entry); // Not supported at the moment
+
+            case SelectBasalProfile:
+                return RecordDecodeStatus.Ignored; // Not supported at the moment
 
                 // WORK IN PROGRESS
 
                 // POSSIBLY READY
+
+            case ChangeBasalProfile_OldProfile:
+            case ChangeBasalProfile_NewProfile:
+                return decodeBasalProfile(entry);
 
             case BasalProfileStart:
                 return decodeBasalProfileStart(entry);
@@ -300,7 +264,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 // AAPS Implementation - Not yet done
 
                 // AAPS Implementation - OK entries
-
+            case ChangeTempBasalType:
+            case ChangeMaxBolus:
+            case ChangeMaxBasal:
+            case ClearSettings:
+            case SaveSettings:
+                return RecordDecodeStatus.OK;
                 // AAPS events (Tbr, Bolus)
 
                 // AAPS alerts
@@ -316,14 +285,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case UnabsorbedInsulin:
             case BGReceived: // Ian3F: CGMS
             case SensorAlert: // Ian08 CGMS
-            case ChangeTempBasalType:
             case ChangeTimeFormat:
             case ChangeReservoirWarningTime:
             case ChangeBolusReminderEnable:
             case ChangeBolusReminderTime:
             case ChangeChildBlockEnable:
-            case ChangeMaxBolus:
-            case ChangeMaxBasal:
             case BolusWizardEnabled:
             case ChangeBGReminderOffset:
             case ChangeAlarmClockTime:
@@ -334,7 +300,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case DeleteBolusReminderTime:
             case SetAutoOff:
             case SelfTest:
-            case ClearSettings:
             case JournalEntryInsulinMarker:
             case JournalEntryOtherMarker:
             case ChangeBolusWizardSetup:
@@ -347,7 +312,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case ChangeSensorRateOfChangeAlertSetup:
             case ChangeBolusScrollStepSize:
             case BolusWizardChange:
-            case SaveSettings:
             case ChangeVariableBolus:
             case ChangeAudioBolus:
             case ChangeBGReminderEnable:
@@ -357,9 +321,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case ChangeCarbUnits:
             case ChangeWatchdogEnable:
             case ChangeOtherDeviceID:
-            case ChangeWatchdogMarriageProfile:
-            case DeleteOtherDeviceID:
-            case ChangeCaptureEventEnable:
+                // case ChangeWatchdogMarriageProfile:
+                // case DeleteOtherDeviceID:
+                // case ChangeCaptureEventEnable:
             case EventUnknown_MM522_0x45:
             case EventUnknown_MM522_0x46:
             case EventUnknown_MM522_0x47:
@@ -381,6 +345,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case EventUnknown_MM512_0x94:
             case EventUnknown_MM522_0xE8:
             case EventUnknown_0x4d:
+            case EventUnknown_MM522_0x25:
                 // LOG.debug(" -- ignored Pump Entry: " + entry.getEntryType().name());
                 return RecordDecodeStatus.Ignored;
 
@@ -395,11 +360,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 return RecordDecodeStatus.OK;
 
             case TempBasalDuration:
-                decodeTempBasal(entry);
+                // decodeTempBasal(entry);
                 return RecordDecodeStatus.OK;
 
             case TempBasalRate:
-                decodeTempBasal(entry);
+                // decodeTempBasal(entry);
                 return RecordDecodeStatus.OK;
 
             case Bolus:
@@ -434,8 +399,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 // this.writeData(PumpBaseType.Event, PumpEventType.CartridgeRewind, entry.getATechDate());
                 return RecordDecodeStatus.OK;
 
-            case EventUnknown_MM522_0x05:
-                break;
             case NoDeliveryAlarm:
                 // this.writeData(PumpBaseType.Alarm, PumpAlarms.NoDelivery, entry.getATechDate());
                 return RecordDecodeStatus.OK;
@@ -447,6 +410,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case Prime:
                 decodePrime(entry);
                 return RecordDecodeStatus.OK;
+
+            case EventUnknown_MM522_0x05:
+                return RecordDecodeStatus.Ignored;
+
+            case TempBasalCombined:
+                return RecordDecodeStatus.Ignored;
 
             case None:
             case UnknownBasePacket:
@@ -465,8 +434,65 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         }
 
-        return RecordDecodeStatus.Error;
+        // return RecordDecodeStatus.Error;
 
+    }
+
+
+    private RecordDecodeStatus decodeDailyTotals(PumpHistoryEntry entry) {
+
+        entry.addDecodedData("Raw Data", ByteUtil.getHex(entry.getRawData()));
+
+        LOG.debug("{} - {}", entry.getEntryType().name(), ByteUtil.getHex(entry.getRawData()));
+        LOG.debug("{}", entry);
+
+        // byte[] data = new byte[] {
+        // 0x6D, (byte)0xA2, (byte)0x92, 0x05, 0x0C, 0x00, (byte)0xE8, 0x00, 0x00, 0x00, 0x00, 0x03, 0x18, 0x02,
+        // (byte)0xD4, 0x5B, 0x00, 0x44, 0x09, 0x00, 0x00, 0x00, 0x44, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        // 0x44, 0x64, 0x01, 0x00, 0x00, 0x00, 0x01, 0x0C, 0x00, (byte)0xE8, 0x00, 0x00, 0x00 };
+
+        // basal 18.1, bolus 1.7 manual = 1.7
+
+        // bg avg, bg low hi, number Bgs,
+        // Sen Avg, Sen Lo/Hi, Sens Cal/Data = 0/0,
+        // Insulin=19.8, Basal, Bolus, Carbs,
+        // Bolus=1.7, Fodd, Corr, Manual=1.7,
+        // Num bOlus=1, food/corr, Food+corr, manual bolus=1
+
+        DailyTotalsDTO totals = new DailyTotalsDTO(entry.getEntryType(), entry.getBody());
+
+        // System.out.println("Totals:" + totals);
+
+        // if (entry.getEntryType() == PumpHistoryEntryType.DailyTotals522) {
+        //
+        // // Daily
+        //
+        // byte body[] = entry.getBody();
+        // System.out.println("Totoals 522");
+        //
+        // for (int i = 0; i < body.length - 1; i++) {
+        //
+        // int j = ByteUtil.toInt(body[i], body[i + 1]);
+        //
+        // System.out.println(String.format(
+        // "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0d,
+        // j / 10.0d, body[i], ByteUtil.getHex(body[i])));
+        //
+        // }
+        //
+        // }
+
+        return RecordDecodeStatus.WIP;
+    }
+
+
+    private RecordDecodeStatus decodeBasalProfile(PumpHistoryEntry entry) {
+
+        BasalProfile basalProfile = new BasalProfile(entry.getBody());
+
+        entry.addDecodedData("Object", basalProfile);
+
+        return RecordDecodeStatus.OK;
     }
 
 
@@ -571,7 +597,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         } else {
             dto.bloodGlucose = (((body[1] & 0x0F) << 8) | entry.getHead()[0]);
             dto.carbs = (int)body[0];
-            dto.carbRatio = new Float(body[2]);
+            dto.carbRatio = Float.valueOf(body[2]);
             dto.insulinSensitivity = new Float(body[3]);
             dto.bgTargetLow = (int)body[4];
             dto.bgTargetHigh = (int)body[12];
@@ -643,9 +669,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             bolus.setInsulinOnBoard(bitUtils.toInt(data[4], data[5]) / 40.0f);
             bolus.setDuration(data[6] * 30);
         } else {
-            bolus.setRequestedAmount(data[0] / 40.0f);
-            bolus.setDeliveredAmount(data[1] / 10.0f);
-            bolus.setDuration(data[2] * 30);
+            bolus.setRequestedAmount(ByteUtil.asUINT8(data[0]) / 40.0f);
+            bolus.setDeliveredAmount(ByteUtil.asUINT8(data[1]) / 10.0f);
+            bolus.setDuration(ByteUtil.asUINT8(data[2]) * 30);
         }
 
         bolus.setBolusType((bolus.getDuration() != null && (bolus.getDuration() > 0)) ? PumpBolusType.Extended
@@ -682,6 +708,14 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             return;
         }
 
+        decodeTempBasal(this.tbrPreviousRecord, entry);
+
+        tbrPreviousRecord = null;
+    }
+
+
+    public static void decodeTempBasal(PumpHistoryEntry tbrPreviousRecord, PumpHistoryEntry entry) {
+
         PumpHistoryEntry tbrRate = null, tbrDuration = null;
 
         if (entry.getEntryType() == PumpHistoryEntryType.TempBasalRate) {
@@ -696,18 +730,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             tbrRate = tbrPreviousRecord;
         }
 
-        // LOG.debug("Rate: " + tbrRate.toString());
-        // LOG.debug("Durration: " + tbrDuration.toString());
-
-        // if ((asUINT8(data[7]) >> 3) == 0) {
-        // mIsPercent = false;
-        // tbrRate = (double) (asUINT8(tbrRate.getRawData().get(1)) / 40.0;
-        // } else {
-        // mIsPercent = true;
-        // basalRate = asUINT8(data[1]);
-        // }
-
-        // FIXME
         TempBasalPair tbr = new TempBasalPair(tbrRate.getHead()[0], tbrDuration.getHead()[0], (ByteUtil.asUINT8(tbrRate
             .getDatetime()[4]) >> 3) == 0);
 
@@ -717,7 +739,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         entry.addDecodedData("Object", tbr);
 
-        tbrPreviousRecord = null;
+        entry.addDecodedData("Rate 1: ", tbrRate.getHead()[0] * 0.025);
+        entry.addDecodedData("Rate 2: ", ByteUtil.asUINT8(tbrRate.getHead()[0]) * 0.025d);
+        entry.addDecodedData("Rate 1.b: ", tbrRate.getHead()[0]);
+        entry.addDecodedData("Rate 2.b: ", ByteUtil.asUINT8(tbrRate.getHead()[0]));
+        entry.addDecodedData("Rate 3: ", (ByteUtil.asUINT8(tbrRate.getHead()[0])) / 40.0d);
+
     }
 
 
@@ -743,13 +770,16 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
             LocalDateTime atdate = new LocalDateTime(year, month, dayOfMonth, hour, minutes, seconds);
 
-            entry.setLocalDateTime(atdate);
+            entry.setLocalDateTime(atdate); // TODO remove
+            entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
+
         } else if (entry.getDateTimeLength() == 2) {
             int low = ByteUtil.asUINT8(dt[0]) & 0x1F;
             int mhigh = (ByteUtil.asUINT8(dt[0]) & 0xE0) >> 4;
             int mlow = (ByteUtil.asUINT8(dt[1]) & 0x80) >> 7;
             int month = mhigh + mlow;
-            int dayOfMonth = low + 1;
+            // int dayOfMonth = low + 1;
+            int dayOfMonth = dt[0] & 0x1F;
             int year = 2000 + (ByteUtil.asUINT8(dt[1]) & 0x7F);
 
             // LocalDate rval = new LocalDate(year, month, dayOfMonth);
@@ -758,7 +788,21 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             // int month = (((dt[0] & 0xE0) >> 4) + ((dt[1] & 0x80) >> 7));
             // int year = fix2DigitYear(dt[1] & 0x3F);
 
-            LocalDateTime atdate = new LocalDateTime(year, month, dayOfMonth, 0, 0);
+            LocalDateTime atdate = null;
+
+            LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
+
+            if (dayOfMonth == 32) {
+                // FIXME remove
+                LOG.debug("Entry: {} = [{}] {}", entry.getEntryType().name(), ByteUtil.getHex(entry.getRawData()),
+                    entry);
+            }
+
+            if (entry.getEntryType() == PumpHistoryEntryType.EndResultTotals) {
+                atdate = new LocalDateTime(year, month, dayOfMonth, 23, 59, 59);
+            } else {
+                atdate = new LocalDateTime(year, month, dayOfMonth, 0, 0);
+            }
 
             entry.setLocalDateTime(atdate);
         } else {
