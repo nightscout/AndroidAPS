@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.events;
 
+
+import info.nightscout.utils.StringUtils;
+
 public class EventNetworkChange extends Event {
 
     public boolean mobileConnected = false;
@@ -9,6 +12,6 @@ public class EventNetworkChange extends Event {
     public boolean roaming = false;
 
     public String getSsid() {
-        return ssid.replace("SSID: ","").replaceAll("\"","");
+        return StringUtils.removeSurroundingQuotes(ssid);
     }
 }

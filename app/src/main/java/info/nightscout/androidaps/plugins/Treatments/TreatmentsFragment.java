@@ -27,8 +27,6 @@ import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempora
 import info.nightscout.utils.FabricPrivacy;
 
 public class TreatmentsFragment extends SubscriberFragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
-
     TextView treatmentsTab;
     TextView extendedBolusesTab;
     TextView tempBasalsTab;
@@ -123,7 +121,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
 
     @Override
     protected void updateGUI() {
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().isExtendedBolusCapable
+        if (ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().isExtendedBolusCapable
                 || TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().size() > 0) {
             extendedBolusesTab.setVisibility(View.VISIBLE);
         } else {

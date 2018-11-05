@@ -40,8 +40,8 @@ public class SWCheckbox extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
         // Get if there is already value in SP
         Boolean previousValue;
         previousValue = SP.getBoolean(preferenceId, false);
@@ -68,7 +68,7 @@ public class SWCheckbox extends SWItem {
             }
         });
         layout.addView(checkBox);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
     }
     public void save(boolean value){
         SP.putBoolean(preferenceID, value);

@@ -56,6 +56,7 @@ public class WearPlugin extends PluginBase {
                 .pluginName(R.string.wear)
                 .shortName(R.string.wear_shortname)
                 .preferencesId(R.xml.pref_wear)
+                .description(R.string.description_wear)
         );
         this.ctx = ctx;
     }
@@ -97,6 +98,12 @@ public class WearPlugin extends PluginBase {
 
     void openSettings() {
         ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS));
+    }
+
+    void requestNotificationCancel(String actionstring) {
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
+        intent.putExtra("actionstring", actionstring);
+        ctx.startService(intent);
     }
 
 
@@ -185,6 +192,15 @@ public class WearPlugin extends PluginBase {
     public void requestActionConfirmation(String title, String message, String actionstring) {
 
         Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_ACTIONCONFIRMATIONREQUEST);
+        intent.putExtra("title", title);
+        intent.putExtra("message", message);
+        intent.putExtra("actionstring", actionstring);
+        ctx.startService(intent);
+    }
+
+    public void requestChangeConfirmation(String title, String message, String actionstring) {
+
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_CHANGECONFIRMATIONREQUEST);
         intent.putExtra("title", title);
         intent.putExtra("message", message);
         intent.putExtra("actionstring", actionstring);

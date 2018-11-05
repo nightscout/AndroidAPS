@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -24,7 +25,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder> {
-    private static Logger log = LoggerFactory.getLogger(NotificationRecyclerViewAdapter.class);
+    private static Logger log = LoggerFactory.getLogger(L.NOTIFICATION);
 
     private List<Notification> notificationsList;
 
@@ -96,11 +97,13 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
                         BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
                     }
                     // Adding current time to snooze if we got staleData
-                    log.debug("Notification text is: " + notification.text);
+                    if (L.isEnabled(L.NOTIFICATION))
+                        log.debug("Notification text is: " + notification.text);
                     if (notification.text.equals(MainApp.gs(R.string.nsalarm_staledata))) {
                         NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
                         long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
-                        log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
+                        if (L.isEnabled(L.NOTIFICATION))
+                            log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
                         nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
                     }
                     if (notification instanceof NotificationWithAction) {

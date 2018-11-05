@@ -29,6 +29,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
@@ -37,7 +38,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 public class NSClientPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(NSClientPlugin.class);
+    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
     static NSClientPlugin nsClientPlugin;
 
@@ -53,8 +54,8 @@ public class NSClientPlugin extends PluginBase {
     private final List<EventNSClientNewLog> listLog = new ArrayList<>();
     Spanned textLog = Html.fromHtml("");
 
-    public boolean paused = false;
-    boolean autoscroll = true;
+    public boolean paused;
+    boolean autoscroll;
 
     public String status = "";
 
@@ -69,9 +70,10 @@ public class NSClientPlugin extends PluginBase {
                 .pluginName(R.string.nsclientinternal)
                 .shortName(R.string.nsclientinternal_shortname)
                 .preferencesId(R.xml.pref_nsclientinternal)
+                .description(R.string.description_ns_client)
         );
 
-        if (Config.NSCLIENT || Config.G5UPLOADER) {
+        if (Config.NSCLIENT) {
             pluginDescription.alwaysEnabled(true).visibleByDefault(true);
         }
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
@@ -131,12 +133,14 @@ public class NSClientPlugin extends PluginBase {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            log.debug("Service is disconnected");
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug("Service is disconnected");
             nsClientService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            log.debug("Service is connected");
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug("Service is connected");
             NSClientService.LocalBinder mLocalBinder = (NSClientService.LocalBinder) service;
             if (mLocalBinder != null) // is null when running in roboelectric
                 nsClientService = mLocalBinder.getServiceInstance();
@@ -154,7 +158,8 @@ public class NSClientPlugin extends PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNSClientNewLog ev) {
         addToLog(ev);
-        log.debug(ev.action + " " + ev.logText);
+        if (L.isEnabled(L.NSCLIENT))
+            log.debug(ev.action + " " + ev.logText);
     }
 
     @Subscribe
@@ -164,30 +169,24 @@ public class NSClientPlugin extends PluginBase {
     }
 
     synchronized void clearLog() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (listLog) {
-                    listLog.clear();
-                }
-                MainApp.bus().post(new EventNSClientUpdateGUI());
+        handler.post(() -> {
+            synchronized (listLog) {
+                listLog.clear();
             }
+            MainApp.bus().post(new EventNSClientUpdateGUI());
         });
     }
 
     private synchronized void addToLog(final EventNSClientNewLog ev) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (listLog) {
-                    listLog.add(ev);
-                    // remove the first line if log is too large
-                    if (listLog.size() >= Constants.MAX_LOG_LINES) {
-                        listLog.remove(0);
-                    }
+        handler.post(() -> {
+            synchronized (listLog) {
+                listLog.add(ev);
+                // remove the first line if log is too large
+                if (listLog.size() >= Constants.MAX_LOG_LINES) {
+                    listLog.remove(0);
                 }
-                MainApp.bus().post(new EventNSClientUpdateGUI());
             }
+            MainApp.bus().post(new EventNSClientUpdateGUI());
         });
     }
 
@@ -208,6 +207,12 @@ public class NSClientPlugin extends PluginBase {
     void resend(String reason) {
         if (nsClientService != null)
             nsClientService.resend(reason);
+    }
+
+    public void pause(boolean newState) {
+        SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
+        paused = newState;
+        MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
     }
 
     public UploadQueue queue() {

@@ -6,26 +6,18 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 20.02.2016.
  */
 public class BroadcastFood {
-    private static Logger log = LoggerFactory.getLogger(BroadcastFood.class);
-
     public static void handleNewFood(JSONArray foods, Context context, boolean isDelta) {
 
         List<JSONArray> splitted = BroadcastTreatment.splitArray(foods);
@@ -39,7 +31,7 @@ public class BroadcastFood {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
                 bundle.putString("foods", part.toString());
@@ -65,7 +57,7 @@ public class BroadcastFood {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
                 bundle.putString("foods", part.toString());
@@ -89,7 +81,7 @@ public class BroadcastFood {
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             bundle = new Bundle();
             bundle.putString("foods", foods.toString());
             bundle.putBoolean("delta", isDelta);

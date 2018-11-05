@@ -22,13 +22,15 @@ import info.nightscout.utils.SP;
 public class SWEditUrl extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWEditUrl.class);
 
+    private int updateDelay = 0;
+
     public SWEditUrl() {
         super(Type.URL);
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
 
         TextView l = new TextView(context);
         l.setId(View.generateViewId());
@@ -48,7 +50,7 @@ public class SWEditUrl extends SWItem {
         editText.setMaxLines(1);
         editText.setText(SP.getString(preferenceId, ""));
         layout.addView(editText);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -58,7 +60,7 @@ public class SWEditUrl extends SWItem {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (Patterns.WEB_URL.matcher(s).matches())
-                    save(s.toString());
+                    save(s.toString(), updateDelay);
                 else
                     MainApp.bus().post(new EventSWLabel(MainApp.gs(R.string.error_url_not_valid)));
             }
@@ -71,6 +73,11 @@ public class SWEditUrl extends SWItem {
 
     public SWEditUrl preferenceId(int preferenceId) {
         this.preferenceId = preferenceId;
+        return this;
+    }
+
+    public SWEditUrl updateDelay(int updateDelay) {
+        this.updateDelay = updateDelay;
         return this;
     }
 

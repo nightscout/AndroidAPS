@@ -15,6 +15,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -24,7 +26,7 @@ import info.nightscout.utils.SP;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(BgReading.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -142,7 +144,7 @@ public class BgReading implements DataPointWithLabelInterface {
             return false;
         if (raw != other.raw)
             return false;
-        if (!direction.equals(other.direction))
+        if (!Objects.equals(direction, other.direction))
             return false;
         if (!Objects.equals(_id, other._id))
             return false;
@@ -160,6 +162,21 @@ public class BgReading implements DataPointWithLabelInterface {
         _id = other._id;
     }
 
+    public BgReading date(long date) {
+        this.date = date;
+        return this;
+    }
+
+    public BgReading date(Date date) {
+        this.date = date.getTime();
+        return this;
+    }
+
+    public BgReading value(double value) {
+        this.value = value;
+        return this;
+    }
+
     // ------------------ DataPointWithLabelInterface ------------------
     @Override
     public double getX() {
@@ -168,7 +185,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        String units = MainApp.getConfigBuilder().getProfileUnits();
+        String units = ProfileFunctions.getInstance().getProfileUnits();
         return valueToUnits(units);
     }
 
@@ -202,15 +219,9 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        String units = MainApp.getConfigBuilder().getProfileUnits();
-        Double lowLine = SP.getDouble("low_mark", 0d);
-        Double highLine = SP.getDouble("high_mark", 0d);
-        if (lowLine < 1) {
-            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        }
-        if (highLine < 1) {
-            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
-        }
+        String units = ProfileFunctions.getInstance().getProfileUnits();
+        Double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
+        Double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
         int color = MainApp.gc(R.color.inrange);
         if (isPrediction())
             return getPredectionColor();

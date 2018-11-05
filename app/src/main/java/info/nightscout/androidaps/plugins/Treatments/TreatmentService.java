@@ -37,6 +37,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.utils.JsonHelper;
 
@@ -46,7 +47,7 @@ import info.nightscout.utils.JsonHelper;
  */
 
 public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
-    private static Logger log = LoggerFactory.getLogger(TreatmentService.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATATREATMENTS);
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTreatmentEventPost = null;
@@ -102,7 +103,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public void onCreate() {
         super.onCreate();
         try {
-            log.info("onCreate");
+            if (L.isEnabled(L.DATATREATMENTS))
+                log.info("onCreate");
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Treatment.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
@@ -120,14 +122,28 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 log.error("Can't create database", e);
                 throw new RuntimeException(e);
             }
+        } else if (oldVersion == 8 && newVersion == 9) {
+            log.debug("Upgrading database from v8 to v9");
+            try {
+                getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` ADD COLUMN boluscalc STRING;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
-            log.info("onUpgrade");
+            if (L.isEnabled(L.DATATREATMENTS))
+                log.info("onUpgrade");
 //            this.resetFood();
         }
     }
 
     public void onDowngrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        // this method is not supported right now
+        if (oldVersion == 9 && newVersion == 8) {
+            try {
+                getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` DROP COLUMN boluscalc STRING;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void resetTreatments() {
@@ -161,10 +177,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         class PostRunnable implements Runnable {
             public void run() {
-                log.debug("Firing EventFoodChange");
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("Firing EventReloadTreatmentData");
                 MainApp.bus().post(event);
-                if (DatabaseHelper.earliestDataChange != null)
+                if (DatabaseHelper.earliestDataChange != null) {
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Firing EventNewHistoryData");
                     MainApp.bus().post(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
+                }
                 DatabaseHelper.earliestDataChange = null;
                 callback.setPost(null);
             }
@@ -224,45 +244,74 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             Treatment treatment = Treatment.createFromJson(json);
             if (treatment != null)
                 createOrUpdate(treatment);
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-    }
-
-    public void createFoodFromJsonIfNotExists(JSONArray array) {
-        try {
-            for (int n = 0; n < array.length(); n++) {
-                JSONObject json = array.getJSONObject(n);
-                createTreatmentFromJsonIfNotExists(json);
-            }
+            else
+                log.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
     }
 
     // return true if new record is created
-    public boolean createOrUpdate(Treatment treatment) {
+    public UpdateReturn createOrUpdate(Treatment treatment) {
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
 
             if (treatment.source == Source.PUMP) {
                 // check for changed from pump change in NS
-                QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
-                Where where = queryBuilder.where();
-                where.eq("pumpId", treatment.pumpId);
-                PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-                List<Treatment> trList = getDao().query(preparedQuery);
-                if (trList.size() > 0) {
-                    // do nothing, pump history record cannot be changed
-                    log.debug("TREATMENT: Pump record already found in database: " + treatment.toString());
-                    return false;
+                Treatment existingTreatment = getPumpRecordById(treatment.pumpId);
+                if (existingTreatment != null) {
+                    boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    boolean sameSource = existingTreatment.source == treatment.source;
+                    if (!equalRePumpHistory) {
+                        // another treatment exists. Update it with the treatment coming from the pump
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+                        long oldDate = existingTreatment.date;
+
+                        //preserve carbs
+                        if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
+                            treatment.carbs = existingTreatment.carbs;
+                        }
+
+                        getDao().delete(existingTreatment); // need to delete/create because date may change too
+                        existingTreatment.copyBasics(treatment);
+                        getDao().create(existingTreatment);
+                        DatabaseHelper.updateEarliestDataChange(oldDate);
+                        DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                        scheduleTreatmentChange(treatment);
+                        return new UpdateReturn(sameSource, false); //updating a pump treatment with another one from the pump is not counted as clash
+                    }
+                    return new UpdateReturn(equalRePumpHistory, false);
+                }
+                existingTreatment = getDao().queryForId(treatment.date);
+                if (existingTreatment != null) {
+                    // another treatment exists with different pumpID. Update it with the treatment coming from the pump
+                    boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    boolean sameSource = existingTreatment.source == treatment.source;
+                    long oldDate = existingTreatment.date;
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+
+                    //preserve carbs
+                    if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
+                        treatment.carbs = existingTreatment.carbs;
+                    }
+
+                    getDao().delete(existingTreatment); // need to delete/create because date may change too
+                    existingTreatment.copyFrom(treatment);
+                    getDao().create(existingTreatment);
+                    DatabaseHelper.updateEarliestDataChange(oldDate);
+                    DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                    scheduleTreatmentChange(treatment);
+                    return new UpdateReturn(equalRePumpHistory || sameSource, false);
                 }
                 getDao().create(treatment);
-                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
-                return true;
+                return new UpdateReturn(true, true);
             }
             if (treatment.source == Source.NIGHTSCOUT) {
                 old = getDao().queryForId(treatment.date);
@@ -273,15 +322,18 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         getDao().delete(old); // need to delete/create because date may change too
                         old.copyFrom(treatment);
                         getDao().create(old);
-                        log.debug("TREATMENT: Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
                         if (historyChange) {
                             DatabaseHelper.updateEarliestDataChange(oldDate);
                             DatabaseHelper.updateEarliestDataChange(old.date);
                         }
                         scheduleTreatmentChange(treatment);
-                        return true;
+                        return new UpdateReturn(true, true);
                     }
-                    return false;
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Equal record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                    return new UpdateReturn(true, false);
                 }
                 // find by NS _id
                 if (treatment._id != null) {
@@ -293,33 +345,62 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             getDao().delete(old); // need to delete/create because date may change too
                             old.copyFrom(treatment);
                             getDao().create(old);
-                            log.debug("TREATMENT: Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                            if (L.isEnabled(L.DATATREATMENTS))
+                                log.debug("Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
                             if (historyChange) {
                                 DatabaseHelper.updateEarliestDataChange(oldDate);
                                 DatabaseHelper.updateEarliestDataChange(old.date);
                             }
                             scheduleTreatmentChange(treatment);
-                            return true;
+                            return new UpdateReturn(true, true);
                         }
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Equal record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                        return new UpdateReturn(true, false);
                     }
                 }
                 getDao().create(treatment);
-                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
-                return true;
+                return new UpdateReturn(true, true);
             }
             if (treatment.source == Source.USER) {
                 getDao().create(treatment);
-                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment);
-                return true;
+                return new UpdateReturn(true, true);
             }
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return false;
+        return new UpdateReturn(false, false);
+    }
+
+    /**
+     * Returns the record for the given id, null if none, throws RuntimeException
+     * if multiple records with the same pump id exist.
+     */
+    @Nullable
+    public Treatment getPumpRecordById(long pumpId) {
+        try {
+            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("pumpId", pumpId);
+            queryBuilder.orderBy("date", true);
+
+            List<Treatment> result = getDao().query(queryBuilder.prepare());
+            if (result.isEmpty())
+                return null;
+            if (result.size() > 1)
+                log.warn("Multiple records with the same pump id found (returning first one): " + result.toString());
+            return result.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteNS(JSONObject json) {
@@ -338,7 +419,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     private void deleteByNSId(String _id) {
         Treatment stored = findByNSId(_id);
         if (stored != null) {
-            log.debug("TREATMENT: Removing Treatment record from database: " + stored.toString());
+            if (L.isEnabled(L.DATATREATMENTS))
+                log.debug("Removing Treatment record from database: " + stored.toString());
             delete(stored);
             DatabaseHelper.updateEarliestDataChange(stored.date);
             scheduleTreatmentChange(null);
@@ -423,4 +505,15 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    public class UpdateReturn {
+        public UpdateReturn(boolean success, boolean newRecord) {
+            this.success = success;
+            this.newRecord = newRecord;
+        }
+
+        boolean newRecord;
+        boolean success;
+    }
+
 }

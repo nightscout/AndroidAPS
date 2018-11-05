@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -29,8 +31,6 @@ import info.nightscout.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(Treatment.class);
-
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -60,6 +60,8 @@ public class Treatment implements DataPointWithLabelInterface {
     public int insulinInterfaceID = InsulinInterface.OREF_RAPID_ACTING; // currently unused, will be used in the future
     @DatabaseField
     public double dia = Constants.defaultDIA; // currently unused, will be used in the future
+    @DatabaseField
+    public String boluscalc;
 
     public Treatment() {
     }
@@ -80,6 +82,7 @@ public class Treatment implements DataPointWithLabelInterface {
             double carbs = treatment.carbs;
             if (json.has("boluscalc")) {
                 JSONObject boluscalc = json.getJSONObject("boluscalc");
+                treatment.boluscalc = boluscalc.toString();
                 if (boluscalc.has("carbs")) {
                     carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
                 }
@@ -93,7 +96,7 @@ public class Treatment implements DataPointWithLabelInterface {
     public String toString() {
         return "Treatment{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + new Date(date).toLocaleString() +
                 ", isValid= " + isValid +
                 ", isSMB= " + isSMB +
                 ", _id= " + _id +
@@ -132,6 +135,33 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+    @Nullable
+    public JSONObject getBoluscalc() {
+        try {
+            if (boluscalc != null)
+            return new JSONObject(boluscalc);
+        } catch (JSONException ignored) {
+        }
+        return null;
+    }
+
+    /*
+     * mealBolus, _id and isSMB cannot be known coming from pump. Only compare rest
+     * TODO: remove debug toasts
+     */
+    public boolean equalsRePumpHistory(Treatment other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (insulin != other.insulin) {
+            return false;
+        }
+        if (carbs != other.carbs) {
+            return false;
+        }
+        return true;
+    }
+
     public void copyFrom(Treatment t) {
         date = t.date;
         _id = t._id;
@@ -140,6 +170,14 @@ public class Treatment implements DataPointWithLabelInterface {
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
         isSMB = t.isSMB;
+    }
+
+    public void copyBasics(Treatment t) {
+        date = t.date;
+        insulin = t.insulin;
+        carbs = t.carbs;
+        pumpId = t.pumpId;
+        source = t.source;
     }
 
     //  ----------------- DataPointInterface --------------------
@@ -204,7 +242,7 @@ public class Treatment implements DataPointWithLabelInterface {
         if (!isValid)
             return new Iob();
 
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         return insulinInterface.iobCalcForTreatment(this, time, dia);
     }
 }

@@ -24,7 +24,8 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
         super();
         pluginDescription
                 .pluginName(R.string.free_peak_oref)
-                .preferencesId(R.xml.pref_insulinoreffreepeak);
+                .preferencesId(R.xml.pref_insulinoreffreepeak)
+                .description(R.string.description_insulin_free_peak);
     }
 
     @Override

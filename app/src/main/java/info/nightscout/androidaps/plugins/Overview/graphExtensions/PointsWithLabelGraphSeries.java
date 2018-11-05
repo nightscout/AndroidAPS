@@ -312,20 +312,20 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setStrokeWidth(5);
                         canvas.drawRect(px - 3, bounds.top + py - 3, xpluslength + 3, bounds.bottom + py + 3, mPaint);
                     }
-                } else if (value.getShape() == Shape.OPENAPSOFFLINE) {
+                } else if (value.getShape() == Shape.OPENAPSOFFLINE && value.getDuration() != 0) {
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {
-                        mPaint.setStrokeWidth(0);
-                        mPaint.setTextSize(scaledTextSize);
-                        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                        //mPaint.setStrokeWidth(0);
+                        //mPaint.setTextSize(scaledTextSize);
+                        //mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         Rect bounds = new Rect();
-                        mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
-                        mPaint.setStyle(Paint.Style.STROKE);
+                        //mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
+                        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                         float px = endX;
                         float py = graphTop + 50;
-                        canvas.drawText(value.getLabel(), px, py, mPaint);
+                        //canvas.drawText(value.getLabel(), px, py, mPaint);
                         mPaint.setStrokeWidth(5);
-                        canvas.drawRect(px - 3, bounds.top + py - 3, xpluslength + 3, bounds.bottom + py + 3, mPaint);
+                        canvas.drawRect(px - 3, graphTop, xpluslength + 3, graphTop + graphHeight, mPaint);
                     }
                 } else if (value.getShape() == Shape.GENERALWITHDURATION) {
                     mPaint.setStrokeWidth(0);

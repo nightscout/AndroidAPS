@@ -12,17 +12,18 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.utils.MidnightTime;
 
 public class Profile {
     private static Logger log = LoggerFactory.getLogger(Profile.class);
@@ -50,6 +51,14 @@ public class Profile {
 
     // Default constructor for tests
     protected Profile() {
+    }
+
+    @Override
+    public String toString() {
+        if (json != null)
+            return json.toString();
+        else
+            return "Profile has no JSON";
     }
 
     // Constructor from profileStore JSON
@@ -202,12 +211,18 @@ public class Profile {
             if (targetHigh_v == null)
                 targetHigh_v = convertToSparseArray(targetHigh);
             validate(targetHigh_v);
+
+            if (targetHigh_v.size() != targetLow_v.size()) isValid = false;
+            else for (int i = 0; i < targetHigh_v.size(); i++)
+                if (targetHigh_v.valueAt(i) < targetLow_v.valueAt(i))
+                    isValid = false;
+
             isValidated = true;
         }
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (pump != null && !pump.getPumpDescription().is30minBasalRatesCapable) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
@@ -226,6 +241,10 @@ public class Profile {
                         basal_v.setValueAt(i, description.basalMinimumRate);
                         if (notify)
                             sendBelowMinimumNotification(from);
+                    } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
+                        basal_v.setValueAt(i, description.basalMaximumRate);
+                        if (notify)
+                            sendAboveMaximumNotification(from);
                     }
                 }
             } else {
@@ -235,12 +254,16 @@ public class Profile {
                 isValidated = false;
             }
 
-         }
+        }
         return isValid;
     }
 
     protected void sendBelowMinimumNotification(String from) {
-        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED,  String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+    }
+
+    protected void sendAboveMaximumNotification(String from) {
+        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     private void validate(LongSparseArray array) {
@@ -281,8 +304,6 @@ public class Profile {
     Integer getShitfTimeSecs(Integer originalTime) {
         Integer shiftedTime = originalTime + timeshift * 60 * 60;
         shiftedTime = (shiftedTime + 24 * 60 * 60) % (24 * 60 * 60);
-        if (timeshift != 0 && Config.logProfile)
-            log.debug("(Sec) Original time: " + originalTime + " ShiftedTime: " + shiftedTime);
         return shiftedTime;
     }
 
@@ -361,7 +382,7 @@ public class Profile {
     }
 
     public double getIsf() {
-        return getIsfTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getIsfTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getIsf(long time) {
@@ -381,7 +402,7 @@ public class Profile {
     }
 
     public double getIc() {
-        return getIcTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getIcTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getIc(long time) {
@@ -401,7 +422,7 @@ public class Profile {
     }
 
     public double getBasal() {
-        return getBasalTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getBasalTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getBasal(long time) {
@@ -444,16 +465,16 @@ public class Profile {
         return ret;
     }
 
-    public double getTarget(){
-        return  getTarget(secondsFromMidnight(System.currentTimeMillis()));
+    public double getTarget() {
+        return getTarget(secondsFromMidnight());
     }
 
     protected double getTarget(int timeAsSeconds) {
-        return (getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds))/2;
+        return (getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2;
     }
 
     public double getTargetLow() {
-        return getTargetLowTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getTargetLowTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getTargetLow(long time) {
@@ -467,7 +488,7 @@ public class Profile {
     }
 
     public double getTargetHigh() {
-        return getTargetHighTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getTargetHighTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getTargetHigh(long time) {
@@ -498,24 +519,13 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        Calendar c = Calendar.getInstance();
-        long now = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = now - c.getTimeInMillis();
+        long passed = DateUtil.now() - MidnightTime.calc();
         return (int) (passed / 1000);
     }
 
     public static int secondsFromMidnight(long date) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(date);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = date - c.getTimeInMillis();
+        long midnight = MidnightTime.calc(date);
+        long passed = date - midnight;
         return (int) (passed / 1000);
     }
 
@@ -542,6 +552,12 @@ public class Profile {
     public static String toUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
         else return DecimalFormatter.to1Decimal(valueInMmol);
+    }
+
+    public static String toSignedUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
+        if (units.equals(Constants.MGDL))
+            return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
+        else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
     }
 
     // targets are stored in mg/dl but profile vary

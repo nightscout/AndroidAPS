@@ -21,34 +21,35 @@ public class SWEditString extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWEditString.class);
 
     private SWTextValidator validator = null;
+    private int updateDelay = 0;
 
     public SWEditString() {
         super(Type.STRING);
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
 
         TextView l = new TextView(context);
-        l.setId(view.generateViewId());
+        l.setId(layout.generateViewId());
         l.setText(label);
         l.setTypeface(l.getTypeface(), Typeface.BOLD);
         layout.addView(l);
 
         TextView c = new TextView(context);
-        c.setId(view.generateViewId());
+        c.setId(layout.generateViewId());
         c.setText(comment);
         c.setTypeface(c.getTypeface(), Typeface.ITALIC);
         layout.addView(c);
 
         EditText editText = new EditText(context);
-        editText.setId(view.generateViewId());
+        editText.setId(layout.generateViewId());
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setMaxLines(1);
         editText.setText(SP.getString(preferenceId, ""));
         layout.addView(editText);
-        super.generateDialog(view, layout);
+        super.generateDialog(layout);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -58,7 +59,7 @@ public class SWEditString extends SWItem {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (validator != null && validator.isValid(s.toString()))
-                    save(s.toString());
+                    save(s.toString(), updateDelay);
             }
 
             @Override
@@ -74,6 +75,11 @@ public class SWEditString extends SWItem {
 
     public SWEditString validator(SWTextValidator validator) {
         this.validator = validator;
+        return this;
+    }
+
+    public SWEditString updateDelay(int updateDelay) {
+        this.updateDelay = updateDelay;
         return this;
     }
 }

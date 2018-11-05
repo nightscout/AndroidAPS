@@ -27,15 +27,17 @@
     <color name="warning">#ff1a1a</color>
 
     <color name="defaultbackground">#424242</color>
+    <color name="defaulttext">#BBBBBB</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
     <color name="tempTargetDisabledBackground">#303F9F</color>
 
 
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#40bbaa</color>
+    <color name="mdtp_accent_color">#40bbaa</color>
     <color name="colorInitializingBorder">#00695c</color>
 
     <color name="cardColorBackground">#121212</color>
@@ -74,10 +76,5 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
-
-    <color name="swColorPrimary">#303030</color>
-    <color name="swColorPrimaryDark">#303030</color>
-    <color name="swColorAccent">#FFEB3B</color>
-    <color name="swColorBackground">#303030</color>
-
+    <color name="ic_launcher_background">#424242</color>
 </resources>

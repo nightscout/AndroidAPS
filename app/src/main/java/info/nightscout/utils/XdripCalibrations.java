@@ -10,14 +10,13 @@ import android.support.v7.app.AlertDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.services.Intents;
 
 /**
  * Created by mike on 10.02.2017.
@@ -47,7 +46,7 @@ public class XdripCalibrations {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putDouble("glucose_number", bg);
-        bundle.putString("units", MainApp.getConfigBuilder().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
+        bundle.putString("units", ProfileFunctions.getInstance().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
         bundle.putLong("timestamp", System.currentTimeMillis());
         Intent intent = new Intent(Intents.ACTION_REMOTE_CALIBRATION);
         intent.putExtras(bundle);

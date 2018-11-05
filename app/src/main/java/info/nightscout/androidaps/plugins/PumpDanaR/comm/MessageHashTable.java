@@ -9,8 +9,6 @@ import java.util.HashMap;
  * Created by mike on 28.05.2016.
  */
 public class MessageHashTable {
-    private static Logger log = LoggerFactory.getLogger(MessageHashTable.class);
-
     public static HashMap<Integer, MessageBase> messages = null;
 
     static {
@@ -60,6 +58,7 @@ public class MessageHashTable {
             put(new MsgSettingProfileRatiosAll());   // 0x320D CMD_SETTING_V_CIR_CF_VALUE
             put(new MsgSetSingleBasalProfile());     // 0x3302 CMD_SETTING_BASAL_INS_S
             put(new MsgSetBasalProfile());           // 0x3306 CMD_SETTING_BASAL_PROFILE_S
+            put(new MsgSetUserOptions());            // 0x330B CMD_SETTING_USER_OPTIONS_S
             put(new MsgSetActivateBasalProfile());   // 0x330C CMD_SETTING_PROFILE_NUMBER_S
             put(new MsgHistoryAllDone());            // 0x41F1 CMD_HISTORY_ALL_DONE
             put(new MsgHistoryAll());                // 0x41F2 CMD_HISTORY_ALL

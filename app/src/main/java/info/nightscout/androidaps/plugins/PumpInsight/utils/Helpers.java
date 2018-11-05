@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -16,17 +19,17 @@ import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 
 /**
  * Created by jamorham on 24/01/2018.
- *
+ * <p>
  * Useful utility methods from xDrip+
- *
  */
 
 public class Helpers {
+    private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
-    private static final String TAG = "InsightHelpers";
 
     private static final Map<String, Long> rateLimits = new HashMap<>();
     // singletons to avoid repeated allocation
@@ -37,7 +40,8 @@ public class Helpers {
     public static synchronized boolean ratelimit(String name, int seconds) {
         // check if over limit
         if ((rateLimits.containsKey(name)) && (tsl() - rateLimits.get(name) < (seconds * 1000))) {
-            Log.d(TAG, name + " rate limited: " + seconds + " seconds");
+            if (L.isEnabled(L.PUMP))
+                log.debug(name + " rate limited: " + seconds + " seconds");
             return false;
         }
         // not over limit
@@ -65,7 +69,7 @@ public class Helpers {
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         } catch (Exception e) {
-            Log.wtf(TAG, "Exception trying to determine packages! " + e);
+            log.error("Exception trying to determine packages! " + e);
             return false;
         }
     }
@@ -160,7 +164,7 @@ public class Helpers {
 
     public static String niceTimeScalarBrief(long t) {
         // TODO i18n wont work for non-latin characterset
-        return niceTimeScalar(t).replaceFirst("([a-z])[a-z]*", "$1").replace(" ","");
+        return niceTimeScalar(t).replaceFirst("([a-z])[a-z]*", "$1").replace(" ", "");
     }
 
     public static String hourMinuteString(long timestamp) {

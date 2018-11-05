@@ -41,7 +41,10 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
                         android:text="Open Loop"
+
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -53,6 +56,8 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
                         android:text="Profile"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -63,6 +68,8 @@
                         android:layout_gravity="right"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
                         android:text="TempTarget"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/mdtp_white" />
@@ -83,6 +90,8 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
@@ -97,8 +106,7 @@
                         android:id="@+id/overview_bg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top|left"
-                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
                         android:text="00.0"
                         android:textSize="90dp"
                         android:textStyle="bold" />
@@ -107,69 +115,51 @@
                         android:id="@+id/overview_arrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top|left"
-                        android:layout_marginTop="-15dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="-5dp"
-                        android:paddingRight="-5dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="-5dp"
+                        android:paddingLeft="-2dp"
+                        android:paddingRight="-2dp"
                         android:text="→"
-                        android:textSize="90dp"
+                        android:textSize="50sp"
                         android:textStyle="bold" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/overview_deltashort"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top|center_horizontal"
-                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="-0.5"
+                        android:textSize="50sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/overview_sensitivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="0.5"
-                        android:gravity="top|center_horizontal"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/overview_timeago"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="0.5"
-                            android:gravity="center_horizontal"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                        <TextView
-                            android:id="@+id/overview_delta"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="0.5"
-                            android:gravity="center_horizontal"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                        <TextView
-                            android:id="@+id/overview_avgdelta"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="10dp"
-                            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                        <CheckBox
-                            android:id="@+id/overview_lockscreen"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.5"
-                            android:text="@string/lock_screen"
-                            android:textAlignment="center" />
-
-                    </LinearLayout>
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="100%"
+                        android:textSize="50sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/overview_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top|left"
-                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
                         android:text="8:00 PM"
-                        android:textSize="90dp"
+                        android:textSize="80dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/overview_timeagoshort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:text="(-5)"
+                        android:textSize="50sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -411,32 +401,13 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:paddingRight="5dp"
-                                android:text="@string/pump"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:gravity="center_horizontal"
-                                android:paddingEnd="2dp"
-                                android:paddingStart="2dp"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
                                 android:id="@+id/overview_pump"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -457,25 +428,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:paddingRight="5dp"
-                                android:text="@string/openaps"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:gravity="center_horizontal"
-                                android:paddingEnd="2dp"
-                                android:paddingStart="2dp"
-                                android:text=":"
-                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_openaps"
@@ -484,7 +436,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -506,32 +458,13 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:paddingRight="5dp"
-                                android:text="@string/uploader"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:gravity="center_horizontal"
-                                android:paddingEnd="2dp"
-                                android:paddingStart="2dp"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
                                 android:id="@+id/overview_uploader"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -607,8 +540,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingRight="5dp">
 
                 <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"

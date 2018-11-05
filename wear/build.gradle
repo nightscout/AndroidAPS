@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
         versionName "1.0.2"
@@ -46,6 +46,30 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    productFlavors {
+        flavorDimensions "standard"
+        full {
+            applicationId "info.nightscout.androidaps"
+            dimension "standard"
+            versionName version
+        }
+        pumpcontrol {
+            applicationId "info.nightscout.androidaps"
+            dimension "standard"
+            versionName version
+        }
+        nsclient {
+            applicationId "info.nightscout.nsclient"
+            dimension "standard"
+            versionName version + "-nsclient"
+        }
+        nsclient2 {
+            applicationId "info.nightscout.nsclient2"
+            dimension "standard"
+            versionName version + "-nsclient"
+        }
     }
 }
 
@@ -67,6 +91,7 @@ dependencies {
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:7.3.0"
     implementation(name:"ustwo-clockwise-debug", ext:"aar")
-    implementation "com.android.support:support-v4:23.0.1"
+    implementation "com.android.support:support-v4:27.0.1"
+    implementation 'com.android.support:wear:27.0.1'
     implementation "me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0"
 }

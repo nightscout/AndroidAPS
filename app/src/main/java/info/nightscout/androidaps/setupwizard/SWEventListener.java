@@ -46,11 +46,11 @@ public class SWEventListener extends SWItem {
     }
 
     @Override
-    public void generateDialog(View view, LinearLayout layout) {
-        Context context = view.getContext();
+    public void generateDialog(LinearLayout layout) {
+        Context context = layout.getContext();
 
         textView = new TextView(context);
-        textView.setId(view.generateViewId());
+        textView.setId(layout.generateViewId());
         textView.setText((textLabel != 0 ? MainApp.gs(textLabel) : "") + " " + status);
         layout.addView(textView);
         if (listener != null)

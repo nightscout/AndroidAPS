@@ -21,9 +21,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.utils.SP;
 
 /**
@@ -32,11 +34,10 @@ import info.nightscout.utils.SP;
 
 public class NotificationStore {
 
-    public static final String CHANNEL_ID = "AndroidAPS-Overview";
+    private static final String CHANNEL_ID = "AndroidAPS-Overview";
 
-    private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
-    public List<Notification> store = new ArrayList<Notification>();
-    public long snoozedUntil = 0L;
+    private static Logger log = LoggerFactory.getLogger(L.NOTIFICATION);
+    public List<Notification> store = new ArrayList<>();
     private boolean usesChannels;
 
     public NotificationStore() {
@@ -51,7 +52,8 @@ public class NotificationStore {
     }
 
     public synchronized boolean add(Notification n) {
-        log.info("Notification received: " + n.text);
+        if (L.isEnabled(L.NOTIFICATION))
+            log.debug("Notification received: " + n.text);
         for (Notification storeNotification : store) {
             if (storeNotification.id == n.id) {
                 storeNotification.date = n.date;
@@ -106,7 +108,8 @@ public class NotificationStore {
     }
 
     public void snoozeTo(long timeToSnooze) {
-        log.debug("Snoozing alarm until: " + timeToSnooze);
+        if (L.isEnabled(L.NOTIFICATION))
+            log.debug("Snoozing alarm until: " + timeToSnooze);
         SP.putLong("snoozedTo", timeToSnooze);
     }
 
@@ -115,7 +118,8 @@ public class NotificationStore {
             Notification notification = new Notification(Notification.NSALARM, MainApp.gs(R.string.nsalarm_staledata), Notification.URGENT);
             SP.putLong("snoozedTo", System.currentTimeMillis());
             add(notification);
-            log.debug("Snoozed to current time and added back notification!");
+            if (L.isEnabled(L.NOTIFICATION))
+                log.debug("Snoozed to current time and added back notification!");
         }
     }
 
@@ -123,10 +127,15 @@ public class NotificationStore {
         Context context = MainApp.instance().getApplicationContext();
         NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.blueowl);
+        int smallIcon = R.drawable.ic_notification;
+        if (Config.NSCLIENT) {
+            largeIcon = BitmapFactory.decodeResource(MainApp.instance().getResources(), R.mipmap.yellowowl);
+            smallIcon = R.drawable.nsclient_smallicon;
+        }
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_notification)
+                        .setSmallIcon(smallIcon)
                         .setLargeIcon(largeIcon)
                         .setContentText(n.text)
                         .setPriority(NotificationCompat.PRIORITY_MAX)

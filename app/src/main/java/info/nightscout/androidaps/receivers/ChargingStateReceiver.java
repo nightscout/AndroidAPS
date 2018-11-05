@@ -21,6 +21,9 @@ public class ChargingStateReceiver extends BroadcastReceiver {
     public EventChargingState grabChargingState(Context context) {
         BatteryManager bm = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
 
+        if (bm == null)
+            return new EventChargingState(false);
+
         int status = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS);
         boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING
                 || status == BatteryManager.BATTERY_STATUS_FULL;

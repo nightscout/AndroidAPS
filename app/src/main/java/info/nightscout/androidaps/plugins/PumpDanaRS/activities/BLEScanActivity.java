@@ -31,9 +31,6 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSDeviceCha
 import info.nightscout.utils.SP;
 
 public class BLEScanActivity extends AppCompatActivity {
-    private static Logger log = LoggerFactory.getLogger(BLEScanActivity.class);
-
-
     private ListView listView = null;
     private ListAdapter mListAdapter = null;
     private ArrayList<BluetoothDeviceItem> mDevices = new ArrayList<>();

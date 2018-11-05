@@ -5,22 +5,19 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.utils.DateUtil;
 
 public class DetermineBasalResultSMB extends APSResult {
-    private static final Logger log = LoggerFactory.getLogger(DetermineBasalResultSMB.class);
+    private static final Logger log = LoggerFactory.getLogger(L.APS);
 
-    public double eventualBG;
-    public double snoozeBG;
-    public double insulinReq;
-    public double carbsReq;
+    private double eventualBG;
+    private double snoozeBG;
 
-    public DetermineBasalResultSMB(JSONObject result) {
+    DetermineBasalResultSMB(JSONObject result) {
         this();
-        date = new Date();
+        date = DateUtil.now();
         json = result;
         try {
             if (result.has("error")) {
@@ -31,8 +28,8 @@ public class DetermineBasalResultSMB extends APSResult {
             reason = result.getString("reason");
             if (result.has("eventualBG")) eventualBG = result.getDouble("eventualBG");
             if (result.has("snoozeBG")) snoozeBG = result.getDouble("snoozeBG");
-            if (result.has("insulinReq")) insulinReq = result.getDouble("insulinReq");
-            if (result.has("carbsReq")) carbsReq = result.getDouble("carbsReq");
+            //if (result.has("insulinReq")) insulinReq = result.getDouble("insulinReq");
+            //if (result.has("carbsReq")) carbsReq = result.getDouble("carbsReq");
 
             if (result.has("rate") && result.has("duration")) {
                 tempBasalRequested = true;
@@ -64,31 +61,17 @@ public class DetermineBasalResultSMB extends APSResult {
         }
     }
 
-    public DetermineBasalResultSMB() {
+    private DetermineBasalResultSMB() {
         hasPredictions = true;
     }
 
     @Override
     public DetermineBasalResultSMB clone() {
         DetermineBasalResultSMB newResult = new DetermineBasalResultSMB();
-        newResult.reason = reason;
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.tempBasalRequested = tempBasalRequested;
-        newResult.bolusRequested = bolusRequested;
-        newResult.rate = rate;
-        newResult.duration = duration;
-        newResult.smb = smb;
-        newResult.deliverAt = deliverAt;
+        doClone(newResult);
 
-        try {
-            newResult.json = new JSONObject(json.toString());
-        } catch (JSONException e) {
-            log.error("Error clone parsing determine-basal result", e);
-        }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
-        newResult.date = date;
         return newResult;
     }
 

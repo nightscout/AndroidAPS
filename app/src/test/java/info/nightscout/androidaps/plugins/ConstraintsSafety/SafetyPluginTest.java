@@ -19,7 +19,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.utils.SP;
@@ -42,14 +41,14 @@ public class SafetyPluginTest {
         pump.getPumpDescription().isTempBasalCapable = false;
 
         Constraint<Boolean> c = new Constraint<>(true);
-        c = safetyPlugin.isLoopInvokationAllowed(c);
+        c = safetyPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Safety: Pump is not temp basal capable", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
     @Test
-    public void disabledEngineeringModeShouldLimitClosedLoop() throws Exception {
-        when(SP.getString("aps_mode", "open")).thenReturn("closed");
+    public void disabledEngineeringModeShouldLimitClosedLoop() {
+        when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("closed");
         when(MainApp.isEngineeringModeOrRelease()).thenReturn(false);
 
         Constraint<Boolean> c = new Constraint<>(true);
@@ -59,8 +58,8 @@ public class SafetyPluginTest {
     }
 
     @Test
-    public void setOpenLoopInPreferencesShouldLimitClosedLoop() throws Exception {
-        when(SP.getString("aps_mode", "open")).thenReturn("open");
+    public void setOpenLoopInPreferencesShouldLimitClosedLoop() {
+        when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("open");
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = safetyPlugin.isClosedLoopAllowed(c);
@@ -92,7 +91,7 @@ public class SafetyPluginTest {
 
     @Test
     public void bgsourceShouldPreventSMBAlways() throws Exception {
-        when(MainApp.getConfigBuilder().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+        when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = safetyPlugin.isAdvancedFilteringEnabled(c);
@@ -232,7 +231,7 @@ public class SafetyPluginTest {
         AAPSMocker.mockBus();
 
 
-        when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         safetyPlugin = SafetyPlugin.getPlugin();
     }

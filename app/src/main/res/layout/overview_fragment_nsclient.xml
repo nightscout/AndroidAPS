@@ -24,7 +24,7 @@
             <LinearLayout
                 android:id="@+id/overview_looplayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
 
@@ -35,7 +35,10 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:text="Open Loop"
+
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -47,6 +50,8 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:text="Profile"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -57,6 +62,8 @@
                     android:layout_gravity="right"
                     android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:text="TempTarget"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/mdtp_white" />
@@ -77,6 +84,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="center_vertical|center_horizontal"
+                    android:paddingBottom="3dp"
+                    android:paddingTop="3dp"
                     android:text="@string/initializing"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
@@ -91,77 +100,61 @@
                     android:id="@+id/overview_bg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:text="00.0"
-                    android:textSize="70dp"
+                    android:textSize="40dp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/overview_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:layout_marginTop="-15dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="-5dp"
-                    android:paddingRight="-5dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="-5dp"
+                    android:paddingLeft="-2dp"
+                    android:paddingRight="-2dp"
                     android:text="→"
-                    android:textSize="70dp"
+                    android:textSize="20dp"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/overview_deltashort"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:gravity="top"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_vertical"
+                    android:text="-0.5"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/overview_timeago"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="0.5"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/overview_delta"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="0.5"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/overview_sensitivity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.5"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="100%"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/overview_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="fill_vertical"
-                        android:layout_marginTop="10dp"
-                        android:maxWidth="150dp"
-                        android:paddingLeft="10dp"
-                        android:text="8:00 PM"
-                        android:textSize="30sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/overview_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="8:00 PM"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
-                    <CheckBox
-                        android:id="@+id/overview_lockscreen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lock_screen_short"
-                        android:textAlignment="center" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/overview_timeagoshort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:text="(-5)"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -358,19 +351,6 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingRight="2dp"
-                            android:text="@string/pump"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="14sp" />
-
-                        <TextView
                             android:id="@+id/overview_pump"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -396,18 +376,6 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/openaps_short"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="14sp" />
-
-                        <TextView
                             android:id="@+id/overview_openaps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -431,18 +399,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/uploader_short"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="wrap_content"
-                            android:text=":"
-                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/overview_uploader"
@@ -510,8 +466,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingRight="5dp">
 
                 <info.nightscout.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"

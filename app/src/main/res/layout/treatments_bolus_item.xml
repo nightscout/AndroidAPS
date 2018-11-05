@@ -138,15 +138,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/treatments_activity_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/treatments_activity_string" />
-
-            <TextView
                 android:id="@+id/treatments_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,11 +146,21 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/treatments_remove"
+                android:id="@+id/treatments_calculation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:text="@string/calculation_short"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorCalculatorButton" />
+
+            <TextView
+                android:id="@+id/treatments_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />

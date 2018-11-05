@@ -1,18 +1,22 @@
 package info.nightscout.androidaps.interfaces;
 
 import android.os.SystemClock;
+import android.support.v4.app.FragmentActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.CommandQueue;
 
 /**
  * Created by mike on 09.06.2016.
  */
 public abstract class PluginBase {
-    private static Logger log = LoggerFactory.getLogger(PluginBase.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     public enum State {
         NOT_INITIALIZED,
@@ -30,6 +34,12 @@ public abstract class PluginBase {
 
     public PluginBase(PluginDescription pluginDescription) {
         this.pluginDescription = pluginDescription;
+    }
+
+    // Default always calls invoke
+    // Plugins that have special constraints if they get switched to may override this method
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        pluginSwitcher.invoke();
     }
 
 //    public PluginType getType() {
@@ -55,6 +65,11 @@ public abstract class PluginBase {
             return name;
         // use long name as fallback
         return getName();
+    }
+
+    public String getDescription() {
+        if (pluginDescription.description == -1) return null;
+        else return MainApp.gs(pluginDescription.description);
     }
 
     public PluginType getType() {
@@ -100,15 +115,17 @@ public abstract class PluginBase {
                 if (state != State.ENABLED) {
                     onStateChange(type, state, State.ENABLED);
                     state = State.ENABLED;
-                    log.debug("Starting: " + getName());
+                    if (L.isEnabled(L.CORE))
+                        log.debug("Starting: " + getName());
                     onStart();
                 }
             } else { // disabling plugin
                 if (state == State.ENABLED) {
-                    onStateChange(type, state, State.ENABLED);
+                    onStateChange(type, state, State.DISABLED);
                     state = State.DISABLED;
                     onStop();
-                    log.debug("Stopping: " + getName());
+                    if (L.isEnabled(L.CORE))
+                        log.debug("Stopping: " + getName());
                 }
             }
         } else if (type == PluginType.PROFILE) {
@@ -152,7 +169,9 @@ public abstract class PluginBase {
         if (getType() == PluginType.PUMP) {
             new Thread(() -> {
                 SystemClock.sleep(3000);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("Pump driver changed.", null);
+                CommandQueue commandQueue = ConfigBuilderPlugin.getPlugin().getCommandQueue();
+                if (commandQueue != null)
+                    commandQueue.readStatus("Pump driver changed.", null);
             }).start();
         }
     }

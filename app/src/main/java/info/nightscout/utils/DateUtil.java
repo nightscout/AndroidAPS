@@ -97,25 +97,25 @@ public class DateUtil {
     }
 
     public static String dateString(Date date) {
-        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_DATE); this provide month name not number
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(date);
     }
 
     public static String dateString(long mills) {
-        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_DATE); this provide month name not number
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(mills);
     }
 
     public static String timeString(Date date) {
-        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_TIME);
         return new DateTime(date).toString(DateTimeFormat.shortTime());
     }
 
     public static String timeString(long mills) {
-        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_TIME);
         return new DateTime(mills).toString(DateTimeFormat.shortTime());
+    }
+
+    public static String timeFullString(long mills) {
+        return new DateTime(mills).toString(DateTimeFormat.fullTime());
     }
 
     public static String dateAndTimeString(Date date) {
@@ -130,9 +130,18 @@ public class DateUtil {
         return dateString(mills) + " " + timeString(mills);
     }
 
+    public static String dateAndTimeFullString(long mills) {
+        return dateString(mills) + " " + timeFullString(mills);
+    }
+
     public static String minAgo(long time) {
         int mins = (int) ((now() - time) / 1000 / 60);
         return MainApp.gs(R.string.minago, mins);
+    }
+
+    public static String minAgoShort(long time) {
+        Integer mins = (int) ((time - now()) / 1000 / 60);
+        return (mins > 0 ? "+" : "") + mins.toString();
     }
 
     public static String hourAgo(long time) {
@@ -174,5 +183,4 @@ public class DateUtil {
     public static long roundDateToSec(long date) {
         return date - date % 1000;
     }
-
 }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
@@ -32,6 +34,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
@@ -134,7 +137,7 @@ public class ActionStringHandler {
             ///////////////////////////////////////////////////////// TEMPTARGET
             boolean isMGDL = Boolean.parseBoolean(act[1]);
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null) {
                 sendError("No profile found!");
                 return;
@@ -203,7 +206,7 @@ public class ActionStringHandler {
             boolean useTrend = SP.getBoolean(R.string.key_wearwizard_trend, false);
             int percentage = Integer.parseInt(act[2]);
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
             if (profile == null) {
                 sendError("No profile found!");
                 return;
@@ -292,7 +295,7 @@ public class ActionStringHandler {
             }
 
         } else if ("tddstats".equals(act[0])) {
-            Object activePump = MainApp.getConfigBuilder().getActivePump();
+            Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (activePump != null) {
                 // check if DB up to date
                 List<TDD> dummies = new LinkedList<TDD>();
@@ -304,13 +307,13 @@ public class ActionStringHandler {
                     rMessage = "OLD DATA - ";
 
                     //if pump is not busy: try to fetch data
-                    final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                    final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                     if (pump.isBusy()) {
                         rMessage += MainApp.gs(R.string.pumpbusy);
                     } else {
                         rMessage += "trying to fetch data from pump.";
 
-                        ConfigBuilderPlugin.getCommandQueue().loadTDDs(new Callback() {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs(new Callback() {
                             @Override
                             public void run() {
                                 List<TDD> dummies = new LinkedList<TDD>();
@@ -352,6 +355,23 @@ public class ActionStringHandler {
             }
             rAction += "ecarbs " + carbsAfterConstraints + " " + starttimestamp + " " + duration;
 
+        } else if ("changeRequest".equals(act[0])) {
+            ////////////////////////////////////////////// CHANGE REQUEST
+            rTitle = MainApp.gs(R.string.openloop_newsuggestion);
+            rAction = "changeRequest";
+            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+            rMessage += finalLastRun.constraintsProcessed;
+
+            WearPlugin.getPlugin().requestChangeConfirmation(rTitle, rMessage, rAction);
+            lastSentTimestamp = System.currentTimeMillis();
+            lastConfirmActionString = rAction;
+            return;
+        } else if ("cancelChangeRequest".equals(act[0])) {
+            ////////////////////////////////////////////// CANCEL CHANGE REQUEST NOTIFICATION
+            rAction = "cancelChangeRequest";
+
+            WearPlugin.getPlugin().requestNotificationCancel(rAction);
+            return;
         } else return;
 
 
@@ -363,7 +383,7 @@ public class ActionStringHandler {
 
     private static String generateTDDMessage(List<TDD> historyList, List<TDD> dummies) {
 
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {
             return "No profile loaded :(";
@@ -378,7 +398,7 @@ public class ActionStringHandler {
 
         double refTDD = profile.baseBasalSum() * 2;
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
             double tdd = historyList.get(0).getTotal();
             historyList.remove(0);
@@ -427,7 +447,7 @@ public class ActionStringHandler {
     }
 
     public static boolean isOldData(List<TDD> historyList) {
-        Object activePump = MainApp.getConfigBuilder().getActivePump();
+        Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
         PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
         PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
         PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
@@ -478,7 +498,7 @@ public class ActionStringHandler {
 
     @NonNull
     private static String getPumpStatus() {
-        return ConfigBuilderPlugin.getActivePump().shortStatus(false);
+        return ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(false);
     }
 
     @NonNull
@@ -492,7 +512,7 @@ public class ActionStringHandler {
             } else {
                 ret += "OPEN LOOP\n";
             }
-            final APSInterface aps = ConfigBuilderPlugin.getActiveAPS();
+            final APSInterface aps = ConfigBuilderPlugin.getPlugin().getActiveAPS();
             ret += "APS: " + ((aps == null) ? "NO APS SELECTED!" : ((PluginBase) aps).getName());
             if (LoopPlugin.lastRun != null) {
                 if (LoopPlugin.lastRun.lastAPSRun != null)
@@ -517,7 +537,7 @@ public class ActionStringHandler {
         if (!Config.APS) {
             return "Targets only apply in APS mode!";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) {
             return "No profile set :(";
         }
@@ -541,12 +561,12 @@ public class ActionStringHandler {
         if (!Config.APS) {
             return "Only apply in APS mode!";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null) {
             return "No profile set :(";
         }
 
-        APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+        APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
         if (usedAPS == null) {
             return "No active APS :(!";
         }
@@ -562,7 +582,7 @@ public class ActionStringHandler {
             ret += MainApp.gs(R.string.canceltemp) + "\n";
         } else {
             ret += MainApp.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
-                    "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getActivePump().getBaseBasalRate() * 100) + "%)\n" +
+                    "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate() * 100) + "%)\n" +
                     MainApp.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
         }
         ret += "\n" + MainApp.gs(R.string.reason) + ": " + result.reason;
@@ -625,6 +645,11 @@ public class ActionStringHandler {
             doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
+        } else if ("changeRequest".equals(act[0])) {
+            LoopPlugin.getPlugin().acceptChangeRequest();
+            NotificationManager notificationManager =
+                    (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(Constants.notificationID);
         }
         lastBolusWizard = null;
     }
@@ -651,7 +676,7 @@ public class ActionStringHandler {
         if (timeshift < 0 || timeshift > 23) {
             msg += String.format(MainApp.gs(R.string.valueoutofrange), "Profile-Timeshift") + "\n";
         }
-        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {
             msg += MainApp.gs(R.string.notloadedplugins) + "\n";
@@ -690,7 +715,7 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.isValid = false;
         detailedBolusInfo.source = Source.USER;
-        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {
@@ -707,8 +732,8 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.carbs = carbs;
         detailedBolusInfo.source = Source.USER;
-        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
-            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -719,7 +744,7 @@ public class ActionStringHandler {
                 }
             });
         } else {
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo);
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         }
     }
 

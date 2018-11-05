@@ -50,10 +50,10 @@ public class InsulinFragment extends Fragment {
     }
 
     private void updateGUI() {
-        insulinName.setText(ConfigBuilderPlugin.getActiveInsulin().getFriendlyName());
-        insulinComment.setText(ConfigBuilderPlugin.getActiveInsulin().getComment());
-        insulinDia.setText(MainApp.gs(R.string.dia) + "  " + Double.toString(ConfigBuilderPlugin.getActiveInsulin().getDia()) + "h");
-        insulinGraph.show(ConfigBuilderPlugin.getActiveInsulin());
+        insulinName.setText(ConfigBuilderPlugin.getPlugin().getActiveInsulin().getFriendlyName());
+        insulinComment.setText(ConfigBuilderPlugin.getPlugin().getActiveInsulin().getComment());
+        insulinDia.setText(MainApp.gs(R.string.dia) + "  " + Double.toString(ConfigBuilderPlugin.getPlugin().getActiveInsulin().getDia()) + "h");
+        insulinGraph.show(ConfigBuilderPlugin.getPlugin().getActiveInsulin());
     }
 
 }

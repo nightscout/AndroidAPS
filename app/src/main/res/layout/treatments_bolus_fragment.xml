@@ -50,13 +50,30 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/treatments_reshreshfromnightscout"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/nav_refreshtreatments" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/treatments_reshreshfromnightscout"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="@string/nav_refreshtreatments" />
+
+            <Button
+                android:id="@+id/treatments_delete_future_treatments"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:text="@string/deletefuturetreatments" />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/treatments_recyclerview"

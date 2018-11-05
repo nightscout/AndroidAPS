@@ -406,8 +406,8 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     } else {
         console.error("SMB disabled (no enableSMB preferences active)");
     }
-    // enable UAM (if enabled in preferences) if SMB is enabled
-    var enableUAM=(profile.enableUAM && enableSMB);
+    // enable UAM (if enabled in preferences)
+    var enableUAM=(profile.enableUAM);
 
 
     //console.error(meal_data);
@@ -942,10 +942,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 var durationReq = round(60*worstCaseInsulinReq / profile.current_basal);
                 if (durationReq < 0) {
                     durationReq = 0;
-                // don't set a temp longer than 120 minutes
+                // don't set an SMB zero temp longer than 60 minutess
                 } else {
                     durationReq = round(durationReq/30)*30;
-                    durationReq = Math.min(120,Math.max(0,durationReq));
+                    durationReq = Math.min(60,Math.max(0,durationReq));
                 }
                 //console.error(durationReq);
                 //rT.reason += "insulinReq " + insulinReq + "; "
