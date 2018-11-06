@@ -1210,6 +1210,9 @@
     <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
+    <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
+    <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
+    <string name="dst_loop_disabled_warning">Dayligh Saving time change in less than 3 hours - Closed loop diabled</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
