@@ -955,7 +955,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="virtualpump_pump_def">Bolus: Schritt=%1$s\nVerzögerter Bolus: [Schritt=%2$s, Dauer=%3$smin-%4$sh]\nBasal: Schritt=%5$s\nTBR: %6$s (bei %7$s), Dauer=%8$smin-%9$sh\n%10$s</string>
     <string name="virtualpump_pump_def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
     <string name="ns_autobackfill_title">BZ automatisch auffüllen</string>
-    <string name="wear_wizard_settings">Wizard-Einstellungen</string>
+    <string name="wear_wizard_settings">Einrichtungsassistent</string>
     <string name="wear_wizard_settings_summary">Berechnungen, die im Assistenten berücksichtigt werden:</string>
     <string name="wear_display_settings">Anzeigeeinstellungen</string>
     <string name="wear_general_settings">Allgemeine Einstellungen</string>
