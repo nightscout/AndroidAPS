@@ -107,9 +107,9 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
 
     @Override
     public void onPause() {
-        running = false;
         super.onPause();
         MainApp.unsubscribe(this);
+        running = false;
         if (L.isEnabled(L.UI))
             log.debug("onPause");
     }
@@ -173,12 +173,10 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             Activity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
+                    if (L.isEnabled(L.UI))
+                        log.debug("executing");
                     try {
-                        if (running) {
-                            if (L.isEnabled(L.UI))
-                                log.debug("executing");
-                            dismiss();
-                        }
+                        dismiss();
                     } catch (Exception e) {
                         log.error("Unhandled exception", e);
                     }
