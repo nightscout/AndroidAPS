@@ -1238,6 +1238,7 @@
     <string name="rileylink_scanner_scan">Scan</string>
     <string name="rileylink_scanner_title">RileyLink Scan</string>
     <string name="rileylink_scanner_scan_menu">Scan for RileyLink</string>
+    <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
 
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Settings</string>
