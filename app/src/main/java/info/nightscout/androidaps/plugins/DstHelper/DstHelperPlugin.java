@@ -95,7 +95,7 @@ public class DstHelperPlugin extends PluginBase implements ConstraintsInterface 
 
     //Return false if time to DST change is less than 91 and positive
     @Override
-    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value){
+    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value){
         try {
             this.dstTest(Calendar.getInstance());
         } catch (Exception e) {
