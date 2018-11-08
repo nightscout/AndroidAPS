@@ -398,7 +398,7 @@ public class Profile {
     public String getIsfList() {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
-        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + "/U");
+        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + MainApp.gs(R.string.profile_per_unit));
     }
 
     public double getIc() {
@@ -418,7 +418,7 @@ public class Profile {
     public String getIcList() {
         if (ic_v == null)
             ic_v = convertToSparseArray(ic);
-        return getValuesList(ic_v, null, new DecimalFormat("0.0"), "g/U");
+        return getValuesList(ic_v, null, new DecimalFormat("0.0"), MainApp.gs(R.string.profile_carbs_per_unit));
     }
 
     public double getBasal() {
@@ -439,7 +439,7 @@ public class Profile {
     public String getBasalList() {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
-        return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U/h");
+        return getValuesList(basal_v, null, new DecimalFormat("0.00"), MainApp.gs(R.string.profile_ins_units_per_hout));
     }
 
     public class BasalValue {
