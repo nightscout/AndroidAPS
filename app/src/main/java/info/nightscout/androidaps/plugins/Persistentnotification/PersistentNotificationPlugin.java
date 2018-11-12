@@ -13,6 +13,14 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+// Android Auto
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
+
+
+
+
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Config;
@@ -59,6 +67,17 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     public static final int ONGOING_NOTIFICATION_ID = 4711;
     private final Context ctx;
+
+    /// For Android Auto
+    private static final String PACKAGE = "info.nightscout";
+    private static final String READ_ACTION =
+            "info.nightscout.androidaps.ACTION_MESSAGE_READ";
+    private static final String REPLY_ACTION =
+            "info.nightscout.androidaps.ACTION_MESSAGE_REPLY";
+    private static final String CONVERSATION_ID = "conversation_id";
+    private static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+    /// End Android Auto
+
 
     public PersistentNotificationPlugin(Context ctx) {
         super(new PluginDescription()
@@ -143,12 +162,51 @@ public class PersistentNotificationPlugin extends PluginBase {
         IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
 
-        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();;
+        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
         
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h";
 
 
         line3 += " - " + ProfileFunctions.getInstance().getProfileName();
+
+
+        /// For Android Auto
+        Intent msgReadIntent = new Intent()
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .setAction(READ_ACTION)
+                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                .setPackage(PACKAGE);
+
+        PendingIntent msgReadPendingIntent =
+                PendingIntent.getBroadcast(ctx,
+                        ONGOING_NOTIFICATION_ID,
+                        msgReadIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent msgReplyIntent = new Intent()
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .setAction(REPLY_ACTION)
+                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                .setPackage(PACKAGE);
+
+        PendingIntent msgReplyPendingIntent = PendingIntent.getBroadcast(
+                ctx,
+                ONGOING_NOTIFICATION_ID,
+                msgReplyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Build a RemoteInput for receiving voice input from devices
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
+
+        // Create the UnreadConversation
+        NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder =
+                new NotificationCompat.CarExtender.UnreadConversation.Builder(line1 + "\n" + line2)
+                        .setLatestTimestamp(System.currentTimeMillis())
+                        .setReadPendingIntent(msgReadPendingIntent)
+                        .setReplyAction(msgReplyPendingIntent, remoteInput);
+
+        unreadConversationBuilder.addMessage(line1 + ". " + line2 + ". " + line3);
+        /// End Android Auto
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
@@ -167,6 +225,12 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setContentTitle(line1);
         builder.setContentText(line2);
         builder.setSubText(line3);
+        /// Android Auto
+        builder.extend(new NotificationCompat.CarExtender()
+                .setUnreadConversation(unreadConversationBuilder.build()));
+        unreadConversationBuilder.addMessage(line1+line2+line3);
+        /// End Android Auto
+
 
         Intent resultIntent = new Intent(ctx, MainActivity.class);
 
