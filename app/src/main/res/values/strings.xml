@@ -610,6 +610,7 @@
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+    <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">xDrip Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
