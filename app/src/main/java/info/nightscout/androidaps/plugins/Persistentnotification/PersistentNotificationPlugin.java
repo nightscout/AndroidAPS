@@ -205,7 +205,8 @@ public class PersistentNotificationPlugin extends PluginBase {
                         .setLatestTimestamp(System.currentTimeMillis())
                         .setReadPendingIntent(msgReadPendingIntent)
                         .setReplyAction(msgReplyPendingIntent, remoteInput);
-
+        
+        /// Add dot to produce a "more natural sounding result"
         unreadConversationBuilder.addMessage(line1 + ". " + line2 + ". " + line3);
         /// End Android Auto
 
@@ -229,7 +230,6 @@ public class PersistentNotificationPlugin extends PluginBase {
         /// Android Auto
         builder.extend(new NotificationCompat.CarExtender()
                 .setUnreadConversation(unreadConversationBuilder.build()));
-        unreadConversationBuilder.addMessage(line1+line2+line3);
         /// End Android Auto
 
 
