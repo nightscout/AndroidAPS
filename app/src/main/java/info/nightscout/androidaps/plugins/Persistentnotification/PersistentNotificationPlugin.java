@@ -69,6 +69,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     private final Context ctx;
 
     /// For Android Auto
+    /// Intents are not declared in manifest and not consumed, this is intentionally because actually we can't do anything with
     private static final String PACKAGE = "info.nightscout";
     private static final String READ_ACTION =
             "info.nightscout.androidaps.ACTION_MESSAGE_READ";
