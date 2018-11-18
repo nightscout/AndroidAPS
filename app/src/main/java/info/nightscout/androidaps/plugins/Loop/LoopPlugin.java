@@ -409,8 +409,10 @@ public class LoopPlugin extends PluginBase {
                             .setAutoCancel(true)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
-                            .setVisibility(Notification.VISIBILITY_PUBLIC)
-                            .setLocalOnly(true);
+                            .setVisibility(Notification.VISIBILITY_PUBLIC);
+                    if (SP.getBoolean("wearcontrol", false)) {
+                        builder.setLocalOnly(true);
+                    }
 
                     // Creates an explicit intent for an Activity in your app
                     Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
