@@ -446,7 +446,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
-            final PumpDescription pumpDescription = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
+            final PumpDescription pumpDescription =
+                    ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
             if (!ProfileFunctions.getInstance().isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(MainApp.gs(R.string.loop));
@@ -457,19 +458,21 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.gs(R.string.suspendloopfor2h));
                     menu.add(MainApp.gs(R.string.suspendloopfor3h));
                     menu.add(MainApp.gs(R.string.suspendloopfor10h));
-                    if (pumpDescription.tempDurationStep15mAllowed)
-                        menu.add(MainApp.gs(R.string.disconnectpumpfor15m));
-                    if (pumpDescription.tempDurationStep30mAllowed)
-                        menu.add(MainApp.gs(R.string.disconnectpumpfor30m));
-                    menu.add(MainApp.gs(R.string.disconnectpumpfor1h));
-                    menu.add(MainApp.gs(R.string.disconnectpumpfor2h));
-                    menu.add(MainApp.gs(R.string.disconnectpumpfor3h));
-                } else {
+                }  else  {
                     menu.add(MainApp.gs(R.string.resume));
                 }
             }
-            if (!loopPlugin.isEnabled(PluginType.LOOP))
+
+            if (!loopPlugin.isEnabled(PluginType.LOOP)) {
                 menu.add(MainApp.gs(R.string.enableloop));
+            }
+
+            if (!loopPlugin.isDisconnected()) {
+                showSuspendtPump(menu, pumpDescription);
+            }  else {
+                menu.add(MainApp.gs(R.string.reconnect));
+            }
+
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(MainApp.gs(R.string.profile));
             menu.add(MainApp.gs(R.string.danar_viewprofile));
@@ -486,6 +489,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 menu.add(MainApp.gs(R.string.cancel));
             }
         }
+    }
+
+    private void showSuspendtPump(ContextMenu menu,
+                                  PumpDescription pumpDescription) {
+        if (pumpDescription.tempDurationStep15mAllowed)
+            menu.add(MainApp.gs(R.string.disconnectpumpfor15m));
+        if (pumpDescription.tempDurationStep30mAllowed)
+            menu.add(MainApp.gs(R.string.disconnectpumpfor30m));
+        menu.add(MainApp.gs(R.string.disconnectpumpfor1h));
+        menu.add(MainApp.gs(R.string.disconnectpumpfor2h));
+        menu.add(MainApp.gs(R.string.disconnectpumpfor3h));
     }
 
     @Override
@@ -516,7 +530,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
-        } else if (item.getTitle().equals(MainApp.gs(R.string.resume))) {
+        } else if (item.getTitle().equals(MainApp.gs(R.string.resume)) ||
+                item.getTitle().equals(MainApp.gs(R.string.reconnect))) {
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
@@ -1095,7 +1110,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
-            } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isDisconnected()) {
+            } else  if (loopPlugin.isDisconnected()) {
                 apsModeView.setBackgroundColor(MainApp.gc(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend()));
                 apsModeView.setTextColor(Color.WHITE);
