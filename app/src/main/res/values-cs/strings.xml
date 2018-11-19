@@ -556,6 +556,7 @@
     <string name="danar_bluetooth_status">Stav Bluetooth</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
+    <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
     <string name="xdripstatus_settings">Status z xDripu (hodinky)</string>
     <string name="xdripstatus">Statusový řádek xDripu (hodinky)</string>
     <string name="xdripstatus_shortname">XDS</string>

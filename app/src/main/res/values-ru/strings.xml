@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">отсоединить помпу на 2 часа</string>
     <string name="disconnectpumpfor3h">отсоединить помпу на 3 часа</string>
     <string name="resume">возобновить</string>
+    <string name="reconnect">Возобновить соединение с помпой</string>
     <string name="smscommunicator_wrongduration">неверное значение длительности</string>
     <string name="smscommunicator_loopsuspended">ЗЦ остановлен</string>
     <string name="smscommunicator_loopresumed">ЗЦикл возобновлен</string>
