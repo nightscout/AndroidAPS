@@ -127,7 +127,8 @@ public class PersistentNotificationPlugin extends PluginBase {
             return null;
         }
 
-        String line1 = "";
+        String line1;
+        String line1_aa;
 
         if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() == null || !ProfileFunctions.getInstance().isProfileValid("Notificiation"))
             return null;
@@ -138,22 +139,25 @@ public class PersistentNotificationPlugin extends PluginBase {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if (lastBG != null) {
-            line1 = lastBG.valueToUnitsToString(units);
+            line1 = line1_aa = lastBG.valueToUnitsToString(units);
             if (glucoseStatus != null) {
                 line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                         + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
+                line1_aa += "  " + lastBG.directionToSymbol();
             } else {
                 line1 += " " +
                         MainApp.gs(R.string.old_data) +
                         " ";
+                line1_aa += line1 + ".";
             }
         } else {
-            line1 = MainApp.gs(R.string.missed_bg_readings);
+            line1 = line1_aa = MainApp.gs(R.string.missed_bg_readings);
         }
 
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             line1 += "  " + activeTemp.toStringShort();
+            line1_aa += "  " + activeTemp.toStringShort() + ".";
         }
 
         //IOB
@@ -164,12 +168,15 @@ public class PersistentNotificationPlugin extends PluginBase {
 
 
         String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
-        
+        String line2_aa = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + ".";
+
+
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h";
+        String line3_aa = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h.";
 
 
         line3 += " - " + ProfileFunctions.getInstance().getProfileName();
-
+        line3_aa += " - " + ProfileFunctions.getInstance().getProfileName() + ".";
 
         /// For Android Auto
         Intent msgReadIntent = new Intent()
@@ -201,13 +208,13 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         // Create the UnreadConversation
         NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder =
-                new NotificationCompat.CarExtender.UnreadConversation.Builder(line1 + "\n" + line2)
+                new NotificationCompat.CarExtender.UnreadConversation.Builder(line1_aa + "\n" + line2_aa)
                         .setLatestTimestamp(System.currentTimeMillis())
                         .setReadPendingIntent(msgReadPendingIntent)
                         .setReplyAction(msgReplyPendingIntent, remoteInput);
         
         /// Add dot to produce a "more natural sounding result"
-        unreadConversationBuilder.addMessage(line1 + ". " + line2 + ". " + line3);
+        unreadConversationBuilder.addMessage(line3_aa);
         /// End Android Auto
 
 
