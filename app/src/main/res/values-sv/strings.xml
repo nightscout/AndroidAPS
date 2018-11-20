@@ -556,6 +556,7 @@
     <string name="danar_bluetooth_status">Bluetoothstatus</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
+    <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
     <string name="xdripstatus_settings">xDrip Status (klocka)</string>
     <string name="xdripstatus">xDrip Statusrad (klocka)</string>
     <string name="xdripstatus_shortname">xds</string>

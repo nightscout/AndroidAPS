@@ -326,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
                     case AndroidPermission.CASE_LOCATION:
                     case AndroidPermission.CASE_SMS:
                     case AndroidPermission.CASE_BATTERY:
+                    case AndroidPermission.CASE_PHONESTATE:
                         break;
                 }
             }

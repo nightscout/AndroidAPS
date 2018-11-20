@@ -533,6 +533,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="disconnectpumpfor2h">Déconnecter la pompe 2h</string>
     <string name="disconnectpumpfor3h">Déconnecter la pompe 3h</string>
     <string name="resume">Reprendre</string>
+    <string name="reconnect">Rebrancher la pompe</string>
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
     <string name="smscommunicator_loopsuspended">Boucle suspendue</string>
     <string name="smscommunicator_loopresumed">Boucle relancée</string>
@@ -557,6 +558,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="danar_bluetooth_status">État Bluetooth</string>
     <string name="nav_about">À propos de</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
+    <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
     <string name="xdripstatus_settings">état Xdrip (montre)</string>
     <string name="xdripstatus">Barre d\'état pour xDrip (Montre)</string>
     <string name="xdripstatus_shortname">xds</string>

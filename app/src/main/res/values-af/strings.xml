@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">Ontkoppel pomp vir 2 h</string>
     <string name="disconnectpumpfor3h">Ontkoppel pomp vir 3 h</string>
     <string name="resume">Hervat</string>
+    <string name="reconnect">Herverbind Pomp</string>
     <string name="smscommunicator_wrongduration">Verkeerde duur</string>
     <string name="smscommunicator_loopsuspended">Lus opgeskort</string>
     <string name="smscommunicator_loopresumed">Lus hervat</string>
@@ -556,6 +557,7 @@
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingsmspermission">Vermiste SMS toestemming</string>
+    <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
     <string name="xdripstatus_settings">xDrip Status (horlosie)</string>
     <string name="xdripstatus">xDrip Statusline (horlosie)</string>
     <string name="xdripstatus_shortname">xds</string>

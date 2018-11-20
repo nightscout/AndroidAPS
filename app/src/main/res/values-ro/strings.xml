@@ -556,6 +556,7 @@
     <string name="danar_bluetooth_status">Status bluetooth</string>
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
+    <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
     <string name="xdripstatus_settings">Status xDrip (ceas)</string>
     <string name="xdripstatus">Linie de status xDrip (ceas)</string>
     <string name="xdripstatus_shortname">xds</string>

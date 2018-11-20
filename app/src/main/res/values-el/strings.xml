@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">Αποσύνδεση αντλίας για 2h</string>
     <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
     <string name="resume">Επαναφορά</string>
+    <string name="reconnect">Επανασύνδεση αντλίας</string>
     <string name="smscommunicator_wrongduration">Λάθος διάρκεια</string>
     <string name="smscommunicator_loopsuspended">Κύκλωμα σε αναστολή</string>
     <string name="smscommunicator_loopresumed">Επαναφορά κυκλώματος</string>
