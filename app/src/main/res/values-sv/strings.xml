@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">Koppla loss pump i 2 timmar</string>
     <string name="disconnectpumpfor3h">Koppla loss pump i 3 timmar</string>
     <string name="resume">Återuppta</string>
+    <string name="reconnect">Återanslut Pump</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
     <string name="smscommunicator_loopsuspended">Loop pausad</string>
     <string name="smscommunicator_loopresumed">Loop återupptagen</string>

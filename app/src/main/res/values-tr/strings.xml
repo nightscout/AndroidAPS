@@ -63,16 +63,16 @@
     <string name="noprofileset">PROFİLİ AYARLANMADI</string>
     <string name="treatments_insulin_label_string">İnsülin:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
-    <string name="treatments_iob_label_string">IOB Aktif insülin:</string>
-    <string name="sms_iob">IOB Aktif insülin:</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="sms_iob">IOB:</string>
     <string name="treatments_activity_string">Eğzersiz:</string>
-    <string name="treatments_iobtotal_label_string">Toplam IOB Aktif insülin:</string>
+    <string name="treatments_iobtotal_label_string">Toplam IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Toplam IOB aktivite:</string>
     <string name="tempbasals_realduration_label_string">Süre:</string>
     <string name="tempbasals_netratio_label_string">Oran:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB Aktif İnsülin:</string>
-    <string name="tempbasals_iobtotal_label_string">Toplam IOB Aktif İnsülin:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Toplam IOB:</string>
     <string name="treatments_newtreatment_insulinamount_label">İnsülin</string>
     <string name="treatments_newtreatment_carbsamount_label">Karbonhidrat</string>
     <string name="treatments_wizard_bg_label">KŞ</string>
@@ -80,7 +80,7 @@
     <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
     <string name="insulin_unit_shortname">U</string>
-    <string name="treatments_wizard_bolusiob_label">Bolus IOB Aktif insülin</string>
+    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="vitualpump_label">SANAL POMPA</string>
     <string name="pump_basebasalrate_label">Temel bazal oranı</string>
@@ -110,7 +110,7 @@
     <string name="objectives">Hedefler</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Genel Bakış</string>
-    <string name="nsprofile">NS (Nightscout) Profil</string>
+    <string name="nsprofile">Nightscout Profil</string>
     <string name="simpleprofile">Basit Profil</string>
     <string name="tempbasal">Geçici Bazal</string>
     <string name="treatments">Tedaviler</string>
@@ -176,7 +176,7 @@
     <string name="objectives_pumpstatusavailableinns">Pompa durumu NS mevcut</string>
     <string name="objectives_manualenacts">Manuel eylemler</string>
     <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN İPTAL EDİLDİ</string>
-    <string name="treatments_wizard_basaliob_label">Bazal IOB (Aktif insülin)</string>
+    <string name="treatments_wizard_basaliob_label">Bazal IOB</string>
     <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
     <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="careportal_bgcheck">KŞ Kontrol</string>
@@ -552,7 +552,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">SuperBolus sihirbazını etkinleştir</string>
     <string name="enablesuperbolus_summary">Kurulum sihirbazında superbolus işlevselliğini etkinleştirin. Gerçekten ne yaptığınızı öğrenene kadar etkinleştirmeyin. BİLİNÇSİZ KULLANILDIĞINDA AŞIRI DOS İNSÜLIN VERİLEBİLİR!</string>
-    <string name="iob">IOB (Aktif insülin) </string>
+    <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Son bağlantı</string>
@@ -720,7 +720,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %s</string>
     <string name="overview_editquickwizard_usebg">KŞ Hesaplaması</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB (Aktif İnsülin) hesaplaması</string>
-    <string name="overview_editquickwizard_usebasaliob">Bazal IOB (Aktif İnsülin) hesaplaması</string>
+    <string name="overview_editquickwizard_usebasaliob">Bazal IOB hesaplaması</string>
     <string name="overview_editquickwizard_usetrend">Trend hesapla</string>
     <string name="overview_editquickwizard_usesuperbolus">Super Bolus hesapla</string>
     <string name="yes">Evet</string>
