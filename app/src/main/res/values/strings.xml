@@ -1214,6 +1214,11 @@
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
 
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
+
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
