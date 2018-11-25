@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">Wyłącz pompę na 2 h</string>
     <string name="disconnectpumpfor3h">Wyłącz pompę na 3 h</string>
     <string name="resume">Wznów</string>
+    <string name="reconnect">Połącz ponownie pompę</string>
     <string name="smscommunicator_wrongduration">Zły czas trwania</string>
     <string name="smscommunicator_loopsuspended">Pętla wstrzymana</string>
     <string name="smscommunicator_loopresumed">Pętla wznowiona</string>
@@ -771,8 +772,8 @@
     <string name="combo_error_bolus_verification_failed">Dostarczanie bolusa i sprawdzenia historii pompy nie powiodło się, Sprawdź pompę. Jeśli dostarczono bolusa, dane zostaną uzupełnione podczas następnego połączenia z pompą.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Za mało insuliny na bolus pozostało w zbiorniku</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
-    <string name="insightpump_shortname">Wgląd</string>
-    <string name="insightpump">Wgląd w pompę</string>
+    <string name="insightpump_shortname">Insight</string>
+    <string name="insightpump">Pompa Insight</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Zmieniono</string>
     <string name="pump_stopped_uppercase">POMPA ZATRZYMANA</string>
@@ -889,6 +890,8 @@
     <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
     <string name="autosensdisabledinpreferences">Autosens wyłączony w ustawieniach</string>
     <string name="smbdisabledinpreferences">SMB wyłączone w ustawieniach</string>
+    <string name="uamdisabledinpreferences">UAM wyłączone w ustawieniach</string>
+    <string name="uamdisabledoref1notselected">UAM jest wyłączone ponieważ zależy od wtyczki wrażliwości Oref1</string>
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
     <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
@@ -1051,6 +1054,7 @@
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
     <string name="loop_openmode_min_change">Minimalna żądana zmiana [%]</string>
     <string name="loop_openmode_min_change_summary">Pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość. Wartość domyślna to 20%</string>
+    <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

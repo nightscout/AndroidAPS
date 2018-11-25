@@ -591,7 +591,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="nsalarm_staledatavalue_label">Eski veri eşiği [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Acil durum verileri eşiği [min]</string>
     <string name="openapsama_autosens_period">Autosens [h] için aralık</string>
-    <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmişte geçen saat miktarı (karbonhidrat emme süresi hariç)</string>
+    <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmişte geçen saat miktarı (karbonhidrat emilim süresi hariç)</string>
     <string name="pump">Pompa</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Aktar</string>
@@ -601,7 +601,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="sensitivityoref0">Oref0 duyarlılık</string>
     <string name="sensitivityoref1">Oref1 duyarlılık</string>
     <string name="sensitivityaaps">AAPS duyarlılık</string>
-    <string name="absorptionsettings_title">Emme ayarları</string>
+    <string name="absorptionsettings_title">Emilim ayarları</string>
     <string name="absorption_maxtime_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_maxtime_summary">Tüm karbonhidratların emileceği beklenen saat cinsinden süre</string>
     <string name="danar_visualizeextendedaspercentage_title">Yayım bolusu% olarak görselleştir</string>
