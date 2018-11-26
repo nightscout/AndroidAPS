@@ -557,6 +557,7 @@
     <string name="danar_bluetooth_status">Status Bluetooth</string>
     <string name="nav_about">O programie</string>
     <string name="smscommunicator_missingsmspermission">Brak uprawnień SMS</string>
+    <string name="smscommunicator_missingphonestatepermission">Brak uprawnień do wykrywania stanu telefonu</string>
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">Linia Statusu xDrip (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -1055,6 +1056,10 @@
     <string name="loop_openmode_min_change">Minimalna żądana zmiana [%]</string>
     <string name="loop_openmode_min_change_summary">Pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość. Wartość domyślna to 20%</string>
     <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
+    <string name="profile_total">== ∑ %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

@@ -1056,6 +1056,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_openmode_min_change">Changement minimum possible [%]</string>
     <string name="loop_openmode_min_change_summary">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur. Par défaut, la valeur est 20%</string>
     <string name="pairfirst">Appairez SVP votre pompe avec votre téléphone !</string>
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

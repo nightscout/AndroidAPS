@@ -1012,7 +1012,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="completed_well_done">Tamamlandı, aferin!</string>
     <string name="not_completed_yet">Henüz tamamlanmadı</string>
     <string name="time_elapsed">Geçen süre</string>
-    <string name="nth_objective">%1$d. Amaç</string>
+    <string name="nth_objective">%1$d. Görev</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Poctech app\'ten KŞ değerlerini alır</string>
     <string name="high_temptarget_raises_sensitivity_title">Yüksek geçici hedefler duyarlılığı artırır</string>
@@ -1057,6 +1057,10 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="loop_openmode_min_change">Minimum istek değişikliği [%]</string>
     <string name="loop_openmode_min_change_summary">Döngü yeni değişiklik talebinizi, yalnızca bu değerden büyük olduğunda değiştirecek. Varsayılan değer% 20\'dir</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla bağlayın!</string>
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/sa.</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
