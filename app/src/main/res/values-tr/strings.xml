@@ -4,7 +4,7 @@
     <string name="treatmentssafety_title">Tedavilerin güvenlik ayarları</string>
     <string name="treatmentssafety_maxbolus_title">Max izin verilen bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max izin verilen karbonhidrat [g]</string>
-    <string name="nav_preferences">Ayarlar</string>
+    <string name="nav_preferences">Tercihler</string>
     <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
@@ -14,7 +14,7 @@
     <string name="ns_sync_use_absolute_title">Her zaman bazal mutlak değerleri kullan</string>
     <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada Android APS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
-    <string name="description_careportal">Gelişmiş kayıt defteri girişlerini girin.</string>
+    <string name="description_careportal">Gelişmiş kayıt defteri girişleri.</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılan</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -27,7 +27,7 @@
     <string name="description_ama">2017\'da algoritmanın durumu</string>
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_overview">En yaygın eylemler için Döngü ve düğmelerinizin geçerli durumunu görüntüler</string>
-    <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
+    <string name="description_persistent_notification">Döngünün şu anda ne yaptığını hızlıca gözden geçirerek sürekli bir bildirim gösterir</string>
     <string name="description_profile_local">Çevrimdışı olan bir profili tanımlayın.</string>
     <string name="description_profile_nightscout">Nightscout\'ta tanımladığınız profili sağlar</string>
     <string name="description_profile_simple">Sadece bir zaman bloğuyla bir profil tanımlayın.</string>
@@ -48,7 +48,7 @@
     <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alın.</string>
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
-    <string name="description_treatments">Yapılan tüm tedavileri kaydeder</string>
+    <string name="description_treatments">Yapılan tüm tedavileri kaydet</string>
     <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
     <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ watchface\'inizde gösterin.</string>
     <string name="description_sms_communicator">SMS komutlarını kullanarak uzaktan AndroidAPS kontrolü.</string>
@@ -184,17 +184,17 @@
     <string name="careportal_note">Not</string>
     <string name="careportal_question">Soru</string>
     <string name="careportal_exercise">Egzersiz</string>
-    <string name="careportal_pumpsitechange">Pompa Kanül değiştimi</string>
-    <string name="careportal_cgmsensorinsert">CGM sensörü Ekle</string>
+    <string name="careportal_pumpsitechange">Pompa Kanül Değişimi</string>
+    <string name="careportal_cgmsensorinsert">CGM Sensör Yerleştir</string>
     <string name="careportal_cgmsensorstart">CGM sensörü Başlat</string>
-    <string name="careportal_insulincartridgechange">İnsülin kartuşunu Değiştir</string>
+    <string name="careportal_insulincartridgechange">İnsülin Kartuş Değişimi</string>
     <string name="careportal_profileswitch">Profil değiştir</string>
     <string name="careportal_snackbolus">Aperatif Bolusu</string>
     <string name="careportal_mealbolus">Öğün Bolus</string>
     <string name="careportal_correctionbolus">Düzeltme Bolus</string>
     <string name="careportal_combobolus">Kombo Bolus</string>
     <string name="careportal_tempbasalstart">Geçici Basal başlat</string>
-    <string name="careportal_tempbasalend">Geçici bazal bitişi</string>
+    <string name="careportal_tempbasalend">Geçici Bazal Bitimi</string>
     <string name="careportal_carbscorrection">Karbonhidrat düzeltme</string>
     <string name="careportal_openapsoffline">OpenAPS etkisiz</string>
     <string name="careportal_newnstreatment_eventtype">Etkinlik Türü</string>
@@ -313,19 +313,18 @@
     <string name="overview_bolusprogress_stoppressed">DURDUR\'A BASTIĞINIZ</string>
     <string name="waitingforpump">Pompa bekleniyor</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU Gönderilecek</string>
-    <string name="objectives_0_objective">Görselleştirme ayarlama ve izleme ve analiz bazalar ve oranları
-Görselleştirmeyi ve izlemeyi kurmak, bazalları ve oranları analiz etmek</string>
+    <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın ve bazal oranlarını ve faktörleri düzenleyin</string>
     <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
-    <string name="objectives_1_objective">Açık Döngü modülü başlatılıyor</string>
-    <string name="objectives_1_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el ile girin. Geçici ve varsayılan geçici hedefleri kurun ve kullanın (örneğin, aktivite veya hipo-tedavi amaçlı karbonhidratlar için)</string>
+    <string name="objectives_1_objective">Açık Döngü modu başlatılıyor</string>
+    <string name="objectives_1_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
     <string name="objectives_2_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngü anlamak</string>
     <string name="objectives_2_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
-    <string name="objectives_3_objective">Kapalı Döngü düşük Kş değerlerinde kapat modunda başlatıyor</string>
+    <string name="objectives_3_objective">Kapalı Döngü, (LGS) Düşük Kan Şekerinde Duraklatma modunda başlatılıyor</string>
     <string name="objectives_3_gate">Çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca maksimum IOB = 0 (Aktif insülin) Kapalı Döngü\'de deneyin</string>
-    <string name="objectives_4_objective">Kapalı Döngü ayarlama, maksimum IOB\'u 0\'ın üzerinde yükseltme ve yavaş yavaş BG hedeflerini azaltma</string>
-    <string name="objectives_4_gate">KŞ düşürmeden önce, bir kaç gün çalıştırın ve en az bir geçe düşük KŞ alarmı olmadan</string>
+    <string name="objectives_4_objective">Kapalı Döngü\'de ince ayarlar, maksimum (IOB) Aktif İnsülinin 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
+    <string name="objectives_4_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
     <string name="objectives_5_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i etkinleştirin</string>
-    <string name="objectives_5_gate">Bir hafta boyunca düzenli Karbonhidrad girdileri yaparak günboyunca Döngü\'leyin</string>
+    <string name="objectives_5_gate">Bir hafta boyunca düzenli Karbonhidrad girdileri yaparak gün boyunca Kapalı Döngüyü çalıştırın</string>
     <string name="objectives_6_objective">Gelişmiş yemek asistanı gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
     <string name="objectives_7_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
     <string name="objectives_7_gate">(Super Micro Bolus) SMB\'lerın iyi çalışabilmesi için wiki\'yi okumalısınız ve maxIOB\'u yükseltmelisiniz! İyi bir başlangıç için maxIOB = ortalama yemek bolusu + 3 x max günlük bazaldır</string>
@@ -370,7 +369,7 @@ Görselleştirmeyi ve izlemeyi kurmak, bazalları ve oranları analiz etmek</str
     <string name="button1">Düğme 1</string>
     <string name="button2">Düğme 2</string>
     <string name="button3">Düğme 3</string>
-    <string name="units">Ünite:</string>
+    <string name="units">Birim:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
@@ -396,9 +395,9 @@ Görselleştirmeyi ve izlemeyi kurmak, bazalları ve oranları analiz etmek</str
     <string name="basalvaluebelowminimum">Minimum değerin altında bazal değeri. Profil ayarlanmadı!</string>
     <string name="sms_actualbg">KŞ:</string>
     <string name="sms_lastbg">Son KŞ:</string>
-    <string name="mdi">MDI (ÇDIE) Çoklu dozlu İnsulin Enjeksiyonu</string>
+    <string name="mdi">MDI Çoklu dozlu İnsulin Enjeksiyonu</string>
     <string name="MM640g">MM640g</string>
-    <string name="ongoingnotificaction">Sürekli bildirim</string>
+    <string name="ongoingnotificaction">Sürekli Bildirim</string>
     <string name="old_data">ESKİ VERİ</string>
     <string name="minago">%1$d dakika önce</string>
     <string name="sms_minago">%1$ddak önce</string>
@@ -459,8 +458,8 @@ Görselleştirmeyi ve izlemeyi kurmak, bazalları ve oranları analiz etmek</str
     <string name="openapsama_autosens_adjusttargets">Autosens hedefleri de ayarlar</string>
     <string name="openapsama_autosens_adjusttargets_summary">Varsayılan değer: true\nBu autosens in İnsülin Duyarlılık Faktörü ve bazallara ek olarak KŞ hedeflerinin ayarlanmasında kullanılır.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Varsayılan değer: 2\nEğer sadece öğününüzü yerseniz, öğün bolusu alındıktan sonra bolus ertelemesi devreye girer, bu şekilde Döngü karşı bir tetbir olarak geçici bazal oranını azaltmasın diye. Buaradaki örnekte olduğu gibi varsayılan 2; 3 saat DIA olacak şekilde bolus ertelemesi kademeli olarak 1,5 saat üzeri (3DIA/2=1,5).</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Varsayılan değer: 3.0 (AMA) Advanced meal assist veya 8.0 (SMB) Super Micro Bolus. Bu, 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg / dl / 5dk aynı şekilde SMB 8mg / dl / 5dk dir.
-Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zaman, gelecekte tahmin edilen KŞ\'nin hesaplanmasında ne kadar karbon emilimi varsayımını etkiler.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
+Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
     <string name="error_only_numeric_digits_allowed">Yalnızca sayısal rakam girebilirsiniz.</string>
     <string name="error_only_numeric_digits_range_allowed">%1$s - %2$s aralığında yalnızca sayısal rakamlar kullanılabilir.</string>
@@ -579,7 +578,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="overview_newtempbasal_basaltype_label">Bazal tipi</string>
     <string name="invalidprofile">Geçersiz profil!!!</string>
     <string name="profileswitch">Profil değiştir</string>
-    <string name="careportal_pbage_label">Pompa aküsü yaşı</string>
+    <string name="careportal_pbage_label">Pompa pil yaşı</string>
     <string name="careportal_pumpbatterychange">Pompa Akü Değişimi</string>
     <string name="ns_alarmoptions">Alarm türleri</string>
     <string name="nsalarm_urgenthigh">Aşırı yüksek</string>
@@ -595,7 +594,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="pump">Pompa</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Aktar</string>
-    <string name="configbuilder_sensitivity">Hassasiyeti algılaması</string>
+    <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref0">Oref0 duyarlılık</string>
@@ -732,7 +731,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="loopenabled">Döngü etkin</string>
     <string name="apsselected">Seçili APS</string>
     <string name="nsclienthaswritepermission">NSClient\'in yazma izni var</string>
-    <string name="closedmodeenabled">Kapalı mod etkin</string>
+    <string name="closedmodeenabled">Kapalı Döngü etkinleştirildi</string>
     <string name="maxiobset">Maksimal IOB doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="basalprofilenotaligned" formatted="false">Bazal değerler saatlerle uyumlu değil: %s</string>
@@ -784,7 +783,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="with">ile</string>
     <string name="insight_active_tbr">Etkin TBR (GBO) Geçici Bazal Oranı</string>
     <string name="insight_min_left">min kalan</string>
-    <string name="log_book">Log defteri</string>
+    <string name="log_book">Kayıt defteri</string>
     <string name="insight_last_completed_action">Son Tamamlanan Eylem</string>
     <string name="insight_min">min</string>
     <string name="insight_remaining_over">geriye kalan</string>
@@ -1033,7 +1032,7 @@ Bu COB\'un ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla d
     <string name="maintenance_amount">Gönderilecek loglar Yok</string>
     <string name="maintenance">Bakım</string>
     <string name="maintenance_shortname">BAKIM</string>
-    <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. log gönderme, log silme).</string>
+    <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
     <string name="send_all_logs">E-posta ile Logları Gönder</string>
     <string name="delete_logs">Log Kayıtları Sil</string>
     <string name="error_adding_treatment_message">Tedaviyi (insülin:%1$.2f, karbonhidrat: %2$d, da: %3$s) tedavilere eklenemedi. Lütfen kontrol edin ve uygun şekilde manuel şekilde kayıt edin.</string>
