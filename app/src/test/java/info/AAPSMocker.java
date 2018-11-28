@@ -101,6 +101,9 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.careportal_profileswitch)).thenReturn("Profile Switch");
         when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
         when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
+        when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
+        when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
+        when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
     }
 
     public static MainApp mockMainApp() {
