@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
     <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
     <string name="resume">Uvolnit</string>
+    <string name="reconnect">Znovu připojit pumpu</string>
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
     <string name="smscommunicator_loopsuspended">Smyčka pozastavena</string>
     <string name="smscommunicator_loopresumed">Smyčka obnovena</string>
@@ -556,6 +557,7 @@
     <string name="danar_bluetooth_status">Stav Bluetooth</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
+    <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
     <string name="xdripstatus_settings">Status z xDripu (hodinky)</string>
     <string name="xdripstatus">Statusový řádek xDripu (hodinky)</string>
     <string name="xdripstatus_shortname">XDS</string>
@@ -1053,6 +1055,10 @@
     <string name="loop_openmode_min_change">Minimální změna pro výzvu [%]</string>
     <string name="loop_openmode_min_change_summary">Smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
     <string name="pairfirst">Spárujte pumpu s telefonem!</string>
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
