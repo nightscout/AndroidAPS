@@ -49,6 +49,7 @@ public interface Intents {
     String GLIMP_BG = "it.ct.glicemia.ACTION_GLUCOSE_MEASURED";
 
     String DEXCOMG5_BG = "com.dexcom.cgm.DATA";
+    String DEXCOMG6_BG = "com.dexcom.cgm.AndroidAPSEVGCallback.Broadcast";
 
     String POCTECH_BG = "com.china.poctech.data";
 }

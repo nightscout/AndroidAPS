@@ -81,7 +81,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 bgReading.raw = 0;
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading);
+                    NSUpload.uploadBg(bgReading, "AndroidAPS-DexcomG5");
                 }
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
                     NSUpload.sendToXdrip(bgReading);
