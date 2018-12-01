@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -160,6 +161,7 @@ public class SourceDexcomG6Plugin extends PluginBase implements BgSourceInterfac
                         data.put("eventType", CareportalEvent.BGCHECK);
                         data.put("glucoseType", "Finger");
                         data.put("glucose", meterValues[i]);
+                        data.put("units", Constants.MGDL);
                         NSUpload.uploadCareportalEntryToNS(data);
                     }
                 } catch (JSONException e) {
