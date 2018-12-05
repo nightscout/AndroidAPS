@@ -7,7 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,13 +25,16 @@ public class EditEventDialog extends DialogFragment {
     @BindView(R.id.inputEventTitle)
     TextInputEditText mEditEventTitle;
 
-    @BindView(R.id.layoutTrigger)
-    LinearLayout mLayoutTrigger;
+    @BindView(R.id.editTrigger)
+    TextView mEditTrigger;
+
+    @BindView(R.id.triggerDescription)
+    TextView mTriggerDescription;
 
     private Unbinder mUnbinder;
 
     public static EditEventDialog newInstance(AutomationEvent event) {
-        mEvent = event;
+        mEvent = event; // FIXME
 
         Bundle args = new Bundle();
         EditEventDialog fragment = new EditEventDialog();
@@ -54,14 +57,22 @@ public class EditEventDialog extends DialogFragment {
         }
 
         // display root trigger
-        mLayoutTrigger.addView(mEvent.getTrigger().createView(getContext(), getFragmentManager()));
+        mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
+
+        mEditTrigger.setOnClickListener(v -> {
+            EditTriggerDialog dialog = EditTriggerDialog.newInstance(mEvent.getTrigger());
+            dialog.show(getFragmentManager(), "EditTriggerDialog");
+            dialog.setOnClickListener(trigger -> {
+                mEvent.setTrigger(trigger);
+                mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
+            });
+        });
 
         return view;
     }
 
     @Override
     public void onDestroyView() {
-        //mTriggerListAdapter.destroy();
         mUnbinder.unbind();
         super.onDestroyView();
     }
