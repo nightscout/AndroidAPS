@@ -890,6 +890,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="autosensdisabledinpreferences">Autosens in den Einstellungen deaktiviert</string>
     <string name="smbdisabledinpreferences">SMB in Einstellungen deaktiviert</string>
     <string name="uamdisabledinpreferences">UAM in Einstellungen deaktiviert</string>
+    <string name="uamdisabledoref1notselected">UAM deaktiviert, da diese auf die Oref1 Empfindlichkeitserkennung angewiesen sind.</string>
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
     <string name="itmustbepositivevalue">Es muss ein positiver Wert sein.</string>
@@ -1054,6 +1055,10 @@ Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
     <string name="loop_openmode_min_change_summary">Der Loop fordert eine neue Änderung nur dann an, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="pairfirst">Bitte kopple deine Pumpe mit deinem Telefon!</string>
+    <string name="profile_total">== ∑  %1$s IE</string>
+    <string name="profile_ins_units_per_hout">IE/h</string>
+    <string name="profile_carbs_per_unit">g/IE</string>
+    <string name="profile_per_unit">/IE</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
