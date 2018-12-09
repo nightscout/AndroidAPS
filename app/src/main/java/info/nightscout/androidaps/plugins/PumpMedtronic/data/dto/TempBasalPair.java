@@ -142,6 +142,22 @@ public class TempBasalPair {
     }
 
 
+    public String getDescription() {
+
+        String desc = "";
+
+        if (isPercent) {
+            desc = "Rate=" + insulinRate + "%";
+        } else {
+            desc = "Rate=" + insulinRate + " U";
+        }
+
+        desc += ", Duration=" + durationMinutes + " min";
+
+        return desc;
+    }
+
+
     @Override
     public String toString() {
         return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="

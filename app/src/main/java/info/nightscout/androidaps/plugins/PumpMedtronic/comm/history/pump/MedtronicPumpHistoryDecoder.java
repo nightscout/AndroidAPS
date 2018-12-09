@@ -248,7 +248,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 return decodeDailyTotals(entry); // Not supported at the moment
 
             case SelectBasalProfile:
-                return RecordDecodeStatus.Ignored; // Not supported at the moment
+                return RecordDecodeStatus.OK; // Not supported at the moment
 
                 // WORK IN PROGRESS
 
@@ -782,6 +782,10 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             int dayOfMonth = dt[0] & 0x1F;
             int year = 2000 + (ByteUtil.asUINT8(dt[1]) & 0x7F);
 
+            int hour = 0;
+            int minutes = 0;
+            int seconds = 0;
+
             // LocalDate rval = new LocalDate(year, month, dayOfMonth);
 
             // int dayOfMonth = dt[0] & 0x1F;
@@ -794,17 +798,22 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
             if (dayOfMonth == 32) {
                 // FIXME remove
-                LOG.debug("Entry: {} = [{}] {}", entry.getEntryType().name(), ByteUtil.getHex(entry.getRawData()),
-                    entry);
+                LOG.debug("Entry: Day 32 {} = [{}] {}", entry.getEntryType().name(),
+                    ByteUtil.getHex(entry.getRawData()), entry);
             }
 
             if (entry.getEntryType() == PumpHistoryEntryType.EndResultTotals) {
                 atdate = new LocalDateTime(year, month, dayOfMonth, 23, 59, 59);
+                hour = 23;
+                minutes = 59;
+                seconds = 59;
             } else {
                 atdate = new LocalDateTime(year, month, dayOfMonth, 0, 0);
             }
 
             entry.setLocalDateTime(atdate);
+            entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
+
         } else {
             LOG.warn("Unknown datetime format: " + entry.getDateTimeLength());
         }
@@ -823,17 +832,5 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         return year;
     }
-
-    // WRITE DATA
-
-    // private void writeData(PumpBaseType baseType, CodeEnumWithTranslation subType, ATechDate aTechDate) {
-    // this.pumpValuesWriter.writeObject(baseType.name() + "_" + subType.getName(), aTechDate);
-    // }
-    //
-    //
-    // private void writeData(PumpBaseType baseType, CodeEnumWithTranslation subType, String value, ATechDate aTechDate)
-    // {
-    // this.pumpValuesWriter.writeObject(baseType.name() + "_" + subType.getName(), aTechDate, value);
-    // }
 
 }

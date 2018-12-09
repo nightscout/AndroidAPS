@@ -147,7 +147,7 @@ public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
         if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
             if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 RileyLinkUtil
-                    .setServiceState(RileyLinkServiceState.BluetoothReady, RileyLinkError.RileyLinkUnreachable);
+                    .setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.RileyLinkUnreachable);
             } else {
                 RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
             }
@@ -172,15 +172,6 @@ public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
             ServiceTask task = new InitializePumpManagerTask(RileyLinkUtil.getTargetDevice());
             ServiceTaskExecutor.startTask(task);
             LOG.info("Announcing RileyLink open For business");
-
-            return true;
-        } else if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                RileyLinkUtil
-                    .setServiceState(RileyLinkServiceState.BluetoothReady, RileyLinkError.RileyLinkUnreachable);
-            } else {
-                RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
-            }
 
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkNewAddressSet)) {

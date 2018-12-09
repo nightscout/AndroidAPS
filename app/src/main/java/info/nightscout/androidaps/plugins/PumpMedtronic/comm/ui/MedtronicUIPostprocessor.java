@@ -193,14 +193,14 @@ public class MedtronicUIPostprocessor {
         checkValue = settings.get("PCFG_MAX_BOLUS");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBolus)) {
-            LOG.error("Wrong Max Bolus set on Pump (must be {}).", pumpStatus.maxBolus);
+            LOG.error("Wrong Max Bolus set on Pump (current={}, required={}).", checkValue.value, pumpStatus.maxBolus);
             sendNotification(MedtronicNotificationType.PumpWrongMaxBolusSet, pumpStatus.maxBolus);
         }
 
         checkValue = settings.get("PCFG_MAX_BASAL");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBasal)) {
-            LOG.error("Wrong Max Basal set on Pump (must be {}).", pumpStatus.maxBasal);
+            LOG.error("Wrong Max Basal set on Pump (current={}, required={}).", checkValue.value, pumpStatus.maxBasal);
             sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, pumpStatus.maxBasal);
         }
 

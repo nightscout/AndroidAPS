@@ -231,7 +231,15 @@ public class MedtronicFragment extends SubscriberFragment {
             } else if (pumpStatus.rileyLinkServiceState.isConnecting()) {
                 rileyLinkStatus.setText("{fa-bluetooth-b spin}   " + getTranslation(resourceId));
             } else if (pumpStatus.rileyLinkServiceState.isError()) {
-                rileyLinkStatus.setText("{fa-bluetooth-b}   " + getTranslation(resourceId));
+
+                RileyLinkError rileyLinkError = RileyLinkUtil.getError();
+
+                if (rileyLinkError == null)
+                    rileyLinkStatus.setText("{fa-bluetooth-b}   " + getTranslation(resourceId));
+                else
+                    rileyLinkStatus.setText("{fa-bluetooth-b}   "
+                        + getTranslation(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump)));
+
                 rileyLinkStatus.setTextColor(Color.RED);
             } else {
                 rileyLinkStatus.setText("{fa-bluetooth-b}   " + getTranslation(resourceId));
@@ -274,8 +282,27 @@ public class MedtronicFragment extends SubscriberFragment {
 
                     if (cmd == null)
                         pumpStatusIconView.setText("   " + MainApp.gs(pumpStatus.pumpDeviceState.getResourceId()));
-                    else
-                        pumpStatusIconView.setText("   " + cmd.name());
+                    else {
+                        Integer resourceId = cmd.getResourceId();
+
+                        if (cmd == MedtronicCommandType.GetHistoryData) {
+
+                            if (resourceId == null) {
+                                pumpStatusIconView.setText(String.format("  Get History - Page %d (%d/16)",
+                                    MedtronicUtil.pageNumber, MedtronicUtil.frameNumber));
+                            } else {
+                                pumpStatusIconView.setText(MainApp.gs(resourceId, MedtronicUtil.pageNumber,
+                                    MedtronicUtil.frameNumber));
+                            }
+                        } else {
+                            if (resourceId == null) {
+                                pumpStatusIconView.setText("   " + cmd.name());
+                            } else {
+                                pumpStatusIconView.setText("   " + getTranslation(resourceId));
+                            }
+                        }
+
+                    }
 
                 }
                     break;

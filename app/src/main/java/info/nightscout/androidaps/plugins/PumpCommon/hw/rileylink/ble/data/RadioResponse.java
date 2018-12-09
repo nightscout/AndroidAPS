@@ -5,13 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFTools;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.CRC;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.FabricUtil;
 
 /**
  * Created by geoff on 5/30/16.
@@ -33,14 +32,13 @@ public class RadioResponse {
     }
 
 
-    public RadioResponse(byte[] rxData) {
-        init(rxData);
-    }
+    // public RadioResponse(byte[] rxData) {
+    // init(rxData);
+    // }
 
-
-    public RadioResponse(RileyLinkCommand command, byte[] raw) {
+    public RadioResponse(RileyLinkCommand command /* , byte[] raw */) {
         this.command = command;
-        init(raw);
+        // init(raw);
     }
 
 
@@ -63,7 +61,7 @@ public class RadioResponse {
     }
 
 
-    public void init(byte[] rxData) {
+    public void init(byte[] rxData) throws RileyLinkCommunicationException {
 
         if (rxData == null) {
             return;
@@ -101,22 +99,8 @@ public class RadioResponse {
                     decodedPayload = encodedPayload;
                     break;
                 case FourByteSixByte:
-                    RFTools.DecodeResponseDto decodeResponseDto = RFTools.decode4b6bWithoutException(encodedPayload);
-                    byte[] decodeThis = decodeResponseDto.data;
+                    byte[] decodeThis = RileyLinkUtil.getEncoding4b6b().decode4b6b(encodedPayload);
                     decodedOK = true;
-
-                    if (decodeThis == null || decodeThis.length == 0 || decodeResponseDto.errorData != null) {
-                        LOG.error("=============================================================================");
-                        LOG.error(" Decoded payload length is zero.");
-                        LOG.error(" encodedPayload: {}", ByteUtil.getHex(encodedPayload));
-                        LOG.error(" errors: {}", decodeResponseDto.errorData);
-                        LOG.error("=============================================================================");
-
-                        FabricUtil.createEvent("MedtronicDecode4b6bError", null);
-
-                        decodedOK = false;
-                        return;
-                    }
 
                     decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
                     receivedCRC = decodeThis[decodeThis.length - 1];

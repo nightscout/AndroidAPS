@@ -16,6 +16,8 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6b;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.data.BleAdvertisedData;
@@ -59,6 +61,7 @@ public class RileyLinkUtil {
     private static RileyLinkTargetDevice targetDevice;
     private static RileyLinkEncodingType encoding;
     private static RileyLinkSelectPreference rileyLinkSelectPreference;
+    private static Encoding4b6b encoding4b6b;
 
 
     public static void setContext(Context contextIn) {
@@ -74,6 +77,10 @@ public class RileyLinkUtil {
 
     public static void setEncoding(RileyLinkEncodingType encoding) {
         RileyLinkUtil.encoding = encoding;
+
+        if (encoding == RileyLinkEncodingType.FourByteSixByte) {
+            RileyLinkUtil.encoding4b6b = new Encoding4b6bGeoff();
+        }
     }
 
 
@@ -316,4 +323,8 @@ public class RileyLinkUtil {
         return rileyLinkSelectPreference;
     }
 
+
+    public static Encoding4b6b getEncoding4b6b() {
+        return RileyLinkUtil.encoding4b6b;
+    }
 }

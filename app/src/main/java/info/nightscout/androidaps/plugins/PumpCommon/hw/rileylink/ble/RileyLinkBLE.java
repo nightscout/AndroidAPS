@@ -39,7 +39,8 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.ThreadUtil;
  */
 public class RileyLinkBLE {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RFTools.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RileyLinkBLE.class);
+
     private final Context context;
     public boolean gattDebugEnabled = true;
     boolean manualDisconnect = false;

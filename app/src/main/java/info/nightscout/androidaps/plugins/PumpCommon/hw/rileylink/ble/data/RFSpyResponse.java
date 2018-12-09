@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data;
 
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RFSpyRLResponse;
 
@@ -47,9 +48,10 @@ public class RFSpyResponse {
     }
 
 
-    public RadioResponse getRadioResponse() {
+    public RadioResponse getRadioResponse() throws RileyLinkCommunicationException {
         if (looksLikeRadioPacket()) {
-            radioResponse = new RadioResponse(command, raw);
+            radioResponse = new RadioResponse(command);
+            radioResponse.init(raw);
         } else {
             radioResponse = new RadioResponse();
         }

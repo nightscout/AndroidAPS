@@ -118,13 +118,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         serviceConnection = new ServiceConnection() {
 
             public void onServiceDisconnected(ComponentName name) {
-                LOG.debug("RileyLinkMedtronicService is disconnected");
+                if (isLoggingEnabled())
+                    LOG.debug("RileyLinkMedtronicService is disconnected");
                 medtronicService = null;
             }
 
 
             public void onServiceConnected(ComponentName name, IBinder service) {
-                LOG.debug("RileyLinkMedtronicService is connected");
+                if (isLoggingEnabled())
+                    LOG.debug("RileyLinkMedtronicService is connected");
                 RileyLinkMedtronicService.LocalBinder mLocalBinder = (RileyLinkMedtronicService.LocalBinder)service;
                 medtronicService = mLocalBinder.getServiceInstance();
 
@@ -134,7 +136,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         SystemClock.sleep(5000);
 
                         if (MedtronicUtil.getPumpStatus() != null) {
-                            LOG.debug("Starting Medtronic-RileyLink service");
+                            if (isLoggingEnabled())
+                                LOG.debug("Starting Medtronic-RileyLink service");
                             if (MedtronicUtil.getPumpStatus().setNotInPreInit()) {
                                 break;
                             }
@@ -170,7 +173,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         pumpStatusLocal.refreshConfiguration();
 
-        LOG.debug("initPumpStatusData: {}", this.pumpStatusLocal);
+        if (isLoggingEnabled())
+            LOG.debug("initPumpStatusData: {}", this.pumpStatusLocal);
 
         this.pumpStatus = pumpStatusLocal;
 
@@ -180,6 +184,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // set first Medtronic Pump Start
         if (!SP.contains(MedtronicConst.Statistics.FirstPumpStart)) {
             SP.putLong(MedtronicConst.Statistics.FirstPumpStart, System.currentTimeMillis());
+        }
+
+        migrateSettings();
+
+    }
+
+
+    private void migrateSettings() {
+
+        if ("US (916 MHz)".equals(SP.getString(MedtronicConst.Prefs.PumpFrequency, null))) {
+            SP.putString(MedtronicConst.Prefs.PumpFrequency, MainApp.gs(R.string.medtronic_pump_frequency_us_ca));
         }
 
     }
@@ -193,7 +208,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             do {
                 SystemClock.sleep(60000);
 
-                if (doWeHaveAnyStatusNeededRefereshing()) {
+                Map<MedtronicStatusRefreshType, Long> statusRefresh = workWithStatusRefresh(
+                    StatusRefreshAction.GetData, null, null);
+
+                if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Scheduled Status Refresh", null);
                 }
 
@@ -230,7 +248,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public boolean isInitialized() {
         // TODO remove
-        LOG.debug("MedtronicPumpPlugin::isInitialized");
+        if (isLoggingEnabled())
+            LOG.debug("MedtronicPumpPlugin::isInitialized");
         return isServiceSet() && isInitialized;
     }
 
@@ -245,7 +264,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public boolean isBusy() {
         // TODO remove
-        LOG.debug("MedtronicPumpPlugin::isBusy");
+        if (isLoggingEnabled())
+            LOG.debug("MedtronicPumpPlugin::isBusy");
         return isServiceSet() && medtronicService.isBusy();
     }
 
@@ -253,7 +273,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public boolean isConnected() {
         // TODO remove
-        LOG.debug("MedtronicPumpPlugin::isConnected");
+        if (isLoggingEnabled())
+            LOG.debug("MedtronicPumpPlugin::isConnected");
         return isServiceSet() && medtronicService.isInitialized();
     }
 
@@ -261,7 +282,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public boolean isConnecting() {
         // TODO remove
-        LOG.debug("MedtronicPumpPlugin::isConnecting");
+        if (isLoggingEnabled())
+            LOG.debug("MedtronicPumpPlugin::isConnecting");
         return !isServiceSet() || !medtronicService.isInitialized();
     }
 
@@ -294,7 +316,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (rileyLinkServiceState != RileyLinkServiceState.PumpConnectorReady //
             && rileyLinkServiceState != RileyLinkServiceState.RileyLinkReady //
             && rileyLinkServiceState != RileyLinkServiceState.TuneUpDevice) {
-            LOG.error("RileyLink unreachable.");
+            if (isLoggingEnabled())
+                LOG.error("RileyLink unreachable.");
             return false;
         }
 
@@ -304,14 +327,18 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private void refreshAnyStatusThatNeedsToBeRefreshed() {
 
-        if (!doWeHaveAnyStatusNeededRefereshing()) {
+        Map<MedtronicStatusRefreshType, Long> statusRefresh = workWithStatusRefresh(StatusRefreshAction.GetData, null,
+            null);
+
+        if (!doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
             return;
         }
 
         boolean resetTime = false;
 
         if (isPumpNotReachable()) {
-            LOG.error("Pump unreachable.");
+            if (isLoggingEnabled())
+                LOG.error("Pump unreachable.");
             MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable);
 
             return;
@@ -322,7 +349,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         Set<MedtronicStatusRefreshType> refreshTypesNeededToReschedule = new HashSet<>();
 
         // execute
-        for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefreshMap.entrySet()) {
+        for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefresh.entrySet()) {
 
             if (refreshType.getValue() > 0 && System.currentTimeMillis() > refreshType.getValue()) {
 
@@ -361,9 +388,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    private boolean doWeHaveAnyStatusNeededRefereshing() {
+    private boolean doWeHaveAnyStatusNeededRefereshing(Map<MedtronicStatusRefreshType, Long> statusRefresh) {
 
-        for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefreshMap.entrySet()) {
+        for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefresh.entrySet()) {
 
             if (refreshType.getValue() > 0 && System.currentTimeMillis() > refreshType.getValue()) {
                 return true;
@@ -381,7 +408,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private void initializePump(boolean realInit) {
 
-        LOG.info(getLogPrefix() + "initializePump - start");
+        if (isLoggingEnabled())
+            LOG.info(getLogPrefix() + "initializePump - start");
 
         if (medtronicCommunicationManager == null) {
             medtronicCommunicationManager = MedtronicCommunicationManager.getInstance();
@@ -394,7 +422,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (isRefresh) {
             if (isPumpNotReachable()) {
-                LOG.error(getLogPrefix() + "initializePump::Pump unreachable.");
+                if (isLoggingEnabled())
+                    LOG.error(getLogPrefix() + "initializePump::Pump unreachable.");
                 MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable);
 
                 setRefreshButtonEnabled(true);
@@ -410,7 +439,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             medtronicUIComm.executeCommand(MedtronicCommandType.PumpModel);
         } else {
             if (pumpStatusLocal.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
-                LOG.warn(getLogPrefix() + "Configured pump is not the same as one detected.");
+                if (isLoggingEnabled())
+                    LOG.warn(getLogPrefix() + "Configured pump is not the same as one detected.");
                 MedtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame);
             }
         }
@@ -443,7 +473,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         int errorCount = medtronicUIComm.getInvalidResponsesCount();
 
         if (errorCount >= 5) {
-            LOG.error("Number of error counts was 5 or more. Starting tunning.");
+            if (isLoggingEnabled())
+                LOG.error("Number of error counts was 5 or more. Starting tunning.");
             setRefreshButtonEnabled(true);
             ServiceTaskExecutor.startTask(new WakeAndTuneTask());
             return;
@@ -523,15 +554,18 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             }
 
             if (!invalid) {
-                LOG.debug("Basal profile is same as AAPS one.");
+                if (isLoggingEnabled())
+                    LOG.debug("Basal profile is same as AAPS one.");
                 basalProfileChanged = false;
             } else {
-                LOG.debug("Basal profile on Pump is different than the AAPS one.");
+                if (isLoggingEnabled())
+                    LOG.debug("Basal profile on Pump is different than the AAPS one.");
             }
 
         } else {
             invalid = true;
-            LOG.debug("Basal profile NO DATA");
+            if (isLoggingEnabled())
+                LOG.debug("Basal profile NO DATA");
         }
 
         isBasalProfileInvalid = invalid;
@@ -563,7 +597,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private MedtronicPumpStatus getMDTPumpStatus() {
         if (pumpStatusLocal == null) {
             // FIXME I don't know why this happens
-            LOG.warn("!!!! Reset Pump Status Local");
+            if (isLoggingEnabled())
+                LOG.warn("!!!! Reset Pump Status Local");
             pumpStatusLocal = MedtronicUtil.getPumpStatus();
         }
 
@@ -602,6 +637,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             // TODO display bolus
 
+            setRefreshButtonEnabled(true);
+
             if (response) {
                 // FIXME this needs to be fixed to read info from history
                 boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
@@ -613,13 +650,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
                     : MedtronicConst.Statistics.StandardBoluses);
+
+                return new PumpEnactResult().success(response) //
+                    .enacted(response) //
+                    .bolusDelivered(detailedBolusInfo.insulin) //
+                    .carbsDelivered(detailedBolusInfo.carbs);
+            } else {
+
+                return new PumpEnactResult().success(false).enacted(false) //
+                    .comment(MainApp.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered));
             }
-
-            // readPumpHistory();
-
-            setRefreshButtonEnabled(true);
-
-            return new PumpEnactResult().success(response).enacted(response);
 
             // pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             // MainApp.bus().post(new EventComboPumpUpdateGUI());
@@ -769,19 +809,22 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         getMDTPumpStatus();
 
-        LOG.info(getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
+        if (isLoggingEnabled())
+            LOG.info(getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         // read current TBR
         TempBasalPair tbrCurrent = readTBR();
 
         if (tbrCurrent == null) {
-            LOG.warn(getLogPrefix() + "setTempBasalAbsolute - Could not read current TBR, canceling operation.");
+            if (isLoggingEnabled())
+                LOG.warn(getLogPrefix() + "setTempBasalAbsolute - Could not read current TBR, canceling operation.");
             finishAction("TBR");
             return new PumpEnactResult().success(false).enacted(false)
                 .comment(MainApp.gs(R.string.medtronic_cmd_cant_read_tbr));
         } else {
-            LOG.info(getLogPrefix() + "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
-                tbrCurrent.getDurationMinutes(), tbrCurrent.getInsulinRate());
+            if (isLoggingEnabled())
+                LOG.info(getLogPrefix() + "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
+                    tbrCurrent.getDurationMinutes(), tbrCurrent.getInsulinRate());
         }
 
         if (!enforceNew) {
@@ -795,7 +838,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 }
 
                 if (sameRate) {
-                    LOG.info(getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
+                    if (isLoggingEnabled())
+                        LOG.info(getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
                     finishAction("TBR");
                     return new PumpEnactResult().success(true).enacted(false);
                 }
@@ -805,7 +849,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         // if TBR is running we will cancel it.
         if (tbrCurrent.getInsulinRate() != 0.0f && tbrCurrent.getDurationMinutes() > 0) {
-            LOG.info(getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
+            if (isLoggingEnabled())
+                LOG.info(getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
 
             // CANCEL
 
@@ -814,14 +859,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             Boolean response = (Boolean)responseTask2.returnData;
 
             if (response) {
-                LOG.info(getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
+                if (isLoggingEnabled())
+                    LOG.info(getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
             } else {
-                LOG.error(getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
+                if (isLoggingEnabled())
+                    LOG.error(getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
 
                 finishAction("TBR");
 
                 return new PumpEnactResult().success(false).enacted(false)
-                    .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr));
+                    .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr_stop_op));
             }
         }
 
@@ -831,7 +878,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         Boolean response = (Boolean)responseTask.returnData;
 
-        LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + response);
+        if (isLoggingEnabled())
+            LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + response);
 
         if (response) {
             // FIXME put this into UIPostProcessor
@@ -848,13 +896,19 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet);
+
+            finishAction("TBR");
+
+            return new PumpEnactResult().success(response).enacted(response) //
+                .absolute(absoluteRate).duration(durationInMinutes);
+
+        } else {
+            finishAction("TBR");
+
+            return new PumpEnactResult().success(response).enacted(response) //
+                .comment(MainApp.gs(R.string.medtronic_cmd_tbr_could_not_be_delivered));
         }
 
-        finishAction("TBR");
-
-        setRefreshButtonEnabled(true);
-
-        return new PumpEnactResult().success(response).enacted(response);
     }
 
 
@@ -871,7 +925,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private void readPumpHistory() {
 
-        LOG.error(getLogPrefix() + "readPumpHistory WIP.");
+        if (isLoggingEnabled())
+            LOG.error(getLogPrefix() + "readPumpHistory WIP.");
 
         readPumpHistoryLogic();
 
@@ -894,12 +949,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (medtronicHistoryData.isPumpSuspended(this.pumpState == PumpDriverState.Suspended)) {
             scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, -1);
             this.pumpState = PumpDriverState.Suspended;
-            LOG.debug(getLogPrefix() + "isPumpSuspended: true");
+            if (isLoggingEnabled())
+                LOG.debug(getLogPrefix() + "isPumpSuspended: true");
         } else {
             if (previousState == PumpDriverState.Suspended) {
                 this.pumpState = PumpDriverState.Ready;
             }
-            LOG.debug(getLogPrefix() + "isPumpSuspended: false");
+            if (isLoggingEnabled())
+                LOG.debug(getLogPrefix() + "isPumpSuspended: false");
         }
 
         List<PumpHistoryEntry> tdds = medtronicHistoryData.getTDDs();
@@ -910,6 +967,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         List<PumpHistoryEntry> tdds2 = medtronicHistoryData.getTDDs2();
 
+        // FIXME
         LOG.debug("TDDs2: {}", gsonInstancePretty.toJson(tdds2));
 
         List<PumpHistoryEntry> treatments = medtronicHistoryData.getTreatments();
@@ -954,7 +1012,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (lastPumpHistoryEntry == null) {
 
-            LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: null");
+            if (isLoggingEnabled())
+                LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: null");
 
             Long lastPumpHistoryEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, 0L);
 
@@ -963,14 +1022,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             medtronicHistoryData.setIsInInit(true);
 
             if (lastPumpHistoryEntryTime == 0L) {
-                LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: 0L - targetDate: "
-                    + targetDate);
+                if (isLoggingEnabled())
+                    LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: 0L - targetDate: "
+                        + targetDate);
                 targetDate = timeMinus36h;
             } else {
                 LocalDateTime lastHistoryRecordTime = DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime);
 
-                LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: {} - targetDate: {}",
-                    lastHistoryRecordTime, targetDate);
+                if (isLoggingEnabled())
+                    LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: {} - targetDate: {}",
+                        lastHistoryRecordTime, targetDate);
 
                 medtronicHistoryData.setLastHistoryRecordTime(DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime));
 
@@ -984,11 +1045,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 targetDate = (timeMinus36h.isAfter(lastHistoryRecordTime) ? timeMinus36h : lastHistoryRecordTime);
 
-                LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): targetDate: " + targetDate);
+                if (isLoggingEnabled())
+                    LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): targetDate: " + targetDate);
             }
         } else {
-            LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - {}",
-                gsonInstancePretty.toJson(lastPumpHistoryEntry));
+            if (isLoggingEnabled())
+                LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - {}",
+                    gsonInstancePretty.toJson(lastPumpHistoryEntry));
             medtronicHistoryData.setIsInInit(false);
             medtronicHistoryData.setLastHistoryRecordTime(null);
         }
@@ -1000,7 +1063,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         PumpHistoryEntry latestEntry = historyResult.getLatestEntry();
 
-        LOG.debug(getLogPrefix() + "Last entry: " + latestEntry);
+        if (isLoggingEnabled())
+            LOG.debug(getLogPrefix() + "Last entry: " + latestEntry);
 
         if (latestEntry == null) // no new history to read
             return;
@@ -1053,18 +1117,48 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 else
                     min = 15;
 
-                statusRefreshMap.put(refreshType, getTimeInFutureFromMinutes(min));
+                workWithStatusRefresh(StatusRefreshAction.Add, refreshType, getTimeInFutureFromMinutes(min));
             }
                 break;
 
             case PumpTime:
             case Configuration:
             case PumpHistory: {
-                statusRefreshMap.put(refreshType, getTimeInFutureFromMinutes(refreshType.getRefreshTime()
-                    + additionalTimeInMinutes));
+                workWithStatusRefresh(StatusRefreshAction.Add, refreshType,
+                    getTimeInFutureFromMinutes(refreshType.getRefreshTime() + additionalTimeInMinutes));
             }
                 break;
         }
+    }
+
+    private enum StatusRefreshAction {
+        Add, //
+        GetData;
+    }
+
+
+    private synchronized Map<MedtronicStatusRefreshType, Long> workWithStatusRefresh(StatusRefreshAction action,
+            MedtronicStatusRefreshType statusRefreshType, Long time) {
+
+        switch (action) {
+
+            case Add: {
+                statusRefreshMap.put(statusRefreshType, time);
+                return null;
+            }
+
+            case GetData: {
+                Map<MedtronicStatusRefreshType, Long> shallowCopy = new HashMap<>();
+
+                shallowCopy.putAll(statusRefreshMap);
+                return shallowCopy;
+            }
+
+            default:
+                return null;
+
+        }
+
     }
 
 
@@ -1099,7 +1193,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
 
-        LOG.info(getLogPrefix() + "cancelTempBasal - started");
+        if (isLoggingEnabled())
+            LOG.info(getLogPrefix() + "cancelTempBasal - started");
 
         if (isPumpNotReachable()) {
 
@@ -1118,12 +1213,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (tbrCurrent != null) {
             if (tbrCurrent.getInsulinRate() == 0.0f && tbrCurrent.getDurationMinutes() == 0) {
-                LOG.info(getLogPrefix() + "cancelTempBasal - TBR already canceled.");
+                if (isLoggingEnabled())
+                    LOG.info(getLogPrefix() + "cancelTempBasal - TBR already canceled.");
                 finishAction("TBR");
                 return new PumpEnactResult().success(true).enacted(false);
             }
         } else {
-            LOG.warn(getLogPrefix() + "cancelTempBasal - Could not read currect TBR, canceling operation.");
+            if (isLoggingEnabled())
+                LOG.warn(getLogPrefix() + "cancelTempBasal - Could not read currect TBR, canceling operation.");
             finishAction("TBR");
             return new PumpEnactResult().success(false).enacted(false)
                 .comment(MainApp.gs(R.string.medtronic_cmd_cant_read_tbr));
@@ -1133,22 +1230,35 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         Boolean response = (Boolean)responseTask2.returnData;
 
-        if (response) {
-            LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
-
-        } else {
-            LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
-        }
-
         finishAction("TBR");
 
-        return new PumpEnactResult().success(response).enacted(response);
+        if (response) {
+            if (isLoggingEnabled())
+                LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
+
+            TemporaryBasal tempBasal = new TemporaryBasal() //
+                .date(System.currentTimeMillis()) //
+                .duration(0) //
+                .source(Source.USER);
+
+            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
+
+            return new PumpEnactResult().success(response).enacted(response) //
+                .isTempCancel(true);
+        } else {
+            if (isLoggingEnabled())
+                LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
+
+            return new PumpEnactResult().success(response).enacted(response) //
+                .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr));
+        }
     }
 
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        LOG.error(getLogPrefix() + "setNewBasalProfile - WIP.");
+        if (isLoggingEnabled())
+            LOG.info(getLogPrefix() + "setNewBasalProfile");
 
         setRefreshButtonEnabled(false);
 
@@ -1180,9 +1290,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         Boolean response = (Boolean)responseTask.returnData;
 
-        LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
+        if (isLoggingEnabled())
+            LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
 
-        return new PumpEnactResult().success(response).enacted(response);
+        if (response) {
+            return new PumpEnactResult().success(response).enacted(response);
+        } else {
+            return new PumpEnactResult().success(response).enacted(response) //
+                .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_could_not_be_set));
+        }
     }
 
 
@@ -1205,7 +1321,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         }
 
         return stringBuilder.length() == 0 ? null : stringBuilder.toString();
-
     }
 
 
@@ -1236,28 +1351,26 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     // OPERATIONS not supported by Pump or Plugin
 
-    @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        LOG.error("MedtronicPumpPlugin::setExtendedBolus NOT SUPPORTED.");
-        return OPERATION_NOT_SUPPORTED;
-    }
+    // @Override
+    // public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    // LOG.error("MedtronicPumpPlugin::setExtendedBolus NOT SUPPORTED.");
+    // return OPERATION_NOT_SUPPORTED;
+    // }
+    //
+    //
+    // @Override
+    // public PumpEnactResult cancelExtendedBolus() {
+    // LOG.warn("cancelExtendedBolus - operation not supported.");
+    // return getOperationNotSupportedWithCustomText(R.string.medtronic_cmd_cancel_bolus_not_supported);
+    // }
 
-
-    @Override
-    public PumpEnactResult cancelExtendedBolus() {
-        LOG.warn("cancelExtendedBolus - operation not supported.");
-        return getOperationNotSupportedWithCustomText(R.string.medtronic_cmd_cancel_bolus_not_supported);
-    }
-
-
-    @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
-            boolean enforceNew) {
-        LOG.error("setTempBasalPercent NOT IMPLEMENTED.");
-        // we will never come here unless somebody has played with configuration in PumpType
-        return OPERATION_NOT_SUPPORTED;
-    }
-
+    // @Override
+    // public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
+    // boolean enforceNew) {
+    // LOG.error("setTempBasalPercent NOT IMPLEMENTED.");
+    // // we will never come here unless somebody has played with configuration in PumpType
+    // return OPERATION_NOT_SUPPORTED;
+    // }
 
     // // we don't loadTDD. TDD is read from Pump History
     // @Override

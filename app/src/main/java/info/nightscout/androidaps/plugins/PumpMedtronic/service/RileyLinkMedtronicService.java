@@ -10,14 +10,12 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkEncodingType;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.RileyLinkService;
@@ -86,15 +84,16 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
+    // FIXME remove this, it needs to be set in PumpConfiguration not here
     @Override
     protected void determineRileyLinkTargetFrequency() {
-        boolean hasUSFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency,
-            MainApp.gs(R.string.medtronic_pump_frequency_us)).equals(MainApp.gs(R.string.medtronic_pump_frequency_us));
-
-        if (hasUSFrequency)
-            RileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Medtronic_US);
-        else
-            RileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Medtronic_WorldWide);
+        // boolean hasUSFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency,
+        // MainApp.gs(R.string.medtronic_pump_frequency_us)).equals(MainApp.gs(R.string.medtronic_pump_frequency_us));
+        //
+        // if (hasUSFrequency)
+        // RileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Medtronic_US);
+        // else
+        // RileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Medtronic_WorldWide);
     }
 
 

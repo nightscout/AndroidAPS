@@ -109,6 +109,7 @@ public class MedtronicHistoryData {
     }
 
 
+    // FIXME not just 50 records, last 24 hours
     public void finalizeNewHistoryRecords() {
 
         List<PumpHistoryEntry> filteredListByLastRecord = getFilteredListByLastRecord((PumpHistoryEntryType)null);
@@ -150,6 +151,13 @@ public class MedtronicHistoryData {
 
     // TODO This logic might not be working correctly
     public boolean isPumpSuspended(Boolean wasPumpSuspended) {
+
+        if (true)
+            return false;
+
+        List<PumpHistoryEntry> newAndAll = new ArrayList<>();
+        newAndAll.addAll(this.allHistory);
+        newAndAll.addAll(this.newHistory);
 
         if (wasPumpSuspended == null) { // suspension status not known
 
@@ -199,6 +207,9 @@ public class MedtronicHistoryData {
                     return true;
 
             } else {
+
+                if (items.size() == 0)
+                    return wasPumpSuspended == null ? false : wasPumpSuspended;
 
                 PumpHistoryEntry pumpHistoryEntry = items.get(0);
 

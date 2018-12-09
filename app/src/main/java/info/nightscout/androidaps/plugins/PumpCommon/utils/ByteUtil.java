@@ -137,21 +137,41 @@ public class ByteUtil {
     }
 
 
-    public static byte[] fromByteArray(List<Byte> byteArray) {
-        byte[] rval = new byte[byteArray.size()];
-        for (int i = 0; i < byteArray.size(); i++) {
-            rval[i] = byteArray.get(i);
+    // public static byte[] fromByteList(List<Byte> byteArray) {
+    // byte[] rval = new byte[byteArray.size()];
+    // for (int i = 0; i < byteArray.size(); i++) {
+    // rval[i] = byteArray.get(i);
+    // }
+    // return rval;
+    // }
+
+    // public static List<Byte> toByteList(byte[] data) {
+    // ArrayList<Byte> rval = new ArrayList<>(data.length);
+    // for (int i = 0; i < data.length; i++) {
+    // rval.add(i, new Byte(data[i]));
+    // }
+    // return rval;
+    // }
+
+    public static List<Byte> getListFromByteArray(byte[] array) {
+        List<Byte> listOut = new ArrayList<Byte>();
+
+        for (byte val : array) {
+            listOut.add(val);
         }
-        return rval;
+
+        return listOut;
     }
 
 
-    public static ArrayList<Byte> toByteArray(byte[] data) {
-        ArrayList<Byte> rval = new ArrayList<>(data.length);
-        for (int i = 0; i < data.length; i++) {
-            rval.add(i, new Byte(data[i]));
+    public static byte[] getByteArrayFromList(List<Byte> list) {
+        byte[] out = new byte[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            out[i] = list.get(i);
         }
-        return rval;
+
+        return out;
     }
 
 
@@ -233,17 +253,6 @@ public class ByteUtil {
     }
 
 
-    public static List<Byte> getListFromByteArray(byte[] array) {
-        List<Byte> listOut = new ArrayList<Byte>();
-
-        for (byte val : array) {
-            listOut.add(val);
-        }
-
-        return listOut;
-    }
-
-
     public static int makeUnsignedShort(int i, int j) {
         int k = (i & 0xff) << 8 | j & 0xff;
         return k;
@@ -275,19 +284,20 @@ public class ByteUtil {
     }
 
 
-    public static byte[] getByteArrayFromList(List<Byte> list) {
-        byte[] out = new byte[list.size()];
-
-        for (int i = 0; i < list.size(); i++) {
-            out[i] = list.get(i);
-        }
-
-        return out;
+    public static String getHex(byte abyte0[]) {
+        return abyte0 != null ? getHex(abyte0, abyte0.length) : null;
     }
 
 
-    public static String getHex(byte abyte0[]) {
-        return abyte0 != null ? getHex(abyte0, abyte0.length) : null;
+    public static String getString(short abyte0[]) {
+        StringBuilder sb = new StringBuilder();
+
+        for (short i : abyte0) {
+            sb.append(i);
+            sb.append(" ");
+        }
+
+        return sb.toString();
     }
 
 
@@ -370,12 +380,17 @@ public class ByteUtil {
     }
 
 
-    public static byte[] createByteArray(String dataFull, int startIndex) {
-        return createByteArray(dataFull, startIndex, dataFull.length());
+    public static byte[] createByteArrayFromCompactString(String dataFull) {
+        return createByteArrayFromCompactString(dataFull, 0, dataFull.length());
     }
 
 
-    public static byte[] createByteArray(String dataFull, int startIndex, int length) {
+    public static byte[] createByteArrayFromCompactString(String dataFull, int startIndex) {
+        return createByteArrayFromCompactString(dataFull, startIndex, dataFull.length());
+    }
+
+
+    public static byte[] createByteArrayFromCompactString(String dataFull, int startIndex, int length) {
 
         String data = dataFull.substring(startIndex);
 

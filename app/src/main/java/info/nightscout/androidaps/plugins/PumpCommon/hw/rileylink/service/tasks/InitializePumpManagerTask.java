@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLink
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.utils.SP;
 
 /**
@@ -39,6 +40,11 @@ public class InitializePumpManagerTask extends ServiceTask {
         lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
 
         RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency = lastGoodFrequency;
+
+        if (RileyLinkUtil.getRileyLinkTargetFrequency() == null) {
+            String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
+
+        }
 
         if ((lastGoodFrequency > 0.0d)
             && RileyLinkUtil.getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {

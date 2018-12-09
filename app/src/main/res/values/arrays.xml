@@ -158,7 +158,7 @@
     </string-array>
 
     <string-array name="medtronicPumpFreqArray">
-        <item>@string/medtronic_pump_frequency_us</item>
+        <item>@string/medtronic_pump_frequency_us_ca</item>
         <item>@string/medtronic_pump_frequency_worldwide</item>
     </string-array>
 

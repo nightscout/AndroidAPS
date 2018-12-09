@@ -81,7 +81,7 @@ public enum RileyLinkServiceState {
             this == RileyLinkServiceState.BluetoothReady || //
             this == RileyLinkServiceState.RileyLinkInitializing || //
         this == RileyLinkReady
-        // this == RileyLinkServiceState.RileyLinkError
+        // this == RileyLinkServiceState.RileyLinkBLEError
         );
     }
 

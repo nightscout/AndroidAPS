@@ -27,6 +27,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCommon.data.PumpStatus;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpDriverState;
@@ -141,40 +142,40 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     public boolean isConnected() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("isConnected [PumpPluginAbstract].");
         return PumpDriverState.isConnected(pumpState);
     }
 
 
     public boolean isConnecting() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("isConnecting [PumpPluginAbstract].");
         return pumpState == PumpDriverState.Connecting;
     }
 
 
     public void connect(String reason) {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("connect (reason={}) [PumpPluginAbstract] - default (empty) implementation.", reason);
     }
 
 
     public void disconnect(String reason) {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation.", reason);
     }
 
 
     public void stopConnecting() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
 
     @Override
     public boolean isHandshakeInProgress() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("isHandshakeInProgress [PumpPluginAbstract] - default (empty) implementation.");
         return false;
     }
@@ -182,50 +183,57 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     public void finishHandshaking() {
-        if (displayConnectionMessages)
+        if (displayConnectionMessages && isLoggingEnabled())
             LOG.warn("finishHandshaking [PumpPluginAbstract] - default (empty) implementation.");
     }
 
 
     public void getPumpStatus() {
-        LOG.warn("getPumpStatus [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("getPumpStatus [PumpPluginAbstract] - Not implemented.");
     }
 
 
     // Upload to pump new basal profile
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        LOG.warn("setNewBasalProfile [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("setNewBasalProfile [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public boolean isThisProfileSet(Profile profile) {
-        LOG.warn("isThisProfileSet [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("isThisProfileSet [PumpPluginAbstract] - Not implemented.");
         return true;
     }
 
 
     public long lastDataTime() {
-        LOG.warn("lastDataTime [PumpPluginAbstract].");
+        if (isLoggingEnabled())
+            LOG.warn("lastDataTime [PumpPluginAbstract].");
         return pumpStatus.lastConnection;
     }
 
 
     public double getBaseBasalRate() {
-        LOG.warn("getBaseBasalRate [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("getBaseBasalRate [PumpPluginAbstract] - Not implemented.");
         return 0.0d;
     } // base basal rate, not temp basal
 
 
     public void stopBolusDelivering() {
-        LOG.warn("stopBolusDelivering [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("stopBolusDelivering [PumpPluginAbstract] - Not implemented.");
     }
 
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
             boolean enforceNew) {
-        LOG.warn("setTempBasalAbsolute [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("setTempBasalAbsolute [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -233,13 +241,15 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
             boolean enforceNew) {
-        LOG.warn("setTempBasalPercent [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("setTempBasalPercent [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        LOG.warn("setExtendedBolus [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("setExtendedBolus [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -248,13 +258,15 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        LOG.warn("cancelTempBasal [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("cancelTempBasal [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public PumpEnactResult cancelExtendedBolus() {
-        LOG.warn("cancelExtendedBolus [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("cancelExtendedBolus [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -266,7 +278,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // }
 
     public String deviceID() {
-        LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
         return "FakeDevice";
     }
 
@@ -281,14 +294,16 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // Short info for SMS, Wear etc
 
     public boolean isFakingTempsByExtendedBoluses() {
-        LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
         return false;
     }
 
 
     @Override
     public PumpEnactResult loadTDDs() {
-        LOG.warn("loadTDDs [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("loadTDDs [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -383,7 +398,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
-                LOG.error("deliverTreatment: Invalid input");
+                if (isLoggingEnabled())
+                    LOG.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult().success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
                     .comment(MainApp.gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
@@ -399,7 +415,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                 bolusingEvent.percent = 100;
                 MainApp.bus().post(bolusingEvent);
 
-                LOG.debug("deliverTreatment: Carb only treatment.");
+                if (isLoggingEnabled())
+                    LOG.debug("deliverTreatment: Carb only treatment.");
 
                 return new PumpEnactResult().success(true).enacted(true).bolusDelivered(0d)
                     .carbsDelivered(detailedBolusInfo.carbs).comment(MainApp.gs(R.string.virtualpump_resultok));
@@ -408,6 +425,11 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
             triggerUIChange();
         }
 
+    }
+
+
+    public boolean isLoggingEnabled() {
+        return L.isEnabled(L.PUMP);
     }
 
 

@@ -88,11 +88,11 @@ public class MedtronicUITask {
             }
                 break;
 
-            case PumpState: {
-                // TODO maybe remove this, data returned is almost useless
-                returnData = communicationManager.getPumpState();
-            }
-                break;
+            // case PumpState: {
+            // // TODO maybe remove this, data returned is almost useless
+            // returnData = communicationManager.getPumpState();
+            // }
+            // break;
 
             // case "RefreshData.GetBolus": {
             // returnData = communicationManager.getBolusStatus();

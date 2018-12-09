@@ -87,7 +87,7 @@ public class SendAndListen extends RileyLinkCommand {
             bytes.add(preambleBuf[3]);
         }
 
-        return ByteUtil.concat(ByteUtil.fromByteArray(bytes), packetToSend.getEncoded());
+        return ByteUtil.concat(ByteUtil.getByteArrayFromList(bytes), packetToSend.getEncoded());
 
     }
 }
