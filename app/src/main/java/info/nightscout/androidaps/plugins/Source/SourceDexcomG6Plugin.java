@@ -90,17 +90,20 @@ public class SourceDexcomG6Plugin extends PluginBase implements BgSourceInterfac
 
         if (bundle.containsKey("sensorInsertionTime")) {
             long sensorInsertionTime = bundle.getLong("sensorInsertionTime");
-            if (L.isEnabled(L.BGSOURCE)) log.debug("sensorInsertionTime: " + DateUtil.dateAndTimeFullString(sensorInsertionTime));
-            try {
-                if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
-                    JSONObject data = new JSONObject();
-                    data.put("enteredBy", "AndroidAPS-DexcomG6");
-                    data.put("created_at", DateUtil.toISOString(sensorInsertionTime));
-                    data.put("eventType", CareportalEvent.SENSORCHANGE);
-                    NSUpload.uploadCareportalEntryToNS(data);
+            if (L.isEnabled(L.BGSOURCE))
+                log.debug("sensorInsertionTime: " + DateUtil.dateAndTimeFullString(sensorInsertionTime));
+            if (SP.getBoolean(R.string.key_dexcom_lognssensorchange, false)) {
+                try {
+                    if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
+                        JSONObject data = new JSONObject();
+                        data.put("enteredBy", "AndroidAPS-DexcomG6");
+                        data.put("created_at", DateUtil.toISOString(sensorInsertionTime));
+                        data.put("eventType", CareportalEvent.SENSORCHANGE);
+                        NSUpload.uploadCareportalEntryToNS(data);
+                    }
+                } catch (JSONException e) {
+                    log.error("Unhandled exception", e);
                 }
-            } catch (JSONException e) {
-                log.error("Unhandled exception", e);
             }
         }
 

@@ -69,6 +69,8 @@ public class DataService extends IntentService {
             SourceGlimpPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.DEXCOMG5_BG.equals(action)) {
             SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
+        } else if (Intents.DEXCOMG5_BG_NEW.equals(action)) {
+            SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
         } else if (Intents.DEXCOMG6_BG.equals(action)) {
             SourceDexcomG6Plugin.getPlugin().handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
