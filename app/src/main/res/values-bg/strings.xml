@@ -703,7 +703,7 @@
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
-    <string name="dexcomg5_upload">G5 настройки за качване</string>
+    <string name="bgsource_upload">G5 настройки за качване</string>
     <string name="poctech_upload">Poctech настройки за качване</string>
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>

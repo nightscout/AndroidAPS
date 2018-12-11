@@ -704,7 +704,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="btwatchdog_summary">Deactiveert de bluetooth functie van de telefoon gedurende een ogenblik. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="DexcomG5">DexcomG5 App (aangepast)</string>
     <string name="dexcomg5_nsupload_title">Upload BG gegevens naar NS</string>
-    <string name="dexcomg5_upload">G5 Upload instellingen</string>
+    <string name="bgsource_upload">G5 Upload instellingen</string>
     <string name="poctech_upload">Poctech upload instellingen</string>
     <string name="wear_detailed_delta_title">Toon gedetailleerde delta</string>
     <string name="wear_detailed_delta_summary">Toon delta met een extra decimaal punt</string>

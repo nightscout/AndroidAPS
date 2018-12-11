@@ -705,7 +705,7 @@
     <string name="btwatchdog_summary">Vypne na 1 sek bluetooth v telefonu, pokud se nedaří připojit k pumpě. Může to pomoci u telefonů, které mají problémy s BT</string>
     <string name="DexcomG5">DexcomG5 aplikace (upravená)</string>
     <string name="dexcomg5_nsupload_title">Nahrávat data do NS</string>
-    <string name="dexcomg5_upload">Nastavení nahrávání z G5</string>
+    <string name="bgsource_upload">Nastavení nahrávání z G5</string>
     <string name="poctech_upload">Nastavení nahrávání z Poctech</string>
     <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
     <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>

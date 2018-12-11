@@ -703,7 +703,7 @@
     <string name="btwatchdog_summary">Spegnere il bluetooth del telefono per un secondo se non è possibile alcuna connessione al micro. Questo può aiutare in alcuni telefoni.</string>
     <string name="DexcomG5">DexcomG5 App (con correzione)</string>
     <string name="dexcomg5_nsupload_title">Caricare dati di BG al NS</string>
-    <string name="dexcomg5_upload">Impostazioni caricamento G5</string>
+    <string name="bgsource_upload">Impostazioni caricamento G5</string>
     <string name="poctech_upload">Impostazioni di caricamento Poctech</string>
     <string name="wear_detailed_delta_title">Visualizza dettagliata delta</string>
     <string name="wear_detailed_delta_summary">Visualizza delta con una cifra decimale più</string>

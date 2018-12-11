@@ -705,7 +705,7 @@
     <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
     <string name="DexcomG5">DexcomG5 App (modifierad)</string>
     <string name="dexcomg5_nsupload_title">Ladda upp BG-data till Nightscout</string>
-    <string name="dexcomg5_upload">Uppladdningsinställningar för G5</string>
+    <string name="bgsource_upload">Uppladdningsinställningar för G5</string>
     <string name="poctech_upload">Uppladdningsinställningar för Poctech</string>
     <string name="wear_detailed_delta_title">Visa detaljerad delta</string>
     <string name="wear_detailed_delta_summary">Visa delta med en extra decimal</string>

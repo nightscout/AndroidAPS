@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +23,6 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 30.11.2018.
@@ -47,7 +45,7 @@ public class SourceDexcomG6Plugin extends PluginBase implements BgSourceInterfac
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.DexcomG6)
                 .shortName(R.string.dexcomG6_shortname)
-                .preferencesId(R.xml.pref_dexcomg5)
+                .preferencesId(R.xml.pref_bgsource)
                 .description(R.string.description_source_dexcom_g6)
         );
     }

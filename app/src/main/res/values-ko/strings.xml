@@ -703,7 +703,7 @@
     <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
     <string name="DexcomG5">DexcomG5 앱(패치버전)</string>
     <string name="dexcomg5_nsupload_title">NS에 혈당데이터 업로드하기</string>
-    <string name="dexcomg5_upload">G5업로드 세팅</string>
+    <string name="bgsource_upload">G5업로드 세팅</string>
     <string name="poctech_upload">Poctech 업로드 설정</string>
     <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
     <string name="wear_detailed_delta_summary">소수점 자리 추가된 증분값 보여주기</string>

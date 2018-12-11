@@ -696,7 +696,7 @@
     <string name="btwatchdog_summary">Apaga el bluetooth del móvil por un segundo si no hay conexión con la bomba. Esto ayuda con algunos móviles con problemas de establecer conexión bluetooth estable.</string>
     <string name="DexcomG5">Aplicación de DexcomG5 (parcheada)</string>
     <string name="dexcomg5_nsupload_title">Subir datos BG a NS</string>
-    <string name="dexcomg5_upload">Ajuste de subida datos G5</string>
+    <string name="bgsource_upload">Ajuste de subida datos G5</string>
     <string name="poctech_upload">Configuración de carga Poctech</string>
     <string name="wear_detailed_delta_title">Mostrar detalles delta</string>
     <string name="wear_detailed_delta_summary">Mostrar delta con un decimal mas</string>

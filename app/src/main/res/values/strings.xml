@@ -45,6 +45,7 @@
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_dexcom_g5">Receive BG values from the patched Dexcom G5 app.</string>
     <string name="description_source_dexcom_g6">Receive BG values from the patched Dexcom G6 app.</string>
+    <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
     <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
@@ -801,10 +802,10 @@
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="DexcomG6">DexcomG6 App (patched)</string>
+    <string name="eversense">Eversense App (patched)</string>
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
-    <string name="dexcomg5_upload">G5 upload settings</string>
-    <string name="poctech_upload">Poctech upload settings</string>
+    <string name="bgsource_upload">BG upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
@@ -963,6 +964,7 @@
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
     <string name="dexcomG5_shortname" translatable="false">G5</string>
     <string name="dexcomG6_shortname" translatable="false">G6</string>
+    <string name="eversense_shortname" translatable="false">EVR</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>
     <string name="data_choices">Data Choices</string>

@@ -703,7 +703,7 @@
     <string name="btwatchdog_summary">如果没有连接到泵，关闭手机的蓝牙一秒钟再自动打开。这在一些蓝牙堆栈僵死的手机上是有帮助的,</string>
     <string name="DexcomG5">DexcomG5 app (补丁)</string>
     <string name="dexcomg5_nsupload_title">将 数据血糖数据上传到 NS服务器</string>
-    <string name="dexcomg5_upload">G5 上传设置</string>
+    <string name="bgsource_upload">G5 上传设置</string>
     <string name="poctech_upload">Poctech 上传设置</string>
     <string name="wear_detailed_delta_title">显示详细的增量</string>
     <string name="wear_detailed_delta_summary">增量再多显示一个小数位</string>

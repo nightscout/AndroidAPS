@@ -47,7 +47,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 .fragmentClass(BGSourceFragment.class.getName())
                 .pluginName(R.string.DexcomG5)
                 .shortName(R.string.dexcomG5_shortname)
-                .preferencesId(R.xml.pref_dexcomg5)
+                .preferencesId(R.xml.pref_bgsource)
                 .description(R.string.description_source_dexcom_g5)
         );
     }
