@@ -1,5 +1,9 @@
 package info.nightscout.androidaps.plugins.PumpInsight.history;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.utils.SP;
 
 /**
@@ -7,18 +11,16 @@ import info.nightscout.utils.SP;
  */
 
 public class PumpIdCache {
+    private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
     private static final String INSIGHT_PUMP_ID_PREF = "insight-pump-id";
     private static long cachedPumpSerialNumber = -1;
 
-    private static void log(String msg) {
-        android.util.Log.e("PumpIdCache", msg);
-    }
-
     static void updatePumpSerialNumber(long pump_serial_number) {
         if (pump_serial_number != cachedPumpSerialNumber) {
             cachedPumpSerialNumber = pump_serial_number;
-            log("Updating pump serial number: " + pump_serial_number);
+            if (L.isEnabled(L.PUMP))
+                log.debug("Updating pump serial number: " + pump_serial_number);
             SP.putLong(INSIGHT_PUMP_ID_PREF, cachedPumpSerialNumber);
         }
     }

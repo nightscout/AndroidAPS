@@ -33,14 +33,14 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(L.OBJECTIVES);
+    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
 
     private static ObjectivesPlugin objectivesPlugin;
 
-    public static List<Objective> objectives = new ArrayList<>();
-    public static boolean bgIsAvailableInNS = false;
-    public static boolean pumpStatusIsAvailableInNS = false;
-    public static Integer manualEnacts = 0;
+    public List<Objective> objectives = new ArrayList<>();
+    public boolean bgIsAvailableInNS = false;
+    public boolean pumpStatusIsAvailableInNS = false;
+    public Integer manualEnacts = 0;
 
     public static ObjectivesPlugin getPlugin() {
         if (objectivesPlugin == null) {
@@ -65,7 +65,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -91,11 +91,11 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         saveProgress();
     }
 
-    public static void saveProgress() {
+    public void saveProgress() {
         SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
         SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
         SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
-        if (L.isEnabled(L.OBJECTIVES))
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives stored");
         MainApp.bus().post(new EventObjectivesSaved());
     }
@@ -108,11 +108,11 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        if (L.isEnabled(L.OBJECTIVES))
+        if (L.isEnabled(L.CONSTRAINTS))
             log.debug("Objectives loaded");
     }
 
-    public static List<Objective> getObjectives() {
+    public List<Objective> getObjectives() {
         return objectives;
     }
 

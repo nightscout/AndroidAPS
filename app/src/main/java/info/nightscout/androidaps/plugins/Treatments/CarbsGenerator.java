@@ -11,6 +11,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.utils.T;
 
 import static info.nightscout.utils.DateUtil.now;
 
@@ -35,8 +36,8 @@ public class CarbsGenerator {
         carbInfo.context = MainApp.instance();
         carbInfo.source = Source.USER;
         carbInfo.notes = notes;
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now()) {
-            ConfigBuilderPlugin.getCommandQueue().bolus(carbInfo, new Callback() {
+        if (ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo && carbInfo.date <= now() && carbInfo.date > now()- T.mins(2).msecs()) {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(carbInfo, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -50,6 +51,8 @@ public class CarbsGenerator {
                 }
             });
         } else {
+            // Don't send to pump if it is in the future or more than 5 minutes in the past
+            // as pumps might return those as as "now" when reading the history.
             TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo, false);
         }
     }

@@ -33,7 +33,7 @@ public class CommandSetProfile extends Command {
 
     @Override
     public void execute() {
-        if (ConfigBuilderPlugin.getCommandQueue().isThisProfileSet(profile)) {
+        if (ConfigBuilderPlugin.getPlugin().getCommandQueue().isThisProfileSet(profile)) {
             if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("Correct profile already set. profile: " + profile.toString());
             if (callback != null)
@@ -41,7 +41,7 @@ public class CommandSetProfile extends Command {
             return;
         }
 
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setNewBasalProfile(profile);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().setNewBasalProfile(profile);
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted + " profile: " + profile.toString());
         if (callback != null)

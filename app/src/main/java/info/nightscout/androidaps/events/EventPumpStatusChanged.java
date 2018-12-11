@@ -10,9 +10,10 @@ import info.nightscout.androidaps.R;
 public class EventPumpStatusChanged extends Event {
     public static final int CONNECTING = 0;
     public static final int CONNECTED = 1;
-    public static final int PERFORMING = 2;
-    public static final int DISCONNECTING = 3;
-    public static final int DISCONNECTED = 4;
+    public static final int HANDSHAKING = 2;
+    public static final int PERFORMING = 3;
+    public static final int DISCONNECTING = 4;
+    public static final int DISCONNECTED = 5;
 
     public int sStatus = DISCONNECTED;
     public int sSecondsElapsed = 0;
@@ -47,6 +48,8 @@ public class EventPumpStatusChanged extends Event {
     public String textStatus() {
         if (sStatus == CONNECTING)
             return String.format(MainApp.gs(R.string.danar_history_connectingfor), sSecondsElapsed);
+        else if (sStatus == HANDSHAKING)
+            return MainApp.gs(R.string.handshaking);
         else if (sStatus == CONNECTED)
             return MainApp.gs(R.string.connected);
         else if (sStatus == PERFORMING)

@@ -42,6 +42,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isSMBModeEnabled(new Constraint<>(true));
     }
 
+    public Constraint<Boolean> isUAMEnabled() {
+        return isUAMEnabled(new Constraint<>(true));
+    }
+
     public Constraint<Boolean> isAdvancedFilteringEnabled() {
         return isAdvancedFilteringEnabled(new Constraint<>(true));
     }
@@ -56,6 +60,10 @@ public class ConstraintChecker implements ConstraintsInterface {
 
     public Constraint<Double> getMaxBolusAllowed() {
         return applyBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS));
+    }
+
+    public Constraint<Double> getMaxExtendedBolusAllowed() {
+        return applyExtendedBolusConstraints(new Constraint<>(Constants.REALLYHIGHBOLUS));
     }
 
     public Constraint<Integer> getMaxCarbsAllowed() {
@@ -127,6 +135,18 @@ public class ConstraintChecker implements ConstraintsInterface {
     }
 
     @Override
+    public Constraint<Boolean> isUAMEnabled(Constraint<Boolean> value) {
+
+        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
+            constraint.isUAMEnabled(value);
+        }
+        return value;
+    }
+
+    @Override
     public Constraint<Boolean> isAdvancedFilteringEnabled(Constraint<Boolean> value) {
         ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
@@ -166,6 +186,17 @@ public class ConstraintChecker implements ConstraintsInterface {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constrain.applyBolusConstraints(insulin);
+        }
+        return insulin;
+    }
+
+    @Override
+    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
+            constrain.applyExtendedBolusConstraints(insulin);
         }
         return insulin;
     }

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -20,25 +21,28 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.Treatments.dialogs.WizardInfoDialog;
+import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
 import static info.nightscout.utils.DateUtil.now;
@@ -79,7 +83,6 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             holder.carbs.setText(DecimalFormatter.to0Decimal(t.carbs) + " g");
             Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
-            holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(t.isSMB ? "SMB" : t.mealBolus ? MainApp.gs(R.string.mealbolus) : MainApp.gs(R.string.correctionbous));
             holder.ph.setVisibility(t.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(t._id) ? View.VISIBLE : View.GONE);
@@ -93,6 +96,8 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             else
                 holder.date.setTextColor(holder.carbs.getCurrentTextColor());
             holder.remove.setTag(t);
+            holder.calculation.setTag(t);
+            holder.calculation.setVisibility(t.getBoluscalc() == null ? View.INVISIBLE : View.VISIBLE);
         }
 
         @Override
@@ -111,9 +116,9 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             TextView insulin;
             TextView carbs;
             TextView iob;
-            TextView activity;
             TextView mealOrCorrection;
             TextView remove;
+            TextView calculation;
             TextView ph;
             TextView ns;
             TextView invalid;
@@ -125,11 +130,13 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 insulin = (TextView) itemView.findViewById(R.id.treatments_insulin);
                 carbs = (TextView) itemView.findViewById(R.id.treatments_carbs);
                 iob = (TextView) itemView.findViewById(R.id.treatments_iob);
-                activity = (TextView) itemView.findViewById(R.id.treatments_activity);
                 mealOrCorrection = (TextView) itemView.findViewById(R.id.treatments_mealorcorrection);
                 ph = (TextView) itemView.findViewById(R.id.pump_sign);
                 ns = (TextView) itemView.findViewById(R.id.ns_sign);
                 invalid = (TextView) itemView.findViewById(R.id.invalid_sign);
+                calculation = (TextView) itemView.findViewById(R.id.treatments_calculation);
+                calculation.setOnClickListener(this);
+                calculation.setPaintFlags(calculation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 remove = (TextView) itemView.findViewById(R.id.treatments_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -138,6 +145,8 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             @Override
             public void onClick(View v) {
                 final Treatment treatment = (Treatment) v.getTag();
+                if (treatment == null)
+                    return;
                 switch (v.getId()) {
                     case R.id.treatments_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -163,6 +172,18 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
+                        break;
+                    case R.id.treatments_calculation:
+                        FragmentManager manager = getFragmentManager();
+                        // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
+                        // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
+                        if (manager.isStateSaved())
+                            return;
+                        if (treatment.getBoluscalc() != null) {
+                            WizardInfoDialog wizardDialog = new WizardInfoDialog();
+                            wizardDialog.setData(treatment.getBoluscalc());
+                            wizardDialog.show(manager, "WizardInfoDialog");
+                        }
                         break;
                 }
             }

@@ -55,6 +55,7 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
@@ -164,7 +165,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
 
-
     @Subscribe
     public void onStatusEvent(final EventNewBG e) {
         Activity activity = getActivity();
@@ -207,7 +207,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.overview_wizard_dialog, null, false);
+        View view = inflater.inflate(R.layout.overview_wizard_dialog, container, false);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -270,7 +270,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
+        double bolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
@@ -327,8 +327,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 }
                 okClicked = true;
                 final Profile profile = ProfileFunctions.getInstance().getProfile();
+                final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-                if (profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
+                if (pump != null && profile != null && (calculatedTotalInsulin > 0d || calculatedCarbs > 0d)) {
                     String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(calculatedTotalInsulin)).value();
@@ -339,14 +340,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                     if (carbsAfterConstraints > 0)
                         confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";
 
-                    if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
-                        okClicked = false;
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                        builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
-                        builder.setPositiveButton(MainApp.gs(R.string.ok), null);
-                        builder.show();
-                        return;
+                    if (Math.abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints) || !carbsAfterConstraints.equals(calculatedCarbs)) {
+                        confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
                     }
 
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;
@@ -374,7 +369,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
-                                        ConfigBuilderPlugin.getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
@@ -399,8 +394,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                     detailedBolusInfo.boluscalc = boluscalcJSON;
                                     detailedBolusInfo.source = Source.USER;
                                     detailedBolusInfo.notes = finalNotes;
-                                    if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
-                                        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                    if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                             @Override
                                             public void run() {
                                                 if (!result.success) {
@@ -434,7 +429,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void initDialog() {
         Profile profile = ProfileFunctions.getInstance().getProfile();
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface() != null ? MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() : null;
+        ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null ? ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() : null;
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
@@ -478,14 +473,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void calculateInsulin() {
-        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile();
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null || profileStore == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
         Profile specificProfile;
-        if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active)))
+        if (selectedAlternativeProfile.equals(MainApp.gs(R.string.active))) {
             specificProfile = ProfileFunctions.getInstance().getProfile();
-        else
+            selectedAlternativeProfile = ProfileFunctions.getInstance().getProfileName();
+        } else
             specificProfile = profileStore.getSpecificProfile(selectedAlternativeProfile);
 
         // Entered values
@@ -495,13 +491,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double corrAfterConstraint = c_correction;
         if (c_correction > 0)
             c_correction = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(c_correction)).value();
-        if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
+        if (Math.abs(c_correction - corrAfterConstraint) > 0.01d) { // c_correction != corrAfterConstraint doesn't work
             editCorr.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.bolusconstraintapplied));
             return;
         }
         Integer carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(c_carbs)).value();
-        if (c_carbs - carbsAfterConstraint != 0) {
+        if (Math.abs(c_carbs - carbsAfterConstraint) > 0.01d) {
             editCarbs.setValue(0d);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.carbsconstraintapplied));
             return;
@@ -579,12 +575,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         boluscalcJSON = new JSONObject();
         try {
             boluscalcJSON.put("profile", selectedAlternativeProfile);
+            boluscalcJSON.put("notes", notesEdit.getText());
             boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
             boluscalcJSON.put("targetBGLow", wizard.targetBGLow);
             boluscalcJSON.put("targetBGHigh", wizard.targetBGHigh);
             boluscalcJSON.put("isf", wizard.sens);
             boluscalcJSON.put("ic", wizard.ic);
             boluscalcJSON.put("iob", -(wizard.insulingFromBolusIOB + wizard.insulingFromBasalsIOB));
+            boluscalcJSON.put("bolusiob", wizard.insulingFromBolusIOB);
+            boluscalcJSON.put("basaliob", wizard.insulingFromBasalsIOB);
             boluscalcJSON.put("bolusiobused", bolusIobCheckbox.isChecked());
             boluscalcJSON.put("basaliobused", basalIobCheckbox.isChecked());
             boluscalcJSON.put("bg", c_bg);
@@ -594,11 +593,18 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             boluscalcJSON.put("insulincarbs", wizard.insulinFromCarbs);
             boluscalcJSON.put("carbs", c_carbs);
             boluscalcJSON.put("cob", c_cob);
+            boluscalcJSON.put("cobused", cobCheckbox.isChecked());
             boluscalcJSON.put("insulincob", wizard.insulinFromCOB);
             boluscalcJSON.put("othercorrection", corrAfterConstraint);
             boluscalcJSON.put("insulinsuperbolus", wizard.insulinFromSuperBolus);
             boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
             boluscalcJSON.put("insulin", calculatedTotalInsulin);
+            boluscalcJSON.put("superbolusused", superbolusCheckbox.isChecked());
+            boluscalcJSON.put("insulinsuperbolus", wizard.insulinFromSuperBolus);
+            boluscalcJSON.put("trendused", bgtrendCheckbox.isChecked());
+            boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
+            boluscalcJSON.put("trend", bgTrend.getText());
+            boluscalcJSON.put("ttused", ttCheckbox.isChecked());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }

@@ -116,9 +116,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginTop="-15dp"
-                        android:paddingLeft="-5dp"
-                        android:paddingRight="-5dp"
+                        android:layout_marginTop="-5dp"
+                        android:paddingLeft="-2dp"
+                        android:paddingRight="-2dp"
                         android:text="→"
                         android:textSize="50sp"
                         android:textStyle="bold" />
@@ -401,32 +401,13 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:paddingRight="5dp"
-                                android:text="@string/pump"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:gravity="center_horizontal"
-                                android:paddingEnd="2dp"
-                                android:paddingStart="2dp"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
                                 android:id="@+id/overview_pump"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -447,25 +428,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:paddingRight="5dp"
-                                android:text="@string/openaps"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:gravity="center_horizontal"
-                                android:paddingEnd="2dp"
-                                android:paddingStart="2dp"
-                                android:text=":"
-                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_openaps"
@@ -474,7 +436,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />
@@ -496,32 +458,13 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:paddingRight="5dp"
-                                android:text="@string/uploader"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:gravity="center_horizontal"
-                                android:paddingEnd="2dp"
-                                android:paddingStart="2dp"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
                                 android:id="@+id/overview_uploader"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 android:gravity="start"
                                 android:orientation="horizontal"
-                                android:paddingLeft="5dp"
+                                android:paddingLeft="20dp"
                                 android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="14sp" />

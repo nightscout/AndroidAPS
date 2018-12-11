@@ -39,6 +39,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -49,6 +50,7 @@ import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.T;
 import info.nightscout.utils.ToastUtils;
 
 import static info.nightscout.utils.DateUtil.now;
@@ -131,7 +133,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
         maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
         editInsulin = view.findViewById(R.id.newinsulin_amount);
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
         Button plus1Button = view.findViewById(R.id.newinsulin_plus05);
         plus1Button.setOnClickListener(this);
@@ -210,7 +212,8 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
         try {
             Profile currentProfile = ProfileFunctions.getInstance().getProfile();
-            if (currentProfile == null)
+            final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+            if (currentProfile == null || pump == null)
                 return;
 
             Double insulin = SafeParse.stringToDouble(editInsulin.getText());
@@ -218,13 +221,13 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
 
             List<String> actions = new LinkedList<>();
             if (insulin > 0) {
-                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + insulinAfterConstraints + "U" + "</font>");
+                actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>");
                 if (recordOnlyCheckbox.isChecked()) {
                     actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>");
                 }
             }
 
-            if (!insulinAfterConstraints.equals(insulin))
+            if (Math.abs(insulinAfterConstraints - insulin) >  pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints))
                 actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
 
             int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
@@ -240,7 +243,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
             }
 
             int timeOffset = editTime.getValue().intValue();
-            final long time = now() + timeOffset * 1000 * 60;
+            final long time = now() + T.mins(timeOffset).msecs();
             if (timeOffset != 0) {
                 actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time));
             }
@@ -290,7 +293,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                             } else {
                                 detailedBolusInfo.date = now();
-                                ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                                ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                     @Override
                                     public void run() {
                                         if (!result.success) {

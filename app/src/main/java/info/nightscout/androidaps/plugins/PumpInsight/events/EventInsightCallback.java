@@ -12,7 +12,6 @@ public class EventInsightCallback extends Event {
     public UUID request_uuid;
     public boolean success = false;
     public String message = null;
-    public int response_id = -1;
     public Object response_object = null;
 
     public EventInsightCallback() {

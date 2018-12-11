@@ -15,12 +15,18 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 09.06.2016.
@@ -31,6 +37,8 @@ public class APSResult {
     public long date = 0;
     public String reason;
     public double rate;
+    public int percent;
+    public boolean usePercent = false;
     public int duration;
     public boolean tempBasalRequested = false;
     public boolean bolusRequested = false;
@@ -43,11 +51,42 @@ public class APSResult {
     public Constraint<Double> inputConstraints;
 
     public Constraint<Double> rateConstraint;
+    public Constraint<Integer> percentConstraint;
     public Constraint<Double> smbConstraint;
+
+    public APSResult rate(double rate) {
+        this.rate = rate;
+        return this;
+    }
+
+    public APSResult duration(int duration) {
+        this.duration = duration;
+        return this;
+    }
+
+    public APSResult percent(int percent) {
+        this.percent = percent;
+        return this;
+    }
+
+    public APSResult tempBasalRequested(boolean tempBasalRequested) {
+        this.tempBasalRequested = tempBasalRequested;
+        return this;
+    }
+
+    public APSResult usePercent(boolean usePercent) {
+        this.usePercent = usePercent;
+        return this;
+    }
+
+    public APSResult json(JSONObject json) {
+        this.json = json;
+        return this;
+    }
 
     @Override
     public String toString() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -55,6 +94,10 @@ public class APSResult {
                 ret = MainApp.gs(R.string.canceltemp) + "\n";
             else if (rate == -1)
                 ret = MainApp.gs(R.string.let_temp_basal_run) + "\n";
+            else if (usePercent)
+                ret = MainApp.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(percent) + "% " +
+                        "(" + DecimalFormatter.to2Decimal(percent * pump.getBaseBasalRate() / 100d) + " U/h)\n" +
+                        MainApp.gs(R.string.duration) + ": " + DecimalFormatter.to2Decimal(duration) + " min\n";
             else
                 ret = MainApp.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                         "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) \n" +
@@ -72,7 +115,7 @@ public class APSResult {
     }
 
     public Spanned toSpanned() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -80,9 +123,13 @@ public class APSResult {
                 ret = MainApp.gs(R.string.canceltemp) + "<br>";
             else if (rate == -1)
                 ret = MainApp.gs(R.string.let_temp_basal_run) + "<br>";
+            else if (usePercent)
+                ret = "<b>" + MainApp.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(percent) + "% " +
+                        "(" + DecimalFormatter.to2Decimal(percent * pump.getBaseBasalRate() / 100d) + " U/h)<br>" +
+                        "<b>" + MainApp.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
             else
                 ret = "<b>" + MainApp.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100) + "%) <br>" +
+                        "(" + DecimalFormatter.to2Decimal(rate / pump.getBaseBasalRate() * 100d) + "%) <br>" +
                         "<b>" + MainApp.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>";
 
             // smb
@@ -101,20 +148,32 @@ public class APSResult {
 
     public APSResult clone() {
         APSResult newResult = new APSResult();
-        newResult.reason = reason;
+        doClone(newResult);
+        return newResult;
+    }
+
+    protected void doClone(APSResult newResult) {
+        newResult.date = date;
+        newResult.reason = reason != null ? new String(reason) : null;
         newResult.rate = rate;
         newResult.duration = duration;
         newResult.tempBasalRequested = tempBasalRequested;
         newResult.bolusRequested = bolusRequested;
         newResult.iob = iob;
-        newResult.json = json;
+        try {
+            newResult.json = new JSONObject(json.toString());
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
         newResult.hasPredictions = hasPredictions;
         newResult.smb = smb;
         newResult.deliverAt = deliverAt;
         newResult.rateConstraint = rateConstraint;
         newResult.smbConstraint = smbConstraint;
-        return newResult;
+        newResult.percent = percent;
+        newResult.usePercent = usePercent;
     }
+
 
     public JSONObject json() {
         JSONObject json = new JSONObject();
@@ -228,6 +287,119 @@ public class APSResult {
     }
 
     public boolean isChangeRequested() {
-        return tempBasalRequested || bolusRequested;
+        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
+        // closed loop mode: handle change at driver level
+        if (closedLoopEnabled.value()) {
+            if (L.isEnabled(L.APS))
+                log.debug("DEFAULT: Closed mode");
+            return tempBasalRequested || bolusRequested;
+        }
+
+        // open loop mode: try to limit request
+        if (!tempBasalRequested && !bolusRequested) {
+            if (L.isEnabled(L.APS))
+                log.debug("FALSE: No request");
+            return false;
+        }
+
+        long now = System.currentTimeMillis();
+        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+
+        if (profile == null) {
+            log.error("FALSE: No Profile");
+            return false;
+        }
+
+        if (usePercent) {
+            if (activeTemp == null && percent == 100) {
+                if (L.isEnabled(L.APS))
+                    log.debug("FALSE: No temp running, asking cancel temp");
+                return false;
+            }
+            if (activeTemp != null && Math.abs(percent - activeTemp.tempBasalConvertedToPercent(now, profile)) < pump.getPumpDescription().basalStep) {
+                if (L.isEnabled(L.APS))
+                    log.debug("FALSE: Temp equal");
+                return false;
+            }
+            // always report zerotemp
+            if (percent == 0) {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Zero temp");
+                return true;
+            }
+            // always report hightemp
+            if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
+                double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
+                if (percent == pumpLimit) {
+                    if (L.isEnabled(L.APS))
+                        log.debug("TRUE: Pump limit");
+                    return true;
+                }
+            }
+            // report change bigger than 30%
+            double percentMinChangeChange = SP.getDouble(R.string.key_loop_openmode_min_change, 30d);
+            percentMinChangeChange /= 100d;
+            double lowThreshold = 1 - percentMinChangeChange;
+            double highThreshold = 1 + percentMinChangeChange;
+            double change = percent / 100d;
+            if (activeTemp != null)
+                change = percent / (double) activeTemp.tempBasalConvertedToPercent(now, profile);
+
+            if (change < lowThreshold || change > highThreshold) {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Outside allowed range " + (change * 100d) + "%");
+                return true;
+            } else {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Inside allowed range " + (change * 100d) + "%");
+                return false;
+            }
+        } else {
+            if (activeTemp == null && rate == pump.getBaseBasalRate()) {
+                if (L.isEnabled(L.APS))
+                    log.debug("FALSE: No temp running, asking cancel temp");
+                return false;
+            }
+            if (activeTemp != null && Math.abs(rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+                if (L.isEnabled(L.APS))
+                    log.debug("FALSE: Temp equal");
+                return false;
+            }
+            // always report zerotemp
+            if (rate == 0) {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Zero temp");
+                return true;
+            }
+            // always report hightemp
+            if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+                double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
+                if (rate == pumpLimit) {
+                    if (L.isEnabled(L.APS))
+                        log.debug("TRUE: Pump limit");
+                    return true;
+                }
+            }
+            // report change bigger than 30%
+            double percentMinChangeChange = SP.getDouble(R.string.key_loop_openmode_min_change, 30d);
+            percentMinChangeChange /= 100d;
+            double lowThreshold = 1 - percentMinChangeChange;
+            double highThreshold = 1 + percentMinChangeChange;
+            double change = rate / profile.getBasal();
+            if (activeTemp != null)
+                change = rate / activeTemp.tempBasalConvertedToAbsolute(now, profile);
+
+            if (change < lowThreshold || change > highThreshold) {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Outside allowed range " + (change * 100d) + "%");
+                return true;
+            } else {
+                if (L.isEnabled(L.APS))
+                    log.debug("TRUE: Inside allowed range " + (change * 100d) + "%");
+                return false;
+            }
+        }
     }
 }

@@ -36,7 +36,7 @@ public class BroadcastTreatment {
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             bundle = new Bundle();
             bundle.putString("treatment", treatment.toString());
             bundle.putBoolean("delta", isDelta);
@@ -60,7 +60,7 @@ public class BroadcastTreatment {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             splitted = splitArray(treatments);
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
@@ -87,7 +87,7 @@ public class BroadcastTreatment {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             splitted = splitArray(treatments);
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
@@ -112,7 +112,7 @@ public class BroadcastTreatment {
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
 
-        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if (SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             bundle = new Bundle();
             bundle.putString("treatments", treatments.toString());
             bundle.putBoolean("delta", isDelta);

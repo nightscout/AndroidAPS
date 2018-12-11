@@ -202,12 +202,16 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
-    private void handleTreatmentFromNS(JSONObject json, Intent intent) throws JSONException {
+    private void handleTreatmentFromNS(JSONObject json, Intent intent) {
         // new DB model
         int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
         double insulin = JsonHelper.safeGetDouble(json, "insulin");
         double carbs = JsonHelper.safeGetDouble(json, "carbs");
         String eventType = JsonHelper.safeGetString(json, "eventType");
+        if (eventType == null) {
+            log.debug("Wrong treatment. Ignoring : " + json.toString());
+            return;
+        }
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
             MainApp.bus().post(evtTreatment);
@@ -254,7 +258,7 @@ public class DataService extends IntentService {
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
         if (L.isEnabled(L.DATASERVICE))
-            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+            log.debug("Adding/Updating new MBG: " + careportalEvent.toString());
     }
 
 }

@@ -115,7 +115,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTreatmentData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
             dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
         synchronized (treatments) {
@@ -128,7 +128,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTempBasalData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
             dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
@@ -142,7 +142,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeExtendedBolusData");
         double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder() != null && ProfileFunctions.getInstance().getProfile() != null)
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
             dia = ProfileFunctions.getInstance().getProfile().getDia();
         long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
 
@@ -182,7 +182,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profile == null)
             return total;
 
-        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
             return  total;
 
@@ -209,7 +209,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
         }
 
-        if (!ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
@@ -370,7 +370,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public IobTotal getCalculationToTimeTempBasals(long time, Profile profile, boolean truncate, long truncateTime) {
         IobTotal total = new IobTotal(time);
 
-        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
             return  total;
 
@@ -391,7 +391,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 total.plus(calc);
             }
         }
-        if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+        if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
             IobTotal totalExt = new IobTotal(time);
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
@@ -433,7 +433,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (tb != null)
             return tb;
         ExtendedBolus eb = getExtendedBolusFromHistory(time);
-        if (eb != null && ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
+        if (eb != null && ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
             return new TemporaryBasal(eb);
         return null;
     }
@@ -451,11 +451,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(extendedBolus);
         if (newRecordCreated) {
             if (extendedBolus.durationInMinutes == 0) {
-                if (MainApp.getConfigBuilder().getActivePump().isFakingTempsByExtendedBoluses())
+                if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
                     NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
                 else
                     NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
-            } else if (MainApp.getConfigBuilder().getActivePump().isFakingTempsByExtendedBoluses())
+            } else if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
                 NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
             else
                 NSUpload.uploadExtendedBolus(extendedBolus);
@@ -506,6 +506,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
+        treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
         TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment);
         boolean newRecordCreated = creatOrUpdateResult.newRecord;
         //log.debug("Adding new Treatment record" + treatment.toString());

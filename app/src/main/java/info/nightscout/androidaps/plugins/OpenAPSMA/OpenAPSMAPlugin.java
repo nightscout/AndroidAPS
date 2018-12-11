@@ -66,13 +66,13 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -96,7 +96,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = ProfileFunctions.getInstance().getProfile();
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         if (profile == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
@@ -168,7 +168,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         start = System.currentTimeMillis();
         try {
-            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), iobTotal, glucoseStatus, mealData);
+            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate(), iobTotal, glucoseStatus, mealData);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -182,16 +182,6 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultMA.tempBasalRequested = false;
-        // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
-            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
-            if (activeTemp != null && determineBasalResultMA.rate == 0 && determineBasalResultMA.duration == 0) {
-                // going to cancel
-            } else if (activeTemp != null && Math.abs(determineBasalResultMA.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
-                determineBasalResultMA.tempBasalRequested = false;
-            } else if (activeTemp == null && Math.abs(determineBasalResultMA.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultMA.tempBasalRequested = false;
-        }
 
         determineBasalResultMA.iob = iobTotal;
 

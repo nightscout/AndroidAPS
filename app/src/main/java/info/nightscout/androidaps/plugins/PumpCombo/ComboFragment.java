@@ -77,7 +77,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.combo_refresh_button:
                 refreshButton.setEnabled(false);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("User request", new Callback() {
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("User request", new Callback() {
                     @Override
                     public void run() {
                         runOnUiThread(() -> refreshButton.setEnabled(true));
@@ -124,7 +124,7 @@ public class ComboFragment extends SubscriberFragment implements View.OnClickLis
                 activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(14);
                 activityView.setText(activity);
-            } else if (ConfigBuilderPlugin.getCommandQueue().size() > 0) {
+            } else if (ConfigBuilderPlugin.getPlugin().getCommandQueue().size() > 0) {
                 activityView.setTextColor(Color.WHITE);
                 activityView.setTextSize(14);
                 activityView.setText("");

@@ -51,8 +51,8 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.danars_pairingprogressdialog, container, false);
         getDialog().setTitle(MainApp.gs(R.string.pairing));
-        statusView = (TextView) view.findViewById(R.id.danars_paringprogress_status);
-        progressBar = (ProgressBar) view.findViewById(R.id.danars_paringprogress_progressbar);
+        statusView = (TextView) view.findViewById(R.id.danars_pairingprogress_status);
+        progressBar = (ProgressBar) view.findViewById(R.id.danars_pairingprogress_progressbar);
         button = (Button) view.findViewById(R.id.ok);
 
         progressBar.setMax(100);

@@ -26,6 +26,9 @@ public class MsgSetTime extends MessageBase {
 
     public void handleMessage(byte[] bytes) {
         int result = intFromBuff(bytes, 0, 1);
+        if (result != 1) {
+            failed = true;
+        }
 
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Result of setting time: " + time + " is " + result);

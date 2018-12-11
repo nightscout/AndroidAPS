@@ -9,6 +9,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.T;
 
 public abstract class Objective {
 
@@ -128,9 +129,9 @@ public abstract class Objective {
         }
 
         private String getDurationText(long duration) {
-            int days = (int) Math.floor((double) duration / (24D * 60D * 60D * 1000D));
-            int hours = (int) Math.floor((double) duration / (60D * 60D * 1000D));
-            int minutes = (int) Math.floor((double) duration / (60D * 1000D));
+            int days = (int) Math.floor((double) duration / T.days(1).msecs());
+            int hours = (int) Math.floor((double) duration / T.hours(1).msecs());
+            int minutes = (int) Math.floor((double) duration / T.mins(1).msecs());
             if (days > 0) return MainApp.gq(R.plurals.objective_days, days, days);
             else if (hours > 0) return MainApp.gq(R.plurals.objective_hours, hours, hours);
             else return MainApp.gq(R.plurals.objective_minutes, minutes, minutes);

@@ -126,7 +126,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (MainApp.getConfigBuilder().getActiveProfileInterface() != null && MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() != null) {
+                    if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null) {
                         profileSwitch.setVisibility(View.VISIBLE);
                     } else {
                         profileSwitch.setVisibility(View.GONE);
@@ -142,7 +142,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         return;
                     }
 
-                    final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+                    final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                     final boolean basalprofileEnabled = MainApp.isEngineeringModeOrRelease()
                             && pump.getPumpDescription().isSetBasalProfileCapable;
 
@@ -192,7 +192,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                     else
                         tempTarget.setVisibility(View.VISIBLE);
 
-                    if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().supportsTDDs) tddStats.setVisibility(View.GONE);
+                    if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().supportsTDDs) tddStats.setVisibility(View.GONE);
                     else tddStats.setVisibility(View.VISIBLE);
                 }
             });
@@ -223,13 +223,13 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 break;
             case R.id.actions_extendedbolus_cancel:
                 if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
-                    ConfigBuilderPlugin.getCommandQueue().cancelExtended(null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(null);
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
                 if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
-                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
                     FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;

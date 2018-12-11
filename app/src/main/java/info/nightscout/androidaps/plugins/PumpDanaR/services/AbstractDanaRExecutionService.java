@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -55,18 +56,16 @@ public abstract class AbstractDanaRExecutionService extends Service {
     protected BluetoothSocket mRfcommSocket;
     protected BluetoothDevice mBTDevice;
 
-    protected DanaRPump mDanaRPump = DanaRPump.getInstance();
     protected Treatment mBolusingTreatment = null;
 
-    protected Boolean mConnectionInProgress = false;
+    protected boolean mConnectionInProgress = false;
+    protected boolean mHandshakeInProgress = false;
 
     protected AbstractSerialIOThread mSerialIOThread;
 
     protected IBinder mBinder;
 
     protected final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-
-    protected long lastWrongPumpPassword = 0;
 
     protected long lastApproachingDailyLimit = 0;
 
@@ -129,6 +128,15 @@ public abstract class AbstractDanaRExecutionService extends Service {
 
     public boolean isConnecting() {
         return mConnectionInProgress;
+    }
+
+    public boolean isHandshakeInProgress() {
+        return isConnected() && mHandshakeInProgress;
+    }
+
+    public void finishHandshaking() {
+        mHandshakeInProgress = false;
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
     }
 
     public void disconnect(String from) {
@@ -230,5 +238,14 @@ public abstract class AbstractDanaRExecutionService extends Service {
         return result;
     }
 
-
+    protected void waitForWholeMinute() {
+        while (true) {
+            long time = DateUtil.now();
+            long timeToWholeMinute = (60000 - time % 60000);
+            if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
+                break;
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
+            SystemClock.sleep(Math.min(timeToWholeMinute, 100));
+        }
+    }
 }

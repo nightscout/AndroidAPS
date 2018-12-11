@@ -229,7 +229,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         if (noProfile == null || buttonDate == null || buttonZoom == null || bgGraph == null || iobGraph == null || seekBar == null)
             return;
 
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         final Profile profile = ProfileFunctions.getInstance().getProfile();
 
         if (profile == null) {

@@ -24,7 +24,7 @@ public class BroadcastUrgentAlarm {
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             bundle = new Bundle();
             bundle.putString("data", urgentalarm.toString());
             intent = new Intent(Intents.ACTION_URGENT_ALARM);

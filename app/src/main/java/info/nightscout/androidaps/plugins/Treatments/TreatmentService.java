@@ -122,6 +122,13 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 log.error("Can't create database", e);
                 throw new RuntimeException(e);
             }
+        } else if (oldVersion == 8 && newVersion == 9) {
+            log.debug("Upgrading database from v8 to v9");
+            try {
+                getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` ADD COLUMN boluscalc STRING;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
             if (L.isEnabled(L.DATATREATMENTS))
                 log.info("onUpgrade");
@@ -130,7 +137,13 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     public void onDowngrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        // this method is not supported right now
+        if (oldVersion == 9 && newVersion == 8) {
+            try {
+                getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` DROP COLUMN boluscalc STRING;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void resetTreatments() {
@@ -231,17 +244,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             Treatment treatment = Treatment.createFromJson(json);
             if (treatment != null)
                 createOrUpdate(treatment);
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-    }
-
-    public void createFoodFromJsonIfNotExists(JSONArray array) {
-        try {
-            for (int n = 0; n < array.length(); n++) {
-                JSONObject json = array.getJSONObject(n);
-                createTreatmentFromJsonIfNotExists(json);
-            }
+            else
+                log.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
@@ -327,6 +331,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         scheduleTreatmentChange(treatment);
                         return new UpdateReturn(true, true);
                     }
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Equal record by date from: " + Source.getString(treatment.source) + " " + old.toString());
                     return new UpdateReturn(true, false);
                 }
                 // find by NS _id
@@ -348,6 +354,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             scheduleTreatmentChange(treatment);
                             return new UpdateReturn(true, true);
                         }
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Equal record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                        return new UpdateReturn(true, false);
                     }
                 }
                 getDao().create(treatment);

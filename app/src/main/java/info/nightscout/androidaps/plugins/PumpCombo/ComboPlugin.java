@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
-import com.crashlytics.android.answers.CustomEvent;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +59,10 @@ import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.history.Tdd;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.SP;
 
 /**
@@ -84,42 +82,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     private final static PumpDescription pumpDescription = new PumpDescription();
-
-    static {
-        // these properties can't be changed on the pump, some via desktop configuration software
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
-
-        pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.extendedBolusStep = 0.1d;
-        pumpDescription.extendedBolusDurationStep = 15;
-        pumpDescription.extendedBolusMaxDuration = 12 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 500;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 15;
-        pumpDescription.tempDurationStep15mAllowed = true;
-        pumpDescription.tempDurationStep30mAllowed = true;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.05d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = false;
-
-        pumpDescription.is30minBasalRatesCapable = false;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = true;
-    }
 
     @NonNull
     private final RuffyCommands ruffyScripter;
@@ -173,6 +135,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 .description(R.string.description_pump_combo)
         );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
+        pumpDescription.setPumpDescription(PumpType.AccuChekCombo);
     }
 
     public ComboPump getPump() {
@@ -248,6 +211,15 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     @Override
     public boolean isConnecting() {
         return false;
+    }
+
+    @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
     }
 
     @Override
@@ -353,7 +325,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return basalProfile;
     }
 
-    @NonNull
     @Override
     public long lastDataTime() {
         return pump.lastSuccessfulCmdTime;
@@ -597,10 +568,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             }
             if (waitLoops > 0) {
                 long waitDuration = (System.currentTimeMillis() - waitStartTime) / 1000;
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusTimestampWait")
-                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                        .putCustomAttribute("version", BuildConfig.VERSION)
-                        .putCustomAttribute("waitTimeSecs", String.valueOf(waitDuration)));
                 if (L.isEnabled(L.PUMP))
                     log.debug("Waited " + waitDuration + "s for pump to switch to a fresh minute before bolusing");
             }
@@ -703,11 +670,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         }
     }
 
-    /**
-     * Updates a DetailedBolusInfo from a pump bolus and adds it as a Treatment to the DB.
-     * Handles edge cases when dates aren't unique which are extremely unlikely to occur,
-     * but if they do, the user should be warned since a bolus will be missing from calculations.
-     */
+    /** Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus. */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo dbi = detailedBolusInfo.copy();
         dbi.date = calculateFakeBolusDate(lastPumpBolus);
@@ -715,30 +678,12 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
-            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
-            if (!treatmentCreated) {
-                log.error("Adding treatment record overrode an existing record: " + dbi);
-                if (dbi.isSMB) {
-                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
-                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                        .putCustomAttribute("version", BuildConfig.VERSION)
-                        .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
-                        .putCustomAttribute("issue", "record with same timestamp existed and was overridden"));
-                return false;
-            }
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true);
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
             if (dbi.isSMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
-                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                        .putCustomAttribute("version", BuildConfig.VERSION)
-                        .putCustomAttribute("bolus", String.valueOf(lastPumpBolus.amount))
-                        .putCustomAttribute("issue", "adding record caused exception"));
             }
             return false;
         }
@@ -958,7 +903,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                             Notification.URGENT);
                     n.soundId = R.raw.alarm;
                     MainApp.bus().post(new EventNewNotification(n));
-                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
                 }
                 updateLocalData(commandResult);
             }
@@ -1137,7 +1082,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
-                ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
             }
         }
     }
@@ -1152,10 +1097,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             if (L.isEnabled(L.PUMP))
                 log.debug("Creating temp basal from pump TBR");
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
-                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                    .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("type", "new TBR on pump"));
             TemporaryBasal newTempBasal = new TemporaryBasal()
                     .date(now)
                     .percent(state.tbrPercent)
@@ -1165,10 +1106,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             if (L.isEnabled(L.PUMP))
                 log.debug("Ending AAPS-TBR since pump has no TBR active");
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
-                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                    .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("type", "TBR cancelled on pump"));
             TemporaryBasal tempStop = new TemporaryBasal()
                     .date(now)
                     .duration(0)
@@ -1179,10 +1116,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
             if (L.isEnabled(L.PUMP))
                 log.debug("AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboTbrMismatch")
-                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                    .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("type", "TBR on pump differs from AAPS TBR"));
             TemporaryBasal tempStop = new TemporaryBasal()
                     .date(now - 1000)
                     .duration(0)
@@ -1221,6 +1154,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return historyResult.success;
     }
 
+    /** Return value indicates whether a new record was created. */
     private boolean updateDbFromPumpHistory(@NonNull PumpHistory history) {
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
@@ -1230,8 +1164,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) == null) {
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
+            if (TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }
         }
@@ -1303,20 +1236,14 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         if (bolusSet.size() != historyResult.history.bolusHistory.size()) {
             if (L.isEnabled(L.PUMP))
                 log.debug("Bolus with same amount within the same minute imported. Only one will make it to the DB.");
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ComboBolusToDbError")
-                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                    .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("bolus", "")
-                    .putCustomAttribute("issue", "multiple pump history records with the same time and amount"));
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.
                     combo_error_multiple_boluses_with_identical_timestamp), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
         }
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);
-        if (pumpHistoryChanged) {
-            if (L.isEnabled(L.PUMP))
-                log.debug("Setting 'pumpHistoryChanged' true");
+        if (L.isEnabled(L.PUMP) && pumpHistoryChanged) {
+            log.debug("Setting 'pumpHistoryChanged' true");
         }
 
         List<Bolus> updatedPumpBolusHistory = historyResult.history.bolusHistory;

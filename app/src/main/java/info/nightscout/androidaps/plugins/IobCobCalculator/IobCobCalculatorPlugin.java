@@ -135,18 +135,21 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 long bgTime = bgReadings.get(i).date;
                 long lastbgTime = bgReadings.get(i - 1).date;
                 long diff = lastbgTime - bgTime;
+                diff %= T.mins(5).msecs();
+                if (diff > T.mins(2).plus(T.secs(30)).msecs())
+                    diff = diff - T.mins(5).msecs();
                 totalDiff += diff;
-                if (diff > T.secs(30).msecs() && diff < T.secs(270).msecs()) { // 0:30 - 4:30
+                diff = Math.abs(diff);
+                if (diff > T.secs(30).msecs()) {
                     if (L.isEnabled(L.AUTOSENS))
-                        log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "sec is5minData: " + false);
+                        log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "[s] is5minData: " + false);
                     return false;
                 }
             }
-            double intervals = totalDiff / (5 * 60 * 1000d);
-            double variability = Math.abs(intervals - Math.round(intervals));
-            boolean is5mindata = variability < 0.02;
+            long averageDiff = totalDiff / bgReadings.size() / 1000;
+            boolean is5mindata = averageDiff < 1;
             if (L.isEnabled(L.AUTOSENS))
-                log.debug("Interval detection: values: " + bgReadings.size() + " variability: " + variability + " is5minData: " + is5mindata);
+                log.debug("Interval detection: values: " + bgReadings.size() + " averageDiff: " + averageDiff + "[s] is5minData: " + is5mindata);
             return is5mindata;
         }
     }
@@ -165,7 +168,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         for (int i = 1; i < bgReadings.size(); ++i) {
             if (bgReadings.get(i).date == time) return bgReadings.get(i);
             if (bgReadings.get(i).date > time) continue;
-            lastFound = bgReadings.get(i-1);
+            lastFound = bgReadings.get(i - 1);
             if (bgReadings.get(i).date < time) break;
         }
         return lastFound;
@@ -228,13 +231,15 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
         bucketed_data = new ArrayList<>();
         bucketed_data.add(bgReadings.get(0));
+        if (L.isEnabled(L.AUTOSENS))
+            log.debug("Adding. bgTime: " + DateUtil.toISOString(bgReadings.get(0).date) + " lastbgTime: " + "none-first-value" + " " + bgReadings.get(0).toString());
         int j = 0;
         for (int i = 1; i < bgReadings.size(); ++i) {
             long bgTime = bgReadings.get(i).date;
             long lastbgTime = bgReadings.get(i - 1).date;
             //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + bgReadings.get(i).value + "   Previous: " + new Date(lastbgTime).toString() + " " + bgReadings.get(i - 1).value);
             if (bgReadings.get(i).value < 39 || bgReadings.get(i - 1).value < 39) {
-                continue;
+                throw new IllegalStateException("<39");
             }
 
             long elapsed_minutes = (bgTime - lastbgTime) / (60 * 1000);
@@ -255,7 +260,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     newBgreading.value = Math.round(nextbg);
                     //console.error("Interpolated", bucketed_data[j]);
                     bucketed_data.add(newBgreading);
-                    //log.error("******************************************************************************************************* Adding:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
+                    if (L.isEnabled(L.AUTOSENS))
+                        log.debug("Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
 
                     elapsed_minutes = elapsed_minutes - 5;
                     lastbg = nextbg;
@@ -266,14 +272,16 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 newBgreading.value = bgReadings.get(i).value;
                 newBgreading.date = bgTime;
                 bucketed_data.add(newBgreading);
-                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else if (Math.abs(elapsed_minutes) > 2) {
                 j++;
                 BgReading newBgreading = new BgReading();
                 newBgreading.value = bgReadings.get(i).value;
                 newBgreading.date = bgTime;
                 bucketed_data.add(newBgreading);
-                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else {
                 bucketed_data.get(j).value = (bucketed_data.get(j).value + bgReadings.get(i).value) / 2;
                 //log.error("***** Average");
@@ -281,12 +289,20 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
 
         // Normalize bucketed data
-        for (int i = bucketed_data.size() - 2; i > 0; i--) {
+        for (int i = bucketed_data.size() - 2; i >= 0; i--) {
             BgReading current = bucketed_data.get(i);
             BgReading previous = bucketed_data.get(i + 1);
             long msecDiff = current.date - previous.date;
             long adjusted = (msecDiff - T.mins(5).msecs()) / 1000;
-            log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("Adjusting bucketed data time. Current: " + DateUtil.toISOString(current.date) + " to: " + DateUtil.toISOString(previous.date + T.mins(5).msecs()) + " by " + adjusted + " sec");
+            if (Math.abs(adjusted) > 90) {
+                // too big adjustment, fallback to non 5 min data
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Fallback to non 5 min data");
+                createBucketedDataRecalculated();
+                return;
+            }
             current.date = previous.date + T.mins(5).msecs();
         }
 
@@ -523,7 +539,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     public AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(this, fromTime, toTime);
+            return ConfigBuilderPlugin.getPlugin().getActiveSensitivity().detectSensitivity(this, fromTime, toTime);
         }
     }
 
@@ -590,7 +606,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 log.debug("Ignoring event for non default instance");
             return;
         }
-        if (MainApp.getConfigBuilder() == null)
+        if (ConfigBuilderPlugin.getPlugin() == null)
             return; // app still initializing
         Profile profile = ProfileFunctions.getInstance().getProfile();
         if (profile == null)

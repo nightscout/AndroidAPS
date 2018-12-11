@@ -72,13 +72,13 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -102,7 +102,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = ProfileFunctions.getInstance().getProfile();
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         if (profile == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
@@ -198,6 +198,10 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         MainApp.getConstraintChecker().isAdvancedFilteringEnabled(advancedFiltering);
         inputConstraints.copyReasons(advancedFiltering);
 
+        Constraint<Boolean> uam = new Constraint<>(true);
+        MainApp.getConstraintChecker().isUAMEnabled(uam);
+        inputConstraints.copyReasons(uam);
+
         if (L.isEnabled(L.APS))
             Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         if (L.isEnabled(L.APS))
@@ -205,10 +209,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
 
         start = System.currentTimeMillis();
         try {
-            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
+            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
                     smbAllowed.value(),
+                    uam.value(),
                     advancedFiltering.value()
             );
         } catch (JSONException e) {
@@ -225,16 +230,6 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         // Fix bug determine basal
         if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
             determineBasalResultSMB.tempBasalRequested = false;
-        // limit requests on openloop mode
-        if (!MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
-            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
-            if (activeTemp != null && determineBasalResultSMB.rate == 0 && determineBasalResultSMB.duration == 0) {
-                // going to cancel
-            } else if (activeTemp != null && Math.abs(determineBasalResultSMB.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < 0.1) {
-                determineBasalResultSMB.tempBasalRequested = false;
-            } else if (activeTemp == null && Math.abs(determineBasalResultSMB.rate - ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) < 0.1)
-                determineBasalResultSMB.tempBasalRequested = false;
-        }
 
         determineBasalResultSMB.iob = iobArray[0];
 

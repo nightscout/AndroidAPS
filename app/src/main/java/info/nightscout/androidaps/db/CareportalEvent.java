@@ -97,14 +97,17 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     public String age() {
         Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
         if (OverviewFragment.shorttextmode)
-            return diff.get(TimeUnit.DAYS) +"d" + diff.get(TimeUnit.HOURS) + "h";
+            return diff.get(TimeUnit.DAYS) + "d" + diff.get(TimeUnit.HOURS) + "h";
         else
             return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
     }
 
-    public boolean isOlderThan(double hours) { return getHoursFromStart() > hours; }
+    public boolean isOlderThan(double hours) {
+        return getHoursFromStart() > hours;
+    }
 
-    public String log() {
+    @Override
+    public String toString() {
         return "CareportalEvent{" +
                 "date= " + date +
                 ", date= " + DateUtil.dateAndTimeString(date) +
@@ -136,11 +139,11 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         for (int i = 0; i < list.size(); i++) {
             CareportalEvent event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
-                //log.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                if (L.isEnabled(L.DATABASE))
+                    log.debug("Found event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
                 return true;
             }
         }
-        //log.debug("WWWWWW No found event for time: " + DateUtil.dateAndTimeString(time));
         return false;
     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,33 +15,30 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.utils.T;
 
 /**
  * Created by mike on 16.10.2017.
  */
 
 public class BGSourceFragment extends SubscriberFragment {
-    private static Logger log = LoggerFactory.getLogger(BGSourceFragment.class);
-
     RecyclerView recyclerView;
 
-    Profile profile;
+    String units = Constants.MGDL;
 
-    final long MILLS_TO_THE_PAST = 12 * 60 * 60 * 1000L;
+    final long MILLS_TO_THE_PAST = T.hours(12).msecs();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +55,8 @@ public class BGSourceFragment extends SubscriberFragment {
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false));
             recyclerView.setAdapter(adapter);
 
-            profile = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getDefaultProfile();
+            if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile() != null)
+                units = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile().getUnits();
 
             return view;
         } catch (Exception e) {
@@ -68,8 +67,7 @@ public class BGSourceFragment extends SubscriberFragment {
     }
 
     @Subscribe
-    @SuppressWarnings("unused")
-    public void onStatusEvent(final EventNewBG ev) {
+    public void onStatusEvent(final EventNewBG unused) {
         updateGUI();
     }
 
@@ -77,12 +75,9 @@ public class BGSourceFragment extends SubscriberFragment {
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    long now = System.currentTimeMillis();
-                    recyclerView.swapAdapter(new BGSourceFragment.RecyclerViewAdapter(MainApp.getDbHelper().getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false)), true);
-                }
+            activity.runOnUiThread(() -> {
+                long now = System.currentTimeMillis();
+                recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false)), true);
             });
     }
 
@@ -101,12 +96,12 @@ public class BGSourceFragment extends SubscriberFragment {
         }
 
         @Override
-        public void onBindViewHolder(BgReadingsViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull BgReadingsViewHolder holder, int position) {
             BgReading bgReading = bgReadings.get(position);
             holder.ns.setVisibility(NSUpload.isIdValid(bgReading._id) ? View.VISIBLE : View.GONE);
             holder.invalid.setVisibility(!bgReading.isValid ? View.VISIBLE : View.GONE);
             holder.date.setText(DateUtil.dateAndTimeString(bgReading.date));
-            holder.value.setText(bgReading.valueToUnitsToString(profile.getUnits()));
+            holder.value.setText(bgReading.valueToUnitsToString(units));
             holder.direction.setText(bgReading.directionToSymbol());
             holder.remove.setTag(bgReading);
         }
@@ -144,7 +139,7 @@ public class BGSourceFragment extends SubscriberFragment {
                     case R.id.bgsource_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle(MainApp.gs(R.string.confirmation));
-                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(profile.getUnits()));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(units));
                         builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 /*                                final String _id = bgReading._id;

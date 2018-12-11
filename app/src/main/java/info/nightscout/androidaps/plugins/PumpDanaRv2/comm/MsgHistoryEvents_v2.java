@@ -26,23 +26,30 @@ public class MsgHistoryEvents_v2 extends MessageBase {
 
     public static long lastEventTimeLoaded = 0;
 
-    public MsgHistoryEvents_v2(long from) {
-        SetCommand(0xE003);
-        GregorianCalendar gfrom = new GregorianCalendar();
-        gfrom.setTimeInMillis(from);
-        AddParamDate(gfrom);
-        done = false;
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("New message");
+    public MsgHistoryEvents_v2() {
+        this(0);
     }
 
-    public MsgHistoryEvents_v2() {
+    public MsgHistoryEvents_v2(long from) {
         SetCommand(0xE003);
-        AddParamByte((byte) 0);
-        AddParamByte((byte) 1);
-        AddParamByte((byte) 1);
-        AddParamByte((byte) 0);
-        AddParamByte((byte) 0);
+
+        if (from > DateUtil.now()) {
+            log.debug("Asked to load from the future");
+            from = 0;
+        }
+
+        if (from == 0) {
+            AddParamByte((byte) 0);
+            AddParamByte((byte) 1);
+            AddParamByte((byte) 1);
+            AddParamByte((byte) 0);
+            AddParamByte((byte) 0);
+        } else {
+            GregorianCalendar gfrom = new GregorianCalendar();
+            gfrom.setTimeInMillis(from);
+            AddParamDate(gfrom);
+        }
+
         done = false;
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("New message");
@@ -67,10 +74,10 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 .source(Source.PUMP)
                 .pumpId(datetime);
 
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = datetime;
-        extendedBolus.source = Source.PUMP;
-        extendedBolus.pumpId = datetime;
+        ExtendedBolus extendedBolus = new ExtendedBolus()
+                .date(datetime)
+                .source(Source.PUMP)
+                .pumpId(datetime);
 
         String status = "";
 

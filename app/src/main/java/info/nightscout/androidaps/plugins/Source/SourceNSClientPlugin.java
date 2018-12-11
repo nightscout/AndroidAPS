@@ -86,8 +86,8 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
         }
 
         // Objectives 0
-        ObjectivesPlugin.bgIsAvailableInNS = true;
-        ObjectivesPlugin.saveProgress();
+        ObjectivesPlugin.getPlugin().bgIsAvailableInNS = true;
+        ObjectivesPlugin.getPlugin().saveProgress();
     }
 
     private void storeSgv(JSONObject sgvJson) {
@@ -99,7 +99,7 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
 
     public void detectSource(String source, long timeStamp) {
         if (timeStamp > lastBGTimeStamp) {
-            if (source.contains("G5 Native") || source.contains("AndroidAPS-DexcomG5"))
+            if (source.contains("G5 Native") || source.contains("G6 Native") || source.contains("AndroidAPS-DexcomG5"))
                 isAdvancedFilteringEnabled = true;
             else
                 isAdvancedFilteringEnabled = false;

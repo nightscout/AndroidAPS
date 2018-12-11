@@ -70,6 +70,6 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
     }
 
     public void setSource(String source) {
-        this.advancedFiltering = source.contains("G5 Native");
+        this.advancedFiltering = source.contains("G5 Native")||source.contains("G6 Native");
     }
 }

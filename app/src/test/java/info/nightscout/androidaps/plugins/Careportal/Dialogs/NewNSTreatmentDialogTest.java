@@ -72,7 +72,7 @@ public class NewNSTreatmentDialogTest {
         AAPSMocker.mockDatabaseHelper();
 
         NSProfilePlugin profilePlugin = NSProfilePlugin.getPlugin();
-        when(MainApp.getConfigBuilder().getActiveProfileInterface())
+        when(ConfigBuilderPlugin.getPlugin().getActiveProfileInterface())
                 .thenReturn(profilePlugin);
 
         dialog = new NewNSTreatmentDialog();

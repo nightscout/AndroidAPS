@@ -144,9 +144,9 @@ public class BLEComm {
 
         if (L.isEnabled(L.PUMPBTCOMM))
             log.debug("Trying to create a new connection from: " + from);
+        mBluetoothDeviceName = device.getName();
         mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
-        mBluetoothDeviceName = device.getName();
         return true;
     }
 
@@ -662,7 +662,13 @@ public class BLEComm {
 
     private void SendPumpCheck() {
         // 1st message sent to pump after connect
-        byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, getConnectDeviceName());
+        String devicename = getConnectDeviceName();
+        if(devicename == null || devicename.equals("")){
+            Notification n = new Notification(Notification.DEVICENOTPAIRED, MainApp.gs(R.string.pairfirst), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(n));
+            return;
+        }
+        byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, devicename);
         if (L.isEnabled(L.PUMPBTCOMM))
             log.debug(">>>>> " + "ENCRYPTION__PUMP_CHECK (0x00)" + " " + DanaRS_Packet.toHexString(bytes));
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);

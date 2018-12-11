@@ -48,6 +48,7 @@ public class MsgError extends MessageBase {
             MsgBolusStop.stopped = true;
             bolusingEvent.status = errorString;
             MainApp.bus().post(bolusingEvent);
+            failed=true;
         }
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Error detected: " + errorString);

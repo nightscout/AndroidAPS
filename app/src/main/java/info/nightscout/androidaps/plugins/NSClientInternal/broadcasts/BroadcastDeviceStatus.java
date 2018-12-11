@@ -29,7 +29,7 @@ public class BroadcastDeviceStatus {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
             splitted = BroadcastTreatment.splitArray(statuses);
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();

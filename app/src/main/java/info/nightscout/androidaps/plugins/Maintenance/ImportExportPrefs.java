@@ -28,6 +28,7 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.ToastUtils;
@@ -37,7 +38,7 @@ import info.nightscout.utils.ToastUtils;
  */
 
 public class ImportExportPrefs {
-    private static Logger log = LoggerFactory.getLogger(ImportExportPrefs.class);
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
     static File path = new File(Environment.getExternalStorageDirectory().toString());
     static public final File file = new File(path, MainApp.gs(R.string.app_name) + "Preferences");
 
@@ -134,7 +135,6 @@ public class ImportExportPrefs {
                         }
                         reader.close();
                         editor.commit();
-                        ConfigBuilderPlugin.getPlugin().storeSettings("importSharedPreferences"); // process potentially missing plugins
                         OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
                             log.debug("Exiting");
                             MainApp.instance().stopKeepAliveService();

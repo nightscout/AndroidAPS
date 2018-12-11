@@ -41,7 +41,7 @@ public class LoopPluginTest {
         Assert.assertEquals("LOOP", loopPlugin.getNameShort());
         Assert.assertEquals(true, loopPlugin.hasFragment());
         Assert.assertEquals(true, loopPlugin.showInList(PluginType.LOOP));
-        Assert.assertEquals(R.xml.pref_closedmode, loopPlugin.getPreferencesId());
+        Assert.assertEquals(R.xml.pref_loop, loopPlugin.getPreferencesId());
 
         // Plugin is disabled by default
         Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP));
@@ -97,7 +97,7 @@ public class LoopPluginTest {
         loopPlugin = LoopPlugin.getPlugin();
         virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
 
-        when(ConfigBuilderPlugin.getActivePump()).thenReturn(virtualPumpPlugin);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
     }
 
     class MockedBus extends Bus {

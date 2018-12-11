@@ -127,7 +127,7 @@
                 android:title="@string/ns_create_announcements_from_errors_title" />
 
             <SwitchPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="@string/key_nsclient_localbroadcasts"
                 android:summary="@string/ns_localbroadcasts"
                 android:title="@string/ns_localbroadcasts_title" />

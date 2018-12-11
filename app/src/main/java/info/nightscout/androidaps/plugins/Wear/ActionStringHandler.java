@@ -295,7 +295,7 @@ public class ActionStringHandler {
             }
 
         } else if ("tddstats".equals(act[0])) {
-            Object activePump = MainApp.getConfigBuilder().getActivePump();
+            Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (activePump != null) {
                 // check if DB up to date
                 List<TDD> dummies = new LinkedList<TDD>();
@@ -307,13 +307,13 @@ public class ActionStringHandler {
                     rMessage = "OLD DATA - ";
 
                     //if pump is not busy: try to fetch data
-                    final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                    final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                     if (pump.isBusy()) {
                         rMessage += MainApp.gs(R.string.pumpbusy);
                     } else {
                         rMessage += "trying to fetch data from pump.";
 
-                        ConfigBuilderPlugin.getCommandQueue().loadTDDs(new Callback() {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs(new Callback() {
                             @Override
                             public void run() {
                                 List<TDD> dummies = new LinkedList<TDD>();
@@ -398,7 +398,7 @@ public class ActionStringHandler {
 
         double refTDD = profile.baseBasalSum() * 2;
 
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
             double tdd = historyList.get(0).getTotal();
             historyList.remove(0);
@@ -447,7 +447,7 @@ public class ActionStringHandler {
     }
 
     public static boolean isOldData(List<TDD> historyList) {
-        Object activePump = MainApp.getConfigBuilder().getActivePump();
+        Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
         PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
         PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
         PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
@@ -498,7 +498,7 @@ public class ActionStringHandler {
 
     @NonNull
     private static String getPumpStatus() {
-        return ConfigBuilderPlugin.getActivePump().shortStatus(false);
+        return ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(false);
     }
 
     @NonNull
@@ -512,7 +512,7 @@ public class ActionStringHandler {
             } else {
                 ret += "OPEN LOOP\n";
             }
-            final APSInterface aps = ConfigBuilderPlugin.getActiveAPS();
+            final APSInterface aps = ConfigBuilderPlugin.getPlugin().getActiveAPS();
             ret += "APS: " + ((aps == null) ? "NO APS SELECTED!" : ((PluginBase) aps).getName());
             if (LoopPlugin.lastRun != null) {
                 if (LoopPlugin.lastRun.lastAPSRun != null)
@@ -566,7 +566,7 @@ public class ActionStringHandler {
             return "No profile set :(";
         }
 
-        APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+        APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
         if (usedAPS == null) {
             return "No active APS :(!";
         }
@@ -582,7 +582,7 @@ public class ActionStringHandler {
             ret += MainApp.gs(R.string.canceltemp) + "\n";
         } else {
             ret += MainApp.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
-                    "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getActivePump().getBaseBasalRate() * 100) + "%)\n" +
+                    "(" + DecimalFormatter.to2Decimal(result.rate / ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate() * 100) + "%)\n" +
                     MainApp.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
         }
         ret += "\n" + MainApp.gs(R.string.reason) + ": " + result.reason;
@@ -715,7 +715,7 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.isValid = false;
         detailedBolusInfo.source = Source.USER;
-        ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {
@@ -732,8 +732,8 @@ public class ActionStringHandler {
         detailedBolusInfo.insulin = amount;
         detailedBolusInfo.carbs = carbs;
         detailedBolusInfo.source = Source.USER;
-        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo) {
-            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {

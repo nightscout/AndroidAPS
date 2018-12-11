@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
@@ -88,36 +89,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
                 .description(R.string.description_pump_dana_rs)
         );
 
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.05d;
-
-        pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d;
-        pumpDescription.extendedBolusDurationStep = 30;
-        pumpDescription.extendedBolusMaxDuration = 8 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 200;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 60;
-        pumpDescription.tempDurationStep15mAllowed = true;
-        pumpDescription.tempDurationStep30mAllowed = true;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.04d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = true;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = true;
+        pumpDescription.setPumpDescription(PumpType.DanaRS);
     }
 
     @Override
@@ -222,6 +194,15 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
+    public boolean isHandshakeInProgress() {
+        return false;
+    }
+
+    @Override
+    public void finishHandshaking() {
+    }
+
+    @Override
     public void disconnect(String from) {
         if (L.isEnabled(L.PUMP))
             log.debug("RS disconnect from: " + from);
@@ -280,6 +261,11 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
         insulin.setIfSmaller(DanaRPump.getInstance().maxBolus, String.format(MainApp.gs(R.string.limitingbolus), DanaRPump.getInstance().maxBolus, MainApp.gs(R.string.pumplimit)), this);
         return insulin;
+    }
+
+    @Override
+    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+        return applyBolusConstraints(insulin);
     }
 
     // Profile interface
@@ -432,9 +418,25 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
-            if (!result.success)
-                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode);
-            else
+            if (!result.success) {
+                String error = "" + DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode;
+                switch (DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode) {
+                    // 4 reported as max bolus violation. Check later
+                    case 0x10:
+                        error = MainApp.gs(R.string.maxbolusviolation);
+                        break;
+                    case 0x20:
+                        error = MainApp.gs(R.string.commanderror);
+                        break;
+                    case 0x40:
+                        error = MainApp.gs(R.string.speederror);
+                        break;
+                    case 0x80:
+                        error = MainApp.gs(R.string.insulinlimitviolation);
+                        break;
+                }
+                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, error);
+            } else
                 result.comment = MainApp.gs(R.string.virtualpump_resultok);
             if (L.isEnabled(L.PUMP))
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
@@ -625,7 +627,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     @Override
     public synchronized PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         DanaRPump pump = DanaRPump.getInstance();
-        insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+        insulin = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);

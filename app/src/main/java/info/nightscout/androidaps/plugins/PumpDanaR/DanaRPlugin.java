@@ -21,9 +21,9 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
@@ -47,35 +47,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public DanaRPlugin() {
         super();
         useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.05d;
-
-        pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d;
-        pumpDescription.extendedBolusDurationStep = 30;
-        pumpDescription.extendedBolusMaxDuration = 8 * 60;
-
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
-
-        pumpDescription.maxTempPercent = 200;
-        pumpDescription.tempPercentStep = 10;
-
-        pumpDescription.tempDurationStep = 60;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = true;
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.04d;
-
-        pumpDescription.isRefillingCapable = true;
-
-        pumpDescription.storesCarbInfo = false;
-
-        pumpDescription.supportsTDDs = true;
-        pumpDescription.needsManualTDDLoad = true;
+        pumpDescription.setPumpDescription(PumpType.DanaR);
     }
 
     @Override
@@ -172,7 +144,17 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     @Override
     public boolean isInitialized() {
         DanaRPump pump = DanaRPump.getInstance();
-        return pump.lastConnection > 0 && pump.isExtendedBolusEnabled && pump.maxBasal > 0;
+        return pump.lastConnection > 0 && pump.isExtendedBolusEnabled && pump.maxBasal > 0 && pump.isPasswordOK();
+    }
+
+    @Override
+    public boolean isHandshakeInProgress() {
+        return sExecutionService != null && sExecutionService.isHandshakeInProgress();
+    }
+
+    @Override
+    public void finishHandshaking() {
+        sExecutionService.finishHandshaking();
     }
 
     @Override

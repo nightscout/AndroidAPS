@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.tabs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,8 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 30.05.2016.
@@ -57,8 +57,7 @@ public class TabPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (preferences.getBoolean("short_tabtitles", false)) {
+        if (SP.getBoolean(R.string.key_short_tabtitles, false)) {
             return visibleFragmentList.get(position).getNameShort();
         }
         return visibleFragmentList.get(position).getName();

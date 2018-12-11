@@ -44,12 +44,12 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
         View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
 
-        Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
+        Double maxInsulin = MainApp.getConstraintChecker().getMaxExtendedBolusAllowed().value();
         editInsulin = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_insulin);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
-        double extendedDurationStep = ConfigBuilderPlugin.getActivePump().getPumpDescription().extendedBolusDurationStep;
-        double extendedMaxDuration = ConfigBuilderPlugin.getActivePump().getPumpDescription().extendedBolusMaxDuration;
+        double extendedDurationStep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().extendedBolusDurationStep;
+        double extendedMaxDuration = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().extendedBolusMaxDuration;
         editDuration = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_duration);
         editDuration.setParams(extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false);
 
@@ -71,10 +71,10 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
                     String confirmMessage = MainApp.gs(R.string.setextendedbolusquestion);
 
-                    Double insulinAfterConstraint = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
+                    Double insulinAfterConstraint = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += MainApp.gs(R.string.duration) + " " + durationInMinutes + "min ?";
-                    if (insulinAfterConstraint - insulin != 0d)
+                    if (Math.abs(insulinAfterConstraint - insulin) > 0.01d)
                         confirmMessage += "\n" + MainApp.gs(R.string.constraintapllied);
                     insulin = insulinAfterConstraint;
 
@@ -87,7 +87,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            ConfigBuilderPlugin.getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue().extendedBolus(finalInsulin, finalDurationInMinutes, new Callback() {
                                 @Override
                                 public void run() {
                                     if (!result.success) {

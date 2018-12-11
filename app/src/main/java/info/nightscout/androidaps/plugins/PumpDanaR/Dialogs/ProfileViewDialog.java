@@ -55,7 +55,7 @@ public class ProfileViewDialog extends DialogFragment {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfigBuilderPlugin.getCommandQueue().readStatus("ProfileViewDialog", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("ProfileViewDialog", null);
                 dismiss();
             }
         });
@@ -71,13 +71,13 @@ public class ProfileViewDialog extends DialogFragment {
     }
 
     private void setContent() {
-        ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
+        ProfileStore store = ((ProfileInterface)ConfigBuilderPlugin.getPlugin().getActivePump()).getProfile();
         if (store != null) {
             noProfile.setVisibility(View.GONE);
             Profile profile = store.getDefaultProfile();
             units.setText(profile.getUnits());
             dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-            activeProfile.setText(((ProfileInterface) MainApp.getConfigBuilder().getActivePump()).getProfileName());
+            activeProfile.setText(((ProfileInterface) ConfigBuilderPlugin.getPlugin().getActivePump()).getProfileName());
             ic.setText(profile.getIcList());
             isf.setText(profile.getIsfList());
             basal.setText(profile.getBasalList());

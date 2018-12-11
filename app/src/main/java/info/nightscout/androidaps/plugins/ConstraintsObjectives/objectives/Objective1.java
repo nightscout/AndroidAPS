@@ -27,7 +27,7 @@ public class Objective1 extends Objective {
         tasks.add(new Task(R.string.objectives_bgavailableinns) {
             @Override
             public boolean isCompleted() {
-                return ObjectivesPlugin.bgIsAvailableInNS;
+                return ObjectivesPlugin.getPlugin().bgIsAvailableInNS;
             }
         });
         tasks.add(new Task(R.string.nsclienthaswritepermission) {
@@ -50,7 +50,7 @@ public class Objective1 extends Objective {
         tasks.add(new Task(R.string.objectives_pumpstatusavailableinns) {
             @Override
             public boolean isCompleted() {
-                return ObjectivesPlugin.pumpStatusIsAvailableInNS;
+                return ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS;
             }
         });
         tasks.add(new Task(R.string.hasbgdata) {
@@ -68,7 +68,7 @@ public class Objective1 extends Objective {
         tasks.add(new Task(R.string.apsselected) {
             @Override
             public boolean isCompleted() {
-                APSInterface usedAPS = ConfigBuilderPlugin.getActiveAPS();
+                APSInterface usedAPS = ConfigBuilderPlugin.getPlugin().getActiveAPS();
                 if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS))
                     return true;
                 return false;

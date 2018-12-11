@@ -2,6 +2,7 @@ package info.nightscout.androidaps.queue;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 
@@ -34,12 +35,15 @@ public class QueueThread extends Thread {
 
     private PowerManager.WakeLock mWakeLock;
 
-    public QueueThread(CommandQueue queue) {
+    QueueThread(CommandQueue queue) {
         super();
 
         this.queue = queue;
-        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
+        Context context = MainApp.instance().getApplicationContext();
+        if (context != null) {
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
+        }
     }
 
     @Override
@@ -50,7 +54,7 @@ public class QueueThread extends Thread {
 
         try {
             while (true) {
-                PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+                PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                 if (pump == null) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("pump == null");
@@ -101,6 +105,14 @@ public class QueueThread extends Thread {
                     }
                 }
 
+                if (pump.isHandshakeInProgress()) {
+                    if (L.isEnabled(L.PUMPQUEUE))
+                        log.debug("handshaking " + secondsElapsed);
+                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.HANDSHAKING, (int) secondsElapsed));
+                    SystemClock.sleep(100);
+                    continue;
+                }
+
                 if (pump.isConnecting()) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("connecting " + secondsElapsed);
@@ -108,7 +120,6 @@ public class QueueThread extends Thread {
                     SystemClock.sleep(1000);
                     continue;
                 }
-
 
                 if (!pump.isConnected()) {
                     if (L.isEnabled(L.PUMPQUEUE))
@@ -161,6 +172,8 @@ public class QueueThread extends Thread {
             }
         } finally {
             mWakeLock.release();
+            if (L.isEnabled(L.PUMPQUEUE))
+                log.debug("thread end");
         }
     }
 }

@@ -60,7 +60,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     }
 
     private void checkPump() {
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
             long lastConnection = pump.lastDataTime();
@@ -75,14 +75,14 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated);
             }
 
-            if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+            if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
                 MainApp.bus().post(new EventProfileSwitchChange());
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis();
-                ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
             } else if (isBasalOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis();
-                ConfigBuilderPlugin.getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("KeepAlive. Basal outdated.", null);
             }
         }
         if (lastRun != 0 && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {

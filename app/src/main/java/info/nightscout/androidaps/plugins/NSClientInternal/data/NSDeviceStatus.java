@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
@@ -107,8 +108,8 @@ public class NSDeviceStatus {
                 setData(devicestatusJson);
                 if (devicestatusJson.has("pump")) {
                     // Objectives 0
-                    ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                    ObjectivesPlugin.saveProgress();
+                    ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS = true;
+                    ObjectivesPlugin.getPlugin().saveProgress();
                 }
             }
             if (bundle.containsKey("devicestatuses")) {
@@ -119,8 +120,8 @@ public class NSDeviceStatus {
                     setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
-                        ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                        ObjectivesPlugin.saveProgress();
+                        ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS = true;
+                        ObjectivesPlugin.getPlugin().saveProgress();
                     }
                 }
             }
@@ -174,10 +175,14 @@ public class NSDeviceStatus {
     public Spanned getPumpStatus() {
         //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
 
+        StringBuilder string = new StringBuilder();
+        string.append("<span style=\"color:" + MainApp.gs(R.color.defaulttext).replace("#ff", "#") + "\">");
+        string.append(MainApp.gs(R.string.pump));
+        string.append(": </span>");
+
         if (deviceStatusPumpData == null)
             return Html.fromHtml("");
 
-        StringBuilder string = new StringBuilder();
         // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
@@ -329,6 +334,10 @@ public class NSDeviceStatus {
 
     public Spanned getOpenApsStatus() {
         StringBuilder string = new StringBuilder();
+        string.append("<span style=\"color:" + MainApp.gs(R.color.defaulttext).replace("#ff", "#") + "\">");
+        string.append(MainApp.gs(R.string.openaps_short));
+        string.append(": </span>");
+
         // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
@@ -424,6 +433,26 @@ public class NSDeviceStatus {
         }
 
         return minBattery + "%";
+    }
+
+    public Spanned getUploaderStatusSpanned() {
+        StringBuilder string = new StringBuilder();
+        string.append("<span style=\"color:" + MainApp.gs(R.color.defaulttext).replace("#ff", "#") + "\">");
+        string.append(MainApp.gs(R.string.uploader_short));
+        string.append(": </span>");
+
+        Iterator iter = uploaders.entrySet().iterator();
+        int minBattery = 100;
+        while (iter.hasNext()) {
+            Map.Entry pair = (Map.Entry) iter.next();
+            Uploader uploader = (Uploader) pair.getValue();
+            if (minBattery > uploader.battery)
+                minBattery = uploader.battery;
+        }
+
+        string.append(minBattery);
+        string.append("%");
+        return Html.fromHtml(string.toString());
     }
 
     public Spanned getExtendedUploaderStatus() {

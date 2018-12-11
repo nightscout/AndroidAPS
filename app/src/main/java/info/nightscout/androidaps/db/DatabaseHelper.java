@@ -27,6 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
@@ -41,7 +42,9 @@ import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
@@ -74,7 +77,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
     public static final String DATABASE_TDDS = "TDDs";
 
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     public static Long earliestDataChange = null;
 
@@ -133,6 +136,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (oldVersion == 7 && newVersion == 8) {
                 log.debug("Upgrading database from v7 to v8");
+            } else if (oldVersion == 8 && newVersion == 9) {
+                log.debug("Upgrading database from v8 to v9");
             } else {
                 log.info(DatabaseHelper.class.getName(), "onUpgrade");
                 TableUtils.dropTable(connectionSource, TempTarget.class, true);
@@ -149,6 +154,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Can't drop databases", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        log.info("Do nothing for downgrading...");
+        log.debug("oldVersion: {}, newVersion: {}", oldVersion, newVersion);
     }
 
     public int getOldVersion() {
@@ -198,7 +209,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.setFakingStatus(true);
+        VirtualPumpPlugin.getPlugin().setFakingStatus(true);
         scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleExtendedBolusChange();
@@ -234,7 +245,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.setFakingStatus(false);
+        VirtualPumpPlugin.getPlugin().setFakingStatus(false);
         scheduleTemporaryBasalChange();
     }
 
@@ -392,7 +403,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
             queryBuilder.orderBy("date", false);
             queryBuilder.limit(1L);
-            queryBuilder.where().gt("value", 38).and().eq("isValid", true);
+            queryBuilder.where().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgList = daoBgReadings.query(preparedQuery);
 
@@ -430,7 +441,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("date", mills).and().gt("value", 38).and().eq("isValid", true);
+            where.ge("date", mills).and().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
@@ -447,7 +458,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.between("date", start, end).and().gt("value", 38).and().eq("isValid", true);
+            where.between("date", start, end).and().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
@@ -696,7 +707,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
-            String units = JsonHelper.safeGetString(trJson, "units", ProfileFunctions.getInstance().getProfileUnits());
+            String units = JsonHelper.safeGetString(trJson, "units", Constants.MGDL);
             TempTarget tempTarget = new TempTarget()
                     .date(trJson.getLong("mills"))
                     .duration(trJson.getInt("duration"))
@@ -958,15 +969,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
             if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
-                ExtendedBolus extendedBolus = new ExtendedBolus();
-                extendedBolus.source = Source.NIGHTSCOUT;
-                extendedBolus.date = trJson.getLong("mills");
-                extendedBolus.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
-                extendedBolus.durationInMinutes = trJson.getInt("duration");
-                extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
-                extendedBolus._id = trJson.getString("_id");
-                if (!VirtualPumpPlugin.getFakingStatus()) {
-                    VirtualPumpPlugin.setFakingStatus(true);
+                ExtendedBolus extendedBolus = new ExtendedBolus()
+                        .source(Source.NIGHTSCOUT)
+                        .date(trJson.getLong("mills"))
+                        .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0)
+                        .durationInMinutes(trJson.getInt("duration"))
+                        .insulin(trJson.getDouble("originalExtendedAmount"))
+                        ._id(trJson.getString("_id"));
+                // if faking found in NS, adapt AAPS to use it too
+                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -979,8 +991,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
-                if (!VirtualPumpPlugin.getFakingStatus()) {
-                    VirtualPumpPlugin.setFakingStatus(true);
+                // if faking found in NS, adapt AAPS to use it too
+                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -1044,23 +1057,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public boolean createOrUpdate(ExtendedBolus extendedBolus) {
         try {
+            if (L.isEnabled(L.DATABASE))
+                log.debug("EXTENDEDBOLUS: createOrUpdate: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
+
             ExtendedBolus old;
             extendedBolus.date = roundDateToSec(extendedBolus.date);
 
             if (extendedBolus.source == Source.PUMP) {
-                // check for changed from pump change in NS
-                QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
-                Where where = queryBuilder.where();
-                where.eq("pumpId", extendedBolus.pumpId);
-                PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
-                List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
-                if (trList.size() > 0) {
-                    // do nothing, pump history record cannot be changed
-                    return false;
+                // if pumpId == 0 do not check for existing pumpId
+                // used with pumps without history
+                // and insight where record as added first without pumpId
+                // and then is record updated with pumpId
+                if (extendedBolus.pumpId == 0) {
+                    getDaoExtendedBolus().createOrUpdate(extendedBolus);
+                } else {
+                    QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
+                    Where where = queryBuilder.where();
+                    where.eq("pumpId", extendedBolus.pumpId);
+                    PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+                    List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
+                    if (trList.size() > 1) {
+                        log.error("EXTENDEDBOLUS: Multiple records found for pumpId: " + extendedBolus.pumpId);
+                        return false;
+                    }
+                    getDaoExtendedBolus().createOrUpdate(extendedBolus);
                 }
-                getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1074,7 +1097,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         old.copyFrom(extendedBolus);
                         getDaoExtendedBolus().create(old);
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.toString());
+                            log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.log());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
                         scheduleExtendedBolusChange();
@@ -1097,7 +1120,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             old.copyFrom(extendedBolus);
                             getDaoExtendedBolus().create(old);
                             if (L.isEnabled(L.DATABASE))
-                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.toString());
+                                log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.log());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
                             scheduleExtendedBolusChange();
@@ -1107,7 +1130,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1115,7 +1138,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (extendedBolus.source == Source.USER) {
                 getDaoExtendedBolus().create(extendedBolus);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
+                    log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
                 return true;
@@ -1351,7 +1374,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (list.size() == 1) {
                 CareportalEvent record = list.get(0);
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("Removing CareportalEvent record from database: " + record.log());
+                    log.debug("Removing CareportalEvent record from database: " + record.toString());
                 delete(record);
             } else {
                 if (L.isEnabled(L.DATABASE))
@@ -1423,6 +1446,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             queryBuilder.limit(100L);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            return profileSwitches;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
+    public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            queryBuilder.limit(100L);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
@@ -1551,23 +1592,30 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileStore store = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
-                if (store != null) {
-                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
-                    if (profile != null) {
-                        profileSwitch.profileJson = profile.getData().toString();
-                        if (L.isEnabled(L.DATABASE))
-                            log.debug("Profile switch prefilled with JSON from local store");
-                        // Update data in NS
-                        NSUpload.updateProfileSwitch(profileSwitch);
+                ProfileInterface profileInterface = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+                if (profileInterface != null) {
+                    ProfileStore store = profileInterface.getProfile();
+                    if (store != null) {
+                        Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                        if (profile != null) {
+                            profileSwitch.profileJson = profile.getData().toString();
+                            if (L.isEnabled(L.DATABASE))
+                                log.debug("Profile switch prefilled with JSON from local store");
+                            // Update data in NS
+                            NSUpload.updateProfileSwitch(profileSwitch);
+                        } else {
+                            if (L.isEnabled(L.DATABASE))
+                                log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                            return;
+                        }
                     } else {
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                            log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;
                     }
                 } else {
                     if (L.isEnabled(L.DATABASE))
-                        log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                        log.debug("No active profile interface. Ignoring: " + trJson.toString());
                     return;
                 }
             }

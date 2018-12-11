@@ -45,6 +45,12 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
     public DanaRS_Packet_APS_History_Events(long from) {
         this();
         GregorianCalendar cal = new GregorianCalendar();
+
+        if (from > DateUtil.now()) {
+            log.debug("Asked to load from the future");
+            from = 0;
+        }
+
         if (from != 0)
             cal.setTimeInMillis(from);
         else
@@ -89,10 +95,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
 
         TemporaryBasal temporaryBasal = new TemporaryBasal().date(datetime).source(Source.PUMP).pumpId(datetime);
 
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = datetime;
-        extendedBolus.source = Source.PUMP;
-        extendedBolus.pumpId = datetime;
+        ExtendedBolus extendedBolus = new ExtendedBolus().date(datetime).source(Source.PUMP).pumpId(datetime);
 
         String status;
 

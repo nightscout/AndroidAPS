@@ -183,6 +183,7 @@
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="af_lang" translatable="false">Afrikaans</string>
     <string name="cs_lang" translatable="false">Czech</string>
     <string name="en_lang" translatable="false">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -241,11 +242,14 @@
     <string name="el_lang" translatable="false">Greek</string>
     <string name="it_lang" translatable="false">Italian</string>
     <string name="ro_lang" translatable="false">Romanian</string>
+    <string name="pt_lang" translatable="false">Portuguese</string>
     <string name="ru_lang" translatable="false">Russian</string>
+    <string name="sk_lang" translatable="false">Slovak</string>
     <string name="sv_lang" translatable="false">Swedish</string>
     <string name="fr_lang" translatable="false">French</string>
     <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="pl_lang" translatable="false">Polski</string>
+    <string name="tr_lang" translatable="false">Turkish</string>
+    <string name="pl_lang" translatable="false">Polish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
@@ -490,7 +494,7 @@
     <string name="key_openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">Only numeric digits are allowed.</string>
@@ -582,6 +586,7 @@
     <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
     <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
     <string name="resume">Resume</string>
+    <string name="reconnect">Reconnect Pump</string>
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
     <string name="smscommunicator_loopresumed">Loop resumed</string>
@@ -619,6 +624,7 @@
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+    <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">xDrip Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -725,10 +731,10 @@
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
     <string name="waitingforpairing">Waiting for pairing on pump</string>
-    <string name="pairingok">Paring OK</string>
-    <string name="pairingtimedout">Paring timed out</string>
+    <string name="pairingok">Pairing OK</string>
+    <string name="pairingtimedout">Pairing timed out</string>
     <string name="pairing">PAIRING</string>
-    <string name="key_danars_pairingkey" translatable="false">danars_paring_key_</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="danars_nodeviceavailable">No device found so far</string>
@@ -1016,6 +1022,8 @@
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
+    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
+    <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
@@ -1030,6 +1038,7 @@
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
     <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
@@ -1069,7 +1078,7 @@
     <string name="setupwizard_language_prompt">Select your language</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
-    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$d</string>
+    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
     <string name="firstinsulinincrement">First insulin increment</string>
     <string name="secondinsulinincrement">Second insulin increment</string>
     <string name="thirdinsulinincrement">Third insulin increment</string>
@@ -1094,6 +1103,11 @@
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="value_unavailable_short">n/a</string>
+    <string translatable="false" name="key_virtualpump_type">virtualpump_type</string>
+    <string name="virtualpump_type">Virtual Pump Type</string>
+    <string name="virtualpump_definition">Pump Definition</string>
+    <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
@@ -1175,9 +1189,10 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email</string>
-    <string name="key_maintenance_logs_email" translatable="false">email</string>
+    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="invalid_email_message">Invalid Email</string>
-    <string name="key_maintenance_logs_amount" translatable="false">amount of logs to send</string>
+    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
+    <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
     <string name="maintenance_amount">No of Logs to send</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1197,6 +1212,24 @@
     <string name="time_offset">Time offset</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <string name="calculation_short">Calc</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
+    <string name="maxbolusviolation">Max bolus violation</string>
+    <string name="commanderror">Command error</string>
+    <string name="speederror">Speed error</string>
+    <string name="insulinlimitviolation">Insulin limit violation</string>
+    <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="loop_openmode_min_change">Minimal request change [%]</string>
+    <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
+    <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
+    <string name="pairfirst">Please pair your pump with your phone!</string>
+
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

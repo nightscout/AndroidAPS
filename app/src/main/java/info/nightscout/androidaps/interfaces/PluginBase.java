@@ -10,6 +10,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.queue.CommandQueue;
 
 /**
  * Created by mike on 09.06.2016.
@@ -168,7 +169,9 @@ public abstract class PluginBase {
         if (getType() == PluginType.PUMP) {
             new Thread(() -> {
                 SystemClock.sleep(3000);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("Pump driver changed.", null);
+                CommandQueue commandQueue = ConfigBuilderPlugin.getPlugin().getCommandQueue();
+                if (commandQueue != null)
+                    commandQueue.readStatus("Pump driver changed.", null);
             }).start();
         }
     }

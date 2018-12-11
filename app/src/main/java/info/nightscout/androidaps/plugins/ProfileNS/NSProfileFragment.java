@@ -52,6 +52,8 @@ public class NSProfileFragment extends SubscriberFragment {
     TextView isf;
     @BindView(R.id.profileview_basal)
     TextView basal;
+    @BindView(R.id.profileview_basaltotal)
+    TextView basaltotal;
     @BindView(R.id.profileview_target)
     TextView target;
     @BindView(R.id.basal_graph)
@@ -116,6 +118,7 @@ public class NSProfileFragment extends SubscriberFragment {
                 ic.setText(profile.getIcList());
                 isf.setText(profile.getIsfList());
                 basal.setText(profile.getBasalList());
+                basaltotal.setText(String.format(MainApp.gs(R.string.profile_total), DecimalFormatter.to2Decimal(profile.baseBasalSum())));
                 target.setText(profile.getTargetList());
                 basalGraph.show(profile);
             }
@@ -141,6 +144,7 @@ public class NSProfileFragment extends SubscriberFragment {
         ic.setText("");
         isf.setText("");
         basal.setText("");
+        basaltotal.setText("");
         target.setText("");
         activateButton.setVisibility(View.GONE);
     }

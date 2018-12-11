@@ -47,9 +47,9 @@ public class MsgInitConnStatusTime_k extends MessageBase {
                 (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginType.PROFILE, true);
             }
 
-            MainApp.getConfigBuilder().storeSettings("ChangingKoreanDanaDriver");
+            ConfigBuilderPlugin.getPlugin().storeSettings("ChangingKoreanDanaDriver");
             MainApp.bus().post(new EventRefreshGui());
-            ConfigBuilderPlugin.getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }
 

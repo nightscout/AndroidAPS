@@ -26,6 +26,7 @@ public class MsgInitConnStatusBolus extends MessageBase {
     @Override
     public void handleMessage(byte[] bytes) {
         if (bytes.length - 10 > 12) {
+            failed = true;
             return;
         }
         DanaRPump pump = DanaRPump.getInstance();

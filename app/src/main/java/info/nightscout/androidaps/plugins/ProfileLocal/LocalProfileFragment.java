@@ -79,7 +79,7 @@ public class LocalProfileFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        PumpDescription pumpDescription = ConfigBuilderPlugin.getActivePump().getPumpDescription();
+        PumpDescription pumpDescription = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
         View layout = inflater.inflate(R.layout.localprofile_fragment, container, false);
         diaView = (NumberPicker) layout.findViewById(R.id.localprofile_dia);
         diaView.setParams(LocalProfilePlugin.getPlugin().dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
@@ -96,7 +96,7 @@ public class LocalProfileFragment extends SubscriberFragment {
 
         invalidProfile = (TextView) layout.findViewById(R.id.invalidprofile);
 
-        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().isTempBasalCapable) {
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().isTempBasalCapable) {
             layout.findViewById(R.id.localprofile_basal).setVisibility(View.GONE);
         }
 
@@ -156,7 +156,7 @@ public class LocalProfileFragment extends SubscriberFragment {
     public String getSumLabel() {
         ProfileStore profile = LocalProfilePlugin.getPlugin().createProfileStore();
         if (profile != null)
-            return " ∑" + DecimalFormatter.to2Decimal(profile.getDefaultProfile().baseBasalSum()) + "U";
+            return " ∑" + DecimalFormatter.to2Decimal(profile.getDefaultProfile().baseBasalSum()) + MainApp.gs(R.string.insulin_unit_shortname);
         else
             return MainApp.gs(R.string.localprofile);
     }

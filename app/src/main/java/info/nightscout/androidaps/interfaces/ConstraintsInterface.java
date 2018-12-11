@@ -27,6 +27,10 @@ public interface ConstraintsInterface {
         return value;
     }
 
+    default Constraint<Boolean> isUAMEnabled(Constraint<Boolean> value) {
+        return value;
+    }
+
     default Constraint<Boolean> isAdvancedFilteringEnabled(Constraint<Boolean> value) {
         return value;
     }
@@ -40,6 +44,10 @@ public interface ConstraintsInterface {
     }
 
     default Constraint<Double>  applyBolusConstraints(Constraint<Double>  insulin) {
+        return insulin;
+    }
+
+    default Constraint<Double>  applyExtendedBolusConstraints(Constraint<Double>  insulin) {
         return insulin;
     }
 

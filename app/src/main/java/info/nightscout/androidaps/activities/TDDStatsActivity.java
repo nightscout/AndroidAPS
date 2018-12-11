@@ -130,7 +130,7 @@ public class TDDStatsActivity extends Activity {
         }
         totalBaseBasal.setText(TBB);
 
-        if (!ConfigBuilderPlugin.getActivePump().getPumpDescription().needsManualTDDLoad)
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().needsManualTDDLoad)
             reloadButton.setVisibility(View.GONE);
 
         // stats table
@@ -239,7 +239,7 @@ public class TDDStatsActivity extends Activity {
                         statsMessage.setText(MainApp.gs(R.string.danar_stats_warning_Message));
                     }
                 });
-                ConfigBuilderPlugin.getCommandQueue().loadTDDs( new Callback() {
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs( new Callback() {
                     @Override
                     public void run() {
                         loadDataFromDB();
@@ -440,7 +440,7 @@ public class TDDStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
-                if (isOldData(historyList) && ConfigBuilderPlugin.getActivePump().getPumpDescription().needsManualTDDLoad) {
+                if (isOldData(historyList) && ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().needsManualTDDLoad) {
                     statsMessage.setVisibility(View.VISIBLE);
                     statsMessage.setText(MainApp.gs(R.string.danar_stats_olddata_Message));
 
@@ -545,7 +545,7 @@ public class TDDStatsActivity extends Activity {
 
 
     public static boolean isOldData(List<TDD> historyList) {
-        Object activePump = MainApp.getConfigBuilder().getActivePump();
+        Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
         PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
         PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
         PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
