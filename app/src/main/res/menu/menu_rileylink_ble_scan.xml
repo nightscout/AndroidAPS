@@ -5,7 +5,6 @@
 
     <item
         android:id="@+id/rileylink_miScan"
-        android:icon="@drawable/refresh"
         app:showAsAction="ifRoom"
         android:title="Scan"></item>
 </menu>

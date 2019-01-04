@@ -252,80 +252,85 @@ public class MedtronicFragment extends SubscriberFragment {
 
         pumpStatus.rileyLinkError = (RileyLinkError)checkStatusSet(pumpStatus.rileyLinkError, RileyLinkUtil.getError());
 
-        if (pumpStatus.rileyLinkError != null) {
-            int resourceId = pumpStatus.rileyLinkError.getResourceId(getTargetDevice());
-            errorsView.setText(getTranslation(resourceId));
-        } else
-            errorsView.setText("-");
+        if (errorsView != null) {
+            if (pumpStatus.rileyLinkError != null) {
+                int resourceId = pumpStatus.rileyLinkError.getResourceId(getTargetDevice());
+                errorsView.setText(getTranslation(resourceId));
+            } else
+                errorsView.setText("-");
+        }
 
         pumpStatus.pumpDeviceState = (PumpDeviceState)checkStatusSet(pumpStatus.pumpDeviceState,
             MedtronicUtil.getPumpDeviceState());
 
-        if (pumpStatus.pumpDeviceState != null) {
-            // TODO Pump State
+        if (pumpStatusIconView != null) {
 
-            switch (pumpStatus.pumpDeviceState) {
-                case Sleeping:
-                    pumpStatusIconView.setText("{fa-bed}   "); // + pumpStatus.pumpDeviceState.name());
-                    break;
+            if (pumpStatus.pumpDeviceState != null) {
+                // TODO Pump State
 
-                case NeverContacted:
-                case WakingUp:
-                case PumpUnreachable:
-                case ErrorWhenCommunicating:
-                case TimeoutWhenCommunicating:
-                case InvalidConfiguration:
-                    pumpStatusIconView.setText(" " + getTranslation(pumpStatus.pumpDeviceState.getResourceId()));
-                    break;
+                switch (pumpStatus.pumpDeviceState) {
+                    case Sleeping:
+                        pumpStatusIconView.setText("{fa-bed}   "); // + pumpStatus.pumpDeviceState.name());
+                        break;
 
-                // FIXME
-                case Active: {
-                    MedtronicCommandType cmd = MedtronicUtil.getCurrentCommand();
+                    case NeverContacted:
+                    case WakingUp:
+                    case PumpUnreachable:
+                    case ErrorWhenCommunicating:
+                    case TimeoutWhenCommunicating:
+                    case InvalidConfiguration:
+                        pumpStatusIconView.setText(" " + getTranslation(pumpStatus.pumpDeviceState.getResourceId()));
+                        break;
 
-                    LOG.debug("Command: " + cmd);
+                    // FIXME
+                    case Active: {
+                        MedtronicCommandType cmd = MedtronicUtil.getCurrentCommand();
 
-                    if (cmd == null)
-                        pumpStatusIconView.setText(" " + MainApp.gs(pumpStatus.pumpDeviceState.getResourceId()));
-                    else {
-                        Integer resourceId = cmd.getResourceId();
+                        LOG.debug("Command: " + cmd);
 
-                        if (cmd == MedtronicCommandType.GetHistoryData) {
+                        if (cmd == null)
+                            pumpStatusIconView.setText(" " + MainApp.gs(pumpStatus.pumpDeviceState.getResourceId()));
+                        else {
+                            Integer resourceId = cmd.getResourceId();
 
-                            if (MedtronicUtil.frameNumber == null) {
-                                pumpStatusIconView.setText(MainApp.gs(R.string.medtronic_cmd_desc_get_history_request,
-                                    MedtronicUtil.pageNumber));
+                            if (cmd == MedtronicCommandType.GetHistoryData) {
+
+                                if (MedtronicUtil.frameNumber == null) {
+                                    pumpStatusIconView.setText(MainApp.gs(
+                                        R.string.medtronic_cmd_desc_get_history_request, MedtronicUtil.pageNumber));
+                                } else {
+                                    pumpStatusIconView.setText(MainApp.gs(resourceId, MedtronicUtil.pageNumber,
+                                        MedtronicUtil.frameNumber));
+                                }
+
                             } else {
-                                pumpStatusIconView.setText(MainApp.gs(resourceId, MedtronicUtil.pageNumber,
-                                    MedtronicUtil.frameNumber));
+                                if (resourceId == null) {
+                                    pumpStatusIconView.setText(" " + cmd.name());
+                                } else {
+                                    pumpStatusIconView.setText(" " + getTranslation(resourceId));
+                                }
                             }
 
-                        } else {
-                            if (resourceId == null) {
-                                pumpStatusIconView.setText(" " + cmd.name());
-                            } else {
-                                pumpStatusIconView.setText(" " + getTranslation(resourceId));
-                            }
                         }
 
                     }
+                        break;
 
+                    // // FIXME
+                    //
+                    // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                    // break;
+                    //
+                    // // FIXME
+                    //
+                    // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
+                    // break;
+                    default:
+                        LOG.warn("Unknown pump state: " + pumpStatus.pumpDeviceState);
                 }
-                    break;
-
-                // // FIXME
-                //
-                // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                // break;
-                //
-                // // FIXME
-                //
-                // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                // break;
-                default:
-                    LOG.warn("Unknown pump state: " + pumpStatus.pumpDeviceState);
+            } else {
+                pumpStatusIconView.setText("{fa-bed}   ");
             }
-        } else {
-            pumpStatusIconView.setText("{fa-bed}   ");
         }
 
         if (queueView != null) {

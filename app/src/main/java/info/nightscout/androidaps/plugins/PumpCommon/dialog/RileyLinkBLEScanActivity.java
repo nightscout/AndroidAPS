@@ -128,7 +128,7 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
             }
         });
 
-        startScanBLE();
+        prepareForScanning();
     }
 
 
@@ -150,16 +150,19 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.rileylink_miScan:
+            case R.id.rileylink_miScan: {
+                // FIXME
                 scanLeDevice(true);
                 return true;
+            }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
 
-    public void startScanBLE() {
+    public void prepareForScanning() {
         // https://developer.android.com/training/permissions/requesting.html
         // http://developer.radiusnetworks.com/2015/09/29/is-your-beacon-app-ready-for-android-6.html
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -194,10 +197,11 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
                 filters = Arrays.asList(new ScanFilter.Builder().setServiceUuid(
                     ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)).build());
 
-                scanLeDevice(true);
+                // scanLeDevice(true);
             }
         }
 
+        // disable currently selected RL, so that we can discover it
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
     }
 
@@ -224,13 +228,9 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
             Log.d(TAG, scanRecord.toString());
 
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (addDevice(scanRecord))
-                        mLeDeviceListAdapter.notifyDataSetChanged();
-                }
+            runOnUiThread(() -> {
+                if (addDevice(scanRecord))
+                    mLeDeviceListAdapter.notifyDataSetChanged();
             });
         }
 
@@ -238,22 +238,18 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
         @Override
         public void onBatchScanResults(final List<ScanResult> results) {
 
-            runOnUiThread(new Runnable() {
+            runOnUiThread(() -> {
 
-                @Override
-                public void run() {
+                boolean added = false;
 
-                    boolean added = false;
+                for (ScanResult result : results) {
 
-                    for (ScanResult result : results) {
-
-                        if (addDevice(result))
-                            added = true;
-                    }
-
-                    if (added)
-                        mLeDeviceListAdapter.notifyDataSetChanged();
+                    if (addDevice(result))
+                        added = true;
                 }
+
+                if (added)
+                    mLeDeviceListAdapter.notifyDataSetChanged();
             });
         }
 
@@ -293,7 +289,6 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
 
         private String getDeviceDebug(BluetoothDevice device) {
-
             return "BluetoothDevice [name=" + device.getName() + ", address=" + device.getAddress() + //
                 ", type=" + device.getType(); // + ", alias=" + device.getAlias();
         }
