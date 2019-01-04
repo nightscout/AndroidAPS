@@ -10,6 +10,9 @@ import org.junit.runners.Parameterized;
 
 import android.util.Log;
 
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6bGo;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6bLoop;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 
 /**
@@ -62,6 +65,9 @@ public class RFToolsParametrizedUTest {
 
     // @Test
     public void testEncodeGeoff() {
+
+        Encoding4b6bGeoff decoder = new Encoding4b6bGeoff();
+
         /*
          * {0xa7} -> {0xa9, 0x60}
          * {0xa7, 0x12} -> {0xa9, 0x6c, 0x72}
@@ -84,7 +90,7 @@ public class RFToolsParametrizedUTest {
         // LOG.error("test: compare failed.");
         // }
         // testCompose(new byte[] {(byte)0xa7, (byte)0xa7});
-        byte[] bs = RFTools.encode4b6b(new byte[] { (byte)0xa7 });
+        byte[] bs = decoder.encode4b6b(new byte[] { (byte)0xa7 });
         byte[] out = new byte[] { (byte)(0xa9), 0x65 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -93,7 +99,7 @@ public class RFToolsParametrizedUTest {
                     + ByteUtil.shortHexString(bs));
             Assert.fail();
         }
-        bs = RFTools.encode4b6b(new byte[] { (byte)0xa7, 0x12 });
+        bs = decoder.encode4b6b(new byte[] { (byte)0xa7, 0x12 });
         out = new byte[] { (byte)(0xa9), 0x6c, 0x72 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -102,7 +108,7 @@ public class RFToolsParametrizedUTest {
                     + ByteUtil.shortHexString(bs));
             Assert.fail();
         }
-        bs = RFTools.encode4b6b(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
+        bs = decoder.encode4b6b(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
         out = new byte[] { (byte)(0xa9), 0x6c, 0x72, (byte)0xa9, 0x65 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -117,6 +123,9 @@ public class RFToolsParametrizedUTest {
 
     // @Test
     public void testEncodeGo() {
+
+        Encoding4b6bGo decoder = new Encoding4b6bGo();
+
         /*
          * {0xa7} -> {0xa9, 0x60}
          * {0xa7, 0x12} -> {0xa9, 0x6c, 0x72}
@@ -139,7 +148,7 @@ public class RFToolsParametrizedUTest {
         // LOG.error("test: compare failed.");
         // }
         // testCompose(new byte[] {(byte)0xa7, (byte)0xa7});
-        byte[] bs = RFTools.encode4b6b_go(new byte[] { (byte)0xa7 });
+        byte[] bs = decoder.encode4b6b(new byte[] { (byte)0xa7 });
         byte[] out = new byte[] { (byte)(0xa9), 0x65 };
 
         System.out.println("EncodeGo: " + ByteUtil.getHex(bs));
@@ -152,7 +161,7 @@ public class RFToolsParametrizedUTest {
             Assert.fail();
         }
 
-        bs = RFTools.encode4b6b_go(new byte[] { (byte)0xa7, 0x12 });
+        bs = decoder.encode4b6b(new byte[] { (byte)0xa7, 0x12 });
         out = new byte[] { (byte)(0xa9), 0x6c, 0x72 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -162,7 +171,7 @@ public class RFToolsParametrizedUTest {
             Assert.fail();
         }
 
-        bs = RFTools.encode4b6b_go(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
+        bs = decoder.encode4b6b(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
         out = new byte[] { (byte)(0xa9), 0x6c, 0x72, (byte)0xa9, 0x65 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -176,10 +185,12 @@ public class RFToolsParametrizedUTest {
 
 
     // @Test
-    public void testDecodeGo() {
+    public void testDecodeGo() throws Exception {
+
+        Encoding4b6bGo decoder = new Encoding4b6bGo();
 
         // testCompose(new byte[] {(byte)0xa7, (byte)0xa7});
-        byte[] bs = RFTools.encode4b6b(new byte[] { (byte)0xa7 });
+        byte[] bs = decoder.encode4b6b(new byte[] { (byte)0xa7 });
         byte[] out = new byte[] { (byte)(0xa9), 0x65 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -188,7 +199,7 @@ public class RFToolsParametrizedUTest {
                     + ByteUtil.shortHexString(bs));
         }
 
-        byte[] back = RFTools.decode4b6b(out);
+        byte[] back = decoder.decode4b6b(out);
 
         if (ByteUtil.compare(back, bs) != 0) {
             Log.e(
@@ -198,7 +209,7 @@ public class RFToolsParametrizedUTest {
             Assert.fail();
         }
 
-        bs = RFTools.encode4b6b(new byte[] { (byte)0xa7, 0x12 });
+        bs = decoder.encode4b6b(new byte[] { (byte)0xa7, 0x12 });
         out = new byte[] { (byte)(0xa9), 0x6c, 0x72 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -207,7 +218,7 @@ public class RFToolsParametrizedUTest {
                     + ByteUtil.shortHexString(bs));
         }
 
-        back = RFTools.decode4b6b(out);
+        back = decoder.decode4b6b(out);
 
         if (ByteUtil.compare(back, bs) != 0) {
             Log.e(
@@ -217,7 +228,7 @@ public class RFToolsParametrizedUTest {
             Assert.fail();
         }
 
-        bs = RFTools.encode4b6b(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
+        bs = decoder.encode4b6b(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
         out = new byte[] { (byte)(0xa9), 0x6c, 0x72, (byte)0xa9, 0x65 };
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
@@ -226,7 +237,7 @@ public class RFToolsParametrizedUTest {
                     + ByteUtil.shortHexString(bs));
         }
 
-        back = RFTools.decode4b6b(out);
+        back = decoder.decode4b6b(out);
 
         if (ByteUtil.compare(back, bs) != 0) {
             Log.e(
@@ -258,7 +269,10 @@ public class RFToolsParametrizedUTest {
 
     // @Test
     public void testParametrizedGeoffEncode() {
-        byte[] encodedX = RFTools.encode4b6b(this.decoded);
+
+        Encoding4b6bGeoff decoder = new Encoding4b6bGeoff();
+
+        byte[] encodedX = decoder.encode4b6b(this.decoded);
 
         // if (ByteUtil.compare(encodedX, this.encoded) != 0) {
         // Assert.assertEquals(encodedX, encoded);
@@ -269,8 +283,10 @@ public class RFToolsParametrizedUTest {
 
 
     @Test
-    public void geoffDecode() {
-        byte[] decodedX = RFTools.decode4b6b(this.encoded);
+    public void geoffDecode() throws Exception {
+        Encoding4b6bGeoff decoder = new Encoding4b6bGeoff();
+
+        byte[] decodedX = decoder.decode4b6b(this.encoded);
 
         Assert.assertArrayEquals(decoded, decodedX);
     }
@@ -278,31 +294,38 @@ public class RFToolsParametrizedUTest {
 
     @Test
     public void goDecode() {
-        RFTools.DecodeResponseDto decodeResponseDto = RFTools.decode4b6b_go(this.encoded);
-
-        Assert.assertNull(decodeResponseDto.errorData);
-        System.out.println("Result:   " + ByteUtil.getHex(decodeResponseDto.data));
-        System.out.println("Expected: " + ByteUtil.getHex(decoded));
-        Assert.assertArrayEquals(decoded, decodeResponseDto.data);
+        // Encoding4b6bGo decoder = new Encoding4b6bGo();
+        //
+        // DecodeResponseDto decodeResponseDto = decoder.decode4b6b(this.encoded);
+        //
+        // Assert.assertNull(decodeResponseDto.errorData);
+        // System.out.println("Result:   " + ByteUtil.getHex(decodeResponseDto.data));
+        // System.out.println("Expected: " + ByteUtil.getHex(decoded));
+        // Assert.assertArrayEquals(decoded, decodeResponseDto.data);
     }
 
 
     // @Test
     public void loopDecode() {
-        byte[] data = RFTools.decode4b6b_loop(this.encoded);
-
-        // RFTools.DecodeResponseDto decodeResponseDto
-
-        // Assert.assertNull(decodeResponseDto.errorData);
-        System.out.println("Result:   " + ByteUtil.getHex(data));
-        System.out.println("Expected: " + ByteUtil.getHex(decoded));
-        Assert.assertArrayEquals(decoded, data);
+        // Encoding4b6bLoop decoder = new Encoding4b6bLoop();
+        //
+        // byte[] data = decoder.decode4b6b(this.encoded);
+        //
+        // // RFTools.DecodeResponseDto decodeResponseDto
+        //
+        // // Assert.assertNull(decodeResponseDto.errorData);
+        // System.out.println("Result:   " + ByteUtil.getHex(data));
+        // System.out.println("Expected: " + ByteUtil.getHex(decoded));
+        // Assert.assertArrayEquals(decoded, data);
     }
 
 
     @Test
     public void geoffEncode() {
-        byte[] encodedX = RFTools.encode4b6b(this.decoded);
+
+        Encoding4b6bGeoff decoder = new Encoding4b6bGeoff();
+
+        byte[] encodedX = decoder.encode4b6b(this.decoded);
 
         Assert.assertArrayEquals(encoded, encodedX);
     }
@@ -310,7 +333,9 @@ public class RFToolsParametrizedUTest {
 
     @Test
     public void goEncode() {
-        byte[] encodedX = RFTools.encode4b6b_go(this.decoded);
+        Encoding4b6bGo decoder = new Encoding4b6bGo();
+
+        byte[] encodedX = decoder.encode4b6b(this.decoded);
         System.out.println("Result:   " + ByteUtil.getHex(encodedX));
         System.out.println("Expected: " + ByteUtil.getHex(encoded));
         Assert.assertArrayEquals(encoded, encodedX);
@@ -319,7 +344,9 @@ public class RFToolsParametrizedUTest {
 
     @Test
     public void loopEncode() {
-        byte[] encodedX = RFTools.encode4b6b_loop(this.decoded);
+        Encoding4b6bLoop decoder = new Encoding4b6bLoop();
+
+        byte[] encodedX = decoder.encode4b6b(this.decoded);
         System.out.println("Result:   " + ByteUtil.getHex(encodedX));
         System.out.println("Expected: " + ByteUtil.getHex(encoded));
         Assert.assertArrayEquals(encoded, encodedX);

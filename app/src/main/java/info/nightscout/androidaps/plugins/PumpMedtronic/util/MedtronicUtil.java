@@ -449,9 +449,10 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
     public static int pageNumber;
-    public static int frameNumber;
+    public static Integer frameNumber;
 
-    public static void setCurrentCommand(MedtronicCommandType currentCommand, int pageNumber_, int frameNumber_) {
+
+    public static void setCurrentCommand(MedtronicCommandType currentCommand, int pageNumber_, Integer frameNumber_) {
         pageNumber = pageNumber_;
         frameNumber = frameNumber_;
 

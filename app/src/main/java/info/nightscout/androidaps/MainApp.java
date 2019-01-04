@@ -272,6 +272,8 @@ public class MainApp extends Application {
         // SP.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, null);
         SP.remove(MedtronicConst.Statistics.LastPumpHistoryEntry); // FIXME remove
 
+        //SP.putString(MedtronicConst.Prefs.PumpFrequency, "US (916 MHz)");
+
         // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device
         btReceiver = new BroadcastReceiver() {
 

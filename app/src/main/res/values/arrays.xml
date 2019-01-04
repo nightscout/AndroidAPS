@@ -162,5 +162,15 @@
         <item>@string/medtronic_pump_frequency_worldwide</item>
     </string-array>
 
+    <string-array name="medtronicBolusDelay">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+
+    <string-array name="medtronicEncoding">
+        <item>@string/medtronic_pump_encoding_4b6b_local</item>
+        <item>@string/medtronic_pump_encoding_4b6b_rileylink</item>
+    </string-array>
 
 </resources>

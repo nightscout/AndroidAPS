@@ -94,11 +94,15 @@ public class RadioResponse {
             }
 
             switch (RileyLinkUtil.getEncoding()) {
+
                 case Manchester:
+                case FourByteSixByteRileyLink: {
                     decodedOK = true;
                     decodedPayload = encodedPayload;
+                }
                     break;
-                case FourByteSixByte:
+
+                case FourByteSixByteLocal: {
                     byte[] decodeThis = RileyLinkUtil.getEncoding4b6b().decode4b6b(encodedPayload);
                     decodedOK = true;
 
@@ -109,7 +113,9 @@ public class RadioResponse {
                         LOG.error(String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
                             calculatedCRC, receivedCRC));
                     }
+                }
                     break;
+
                 default:
                     throw new NotImplementedException("this {" + RileyLinkUtil.getEncoding().toString()
                         + "} encoding is not supported");

@@ -316,7 +316,6 @@ public class RileyLinkBLE {
                 debugService(serviceI, indentCount + 4);
             }
         }
-        // }
     }
 
 

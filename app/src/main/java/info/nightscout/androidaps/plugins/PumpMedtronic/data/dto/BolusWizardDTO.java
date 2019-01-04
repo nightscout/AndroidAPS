@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
-import org.joda.time.LocalDateTime;
-
-import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 
 /**
  * Created by andy on 18.05.15.
@@ -22,8 +20,10 @@ public class BolusWizardDTO extends PumpTimeStampedRecord {
     public Float correctionEstimate = 0.0f;
     public Float foodEstimate = 0.0f;
     public Float unabsorbedInsulin = 0.0f;
-    public LocalDateTime localDateTime;
 
+
+    // public LocalDateTime localDateTime;
+    // public long atechDateTime;
 
     public String getValue() {
         return String.format("BG=%d;CH=%d;CH_UNIT=%s;CH_INS_RATIO=%5.3f;BG_INS_RATIO=%5.3f;"
@@ -35,6 +35,6 @@ public class BolusWizardDTO extends PumpTimeStampedRecord {
 
 
     public String toString() {
-        return "BolusWizardDTO [dateTime=" + StringUtil.toDateTimeString(localDateTime) + ", " + getValue() + "]";
+        return "BolusWizardDTO [dateTime=" + DateTimeUtil.toString(atechDateTime) + ", " + getValue() + "]";
     }
 }

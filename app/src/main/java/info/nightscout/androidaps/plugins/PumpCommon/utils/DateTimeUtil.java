@@ -4,6 +4,9 @@ package info.nightscout.androidaps.plugins.PumpCommon.utils;
  * Created by andy on 10/25/18.
  */
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.joda.time.LocalDateTime;
 
 /**
@@ -53,12 +56,35 @@ public class DateTimeUtil {
     }
 
 
+    public static long toATechDate(GregorianCalendar gc) {
+        long atechDateTime = 0L;
+
+        atechDateTime += gc.get(Calendar.YEAR) * 10000000000L;
+        atechDateTime += (gc.get(Calendar.MONTH) + 1) * 100000000L;
+        atechDateTime += gc.get(Calendar.DAY_OF_MONTH) * 1000000L;
+        atechDateTime += gc.get(Calendar.HOUR_OF_DAY) * 10000L;
+        atechDateTime += gc.get(Calendar.MINUTE) * 100L;
+        atechDateTime += gc.get(Calendar.SECOND);
+
+        return atechDateTime;
+    }
+
+
     public static boolean isSameDay(LocalDateTime ldt1, LocalDateTime ldt2) {
 
         return (ldt1.getYear() == ldt2.getYear() && //
             ldt1.getMonthOfYear() == ldt2.getMonthOfYear() && //
         ldt1.getDayOfMonth() == ldt2.getDayOfMonth());
 
+    }
+
+
+    public static boolean isSameDay(long ldt1, long ldt2) {
+
+        long day1 = ldt1 / 10000L;
+        long day2 = ldt2 / 10000L;
+
+        return day1 == day2;
     }
 
 
@@ -104,4 +130,10 @@ public class DateTimeUtil {
         return (number < 10) ? "0" + number : "" + number;
     }
 
+
+    public static int getYear(long atechDateTime) {
+
+        int year = (int)(atechDateTime / 10000000000L);
+        return year;
+    }
 }

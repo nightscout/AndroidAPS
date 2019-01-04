@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 
@@ -65,6 +66,52 @@ public class MedtronicPumpHistoryDecoderUTest {
         // basal 18.1, bolus 1.7 manual = 1.7
         // All (bg low hi, number Bgs, Sen Lo/Hi, Sens Cal/Data, Basal, Bolus, Carbs, Fodd, Corr, Manual=1.7, food/corr,
         // Food+corr, manual bolus=1
+        testRecord(data);
+
+    }
+
+
+    @Test
+    public void decodeDailyTotals515() {
+
+        byte[] data = new byte[] {
+            0x6E, (byte)0xB1, (byte)0x92, 0x05, 0x00, (byte)0x80, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, (byte)0x9A, 0x00,
+            0x50, 0x34, 0x00, 0x4A, 0x30, 0x00, 0x0B, 0x00, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x26, 0x01, 0x00, 0x00,
+            0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte)0x80, (byte)0x80, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00 };
+
+        // Carbs=11, total=3.850,basal=2.000, bolus=1.850, basal 52%, blus=48%, Manual=0.95, #manual=5,
+        // Food only=0.9, #Food Only=1,Corr Only =0, #Corr only=0,Food+Corr=0
+
+        // Delivery Stats: Carbs=11, Total Insulin=3.850, Basal=2.000
+        // Delivery Stats: Basal 52,Bolus 1.850, Bolus=48%o
+        // Delivery Stats: Food only=0.9, Food only#=1, Corr only = 0.0
+        // Delivery Stats: #Corr_only=0,Food+Corr=0.000, #Food+Corr=0
+        // Delivery Stats: Manual = 0.95, #Manual=5
+
+        testRecord(data);
+
+    }
+
+
+    @Test
+    public void decodeDailyTotals523() {
+
+        byte[] data = new byte[] {
+            0x6E, (byte)0xB1, (byte)0x92, 0x05, 0x00, (byte)0x80, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, (byte)0x9A, 0x00,
+            0x50, 0x34, 0x00, 0x4A, 0x30, 0x00, 0x0B, 0x00, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x26, 0x01, 0x00, 0x00,
+            0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte)0x80, (byte)0x80, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00 };
+
+        // Carbs=11, total=3.850,basal=2.000, bolus=1.850, basal 52%, blus=48%, Manual=0.95, #manual=5,
+        // Food only=0.9, #Food Only=1,Corr Only =0, #Corr only=0,Food+Corr=0
+
+        // Delivery Stats: Carbs=11, Total Insulin=3.850, Basal=2.000
+        // Delivery Stats: Basal 52,Bolus 1.850, Bolus=48%o
+        // Delivery Stats: Food only=0.9, Food only#=1, Corr only = 0.0
+        // Delivery Stats: #Corr_only=0,Food+Corr=0.000, #Food+Corr=0
+        // Delivery Stats: Manual = 0.95, #Manual=5
+
         testRecord(data);
 
     }

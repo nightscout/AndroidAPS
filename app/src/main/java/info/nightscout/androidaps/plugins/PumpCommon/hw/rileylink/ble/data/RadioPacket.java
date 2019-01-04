@@ -38,11 +38,15 @@ public class RadioPacket {
                 return pkt;
             }
 
-            case FourByteSixByte: {
+            case FourByteSixByteLocal: {
                 byte[] withCRC = getWithCRC();
 
                 byte[] encoded = RileyLinkUtil.getEncoding4b6b().encode4b6b(withCRC);
                 return ByteUtil.concat(encoded, (byte)0);
+            }
+
+            case FourByteSixByteRileyLink: {
+                return pkt;
             }
 
             default:

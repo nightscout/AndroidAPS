@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.Riley
  * Created by andy on 11/23/18.
  */
 
-public class RileyLinkCommunicationException extends Throwable {
+public class RileyLinkCommunicationException extends Exception {
 
     String extendedErrorText;
     private RileyLinkBLEError errorCode;

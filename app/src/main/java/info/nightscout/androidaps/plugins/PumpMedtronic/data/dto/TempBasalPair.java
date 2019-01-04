@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,17 +145,11 @@ public class TempBasalPair {
 
     public String getDescription() {
 
-        String desc = "";
-
         if (isPercent) {
-            desc = "Rate=" + insulinRate + "%";
+            return String.format(Locale.ENGLISH, "Rate=%.0f%%, Duration=%d min", insulinRate, durationMinutes);
         } else {
-            desc = "Rate=" + insulinRate + " U";
+            return String.format(Locale.ENGLISH, "Rate=%.3f U, Duration=%d min", insulinRate, durationMinutes);
         }
-
-        desc += ", Duration=" + durationMinutes + " min";
-
-        return desc;
     }
 
 

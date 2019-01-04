@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
-import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RecordDecodeStatus;
@@ -247,7 +246,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case DailyTotals515:
                 return decodeDailyTotals(entry); // Not supported at the moment
 
-            case SelectBasalProfile:
+            case ChangeBasalPattern:
                 return RecordDecodeStatus.OK; // Not supported at the moment
 
                 // WORK IN PROGRESS
@@ -294,7 +293,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case ChangeBGReminderOffset:
             case ChangeAlarmClockTime:
             case ChangeMeterId:
-            case ChangeParadigmLinkID:
+            case ChangeParadigmID:
             case JournalEntryMealMarker:
             case JournalEntryExerciseMarker:
             case DeleteBolusReminderTime:
@@ -304,11 +303,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case JournalEntryOtherMarker:
             case ChangeBolusWizardSetup:
             case ChangeSensorSetup2:
-            case RestoreMystery51:
-            case RestoreMystery52:
             case ChangeSensorAlarmSilenceConfig:
-            case RestoreMystery54:
-            case RestoreMystery55:
             case ChangeSensorRateOfChangeAlertSetup:
             case ChangeBolusScrollStepSize:
             case BolusWizardChange:
@@ -321,9 +316,22 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case ChangeCarbUnits:
             case ChangeWatchdogEnable:
             case ChangeOtherDeviceID:
+            case ReadOtherDevicesIDs:
+            case BolusWizard512:
+            case BGReceived512:
+            case SensorStatus:
+            case ReadCaptureEventEnabled:
+            case ChangeCaptureEventEnable:
+            case ReadOtherDevicesStatus:
+                return RecordDecodeStatus.OK;
+
                 // case ChangeWatchdogMarriageProfile:
                 // case DeleteOtherDeviceID:
                 // case ChangeCaptureEventEnable:
+            case Sensor54:
+            case Sensor55:
+            case Sensor51:
+            case Sensor52:
             case EventUnknown_MM522_0x45:
             case EventUnknown_MM522_0x46:
             case EventUnknown_MM522_0x47:
@@ -334,11 +342,10 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case EventUnknown_MM522_0x4c:
             case EventUnknown_MM512_0x10:
             case EventUnknown_MM512_0x2e:
-            case EventUnknown_MM512_0x2f:
+
             case EventUnknown_MM512_0x37:
             case EventUnknown_MM512_0x38:
-            case EventUnknown_MM512_0x39:
-            case EventUnknown_MM512_0x3b:
+
             case EventUnknown_MM512_0x4e:
             case EventUnknown_MM522_0x70:
             case EventUnknown_MM512_0x88:
@@ -346,7 +353,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case EventUnknown_MM522_0xE8:
             case EventUnknown_0x4d:
             case EventUnknown_MM522_0x25:
-                // LOG.debug(" -- ignored Pump Entry: " + entry.getEntryType().name());
+            case EventUnknown_MM522_0x05:
+                LOG.debug(" -- ignored Pump Entry: " + entry);
                 return RecordDecodeStatus.Ignored;
 
                 // **** Implemented records ****
@@ -375,7 +383,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 decodeEndResultTotals(entry);
                 return RecordDecodeStatus.OK;
 
-            case BatteryActivity:
+            case BatteryChange:
                 decodeBatteryActivity(entry);
                 return RecordDecodeStatus.OK;
 
@@ -410,9 +418,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             case Prime:
                 decodePrime(entry);
                 return RecordDecodeStatus.OK;
-
-            case EventUnknown_MM522_0x05:
-                return RecordDecodeStatus.Ignored;
 
             case TempBasalCombined:
                 return RecordDecodeStatus.Ignored;
@@ -481,6 +486,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         // }
         //
         // }
+
+        System.out.println("" + totals.toString());
 
         return RecordDecodeStatus.WIP;
     }
@@ -608,7 +615,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
             dto.correctionEstimate = (body[7] + (body[5] & 0x0F)) / 10.0f;
         }
 
-        dto.localDateTime = entry.getLocalDateTime();
+        dto.atechDateTime = entry.atechDateTime;
         entry.addDecodedData("Object", dto);
         // entry.setHistoryEntryDetails(dto);
 
@@ -676,9 +683,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
         bolus.setBolusType((bolus.getDuration() != null && (bolus.getDuration() > 0)) ? PumpBolusType.Extended
             : PumpBolusType.Normal);
-        bolus.setLocalDateTime(entry.getLocalDateTime());
+        bolus.setAtechDateTime(entry.atechDateTime);
 
-        String dateTime = StringUtil.toDateTimeString(entry.getLocalDateTime());
+        String dateTime = entry.DT;
 
         if (bolus.getBolusType() == PumpBolusType.Extended) {
             // we check if we have coresponding normal entry
@@ -770,7 +777,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
 
             LocalDateTime atdate = new LocalDateTime(year, month, dayOfMonth, hour, minutes, seconds);
 
-            entry.setLocalDateTime(atdate); // TODO remove
+            // entry.setLocalDateTime(atdate); // TODO remove
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
 
         } else if (entry.getDateTimeLength() == 2) {
@@ -811,7 +818,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
                 atdate = new LocalDateTime(year, month, dayOfMonth, 0, 0);
             }
 
-            entry.setLocalDateTime(atdate);
+            // entry.setLocalDateTime(atdate);
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
 
         } else {

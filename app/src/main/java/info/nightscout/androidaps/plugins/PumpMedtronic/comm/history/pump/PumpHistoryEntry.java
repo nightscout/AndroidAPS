@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump;
 
 import java.util.Objects;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +40,7 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     private PumpHistoryEntryType entryType;
     private Integer opCode; // this is set only when we have unknown entry...
     private int offset;
+    private String displayableValue = "";
 
 
     public PumpHistoryEntryType getEntryType() {
@@ -112,7 +112,7 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
         PumpHistoryEntry that = (PumpHistoryEntry)o;
 
         return entryType == that.entryType && //
-            Objects.equals(this.dateTime, that.dateTime); // && //
+            this.atechDateTime == that.atechDateTime; // && //
         // Objects.equals(this.decodedData, that.decodedData);
     }
 
@@ -123,13 +123,12 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     }
 
 
-    public boolean isAfter(LocalDateTime dateTimeIn) {
-        // LOG.debug("Entry: " + this.dateTime);
-        // LOG.debug("Datetime: " + dateTimeIn);
-        // LOG.debug("Item after: " + this.dateTime.isAfter(dateTimeIn));
-        return this.dateTime.isAfter(dateTimeIn);
-    }
-
+    // public boolean isAfter(LocalDateTime dateTimeIn) {
+    // // LOG.debug("Entry: " + this.dateTime);
+    // // LOG.debug("Datetime: " + dateTimeIn);
+    // // LOG.debug("Item after: " + this.dateTime.isAfter(dateTimeIn));
+    // return this.dateTime.isAfter(dateTimeIn);
+    // }
 
     public boolean isAfter(long atechDateTime) {
         return atechDateTime > this.atechDateTime;
@@ -141,5 +140,10 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
         public int compare(PumpHistoryEntry o1, PumpHistoryEntry o2) {
             return (int)(o2.atechDateTime - o1.atechDateTime);
         }
+    }
+
+
+    public String getDisplayableValue() {
+        return displayableValue;
     }
 }

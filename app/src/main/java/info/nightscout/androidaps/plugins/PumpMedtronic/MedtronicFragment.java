@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLink
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.dialog.RileyLinkStatusActivity;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.PumpMedtronic.dialog.MedtronicHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpConfigurationChanged;
@@ -146,13 +147,15 @@ public class MedtronicFragment extends SubscriberFragment {
 
     @OnClick(R.id.medtronic_history)
     void onHistoryClick() {
-        // startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
+        startActivity(new Intent(getContext(), MedtronicHistoryActivity.class));
     }
 
 
     @OnClick(R.id.medtronic_refresh)
     void onRefreshClick() {
-        refreshButton.setEnabled(false);
+        if (refreshButtonStatic != null)
+            refreshButtonStatic.setEnabled(false);
+
         MedtronicPumpPlugin.getPlugin().resetStatusState();
 
         ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked refresh", new Callback() {
@@ -163,7 +166,8 @@ public class MedtronicFragment extends SubscriberFragment {
 
                 if (activity != null) {
                     activity.runOnUiThread(() -> {
-                        refreshButton.setEnabled(true);
+                        if (refreshButtonStatic != null)
+                            refreshButtonStatic.setEnabled(true);
                     });
                 }
             }
@@ -219,7 +223,7 @@ public class MedtronicFragment extends SubscriberFragment {
         pumpStatus.rileyLinkServiceState = (RileyLinkServiceState)checkStatusSet(pumpStatus.rileyLinkServiceState,
             RileyLinkUtil.getServiceState());
 
-        if (pumpStatus.rileyLinkServiceState != null) {
+        if (pumpStatus.rileyLinkServiceState != null && rileyLinkStatus != null) {
 
             int resourceId = pumpStatus.rileyLinkServiceState.getResourceId(getTargetDevice());
             rileyLinkStatus.setTextColor(Color.WHITE);
@@ -271,7 +275,7 @@ public class MedtronicFragment extends SubscriberFragment {
                 case ErrorWhenCommunicating:
                 case TimeoutWhenCommunicating:
                 case InvalidConfiguration:
-                    pumpStatusIconView.setText("   " + getTranslation(pumpStatus.pumpDeviceState.getResourceId()));
+                    pumpStatusIconView.setText(" " + getTranslation(pumpStatus.pumpDeviceState.getResourceId()));
                     break;
 
                 // FIXME
@@ -281,24 +285,25 @@ public class MedtronicFragment extends SubscriberFragment {
                     LOG.debug("Command: " + cmd);
 
                     if (cmd == null)
-                        pumpStatusIconView.setText("   " + MainApp.gs(pumpStatus.pumpDeviceState.getResourceId()));
+                        pumpStatusIconView.setText(" " + MainApp.gs(pumpStatus.pumpDeviceState.getResourceId()));
                     else {
                         Integer resourceId = cmd.getResourceId();
 
                         if (cmd == MedtronicCommandType.GetHistoryData) {
 
-                            if (resourceId == null) {
-                                pumpStatusIconView.setText(String.format("  Get History - Page %d (%d/16)",
-                                    MedtronicUtil.pageNumber, MedtronicUtil.frameNumber));
+                            if (MedtronicUtil.frameNumber == null) {
+                                pumpStatusIconView.setText(MainApp.gs(R.string.medtronic_cmd_desc_get_history_request,
+                                    MedtronicUtil.pageNumber));
                             } else {
                                 pumpStatusIconView.setText(MainApp.gs(resourceId, MedtronicUtil.pageNumber,
                                     MedtronicUtil.frameNumber));
                             }
+
                         } else {
                             if (resourceId == null) {
-                                pumpStatusIconView.setText("   " + cmd.name());
+                                pumpStatusIconView.setText(" " + cmd.name());
                             } else {
-                                pumpStatusIconView.setText("   " + getTranslation(resourceId));
+                                pumpStatusIconView.setText(" " + getTranslation(resourceId));
                             }
                         }
 
@@ -338,7 +343,7 @@ public class MedtronicFragment extends SubscriberFragment {
 
     public Object checkStatusSet(Object object1, Object object2) {
         if (object1 == null) {
-            return object1;
+            return object2;
         } else {
             if (!object1.equals(object2)) {
                 return object2;

@@ -1224,15 +1224,18 @@
     <string name="medtronic_name_short" translatable="false">MDT</string>
     <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
-
     <!-- MDT Configuration -->
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
     <string name="medtronic_pump_frequency">Pump Frequency</string>
+    <string name="medtronic_pump_bolus_delay">Delay before Bolus is started (s)</string>
     <string name="medtronic_pump_max_bolus">Max Bolus on Pump</string>
     <string name="medtronic_pump_max_basal">Max Basal on Pump</string>
+    <string name="medtronic_pump_encoding">Medtronic Encoding</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Local 4b6b Encoding</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">RileyLink 4b6b Encoding</string>
     <string name="rileylink_mac_address">RileyLink MAC Address</string>
     <string name="rileylink_scanner_selected_device">Selected</string>
     <string name="rileylink_scanner_scan">Scan</string>
@@ -1302,6 +1305,14 @@
     <string name="medtronic_error_pump_wrong_max_basal_set" formatted="false">Wrong Max Basal set on Pump (must be %.2f).</string>
     <string name="xxx">xxx</string>
 
+    <!-- MDT History -->
+    <string name="medtronic_history_group_basal">Basals</string>
+    <string name="medtronic_history_group_configuration">Configurations</string>
+    <string name="medtronic_history_group_notification">Notifications</string>
+    <string name="medtronic_history_group_statistic">Statistics</string>
+    <string name="medtronic_history_group_unknown">Unknowns</string>
+    <string name="medtronic_history_group_all">All</string>
+
 
     <!-- MDT Pump Status -->
     <string name="medtronic_pump_status_never_contacted">Never contacted</string>
@@ -1315,7 +1326,7 @@
     <string name="medtronic_pump_status_sleeping">Sleeping</string>
 
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Remote cancel of Bolus is not supported. If you wish to cancel bolus, go to pump put it in suspend and then resume. This will cancel the bolus.</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">You cancelled Bolus, after it was already sent to Pump. Since Medtronic Pumps don&#44;t support cancel, you need to get Pump and put it into Suspend mode and then do Resume. Application will pick up changes, on next update.</string>
     <string name="medtronic_cmd_cant_read_tbr">Could not read current TBR.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Could not cancel current TBR. Stopping operation.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profile set failed, because following patterns, have too big basal rate: %1$s</string>
@@ -1323,6 +1334,19 @@
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR could not be set.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Could not cancel current TBR.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Basal profile could not be set.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basal profile is the same, so it will not be set again.</string>
+
+    <string name="medtronic_cmd_desc_get_history">Get History - Page %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Get History - Page %1$d</string>
+    <string name="medtronic_cmd_desc_get_history_base">Get History - Page %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Get Pump Time</string>
+    <string name="medtronic_cmd_desc_get_settings">Get Settings</string>
+    <string name="medtronic_cmd_desc_get_model">Get Pump Model</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Get Basal Profile</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Set Basal Profile</string>
+    <string name="medtronic_cmd_desc_get_tbr">Get Temporary Basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Set Temporary Basal</string>
+    <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
 
 
     <string name="pump_no_connection_h">No connection for %1$d hour(s) %2$d min</string>

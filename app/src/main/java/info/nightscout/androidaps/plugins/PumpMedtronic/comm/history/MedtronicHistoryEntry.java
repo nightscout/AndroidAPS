@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -47,7 +46,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     protected byte[] datetime;
     protected byte[] body;
 
-    protected LocalDateTime dateTime;
+    // protected LocalDateTime dateTime;
 
     @Expose
     public String DT;
@@ -90,6 +89,11 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
         }
 
+    }
+
+
+    public String getDateTimeString() {
+        return this.DT;
     }
 
 
@@ -139,9 +143,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
         StringBuilder sb = new StringBuilder();
 
         sb.append(getToStringStart());
-        sb.append(", DT: "
-            + StringUtil.getStringInLength((this.dateTime == null) ? "x" : StringUtil.toDateTimeString(this.dateTime),
-                19));
+        sb.append(", DT: " + StringUtil.getStringInLength(this.DT, 19));
         sb.append(", length=");
         sb.append(getHeadLength());
         sb.append(",");
@@ -237,16 +239,15 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     }
 
 
-    public LocalDateTime getLocalDateTime() {
-        return this.dateTime;
-    }
-
-
-    public void setLocalDateTime(LocalDateTime atdate) {
-        this.dateTime = atdate;
-        // this.DT = atdate.toString(dateTimeFormatter);
-    }
-
+    // public LocalDateTime getLocalDateTime() {
+    // return this.dateTime;
+    // }
+    //
+    //
+    // public void setLocalDateTime(LocalDateTime atdate) {
+    // this.dateTime = atdate;
+    // // this.DT = atdate.toString(dateTimeFormatter);
+    // }
 
     public void setAtechDateTime(long dt) {
         this.atechDateTime = dt;

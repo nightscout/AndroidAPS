@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data.dto;
 
-import org.joda.time.LocalDateTime;
-
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 
 /**
@@ -10,19 +8,29 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 @Deprecated
 public class PumpTimeStampedRecord {
 
-    protected LocalDateTime localDateTime;
+    // protected LocalDateTime localDateTime;
     protected int decimalPrecission = 2;
+    public long atechDateTime;
 
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public long getAtechDateTime() {
+        return this.atechDateTime;
     }
 
 
-    public void setLocalDateTime(LocalDateTime ATechDate) {
-        this.localDateTime = ATechDate;
+    public void setAtechDateTime(long atechDateTime) {
+        this.atechDateTime = atechDateTime;
     }
 
+
+    // public LocalDateTime getLocalDateTime() {
+    // return localDateTime;
+    // }
+    //
+    //
+    // public void setLocalDateTime(LocalDateTime ATechDate) {
+    // this.localDateTime = ATechDate;
+    // }
 
     public String getFormattedDecimal(double value) {
         return StringUtil.getFormatedValueUS(value, this.decimalPrecission);

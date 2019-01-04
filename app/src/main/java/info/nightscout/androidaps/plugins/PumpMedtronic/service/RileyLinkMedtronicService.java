@@ -80,7 +80,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     @Override
     public RileyLinkEncodingType getEncoding() {
-        return RileyLinkEncodingType.FourByteSixByte;
+        return RileyLinkEncodingType.FourByteSixByteLocal;
     }
 
 

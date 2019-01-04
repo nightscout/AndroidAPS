@@ -78,15 +78,17 @@ public class RileyLinkUtil {
     public static void setEncoding(RileyLinkEncodingType encoding) {
         RileyLinkUtil.encoding = encoding;
 
-        if (encoding == RileyLinkEncodingType.FourByteSixByte) {
+        if (encoding == RileyLinkEncodingType.FourByteSixByteLocal) {
             RileyLinkUtil.encoding4b6b = new Encoding4b6bGeoff();
         }
     }
 
 
     public static void sendBroadcastMessage(String message) {
-        Intent intent = new Intent(message);
-        LocalBroadcastManager.getInstance(RileyLinkUtil.context).sendBroadcast(intent);
+        if (context != null) {
+            Intent intent = new Intent(message);
+            LocalBroadcastManager.getInstance(RileyLinkUtil.context).sendBroadcast(intent);
+        }
     }
 
 

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.MedtronicHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.RecordDecodeStatus;
@@ -63,7 +63,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
         // CGMSHistoryEntry entry = (CGMSHistoryEntry) entryIn;
 
         if (entry.getDateTimeLength() > 0) {
-            LocalDateTime dt = parseDate(entry);
+            Long dt = parseDate(entry);
             System.out.println("DT: " + dt);
         }
 
@@ -292,7 +292,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    private LocalDateTime parseDate(CGMSHistoryEntry entry) {
+    private Long parseDate(CGMSHistoryEntry entry) {
         if (entry.getEntryType().hasDate())
             return null;
 
@@ -323,17 +323,18 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
         // date is reversed
 
         if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.MinuteSpecific) {
-            LocalDateTime date = new LocalDateTime(parseDay(data[2]), parseMonths(data[0], data[1]),
-                parseYear(data[3]), parseHours(data[0]), parseMinutes(data[1]), 0);
+            // LocalDateTime date = new LocalDateTime(parseDay(data[2]), parseMonths(data[0], data[1]),
+            // parseHours(data[0]), parseMinutes(data[1]), 0);
 
             // ATechDate date = new ATechDate(parseDay(data[0]),
             // parseMonths(data[2], data[1]), parseYear(data[2]),
             // parseHours(data[2]), parseMinutes(data[1]), 0,
             // ATechDateType.DateAndTimeSec);
 
-            entry.setLocalDateTime(date);
+            entry.atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3]), parseMonths(data[0], data[1]),
+                parseDay(data[2]), parseHours(data[0]), parseMinutes(data[1]), 0);
 
-            return date;
+            return entry.atechDateTime;
 
         } else if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.SecondSpecific) {
             LOG.warn("parseDate for SecondSpecific type is not implemented.");

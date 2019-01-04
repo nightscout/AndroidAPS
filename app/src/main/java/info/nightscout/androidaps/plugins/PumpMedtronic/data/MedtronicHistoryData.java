@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,10 +32,13 @@ public class MedtronicHistoryData {
     private List<PumpHistoryEntry> allHistory = null;
     private List<PumpHistoryEntry> newHistory = null;
 
-    private LocalDateTime lastHistoryRecordTime;
+    // private LocalDateTime previousLastHistoryRecordTime;
+    private Long lastHistoryRecordTime;
     private boolean isInit = false;
 
     private static final int OLD_HISTORY_SIZE = 50;
+
+    private int basalProfileChangedInternally = 0;
 
 
     public MedtronicHistoryData() {
@@ -67,32 +70,38 @@ public class MedtronicHistoryData {
     }
 
 
+    public List<PumpHistoryEntry> getAllHistory() {
+        return this.allHistory;
+    }
+
+
     public void filterNewEntries() {
 
         List<PumpHistoryEntry> newHistory2 = new ArrayList<>();
         List<PumpHistoryEntry> TBRs = new ArrayList<>();
-        LocalDateTime localDateTime = new LocalDateTime();
+        // LocalDateTime localDateTime = new LocalDateTime();
+        long atechDate = DateTimeUtil.toATechDate(new GregorianCalendar());
 
         for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
 
             PumpHistoryEntryType type = pumpHistoryEntry.getEntryType();
 
-            if (PumpHistoryEntryType.isAAPSRelevantEntry(type)) {
+            // if (PumpHistoryEntryType.isAAPSRelevantEntry(type)) {
 
-                if (type == PumpHistoryEntryType.TempBasalRate || type == PumpHistoryEntryType.TempBasalDuration) {
-                    TBRs.add(pumpHistoryEntry);
-                } else {
+            if (type == PumpHistoryEntryType.TempBasalRate || type == PumpHistoryEntryType.TempBasalDuration) {
+                TBRs.add(pumpHistoryEntry);
+            } else {
 
-                    if (type == PumpHistoryEntryType.EndResultTotals) {
-                        if (!DateTimeUtil.isSameDay(localDateTime, pumpHistoryEntry.getLocalDateTime())) {
-                            newHistory2.add(pumpHistoryEntry);
-                        }
-                    } else {
+                if (type == PumpHistoryEntryType.EndResultTotals) {
+                    if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.atechDateTime)) {
                         newHistory2.add(pumpHistoryEntry);
                     }
-
+                } else {
+                    newHistory2.add(pumpHistoryEntry);
                 }
+
             }
+            // }
         }
 
         TBRs = processTBRs(TBRs);
@@ -114,17 +123,26 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> filteredListByLastRecord = getFilteredListByLastRecord((PumpHistoryEntryType)null);
 
+        LOG.debug("New records: " + filteredListByLastRecord.size());
+
         if (filteredListByLastRecord.size() == 0)
             return;
 
         List<PumpHistoryEntry> outList = new ArrayList<>();
 
-        if (allHistory.size() > OLD_HISTORY_SIZE) {
-            for (int i = 0; i < OLD_HISTORY_SIZE; i++) {
-                outList.add(allHistory.get(i));
-            }
-        }
+        // if (allHistory.size() > OLD_HISTORY_SIZE) {
+        // for (int i = 0; i < OLD_HISTORY_SIZE; i++) {
+        // outList.add(allHistory.get(i));
+        // }
+        // } else {
+        //
+        // }
 
+        // FIXME keep 24h only
+
+        LOG.debug("All History records (before): " + allHistory.size());
+
+        outList.addAll(this.allHistory);
         outList.addAll(filteredListByLastRecord);
 
         this.allHistory.clear();
@@ -133,13 +151,15 @@ public class MedtronicHistoryData {
 
         this.sort(this.allHistory);
 
+        LOG.debug("All History records (after): " + allHistory.size());
+
     }
 
 
     public boolean hasRelevantConfigurationChanged() {
 
         return getStateFromFilteredList( //
-            PumpHistoryEntryType.SelectBasalProfile, //
+            PumpHistoryEntryType.ChangeBasalPattern, //
             PumpHistoryEntryType.ClearSettings, //
             PumpHistoryEntryType.SaveSettings, //
             PumpHistoryEntryType.ChangeMaxBolus, //
@@ -158,6 +178,8 @@ public class MedtronicHistoryData {
         List<PumpHistoryEntry> newAndAll = new ArrayList<>();
         newAndAll.addAll(this.allHistory);
         newAndAll.addAll(this.newHistory);
+
+        this.sort(newAndAll);
 
         if (wasPumpSuspended == null) { // suspension status not known
 
@@ -268,7 +290,7 @@ public class MedtronicHistoryData {
      * entryType == PumpHistoryEntryType.ChangeTime || // Time Change
      * entryType == PumpHistoryEntryType.NewTimeSet || //
      * 
-     * entryType == PumpHistoryEntryType.SelectBasalProfile || // Settings
+     * entryType == PumpHistoryEntryType.SelectBasalProfile || // Configuration
      * entryType == PumpHistoryEntryType.ClearSettings || //
      * entryType == PumpHistoryEntryType.SaveSettings || //
      * entryType == PumpHistoryEntryType.ChangeMaxBolus || //
@@ -285,7 +307,17 @@ public class MedtronicHistoryData {
 
     public boolean hasBasalProfileChanged() {
 
-        return getStateFromFilteredList(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
+        List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
+
+        LOG.debug("Items: " + filteredItems);
+
+        boolean profileChanged = ((filteredItems.size() - basalProfileChangedInternally) > 0);
+
+        LOG.error("Profile changed:" + profileChanged);
+
+        this.basalProfileChangedInternally = 0;
+
+        return profileChanged;
 
     }
 
@@ -298,8 +330,9 @@ public class MedtronicHistoryData {
     }
 
 
-    public void setLastHistoryRecordTime(LocalDateTime lastHistoryRecordTime) {
+    public void setLastHistoryRecordTime(Long lastHistoryRecordTime) {
 
+        // this.previousLastHistoryRecordTime = this.lastHistoryRecordTime;
         this.lastHistoryRecordTime = lastHistoryRecordTime;
     }
 
@@ -343,11 +376,20 @@ public class MedtronicHistoryData {
     }
 
 
+    // private List<PumpHistoryEntry> getFilteredListByPreviousLastRecord(PumpHistoryEntryType... entryTypes) {
+    // return getFilteredListByTime(this.previousLastHistoryRecordTime, entryTypes);
+    // }
+
     private List<PumpHistoryEntry> getFilteredListByLastRecord(PumpHistoryEntryType... entryTypes) {
-        if (this.lastHistoryRecordTime == null) {
+        return getFilteredListByTime(this.lastHistoryRecordTime, entryTypes);
+    }
+
+
+    private List<PumpHistoryEntry> getFilteredListByTime(Long lastRecordTime, PumpHistoryEntryType... entryTypes) {
+        if (lastRecordTime == null) {
             return getFilteredItems(entryTypes);
         } else {
-            return getFilteredItems(this.lastHistoryRecordTime, entryTypes);
+            return getFilteredItems(lastRecordTime, entryTypes);
         }
     }
 
@@ -358,12 +400,14 @@ public class MedtronicHistoryData {
         } else {
             List<PumpHistoryEntry> filteredItems = getFilteredItems(entryTypes);
 
+            LOG.debug("Items: " + filteredItems);
+
             return filteredItems.size() > 0;
         }
     }
 
 
-    private List<PumpHistoryEntry> getFilteredItems(LocalDateTime dateTime, PumpHistoryEntryType... entryTypes) {
+    private List<PumpHistoryEntry> getFilteredItems(Long dateTime, PumpHistoryEntryType... entryTypes) {
 
         PumpHistoryResult phr = new PumpHistoryResult(null, dateTime);
         return getFilteredItems(phr.getValidEntries(), entryTypes);
@@ -379,7 +423,7 @@ public class MedtronicHistoryData {
         if (inList != null && inList.size() > 0) {
             for (PumpHistoryEntry pumpHistoryEntry : inList) {
 
-                if (entryTypes != null) {
+                if (!isEmpty(entryTypes)) {
                     for (PumpHistoryEntryType pumpHistoryEntryType : entryTypes) {
 
                         if (pumpHistoryEntry.getEntryType() == pumpHistoryEntryType) {
@@ -400,7 +444,17 @@ public class MedtronicHistoryData {
     }
 
 
+    private boolean isEmpty(PumpHistoryEntryType... entryTypes) {
+        return (entryTypes == null || (entryTypes.length == 1 && entryTypes[0] == null));
+    }
+
+
     public List<PumpHistoryEntry> getNewHistoryEntries() {
         return this.newHistory;
+    }
+
+
+    public void setBasalProfileChanged() {
+        this.basalProfileChangedInternally++;
     }
 }

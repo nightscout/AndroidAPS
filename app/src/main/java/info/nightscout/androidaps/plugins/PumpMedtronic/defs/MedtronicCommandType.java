@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.MessageBody;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.PumpAckMessageBody;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.UnknownMessageBody;
@@ -43,14 +44,16 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     PushButton(0x5b, "Push Button", MinimedTargetType.ActionCommand, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), // 91
 
     RFPowerOn(93, "RF Power On", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, getByteArray(
-            1, 10)), //
+        1, 10)), //
 
     RFPowerOff(93, "RF Power Off", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, getByteArray(
-            0, 0)), //
+        0, 0)), //
 
-    SetSuspend(77, "Set Suspend", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, getByteArray(1)), //
+    // SetSuspend(77, "Set Suspend", MinimedTargetType.InitCommand, MedtronicDeviceType.All,
+    // MinimedCommandParameterType.FixedParameters, getByteArray(1)), //
 
-    CancelSuspend(77, "Cancel Suspend", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.FixedParameters, getByteArray(0)), //
+    // CancelSuspend(77, "Cancel Suspend", MinimedTargetType.InitCommand, MedtronicDeviceType.All,
+    // MinimedCommandParameterType.FixedParameters, getByteArray(0)), //
 
     PumpState(131, "Pump State", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), //
 
@@ -58,78 +61,98 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
 
     // 511 (InitCommand = 2, Config 7, Data = 1(+3)
     DetectBolus(75, "Detect Bolus", MinimedTargetType.InitCommand, MedtronicDeviceType.Medtronic_511, MinimedCommandParameterType.FixedParameters, getByteArray(
-            0, 0, 0)), //
+        0, 0, 0)), //
 
-    RemoteControlIds(118, "Remote Control Ids", MinimedTargetType.PumpConfiguration_NA, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), //
+    // RemoteControlIds(118, "Remote Control Ids", MinimedTargetType.PumpConfiguration_NA, MedtronicDeviceType.All,
+    // MinimedCommandParameterType.NoParameters), //
 
-    FirmwareVersion(116, "Firmware Version", MinimedTargetType.InitCommand, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), //
+    // FirmwareVersion(116, "Firmware Version", MinimedTargetType.InitCommand, MedtronicDeviceType.All,
+    // MinimedCommandParameterType.NoParameters), //
 
-    PumpId(113, "Pump Id", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), // init
+    // PumpId(113, "Pump Id", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All,
+    // MinimedCommandParameterType.NoParameters), // init
 
-    RealTimeClock(112, "Real Time Clock", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, 7), // 0x70
+    RealTimeClock(112, "Real Time Clock", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, //
+    7, R.string.medtronic_cmd_desc_get_time), // 0x70
 
     GetBatteryStatus(0x72, "Get Battery Status", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), //
     // GetBattery((byte) 0x72), //
 
     GetRemainingInsulin(0x73, "Read Remaining Insulin", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, 2), // 115
 
-    SetBolus(0x42, "Set Bolus", MinimedTargetType.PumpSetData, MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), // 66
+    SetBolus(0x42, "Set Bolus", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, //
+    0, R.string.medtronic_cmd_desc_set_bolus), // 66
 
     // 512
-    ReadTemporaryBasal(0x98, "Read Temporary Basal", MinimedTargetType.InitCommand, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 5), // 152
+    ReadTemporaryBasal(0x98, "Read Temporary Basal", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    5, R.string.medtronic_cmd_desc_get_tbr), // 152
 
-    SetTemporaryBasal(76, "Set Temp Basal Rate (bolus detection only)", MinimedTargetType.InitCommand, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, getByteArray(
-            0, 0, 0)),
-    // util.getCommand(MinimedCommand.SET_TEMPORARY_BASAL).allowedRetries
-    // = 0;
+    SetTemporaryBasal(76, "Set Temporay Basal", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    0, R.string.medtronic_cmd_desc_set_tbr),
 
     // 512 Config
-    PumpModel(141, "Pump Model", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 5), // 0x8D
+    PumpModel(141, "Pump Model", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    5, R.string.medtronic_cmd_desc_get_model), // 0x8D
 
-    BGTargets_512(140, "BG Targets", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512_712, MinimedCommandParameterType.NoParameters), //
+    // BGTargets_512(140, "BG Targets", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512_712,
+    // MinimedCommandParameterType.NoParameters), //
 
-    BGUnits(137, "BG Units", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
+    // BGUnits(137, "BG Units", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher,
+    // MinimedCommandParameterType.NoParameters), //
 
-    Language(134, "Language", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
+    // Language(134, "Language", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher,
+    // MinimedCommandParameterType.NoParameters), //
 
-    Settings_512(145, "Settings", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512_712, MinimedCommandParameterType.NoParameters), //
+    Settings_512(145, "Configuration", MedtronicDeviceType.Medtronic_512_712, MinimedCommandParameterType.NoParameters, //
+    64, 1, 0, R.string.medtronic_cmd_desc_get_settings), //
 
-    BGAlarmClocks(142, "BG Alarm Clocks", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
+    // BGAlarmClocks(142, "BG Alarm Clocks", MinimedTargetType.PumpConfiguration,
+    // MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
 
-    BGAlarmEnable(151, "BG Alarm Enable", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
+    // BGAlarmEnable(151, "BG Alarm Enable", MinimedTargetType.PumpConfiguration,
+    // MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
 
-    BGReminderEnable(144, "BG Reminder Enable", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
+    // BGReminderEnable(144, "BG Reminder Enable", MinimedTargetType.PumpConfiguration,
+    // MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
 
-    ReadInsulinSensitivities(0x8b, "Read Insulin Sensitivities", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), // 139
+    // ReadInsulinSensitivities(0x8b, "Read Insulin Sensitivities", MinimedTargetType.PumpConfiguration,
+    // MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), // 139
 
     // 512 Data
-    GetHistoryData(128, "History data", MinimedTargetType.PumpData, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.SubCommands, 1024, 36, 0), // 0x80
-    // new MinimedCommandHistoryData(36)
+    GetHistoryData(128, "Get History", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.SubCommands, //
+    1024, 16, 1024, R.string.medtronic_cmd_desc_get_history), // 0x80
 
-    GetBasalProfileSTD(146, "Get Profile Standard", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8, 1), // 146
+    GetBasalProfileSTD(146, "Get Profile Standard", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 3, 192, R.string.medtronic_cmd_desc_get_basal_profile), // 146
 
-    GetBasalProfileA(147, "Get Profile A", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 9), // 147
-    // FIXME
+    GetBasalProfileA(147, "Get Profile A", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 3, 192, R.string.medtronic_cmd_desc_get_basal_profile),
 
-    GetBasalProfileB(148, "Get Profile B", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 10), // 148
-    // FIXME
+    GetBasalProfileB(148, "Get Profile B", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 3, 192, R.string.medtronic_cmd_desc_get_basal_profile), // 148
 
-    SetBasalProfileSTD(0x6f, "Set Profile Standard", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8), // 111
+    SetBasalProfileSTD(0x6f, "Set Profile Standard", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 3, 192, R.string.medtronic_cmd_desc_set_basal_profile), // 111
 
-    SetBasalProfileA(0x30, "Set Profile A", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8), // 48
+    SetBasalProfileA(0x30, "Set Profile A", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 3, 192, R.string.medtronic_cmd_desc_set_basal_profile), // 48
 
-    SetBasalProfileB(0x31, "Set Profile B", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, 192, 1, 8), // 49
+    SetBasalProfileB(0x31, "Set Profile B", MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 3, 192, R.string.medtronic_cmd_desc_set_basal_profile), // 49
 
     // 515
     PumpStatus(206, "Pump Status", MinimedTargetType.InitCommand, MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters), // PumpConfiguration
-    Settings(192, "Settings", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters), //
+
+    Settings(192, "Configuration", MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters, //
+    64, 1, 0, R.string.medtronic_cmd_desc_get_settings), //
 
     // 522
-    SensorSettings_522(153, "Sensor Settings", MedtronicDeviceType.Medtronic_522andHigher, MinimedCommandParameterType.NoParameters), //
+    SensorSettings_522(153, "Sensor Configuration", MedtronicDeviceType.Medtronic_522andHigher, MinimedCommandParameterType.NoParameters), //
+
     GlucoseHistory(154, "Glucose History", MedtronicDeviceType.Medtronic_522andHigher, MinimedCommandParameterType.SubCommands, 1024, 32, 0, null), //
 
     // 523
-    SensorSettings(207, "Sensor Settings", MinimedTargetType.CGMSConfiguration, MedtronicDeviceType.Medtronic_523andHigher, MinimedCommandParameterType.NoParameters), //
+    SensorSettings(207, "Sensor Configuration", MinimedTargetType.CGMSConfiguration, MedtronicDeviceType.Medtronic_523andHigher, MinimedCommandParameterType.NoParameters), //
 
     // 553
     // 554
@@ -154,7 +177,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
 
     // Fake Commands
 
-    CancelTBR(),;
+    CancelTBR(), ;
 
     static Map<Byte, MedtronicCommandType> mapByCode;
 
@@ -194,33 +217,33 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
 
 
     MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType) {
+            MinimedCommandParameterType parameterType) {
         this(code, description, targetType, devices, parameterType, 64, 1, 0, 0, 0, 0);
     }
 
 
     MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, int expectedLength) {
+            MinimedCommandParameterType parameterType, int expectedLength) {
         this(code, description, targetType, devices, parameterType, 64, 1, 0, 0, 0, expectedLength);
     }
 
 
     MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType) {
+            MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType) {
         this(code, description, targetType, devices, parameterType, recordLength, maxRecords, 0, 0, commandType, 0);
     }
 
 
     MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType,
-                         int expectedLength) {
+            MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType,
+            int expectedLength) {
         this(code, description, targetType, devices, parameterType, recordLength, maxRecords, 0, 0, commandType,
-                expectedLength);
+            expectedLength);
     }
 
 
     MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, byte[] cmd_params) {
+            MinimedCommandParameterType parameterType, byte[] cmd_params) {
         this(code, description, targetType, devices, parameterType, 0, 1, 0, 0, 11, 0);
 
         this.commandParameters = cmd_params;
@@ -228,17 +251,16 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     }
 
 
-    MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, byte[] cmd_params, int expectedLength) {
-        this(code, description, targetType, devices, parameterType, 0, 1, 0, 0, 11, expectedLength);
-
-        this.commandParameters = cmd_params;
-        this.commandParametersCount = cmd_params.length;
-    }
-
+    // MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices,
+    // MinimedCommandParameterType parameterType, byte[] cmd_params, int expectedLength) {
+    // this(code, description, targetType, devices, parameterType, 0, 1, 0, 0, 11, expectedLength);
+    //
+    // this.commandParameters = cmd_params;
+    // this.commandParametersCount = cmd_params.length;
+    // }
 
     MedtronicCommandType(int code, String description, MedtronicDeviceType devices, //
-                         MinimedCommandParameterType parameterType) {
+            MinimedCommandParameterType parameterType) {
 
         this(code, description, devices, parameterType, 64, 1, 0, null);
     }
@@ -246,31 +268,31 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
 
     // NEW
     MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType) {
+            MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType) {
         this(code, description, devices, parameterType, recordLength, maxRecords, 0, null);
     }
 
 
     // NEW
     MedtronicCommandType(int code, String description, MedtronicDeviceType devices, //
-                         MinimedCommandParameterType parameterType, int expectedLength) {
+            MinimedCommandParameterType parameterType, int expectedLength) {
         this(code, description, devices, parameterType, 64, 1, expectedLength, null);
     }
 
 
     // NEW
     MedtronicCommandType(int code, String description, MedtronicDeviceType devices, //
-                         MinimedCommandParameterType parameterType, int expectedLength, int resourceId) {
+            MinimedCommandParameterType parameterType, int expectedLength, int resourceId) {
         this(code, description, devices, parameterType, 64, 1, expectedLength, resourceId);
     }
 
 
     // NEW
     MedtronicCommandType(int code, String description,
-                         MedtronicDeviceType devices, //
-                         MinimedCommandParameterType parameterType, int recordLength, int max_recs, int expectedLength,
-                         Integer resourceId) {
-        this.commandCode = (byte) code;
+            MedtronicDeviceType devices, //
+            MinimedCommandParameterType parameterType, int recordLength, int max_recs, int expectedLength,
+            Integer resourceId) {
+        this.commandCode = (byte)code;
         this.commandDescription = description;
         this.devices = devices;
         this.recordLength = recordLength;
@@ -285,15 +307,14 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
         if (this.parameterType == MinimedCommandParameterType.SubCommands) {
             this.minimalBufferSizeToStartReading = 200;
         }
-
     }
 
 
     @Deprecated
     MedtronicCommandType(int code, String description, MinimedTargetType targetType, MedtronicDeviceType devices, //
-                         MinimedCommandParameterType parameterType, int recordLength, int max_recs, int addy, //
-                         int addy_len, int cmd_type, int expectedLength) {
-        this.commandCode = (byte) code;
+            MinimedCommandParameterType parameterType, int recordLength, int max_recs, int addy, //
+            int addy_len, int cmd_type, int expectedLength) {
+        this.commandCode = (byte)code;
         this.commandDescription = description;
         this.targetType = targetType;
         this.devices = devices;
@@ -328,7 +349,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
         byte[] array = new byte[data.length];
 
         for (int i = 0; i < data.length; i++) {
-            array[i] = (byte) data[i];
+            array[i] = (byte)data[i];
         }
 
         return array;
@@ -400,7 +421,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
      */
     public String getFullCommandDescription() {
         return "Command [name=" + this.name() + ", id=" + this.commandCode + ",description=" + this.commandDescription
-                + "] ";
+            + "] ";
     }
 
 
@@ -452,6 +473,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     public String getCommandDescription() {
         return this.commandDescription;
     }
+
 
     public Integer getResourceId() {
         return resourceId;

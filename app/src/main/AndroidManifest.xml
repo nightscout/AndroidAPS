@@ -66,7 +66,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
-        
+
         <activity android:name=".activities.HistoryBrowseActivity" />
 
         <activity android:name=".plugins.PumpCommon.dialog.RileyLinkBLEScanActivity">
@@ -213,6 +213,7 @@
             android:label="@string/title_activity_rileylink_settings"
             android:theme="@style/Theme.AppCompat.NoTitle" />
 
+        <activity android:name=".plugins.PumpMedtronic.dialog.MedtronicHistoryActivity" />
 
     </application>
 

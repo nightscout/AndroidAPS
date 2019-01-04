@@ -81,8 +81,8 @@ public class RFSpy {
     // Here should go generic RL initialisation + protocol adjustments depending on
     // firmware version
     public void initializeRileyLink() {
-        firmwareVersion = getFirmwareVersion();
         bleVersion = getVersion();
+        firmwareVersion = getFirmwareVersion();
     }
 
 
@@ -98,7 +98,9 @@ public class RFSpy {
     public String getVersion() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(radioServiceUUID, radioVersionUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            return StringUtil.fromBytes(result.value);
+            String version = StringUtil.fromBytes(result.value);
+            LOG.debug("BLE Version: " + version);
+            return version;
         } else {
             LOG.error("getVersion failed with code: " + result.resultCode);
             return "(null)";
@@ -107,14 +109,22 @@ public class RFSpy {
 
 
     public RileyLinkFirmwareVersion getFirmwareVersion() {
+
+        LOG.debug("Firmware Version. Get Version - Start");
+
         for (int i = 0; i < 5; i++) {
             // We have to call raw version of communication to get firmware version
             // So that we can adjust other commands accordingly afterwords
+
             byte[] getVersionRaw = getByteArray(RileyLinkCommandType.GetVersion.code);
             byte[] response = writeToDataRaw(getVersionRaw, 5000);
+
+            LOG.debug("Firmware Version. GetVersion [response={}]", ByteUtil.getHex(response));
+
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
                 String versionString = StringUtil.fromBytes(response);
+
                 RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
                     .fromBytes(response));
 
@@ -125,6 +135,12 @@ public class RFSpy {
 
                 SystemClock.sleep(1000);
             }
+        }
+
+        LOG.error("Firmware Version can't be determined. Checking with BLE Version [{}].", bleVersion);
+
+        if (bleVersion.contains(" 2.")) {
+            return RileyLinkFirmwareVersion.Version_2_0;
         }
 
         return RileyLinkFirmwareVersion.UnknownVersion;
@@ -310,7 +326,7 @@ public class RFSpy {
                 updateRegister(CC111XRegister.mdmcfg1, 0x62);
                 updateRegister(CC111XRegister.mdmcfg0, 0x1A);
                 updateRegister(CC111XRegister.deviatn, 0x13);
-                // RileyLinkUtil.setEncoding(RileyLinkEncodingType.FourByteSixByte);
+                setMedtronicEncoding();
             }
                 break;
 
@@ -322,10 +338,10 @@ public class RFSpy {
                 updateRegister(CC111XRegister.mdmcfg1, 0x61);
                 updateRegister(CC111XRegister.mdmcfg0, 0x7E);
                 updateRegister(CC111XRegister.deviatn, 0x15);
-                // RileyLinkUtil.setEncoding(RileyLinkEncodingType.FourByteSixByte);
-
+                setMedtronicEncoding();
             }
                 break;
+
             case Omnipod: {
                 RFSpyResponse r = null;
                 // RL initialization for Omnipod is a copy/paste from OmniKit implementation.
@@ -366,6 +382,15 @@ public class RFSpy {
         }
 
         this.selectedTargetFrequency = frequency;
+    }
+
+
+    private void setMedtronicEncoding() {
+        // FIXME
+
+        // check settings if RileyLink_4b6b is enabled, and then check if we have version 2.2 or higher, if both
+        // are yes then we set encoding on RileyLink and set it in RileyLinkUtil.
+
     }
 
 

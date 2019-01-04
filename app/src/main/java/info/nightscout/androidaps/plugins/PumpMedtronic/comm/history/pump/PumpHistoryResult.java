@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 
 /**
@@ -23,7 +23,7 @@ public class PumpHistoryResult {
 
     private boolean searchFinished = false;
     private PumpHistoryEntry searchEntry = null;
-    private LocalDateTime searchDate = null;
+    private Long searchDate = null;
     private SearchType searchType = SearchType.None;
     private List<PumpHistoryEntry> unprocessedEntries;
     public List<PumpHistoryEntry> validEntries;
@@ -31,11 +31,11 @@ public class PumpHistoryResult {
 
     // private Object validValues;
 
-    public PumpHistoryResult(PumpHistoryEntry searchEntry, LocalDateTime targetDate) {
+    public PumpHistoryResult(PumpHistoryEntry searchEntry, Long targetDate) {
         if (searchEntry != null) {
             this.searchEntry = searchEntry;
             this.searchType = SearchType.LastEntry;
-            LOG.debug("PumpHistoryResult. Search parameters: Last Entry: " + searchEntry.getLocalDateTime() + " type="
+            LOG.debug("PumpHistoryResult. Search parameters: Last Entry: " + searchEntry.atechDateTime + " type="
                 + searchEntry.getEntryType().name());
         } else if (targetDate != null) {
             this.searchDate = targetDate;
@@ -70,7 +70,7 @@ public class PumpHistoryResult {
 
                 Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
 
-                LOG.debug("PumpHistoryResult. Search entry date: " + searchEntry.getLocalDateTime());
+                LOG.debug("PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
@@ -91,7 +91,7 @@ public class PumpHistoryResult {
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {
-                        if (unprocessedEntry.getLocalDateTime().getYear() != 2000)
+                        if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) != 2000)
                             olderEntries++;
                     }
                 }
