@@ -307,6 +307,11 @@ public class APSResult {
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         Profile profile = ProfileFunctions.getInstance().getProfile();
 
+        if (profile == null) {
+            log.error("FALSE: No Profile");
+            return false;
+        }
+
         if (usePercent) {
             if (activeTemp == null && percent == 100) {
                 if (L.isEnabled(L.APS))

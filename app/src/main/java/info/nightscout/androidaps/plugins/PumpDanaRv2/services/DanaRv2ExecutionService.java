@@ -465,16 +465,10 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected())
             return new PumpEnactResult().success(false);
         SystemClock.sleep(300);
-        MsgHistoryEvents_v2 msg;
-        if (lastHistoryFetched == 0) {
-            msg = new MsgHistoryEvents_v2();
-            if (L.isEnabled(L.PUMP))
-                log.debug("Loading complete event history");
-        } else {
-            msg = new MsgHistoryEvents_v2(lastHistoryFetched);
-            if (L.isEnabled(L.PUMP))
-                log.debug("Loading event history from: " + DateUtil.dateAndTimeFullString(lastHistoryFetched));
-        }
+        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2(lastHistoryFetched);
+        if (L.isEnabled(L.PUMP))
+            log.debug("Loading event history from: " + DateUtil.dateAndTimeFullString(lastHistoryFetched));
+
         mSerialIOThread.sendMessage(msg);
         while (!msg.done && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);

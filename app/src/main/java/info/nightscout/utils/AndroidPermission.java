@@ -21,6 +21,7 @@ public class AndroidPermission {
     public static final int CASE_SMS = 0x2;
     public static final int CASE_LOCATION = 0x3;
     public static final int CASE_BATTERY = 0x4;
+    public static final int CASE_PHONESTATE = 0x5;
 
     public static void askForPermission(Activity activity, String[] permission, Integer requestCode) {
         boolean test = false;
@@ -54,6 +55,16 @@ public class AndroidPermission {
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else
                     MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_SMS));
+            }
+            // Following is a bug in Android 8
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+                if (!checkForPermission(activity, Manifest.permission.READ_PHONE_STATE)) {
+                    NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_PHONESTATE, MainApp.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT);
+                    notification.action(MainApp.gs(R.string.request), () ->
+                            AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, AndroidPermission.CASE_PHONESTATE));
+                    MainApp.bus().post(new EventNewNotification(notification));
+                } else
+                    MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_PHONESTATE));
             }
         }
     }

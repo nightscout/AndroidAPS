@@ -13,6 +13,14 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+// Android Auto
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
+
+
+
+
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Config;
@@ -59,6 +67,18 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     public static final int ONGOING_NOTIFICATION_ID = 4711;
     private final Context ctx;
+
+    /// For Android Auto
+    /// Intents are not declared in manifest and not consumed, this is intentionally because actually we can't do anything with
+    private static final String PACKAGE = "info.nightscout";
+    private static final String READ_ACTION =
+            "info.nightscout.androidaps.ACTION_MESSAGE_READ";
+    private static final String REPLY_ACTION =
+            "info.nightscout.androidaps.ACTION_MESSAGE_REPLY";
+    private static final String CONVERSATION_ID = "conversation_id";
+    private static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+    /// End Android Auto
+
 
     public PersistentNotificationPlugin(Context ctx) {
         super(new PluginDescription()
@@ -107,7 +127,8 @@ public class PersistentNotificationPlugin extends PluginBase {
             return null;
         }
 
-        String line1 = "";
+        String line1;
+        String line1_aa;
 
         if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() == null || !ProfileFunctions.getInstance().isProfileValid("Notificiation"))
             return null;
@@ -118,22 +139,25 @@ public class PersistentNotificationPlugin extends PluginBase {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if (lastBG != null) {
-            line1 = lastBG.valueToUnitsToString(units);
+            line1 = line1_aa = lastBG.valueToUnitsToString(units);
             if (glucoseStatus != null) {
                 line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                         + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
+                line1_aa += "  " + lastBG.directionToSymbol();
             } else {
                 line1 += " " +
                         MainApp.gs(R.string.old_data) +
                         " ";
+                line1_aa += line1 + ".";
             }
         } else {
-            line1 = MainApp.gs(R.string.missed_bg_readings);
+            line1 = line1_aa = MainApp.gs(R.string.missed_bg_readings);
         }
 
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             line1 += "  " + activeTemp.toStringShort();
+            line1_aa += "  " + activeTemp.toStringShort() + ".";
         }
 
         //IOB
@@ -143,12 +167,55 @@ public class PersistentNotificationPlugin extends PluginBase {
         IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
 
-        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();;
-        
+        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
+        String line2_aa = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + ".";
+
+
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h";
+        String line3_aa = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h.";
 
 
         line3 += " - " + ProfileFunctions.getInstance().getProfileName();
+        line3_aa += " - " + ProfileFunctions.getInstance().getProfileName() + ".";
+
+        /// For Android Auto
+        Intent msgReadIntent = new Intent()
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .setAction(READ_ACTION)
+                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                .setPackage(PACKAGE);
+
+        PendingIntent msgReadPendingIntent =
+                PendingIntent.getBroadcast(ctx,
+                        ONGOING_NOTIFICATION_ID,
+                        msgReadIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent msgReplyIntent = new Intent()
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .setAction(REPLY_ACTION)
+                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                .setPackage(PACKAGE);
+
+        PendingIntent msgReplyPendingIntent = PendingIntent.getBroadcast(
+                ctx,
+                ONGOING_NOTIFICATION_ID,
+                msgReplyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Build a RemoteInput for receiving voice input from devices
+        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
+
+        // Create the UnreadConversation
+        NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder =
+                new NotificationCompat.CarExtender.UnreadConversation.Builder(line1_aa + "\n" + line2_aa)
+                        .setLatestTimestamp(System.currentTimeMillis())
+                        .setReadPendingIntent(msgReadPendingIntent)
+                        .setReplyAction(msgReplyPendingIntent, remoteInput);
+        
+        /// Add dot to produce a "more natural sounding result"
+        unreadConversationBuilder.addMessage(line3_aa);
+        /// End Android Auto
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
@@ -167,6 +234,11 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setContentTitle(line1);
         builder.setContentText(line2);
         builder.setSubText(line3);
+        /// Android Auto
+        builder.extend(new NotificationCompat.CarExtender()
+                .setUnreadConversation(unreadConversationBuilder.build()));
+        /// End Android Auto
+
 
         Intent resultIntent = new Intent(ctx, MainActivity.class);
 

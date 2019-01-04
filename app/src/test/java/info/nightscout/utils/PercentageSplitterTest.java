@@ -19,7 +19,12 @@ public class PercentageSplitterTest {
     }
 
     @Test
-    public void pureNameTestPercentageAndShift() {
+    public void pureNameTestPercentageAndPositiveTimeShift() {
         assertEquals("Fiasp", PercentageSplitter.pureName("Fiasp (101%,2h)"));
+    }
+
+    @Test
+    public void pureNameTestPercentageAndNegtiveTimeShift() {
+        assertEquals("Fiasp", PercentageSplitter.pureName("Fiasp (50%,-2h)"));
     }
 }

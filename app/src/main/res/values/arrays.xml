@@ -29,6 +29,7 @@
         <item>@string/sk_lang</item>
         <item>@string/sv_lang</item>
         <item>@string/pl_lang</item>
+        <item>@string/tr_lang</item>
         <item>@string/zh_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
@@ -50,6 +51,7 @@
         <item>sk</item>
         <item>sv</item>
         <item>pl</item>
+        <item>tr</item>
         <item>zh</item>
     </string-array>
 
