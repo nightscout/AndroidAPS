@@ -73,8 +73,8 @@ public class MaintenancePlugin extends PluginBase {
     }
 
     public void sendLogs() {
-        String recipient = SP.getString("key_maintenance_logs_email", "logs@androidaps.org");
-        int amount = SP.getInt("key_maintenance_logs_amount", 2);
+        String recipient = SP.getString(R.string.key_maintenance_logs_email, "logs@androidaps.org");
+        int amount = SP.getInt(R.string.key_maintenance_logs_amount, 2);
 
         String logDirectory = LoggerUtils.getLogDirectory();
         List<File> logs = this.getLogfiles(logDirectory, amount);
@@ -103,7 +103,7 @@ public class MaintenancePlugin extends PluginBase {
         Arrays.sort(files, (f1, f2) -> f1.getName().compareTo(f2.getName()));
 
         List<File> delFiles = Arrays.asList(files);
-        int amount = SP.getInt("key_logshipper_amount", 2);
+        int amount = SP.getInt(R.string.key_logshipper_amount, 2);
         int keepIndex = amount - 1;
 
         if (keepIndex < delFiles.size()) {
@@ -212,6 +212,10 @@ public class MaintenancePlugin extends PluginBase {
         
         builder.append("ADD TIME OF EVENT HERE: " + System.lineSeparator());
         builder.append("ADD ISSUE DESCRIPTION OR GITHUB ISSUE REFERENCE NUMBER: " + System.lineSeparator());
+        builder.append("-------------------------------------------------------" + System.lineSeparator());
+        builder.append("(Please remember this will send only very recent logs." + System.lineSeparator());
+        builder.append("If you want to provide logs for event older than a few hours," + System.lineSeparator());
+        builder.append("you have to do it manually)" + System.lineSeparator());
         builder.append("-------------------------------------------------------" + System.lineSeparator());
         builder.append(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION + System.lineSeparator());
         if (Config.NSCLIENT)

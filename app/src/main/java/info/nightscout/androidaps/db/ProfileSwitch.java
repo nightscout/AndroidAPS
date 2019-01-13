@@ -101,6 +101,11 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return profile;
     }
 
+    /**
+     * Note: the name returned here is used as the PS name when uploading to NS. When such a PS is retrieved
+     * again from NS, the added parts must be removed again, see
+     * {@link info.nightscout.utils.PercentageSplitter#pureName}
+     */
     public String getCustomizedName() {
         String name = profileName;
         if(LocalProfilePlugin.LOCAL_PROFILE.equals(name)){

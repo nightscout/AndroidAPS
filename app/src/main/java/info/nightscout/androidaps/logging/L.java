@@ -99,13 +99,13 @@ public class L {
     private static void initialize() {
         logElements = new ArrayList<>();
         logElements.add(new LogElement(APS, true));
-        logElements.add(new LogElement(AUTOSENS, true));
+        logElements.add(new LogElement(AUTOSENS, false));
         logElements.add(new LogElement(BGSOURCE, true));
-        logElements.add(new LogElement(CONFIGBUILDER, true));
+        logElements.add(new LogElement(CONFIGBUILDER, false));
         logElements.add(new LogElement(CONSTRAINTS, true));
         logElements.add(new LogElement(CORE, true));
         logElements.add(new LogElement(DATABASE, true));
-        logElements.add(new LogElement(DATAFOOD, true));
+        logElements.add(new LogElement(DATAFOOD, false));
         logElements.add(new LogElement(DATASERVICE, true));
         logElements.add(new LogElement(DATATREATMENTS, true));
         logElements.add(new LogElement(EVENTS, false, true));

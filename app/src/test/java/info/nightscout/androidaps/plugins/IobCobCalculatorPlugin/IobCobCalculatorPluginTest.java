@@ -120,9 +120,10 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(5).msecs()).value(100));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(bgReadingList.get(0).date, iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(bgReadingList.get(3).date, iobCobCalculatorPlugin.getBucketedData().get(3).date);
         Assert.assertEquals(bgReadingList.size(), iobCobCalculatorPlugin.getBucketedData().size());
@@ -134,9 +135,10 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(5).msecs()).value(100));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(bgReadingList.get(0).date, iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(bgReadingList.get(2).date, iobCobCalculatorPlugin.getBucketedData().get(3).date);
         Assert.assertEquals(bgReadingList.size() + 1, iobCobCalculatorPlugin.getBucketedData().size());
@@ -150,9 +152,10 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(0).msecs()).value(100));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(T.mins(15).msecs(), iobCobCalculatorPlugin.getBucketedData().get(1).date);
         Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.getBucketedData().get(2).date);
@@ -165,9 +168,10 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(5).msecs()).value(100));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(null, iobCobCalculatorPlugin.getBucketedData());
 
         // data should be reconstructed
@@ -177,9 +181,10 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(20).msecs()).value(40));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.getBucketedData().get(6).date);
         Assert.assertEquals(7, iobCobCalculatorPlugin.getBucketedData().size());
@@ -196,9 +201,10 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(T.mins(20).msecs()).value(40));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData());
+
         iobCobCalculatorPlugin.createBucketedData();
 
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData());
         Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.getBucketedData().get(6).date);
         Assert.assertEquals(7, iobCobCalculatorPlugin.getBucketedData().size());
@@ -333,11 +339,40 @@ public class IobCobCalculatorPluginTest {
         bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-09-05T03:44:57Z")).value(100));
 
         iobCobCalculatorPlugin.setBgReadings(bgReadingList);
-        iobCobCalculatorPlugin.createBucketedData();
-
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData());
+
+        iobCobCalculatorPlugin.createBucketedData();
         Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T13:34:57Z").getTime(), iobCobCalculatorPlugin.getBucketedData().get(0).date);
         Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T03:44:57Z").getTime(), iobCobCalculatorPlugin.getBucketedData().get(iobCobCalculatorPlugin.getBucketedData().size() - 1).date);
+
+        // 5min 4sec data
+        bgReadingList.clear();
+
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:33:40Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:28:36Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:23:32Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:18:28Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:13:24Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:08:19Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T06:03:16Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:58:11Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:53:07Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:48:03Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:42:58Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:37:54Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:32:51Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:27:46Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:22:42Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:17:38Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:12:33Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:07:29Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T05:02:26Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T04:57:21Z")).value(100));
+        bgReadingList.add(new BgReading().date(DateUtil.fromISODateString("2018-10-05T04:52:17Z")).value(100));
+
+        iobCobCalculatorPlugin.setBgReadings(bgReadingList);
+
+        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData());
     }
 
     @Test

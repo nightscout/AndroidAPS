@@ -156,6 +156,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        log.info("Do nothing for downgrading...");
+        log.debug("oldVersion: {}, newVersion: {}", oldVersion, newVersion);
+    }
+
     public int getOldVersion() {
         return oldVersion;
     }
@@ -397,7 +403,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
             queryBuilder.orderBy("date", false);
             queryBuilder.limit(1L);
-            queryBuilder.where().gt("value", 38).and().eq("isValid", true);
+            queryBuilder.where().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgList = daoBgReadings.query(preparedQuery);
 
@@ -435,7 +441,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("date", mills).and().gt("value", 38).and().eq("isValid", true);
+            where.ge("date", mills).and().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
@@ -452,7 +458,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.between("date", start, end).and().gt("value", 38).and().eq("isValid", true);
+            where.between("date", start, end).and().ge("value", 39).and().eq("isValid", true);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;

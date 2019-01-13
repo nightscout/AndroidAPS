@@ -27,6 +27,10 @@ public interface ConstraintsInterface {
         return value;
     }
 
+    default Constraint<Boolean> isUAMEnabled(Constraint<Boolean> value) {
+        return value;
+    }
+
     default Constraint<Boolean> isAdvancedFilteringEnabled(Constraint<Boolean> value) {
         return value;
     }

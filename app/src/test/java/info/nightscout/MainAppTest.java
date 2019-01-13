@@ -117,6 +117,7 @@ public class MainAppTest {
 
     @Test
     public void isEngineeringModeOrReleaseTest() {
+        mainApp.devBranch = true;
         Assert.assertEquals(!Config.APS, mainApp.isEngineeringModeOrRelease());
     }
 

@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Round;
@@ -91,6 +92,17 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         Constraint<Boolean> closedLoop = constraintChecker.isClosedLoopAllowed();
         if (!closedLoop.value())
             value.set(false, MainApp.gs(R.string.smbnotallowedinopenloopmode), this);
+        return value;
+    }
+
+    @Override
+    public Constraint<Boolean> isUAMEnabled(Constraint<Boolean> value) {
+        boolean enabled = SP.getBoolean(R.string.key_use_uam, false);
+        if (!enabled)
+            value.set(false, MainApp.gs(R.string.uamdisabledinpreferences), this);
+        boolean oref1Enabled = SensitivityOref1Plugin.getPlugin().isEnabled(PluginType.SENSITIVITY);
+        if (!oref1Enabled)
+            value.set(false, MainApp.gs(R.string.uamdisabledoref1notselected), this);
         return value;
     }
 

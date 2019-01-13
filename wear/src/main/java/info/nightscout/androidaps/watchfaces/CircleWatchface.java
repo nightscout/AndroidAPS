@@ -590,7 +590,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         } else
 
             Log.d("addToWatchSet", "start removing bgDataList.size(): " + bgDataList.size());
-        HashSet removeSet = new HashSet();
+        HashSet<BgWatchData> removeSet = new HashSet<>();
         double threshold = (System.currentTimeMillis() - (1000 * 60 * 5 * holdInMemory()));
         for (BgWatchData data : bgDataList) {
             if (data.timestamp < threshold) {

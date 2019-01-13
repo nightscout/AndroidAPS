@@ -198,6 +198,10 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         MainApp.getConstraintChecker().isAdvancedFilteringEnabled(advancedFiltering);
         inputConstraints.copyReasons(advancedFiltering);
 
+        Constraint<Boolean> uam = new Constraint<>(true);
+        MainApp.getConstraintChecker().isUAMEnabled(uam);
+        inputConstraints.copyReasons(uam);
+
         if (L.isEnabled(L.APS))
             Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         if (L.isEnabled(L.APS))
@@ -209,6 +213,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
                     smbAllowed.value(),
+                    uam.value(),
                     advancedFiltering.value()
             );
         } catch (JSONException e) {
