@@ -6,9 +6,12 @@ import java.util.Map;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.Expose;
 
+import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.HexDump;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
@@ -39,6 +42,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     protected List<Byte> rawData;
 
     protected static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
+    public static final Logger LOG = LoggerFactory.getLogger(MedtronicHistoryEntry.class);
 
     protected int[] sizes = new int[3];
 
@@ -142,8 +146,12 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        if (this.DT == null) {
+            LOG.error("DT is null. RawData={}", ByteUtil.getHex(this.rawData));
+        }
+
         sb.append(getToStringStart());
-        sb.append(", DT: " + StringUtil.getStringInLength(this.DT, 19));
+        sb.append(", DT: " + (this.DT == null ? "null" : StringUtil.getStringInLength(this.DT, 19)));
         sb.append(", length=");
         sb.append(getHeadLength());
         sb.append(",");

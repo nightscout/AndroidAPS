@@ -64,11 +64,12 @@ android {
         multiDexEnabled true
         versionCode 1500
         // dev_version: 2.0
-        version "medtronic-0.5"
+        version "medtronic-0.6"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
-        buildConfigField "String", "DEV_VERSION", '"2.0i"'
+        buildConfigField "String", "DEV_VERSION", '"2.0"'
+        buildConfigField "String", "DEV_DATE", '"4.1.2019"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {

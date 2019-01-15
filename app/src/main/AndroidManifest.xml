@@ -51,6 +51,10 @@
         <activity
             android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".plugins.Overview.Dialogs.MessageHelperActivity"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+
         <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />

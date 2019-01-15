@@ -7,7 +7,8 @@ package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs;
 public enum RileyLinkBLEError {
     CodingErrors("Coding Errors encpountered during decode of RileyLink packet."), //
     Timeout("Timeout"), //
-    Interrupted("Interrupted");
+    Interrupted("Interrupted"),
+    TooShortOrNullResponse("Too short or null decoded response.");
 
     private String description;
 

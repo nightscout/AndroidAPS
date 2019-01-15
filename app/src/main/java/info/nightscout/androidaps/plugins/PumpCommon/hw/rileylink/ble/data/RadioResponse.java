@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.command.RileyLinkCommand;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
@@ -104,14 +105,19 @@ public class RadioResponse {
 
                 case FourByteSixByteLocal: {
                     byte[] decodeThis = RileyLinkUtil.getEncoding4b6b().decode4b6b(encodedPayload);
-                    decodedOK = true;
 
-                    decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
-                    receivedCRC = decodeThis[decodeThis.length - 1];
-                    byte calculatedCRC = CRC.crc8(decodedPayload);
-                    if (receivedCRC != calculatedCRC) {
-                        LOG.error(String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
-                            calculatedCRC, receivedCRC));
+                    if (decodeThis != null && decodeThis.length > 2) {
+                        decodedOK = true;
+
+                        decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
+                        receivedCRC = decodeThis[decodeThis.length - 1];
+                        byte calculatedCRC = CRC.crc8(decodedPayload);
+                        if (receivedCRC != calculatedCRC) {
+                            LOG.error(String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
+                                calculatedCRC, receivedCRC));
+                        }
+                    } else {
+                        throw new RileyLinkCommunicationException(RileyLinkBLEError.TooShortOrNullResponse);
                     }
                 }
                     break;

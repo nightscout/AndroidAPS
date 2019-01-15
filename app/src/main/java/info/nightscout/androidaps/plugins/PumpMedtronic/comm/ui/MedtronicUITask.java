@@ -187,11 +187,6 @@ public class MedtronicUITask {
     }
 
 
-    public boolean haveData() {
-        return (returnData != null);
-    }
-
-
     public void postProcess(MedtronicUIPostprocessor postprocessor) {
 
         EventMedtronicDeviceStatusChange statusChange;

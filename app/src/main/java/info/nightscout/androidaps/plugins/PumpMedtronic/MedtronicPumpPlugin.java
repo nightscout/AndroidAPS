@@ -40,7 +40,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.Actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.PumpCommon.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
@@ -513,7 +513,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return true;
         }
 
-        LOG.info("isThisProfileSet: check");
+        // LOG.info("isThisProfileSet: check");
+
+        LOG.info("isThisProfileSet: check [basalProfileChanged={}, basalByHourSet={}, isBasalProfileInvalid={}",
+            basalProfileChanged, getMDTPumpStatus().basalsByHour != null, isBasalProfileInvalid);
 
         if (!basalProfileChanged && getMDTPumpStatus().basalsByHour != null && !isBasalProfileInvalid) {
             if (isLoggingEnabled())
@@ -541,9 +544,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         boolean valid = false;
         boolean noData = false;
 
-        if (responseTask.haveData()) {
+        LOG.debug("isThisProfileSet: haveData={}", responseTask.hasData());
+
+        if (responseTask.hasData()) {
 
             valid = isProfileSame(profile);
+
+            LOG.debug("isThisProfileSet: valid={}", valid);
 
             if (valid) {
                 basalProfileChanged = false;
@@ -670,61 +677,56 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
 
         if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
-            LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled.");
+            // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled.");
             return setNotReachable(true, true);
         }
 
-        LOG.debug("MedtronicPumpPlugin::deliverBolus - Starting wait period.");
+        // LOG.debug("MedtronicPumpPlugin::deliverBolus - Starting wait period.");
 
-        SystemClock.sleep(10000);
+        int sleepTime = SP.getInt(MedtronicConst.Prefs.BolusDelay, 10) * 1000;
+
+        SystemClock.sleep(sleepTime);
 
         if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
-            LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled, before wait period.");
+            // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled, before wait period.");
             return setNotReachable(true, true);
         }
 
-        LOG.debug("MedtronicPumpPlugin::deliverBolus - End wait period. Start delivery");
+        // LOG.debug("MedtronicPumpPlugin::deliverBolus - End wait period. Start delivery");
 
         try {
 
             bolusDeliveryType = BolusDeliveryType.Delivering;
 
-            // LOG.error("MedtronicPumpPlugin::deliverBolus Not fully implemented - Just base command.");
+            // LOG.debug("MedtronicPumpPlugin::deliverBolus - Start delivery");
 
             MedtronicUITask responseTask = medtronicUIComm.executeCommand(MedtronicCommandType.SetBolus,
                 detailedBolusInfo.insulin);
 
             Boolean response = (Boolean)responseTask.returnData;
 
-            // TODO display bolus
-
-            // setRefreshButtonEnabled(true);
-
             setRefreshButtonEnabled(true);
-            bolusDeliveryType = BolusDeliveryType.Idle;
+
+            // LOG.debug("MedtronicPumpPlugin::deliverBolus - Response: {}", response);
 
             if (response) {
 
                 if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
-                    LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
+                    // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
 
                     new Thread(() -> {
                         // Looper.prepare();
-                        LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog - before");
+                        // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog - before");
                         SystemClock.sleep(2000);
-                        LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog. Context: "
-                            + MainApp.instance().getApplicationContext());
+                        // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog. Context: "
+                        // + MainApp.instance().getApplicationContext());
 
-                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                        // i.putExtra("soundid", R.raw.boluserror);
+                        Intent i = new Intent(MainApp.instance(), MessageHelperActivity.class);
                         i.putExtra("status", MainApp.gs(R.string.medtronic_cmd_cancel_bolus_not_supported));
                         i.putExtra("title", MainApp.gs(R.string.combo_warning));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         MainApp.instance().startActivity(i);
 
-                        // OKDialog.show(MainApp.instance().getApplicationContext(), //
-                        // MainApp.gs(R.string.combo_warning), //
-                        // MainApp.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), null);
                     }).start();
                 }
 
@@ -737,142 +739,21 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
                     : MedtronicConst.Statistics.StandardBoluses);
 
-                if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
-                    return new PumpEnactResult() //
-                        .success(false) //
-                        .enacted(response) //
-                        .bolusDelivered(detailedBolusInfo.insulin) //
-                        .carbsDelivered(detailedBolusInfo.carbs) //
-                        .comment(MainApp.gs(R.string.medtronic_cmd_cancel_bolus_not_supported));
-                } else {
-                    return new PumpEnactResult().success(response) //
-                        .enacted(response) //
-                        .bolusDelivered(detailedBolusInfo.insulin) //
-                        .carbsDelivered(detailedBolusInfo.carbs);
-                }
-            } else {
+                return new PumpEnactResult().success(response) //
+                    .enacted(response) //
+                    .bolusDelivered(detailedBolusInfo.insulin) //
+                    .carbsDelivered(detailedBolusInfo.carbs);
 
+            } else {
                 return new PumpEnactResult() //
                     .success(bolusDeliveryType == BolusDeliveryType.CancelDelivery) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered));
-
             }
 
-            // pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
-            // MainApp.bus().post(new EventComboPumpUpdateGUI());
-            //
-            // // check pump is ready and all pump bolus records are known
-            // CommandResult stateResult = runCommand(null, 2, () -> ruffyScripter.readQuickInfo(1));
-            // if (!stateResult.success) {
-            // return new PumpEnactResult().success(false).enacted(false)
-            // .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
-            // }
-            // if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
-            // return new PumpEnactResult().success(false).enacted(false)
-            // .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
-            // }
-            // // the commands above ensured a connection was made, which updated this field
-            // if (pumpHistoryChanged) {
-            // return new PumpEnactResult().success(false).enacted(false)
-            // .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
-            // }
-            //
-            // Bolus previousBolus = stateResult.history != null && !stateResult.history.bolusHistory.isEmpty()
-            // ? stateResult.history.bolusHistory.get(0)
-            // : new Bolus(0, 0, false);
-            //
-            // // reject a bolus if one with the exact same size was successfully delivered
-            // // within the last 1-2 minutes
-            // if (Math.abs(previousBolus.amount - detailedBolusInfo.insulin) < 0.01
-            // && previousBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
-            // log.debug("Bolu request rejected, same bolus was successfully delivered very recently");
-            // return new PumpEnactResult().success(false).enacted(false)
-            // .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
-            // }
-            //
-            //
-            //
-            // if (cancelBolus) {
-            // return new PumpEnactResult().success(true).enacted(false);
-            // }
-            //
-            // BolusProgressReporter progressReporter = detailedBolusInfo.isSMB ? nullBolusProgressReporter :
-            // bolusProgressReporter;
-            //
-            // // start bolus delivery
-            // scripterIsBolusing = true;
-            // runCommand(null, 0,
-            // () -> ruffyScripter.deliverBolus(detailedBolusInfo.insulin, progressReporter));
-            // scripterIsBolusing = false;
-            //
-            // // Note that the result of the issued bolus command is not checked. If there was
-            // // a connection problem, ruffyscripter tried to recover and we can just check the
-            // // history below to see what was actually delivered
-            //
-            // // get last bolus from pump history for verification
-            // // (reads 2 records to update `recentBoluses` further down)
-            // CommandResult postBolusStateResult = runCommand(null, 3, () -> ruffyScripter.readQuickInfo(2));
-            // if (!postBolusStateResult.success) {
-            // return new PumpEnactResult().success(false).enacted(false)
-            // .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
-            // }
-            // Bolus lastPumpBolus = postBolusStateResult.history != null &&
-            // !postBolusStateResult.history.bolusHistory.isEmpty()
-            // ? postBolusStateResult.history.bolusHistory.get(0)
-            // : null;
-            //
-            // // no bolus delivered?
-            // if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
-            // if (cancelBolus) {
-            // return new PumpEnactResult().success(true).enacted(false);
-            // } else {
-            // return new PumpEnactResult()
-            // .success(false)
-            // .enacted(false)
-            // .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
-            // }
-            // }
-            //
-            // // at least some insulin delivered, so add it to treatments
-            // if (!addBolusToTreatments(detailedBolusInfo, lastPumpBolus))
-            // return new PumpEnactResult().success(false).enacted(true)
-            // .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
-            //
-            // // check pump bolus record has a sane timestamp
-            // long now = System.currentTimeMillis();
-            // if (lastPumpBolus.timestamp < now - 10 * 60 * 1000 || lastPumpBolus.timestamp > now + 10 * 60 * 1000) {
-            // Notification notification = new Notification(Notification.COMBO_PUMP_ALARM,
-            // MainApp.gs(R.string.combo_suspious_bolus_time), Notification.URGENT);
-            // MainApp.bus().post(new EventNewNotification(notification));
-            // }
-            //
-            // // update `recentBoluses` so the bolus was just delivered won't be detected as a new
-            // // bolus that has been delivered on the pump
-            // recentBoluses = postBolusStateResult.history.bolusHistory;
-            //
-            // // only a partial bolus was delivered
-            // if (Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01) {
-            // if (cancelBolus) {
-            // return new PumpEnactResult().success(true).enacted(true);
-            // }
-            // return new PumpEnactResult().success(false).enacted(true)
-            // .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered,
-            // lastPumpBolus.amount, detailedBolusInfo.insulin));
-            // }
-            //
-            // // full bolus was delivered successfully
-            // incrementBolusCount();
-            // return new PumpEnactResult()
-            // .success(true)
-            // .enacted(lastPumpBolus.amount > 0)
-            // .bolusDelivered(lastPumpBolus.amount)
-            // .carbsDelivered(detailedBolusInfo.carbs);
         } finally {
-            // pump.activity = null;
-            // MainApp.bus().post(new EventComboPumpUpdateGUI());
             MainApp.bus().post(new EventRefreshOverview("Bolus"));
-            // cancelBolus = false;
+            this.bolusDeliveryType = BolusDeliveryType.Idle;
             triggerUIChange();
         }
     }
@@ -903,7 +784,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.bolusDeliveryType = BolusDeliveryType.CancelDelivery;
 
         // if (isLoggingEnabled())
-        LOG.warn("MedtronicPumpPlugin::deliverBolus - Stop Bolus Delivery.");
+        // LOG.warn("MedtronicPumpPlugin::deliverBolus - Stop Bolus Delivery.");
     }
 
 
@@ -1183,6 +1064,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     gsonInstancePretty.toJson(lastPumpHistoryEntry));
             medtronicHistoryData.setIsInInit(false);
             medtronicHistoryData.setLastHistoryRecordTime(null);
+
+            // targetDate = lastPumpHistoryEntry.atechDateTime;
         }
 
         MedtronicUITask responseTask2 = medtronicUIComm.executeCommand(MedtronicCommandType.GetHistoryData,

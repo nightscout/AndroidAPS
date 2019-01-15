@@ -180,7 +180,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                             pumpResponse.getRawContent());
 
                         MedtronicDeviceType pumpModel = (MedtronicDeviceType)dataResponse;
-                        boolean valid = pumpModel != MedtronicDeviceType.Unknown_Device;
+                        boolean valid = (pumpModel != MedtronicDeviceType.Unknown_Device);
+
+                        if (MedtronicUtil.getMedtronicPumpModel() == null && valid) {
+                            MedtronicUtil.setMedtronicPumpModel(pumpModel);
+                        }
 
                         LOG.debug("isDeviceReachable. PumpModel is {} - Valid: {} (rssi={})", pumpModel.name(), valid,
                             radioResponse.rssi);
@@ -412,7 +416,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public PumpHistoryResult getPumpHistory(PumpHistoryEntry lastEntry, LocalDateTime targetDate) {
 
-        PumpHistoryResult pumpTotalResult = new PumpHistoryResult(lastEntry, DateTimeUtil.toATechDate(targetDate));
+        PumpHistoryResult pumpTotalResult = new PumpHistoryResult(lastEntry, targetDate == null ? null
+            : DateTimeUtil.toATechDate(targetDate));
 
         if (doWakeUpBeforeCommand)
             wakeUp(receiverDeviceAwakeForMinutes, false);
