@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_failed">Connection failed</string>
+    <string name="connection_lost">Connection lost</string>
+    <string name="pairing_rejected">Pairing rejected</string>
+    <string name="socket_creation_failed">Socket creation failed</string>
+    <string name="timeout">Timeout</string>
+    <string name="maximum_number_of_bolus_type_already_running">Maximum number of bolus type already running</string>
+    <string name="no_active_tbr_to_cancel">No active TBR to cancel</string>
+    <string name="no_active_tbr_to_change">No active TBR to change</string>
+    <string name="no_such_bolus_to_cancel">No such bolus to cancel</string>
+    <string name="pump_already_in_that_state_exception">Pump already in that state</string>
+    <string name="run_mode_not_allowed">Run mode not allowed</string>
+</resources>

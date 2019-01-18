@@ -35,6 +35,7 @@ import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelTempBasal;
 import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
+import info.nightscout.androidaps.queue.commands.CommandInsightSetTBROverNotification;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
 import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
@@ -42,6 +43,8 @@ import info.nightscout.androidaps.queue.commands.CommandReadStatus;
 import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
 import info.nightscout.androidaps.queue.commands.CommandSetUserSettings;
+import info.nightscout.androidaps.queue.commands.CommandStartPump;
+import info.nightscout.androidaps.queue.commands.CommandStopPump;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
@@ -237,6 +240,21 @@ public class CommandQueue {
         notifyAboutNewCommand();
 
         return true;
+    }
+
+    public void stopPump(Callback callback) {
+        add(new CommandStopPump(callback));
+        notifyAboutNewCommand();
+    }
+
+    public void startPump(Callback callback) {
+        add(new CommandStartPump(callback));
+        notifyAboutNewCommand();
+    }
+
+    public void setTBROverNotification(Callback callback, boolean enable) {
+        add(new CommandInsightSetTBROverNotification(callback, enable));
+        notifyAboutNewCommand();
     }
 
     public synchronized void cancelAllBoluses() {
