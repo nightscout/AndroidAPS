@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_b
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.ActiveBolus;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.ActiveTBR;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.CartridgeStatus;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
@@ -243,9 +244,13 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
     }
 
     private void getCartridgeStatusItem(List<View> statusItems) {
-        if (LocalInsightPlugin.getInstance().getCartridgeStatus() == null) return;
-        statusItems.add(getStatusItem(MainApp.gs(R.string.pump_reservoir_label),
-                DecimalFormatter.to2Decimal(LocalInsightPlugin.getInstance().getCartridgeStatus().getRemainingAmount()) + "U"));
+        CartridgeStatus cartridgeStatus = LocalInsightPlugin.getInstance().getCartridgeStatus();
+        if (cartridgeStatus == null) return;
+        String status;
+        if (cartridgeStatus.isInserted())
+            status = DecimalFormatter.to2Decimal(LocalInsightPlugin.getInstance().getCartridgeStatus().getRemainingAmount()) + "U";
+        else status = MainApp.gs(R.string.not_inserted);
+        statusItems.add(getStatusItem(MainApp.gs(R.string.pump_reservoir_label), status));
     }
 
     private void getTDDItems(List<View> statusItems) {
