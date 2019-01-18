@@ -67,6 +67,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.his
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.history_events.StartOfTBREvent;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.history_events.TotalDailyDoseEvent;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.history_events.TubeFilledEvent;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.ActiveBRProfileBlock;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile1Block;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile2Block;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile3Block;
@@ -335,7 +336,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     private void fetchBasalProfile() throws Exception {
         Class<? extends BRProfileBlock> parameterBlock = null;
-        switch (activeBasalRate.getActiveBasalProfile()) {
+        switch (ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, ActiveBRProfileBlock.class).getActiveBasalProfile()) {
             case PROFILE_1:
                 parameterBlock = BRProfile1Block.class;
                 break;
