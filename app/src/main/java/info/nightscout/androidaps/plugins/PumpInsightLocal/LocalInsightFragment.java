@@ -36,8 +36,8 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
     private boolean viewsCreated;
     private Button operatingMode;
     private Button tbrOverNotification;
-    private LinearLayout statusItemContainer = null;
     private Button refresh;
+    private LinearLayout statusItemContainer = null;
 
     private Callback operatingModeCallback;
     private Callback tbrOverNotificationCallback;
@@ -56,6 +56,12 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
         refresh.setOnClickListener(this);
         viewsCreated = true;
         return view;
+    }
+
+    @Override
+    public synchronized void onDestroyView() {
+        super.onDestroyView();
+        viewsCreated = false;
     }
 
     @Override
