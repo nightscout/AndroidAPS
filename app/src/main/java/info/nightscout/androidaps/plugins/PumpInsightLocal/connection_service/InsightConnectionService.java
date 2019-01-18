@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BolusProgressReporter;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.ReadParameterBlockMessage;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.configuration.CloseConfigurationWriteSessionMessage;
@@ -262,16 +263,16 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         if (!connectionRequests.contains(lock)) return;
         connectionRequests.remove(lock);
         if (connectionRequests.size() == 0) {
-            //TODO: Make adjustable
-            log.info("Last connection lock released, will disconnect in 5 seconds");
-            if (recoveryTimer != null) {
+            if (state == InsightState.RECOVERING) {
                 recoveryTimer.interrupt();
                 recoveryTimer = null;
                 setState(InsightState.DISCONNECTED);
-            } else {
+                cleanup();
+            } else if (state != InsightState.DISCONNECTED) {
                 long disconnectTimeout = SP.getInt("insight_disconnect_delay", 5);
                 disconnectTimeout = Math.min(disconnectTimeout, 15);
                 disconnectTimeout = Math.max(disconnectTimeout, 0);
+                log.info("Last connection lock released, will disconnect " + disconnectTimeout + " seconds");
                 disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000, this::disconnect);
             }
         }
@@ -326,20 +327,24 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         }
         log.info("Exception occurred: " + e.getClass().getSimpleName());
         if (pairingDataStorage.isPaired()) {
-            setState(InsightState.RECOVERING);
+            setState(connectionRequests.size() != 0 ? InsightState.RECOVERING : InsightState.DISCONNECTED);
             cleanup();
             messageQueue.completeActiveRequest(e);
             messageQueue.completePendingRequests(e);
-            if (!(e instanceof ConnectionFailedException)) {
-                connect();
-            } else {
-                int recoveryDuration = SP.getInt("insight_recovery_duration", 5);
-                recoveryDuration = Math.min(recoveryDuration, 20);
-                recoveryDuration = Math.max(recoveryDuration, 0);
-                recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration * 1000, () -> {
-                    recoveryTimer = null;
+            if (connectionRequests.size() != 0) {
+                if (!(e instanceof ConnectionFailedException)) {
                     connect();
-                });
+                } else {
+                    int recoveryDuration = SP.getInt("insight_recovery_duration", 5);
+                    recoveryDuration = Math.min(recoveryDuration, 20);
+                    recoveryDuration = Math.max(recoveryDuration, 0);
+                    recoveryTimer = DelayedActionThread.runDelayed("RecoveryTimer", recoveryDuration * 1000, () -> {
+                        recoveryTimer = null;
+                        synchronized (InsightConnectionService.this) {
+                            if (!Thread.currentThread().isInterrupted()) connect();
+                        }
+                    });
+                }
             }
         } else {
             setState(InsightState.NOT_PAIRED);
