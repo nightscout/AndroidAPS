@@ -374,12 +374,18 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 cartridgeStatus = connectionService.requestMessage(new GetCartridgeStatusMessage()).await().getCartridgeStatus();
             if (registerMessage.isTotalDailyDoseChanged())
                 totalDailyDose = connectionService.requestMessage(new GetTotalDailyDoseMessage()).await().getTDD();
-            if (registerMessage.isActiveBasalRateChanged())
-                activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
-            if (registerMessage.isActiveTBRChanged())
-                activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
-            if (registerMessage.isActiveBolusesChanged())
-                activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+            if (operatingMode == OperatingMode.STARTED) {
+                if (registerMessage.isActiveBasalRateChanged())
+                    activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
+                if (registerMessage.isActiveTBRChanged())
+                    activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
+                if (registerMessage.isActiveBolusesChanged())
+                    activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+            } else {
+                activeBasalRate = null;
+                activeTBR = null;
+                activeBoluses = null;
+            }
 
         } else {
             ResetPumpStatusRegisterMessage resetMessage = new ResetPumpStatusRegisterMessage();
@@ -395,9 +401,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             batteryStatus = connectionService.requestMessage(new GetBatteryStatusMessage()).await().getBatteryStatus();
             cartridgeStatus = connectionService.requestMessage(new GetCartridgeStatusMessage()).await().getCartridgeStatus();
             totalDailyDose = connectionService.requestMessage(new GetTotalDailyDoseMessage()).await().getTDD();
-            activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
-            activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
-            activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+            if (operatingMode == OperatingMode.STARTED) {
+                activeBasalRate = connectionService.requestMessage(new GetActiveBasalRateMessage()).await().getActiveBasalRate();
+                activeTBR = connectionService.requestMessage(new GetActiveTBRMessage()).await().getActiveTBR();
+                activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+            } else {
+                activeBasalRate = null;
+                activeTBR = null;
+                activeBoluses = null;
+            }
             statusLoaded = true;
         }
         lastUpdated = System.currentTimeMillis();
