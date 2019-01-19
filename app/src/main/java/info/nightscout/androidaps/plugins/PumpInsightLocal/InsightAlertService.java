@@ -80,8 +80,13 @@ public class InsightAlertService extends Service implements InsightConnectionSer
 
     public void ignore(AlertType alertType) {
         synchronized ($alertLock) {
-            ignoreTimestamp = System.currentTimeMillis();
-            ignoreType = alertType;
+            if (alertType == null) {
+                ignoreTimestamp = 0;
+                ignoreType = null;
+            } else {
+                ignoreTimestamp = System.currentTimeMillis();
+                ignoreType = alertType;
+            }
         }
     }
 

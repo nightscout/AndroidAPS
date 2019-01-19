@@ -735,11 +735,13 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     private PumpEnactResult cancelTempBasalOnly() {
         PumpEnactResult result = new PumpEnactResult();
         try {
+            alertService.ignore(AlertType.WARNING_36);
             connectionService.requestMessage(new CancelTBRMessage()).await();
             result.success = true;
             result.enacted = true;
             result.isTempCancel = true;
             confirmAlert(AlertType.WARNING_36);
+            alertService.ignore(null);
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
         } catch (NoActiveTBRToCanceLException e) {
             result.success = true;
@@ -773,6 +775,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     cancelBolusMessage.setBolusID(activeBolus.getBolusID());
                     connectionService.requestMessage(cancelBolusMessage).await();
                     confirmAlert(AlertType.WARNING_38);
+                    alertService.ignore(null);
                     InsightBolusID insightBolusID = MainApp.getDbHelper().getInsightBolusID(connectionService.getPumpSystemIdentification().getSerialNumber(),
                             activeBolus.getBolusID(), System.currentTimeMillis());
                     if (insightBolusID != null) {
