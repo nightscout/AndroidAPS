@@ -79,8 +79,10 @@ public class InsightAlertService extends Service implements InsightConnectionSer
     }
 
     public void ignore(AlertType alertType) {
-        ignoreTimestamp = System.currentTimeMillis();
-        ignoreType = alertType;
+        synchronized ($alertLock) {
+            ignoreTimestamp = System.currentTimeMillis();
+            ignoreType = alertType;
+        }
     }
 
     @Nullable
@@ -132,26 +134,26 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                         if (alertActivity != null && alert != null)
                             new Handler(Looper.getMainLooper()).post(() -> alertActivity.update(alert));
                     }
-                }
-                if (alert == null) {
-                    stopAlerting();
-                    if (connectionRequested) {
-                        connectionService.withdrawConnectionRequest(this);
-                        connectionRequested = false;
-                    }
-                    if (alertActivity != null)
-                        new Handler(Looper.getMainLooper()).post(() -> alertActivity.finish());
-                } else if (!(alert.getAlertType() == ignoreType && System.currentTimeMillis() - ignoreTimestamp < 10000))  {
-                    if (alert.getAlertStatus() == AlertStatus.ACTIVE) alert();
-                    else stopAlerting();
-                    if (!connectionRequested) {
-                        connectionService.requestConnection(this);
-                        connectionRequested = true;
-                    }
-                    if (alertActivity == null) {
-                        Intent intent = new Intent(InsightAlertService.this, InsightAlertActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        new Handler(Looper.getMainLooper()).post(() -> startActivity(intent));
+                    if (alert == null) {
+                        stopAlerting();
+                        if (connectionRequested) {
+                            connectionService.withdrawConnectionRequest(this);
+                            connectionRequested = false;
+                        }
+                        if (alertActivity != null)
+                            new Handler(Looper.getMainLooper()).post(() -> alertActivity.finish());
+                    } else if (!(alert.getAlertType() == ignoreType && System.currentTimeMillis() - ignoreTimestamp < 10000))  {
+                        if (alert.getAlertStatus() == AlertStatus.ACTIVE) alert();
+                        else stopAlerting();
+                        if (!connectionRequested) {
+                            connectionService.requestConnection(this);
+                            connectionRequested = true;
+                        }
+                        if (alertActivity == null) {
+                            Intent intent = new Intent(InsightAlertService.this, InsightAlertActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            new Handler(Looper.getMainLooper()).post(() -> startActivity(intent));
+                        }
                     }
                 }
             } catch (InterruptedException ignored) {
