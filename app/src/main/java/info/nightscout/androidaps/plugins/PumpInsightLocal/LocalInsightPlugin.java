@@ -596,25 +596,40 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         PumpEnactResult result = new PumpEnactResult();
         if (activeBasalRate == null) return result;
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
-        try {
-            if (isFakingTempsByExtendedBoluses()) {
-                PumpEnactResult cancelResult = cancelTempBasal(true);
-                if (cancelResult.success) {
-                    if (percent > 250) {
-                        PumpEnactResult ebResult = setExtendedBolus((absoluteRate - getBaseBasalRate()) / 60D * ((double) durationInMinutes), durationInMinutes);
+        if (isFakingTempsByExtendedBoluses()) {
+            PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();
+            if (cancelEBResult.success) {
+                if (percent > 250) {
+                    PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
+                    if (cancelTBRResult.success) {
+                        PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
+                                * ((double) durationInMinutes),durationInMinutes);
                         if (ebResult.success) {
                             result.success = true;
                             result.enacted = true;
                             result.isPercent = false;
                             result.absolute = absoluteRate;
                             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-                        } else result.comment = ebResult.comment;
-                    } else return setTempBasalPercent((int) percent, durationInMinutes, profile, enforceNew);
-                } else result.comment = cancelResult.comment;
-            } else return setTempBasalPercent((int) percent, durationInMinutes, profile, enforceNew);
+                        } else {
+                            result.comment = ebResult.comment;
+                        }
+                    } else {
+                        result.comment = cancelTBRResult.comment;
+                    }
+                } else {
+                    result = setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+                }
+            } else {
+                result.comment = cancelEBResult.comment;
+            }
+        } else {
+            result = setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+        }
+        try {
+            fetchStatus();
+            readHistory();
         } catch (Exception e) {
-            log.info("Error while setting TBR: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            log.info("Error after setting TBR: " + e.getClass().getCanonicalName());
         }
         return result;
     }
@@ -653,6 +668,17 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        PumpEnactResult result = cancelExtendedBolusOnly();
+        try {
+            fetchStatus();
+            readHistory();
+        } catch (Exception e) {
+            log.info("Exception after delivering extended bolus: " + e.getClass().getCanonicalName());
+        }
+        return result;
+    }
+
+    public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = new PumpEnactResult();
         try {
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
@@ -676,8 +702,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.success = true;
             result.enacted = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            readHistory();
-            fetchStatus();
         } catch (Exception e) {
             log.info("Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
@@ -688,21 +712,30 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult cancelEBResult = null;
+        if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
+        PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
+        result.success = (cancelEBResult != null && cancelEBResult.success) && cancelTBRResult.success;
+        result.enacted = (cancelEBResult != null && cancelEBResult.enacted) || cancelTBRResult.enacted;
+        result.comment = cancelEBResult != null ? cancelEBResult.comment : cancelTBRResult.comment;
         try {
-            PumpEnactResult cancelEBResult = null;
-            if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolus();
+            fetchStatus();
+            readHistory();
+        } catch (Exception e) {
+            log.info("Exception after canceling TBR: " + e.getClass().getCanonicalName());
+        }
+        return result;
+    }
+
+    private PumpEnactResult cancelTempBasalOnly() {
+        PumpEnactResult result = new PumpEnactResult();
+        try {
             connectionService.requestMessage(new CancelTBRMessage()).await();
             result.success = true;
             result.enacted = true;
             result.isTempCancel = true;
             confirmAlert(AlertType.WARNING_36);
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            if (isFakingTempsByExtendedBoluses() && !cancelEBResult.success) {
-                result.success = false;
-                result.enacted = false;
-            }
-            readHistory();
-            fetchStatus();
         } catch (NoActiveTBRToCanceLException e) {
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
@@ -715,6 +748,17 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public PumpEnactResult cancelExtendedBolus() {
+        PumpEnactResult result = cancelExtendedBolusOnly();
+        try {
+            fetchStatus();
+            readHistory();
+        } catch (Exception e) {
+            log.info("Exception after canceling bolus: " + e.getClass().getCanonicalName());
+        }
+        return result;
+    }
+
+    private PumpEnactResult cancelExtendedBolusOnly() {
         PumpEnactResult result = new PumpEnactResult();
         try {
             for (ActiveBolus activeBolus : activeBoluses) {
@@ -744,8 +788,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             }
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            readHistory();
-            fetchStatus();
         } catch (Exception e) {
             log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
