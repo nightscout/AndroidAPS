@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -995,7 +996,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         for (HistoryEvent historyEvent : historyEvents)
             if (!processHistoryEvent(serial, historyEvent)) break;
         Collections.reverse(temporaryBasals);
-        for (TemporaryBasal temporaryBasal : temporaryBasals) TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
         for (InsightPumpID pumpID : pumpStartedEvents) {
             long tbrStart = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp).timestamp + 10000;
             TemporaryBasal temporaryBasal = new TemporaryBasal();
@@ -1005,10 +1005,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             temporaryBasal.pumpId = pumpID.id;
             temporaryBasal.percentRate = 0;
             temporaryBasal.isAbsolute = false;
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
+            temporaryBasals.add(temporaryBasal);
         }
-        temporaryBasals = null;
         pumpStartedEvents = null;
+        Collections.sort(temporaryBasals, (o1, o2) -> (int) (o1.date - o2.date));
+        for (TemporaryBasal temporaryBasal : temporaryBasals) TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
+        temporaryBasals = null;
         if (historyEvents.size() > 0) {
             InsightHistoryOffset historyOffset = new InsightHistoryOffset();
             historyOffset.pumpSerial = serial;
