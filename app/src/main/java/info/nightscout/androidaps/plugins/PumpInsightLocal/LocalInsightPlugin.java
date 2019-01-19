@@ -611,6 +611,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                             result.enacted = true;
                             result.isPercent = false;
                             result.absolute = absoluteRate;
+                            result.duration = durationInMinutes;
                             result.comment = MainApp.gs(R.string.virtualpump_resultok);
                         } else {
                             result.comment = ebResult.comment;
@@ -619,13 +620,13 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         result.comment = cancelTBRResult.comment;
                     }
                 } else {
-                    result = setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
                 }
             } else {
                 result.comment = cancelEBResult.comment;
             }
         } else {
-            result = setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
         }
         try {
             fetchStatus();
@@ -656,6 +657,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             }
             result.isPercent = true;
             result.percent = percent;
+            result.duration = durationInMinutes;
             result.success = true;
             result.enacted = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
