@@ -160,8 +160,8 @@ public class MainApp extends Application {
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRSPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(LocalInsightPlugin.getInstance());
             pluginsList.add(CareportalPlugin.getPlugin());
-            if (Config.PUMPDRIVERS && engineeringMode)
-                pluginsList.add(InsightPlugin.getPlugin()); // <-- Enable Insight plugin here
+            /*if (Config.PUMPDRIVERS && engineeringMode)
+                pluginsList.add(InsightPlugin.getPlugin());*/
             if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());
