@@ -272,7 +272,7 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
         if (LocalInsightPlugin.getInstance().getActiveTBR() == null) return;
         ActiveTBR activeTBR = LocalInsightPlugin.getInstance().getActiveTBR();
         statusItems.add(getStatusItem(MainApp.gs(R.string.pump_tempbasal_label),
-                MainApp.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
+                MainApp.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
     }
 
     private void getBolusItems(List<View> statusItems) {
