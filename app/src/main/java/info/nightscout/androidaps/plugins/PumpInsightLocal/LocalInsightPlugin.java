@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -48,6 +49,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.Service;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.HistoryReadingDirection;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.ReadHistoryEventsMessage;
@@ -815,7 +817,50 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
-        return new JSONObject();
+        long now = System.currentTimeMillis();
+        if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
+            return null;
+        }
+
+        final JSONObject pump = new JSONObject();
+        final JSONObject battery = new JSONObject();
+        final JSONObject status = new JSONObject();
+        final JSONObject extended = new JSONObject();
+        try {
+            status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
+            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            try {
+                extended.put("ActiveProfile", ProfileFunctions.getInstance().getProfileName());
+            } catch (Exception e) {
+            }
+            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+            if (tb != null) {
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+            }
+            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(now);
+            if (eb != null) {
+                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
+                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+            }
+            extended.put("BaseBasalRate", getBaseBasalRate());
+            status.put("timestamp", DateUtil.toISOString(now));
+
+            pump.put("extended", extended);
+            if (statusLoaded) {
+                status.put("status", operatingMode != OperatingMode.STARTED ? "suspended" : "normal");
+                pump.put("status", status);
+                battery.put("percent", batteryStatus.getBatteryAmount());
+                pump.put("battery", battery);
+                pump.put("reservoir", cartridgeStatus.getRemainingAmount());
+            }
+            pump.put("clock", DateUtil.toISOString(now));
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        return pump;
     }
 
     @Override
