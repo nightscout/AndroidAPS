@@ -844,7 +844,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return true;
+        return SP.getBoolean("insight_enable_tbr_emulation", false);
     }
 
     @Override
