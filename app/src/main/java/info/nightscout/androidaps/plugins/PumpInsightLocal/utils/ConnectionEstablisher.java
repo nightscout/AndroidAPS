@@ -63,7 +63,7 @@ public class ConnectionEstablisher extends Thread {
     public void close() {
         try {
             interrupt();
-            if (socket.isConnected()) socket.close();
+            if (socket != null && socket.isConnected()) socket.close();
         } catch (IOException ignored) {
         }
     }
