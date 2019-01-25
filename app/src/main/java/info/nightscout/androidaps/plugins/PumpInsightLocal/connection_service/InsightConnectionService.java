@@ -249,6 +249,10 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         log.info("Insight state changed: " + state.name());
     }
 
+    public synchronized boolean hasRequestedConnection(Object lock) {
+        return connectionRequests.contains(lock);
+    }
+
     public synchronized void requestConnection(Object lock) {
         if (connectionRequests.contains(lock)) return;
         connectionRequests.add(lock);
