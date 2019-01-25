@@ -1424,6 +1424,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public void stateChanged(InsightState state) {
         if (state == InsightState.CONNECTED) statusLoaded = false;
         else if (state == InsightState.NOT_PAIRED) {
+            connectionService.withdrawConnectionRequest(this);
             statusLoaded = false;
             profileBlocks = null;
             operatingMode = null;
