@@ -261,12 +261,17 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public boolean isConnected() {
-        return connectionService != null && alertService != null && connectionService.getState() == InsightState.CONNECTED;
+        if (connectionService == null || alertService == null) return false;
+        return connectionService.getState() == InsightState.CONNECTED;
     }
 
     @Override
     public boolean isConnecting() {
-        return connectionService != null && alertService != null && connectionService.hasRequestedConnection(this);
+        if (connectionService == null || alertService == null) return false;
+        InsightState state = connectionService.getState();
+        return state == InsightState.CONNECTING
+                || state == InsightState.APP_CONNECT_MESSAGE
+                || state == InsightState.RECOVERING;
     }
 
     @Override
