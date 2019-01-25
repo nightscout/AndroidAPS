@@ -122,6 +122,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ParameterBlockU
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
 public class LocalInsightPlugin extends PluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
@@ -932,7 +933,31 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return "";
+        StringBuilder ret = new StringBuilder();
+        if (connectionService.getLastConnected() != 0) {
+            Long agoMsec = System.currentTimeMillis() - connectionService.getLastConnected();
+            int agoMin = (int) (agoMsec / 60d / 1000d);
+            ret.append(MainApp.gs(R.string.short_status_last_connected, agoMin) + "\n");
+        }
+        if (activeTBR != null) {
+            ret.append(MainApp.gs(R.string.short_status_tbr, activeTBR.getPercentage(),
+                    activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration()) + "\n");
+        }
+        if (activeBoluses != null) for (ActiveBolus activeBolus : activeBoluses) {
+            if (activeBolus.getBolusType() == BolusType.STANDARD) continue;
+            ret.append(MainApp.gs(activeBolus.getBolusType() == BolusType.MULTIWAVE ? R.string.short_status_multiwave : R.string.short_status_extended,
+                    activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration()) + "\n");
+        }
+        if (!veryShort && totalDailyDose != null) {
+            ret.append(MainApp.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal()) + "\n");
+        }
+        if (cartridgeStatus != null) {
+            ret.append(MainApp.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount()) + "\n");
+        }
+        if (batteryStatus != null) {
+            ret.append(MainApp.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount()) + "\n");
+        }
+        return ret.toString();
     }
 
     @Override
