@@ -537,7 +537,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 t.isSMB = detailedBolusInfo.isSMB;
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 bolusingEvent.t = t;
-                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, 0d);
+                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, detailedBolusInfo.insulin);
                 bolusingEvent.percent = 0;
                 MainApp.bus().post(bolusingEvent);
                 int trials = 0;
