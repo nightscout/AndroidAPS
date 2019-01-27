@@ -565,6 +565,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     } else if (trials == -1 || trials++ >=5) break;
                     Thread.sleep(200);
                 }
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(bolusingEvent);
                 readHistory();
                 fetchStatus();
             } catch (Exception e) {
