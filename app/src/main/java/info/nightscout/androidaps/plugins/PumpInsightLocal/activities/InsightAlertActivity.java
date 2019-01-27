@@ -76,6 +76,7 @@ public class InsightAlertActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        alertService.setAlertActivity(null);
         unbindService(serviceConnection);
         super.onDestroy();
     }
