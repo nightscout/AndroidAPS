@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -50,7 +49,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpInsight.utils.Helpers;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.Service;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.HistoryReadingDirection;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.ReadHistoryEventsMessage;
@@ -123,7 +121,6 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ParameterBlockU
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
 public class LocalInsightPlugin extends PluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
@@ -145,7 +142,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             } else if (binder instanceof InsightAlertService.LocalBinder) {
                 alertService = ((InsightAlertService.LocalBinder) binder).getService();
             }
-            if (connectionService != null && alertService != null) MainApp.bus().post(new EventInitializationChanged());
+            if (connectionService != null && alertService != null)
+                MainApp.bus().post(new EventInitializationChanged());
         }
 
         @Override
@@ -285,17 +283,20 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public void connect(String reason) {
-        if (connectionService != null && alertService != null) connectionService.requestConnection(this);
+        if (connectionService != null && alertService != null)
+            connectionService.requestConnection(this);
     }
 
     @Override
     public void disconnect(String reason) {
-        if (connectionService != null && alertService != null) connectionService.withdrawConnectionRequest(this);
+        if (connectionService != null && alertService != null)
+            connectionService.withdrawConnectionRequest(this);
     }
 
     @Override
     public void stopConnecting() {
-        if (connectionService != null && alertService != null) connectionService.withdrawConnectionRequest(this);
+        if (connectionService != null && alertService != null)
+            connectionService.withdrawConnectionRequest(this);
     }
 
     @Override
@@ -376,7 +377,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
             if (registerMessage.isBatteryStatusChanged())
                 batteryStatus = connectionService.requestMessage(new GetBatteryStatusMessage()).await().getBatteryStatus();
-            if  (registerMessage.isCartridgeStatusChanged())
+            if (registerMessage.isCartridgeStatusChanged())
                 cartridgeStatus = connectionService.requestMessage(new GetCartridgeStatusMessage()).await().getCartridgeStatus();
             if (registerMessage.isTotalDailyDoseChanged())
                 totalDailyDose = connectionService.requestMessage(new GetTotalDailyDoseMessage()).await().getTDD();
@@ -452,7 +453,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
         try {
             BRProfileBlock profileBlock = null;
-            switch(activeBasalRate.getActiveBasalProfile()) {
+            switch (activeBasalRate.getActiveBasalProfile()) {
                 case PROFILE_1:
                     profileBlock = new BRProfile1Block();
                     break;
@@ -568,10 +569,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         int percentBefore = bolusingEvent.percent;
                         bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount()));
                         bolusingEvent.status = MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount());
-                        if (percentBefore != bolusingEvent.percent) MainApp.bus().post(bolusingEvent);
-                    } else if (trials == -1 || trials++ >=5) break;
+                        if (percentBefore != bolusingEvent.percent)
+                            MainApp.bus().post(bolusingEvent);
+                    } else if (trials == -1 || trials++ >= 5) break;
                     Thread.sleep(200);
                 }
+                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
                 bolusingEvent.percent = 100;
                 MainApp.bus().post(bolusingEvent);
                 readHistory();
@@ -620,7 +623,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
                     if (cancelTBRResult.success) {
                         PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
-                                * ((double) durationInMinutes),durationInMinutes);
+                                * ((double) durationInMinutes), durationInMinutes);
                         if (ebResult.success) {
                             result.success = true;
                             result.enacted = true;
@@ -666,7 +669,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 message.setDuration(durationInMinutes);
                 message.setPercentage(percent);
                 connectionService.requestMessage(message);
-            } else  {
+            } else {
                 SetTBRMessage message = new SetTBRMessage();
                 message.setDuration(durationInMinutes);
                 message.setPercentage(percent);
@@ -813,12 +816,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         ExtendedBolus extendedBolus = MainApp.getDbHelper().getExtendedBolusByPumpId(insightBolusID.id);
                         if (extendedBolus != null) {
                             extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
-                            if (extendedBolus.durationInMinutes <= 0) {;
+                            if (extendedBolus.durationInMinutes <= 0) {
+                                ;
                                 final String _id = extendedBolus._id;
-                                if (NSUpload.isIdValid(_id)) NSUpload.removeCareportalEntryFromNS(_id);
+                                if (NSUpload.isIdValid(_id))
+                                    NSUpload.removeCareportalEntryFromNS(_id);
                                 else UploadQueue.removeID("dbAdd", _id);
                                 MainApp.getDbHelper().delete(extendedBolus);
-                            } else TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+                            } else
+                                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
                         }
                         result.enacted = true;
                         result.success = true;
@@ -1069,7 +1075,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         List<TemporaryBasal> temporaryBasals = new ArrayList<>();
         List<InsightPumpID> pumpStartedEvents = new ArrayList<>();
         for (HistoryEvent historyEvent : historyEvents)
-            if (!processHistoryEvent(serial, temporaryBasals, pumpStartedEvents, historyEvent)) break;
+            if (!processHistoryEvent(serial, temporaryBasals, pumpStartedEvents, historyEvent))
+                break;
         Collections.reverse(temporaryBasals);
         for (InsightPumpID pumpID : pumpStartedEvents) {
             InsightPumpID stoppedEvent = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
@@ -1085,7 +1092,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             temporaryBasals.add(temporaryBasal);
         }
         Collections.sort(temporaryBasals, (o1, o2) -> (int) (o1.date - o2.date));
-        for (TemporaryBasal temporaryBasal : temporaryBasals) TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
+        for (TemporaryBasal temporaryBasal : temporaryBasals)
+            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
         if (historyEvents.size() > 0) {
             InsightHistoryOffset historyOffset = new InsightHistoryOffset();
             historyOffset.pumpSerial = serial;
@@ -1096,18 +1104,28 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
         if (event instanceof DefaultDateTimeSetEvent) return false;
-        else if (event instanceof DateTimeChangedEvent) processDateTimeChangedEvent((DateTimeChangedEvent) event);
-        else if (event instanceof CannulaFilledEvent) processCannulaFilledEvent((CannulaFilledEvent) event);
-        else if (event instanceof TotalDailyDoseEvent) processTotalDailyDoseEvent((TotalDailyDoseEvent) event);
+        else if (event instanceof DateTimeChangedEvent)
+            processDateTimeChangedEvent((DateTimeChangedEvent) event);
+        else if (event instanceof CannulaFilledEvent)
+            processCannulaFilledEvent((CannulaFilledEvent) event);
+        else if (event instanceof TotalDailyDoseEvent)
+            processTotalDailyDoseEvent((TotalDailyDoseEvent) event);
         else if (event instanceof TubeFilledEvent) processTubeFilledEvent((TubeFilledEvent) event);
-        else if (event instanceof SniffingDoneEvent) processSniffingDoneEvent((SniffingDoneEvent) event);
+        else if (event instanceof SniffingDoneEvent)
+            processSniffingDoneEvent((SniffingDoneEvent) event);
         else if (event instanceof PowerUpEvent) processPowerUpEvent((PowerUpEvent) event);
-        else if (event instanceof OperatingModeChangedEvent) processOperatingModeChangedEvent(serial, pumpStartedEvents, (OperatingModeChangedEvent) event);
-        else if (event instanceof StartOfTBREvent) processStartOfTBREvent(serial, temporaryBasals, (StartOfTBREvent) event);
-        else if (event instanceof EndOfTBREvent) processEndOfTBREvent(serial, temporaryBasals, (EndOfTBREvent) event);
-        else if (event instanceof BolusProgrammedEvent) processBolusProgrammedEvent(serial, (BolusProgrammedEvent) event);
-        else if (event instanceof BolusDeliveredEvent) processBolusDeliveredEvent(serial, (BolusDeliveredEvent) event);
-        else if (event instanceof OccurrenceOfAlertEvent) processOccurrenceOfAlertEvent((OccurrenceOfAlertEvent) event);
+        else if (event instanceof OperatingModeChangedEvent)
+            processOperatingModeChangedEvent(serial, pumpStartedEvents, (OperatingModeChangedEvent) event);
+        else if (event instanceof StartOfTBREvent)
+            processStartOfTBREvent(serial, temporaryBasals, (StartOfTBREvent) event);
+        else if (event instanceof EndOfTBREvent)
+            processEndOfTBREvent(serial, temporaryBasals, (EndOfTBREvent) event);
+        else if (event instanceof BolusProgrammedEvent)
+            processBolusProgrammedEvent(serial, (BolusProgrammedEvent) event);
+        else if (event instanceof BolusDeliveredEvent)
+            processBolusDeliveredEvent(serial, (BolusDeliveredEvent) event);
+        else if (event instanceof OccurrenceOfAlertEvent)
+            processOccurrenceOfAlertEvent((OccurrenceOfAlertEvent) event);
         return true;
     }
 
@@ -1387,7 +1405,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 title = R.string.alert_w39_title;
                 break;
         }
-        if (code != null) logNote(timestamp, MainApp.gs(R.string.insight_alert_formatter, MainApp.gs(code), MainApp.gs(title)));
+        if (code != null)
+            logNote(timestamp, MainApp.gs(R.string.insight_alert_formatter, MainApp.gs(code), MainApp.gs(title)));
     }
 
     private long parseDate(int year, int month, int day, int hour, int minute, int second) {
