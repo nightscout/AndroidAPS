@@ -116,6 +116,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.InsightSt
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.OperatingMode;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.PumpTime;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.TotalDailyDose;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.InsightException;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ParameterBlockUtil;
@@ -134,8 +135,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     private PumpDescription pumpDescription;
     private InsightAlertService alertService;
     private InsightConnectionService connectionService;
-    private List<TemporaryBasal> temporaryBasals;
-    private List<InsightPumpID> pumpStartedEvents;
     private long timeOffset;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -308,8 +307,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             fetchLimitations();
             updatePumpTimeIfNeeded();
             readHistory();
+        } catch (InsightException e) {
+            log.info("Exception while fetching status: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.info("Error while fetching status: " + e.getClass().getCanonicalName());
+            log.error("Exception while fetching status", e);
         }
     }
 
@@ -481,7 +482,13 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 fetchStatus();
             } catch (Exception ignored) {
             }
+        } catch (InsightException e) {
+            log.info("Exception while setting profile: " + e.getClass().getCanonicalName());
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
+            log.error("Exception while setting profile", e);
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
@@ -569,9 +576,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 MainApp.bus().post(bolusingEvent);
                 readHistory();
                 fetchStatus();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (InsightException e) {
                 log.info("Exception while delivering bolus: " + e.getClass().getCanonicalName());
+                result.comment = ExceptionTranslator.getString(e);
+            } catch (Exception e) {
+                log.error("Exception while delivering bolus", e);
                 result.comment = ExceptionTranslator.getString(e);
             }
         } else if (detailedBolusInfo.carbs > 0) {
@@ -591,8 +600,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 cancelBolusMessage.setBolusID(bolusID);
                 connectionService.requestMessage(cancelBolusMessage).await();
                 confirmAlert(AlertType.WARNING_38);
-            } catch (Exception e) {
+            } catch (InsightException e) {
                 log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+            } catch (Exception e) {
+                log.error("Exception while canceling bolus", e);
             }
         }).start();
     }
@@ -635,8 +646,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
+        } catch (InsightException e) {
+            log.info("Exception after setting TBR: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.info("Error after setting TBR: " + e.getClass().getCanonicalName());
+            log.error("Exception after setting TBR", e);
         }
         return result;
     }
@@ -667,8 +680,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
             readHistory();
             fetchStatus();
+        } catch (InsightException e) {
+            log.info("Exception while setting TBR: " + e.getClass().getCanonicalName());
+            result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.info("Error while setting TBR: " + e.getClass().getCanonicalName());
+            log.error("Exception while setting TBR", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -680,8 +696,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
-        } catch (Exception e) {
+        } catch (InsightException e) {
             log.info("Exception after delivering extended bolus: " + e.getClass().getCanonicalName());
+        } catch (Exception e) {
+            log.error("Exception after delivering extended bolus", e);
         }
         return result;
     }
@@ -710,8 +728,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.success = true;
             result.enacted = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        } catch (Exception e) {
+        } catch (InsightException e) {
             log.info("Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
+            result.comment = ExceptionTranslator.getString(e);
+        } catch (Exception e) {
+            log.error("Exception while delivering extended bolus", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -729,8 +750,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
-        } catch (Exception e) {
+        } catch (InsightException e) {
             log.info("Exception after canceling TBR: " + e.getClass().getCanonicalName());
+        } catch (Exception e) {
+            log.error("Exception after canceling TBR", e);
         }
         return result;
     }
@@ -749,8 +772,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         } catch (NoActiveTBRToCanceLException e) {
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        } catch (Exception e) {
+        } catch (InsightException e) {
             log.info("Exception while canceling TBR: " + e.getClass().getCanonicalName());
+            result.comment = ExceptionTranslator.getString(e);
+        } catch (Exception e) {
+            log.error("Exception while canceling TBR", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -762,8 +788,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
-        } catch (Exception e) {
+        } catch (InsightException e) {
             log.info("Exception after canceling bolus: " + e.getClass().getCanonicalName());
+        } catch (Exception e) {
+            log.error("Exception after canceling bolus", e);
         }
         return result;
     }
@@ -799,8 +827,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             }
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        } catch (Exception e) {
+        } catch (InsightException e) {
             log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+            result.comment = ExceptionTranslator.getString(e);
+        } catch (Exception e) {
+            log.error("Exception while canceling bolus", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -819,8 +850,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     } else break;
                 }
             }
+        } catch (InsightException e) {
+            log.info("Exception while confirming alert: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.info("Error while confirming alert: " + e.getClass().getCanonicalName());
+            log.error("Exception while confirming alert", e);
         }
     }
 
@@ -888,8 +921,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
             fetchStatus();
             readHistory();
+        } catch (InsightException e) {
+            log.info("Exception while stopping pump: " + e.getClass().getCanonicalName());
+            result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.info("Error while stopping pump: " + e.getClass().getCanonicalName());
+            log.error("Exception while stopping pump", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -905,8 +941,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
             fetchStatus();
             readHistory();
+        } catch (InsightException e) {
+            log.info("Exception while starting pump: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.info("Error while starting pump: " + e.getClass().getCanonicalName());
+            log.error("Exception while starting pump", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -920,9 +958,13 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             ParameterBlockUtil.writeConfigurationBlock(connectionService, tbrOverNotificationBlock);
             result.success = true;
             result.enacted = true;
+        } catch (InsightException e) {
+            tbrOverNotificationBlock.setEnabled(valueBefore);
+            log.info("Exception while updating TBR notification block: " + e.getClass().getSimpleName());
+            result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
-            log.info("Error while starting pump: " + e.getClass().getCanonicalName());
+            log.error("Exception while updating TBR notification block", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -1003,17 +1045,20 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     }
                 }
                 processHistoryEvents(pumpSerial, historyEvents);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (InsightException e) {
                 log.info("Error while reading history: " + e.getClass().getSimpleName());
+            } catch (Exception e) {
+                log.error("Error while reading history", e);
             } finally {
                 try {
                     connectionService.requestMessage(new StopReadingHistoryMessage()).await();
                 } catch (Exception ignored) {
                 }
             }
+        } catch (InsightException e) {
+            log.info("Exception while reading history: " + e.getClass().getSimpleName());
         } catch (Exception e) {
-            log.info("Error while reading history: " + e.getClass().getSimpleName());
+            log.error("Exception while reading history", e);
         }
         new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
     }
@@ -1021,13 +1066,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
         Collections.sort(historyEvents);
         Collections.reverse(historyEvents);
-        temporaryBasals = new ArrayList<>();
-        pumpStartedEvents = new ArrayList<>();
+        List<TemporaryBasal> temporaryBasals = new ArrayList<>();
+        List<InsightPumpID> pumpStartedEvents = new ArrayList<>();
         for (HistoryEvent historyEvent : historyEvents)
-            if (!processHistoryEvent(serial, historyEvent)) break;
+            if (!processHistoryEvent(serial, temporaryBasals, pumpStartedEvents, historyEvent)) break;
         Collections.reverse(temporaryBasals);
         for (InsightPumpID pumpID : pumpStartedEvents) {
-            long tbrStart = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp).timestamp + 10000;
+            InsightPumpID stoppedEvent = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
+            if (stoppedEvent == null) continue;
+            long tbrStart = stoppedEvent.timestamp + 10000;
             TemporaryBasal temporaryBasal = new TemporaryBasal();
             temporaryBasal.durationInMinutes = (int) ((pumpID.timestamp - tbrStart) / 60000);
             temporaryBasal.date = tbrStart;
@@ -1037,10 +1084,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             temporaryBasal.isAbsolute = false;
             temporaryBasals.add(temporaryBasal);
         }
-        pumpStartedEvents = null;
         Collections.sort(temporaryBasals, (o1, o2) -> (int) (o1.date - o2.date));
         for (TemporaryBasal temporaryBasal : temporaryBasals) TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
-        temporaryBasals = null;
         if (historyEvents.size() > 0) {
             InsightHistoryOffset historyOffset = new InsightHistoryOffset();
             historyOffset.pumpSerial = serial;
@@ -1049,7 +1094,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
     }
 
-    private boolean processHistoryEvent(String serial, HistoryEvent event) {
+    private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
         if (event instanceof DefaultDateTimeSetEvent) return false;
         else if (event instanceof DateTimeChangedEvent) processDateTimeChangedEvent((DateTimeChangedEvent) event);
         else if (event instanceof CannulaFilledEvent) processCannulaFilledEvent((CannulaFilledEvent) event);
@@ -1057,9 +1102,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         else if (event instanceof TubeFilledEvent) processTubeFilledEvent((TubeFilledEvent) event);
         else if (event instanceof SniffingDoneEvent) processSniffingDoneEvent((SniffingDoneEvent) event);
         else if (event instanceof PowerUpEvent) processPowerUpEvent((PowerUpEvent) event);
-        else if (event instanceof OperatingModeChangedEvent) processOperatingModeChangedEvent(serial, (OperatingModeChangedEvent) event);
-        else if (event instanceof StartOfTBREvent) processStartOfTBREvent(serial, (StartOfTBREvent) event);
-        else if (event instanceof EndOfTBREvent) processEndOfTBREvent(serial, (EndOfTBREvent) event);
+        else if (event instanceof OperatingModeChangedEvent) processOperatingModeChangedEvent(serial, pumpStartedEvents, (OperatingModeChangedEvent) event);
+        else if (event instanceof StartOfTBREvent) processStartOfTBREvent(serial, temporaryBasals, (StartOfTBREvent) event);
+        else if (event instanceof EndOfTBREvent) processEndOfTBREvent(serial, temporaryBasals, (EndOfTBREvent) event);
         else if (event instanceof BolusProgrammedEvent) processBolusProgrammedEvent(serial, (BolusProgrammedEvent) event);
         else if (event instanceof BolusDeliveredEvent) processBolusDeliveredEvent(serial, (BolusDeliveredEvent) event);
         else if (event instanceof OccurrenceOfAlertEvent) processOccurrenceOfAlertEvent((OccurrenceOfAlertEvent) event);
@@ -1113,7 +1158,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         uploadCareportalEvent(timestamp, CareportalEvent.PUMPBATTERYCHANGE);
     }
 
-    private void processOperatingModeChangedEvent(String serial, OperatingModeChangedEvent event) {
+    private void processOperatingModeChangedEvent(String serial, List<InsightPumpID> pumpStartedEvents, OperatingModeChangedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightPumpID pumpID = new InsightPumpID();
@@ -1141,7 +1186,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
     }
 
-    private void processStartOfTBREvent(String serial, StartOfTBREvent event) {
+    private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightPumpID pumpID = new InsightPumpID();
@@ -1160,7 +1205,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         temporaryBasals.add(temporaryBasal);
     }
 
-    private void processEndOfTBREvent(String serial, EndOfTBREvent event) {
+    private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightPumpID pumpID = new InsightPumpID();
