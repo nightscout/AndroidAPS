@@ -72,6 +72,7 @@ public class Notification {
     public static final int MEDTRONIC_PUMP_ALARM = 44;
     public static final int RILEYLINK_CONNECTION = 45;
     public static final int PERMISSION_PHONESTATE = 46;
+    public static final int INSIGHT_DATE_TIME_UPDATED = 47;
 
 
     public int id;
