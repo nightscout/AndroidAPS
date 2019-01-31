@@ -158,7 +158,7 @@ public class MainApp extends Application {
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRSPlugin.getPlugin());
-            if (Config.PUMPDRIVERS) pluginsList.add(LocalInsightPlugin.getInstance());
+            if (Config.PUMPDRIVERS && engineeringMode) pluginsList.add(LocalInsightPlugin.getInstance());
             pluginsList.add(CareportalPlugin.getPlugin());
             /*if (Config.PUMPDRIVERS && engineeringMode)
                 pluginsList.add(InsightPlugin.getPlugin());*/
