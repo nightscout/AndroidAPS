@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BatteryStatusDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicNotificationType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
@@ -62,6 +63,7 @@ public class MedtronicUIPostprocessor {
 
                 if (profilesByHour != null) {
                     pumpStatus.basalsByHour = profilesByHour;
+                    pumpStatus.basalProfileStatus = BasalProfileStatus.ProfileOK;
                 } else {
                     uiTask.responseType = MedtronicUIResponseType.Error;
                     uiTask.errorDescription = "No profile found.";

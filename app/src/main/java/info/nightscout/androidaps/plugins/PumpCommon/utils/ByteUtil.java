@@ -380,8 +380,18 @@ public class ByteUtil {
     }
 
 
+    // 000300050100C800A0
     public static byte[] createByteArrayFromCompactString(String dataFull) {
         return createByteArrayFromCompactString(dataFull, 0, dataFull.length());
+    }
+
+
+    // 00 03 00 05 01 00 C8 00 A0
+    public static byte[] createByteArrayFromString(String dataFull) {
+
+        String data = dataFull.replace(" ", "");
+
+        return createByteArrayFromCompactString(data, 0, data.length());
     }
 
 

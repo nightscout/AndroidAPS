@@ -101,7 +101,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     }
 
 
-    public String getDecodedData() {
+    public String getDecodedDataAsString() {
         if (decodedData == null)
             if (isNoDataEntry())
                 return "No data";
@@ -119,6 +119,11 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     public boolean isNoDataEntry() {
         return (sizes[0] == 2 && sizes[1] == 5 && sizes[2] == 0);
+    }
+
+
+    public Map<String, Object> getDecodedData() {
+        return this.decodedData;
     }
 
 
@@ -165,7 +170,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
         boolean hasData = hasData();
 
         if (hasData) {
-            sb.append(", data=" + getDecodedData());
+            sb.append(", data=" + getDecodedDataAsString());
         }
 
         if (hasData && !showRaw()) {

@@ -4,7 +4,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 import junit.framework.Assert;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,6 +88,8 @@ public class BasalProfileUTest {
         Assert.assertTrue(MedtronicUtil.isSame(0.5d, profilesByHour[22]));
         Assert.assertTrue(MedtronicUtil.isSame(0.5d, profilesByHour[23]));
 
+        System.out.println("Basals by hour: "
+            + (profilesByHour == null ? "null" : BasalProfile.getProfilesByHourToString(profilesByHour)));
     }
 
 
@@ -106,7 +107,39 @@ public class BasalProfileUTest {
         Double[] profilesByHour = basalProfile.getProfilesByHour();
 
         System.out.println("Basals by hour: "
-            + (profilesByHour == null ? "null" : StringUtils.join(profilesByHour, " ")));
+            + (profilesByHour == null ? "null" : BasalProfile.getProfilesByHourToString(profilesByHour)));
+
+    }
+
+
+    @Test
+    public void testProfileByDayZero() {
+        BasalProfile basalProfile = new BasalProfile();
+        byte[] data = { //
+        0x00 };
+
+        basalProfile.setRawData(data);
+
+        Double[] profilesByHour = basalProfile.getProfilesByHour();
+
+        System.out.println("Basals by hour: "
+            + (profilesByHour == null ? "null" : BasalProfile.getProfilesByHourToString(profilesByHour)));
+
+    }
+
+
+    @Test
+    public void testProfileByDayZeroZero3F() {
+        BasalProfile basalProfile = new BasalProfile();
+        byte[] data = { //
+        0x00, 0x00, 0x3f };
+
+        basalProfile.setRawData(data);
+
+        Double[] profilesByHour = basalProfile.getProfilesByHour();
+
+        System.out.println("Basals by hour: "
+            + (profilesByHour == null ? "null" : BasalProfile.getProfilesByHourToString(profilesByHour)));
 
     }
 

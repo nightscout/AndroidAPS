@@ -18,6 +18,8 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.Medtro
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntryType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryResult;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
+import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 
 //import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 
@@ -304,8 +306,8 @@ public class MedtronicHistoryData {
      * entryType == PumpHistoryEntryType.DailyTotals523 || //
      * entryType == PumpHistoryEntryType.EndResultTotals
      */
-
-    public boolean hasBasalProfileChanged() {
+    @Deprecated
+    public boolean hasBasalProfileChanged_Old() {
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
@@ -318,6 +320,58 @@ public class MedtronicHistoryData {
         this.basalProfileChangedInternally = 0;
 
         return profileChanged;
+
+    }
+
+
+    public boolean hasBasalProfileChanged() {
+
+        List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
+
+        LOG.debug("hasBasalProfileChanged. Items: " + filteredItems);
+
+        return (filteredItems.size() > 0);
+
+    }
+
+
+    public void processLastBasalProfileChange(MedtronicPumpStatus mdtPumpStatus) {
+
+        // FIXME
+
+        List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
+
+        LOG.debug("processLastBasalProfileChange. Items: " + filteredItems);
+
+        PumpHistoryEntry newProfile = null;
+        Long lastDate = null;
+
+        if (filteredItems.size() == 1) {
+            newProfile = filteredItems.get(0);
+        } else if (filteredItems.size() > 1) {
+
+            for (PumpHistoryEntry filteredItem : filteredItems) {
+
+                if (lastDate == null || lastDate < filteredItem.atechDateTime) {
+                    newProfile = filteredItem;
+                    lastDate = newProfile.atechDateTime;
+                }
+            }
+        }
+
+        if (newProfile != null) {
+            LOG.debug("processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
+            BasalProfile basalProfile = (BasalProfile)newProfile.getDecodedData().get("Object");
+            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+        }
+
+        // boolean profileChanged = ((filteredItems.size() - basalProfileChangedInternally) > 0);
+
+        // LOG.error("Profile changed:" + profileChanged);
+
+        // this.basalProfileChangedInternally = 0;
+
+        // return profileChanged;
 
     }
 

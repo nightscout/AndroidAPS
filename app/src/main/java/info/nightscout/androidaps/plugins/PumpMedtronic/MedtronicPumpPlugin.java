@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +57,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.data.MedtronicHistoryDat
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfileEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCustomActionType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicNotificationType;
@@ -215,11 +215,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             do {
                 SystemClock.sleep(60000);
 
-                Map<MedtronicStatusRefreshType, Long> statusRefresh = workWithStatusRefresh(
-                    StatusRefreshAction.GetData, null, null);
+                if (this.isInitialized) {
 
-                if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
-                    ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Scheduled Status Refresh", null);
+                    Map<MedtronicStatusRefreshType, Long> statusRefresh = workWithStatusRefresh(
+                        StatusRefreshAction.GetData, null, null);
+
+                    if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Scheduled Status Refresh", null);
+                    }
                 }
 
             } while (serviceRunning);
@@ -508,6 +511,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
+        return isThisProfileSet_New(profile);
+    }
+
+
+    @Deprecated
+    public boolean isThisProfileSet_Old(Profile profile) {
 
         if (!this.isInitialized) {
             return true;
@@ -573,13 +582,26 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
+    public boolean isThisProfileSet_New(Profile profile) {
+
+        LOG.debug("isThisProfileSet: basalInitalized={}", getMDTPumpStatus().basalProfileStatus);
+
+        if (getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.ProfileOK)
+            return true;
+
+        return isProfileSame(profile);
+
+    }
+
+
     private boolean isProfileSame(Profile profile) {
 
         boolean invalid = false;
         Double[] basalsByHour = getMDTPumpStatus().basalsByHour;
 
         if (isLoggingEnabled())
-            LOG.debug("Current Basals (h):   " + (basalsByHour == null ? "null" : StringUtils.join(basalsByHour, " ")));
+            LOG.debug("Current Basals (h):   "
+                + (basalsByHour == null ? "null" : BasalProfile.getProfilesByHourToString(basalsByHour)));
 
         int index = 0;
 
@@ -596,7 +618,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 invalid = true;
             }
 
-            stringBuilder.append(basalValue.value);
+            stringBuilder.append(String.format("%.3f", basalValue.value));
             stringBuilder.append(" ");
         }
 
@@ -948,8 +970,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, -1);
         }
 
-        if (medtronicHistoryData.hasBasalProfileChanged()) {
-            this.basalProfileChanged = true;
+        if (this.getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.NotInitialized
+            && medtronicHistoryData.hasBasalProfileChanged()) {
+            medtronicHistoryData.processLastBasalProfileChange(getMDTPumpStatus());
+            // this.basalProfileChanged = true;
         }
 
         PumpDriverState previousState = this.pumpState;

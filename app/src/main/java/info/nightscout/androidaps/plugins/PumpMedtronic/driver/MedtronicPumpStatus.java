@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
@@ -67,6 +68,8 @@ public class MedtronicPumpStatus extends PumpStatus {
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
     private RileyLinkTargetFrequency targetFrequency;
     private boolean targetFrequencyChanged = false;
+    // public boolean isBasalInitalized = false;
+    public BasalProfileStatus basalProfileStatus;
 
 
     public MedtronicPumpStatus(PumpDescription pumpDescription) {
@@ -227,7 +230,11 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             maxBolus = checkParameterValue(MedtronicConst.Prefs.MaxBolus, "25.0", 25.0d);
 
+            LOG.debug("Max Bolus from AAPS settings is " + maxBolus);
+
             maxBasal = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0d);
+
+            LOG.debug("Max Basal from AAPS settings is " + maxBasal);
 
             startService();
 

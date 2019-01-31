@@ -253,7 +253,13 @@ public class BasalProfile {
         }
 
         if (entries == null || entries.size() == 0) {
-            return null;
+            Double[] basalByHour = new Double[24];
+
+            for (int i = 0; i < 24; i++) {
+                basalByHour[i] = 0.0d;
+            }
+
+            return basalByHour;
         }
 
         Double[] basalByHour = new Double[24];
@@ -290,6 +296,20 @@ public class BasalProfile {
         }
 
         return basalByHour;
+    }
+
+
+    public static String getProfilesByHourToString(Double[] data) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Double value : data) {
+            stringBuilder.append(String.format("%.3f", value));
+            stringBuilder.append(" ");
+        }
+
+        return stringBuilder.toString();
+
     }
 
 

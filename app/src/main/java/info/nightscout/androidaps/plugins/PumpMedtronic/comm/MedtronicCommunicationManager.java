@@ -398,8 +398,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             rval = sendAndListen(msg);
 
+            // LOG.debug("PumpResponse: " + rval);
+
             if (rval.commandType != MedtronicCommandType.CommandACK) {
                 LOG.error("runCommandWithFrames: Pump did not ACK frame #{}", frameNr);
+
+                LOG.error("Run command with Frames FAILED (command={}, response={})", commandType.name(),
+                    rval.toString());
 
                 return new PumpMessage("No ACK after frame #" + frameNr);
             } else {
@@ -909,8 +914,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 LOG.debug("1st Response: " + HexDump.toHexStringDisplayable(response.getRawContent()));
                 LOG.debug("1st Response: " + HexDump.toHexStringDisplayable(response.getMessageBody().getTxData()));
 
-                String check = checkResponseContent(response, commandType.commandDescription,
-                    commandType.getRecordLength());
+                String check = checkResponseContent(response, commandType.commandDescription, 1);
 
                 byte[] data = null;
 
@@ -932,8 +936,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                         LOG.debug("{} Response: {}", runs,
                             HexDump.toHexStringDisplayable(response2.getMessageBody().getTxData()));
 
-                        String check2 = checkResponseContent(response2, commandType.commandDescription,
-                            commandType.getRecordLength());
+                        String check2 = checkResponseContent(response2, commandType.commandDescription, 1);
 
                         if (check2 == null) {
 
