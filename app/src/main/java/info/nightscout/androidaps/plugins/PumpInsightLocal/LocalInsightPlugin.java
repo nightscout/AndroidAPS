@@ -580,6 +580,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         if (activeBasalRate == null) return result;
+        if (activeBasalRate.getActiveBasalRate() == 0) return result;
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
         if (isFakingTempsByExtendedBoluses()) {
             PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();
