@@ -152,6 +152,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
     };
 
+    private final Object $bolusLock = new Object[0];
+    private boolean bolusInProgress;
     private int bolusID = -1;
     private List<BasalProfileBlock> profileBlocks;
     private boolean limitsFetched;
@@ -341,25 +343,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void fetchBasalProfile() throws Exception {
-        Class<? extends BRProfileBlock> parameterBlock = null;
-        switch (ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, ActiveBRProfileBlock.class).getActiveBasalProfile()) {
-            case PROFILE_1:
-                parameterBlock = BRProfile1Block.class;
-                break;
-            case PROFILE_2:
-                parameterBlock = BRProfile2Block.class;
-                break;
-            case PROFILE_3:
-                parameterBlock = BRProfile3Block.class;
-                break;
-            case PROFILE_4:
-                parameterBlock = BRProfile4Block.class;
-                break;
-            case PROFILE_5:
-                parameterBlock = BRProfile5Block.class;
-                break;
-        }
-        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, parameterBlock).getProfileBlocks();
+        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, BRProfile1Block.class).getProfileBlocks();
     }
 
     private void fetchStatus() throws Exception {
@@ -452,24 +436,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             profileBlocks.add(profileBlock);
         }
         try {
-            BRProfileBlock profileBlock = null;
-            switch (activeBasalRate.getActiveBasalProfile()) {
-                case PROFILE_1:
-                    profileBlock = new BRProfile1Block();
-                    break;
-                case PROFILE_2:
-                    profileBlock = new BRProfile2Block();
-                    break;
-                case PROFILE_3:
-                    profileBlock = new BRProfile3Block();
-                    break;
-                case PROFILE_4:
-                    profileBlock = new BRProfile4Block();
-                    break;
-                case PROFILE_5:
-                    profileBlock = new BRProfile5Block();
-                    break;
-            }
+            BRProfileBlock profileBlock = new BRProfile1Block();
             profileBlock.setProfileBlocks(profileBlocks);
             ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock);
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
@@ -533,12 +500,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         PumpEnactResult result = new PumpEnactResult();
         if (detailedBolusInfo.insulin > 0) {
             try {
-                DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
-                bolusMessage.setBolusType(BolusType.STANDARD);
-                bolusMessage.setDuration(0);
-                bolusMessage.setExtendedAmount(0);
-                bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
-                bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
+                synchronized ($bolusLock) {
+                    DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
+                    bolusMessage.setBolusType(BolusType.STANDARD);
+                    bolusMessage.setDuration(0);
+                    bolusMessage.setExtendedAmount(0);
+                    bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
+                    bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
+                }
                 result.success = true;
                 result.enacted = true;
                 Treatment t = new Treatment();
@@ -597,16 +566,18 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public void stopBolusDelivering() {
         new Thread(() -> {
-            try {
-                alertService.ignore(AlertType.WARNING_38);
-                CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
-                cancelBolusMessage.setBolusID(bolusID);
-                connectionService.requestMessage(cancelBolusMessage).await();
-                confirmAlert(AlertType.WARNING_38);
-            } catch (InsightException e) {
-                log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
-            } catch (Exception e) {
-                log.error("Exception while canceling bolus", e);
+            synchronized ($bolusLock) {
+                try {
+                    alertService.ignore(AlertType.WARNING_38);
+                    CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
+                    cancelBolusMessage.setBolusID(bolusID);
+                    connectionService.requestMessage(cancelBolusMessage).await();
+                    confirmAlert(AlertType.WARNING_38);
+                } catch (InsightException e) {
+                    log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+                } catch (Exception e) {
+                    log.error("Exception while canceling bolus", e);
+                }
             }
         }).start();
     }
@@ -615,6 +586,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult();
         if (activeBasalRate == null) return result;
+        if (activeBasalRate.getActiveBasalRate() == 0) return result;
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
         if (isFakingTempsByExtendedBoluses()) {
             PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();

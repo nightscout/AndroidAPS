@@ -34,6 +34,8 @@ import info.nightscout.utils.DecimalFormatter;
 
 public class LocalInsightFragment extends SubscriberFragment implements View.OnClickListener {
 
+    private static final boolean ENABLE_OPERATING_MODE_BUTTON = false;
+
     private boolean viewsCreated;
     private Button operatingMode;
     private Button tbrOverNotification;
@@ -218,7 +220,7 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
             return;
         }
         int string = 0;
-        operatingMode.setVisibility(View.VISIBLE);
+        if (ENABLE_OPERATING_MODE_BUTTON) operatingMode.setVisibility(View.VISIBLE);
         operatingMode.setEnabled(operatingModeCallback == null);
         switch (LocalInsightPlugin.getInstance().getOperatingMode()) {
             case STARTED:
