@@ -479,6 +479,7 @@
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="key_advancedsettings" translatable="false">key_advancedsettings</string>
     <string name="danar_model">Model: %1$02X Protocol: %2$02X Code: %3$02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
@@ -605,6 +606,17 @@
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
+    <string name="key_show_statuslights" translatable="false">key_show_statuslights</string>
+    <string name="show_statuslights">Show status lights on home screen</string>
+    <string name="show_statuslights_summary">Enable status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
+    <string name="key_statuslights_res_warning" translatable="false">key_statuslights_res_warning</string>
+    <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
+    <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
+    <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
+    <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
+    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
+    <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
+    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
