@@ -341,25 +341,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void fetchBasalProfile() throws Exception {
-        Class<? extends BRProfileBlock> parameterBlock = null;
-        switch (ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, ActiveBRProfileBlock.class).getActiveBasalProfile()) {
-            case PROFILE_1:
-                parameterBlock = BRProfile1Block.class;
-                break;
-            case PROFILE_2:
-                parameterBlock = BRProfile2Block.class;
-                break;
-            case PROFILE_3:
-                parameterBlock = BRProfile3Block.class;
-                break;
-            case PROFILE_4:
-                parameterBlock = BRProfile4Block.class;
-                break;
-            case PROFILE_5:
-                parameterBlock = BRProfile5Block.class;
-                break;
-        }
-        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, parameterBlock).getProfileBlocks();
+        profileBlocks = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, BRProfile1Block.class).getProfileBlocks();
     }
 
     private void fetchStatus() throws Exception {
@@ -452,24 +434,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             profileBlocks.add(profileBlock);
         }
         try {
-            BRProfileBlock profileBlock = null;
-            switch (activeBasalRate.getActiveBasalProfile()) {
-                case PROFILE_1:
-                    profileBlock = new BRProfile1Block();
-                    break;
-                case PROFILE_2:
-                    profileBlock = new BRProfile2Block();
-                    break;
-                case PROFILE_3:
-                    profileBlock = new BRProfile3Block();
-                    break;
-                case PROFILE_4:
-                    profileBlock = new BRProfile4Block();
-                    break;
-                case PROFILE_5:
-                    profileBlock = new BRProfile5Block();
-                    break;
-            }
+            BRProfileBlock profileBlock = new BRProfile1Block();
             profileBlock.setProfileBlocks(profileBlocks);
             ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock);
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
