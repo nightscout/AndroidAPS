@@ -496,6 +496,18 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
+    public double getReservoirLevel() {
+        if (cartridgeStatus == null) return 0;
+        return cartridgeStatus.getRemainingAmount();
+    }
+
+    @Override
+    public int getBatteryLevel() {
+        if (batteryStatus == null) return 0;
+        return batteryStatus.getBatteryAmount();
+    }
+
+    @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = new PumpEnactResult();
         if (detailedBolusInfo.insulin > 0) {
