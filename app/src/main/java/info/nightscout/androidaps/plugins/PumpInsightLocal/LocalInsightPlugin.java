@@ -152,6 +152,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
     };
 
+    private final Object $bolusLock = new Object[0];
+    private boolean bolusInProgress;
     private int bolusID = -1;
     private List<BasalProfileBlock> profileBlocks;
     private boolean limitsFetched;
@@ -498,12 +500,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         PumpEnactResult result = new PumpEnactResult();
         if (detailedBolusInfo.insulin > 0) {
             try {
-                DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
-                bolusMessage.setBolusType(BolusType.STANDARD);
-                bolusMessage.setDuration(0);
-                bolusMessage.setExtendedAmount(0);
-                bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
-                bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
+                synchronized ($bolusLock) {
+                    DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
+                    bolusMessage.setBolusType(BolusType.STANDARD);
+                    bolusMessage.setDuration(0);
+                    bolusMessage.setExtendedAmount(0);
+                    bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
+                    bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
+                }
                 result.success = true;
                 result.enacted = true;
                 Treatment t = new Treatment();
@@ -562,16 +566,18 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public void stopBolusDelivering() {
         new Thread(() -> {
-            try {
-                alertService.ignore(AlertType.WARNING_38);
-                CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
-                cancelBolusMessage.setBolusID(bolusID);
-                connectionService.requestMessage(cancelBolusMessage).await();
-                confirmAlert(AlertType.WARNING_38);
-            } catch (InsightException e) {
-                log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
-            } catch (Exception e) {
-                log.error("Exception while canceling bolus", e);
+            synchronized ($bolusLock) {
+                try {
+                    alertService.ignore(AlertType.WARNING_38);
+                    CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
+                    cancelBolusMessage.setBolusID(bolusID);
+                    connectionService.requestMessage(cancelBolusMessage).await();
+                    confirmAlert(AlertType.WARNING_38);
+                } catch (InsightException e) {
+                    log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+                } catch (Exception e) {
+                    log.error("Exception while canceling bolus", e);
+                }
             }
         }).start();
     }
