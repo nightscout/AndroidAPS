@@ -9,6 +9,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 
 import info.nightscout.androidaps.Config;
@@ -188,6 +189,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResourceIfEnabled(WearPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
+            }
+
+            if (Config.NSCLIENT) {
+                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen)findPreference(getString(R.string.key_advancedsettings));
+                if (scrnAdvancedSettings != null) {
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
+                }
             }
 
             initSummary(getPreferenceScreen());
