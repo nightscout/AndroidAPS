@@ -225,7 +225,7 @@
     <string name="filenotfound">Dosya bulunamadı</string>
     <string name="nav_export">Dışarı aktarma ayarları</string>
     <string name="nav_import">İçe aktarma ayarları</string>
-    <string name="openapsma_maxbasal_title">Max U/sa geçici Bazal ayarlanabilir</string>
+    <string name="openapsma_maxbasal_title">Max Ü/sa geçici Bazal ayarlanabilir</string>
     <string name="openapsma_maxbasal_summary">Bu değer OpenAPS\'te \"max bazal\" olarak adlandırılır</string>
     <string name="openapsma_maxiob_title">OpenAPS\'nin vermesine izin verilen maksimum bazal IOB (Aktif insülin) [U]</string>
     <string name="openapsma_maxiob_summary">Bu değere OpenAPS bağlamında Max IOB denir.\nAPS\'de [U] bir kerede verilen maksimum insülin.</string>
@@ -245,7 +245,7 @@
     <string name="danar_iob_label">IOB(Aktif insülin) pompa</string>
     <string name="danar_dailyunits">Günlük birimleri</string>
     <string name="pump_lastbolus_label">Son bolus</string>
-    <string name="hoursago">%.1fh önce</string>
+    <string name="hoursago">%.1fs önce</string>
     <string name="danar_invalidinput">Geçersiz bilgi girişi</string>
     <string name="danar_valuenotsetproperly">Değer düzgün ayarlanmamış</string>
     <string name="reloadprofile">Dosyayı yeniden yükle</string>
@@ -338,9 +338,9 @@
     <string name="valueoutofrange" formatted="false">Değer %s sabit sınırları dışında olduğunu</string>
     <string name="smscommunicator_remotebasalnotallowed">Uzak bazal ayarına izin verilmez</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
-    <string name="smscommunicator_basalreplywithcode">Bazal\'ı %1$.2fU/s başlatmak için kodu %2$s ile yanıtlayın</string>
+    <string name="smscommunicator_basalreplywithcode">Bazal\'ı %1$.2fÜ/s başlatmak için kodu %2$s ile yanıtlayın</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d dakika için Döngü\'yü askıya almak için %2$s kodunu yanıtla</string>
-    <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fU/s %2$d dakika için başarıyla başlatıldı</string>
+    <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
     <string name="smscommunicator_tempbasalfailed">Temp bazal başlatma başarısız oldu</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Geçici bazal oranını iptal etmek için kodla %s yanıtla</string>
     <string name="smscommunicator_tempbasalcanceled">Geçici bazal iptal</string>
@@ -391,7 +391,7 @@
     <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
     <string name="danar_disableeasymode">Pompada EasyUI modunu devre dışı bırak</string>
     <string name="danar_enableextendedbolus">Pompada yayma bolusları etkinleştir</string>
-    <string name="danar_switchtouhmode">Pompayı U/d\'den U/s\'te değiştirin</string>
+    <string name="danar_switchtouhmode">Pompayı Ü/d\'den Ü/s\'te değiştirin</string>
     <string name="basalvaluebelowminimum">Minimum değerin altında bazal değeri. Profil ayarlanmadı!</string>
     <string name="sms_actualbg">KŞ:</string>
     <string name="sms_lastbg">Son KŞ:</string>
@@ -626,7 +626,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="careportal_carbsandbolus_label">KARBONHİDRATLAR &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">PUMP</string>
-    <string name="overview_newtempbasal_basalabsolute">Bazal değer [U/s]</string>
+    <string name="overview_newtempbasal_basalabsolute">Bazal değer [Ü/s]</string>
     <string name="careportal_newnstreatment_duration_min_label">Süre [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -656,7 +656,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="selectedpump">Seçilen Pompa</string>
     <string name="pairpump">Yeni Pompa eşleştir</string>
     <string name="bolusspeed">Bolus hızı</string>
-    <string name="danar_setbasalstep001">Bazal adımı ayarla 0,01 U/s</string>
+    <string name="danar_setbasalstep001">Bazal adımı ayarla 0,01 Ü/s</string>
     <string name="serialnumber">Seri numara</string>
     <string name="careportal_newnstreatment_percentage_label">Yüzdesi</string>
     <string name="careportal_newnstreatment_timeshift_label">Zaman kaydır</string>
@@ -781,7 +781,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="status_updated">Durum Güncellendi</string>
     <string name="ago">önce</string>
     <string name="with">ile</string>
-    <string name="insight_active_tbr">Etkin TBR (GBO) Geçici Bazal Oranı</string>
+    <string name="insight_active_tbr">Etkin (TBR) Geçici Bazal Oranı</string>
     <string name="insight_min_left">min kalan</string>
     <string name="log_book">Kayıt defteri</string>
     <string name="insight_last_completed_action">Son Tamamlanan Eylem</string>
@@ -868,7 +868,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="closed_loop_disabled_on_dev_branch">Dev sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu aktivleşti</string>
     <string name="not_eng_mode_or_release">Engineering mode etkin değil ve yayım sürümü değil</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
+    <string name="pump_basebasalrate">%.2f Ü/s</string>
     <string name="combo_actvity_reading_basal_profile">Bazal oranı profili okunuyor</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus hesaplaması yapıldıktan sonra pompa geçmişi değişti. Bolus teslim edilmedi. Bir bolus hala gerekli ise lütfen yeniden hesaplayın.</string>
     <string name="combo_error_updating_treatment_record">Bolus başarıyla gönderildi, ancak tedavi girişinin eklenmesi başarısız oldu. Son iki dakika içinde aynı boyutta iki küçük bolüs verilirse bu durum meydana gelebilir. Lütfen pompa geçmişini ve tedavi girişlerini kontrol edin ve eksik girişler eklemek için Careportal\'ı kullanın. Aynı dakika ve aynı tutar için herhangi bir giriş eklemediğinizden emin olun.</string>
@@ -893,7 +893,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smbdisabledinpreferences">SMB tercihleri devre dışı</string>
     <string name="uamdisabledinpreferences">UAM (UnAnnounced Meals) tercihlerde devre dışı bırakıldı</string>
     <string name="uamdisabledoref1notselected">UAM (UnAnnounced Meals), Oref1 duyarlılık eklentisine bağlı olduğu için devre dışı bırakıldı</string>
-    <string name="limitingbasalratio">%2$s nedeniyle max bazal oranını %1$.2f U/s ile sınırlı</string>
+    <string name="limitingbasalratio">%2$s nedeniyle max bazal oranını %1$.2f Ü/s ile sınırlı</string>
     <string name="pumplimit">pompa sınırı</string>
     <string name="itmustbepositivevalue">pozitif bir değer olmalıdır</string>
     <string name="maxbasalmultiplier">max bazal çarpanı</string>
@@ -1057,7 +1057,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_openmode_min_change_summary">Döngü yeni değişiklik talebinizi, yalnızca bu değerden büyük olduğunda değiştirecek. Varsayılan değer% 20\'dir</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla bağlayın!</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/sa.</string>
+    <string name="profile_ins_units_per_hout">Ü/s</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">

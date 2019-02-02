@@ -557,6 +557,7 @@
     <string name="danar_bluetooth_status">статус блутус</string>
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingsmspermission">отсутствует смс подтверждение</string>
+    <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
     <string name="xdripstatus_settings">состояние xdrip (часы)</string>
     <string name="xdripstatus">строка состояния xdrip (часы)</string>
     <string name="xdripstatus_shortname">Статус xDrip</string>

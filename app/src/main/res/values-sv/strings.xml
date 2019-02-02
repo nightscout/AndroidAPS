@@ -1055,6 +1055,10 @@
     <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
     <string name="loop_openmode_min_change_summary">Loopen kommer att be om justering endast om ändringen är större än detta värde. Standardvärde är 20%</string>
     <string name="pairfirst">Vänligen para ihop pumpen med telefonen.</string>
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

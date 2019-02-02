@@ -293,7 +293,7 @@
     <string name="danar_sbolus">S Bolus</string>
     <string name="danar_history_alarm">Alarm</string>
     <string name="danar_history_basalhours">Basale uren</string>
-    <string name="danar_history_bolus">Bulossen</string>
+    <string name="danar_history_bolus">Bolussen</string>
     <string name="danar_history_carbohydrates">Koolhydraten</string>
     <string name="danar_history_dailyinsulin">Dagtotaal insuline</string>
     <string name="danar_history_errors">Storing</string>
@@ -404,7 +404,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="sms_minago">%1$dmin geleden</string>
     <string name="localprofile">Lokaal profiel</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="short_avgdelta">Klein gemiddeld verschil</string>
+    <string name="short_avgdelta">Kort gemiddeld verschil</string>
     <string name="long_avgdelta">Groot gemiddeld verschil</string>
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
@@ -447,7 +447,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Afgekorte tab titels</string>
-    <string name="always_use_shortavg">Gebruik altijd kleine gemiddelde verschillen ipv gewone verschillen</string>
+    <string name="always_use_shortavg">Gebruik altijd korte gemiddeld verschil ipv gewone verschil</string>
     <string name="always_use_shortavg_summary">Nuttig wanneer gegevens van niet gedempte bronnen zoals Xdrip noisy zijn.</string>
     <string name="advancedsettings_title">Geavanceerde instellingen</string>
     <string name="danar_model">Model: %1$02X Protokoll: %2$02X Code: %3$02X</string>
@@ -533,6 +533,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
     <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
     <string name="resume">Hervatten</string>
+    <string name="reconnect">Opnieuw verbinden met pomp</string>
     <string name="smscommunicator_wrongduration">Verkeerde tijdsduur</string>
     <string name="smscommunicator_loopsuspended">Loop onderbroken</string>
     <string name="smscommunicator_loopresumed">Loop hervat</string>
@@ -557,6 +558,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="danar_bluetooth_status">Bluetooh status</string>
     <string name="nav_about">Over</string>
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
+    <string name="smscommunicator_missingphonestatepermission">Machtiging ontbreekt voor telefoon gebruik</string>
     <string name="xdripstatus_settings">xDrip Status (Horloge)</string>
     <string name="xdripstatus">xDrip Statuslijn (Horloge)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -816,14 +818,14 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="automatically_connect_when">Automatische verbinden wanneer AndroidAPS scherm geopend wordt, voordat er een pomp commando wordt uitgevoerd om zo de verbindingsvertraging te verkleinen</string>
     <string name="not_recommended_due_to_battery_drain">Niet aanbevolen door hoog batterij verbruik</string>
     <string name="enablesmbalways">Activeer SMB altijd</string>
-    <string name="enablesmbalways_summary">SMB altijd onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5</string>
+    <string name="enablesmbalways_summary">SMB altijd aan onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5</string>
     <string name="enablesmbaftercarbs">Activeer SMB na koolhydraten</string>
     <string name="enablesmbaftercarbs_summary">SMB actief gedurende 6u, zelfs met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5</string>
     <string name="enablesmbwithcob">Activeer SMB met Koolhydraten</string>
     <string name="enablesmbwithcob_summary">SMB actief tijdens actieve koolhydraten</string>
-    <string name="enablesmbwithtemptarget">Gebruik SMB met tijdelijke doelen</string>
-    <string name="enablesmbwithtemptarget_summary">Gebruik SMB bij een actief tijdelijk basaal (binnenkort eten, inspanningen)</string>
-    <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk doel</string>
+    <string name="enablesmbwithtemptarget">Gebruik SMB met tijdelijke streefdoelen</string>
+    <string name="enablesmbwithtemptarget_summary">Gebruik SMB bij een actief tijdelijk streefdoel (eet binnenkort, activiteit)</string>
+    <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk streefdoel</string>
     <string name="enablesmbwithhightemptarget_summary">Gebruik SMB tijdens een verhoogd tijdelijk doel (Inspanningen)</string>
     <string name="let_temp_basal_run">Laat tijdelijk basaal lopen</string>
     <string name="mute">Geluid dempen</string>
@@ -950,7 +952,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="openapsama_autosens_min">Min autosens factor</string>
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsama_max_daily_safety_multiplier">Maximale dagelijkse veiligheids vermeningvuldigings factor</string>
-    <string name="openapsama_current_basal_safety_multiplier">Actuele veiliheids verhoger van basaal</string>
+    <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtuele pomp Type</string>
     <string name="virtualpump_definition">Pomp definitie</string>
@@ -1012,9 +1014,9 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="nth_objective">%1$d. Doel</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
-    <string name="high_temptarget_raises_sensitivity_title">Hoge temptarget verhoogt de gevoeligheid</string>
+    <string name="high_temptarget_raises_sensitivity_title">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhogen van de gevoeligheid voor temptargets > = 100]]></string>
-    <string name="low_temptarget_lowers_sensitivity_title">Lage temptarget verlaagt de gevoeligheid</string>
+    <string name="low_temptarget_lowers_sensitivity_title">Laag tijdelijk streefdoel verlaagt gevoeligheid</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lagere gevoeligheid voor temptargets < 100]]></string>
     <string name="combo_invalid_setup">Ongeldige pompinstellingen, controleer de documenten en controleer of het Quick Info-menu QUICK INFO wordt genoemd met behulp van de 360-configuratiesoftware.</string>
     <string name="custom">Aangepast</string>
@@ -1053,6 +1055,11 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="insulinlimitviolation">Insuline limiet overschreiding</string>
     <string name="loop_openmode_min_change">Minimale verzoek voor aanpassing [%]</string>
     <string name="loop_openmode_min_change_summary">Loop zal popup met nieuwe veranderingsverzoek alleen geven als verandering groter is dan deze waarde. Standaardwaarde is 20%</string>
+    <string name="pairfirst">Aub de pomp koppelen met je telefoon!</string>
+    <string name="profile_total">== ∑  %1$s E</string>
+    <string name="profile_ins_units_per_hout">E/uur</string>
+    <string name="profile_carbs_per_unit">g/E</string>
+    <string name="profile_per_unit">/E</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>
