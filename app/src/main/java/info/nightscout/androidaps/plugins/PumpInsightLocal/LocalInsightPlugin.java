@@ -115,6 +115,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.Operating
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.PumpTime;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.InsightException;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ParameterBlockUtil;
@@ -310,6 +311,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             fetchLimitations();
             updatePumpTimeIfNeeded();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while fetching status: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
             log.info("Exception while fetching status: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
@@ -450,6 +453,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 fetchStatus();
             } catch (Exception ignored) {
             }
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while setting profile: " + e.getClass().getCanonicalName());
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
@@ -548,6 +556,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 MainApp.bus().post(bolusingEvent);
                 readHistory();
                 fetchStatus();
+            } catch (AppLayerErrorException e) {
+                log.info("Exception while delivering bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                result.comment = ExceptionTranslator.getString(e);
             } catch (InsightException e) {
                 log.info("Exception while delivering bolus: " + e.getClass().getCanonicalName());
                 result.comment = ExceptionTranslator.getString(e);
@@ -573,6 +584,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
                     confirmAlert(AlertType.WARNING_38);
+                } catch (AppLayerErrorException e) {
+                    log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
                 } catch (InsightException e) {
                     log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
                 } catch (Exception e) {
@@ -621,6 +634,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception after setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
             log.info("Exception after setting TBR: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
@@ -655,6 +670,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
             readHistory();
             fetchStatus();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while setting TBR: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
@@ -671,6 +689,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception after delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
             log.info("Exception after delivering extended bolus: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
@@ -703,6 +723,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.success = true;
             result.enacted = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
@@ -725,6 +748,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception after canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
             log.info("Exception after canceling TBR: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
@@ -747,6 +772,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         } catch (NoActiveTBRToCanceLException e) {
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while canceling TBR: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
@@ -763,10 +791,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         try {
             fetchStatus();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception after canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception after canceling bolus: " + e.getClass().getCanonicalName());
+            log.info("Exception after canceling extended bolus: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception after canceling bolus", e);
+            log.error("Exception after canceling extended bolus", e);
         }
         return result;
     }
@@ -805,11 +835,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             }
             result.success = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+            log.info("Exception while canceling extended bolus: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while canceling bolus", e);
+            log.error("Exception while canceling extended bolus", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -828,6 +861,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     } else break;
                 }
             }
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
             log.info("Exception while confirming alert: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
@@ -899,6 +934,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
             fetchStatus();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while stopping pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while stopping pump: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
@@ -919,8 +957,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
             fetchStatus();
             readHistory();
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while starting pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while starting pump: " + e.getClass().getCanonicalName());
+            result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
             log.error("Exception while starting pump", e);
             result.comment = ExceptionTranslator.getString(e);
@@ -936,6 +978,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             ParameterBlockUtil.writeConfigurationBlock(connectionService, tbrOverNotificationBlock);
             result.success = true;
             result.enacted = true;
+        } catch (AppLayerErrorException e) {
+            tbrOverNotificationBlock.setEnabled(valueBefore);
+            log.info("Exception while updating TBR notification block: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             log.info("Exception while updating TBR notification block: " + e.getClass().getSimpleName());
@@ -1023,16 +1069,20 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     }
                 }
                 processHistoryEvents(pumpSerial, historyEvents);
+            } catch (AppLayerErrorException e) {
+                log.info("Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
-                log.info("Error while reading history: " + e.getClass().getSimpleName());
+                log.info("Exception while reading history: " + e.getClass().getSimpleName());
             } catch (Exception e) {
-                log.error("Error while reading history", e);
+                log.error("Exception while reading history", e);
             } finally {
                 try {
                     connectionService.requestMessage(new StopReadingHistoryMessage()).await();
                 } catch (Exception ignored) {
                 }
             }
+        } catch (AppLayerErrorException e) {
+            log.info("Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
             log.info("Exception while reading history: " + e.getClass().getSimpleName());
         } catch (Exception e) {
