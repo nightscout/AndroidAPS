@@ -1092,10 +1092,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             // targetDate = lastPumpHistoryEntry.atechDateTime;
         }
 
+        LOG.debug("HST: Target Date: {}", targetDate);
+
         MedtronicUITask responseTask2 = medtronicUIComm.executeCommand(MedtronicCommandType.GetHistoryData,
             lastPumpHistoryEntry, targetDate);
 
+        LOG.debug("HST: After task");
+
         PumpHistoryResult historyResult = (PumpHistoryResult)responseTask2.returnData;
+
+        LOG.debug("HST: History Result: {}", historyResult.toString());
 
         PumpHistoryEntry latestEntry = historyResult.getLatestEntry();
 
@@ -1107,6 +1113,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         this.lastPumpHistoryEntry = latestEntry;
         SP.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, latestEntry.atechDateTime);
+
+        LOG.debug("HST: History: valid={}, unprocessed={}", historyResult.validEntries.size(),
+            historyResult.unprocessedEntries.size());
 
         this.medtronicHistoryData.addNewHistory(historyResult);
         this.medtronicHistoryData.filterNewEntries();

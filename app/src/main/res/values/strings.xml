@@ -1331,6 +1331,7 @@
     <string name="medtronic_history_group_statistic">Statistics</string>
     <string name="medtronic_history_group_unknown">Unknowns</string>
     <string name="medtronic_history_group_all">All</string>
+    <string name="medtronic_pump_history">Medtronic Pump History</string>
 
 
     <!-- MDT Pump Status -->

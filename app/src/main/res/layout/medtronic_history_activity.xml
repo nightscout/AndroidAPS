@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:background="@drawable/pillborder"
             android:gravity="center_horizontal"
-            android:text="DanaR History" />
+            android:text="@string/medtronic_pump_history" />
 
 
     </LinearLayout>
@@ -54,7 +54,6 @@
         android:id="@+id/medtronic_history_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-
         android:layout_below="@+id/medtronic_historystatus" />
 
 </RelativeLayout>

@@ -97,7 +97,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
 
     public String getDateTimeString() {
-        return this.DT;
+        return this.DT == null ? "Unknown" : this.DT;
     }
 
 

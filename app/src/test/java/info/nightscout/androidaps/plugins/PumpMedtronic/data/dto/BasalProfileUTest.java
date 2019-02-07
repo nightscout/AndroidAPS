@@ -143,4 +143,29 @@ public class BasalProfileUTest {
 
     }
 
+
+    @Test
+    public void testProfileFromHistory() {
+        MedtronicUtil.setPumpStatus(new MedtronicPumpStatus(new PumpDescription()));
+        MedtronicUtil.getPumpStatus().pumpType = PumpType.Medtronic_522_722;
+
+        byte[] data = {
+            0, 72, 0, 2, 64, 0, 4, 56, 0, 6, 58, 0, 8, 58, 0, 10, 58, 0, 12, 50, 0, 14, 50, 0, 16, 38, 0, 18, 38, 0,
+            20, 46, 0, 22, 46, 0, 24, 50, 0, 26, 38, 0, 28, 38, 0, 30, 38, 0, 32, 26, 0, 34, 26, 0, 36, 26, 0, 38, 26,
+            0, 40, 26, 0, 42, 20, 0, 44, 20, 0, 46, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        BasalProfile basalProfile = new BasalProfile();
+        basalProfile.setRawDataFromHistory(data);
+
+        Double[] profilesByHour = basalProfile.getProfilesByHour();
+
+        System.out.println("Basals by hour: "
+            + (profilesByHour == null ? "null" : BasalProfile.getProfilesByHourToString(profilesByHour)));
+
+        // 1.800 1.600 1.400 1.450 1.450 1.450 1.250 1.250 0.950 0.950 1.150 1.150 1.250 0.950 0.950 0.950 0.650 0.650
+        // 0.650 0.650 0.650 0.500 0.500 0.500
+    }
+
 }

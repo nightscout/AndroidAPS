@@ -25,7 +25,7 @@ public class PumpHistoryResult {
     private PumpHistoryEntry searchEntry = null;
     private Long searchDate = null;
     private SearchType searchType = SearchType.None;
-    private List<PumpHistoryEntry> unprocessedEntries;
+    public List<PumpHistoryEntry> unprocessedEntries;
     public List<PumpHistoryEntry> validEntries;
 
 
@@ -60,32 +60,41 @@ public class PumpHistoryResult {
 
         switch (searchType) {
             case None:
+                LOG.debug("PE. None search");
+                // clearOrPrepareList();
                 this.validEntries.addAll(this.unprocessedEntries);
-                // this.unprocessedEntries = null;
+                // this.unprocessedEntries
+                // = null;
                 break;
 
             case LastEntry: {
-                if (this.validEntries == null)
-                    this.validEntries = new ArrayList<>();
+                LOG.debug("PE. Last entry search");
+
+                // clearOrPrepareList();
 
                 Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
 
-                LOG.debug("PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
+                LOG.debug("PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
+
+                Long date = searchEntry.atechDateTime;
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
                     if (unprocessedEntry.equals(searchEntry)) {
+                        LOG.debug("PE. Item found {}.", unprocessedEntry);
                         searchFinished = true;
                         break;
                     }
 
+                    LOG.debug("PE. Entry {} added.", unprocessedEntry);
                     this.validEntries.add(unprocessedEntry);
                 }
             }
                 break;
             case Date: {
-                if (this.validEntries == null)
-                    this.validEntries = new ArrayList<>();
+                LOG.debug("PE. Date search");
+
+                // clearOrPrepareList();
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
                     if (unprocessedEntry.isAfter(this.searchDate)) {
@@ -105,6 +114,27 @@ public class PumpHistoryResult {
                 break;
 
         } // switch
+
+        LOG.debug("PE. Valid Entries: {}", validEntries);
+    }
+
+
+    private void clearOrPrepareList() {
+        if (this.validEntries == null)
+            this.validEntries = new ArrayList<>();
+        else
+            this.validEntries.clear();
+    }
+
+
+    public String toString() {
+        return "PumpHistoryResult [unprocessed=" + unprocessedEntries.size() + //
+            ", valid=" + validEntries.size() + //
+            ", searchEntry=" + searchEntry + //
+            ", searchDate=" + searchDate + //
+            ", searchType=" + searchType + //
+            ", searchFinished=" + searchFinished + //
+            "]";
 
     }
 

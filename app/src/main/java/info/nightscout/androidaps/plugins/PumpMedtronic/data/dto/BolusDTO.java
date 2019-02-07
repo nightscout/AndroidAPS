@@ -120,6 +120,17 @@ public class BolusDTO extends PumpTimeStampedRecord {
     }
 
 
+    public String getDisplayableValue() {
+        String value = getValue();
+
+        value = value.replace("AMOUNT_SQUARE=", "Amount Square: ");
+        value = value.replace("AMOUNT=", "Amount: ");
+        value = value.replace("DURATION=", "Duration: ");
+
+        return value;
+    }
+
+
     public Float getImmediateAmount() {
         return immediateAmount;
     }

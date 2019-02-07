@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.v7.widget.CardView;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,11 +23,7 @@ import android.widget.TextView;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntryGroup;
@@ -38,44 +34,28 @@ public class MedtronicHistoryActivity extends Activity {
 
     private Handler mHandler;
 
-    static Profile profile = null;
+    // static Profile profile = null;
 
     Spinner historyTypeSpinner;
     TextView statusView;
-    // Button reloadButton;
-    // Button syncButton;
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
-    static PumpHistoryEntryGroup showingType = PumpHistoryEntryGroup.All;
-    // List<PumpHistoryEntry> fullHistoryList = null;
+    static TypeList showingType = null;
+    static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
     List<PumpHistoryEntry> filteredHistoryList = new ArrayList<>();
 
+    RecyclerViewAdapter recyclerViewAdapter;
+    boolean manualChange = false;
 
-    // public static class TypeList {
-    //
-    // public byte type;
-    // String name;
-    //
-    //
-    // TypeList(byte type, String name) {
-    // this.type = type;
-    // this.name = name;
-    // }
-    //
-    //
-    // @Override
-    // public String toString() {
-    // return name;
-    // }
-    // }
+    List<TypeList> typeListFull;
+
 
     public MedtronicHistoryActivity() {
         super();
         HandlerThread mHandlerThread = new HandlerThread(MedtronicHistoryActivity.class.getSimpleName());
         mHandlerThread.start();
-        // this.fullHistoryList = MedtronicPumpPlugin.getPlugin().getMedtronicHistoryData().getAllHistory();
-        filterHistory(this.showingType);
+        filterHistory(PumpHistoryEntryGroup.All);
         this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
@@ -99,6 +79,11 @@ public class MedtronicHistoryActivity extends Activity {
             }
         }
 
+        if (this.recyclerViewAdapter != null) {
+            this.recyclerViewAdapter.setHistoryList(this.filteredHistoryList);
+            this.recyclerViewAdapter.notifyDataSetChanged();
+        }
+
         LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
     }
 
@@ -107,7 +92,23 @@ public class MedtronicHistoryActivity extends Activity {
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
-        filterHistory(showingType);
+        filterHistory(selectedGroup);
+        setHistoryTypeSpinner();
+    }
+
+
+    private void setHistoryTypeSpinner() {
+        this.manualChange = true;
+
+        for (int i = 0; i < typeListFull.size(); i++) {
+            if (typeListFull.get(i).entryGroup == selectedGroup) {
+                historyTypeSpinner.setSelection(i);
+                break;
+            }
+        }
+
+        SystemClock.sleep(200);
+        this.manualChange = false;
     }
 
 
@@ -125,56 +126,73 @@ public class MedtronicHistoryActivity extends Activity {
 
         historyTypeSpinner = (Spinner)findViewById(R.id.medtronic_historytype);
         statusView = (TextView)findViewById(R.id.medtronic_historystatus);
-        // reloadButton = (Button)findViewById(R.id.medtronic_historyreload);
-        // syncButton = (Button)findViewById(R.id.medtronic_historysync);
         recyclerView = (RecyclerView)findViewById(R.id.medtronic_history_recyclerview);
 
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredHistoryList);
-        recyclerView.setAdapter(adapter);
+        recyclerViewAdapter = new RecyclerViewAdapter(filteredHistoryList);
+        recyclerView.setAdapter(recyclerViewAdapter);
 
         statusView.setVisibility(View.GONE);
 
-        boolean isKorean = DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PUMP);
-        boolean isRS = DanaRSPlugin.getPlugin().isEnabled(PluginType.PUMP);
+        typeListFull = getTypeList(PumpHistoryEntryGroup.getList());
 
-        // Types
-
-        // ArrayList<TypeList> typeList = new ArrayList<>();
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ALARM, MainApp.gs(R.string.danar_history_alarm)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, MainApp.gs(R.string.danar_history_basalhours)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BOLUS, MainApp.gs(R.string.danar_history_bolus)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_CARBO, MainApp.gs(R.string.danar_history_carbohydrates)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_DAILY, MainApp.gs(R.string.danar_history_dailyinsulin)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, MainApp.gs(R.string.danar_history_glucose)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, MainApp.gs(R.string.danar_history_errors)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_PRIME, MainApp.gs(R.string.danar_history_prime)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, MainApp.gs(R.string.danar_history_refill)));
-        // typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, MainApp.gs(R.string.danar_history_syspend)));
-
-        ArrayAdapter<PumpHistoryEntryGroup> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered,
-            PumpHistoryEntryGroup.getList());
+        ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);
 
         historyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                PumpHistoryEntryGroup selected = (PumpHistoryEntryGroup)historyTypeSpinner.getSelectedItem();
+                if (manualChange)
+                    return;
+                TypeList selected = (TypeList)historyTypeSpinner.getSelectedItem();
                 showingType = selected;
-                filterHistory(selected);
+                selectedGroup = selected.entryGroup;
+                filterHistory(selectedGroup);
             }
 
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                filterHistory(showingType);
+                if (manualChange)
+                    return;
+                filterHistory(PumpHistoryEntryGroup.All);
             }
         });
 
+    }
+
+
+    private List<TypeList> getTypeList(List<PumpHistoryEntryGroup> list) {
+
+        ArrayList<TypeList> typeList = new ArrayList<>();
+
+        for (PumpHistoryEntryGroup pumpHistoryEntryGroup : list) {
+            typeList.add(new TypeList(pumpHistoryEntryGroup));
+        }
+
+        return typeList;
+    }
+
+    public static class TypeList {
+
+        PumpHistoryEntryGroup entryGroup;
+        String name;
+
+
+        TypeList(PumpHistoryEntryGroup entryGroup) {
+            this.entryGroup = entryGroup;
+            this.name = entryGroup.getTranslated();
+        }
+
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
@@ -187,9 +205,19 @@ public class MedtronicHistoryActivity extends Activity {
         }
 
 
+        public void setHistoryList(List<PumpHistoryEntry> historyList) {
+            // this.historyList.clear();
+            // this.historyList.addAll(historyList);
+
+            this.historyList = historyList;
+
+            // this.notifyDataSetChanged();
+        }
+
+
         @Override
         public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rileylink_status_history_item, //
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.medtronic_history_item, //
                 viewGroup, false);
             return new HistoryViewHolder(v);
         }
@@ -199,9 +227,11 @@ public class MedtronicHistoryActivity extends Activity {
         public void onBindViewHolder(HistoryViewHolder holder, int position) {
             PumpHistoryEntry record = historyList.get(position);
 
-            holder.timeView.setText(record.getDateTimeString());
-            holder.typeView.setText(record.getEntryType().getDescription());
-            holder.valueView.setText(record.getDisplayableValue());
+            if (record != null) {
+                holder.timeView.setText(record.getDateTimeString());
+                holder.typeView.setText(record.getEntryType().getDescription());
+                holder.valueView.setText(record.getDisplayableValue());
+            }
         }
 
 
@@ -218,7 +248,6 @@ public class MedtronicHistoryActivity extends Activity {
 
         static class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-            CardView cv;
             TextView timeView;
             TextView typeView;
             TextView valueView;
@@ -227,9 +256,9 @@ public class MedtronicHistoryActivity extends Activity {
             HistoryViewHolder(View itemView) {
                 super(itemView);
                 // cv = (CardView)itemView.findViewById(R.id.rileylink_history_item);
-                timeView = (TextView)itemView.findViewById(R.id.rileylink_history_time);
-                typeView = (TextView)itemView.findViewById(R.id.rileylink_history_source);
-                valueView = (TextView)itemView.findViewById(R.id.rileylink_history_description);
+                timeView = (TextView)itemView.findViewById(R.id.medtronic_history_time);
+                typeView = (TextView)itemView.findViewById(R.id.medtronic_history_source);
+                valueView = (TextView)itemView.findViewById(R.id.medtronic_history_description);
             }
         }
     }

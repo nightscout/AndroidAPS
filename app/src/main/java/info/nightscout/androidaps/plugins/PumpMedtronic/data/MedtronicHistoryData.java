@@ -54,6 +54,7 @@ public class MedtronicHistoryData {
      * @param result PumpHistoryResult instance
      */
     public void addNewHistory(PumpHistoryResult result) {
+
         this.newHistory = result.getValidEntries();
 
         showLogs("List of history (before filtering): ", MedtronicPumpPlugin.gsonInstance.toJson(this.newHistory));
@@ -86,24 +87,28 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
 
-            PumpHistoryEntryType type = pumpHistoryEntry.getEntryType();
+            if (!this.allHistory.contains(pumpHistoryEntry)) {
 
-            // if (PumpHistoryEntryType.isAAPSRelevantEntry(type)) {
+                PumpHistoryEntryType type = pumpHistoryEntry.getEntryType();
 
-            if (type == PumpHistoryEntryType.TempBasalRate || type == PumpHistoryEntryType.TempBasalDuration) {
-                TBRs.add(pumpHistoryEntry);
-            } else {
+                // if (PumpHistoryEntryType.isAAPSRelevantEntry(type)) {
 
-                if (type == PumpHistoryEntryType.EndResultTotals) {
-                    if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.atechDateTime)) {
+                if (type == PumpHistoryEntryType.TempBasalRate || type == PumpHistoryEntryType.TempBasalDuration) {
+                    TBRs.add(pumpHistoryEntry);
+                } else {
+
+                    if (type == PumpHistoryEntryType.EndResultTotals) {
+                        if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.atechDateTime)) {
+                            newHistory2.add(pumpHistoryEntry);
+                        }
+                    } else {
                         newHistory2.add(pumpHistoryEntry);
                     }
-                } else {
-                    newHistory2.add(pumpHistoryEntry);
-                }
 
+                }
+                // }
             }
-            // }
+
         }
 
         TBRs = processTBRs(TBRs);
@@ -130,7 +135,7 @@ public class MedtronicHistoryData {
         if (filteredListByLastRecord.size() == 0)
             return;
 
-        List<PumpHistoryEntry> outList = new ArrayList<>();
+        // List<PumpHistoryEntry> outList = new ArrayList<>();
 
         // if (allHistory.size() > OLD_HISTORY_SIZE) {
         // for (int i = 0; i < OLD_HISTORY_SIZE; i++) {
@@ -144,14 +149,21 @@ public class MedtronicHistoryData {
 
         LOG.debug("All History records (before): " + allHistory.size());
 
-        outList.addAll(this.allHistory);
-        outList.addAll(filteredListByLastRecord);
+        for (PumpHistoryEntry pumpHistoryEntry : filteredListByLastRecord) {
 
-        this.allHistory.clear();
+            if (!this.allHistory.contains(pumpHistoryEntry)) {
+                this.allHistory.add(pumpHistoryEntry);
+            }
+        }
 
-        this.allHistory.addAll(outList);
-
-        this.sort(this.allHistory);
+        // outList.addAll(this.allHistory);
+        // outList.addAll(filteredListByLastRecord);
+        //
+        // this.allHistory.clear();
+        //
+        // this.allHistory.addAll(outList);
+        //
+        // this.sort(this.allHistory);
 
         LOG.debug("All History records (after): " + allHistory.size());
 

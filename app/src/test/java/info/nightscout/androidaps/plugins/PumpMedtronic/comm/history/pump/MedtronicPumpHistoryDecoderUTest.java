@@ -48,6 +48,25 @@ public class MedtronicPumpHistoryDecoderUTest {
 
 
     // @Test
+    public void decodeLowAmount() {
+        byte[] data = new byte[] { 52, -12, 22, -81, 46, 3, 19 };
+
+        PumpHistoryEntryGroup.doNotTranslate = true;
+        PumpHistoryEntryType entryType = PumpHistoryEntryType.getByCode(52);
+
+        PumpHistoryEntry phe = new PumpHistoryEntry();
+        phe.setEntryType(entryType);
+        phe.setData(ByteUtil.getListFromByteArray(data), false);
+
+        decoder.decodeRecord(phe);
+
+        System.out.println("Record: " + phe);
+        System.out.println("Record: " + phe.getDisplayableValue());
+
+    }
+
+
+    // @Test
     public void decodeDailyTotals522() {
         // PumpHistoryRecord [type=DailyTotals522 [109, 0x6D], DT: 01.11.2018 00:00:00, length=1,2,41(44), data={Raw
         // Data=0x6D 0xA1 0x92 0x05 0x0C 0x00 0xE8 0x00 0x00 0x00 0x00 0x04 0x0A 0x04 0x0A 0x64 0x00 0x00 0x00 0x00 0x00

@@ -87,6 +87,32 @@ public class BasalProfile {
     }
 
 
+    public boolean setRawDataFromHistory(byte[] data) {
+        if (data == null) {
+            LOG.error("setRawData: buffer is null!");
+            return false;
+        }
+
+        mRawData = new byte[MAX_RAW_DATA_SIZE];
+        int item = 0;
+
+        for (int i = 0; i < data.length - 2; i += 3) {
+
+            if ((data[i] == 0) && (data[i + 1] == 0) && (data[i + 2] == 0)) {
+                mRawData[i] = 0;
+                mRawData[i + 1] = 0;
+                mRawData[i + 2] = 0;
+            }
+
+            mRawData[i] = data[i + 1];
+            mRawData[i + 1] = data[i + 2];
+            mRawData[i + 2] = data[i];
+        }
+
+        return true;
+    }
+
+
     public void dumpBasalProfile() {
         LOG.debug("Basal Profile entries:");
         List<BasalProfileEntry> entries = getEntries();

@@ -146,9 +146,9 @@ public class TempBasalPair {
     public String getDescription() {
 
         if (isPercent) {
-            return String.format(Locale.ENGLISH, "Rate=%.0f%%, Duration=%d min", insulinRate, durationMinutes);
+            return String.format(Locale.ENGLISH, "Rate: %.0f%%, Duration: %d min", insulinRate, durationMinutes);
         } else {
-            return String.format(Locale.ENGLISH, "Rate=%.3f U, Duration=%d min", insulinRate, durationMinutes);
+            return String.format(Locale.ENGLISH, "Rate: %.3f U, Duration: %d min", insulinRate, durationMinutes);
         }
     }
 

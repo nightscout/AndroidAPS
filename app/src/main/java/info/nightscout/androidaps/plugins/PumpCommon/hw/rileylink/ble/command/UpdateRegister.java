@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.command;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.CC111XRegister;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkCommandType;
-import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 
 public class UpdateRegister extends RileyLinkCommand {
 
@@ -10,8 +9,8 @@ public class UpdateRegister extends RileyLinkCommand {
     byte registerValue;
 
 
-    public UpdateRegister(RileyLinkFirmwareVersion version, CC111XRegister register, byte registerValue) {
-        super(version);
+    public UpdateRegister(CC111XRegister register, byte registerValue) {
+        super();
         this.register = register;
         this.registerValue = registerValue;
     }

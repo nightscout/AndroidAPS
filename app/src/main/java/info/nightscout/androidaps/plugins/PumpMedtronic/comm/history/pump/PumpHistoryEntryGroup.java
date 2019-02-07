@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 /**
@@ -26,12 +27,17 @@ public enum PumpHistoryEntryGroup {
     private int resourceId;
     private String translated;
 
+    public static boolean doNotTranslate = false;
+
     private static List<PumpHistoryEntryGroup> list;
 
     static {
         list = new ArrayList<>();
 
         for (PumpHistoryEntryGroup pumpHistoryEntryGroup : values()) {
+            if (doNotTranslate) {
+                pumpHistoryEntryGroup.translated = MainApp.gs(pumpHistoryEntryGroup.resourceId);
+            }
             list.add(pumpHistoryEntryGroup);
         }
     }
@@ -50,6 +56,11 @@ public enum PumpHistoryEntryGroup {
 
     public int getResourceId() {
         return resourceId;
+    }
+
+
+    public String getTranslated() {
+        return translated;
     }
 
 

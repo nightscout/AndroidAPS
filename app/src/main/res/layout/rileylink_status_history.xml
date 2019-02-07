@@ -10,12 +10,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ListView
+        <TextView
+            android:id="@+id/rileylink_historystatus"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="10px"
+            android:layout_below="@id/medtronic_historytop"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" />
+
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/rileylink_history_list"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp" />
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/rileylink_historystatus" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

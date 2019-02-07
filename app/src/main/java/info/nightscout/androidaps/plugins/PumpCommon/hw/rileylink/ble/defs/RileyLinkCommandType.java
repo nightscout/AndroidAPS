@@ -14,9 +14,9 @@ public enum RileyLinkCommandType {
     UpdateRegister(6), //
     Reset(7), //
     Led(8),
-    ReadRegister(8),
+    ReadRegister(9),
     SetModeRegisters(10),
-    SetSWEncoding(11),
+    SetHardwareEncoding(11),
     SetPreamble(12),
     ResetRadioConfig(13),
     GetStatistics(14), ;

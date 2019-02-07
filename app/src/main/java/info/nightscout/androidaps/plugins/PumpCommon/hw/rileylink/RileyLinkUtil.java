@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.RileyLinkB
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkEncodingType;
+import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.data.RLHistoryItem;
@@ -32,7 +33,6 @@ import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.S
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.PumpCommon.ui.RileyLinkSelectPreference;
-import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicDeviceStatusChange;
 
 /**
@@ -52,7 +52,7 @@ public class RileyLinkUtil {
     // private static MedtronicPumpStatus medtronicPumpStatus;
     private static RileyLinkService rileyLinkService;
     // private static RileyLinkIPCConnection rileyLinkIPCConnection;
-    private static MedtronicDeviceType medtronicPumpModel;
+    // private static MedtronicDeviceType medtronicPumpModel;
     // BAD dependencies in Classes: RileyLinkService
     private static RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
@@ -62,6 +62,7 @@ public class RileyLinkUtil {
     private static RileyLinkEncodingType encoding;
     private static RileyLinkSelectPreference rileyLinkSelectPreference;
     private static Encoding4b6b encoding4b6b;
+    private static RileyLinkFirmwareVersion firmwareVersion;
 
 
     public static void setContext(Context contextIn) {
@@ -328,5 +329,15 @@ public class RileyLinkUtil {
 
     public static Encoding4b6b getEncoding4b6b() {
         return RileyLinkUtil.encoding4b6b;
+    }
+
+
+    public static void setFirmwareVersion(RileyLinkFirmwareVersion firmwareVersion) {
+        RileyLinkUtil.firmwareVersion = firmwareVersion;
+    }
+
+
+    public static RileyLinkFirmwareVersion getFirmwareVersion() {
+        return firmwareVersion;
     }
 }

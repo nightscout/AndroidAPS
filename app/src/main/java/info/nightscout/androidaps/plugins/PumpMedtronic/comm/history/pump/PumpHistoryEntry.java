@@ -131,19 +131,30 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     // }
 
     public boolean isAfter(long atechDateTime) {
-        return atechDateTime > this.atechDateTime;
+        return atechDateTime < this.atechDateTime;
     }
 
-    public static class Comparator implements java.util.Comparator<PumpHistoryEntry> {
 
-        @Override
-        public int compare(PumpHistoryEntry o1, PumpHistoryEntry o2) {
-            return (int)(o2.atechDateTime - o1.atechDateTime);
-        }
+    public void setDisplayableValue(String displayableValue) {
+        this.displayableValue = displayableValue;
     }
 
 
     public String getDisplayableValue() {
         return displayableValue;
     }
+
+    public static class Comparator implements java.util.Comparator<PumpHistoryEntry> {
+
+        @Override
+        public int compare(PumpHistoryEntry o1, PumpHistoryEntry o2) {
+            int data = (int)(o2.atechDateTime - o1.atechDateTime);
+
+            if (data != 0)
+                return data;
+
+            return o2.getEntryType().getCode() - o1.getEntryType().getCode();
+        }
+    }
+
 }
