@@ -705,7 +705,7 @@
     <string name="btwatchdog_summary">Wyłącza bluetooth telefonu na jedną sekundę, jeśli nie jest możliwe połączenie z pompą. Może to pomóc w niektórych telefonach, w których blokuje się bluetooth.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="dexcomg5_nsupload_title">Przekaż dane BG do NS</string>
-    <string name="dexcomg5_upload">G5 prześlij ustawienia</string>
+    <string name="bgsource_upload">G5 prześlij ustawienia</string>
     <string name="poctech_upload">Poctech ustawienia przesyłania</string>
     <string name="wear_detailed_delta_title">Pokaż szczegółowe delta</string>
     <string name="wear_detailed_delta_summary">Pokaż deltę z jednym więcej miejscem dziesiętnym</string>

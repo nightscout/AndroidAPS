@@ -68,6 +68,8 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
@@ -180,7 +182,9 @@ public class MainApp extends Application {
             pluginsList.add(SourceMM640gPlugin.getPlugin());
             pluginsList.add(SourceGlimpPlugin.getPlugin());
             pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+            pluginsList.add(SourceDexcomG6Plugin.getPlugin());
             pluginsList.add(SourcePoctechPlugin.getPlugin());
+            pluginsList.add(SourceEversensePlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 

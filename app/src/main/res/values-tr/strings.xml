@@ -705,7 +705,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="btwatchdog_summary">Pompa ile herhangi bir bağlantı sorunu yaşanıyorsa, Akıllı telefonunuzda Bluetooth bağlantısını kapatıp açın. Bu bluetooth bağlantı sorununu giderecektir.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="dexcomg5_nsupload_title">KŞ verilerini NighScout\'a yükle</string>
-    <string name="dexcomg5_upload">G5 yükleme ayarları</string>
+    <string name="bgsource_upload">G5 yükleme ayarları</string>
     <string name="poctech_upload">Poctech yükleme ayarları</string>
     <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
     <string name="wear_detailed_delta_summary">Bir ondalık basamakla deltayı göster</string>

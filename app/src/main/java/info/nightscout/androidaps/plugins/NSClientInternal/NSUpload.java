@@ -470,14 +470,14 @@ public class NSUpload {
         DbLogger.dbAdd(intent, data.toString());
     }
 
-    public static void uploadBg(BgReading reading) {
+    public static void uploadBg(BgReading reading, String source) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
         bundle.putString("collection", "entries");
         JSONObject data = new JSONObject();
         try {
-            data.put("device", "AndroidAPS-DexcomG5");
+            data.put("device", source);
             data.put("date", reading.date);
             data.put("dateString", DateUtil.toISOString(reading.date));
             data.put("sgv", reading.value);

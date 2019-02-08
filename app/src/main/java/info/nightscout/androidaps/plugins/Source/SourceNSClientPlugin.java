@@ -99,7 +99,7 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
 
     public void detectSource(String source, long timeStamp) {
         if (timeStamp > lastBGTimeStamp) {
-            if (source.contains("G5 Native") || source.contains("G6 Native") || source.contains("AndroidAPS-DexcomG5"))
+            if (source.contains("G5 Native") || source.contains("G6 Native") || source.contains("AndroidAPS-DexcomG5") || source.contains("AndroidAPS-DexcomG6"))
                 isAdvancedFilteringEnabled = true;
             else
                 isAdvancedFilteringEnabled = false;

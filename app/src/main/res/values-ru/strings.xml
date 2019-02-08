@@ -704,7 +704,7 @@
     <string name="btwatchdog_summary">Выключает bluetooth телефона на одну секунду, если подключение к помпе невозможно. Это помогает на тех телефонах, где зависает модуль bluetooth.</string>
     <string name="DexcomG5">Приложение Dexcom (пропатченное)</string>
     <string name="dexcomg5_nsupload_title">Загрузить данные СК в Nightscout</string>
-    <string name="dexcomg5_upload">Настройки загрузки c G5</string>
+    <string name="bgsource_upload">Настройки загрузки c G5</string>
     <string name="poctech_upload">Настройка загрузки с Poctech</string>
     <string name="wear_detailed_delta_title">Показать подробно дельту</string>
     <string name="wear_detailed_delta_summary">Показать дельту еще с одним десятичным знаком</string>

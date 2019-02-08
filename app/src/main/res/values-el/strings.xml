@@ -703,7 +703,7 @@
     <string name="btwatchdog_summary">Απενεργοποιεί το bluetooth του τηλεφώνου για ένα δευτερόλεπτο αν δεν είναι δυνατή η σύνδεση με την αντλία. Αυτό μπορεί να βοηθήσει σε ορισμένα τηλέφωνα όπου το bluetooth παγώνει.</string>
     <string name="DexcomG5">Εφαρμογή DexcomG5 (τροποποιημένη)</string>
     <string name="dexcomg5_nsupload_title">Ανέβασμα δεδομένων BG στο NS</string>
-    <string name="dexcomg5_upload">Ανέβασμα ρυθμίσεων G5</string>
+    <string name="bgsource_upload">Ανέβασμα ρυθμίσεων G5</string>
     <string name="poctech_upload">Ανέβασμα ρυθμίσεων Poctech</string>
     <string name="wear_detailed_delta_title">Εμφάνιση λεπτομερών στατιστικών</string>
     <string name="wear_detailed_delta_summary">Δείξτε τη διαφορά με ένα επιπλέον δεκαδικό ψηφίο</string>

@@ -110,6 +110,7 @@ import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationRecyclerViewAdapter;
 import info.nightscout.androidaps.plugins.Overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG6Plugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
@@ -664,6 +665,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         boolean xdrip = SourceXdripPlugin.getPlugin().isEnabled(PluginType.BGSOURCE);
         boolean g5 = SourceDexcomG5Plugin.getPlugin().isEnabled(PluginType.BGSOURCE);
+        boolean g6 = SourceDexcomG6Plugin.getPlugin().isEnabled(PluginType.BGSOURCE);
         String units = ProfileFunctions.getInstance().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
@@ -686,7 +688,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (xdrip) {
                     CalibrationDialog calibrationDialog = new CalibrationDialog();
                     calibrationDialog.show(manager, "CalibrationDialog");
-                } else if (g5) {
+                } else if (g5 || g6) {
                     try {
                         Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
                         startActivity(i);
@@ -702,6 +704,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     openCgmApp("com.dexcom.cgm.region5.mgdl");
                 else if (g5 && units.equals(Constants.MMOL))
                     openCgmApp("com.dexcom.cgm.region5.mmol");
+                else if (g6 && units.equals(Constants.MGDL))
+                    openCgmApp("com.dexcom.g6.region3.mgdl");
+                else if (g6 && units.equals(Constants.MMOL))
+                    openCgmApp("com.dexcom.g6.region3.mmol");
                 break;
             case R.id.overview_treatmentbutton:
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();

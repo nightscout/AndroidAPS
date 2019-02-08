@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.Source;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,33 +21,32 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
 /**
- * Created by mike on 28.11.2017.
+ * Created by mike on 30.11.2018.
  */
 
-public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterface {
+public class SourceDexcomG6Plugin extends PluginBase implements BgSourceInterface {
     private static Logger log = LoggerFactory.getLogger(L.BGSOURCE);
 
-    private static SourceDexcomG5Plugin plugin = null;
+    private static SourceDexcomG6Plugin plugin = null;
 
-    public static SourceDexcomG5Plugin getPlugin() {
+    public static SourceDexcomG6Plugin getPlugin() {
         if (plugin == null)
-            plugin = new SourceDexcomG5Plugin();
+            plugin = new SourceDexcomG6Plugin();
         return plugin;
     }
 
-    private SourceDexcomG5Plugin() {
+    private SourceDexcomG6Plugin() {
         super(new PluginDescription()
                 .mainType(PluginType.BGSOURCE)
                 .fragmentClass(BGSourceFragment.class.getName())
-                .pluginName(R.string.DexcomG5)
-                .shortName(R.string.dexcomG5_shortname)
+                .pluginName(R.string.DexcomG6)
+                .shortName(R.string.dexcomG6_shortname)
                 .preferencesId(R.xml.pref_bgsource)
-                .description(R.string.description_source_dexcom_g5)
+                .description(R.string.description_source_dexcom_g6)
         );
     }
 
@@ -59,56 +57,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
 
     @Override
     public void handleNewData(Intent intent) {
-        // onHandleIntent Bundle{ data => [{"m_time":1511939180,"m_trend":"NotComputable","m_value":335}]; android.support.content.wakelockid => 95; }Bundle
-
         if (!isEnabled(PluginType.BGSOURCE)) return;
-
-        if (intent.getAction().equals(Intents.DEXCOMG5_BG))
-            handleNewDataOld(intent);
-
-        if (intent.getAction().equals(Intents.DEXCOMG5_BG_NEW))
-            handleNewDataNew(intent);
-    }
-
-    public void handleNewDataOld(Intent intent) {
-        // onHandleIntent Bundle{ data => [{"m_time":1511939180,"m_trend":"NotComputable","m_value":335}]; android.support.content.wakelockid => 95; }Bundle
-
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
-
-        BgReading bgReading = new BgReading();
-
-        String data = bundle.getString("data");
-        if (L.isEnabled(L.BGSOURCE))
-            log.debug("Received Dexcom Data", data);
-
-        if (data == null) return;
-
-        try {
-            JSONArray jsonArray = new JSONArray(data);
-            if (L.isEnabled(L.BGSOURCE))
-                log.debug("Received Dexcom Data size:" + jsonArray.length());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject json = jsonArray.getJSONObject(i);
-                bgReading.value = json.getInt("m_value");
-                bgReading.direction = json.getString("m_trend");
-                bgReading.date = json.getLong("m_time") * 1000L;
-                bgReading.raw = 0;
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading, "AndroidAPS-DexcomG5");
-                }
-                if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    NSUpload.sendToXdrip(bgReading);
-                }
-            }
-
-        } catch (JSONException e) {
-            log.error("Exception: ", e);
-        }
-    }
-
-    public void handleNewDataNew(Intent intent) {
 
         Bundle bundle = intent.getExtras();
         if (bundle == null) return;
@@ -116,8 +65,6 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
         if (L.isEnabled(L.BGSOURCE)) {
             if (bundle.containsKey("transmitterSystemTime"))
                 log.debug("transmitterSystemTime: " + DateUtil.dateAndTimeFullString(bundle.getLong("transmitterSystemTime")));
-            if (bundle.containsKey("transmitterRemainingTime"))
-                log.debug("transmitterRemainingTime: " + DateUtil.dateAndTimeFullString(bundle.getLong("transmitterRemainingTime")));
             log.debug("transmitterId: " + bundle.getString("transmitterId"));
             if (bundle.containsKey("transmitterActivatedOn"))
                 log.debug("transmitterActivatedOn: " + DateUtil.dateAndTimeFullString(bundle.getLong("transmitterActivatedOn")));
@@ -134,6 +81,9 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
             log.debug("transmitterNordicAsicHwID: " + bundle.getInt("transmitterNordicAsicHwID"));
             log.debug("transmitterSessionTimeDays: " + bundle.getInt("transmitterSessionTimeDays"));
             log.debug("transmitterFeatureFlags: " + bundle.getInt("transmitterFeatureFlags"));
+
+            if (bundle.containsKey("sensorCode"))
+                log.debug("sensorCode: " + bundle.getString("sensorCode"));
         }
 
         if (bundle.containsKey("sensorInsertionTime")) {
@@ -144,7 +94,7 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 try {
                     if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
                         JSONObject data = new JSONObject();
-                        data.put("enteredBy", "AndroidAPS-DexcomG5");
+                        data.put("enteredBy", "AndroidAPS-DexcomG6");
                         data.put("created_at", DateUtil.toISOString(sensorInsertionTime));
                         data.put("eventType", CareportalEvent.SENSORCHANGE);
                         NSUpload.uploadCareportalEntryToNS(data);
@@ -155,38 +105,30 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
             }
         }
 
-        if (bundle.containsKey("glucoseValues")) {
-            int[] glucoseValues = bundle.getIntArray("glucoseValues");
-            int[] glucoseRecordIDs = bundle.getIntArray("glucoseRecordIDs");
-            long[] glucoseRecordedTimestamps = bundle.getLongArray("glucoseRecordedTimestamps");
-            long[] glucoseSessionStartTimes = bundle.getLongArray("glucoseSessionStartTimes");
-            long[] glucoseSystemTimestamps = bundle.getLongArray("glucoseSystemTimestamps");
-            String[] glucoseTransmitterIDS = bundle.getStringArray("glucoseTransmitterIDS");
-            long[] glucoseTransmitterTimestamps = bundle.getLongArray("glucoseTransmitterTimestamps");
-            String[] glucoseTrendsArrows = bundle.getStringArray("glucoseTrendsArrows");
-            boolean[] glucoseWasBackfilled = bundle.getBooleanArray("glucoseWasBackfilled");
+        if (bundle.containsKey("evgTimestamps")) {
+            long[] timestamps = bundle.getLongArray("evgTimestamps");
+            long[] transmitterTimes = bundle.getLongArray("transmitterTimes");
+            int[] evgs = bundle.getIntArray("evgs");
+            int[] predictiveEVGs = bundle.getIntArray("predictiveEVGs");
+            String[] trendArrows = bundle.getStringArray("trendArrows");
 
             if (L.isEnabled(L.BGSOURCE)) {
-                log.debug("glucoseValues", Arrays.toString(glucoseValues));
-                log.debug("glucoseRecordIDs", Arrays.toString(glucoseRecordIDs));
-                log.debug("glucoseRecordedTimestamps", Arrays.toString(glucoseRecordedTimestamps));
-                log.debug("glucoseSessionStartTimes", Arrays.toString(glucoseSessionStartTimes));
-                log.debug("glucoseSystemTimestamps", Arrays.toString(glucoseSystemTimestamps));
-                log.debug("glucoseTransmitterIDS", Arrays.toString(glucoseTransmitterIDS));
-                log.debug("glucoseTransmitterTimestamps", Arrays.toString(glucoseTransmitterTimestamps));
-                log.debug("glucoseTrendsArrows", Arrays.toString(glucoseTrendsArrows));
-                log.debug("glucoseWasBackfilled", Arrays.toString(glucoseWasBackfilled));
+                log.debug("timestamps", Arrays.toString(timestamps));
+                log.debug("transmitterTimes", Arrays.toString(transmitterTimes));
+                log.debug("evgs", Arrays.toString(evgs));
+                log.debug("predictiveEVGs", Arrays.toString(predictiveEVGs));
+                log.debug("trendArrows", Arrays.toString(trendArrows));
             }
 
-            for (int i = 0; i < glucoseValues.length; i++) {
+            for (int i = 0; i < transmitterTimes.length; i++) {
                 BgReading bgReading = new BgReading();
-                bgReading.value = glucoseValues[i];
-                bgReading.direction = glucoseTrendsArrows[i];
-                bgReading.date = glucoseTransmitterTimestamps[i];
+                bgReading.value = evgs[i];
+                bgReading.direction = trendArrows[i];
+                bgReading.date = timestamps[i];
                 bgReading.raw = 0;
-                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG5");
+                boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "DexcomG6");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading, "AndroidAPS-DexcomG5");
+                    NSUpload.uploadBg(bgReading, "AndroidAPS-DexcomG6");
                 }
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
                     NSUpload.sendToXdrip(bgReading);
@@ -195,12 +137,12 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
         }
 
         if (bundle.containsKey("meterValues")) {
+            int[] meterValues = bundle.getIntArray("meterValues");
             String[] meterEntryTypes = bundle.getStringArray("meterEntryTypes");
             long[] meterTimestamps = bundle.getLongArray("meterTimestamps");
-            int[] meterValues = bundle.getIntArray("meterValues");
-            long[] meterRecordedTimestamps = bundle.getLongArray("meterRecordedTimestamps");
-            int[] meterTransmitterIDs = bundle.getIntArray("meterTransmitterIDs");
             long[] meterTransmitterTimestamps = bundle.getLongArray("meterTransmitterTimestamps");
+            long[] meterRecordedTimestamps = bundle.getLongArray("meterRecordedTimestamps");
+            int[] meterRecordIDs = bundle.getIntArray("meterRecordIDs");
 
             if (L.isEnabled(L.BGSOURCE)) {
                 log.debug("meterValues", Arrays.toString(meterValues));
@@ -208,14 +150,14 @@ public class SourceDexcomG5Plugin extends PluginBase implements BgSourceInterfac
                 log.debug("meterTimestamps", Arrays.toString(meterTimestamps));
                 log.debug("meterTransmitterTimestamps", Arrays.toString(meterTransmitterTimestamps));
                 log.debug("meterRecordedTimestamps", Arrays.toString(meterRecordedTimestamps));
-                log.debug("meterTransmitterIDs", Arrays.toString(meterTransmitterIDs));
+                log.debug("meterRecordIDs", Arrays.toString(meterRecordIDs));
             }
 
             for (int i = 0; i < meterValues.length; i++) {
                 try {
                     if (MainApp.getDbHelper().getCareportalEventFromTimestamp(meterTimestamps[i]) == null) {
                         JSONObject data = new JSONObject();
-                        data.put("enteredBy", "AndroidAPS-DexcomG5");
+                        data.put("enteredBy", "AndroidAPS-DexcomG6");
                         data.put("created_at", DateUtil.toISOString(meterTimestamps[i]));
                         data.put("eventType", CareportalEvent.BGCHECK);
                         data.put("glucoseType", "Finger");
