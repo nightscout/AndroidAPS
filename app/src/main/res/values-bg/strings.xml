@@ -532,6 +532,7 @@
     <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
     <string name="disconnectpumpfor3h">Изключи помпата за 3 ч</string>
     <string name="resume">Възстанови</string>
+    <string name="reconnect">Свържи помпа</string>
     <string name="smscommunicator_wrongduration">Грешна продължителност</string>
     <string name="smscommunicator_loopsuspended">APS забранен</string>
     <string name="smscommunicator_loopresumed">APS възобновен</string>
@@ -1053,6 +1054,10 @@
     <string name="loop_openmode_min_change">Минимална стойност за промяна [%]</string>
     <string name="loop_openmode_min_change_summary">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
+    <string name="profile_total">Общо  %1$s Е</string>
+    <string name="profile_ins_units_per_hout">Е/ч</string>
+    <string name="profile_carbs_per_unit">гр/Е</string>
+    <string name="profile_per_unit">/Е</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
