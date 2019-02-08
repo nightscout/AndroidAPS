@@ -408,7 +408,6 @@
     <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">스크립트 디버그</string>
-    <string name="openapsama_useautosens">AMA Autosens 기능 사용하기</string>
     <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="deletefuturetreatments">미래시점의 관리 삭제</string>
     <string name="eatingsoon">식사직전</string>

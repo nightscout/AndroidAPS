@@ -408,7 +408,6 @@
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
     <string name="openapsma_scriptdebugdata_label">脚本调试</string>
-    <string name="openapsama_useautosens">使用 AMA autosens 功能</string>
     <string name="refresheventsfromnightscout">从 NS 刷新事件</string>
     <string name="deletefuturetreatments">删除未来的治疗项</string>
     <string name="eatingsoon">很快吃饭</string>

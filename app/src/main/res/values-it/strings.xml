@@ -408,7 +408,6 @@
     <string name="array_of_elements">Matrice di %1$d elementi. \nActual valore:</string>
     <string name="openapsma_autosensdata_label">Autosens dati</string>
     <string name="openapsma_scriptdebugdata_label">Debug di script</string>
-    <string name="openapsama_useautosens">Funzionalità di utilizzo AMA autosens</string>
     <string name="refresheventsfromnightscout">Aggiornare gli eventi da NS</string>
     <string name="deletefuturetreatments">Eliminare trattamenti in futuro</string>
     <string name="eatingsoon">Pranzo</string>
