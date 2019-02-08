@@ -408,7 +408,6 @@
     <string name="array_of_elements">En serie med %1$d tal.\nVärde:</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
     <string name="openapsma_scriptdebugdata_label">Debug</string>
-    <string name="openapsama_useautosens">Använd AMA autosens</string>
     <string name="refresheventsfromnightscout">Uppdatera från Nightscout</string>
     <string name="deletefuturetreatments">Ta bort behandlingar från framtiden</string>
     <string name="eatingsoon">Äta snart</string>

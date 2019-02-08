@@ -408,7 +408,6 @@
     <string name="array_of_elements">Matriz de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
-    <string name="openapsama_useautosens">Usar característica AMA autosens</string>
     <string name="refresheventsfromnightscout">Renovar datos desde NS</string>
     <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
     <string name="eatingsoon">ComidendoPronto</string>

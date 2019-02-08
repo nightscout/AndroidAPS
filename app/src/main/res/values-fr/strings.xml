@@ -409,7 +409,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="array_of_elements">Tableau de %1$d éléments.\nValeur Actuelle :</string>
     <string name="openapsma_autosensdata_label">Données Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Débogage du Script</string>
-    <string name="openapsama_useautosens">Utiliser la fonction AMA Autosens</string>
     <string name="refresheventsfromnightscout">Actualiser les événements depuis NS</string>
     <string name="deletefuturetreatments">Supprimer les futurs traitements</string>
     <string name="eatingsoon">Repas imminent</string>

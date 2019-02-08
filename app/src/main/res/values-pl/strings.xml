@@ -408,7 +408,6 @@
     <string name="array_of_elements">Lista %1$d elementów.\n Bieżąca wartość:</string>
     <string name="openapsma_autosensdata_label">Dane Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Debugowanie skryptów</string>
-    <string name="openapsama_useautosens">Używaj funkcji AMA autosens</string>
     <string name="refresheventsfromnightscout">Odśwież zdarzenia z NS</string>
     <string name="deletefuturetreatments">Usuń zabiegi w przyszłości</string>
     <string name="eatingsoon">Wkrótce posiłek</string>

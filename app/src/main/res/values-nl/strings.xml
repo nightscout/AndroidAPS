@@ -409,7 +409,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
-    <string name="openapsama_useautosens">Activeer AMA autosens</string>
     <string name="refresheventsfromnightscout">Haal wijzigingen op van NS</string>
     <string name="deletefuturetreatments">Verwijder behandelingen in de toekomst</string>
     <string name="eatingsoon">Eet binnenkort</string>
