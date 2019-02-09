@@ -154,7 +154,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     };
 
     private final Object $bolusLock = new Object[0];
-    private boolean bolusInProgress;
     private int bolusID = -1;
     private List<BasalProfileBlock> profileBlocks;
     private boolean limitsFetched;
