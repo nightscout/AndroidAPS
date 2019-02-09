@@ -535,10 +535,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 detailedBolusInfo.pumpId = insightBolusID.id;
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
-                    List<ActiveBolus> activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
+                    fetchStatus();
+                    if (operatingMode != OperatingMode.STARTED) break;
                     ActiveBolus activeBolus = null;
                     for (ActiveBolus bolus : activeBoluses) {
-                        if (bolus.getBolusID() == bolusID) activeBolus = bolus;
+                        if (bolus.getBolusID() == bolusID) {
+                            activeBolus = bolus;
+                            break;
+                        }
                     }
                     if (activeBolus != null) {
                         trials = -1;
@@ -547,12 +551,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         bolusingEvent.status = MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount());
                         if (percentBefore != bolusingEvent.percent)
                             MainApp.bus().post(bolusingEvent);
-                    } else if (trials == -1 || trials++ >= 5) break;
+                    } else if (trials == -1 || trials++ >= 5) {
+                        bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
+                        bolusingEvent.percent = 100;
+                        MainApp.bus().post(bolusingEvent);
+                        break;
+                    }
                     Thread.sleep(200);
                 }
-                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
-                bolusingEvent.percent = 100;
-                MainApp.bus().post(bolusingEvent);
                 readHistory();
                 fetchStatus();
             } catch (AppLayerErrorException e) {
