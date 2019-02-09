@@ -48,7 +48,7 @@ public class InsightAlertService extends Service implements InsightConnectionSer
         public void onServiceConnected(ComponentName name, IBinder binder) {
             connectionService = ((InsightConnectionService.LocalBinder) binder).getService();
             connectionService.registerStateCallback(InsightAlertService.this);
-            stateChanged(connectionService.getState());
+            onStateChanged(connectionService.getState());
         }
 
         @Override
@@ -114,7 +114,7 @@ public class InsightAlertService extends Service implements InsightConnectionSer
     }
 
     @Override
-    public void stateChanged(InsightState state) {
+    public void onStateChanged(InsightState state) {
         if (state == InsightState.CONNECTED) {
             thread = new Thread(this::queryActiveAlert);
             thread.start();
