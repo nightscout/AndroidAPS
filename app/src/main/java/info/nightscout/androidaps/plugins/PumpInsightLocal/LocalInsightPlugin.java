@@ -538,6 +538,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 detailedBolusInfo.pumpId = insightBolusID.id;
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
+                    synchronized ($bolusLock) {
+                        if (bolusID == -1) break;
+                    }
                     OperatingMode operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
                     if (operatingMode != OperatingMode.STARTED) break;
                     List<ActiveBolus> activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
@@ -592,6 +595,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
+                    bolusID = -1;
                     confirmAlert(AlertType.WARNING_38);
                 } catch (AppLayerErrorException e) {
                     log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
