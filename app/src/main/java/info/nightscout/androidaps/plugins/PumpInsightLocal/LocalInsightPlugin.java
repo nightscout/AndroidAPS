@@ -1057,11 +1057,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     startMessage.setDirection(HistoryReadingDirection.BACKWARD);
                     startMessage.setOffset(0xFFFFFFFF);
                     connectionService.requestMessage(startMessage).await();
-                    for (int i = 0; i < 50; i++) {
-                        List<HistoryEvent> newEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
-                        if (newEvents.size() == 0) break;
-                        historyEvents.addAll(newEvents);
-                    }
+                    historyEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
                 } else {
                     StartReadingHistoryMessage startMessage = new StartReadingHistoryMessage();
                     startMessage.setDirection(HistoryReadingDirection.FORWARD);
@@ -1073,7 +1069,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         historyEvents.addAll(newEvents);
                     }
                 }
-                processHistoryEvents(pumpSerial, historyEvents);
+                Collections.sort(historyEvents);
+                Collections.reverse(historyEvents);
+                if (historyOffset != null) processHistoryEvents(pumpSerial, historyEvents);
+                if (historyEvents.size() > 0) {
+                    historyOffset = new InsightHistoryOffset();
+                    historyOffset.pumpSerial = pumpSerial;
+                    historyOffset.offset = historyEvents.get(0).getEventPosition();
+                    MainApp.getDbHelper().createOrUpdate(historyOffset);
+                }
             } catch (AppLayerErrorException e) {
                 log.info("Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
@@ -1097,8 +1101,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
-        Collections.sort(historyEvents);
-        Collections.reverse(historyEvents);
         List<TemporaryBasal> temporaryBasals = new ArrayList<>();
         List<InsightPumpID> pumpStartedEvents = new ArrayList<>();
         for (HistoryEvent historyEvent : historyEvents)
@@ -1121,12 +1123,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         Collections.sort(temporaryBasals, (o1, o2) -> (int) (o1.date - o2.date));
         for (TemporaryBasal temporaryBasal : temporaryBasals)
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
-        if (historyEvents.size() > 0) {
-            InsightHistoryOffset historyOffset = new InsightHistoryOffset();
-            historyOffset.pumpSerial = serial;
-            historyOffset.offset = historyEvents.get(0).getEventPosition();
-            MainApp.getDbHelper().createOrUpdate(historyOffset);
-        }
     }
 
     private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
