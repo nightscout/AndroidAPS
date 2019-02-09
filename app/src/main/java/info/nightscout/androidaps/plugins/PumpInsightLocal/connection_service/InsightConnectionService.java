@@ -277,6 +277,10 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         }
     }
 
+    public synchronized boolean hasRequestedConnection(Object lock) {
+        return connectionRequests.contains(lock);
+    }
+
     private void cleanup() {
         messageQueue.completeActiveRequest(new ConnectionLostException());
         messageQueue.completePendingRequests(new ConnectionLostException());
