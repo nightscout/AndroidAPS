@@ -808,7 +808,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             return;
                         }
                         accepted = true;
-                        if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                        if (Math.abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= 0.01 || finalCarbsAfterConstraints > 0) {
                             if (wizard.superBolus) {
                                 final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
                                 if (loopPlugin.isEnabled(PluginType.LOOP)) {
