@@ -868,7 +868,7 @@
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump. If a bolus was delivered, it will be added to treatments during the next connection to the pump.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
-    <string name="insightpump_shortname">Insight</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insightpump">Insight Pump</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Changed</string>
@@ -1261,8 +1261,8 @@
     <string name="extended_bolus">Extended bolus</string>
     <string name="multiwave_bolus">Multiwave bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
-    <string name="enable_tbr_over_notification">Enable TBR over notification</string>
-    <string name="disable_tbr_over_notification">Disable TBR over notification</string>
+    <string name="enable_tbr_over_notification">Enable notification of TBR end\n(pump setting)</string>
+    <string name="disable_tbr_over_notification">Disable notification of TBR end\n(pump setting)</string>
     <string name="refresh">Refresh</string>
     <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
     <string name="not_inserted">Not inserted</string>
