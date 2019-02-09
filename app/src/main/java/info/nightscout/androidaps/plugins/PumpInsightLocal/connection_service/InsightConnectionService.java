@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.PumpCombo.ruffyscripter.BolusProgressReporter;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.ReadParameterBlockMessage;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.configuration.CloseConfigurationWriteSessionMessage;
@@ -245,7 +244,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
             wakeLock.release();
         else if (!wakeLock.isHeld()) wakeLock.acquire();
         this.state = state;
-        for (StateCallback stateCallback : stateCallbacks) stateCallback.stateChanged(state);
+        for (StateCallback stateCallback : stateCallbacks) stateCallback.onStateChanged(state);
         log.info("Insight state changed: " + state.name());
     }
 
@@ -704,6 +703,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
                 pairingDataStorage.setPaired(true);
                 log.info("Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪");
                 setState(InsightState.CONNECTED);
+                for (StateCallback stateCallback : stateCallbacks) stateCallback.onPumpPaired();
             }
         } else processGenericAppLayerMessage(message);
     }
@@ -771,7 +771,10 @@ public class InsightConnectionService extends Service implements ConnectionEstab
     }
 
     public interface StateCallback {
-        void stateChanged(InsightState state);
+        void onStateChanged(InsightState state);
+        default void onPumpPaired() {
+
+        }
     }
 
     public interface ExceptionCallback {

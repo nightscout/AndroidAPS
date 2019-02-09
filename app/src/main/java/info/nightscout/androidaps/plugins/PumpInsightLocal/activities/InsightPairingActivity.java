@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class InsightPairingActivity extends AppCompatActivity implements Insight
                 service.requestConnection(InsightPairingActivity.this);
                 service.registerStateCallback(InsightPairingActivity.this);
                 service.registerExceptionCallback(InsightPairingActivity.this);
-                stateChanged(service.getState());
+                onStateChanged(service.getState());
             }
         }
 
@@ -116,7 +115,7 @@ public class InsightPairingActivity extends AppCompatActivity implements Insight
     }
 
     @Override
-    public void stateChanged(InsightState state) {
+    public void onStateChanged(InsightState state) {
         runOnUiThread(() -> {
             switch (state) {
                 case NOT_PAIRED:

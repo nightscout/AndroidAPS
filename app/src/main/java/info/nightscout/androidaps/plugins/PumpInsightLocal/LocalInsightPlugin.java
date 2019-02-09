@@ -41,6 +41,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
@@ -1510,7 +1511,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public void stateChanged(InsightState state) {
+    public void onStateChanged(InsightState state) {
         if (state == InsightState.CONNECTED) statusLoaded = false;
         else if (state == InsightState.NOT_PAIRED) {
             connectionService.withdrawConnectionRequest(this);
@@ -1526,5 +1527,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             tbrOverNotificationBlock = null;
         }
         new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventLocalInsightUpdateGUI()));
+    }
+
+    @Override
+    public void onPumpPaired() {
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Pump paired", null);
     }
 }
