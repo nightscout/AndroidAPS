@@ -14,4 +14,8 @@ public abstract class AppLayerErrorException extends AppLayerException {
     public String getMessage() {
         return "Error code: " + errorCode;
     }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
 }
