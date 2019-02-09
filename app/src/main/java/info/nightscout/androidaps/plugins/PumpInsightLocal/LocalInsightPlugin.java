@@ -538,8 +538,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 detailedBolusInfo.pumpId = insightBolusID.id;
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
-                    fetchStatus();
+                    OperatingMode operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
                     if (operatingMode != OperatingMode.STARTED) break;
+                    List<ActiveBolus> activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
                     ActiveBolus activeBolus = null;
                     for (ActiveBolus bolus : activeBoluses) {
                         if (bolus.getBolusID() == bolusID) {
