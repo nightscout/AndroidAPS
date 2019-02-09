@@ -1527,6 +1527,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             activeTBR = null;
             activeBoluses = null;
             tbrOverNotificationBlock = null;
+            new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
         }
         new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventLocalInsightUpdateGUI()));
     }
