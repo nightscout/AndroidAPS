@@ -305,11 +305,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public void getPumpStatus() {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
-            fetchStatus();
+            readHistory();
             fetchBasalProfile();
             fetchLimitations();
             updatePumpTimeIfNeeded();
-            readHistory();
+            fetchStatus();
         } catch (AppLayerErrorException e) {
             log.info("Exception while fetching status: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
@@ -1121,7 +1121,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         Collections.reverse(temporaryBasals);
         for (InsightPumpID pumpID : pumpStartedEvents) {
             InsightPumpID stoppedEvent = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
-            if (stoppedEvent == null) continue;
+            if (stoppedEvent == null || stoppedEvent.eventType.equals("PumpPaused")) continue;
             long tbrStart = stoppedEvent.timestamp + 10000;
             TemporaryBasal temporaryBasal = new TemporaryBasal();
             temporaryBasal.durationInMinutes = (int) ((pumpID.timestamp - tbrStart) / 60000);
@@ -1221,22 +1221,22 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         switch (event.getNewValue()) {
             case STARTED:
                 pumpID.eventType = "PumpStarted";
-                MainApp.getDbHelper().createOrUpdate(pumpID);
                 pumpStartedEvents.add(pumpID);
                 if (SP.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, MainApp.gs(R.string.pump_started));
                 break;
             case STOPPED:
+                pumpID.eventType = "PumpStopped";
                 if (SP.getBoolean("insight_log_operating_mode_changes", false))
-                    pumpID.eventType = "PumpStopped";
-                MainApp.getDbHelper().createOrUpdate(pumpID);
-                logNote(timestamp, MainApp.gs(R.string.pump_stopped));
+                    logNote(timestamp, MainApp.gs(R.string.pump_stopped));
                 break;
             case PAUSED:
+                pumpID.eventType = "PumpPaused";
                 if (SP.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, MainApp.gs(R.string.pump_paused));
                 break;
         }
+        MainApp.getDbHelper().createOrUpdate(pumpID);
     }
 
     private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
