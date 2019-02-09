@@ -232,7 +232,7 @@ public class ActionStringHandler {
                     0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
 
             Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
-            if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
+            if (Math.abs(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin contraint violation!" +
                         "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!");
                 return;
