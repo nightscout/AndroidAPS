@@ -784,7 +784,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 confirmMessage += "\n" + MainApp.gs(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                 confirmMessage += "\n" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
-                if (!insulinAfterConstraints.equals(wizard.calculatedTotalInsulin) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
+                if (Math.abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= 0.01 || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
                     builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
