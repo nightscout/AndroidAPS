@@ -1745,7 +1745,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             return getDaoInsightPumpID().queryBuilder()
                     .orderBy("timestamp", false)
                     .where().eq("pumpSerial", pumpSerial)
-                    .and().eq("eventType", "PumpStopped")
+                    .and().in("eventType", "PumpStopped", "PumpPaused")
                     .and().lt("timestamp", before)
                     .queryForFirst();
         } catch (SQLException e) {

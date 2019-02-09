@@ -69,12 +69,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.his
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.history_events.StartOfTBREvent;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.history_events.TotalDailyDoseEvent;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.history.history_events.TubeFilledEvent;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.ActiveBRProfileBlock;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile1Block;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile2Block;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile3Block;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile4Block;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfile5Block;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.BRProfileBlock;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.FactoryMinBolusAmountBlock;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.parameter_blocks.MaxBasalAmountBlock;
@@ -155,7 +150,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     };
 
     private final Object $bolusLock = new Object[0];
-    private int bolusID = -1;
+    private int bolusID;
+    private boolean bolusCancelled;
     private List<BasalProfileBlock> profileBlocks;
     private boolean limitsFetched;
     private double maximumBolusAmount;
@@ -269,7 +265,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public boolean isConnecting() {
-        if (connectionService == null || alertService == null || !connectionService.hasRequestedConnection(this)) return false;
+        if (connectionService == null || alertService == null || !connectionService.hasRequestedConnection(this))
+            return false;
         InsightState state = connectionService.getState();
         return state == InsightState.CONNECTING
                 || state == InsightState.APP_CONNECT_MESSAGE
@@ -308,11 +305,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public void getPumpStatus() {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
-            fetchStatus();
+            readHistory();
             fetchBasalProfile();
             fetchLimitations();
             updatePumpTimeIfNeeded();
-            readHistory();
+            fetchStatus();
         } catch (AppLayerErrorException e) {
             log.info("Exception while fetching status: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
@@ -529,6 +526,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
+                    bolusCancelled = false;
                 }
                 result.success = true;
                 result.enacted = true;
@@ -550,8 +548,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 detailedBolusInfo.pumpId = insightBolusID.id;
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
-                    fetchStatus();
+                    synchronized ($bolusLock) {
+                        if (bolusCancelled) break;
+                    }
+                    OperatingMode operatingMode = connectionService.requestMessage(new GetOperatingModeMessage()).await().getOperatingMode();
                     if (operatingMode != OperatingMode.STARTED) break;
+                    List<ActiveBolus> activeBoluses = connectionService.requestMessage(new GetActiveBolusesMessage()).await().getActiveBoluses();
                     ActiveBolus activeBolus = null;
                     for (ActiveBolus bolus : activeBoluses) {
                         if (bolus.getBolusID() == bolusID) {
@@ -566,11 +568,17 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         bolusingEvent.status = MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount());
                         if (percentBefore != bolusingEvent.percent)
                             MainApp.bus().post(bolusingEvent);
-                    } else if (trials == -1 || trials++ >= 5) {
-                        bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
-                        bolusingEvent.percent = 100;
-                        MainApp.bus().post(bolusingEvent);
-                        break;
+                    } else {
+                        synchronized ($bolusLock) {
+                            if (bolusCancelled || trials == -1 || trials++ >= 5) {
+                                if (!bolusCancelled) {
+                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
+                                    bolusingEvent.percent = 100;
+                                    MainApp.bus().post(bolusingEvent);
+                                }
+                                break;
+                            }
+                        }
                     }
                     Thread.sleep(200);
                 }
@@ -597,20 +605,21 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public void stopBolusDelivering() {
         new Thread(() -> {
-            synchronized ($bolusLock) {
-                try {
+            try {
+                synchronized ($bolusLock) {
                     alertService.ignore(AlertType.WARNING_38);
                     CancelBolusMessage cancelBolusMessage = new CancelBolusMessage();
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
-                    confirmAlert(AlertType.WARNING_38);
-                } catch (AppLayerErrorException e) {
-                    log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-                } catch (InsightException e) {
-                    log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
-                } catch (Exception e) {
-                    log.error("Exception while canceling bolus", e);
+                    bolusCancelled = true;
                 }
+                confirmAlert(AlertType.WARNING_38);
+            } catch (AppLayerErrorException e) {
+                log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            } catch (InsightException e) {
+                log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+            } catch (Exception e) {
+                log.error("Exception while canceling bolus", e);
             }
         }).start();
     }
@@ -1124,7 +1133,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         Collections.reverse(temporaryBasals);
         for (InsightPumpID pumpID : pumpStartedEvents) {
             InsightPumpID stoppedEvent = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
-            if (stoppedEvent == null) continue;
+            if (stoppedEvent == null || stoppedEvent.eventType.equals("PumpPaused")) continue;
             long tbrStart = stoppedEvent.timestamp + 10000;
             TemporaryBasal temporaryBasal = new TemporaryBasal();
             temporaryBasal.durationInMinutes = (int) ((pumpID.timestamp - tbrStart) / 60000);
@@ -1224,22 +1233,22 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         switch (event.getNewValue()) {
             case STARTED:
                 pumpID.eventType = "PumpStarted";
-                MainApp.getDbHelper().createOrUpdate(pumpID);
                 pumpStartedEvents.add(pumpID);
                 if (SP.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, MainApp.gs(R.string.pump_started));
                 break;
             case STOPPED:
+                pumpID.eventType = "PumpStopped";
                 if (SP.getBoolean("insight_log_operating_mode_changes", false))
-                    pumpID.eventType = "PumpStopped";
-                MainApp.getDbHelper().createOrUpdate(pumpID);
-                logNote(timestamp, MainApp.gs(R.string.pump_stopped));
+                    logNote(timestamp, MainApp.gs(R.string.pump_stopped));
                 break;
             case PAUSED:
+                pumpID.eventType = "PumpPaused";
                 if (SP.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, MainApp.gs(R.string.pump_paused));
                 break;
         }
+        MainApp.getDbHelper().createOrUpdate(pumpID);
     }
 
     private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
