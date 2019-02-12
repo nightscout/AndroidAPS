@@ -266,7 +266,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
                 recoveryTimer.interrupt();
                 recoveryTimer = null;
                 setState(InsightState.DISCONNECTED);
-                cleanup();
+                cleanup(true);
             } else if (state != InsightState.DISCONNECTED) {
                 long disconnectTimeout = SP.getInt("insight_disconnect_delay", 5);
                 disconnectTimeout = Math.min(disconnectTimeout, 15);
@@ -281,7 +281,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         return connectionRequests.contains(lock);
     }
 
-    private void cleanup() {
+    private void cleanup(boolean closeSocket) {
         messageQueue.completeActiveRequest(new ConnectionLostException());
         messageQueue.completePendingRequests(new ConnectionLostException());
         if (recoveryTimer != null) {
@@ -301,10 +301,12 @@ public class InsightConnectionService extends Service implements ConnectionEstab
             outputStreamWriter = null;
         }
         if (connectionEstablisher != null) {
-            connectionEstablisher.close();
+            if (closeSocket) {
+                connectionEstablisher.close(closeSocket);
+                bluetoothSocket = null;
+            }
             connectionEstablisher = null;
         }
-        bluetoothSocket = null;
         if (timeoutTimer != null) {
             timeoutTimer.interrupt();
             timeoutTimer = null;
@@ -331,7 +333,9 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         log.info("Exception occurred: " + e.getClass().getSimpleName());
         if (pairingDataStorage.isPaired()) {
             setState(connectionRequests.size() != 0 ? InsightState.RECOVERING : InsightState.DISCONNECTED);
-            cleanup();
+            if (e instanceof ConnectionFailedException) {
+                cleanup(((ConnectionFailedException) e).getDurationOfConnectionAttempt() <= 1000);
+            } else cleanup(true);
             messageQueue.completeActiveRequest(e);
             messageQueue.completePendingRequests(e);
             if (connectionRequests.size() != 0) {
@@ -351,7 +355,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
             }
         } else {
             setState(InsightState.NOT_PAIRED);
-            cleanup();
+            cleanup(true);
         }
         for (ExceptionCallback exceptionCallback : exceptionCallbacks)
             exceptionCallback.onExceptionOccur(e);
@@ -362,7 +366,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
             sendAppLayerMessage(new DisconnectMessage());
             sendSatlMessageAndWait(new info.nightscout.androidaps.plugins.PumpInsightLocal.satl.DisconnectMessage());
         }
-        cleanup();
+        cleanup(true);
         setState(pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED);
     }
 
@@ -377,7 +381,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         if (connectionRequests.size() == 0)
             throw new IllegalStateException("A connection lock must be hold for pairing");
         log.info("Pairing initiated");
-        cleanup();
+        cleanup(true);
         pairingDataStorage.setMacAddress(macAddress);
         connect();
     }
@@ -743,8 +747,8 @@ public class InsightConnectionService extends Service implements ConnectionEstab
     }
 
     @Override
-    public synchronized void onConnectionFail(Exception e) {
-        handleException(new ConnectionFailedException());
+    public synchronized void onConnectionFail(Exception e, long duration) {
+        handleException(new ConnectionFailedException(duration));
     }
 
     @Override
