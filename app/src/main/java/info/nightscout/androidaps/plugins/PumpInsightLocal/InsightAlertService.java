@@ -17,6 +17,10 @@ import android.os.Looper;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.activities.InsightAlertActivity;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.remote_control.ConfirmAlertMessage;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.app_layer.remote_control.SnoozeAlertMessage;
@@ -26,9 +30,13 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.Alert;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.AlertStatus;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.AlertType;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.InsightState;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.InsightException;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.utils.ExceptionTranslator;
 
 public class InsightAlertService extends Service implements InsightConnectionService.StateCallback {
+
+    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private LocalBinder localBinder = new LocalBinder();
     private boolean connectionRequested;
@@ -164,7 +172,12 @@ public class InsightAlertService extends Service implements InsightConnectionSer
             } catch (InterruptedException ignored) {
                 connectionService.withdrawConnectionRequest(thread);
                 break;
-            } catch (Exception ignored) {
+            } catch (AppLayerErrorException e) {
+                log.info("Exception while fetching alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            } catch (InsightException e) {
+                log.info("Exception while fetching alert: " + e.getClass().getSimpleName());
+            } catch (Exception e) {
+                log.error("Exception while fetching alert", e);
             }
             try {
                 Thread.sleep(1000);
@@ -207,7 +220,14 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                 SnoozeAlertMessage snoozeAlertMessage = new SnoozeAlertMessage();
                 snoozeAlertMessage.setAlertID(alert.getAlertId());
                 connectionService.requestMessage(snoozeAlertMessage).await();
+            } catch (AppLayerErrorException e) {
+                log.info("Exception while muting alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                ExceptionTranslator.makeToast(InsightAlertService.this, e);
+            } catch (InsightException e) {
+                log.info("Exception while muting alert: " + e.getClass().getSimpleName());
+                ExceptionTranslator.makeToast(InsightAlertService.this, e);
             } catch (Exception e) {
+                log.error("Exception while muting alert", e);
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             }
         }).start();
@@ -219,7 +239,14 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                 ConfirmAlertMessage confirmAlertMessage = new ConfirmAlertMessage();
                 confirmAlertMessage.setAlertID(alert.getAlertId());
                 connectionService.requestMessage(confirmAlertMessage).await();
+            } catch (AppLayerErrorException e) {
+                log.info("Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                ExceptionTranslator.makeToast(InsightAlertService.this, e);
+            } catch (InsightException e) {
+                log.info("Exception while confirming alert: " + e.getClass().getSimpleName());
+                ExceptionTranslator.makeToast(InsightAlertService.this, e);
             } catch (Exception e) {
+                log.error("Exception while confirming alert", e);
                 ExceptionTranslator.makeToast(InsightAlertService.this, e);
             }
         }).start();
