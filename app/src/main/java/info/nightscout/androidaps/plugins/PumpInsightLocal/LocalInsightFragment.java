@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.ActiveBas
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.ActiveBolus;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.ActiveTBR;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.CartridgeStatus;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
@@ -169,7 +170,8 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
 
     private void getConnectionStatusItem(List<View> statusItems) {
         int string = 0;
-        switch (LocalInsightPlugin.getInstance().getConnectionService().getState()) {
+        InsightState state = LocalInsightPlugin.getInstance().getConnectionService().getState();
+        switch (state) {
             case NOT_PAIRED:
                 string = R.string.not_paired;
                 break;
@@ -199,6 +201,9 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
                 break;
         }
         statusItems.add(getStatusItem(MainApp.gs(R.string.insight_status), MainApp.gs(string)));
+        if (state == InsightState.RECOVERING) {
+            statusItems.add(getStatusItem(MainApp.gs(R.string.recovery_duration), LocalInsightPlugin.getInstance().getConnectionService().getRecoveryDuration() / 1000 + "s"));
+        }
     }
 
     private void getLastConnectedItem(List<View> statusItems) {
