@@ -1230,7 +1230,6 @@
     <string name="log_alerts">Log alerts</string>
     <string name="enable_tbr_emulation">Enable TBR emulation</string>
     <string name="enable_tbr_emulation_summary">Use extended boluses instead of TBRs to bypass the 250% limit</string>
-    <string name="recovery_duration">Recovery duration [s]</string>
     <string name="disconnect_delay">Disconnect delay [s]</string>
     <string name="serial_number">Serial number</string>
     <string name="release_software_version">Release software version</string>
@@ -1273,6 +1272,9 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
+    <string name="max_recovery_duration">Max. recovery duration [s]</string>
+    <string name="min_recovery_duration">Min. recovery duration [s]</string>
+    <string name="recovery_duration">Recovery duration</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
