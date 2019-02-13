@@ -39,7 +39,7 @@ public class ConnectionEstablisher extends Thread {
                 Method removeBond = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
                 removeBond.invoke(bluetoothDevice, (Object[]) null);
             } catch (ReflectiveOperationException e) {
-                if (!isInterrupted()) callback.onConnectionFail(e);
+                if (!isInterrupted()) callback.onConnectionFail(e, 0);
                 return;
             }
         }
@@ -49,21 +49,22 @@ public class ConnectionEstablisher extends Thread {
                 callback.onSocketCreated(socket);
             }
         } catch (IOException e) {
-            if (!isInterrupted()) callback.onConnectionFail(e);
+            if (!isInterrupted()) callback.onConnectionFail(e, 0);
             return;
         }
+        long connectionStart = System.currentTimeMillis();
         try {
             socket.connect();
             if (!isInterrupted()) callback.onConnectionSucceed();
         } catch (IOException e) {
-            if (!isInterrupted()) callback.onConnectionFail(e);
+            if (!isInterrupted()) callback.onConnectionFail(e, System.currentTimeMillis() - connectionStart);
         }
     }
 
-    public void close() {
+    public void close(boolean closeSocket) {
         try {
             interrupt();
-            if (socket != null && socket.isConnected()) socket.close();
+            if (closeSocket && socket != null && socket.isConnected()) socket.close();
         } catch (IOException ignored) {
         }
     }
@@ -73,6 +74,6 @@ public class ConnectionEstablisher extends Thread {
 
         void onConnectionSucceed();
 
-        void onConnectionFail(Exception e);
+        void onConnectionFail(Exception e, long duration);
     }
 }
