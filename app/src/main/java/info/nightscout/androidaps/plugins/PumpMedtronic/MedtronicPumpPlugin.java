@@ -655,6 +655,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return getMDTPumpStatus().getBasalProfileForHour();
     }
 
+    @Override
+    public double getReservoirLevel() {
+        return getMDTPumpStatus().reservoirRemainingUnits;
+    }
+
+    @Override
+    public int getBatteryLevel() {
+        return getMDTPumpStatus().batteryRemaining;
+    }
+
 
     private MedtronicPumpStatus getMDTPumpStatus() {
         if (pumpStatusLocal == null) {

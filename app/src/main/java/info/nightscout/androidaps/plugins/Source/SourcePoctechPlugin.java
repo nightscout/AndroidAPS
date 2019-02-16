@@ -80,7 +80,7 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
                     bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL;
                 boolean isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech");
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    NSUpload.uploadBg(bgReading);
+                    NSUpload.uploadBg(bgReading, "AndroidAPS-Poctech");
                 }
                 if (isNew && SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
                     NSUpload.sendToXdrip(bgReading);

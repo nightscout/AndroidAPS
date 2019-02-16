@@ -1,13 +1,5 @@
 package info.nightscout.androidaps;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -28,6 +20,14 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
 import com.squareup.otto.ThreadEnforcer;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -44,9 +44,8 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.Maintenance.MaintenancePlugin;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
@@ -67,8 +66,8 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.LocalInsightPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
-import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
@@ -77,6 +76,8 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
@@ -90,11 +91,12 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
 import info.nightscout.utils.SP;
 import io.fabric.sdk.android.Fabric;
 
-public class MainApp extends Application {
 
+public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
     private static KeepAliveReceiver keepAliveReceiver;
 
@@ -116,7 +118,6 @@ public class MainApp extends Application {
 
     public static boolean devBranch;
     public static boolean engineeringMode;
-
 
     @Override
     public void onCreate() {
@@ -159,8 +160,7 @@ public class MainApp extends Application {
             // Register all tabs in app here
             pluginsList.add(OverviewPlugin.getPlugin());
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
-            if (Config.ACTION)
-                pluginsList.add(ActionsFragment.getPlugin());
+            if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
             pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
             pluginsList.add(InsulinOrefFreePeakPlugin.getPlugin());
@@ -168,50 +168,36 @@ public class MainApp extends Application {
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
             pluginsList.add(SensitivityOref1Plugin.getPlugin());
-            if (Config.PUMPDRIVERS)
-                pluginsList.add(DanaRPlugin.getPlugin());
-            if (Config.PUMPDRIVERS)
-                pluginsList.add(DanaRKoreanPlugin.getPlugin());
-            if (Config.PUMPDRIVERS)
-                pluginsList.add(DanaRv2Plugin.getPlugin());
-            if (Config.PUMPDRIVERS)
-                pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.PUMPDRIVERS) pluginsList.add(DanaRPlugin.getPlugin());
+            if (Config.PUMPDRIVERS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
+            if (Config.PUMPDRIVERS) pluginsList.add(DanaRv2Plugin.getPlugin());
+            if (Config.PUMPDRIVERS) pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.PUMPDRIVERS && engineeringMode) pluginsList.add(LocalInsightPlugin.getInstance());
             pluginsList.add(CareportalPlugin.getPlugin());
-            if (Config.PUMPDRIVERS && engineeringMode) {
-                pluginsList.add(InsightPlugin.getPlugin()); // <-- Enable Insight plugin here
-                pluginsList.add(MedtronicPumpPlugin.getPlugin());
-            }
-            if (Config.PUMPDRIVERS)
-                pluginsList.add(ComboPlugin.getPlugin());
-            if (Config.MDI)
-                pluginsList.add(MDIPlugin.getPlugin());
+            /*if (Config.PUMPDRIVERS && engineeringMode)
+                pluginsList.add(InsightPlugin.getPlugin());*/
+            if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
+            if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());
-            if (Config.APS)
-                pluginsList.add(LoopPlugin.getPlugin());
-            if (Config.APS)
-                pluginsList.add(OpenAPSMAPlugin.getPlugin());
-            if (Config.APS)
-                pluginsList.add(OpenAPSAMAPlugin.getPlugin());
-            if (Config.APS)
-                pluginsList.add(OpenAPSSMBPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(OpenAPSSMBPlugin.getPlugin());
             pluginsList.add(NSProfilePlugin.getPlugin());
-            if (Config.OTHERPROFILES)
-                pluginsList.add(SimpleProfilePlugin.getPlugin());
-            if (Config.OTHERPROFILES)
-                pluginsList.add(LocalProfilePlugin.getPlugin());
+            if (Config.OTHERPROFILES) pluginsList.add(SimpleProfilePlugin.getPlugin());
+            if (Config.OTHERPROFILES) pluginsList.add(LocalProfilePlugin.getPlugin());
             pluginsList.add(TreatmentsPlugin.getPlugin());
-            if (Config.SAFETY)
-                pluginsList.add(SafetyPlugin.getPlugin());
-            if (Config.APS)
-                pluginsList.add(ObjectivesPlugin.getPlugin());
+            if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
             pluginsList.add(SourceXdripPlugin.getPlugin());
             pluginsList.add(SourceNSClientPlugin.getPlugin());
             pluginsList.add(SourceMM640gPlugin.getPlugin());
             pluginsList.add(SourceGlimpPlugin.getPlugin());
             pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+            pluginsList.add(SourceDexcomG6Plugin.getPlugin());
             pluginsList.add(SourcePoctechPlugin.getPlugin());
-            if (Config.SMSCOMMUNICATORENABLED)
-                pluginsList.add(SmsCommunicatorPlugin.getPlugin());
+            pluginsList.add(SourceEversensePlugin.getPlugin());
+            if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 
             pluginsList.add(WearPlugin.initPlugin(this));
@@ -253,16 +239,16 @@ public class MainApp extends Application {
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_DEVICESTATUS));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_CAL));
 
-        // register alarms
+        //register alarms
         lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_ALARM));
         lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_ANNOUNCEMENT));
         lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_CLEAR_ALARM));
         lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_URGENT_ALARM));
 
-        // register ack alarm
+        //register ack alarm
         lbm.registerReceiver(ackAlarmReciever, new IntentFilter(Intents.ACTION_ACK_ALARM));
 
-        // register dbaccess
+        //register dbaccess
         lbm.registerReceiver(dbAccessReciever, new IntentFilter(Intents.ACTION_DATABASE));
     }
 
@@ -312,12 +298,10 @@ public class MainApp extends Application {
         }
     }
 
-
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
             KeepAliveReceiver.cancelAlarm(this);
     }
-
 
     public static void subscribe(Object subscriber) {
         try {
@@ -327,7 +311,6 @@ public class MainApp extends Application {
         }
     }
 
-
     public static void unsubscribe(Object subscriber) {
         try {
             bus().unregister(subscriber);
@@ -336,41 +319,33 @@ public class MainApp extends Application {
         }
     }
 
-
     public static Bus bus() {
         return sBus;
     }
-
 
     public static String gs(int id) {
         return sResources.getString(id);
     }
 
-
     public static String gs(int id, Object... args) {
         return sResources.getString(id, args);
     }
-
 
     public static String gq(@PluralsRes int id, int quantity, Object... args) {
         return sResources.getQuantityString(id, quantity, args);
     }
 
-
     public static int gc(int id) {
         return sResources.getColor(id);
     }
-
 
     public static MainApp instance() {
         return sInstance;
     }
 
-
     public static DatabaseHelper getDbHelper() {
         return sDatabaseHelper;
     }
-
 
     public static void closeDbHelper() {
         if (sDatabaseHelper != null) {
@@ -379,16 +354,13 @@ public class MainApp extends Application {
         }
     }
 
-
     public static ConstraintChecker getConstraintChecker() {
         return sConstraintsChecker;
     }
 
-
     public static ArrayList<PluginBase> getPluginsList() {
         return pluginsList;
     }
-
 
     public static ArrayList<PluginBase> getSpecificPluginsList(PluginType type) {
         ArrayList<PluginBase> newList = new ArrayList<>();
@@ -403,7 +375,6 @@ public class MainApp extends Application {
         }
         return newList;
     }
-
 
     public static ArrayList<PluginBase> getSpecificPluginsVisibleInList(PluginType type) {
         ArrayList<PluginBase> newList = new ArrayList<>();
@@ -420,7 +391,6 @@ public class MainApp extends Application {
         return newList;
     }
 
-
     public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
         ArrayList<PluginBase> newList = new ArrayList<>();
 
@@ -434,7 +404,6 @@ public class MainApp extends Application {
         }
         return newList;
     }
-
 
     public static ArrayList<PluginBase> getSpecificPluginsVisibleInListByInterface(Class interfaceClass, PluginType type) {
         ArrayList<PluginBase> newList = new ArrayList<>();
@@ -451,20 +420,18 @@ public class MainApp extends Application {
         return newList;
     }
 
-
     @Nullable
     public static <T extends PluginBase> T getSpecificPlugin(Class<T> pluginClass) {
         if (pluginsList != null) {
             for (PluginBase p : pluginsList) {
                 if (pluginClass.isAssignableFrom(p.getClass()))
-                    return (T)p;
+                    return (T) p;
             }
         } else {
             log.error("pluginsList=null");
         }
         return null;
     }
-
 
     public static boolean isEngineeringModeOrRelease() {
         if (!Config.APS)
@@ -481,7 +448,6 @@ public class MainApp extends Application {
     public static boolean isDev() {
         return devBranch;
     }
-
 
     @Override
     public void onTerminate() {

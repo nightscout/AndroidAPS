@@ -408,7 +408,6 @@
     <string name="array_of_elements">En serie med %1$d tal.\nVärde:</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
     <string name="openapsma_scriptdebugdata_label">Debug</string>
-    <string name="openapsama_useautosens">Använd AMA autosens</string>
     <string name="refresheventsfromnightscout">Uppdatera från Nightscout</string>
     <string name="deletefuturetreatments">Ta bort behandlingar från framtiden</string>
     <string name="eatingsoon">Äta snart</string>
@@ -705,7 +704,7 @@
     <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
     <string name="DexcomG5">DexcomG5 App (modifierad)</string>
     <string name="dexcomg5_nsupload_title">Ladda upp BG-data till Nightscout</string>
-    <string name="dexcomg5_upload">Uppladdningsinställningar för G5</string>
+    <string name="bgsource_upload">Uppladdningsinställningar för G5</string>
     <string name="poctech_upload">Uppladdningsinställningar för Poctech</string>
     <string name="wear_detailed_delta_title">Visa detaljerad delta</string>
     <string name="wear_detailed_delta_summary">Visa delta med en extra decimal</string>
@@ -1055,6 +1054,10 @@
     <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
     <string name="loop_openmode_min_change_summary">Loopen kommer att be om justering endast om ändringen är större än detta värde. Standardvärde är 20%</string>
     <string name="pairfirst">Vänligen para ihop pumpen med telefonen.</string>
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
