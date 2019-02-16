@@ -352,6 +352,11 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         }
         log.info("Exception occurred: " + e.getClass().getSimpleName());
         if (pairingDataStorage.isPaired()) {
+            if (e instanceof TimeoutException && (state == InsightState.SATL_SYN_REQUEST || state == InsightState.APP_CONNECT_MESSAGE)) {
+                for (StateCallback stateCallback : stateCallbacks) {
+                    stateCallback.onTimeoutDuringHandshake();
+                }
+            }
             setState(connectionRequests.size() != 0 ? InsightState.RECOVERING : InsightState.DISCONNECTED);
             if (e instanceof ConnectionFailedException) {
                 cleanup(((ConnectionFailedException) e).getDurationOfConnectionAttempt() <= 1000);
@@ -726,7 +731,8 @@ public class InsightConnectionService extends Service implements ConnectionEstab
 
     private void processReadParameterBlockMessage(ReadParameterBlockMessage message) {
         if (state == InsightState.APP_SYSTEM_IDENTIFICATION) {
-            if (!(message.getParameterBlock() instanceof SystemIdentificationBlock)) handleException(new TooChattyPumpException());
+            if (!(message.getParameterBlock() instanceof SystemIdentificationBlock))
+                handleException(new TooChattyPumpException());
             else {
                 SystemIdentification systemIdentification = ((SystemIdentificationBlock) message.getParameterBlock()).getSystemIdentification();
                 pairingDataStorage.setSystemIdentification(systemIdentification);
@@ -802,8 +808,11 @@ public class InsightConnectionService extends Service implements ConnectionEstab
 
     public interface StateCallback {
         void onStateChanged(InsightState state);
-        default void onPumpPaired() {
 
+        default void onPumpPaired() {
+        }
+
+        default void onTimeoutDuringHandshake() {
         }
     }
 
