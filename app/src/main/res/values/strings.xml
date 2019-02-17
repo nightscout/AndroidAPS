@@ -1295,6 +1295,7 @@
     <string name="max_recovery_duration">Max. recovery duration [s]</string>
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="recovery_duration">Recovery duration</string>
+    <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
