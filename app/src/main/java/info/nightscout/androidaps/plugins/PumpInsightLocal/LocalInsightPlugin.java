@@ -1535,8 +1535,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public void onStateChanged(InsightState state) {
-        if (state == InsightState.CONNECTED) statusLoaded = false;
-        else if (state == InsightState.NOT_PAIRED) {
+        if (state == InsightState.CONNECTED) {
+            statusLoaded = false;
+            MainApp.bus().post(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE));
+        } else if (state == InsightState.NOT_PAIRED) {
             connectionService.withdrawConnectionRequest(this);
             statusLoaded = false;
             profileBlocks = null;
