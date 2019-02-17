@@ -89,6 +89,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
     private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static final int BUFFER_SIZE = 1024;
+    private static final int TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD = 3;
     private static final long RESPONSE_TIMEOUT = 6000;
 
     private List<StateCallback> stateCallbacks = new ArrayList<>();
@@ -117,6 +118,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
     private long lastDataTime;
     private long lastConnected;
     private long recoveryDuration = 0;
+    private int timeoutDuringHandshakeCounter;
 
     KeyPair getKeyPair() {
         if (keyPair == null) keyPair = Cryptograph.generateRSAKey();
@@ -274,6 +276,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         }
         if (state == InsightState.DISCONNECTED && pairingDataStorage.isPaired()) {
             recoveryDuration = 0;
+            timeoutDuringHandshakeCounter = 0;
             connect();
         }
     }
@@ -353,8 +356,10 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         log.info("Exception occurred: " + e.getClass().getSimpleName());
         if (pairingDataStorage.isPaired()) {
             if (e instanceof TimeoutException && (state == InsightState.SATL_SYN_REQUEST || state == InsightState.APP_CONNECT_MESSAGE)) {
-                for (StateCallback stateCallback : stateCallbacks) {
-                    stateCallback.onTimeoutDuringHandshake();
+                if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
+                    for (StateCallback stateCallback : stateCallbacks) {
+                        stateCallback.onTimeoutDuringHandshake();
+                    }
                 }
             }
             setState(connectionRequests.size() != 0 ? InsightState.RECOVERING : InsightState.DISCONNECTED);
