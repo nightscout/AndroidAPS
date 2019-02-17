@@ -703,8 +703,6 @@
     <string name="btwatchdog_summary">Oprește bluetooth-ul telefonului pentru o secundă dacă nu se poate conecta la pompă. Aceasta poate ajuta în cazul telefoanelor cu bluetooth incompatitibil.</string>
     <string name="DexcomG5">App DexcomG5 (cu patch)</string>
     <string name="dexcomg5_nsupload_title">Încarcă date glicemie în NS</string>
-    <string name="bgsource_upload">Setări înregistrare G5</string>
-    <string name="poctech_upload">Setări upload Poctech</string>
     <string name="wear_detailed_delta_title">Arată variație detaliată</string>
     <string name="wear_detailed_delta_summary">Arată variație cu încă o zecimală</string>
     <string name="smbmaxminutes_summary">Max minute de bazală la care să se limiteze SMB</string>
@@ -770,7 +768,6 @@
     <string name="combo_error_bolus_verification_failed">Nu s-a reușit livrarea bolusului și citirea istoricului pompei, verificați pompa. Dacă a fost totuși livrat un bolus, acesta va fi adăugat în lista tratamentelor în timpul următoarei conexiuni cu pompa.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Pompă Insight</string>
     <string name="status_no_colon">Stare</string>
     <string name="changed">Schimbat</string>
@@ -845,7 +842,6 @@
     <string name="data_choices">Alegeri date</string>
     <string name="fabric_upload">Încărcare \"fabric\"</string>
     <string name="allow_automated_crash_reporting">Permite trimiterea de rapoarte automate de eroare și de date despre folosire către dezvoltatori prin serviciul fabric.io.</string>
-    <string name="g5appnotdetected">Actualizați aplicația G5 la o versiune suportată</string>
     <string name="start_activity_tt">Start TT activitate</string>
     <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
     <string name="temptargetshort">TT</string>

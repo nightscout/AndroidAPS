@@ -705,8 +705,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="btwatchdog_summary">Deactiveert de bluetooth functie van de telefoon gedurende een ogenblik. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="DexcomG5">DexcomG5 App (aangepast)</string>
     <string name="dexcomg5_nsupload_title">Upload BG gegevens naar NS</string>
-    <string name="bgsource_upload">G5 Upload instellingen</string>
-    <string name="poctech_upload">Poctech upload instellingen</string>
     <string name="wear_detailed_delta_title">Toon gedetailleerde delta</string>
     <string name="wear_detailed_delta_summary">Toon delta met een extra decimaal punt</string>
     <string name="smbmaxminutes_summary">Maximum aantal minuten basaal om de SMB te limiteren tot</string>
@@ -772,7 +770,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="combo_error_bolus_verification_failed">Het toedienen van de bolus en het controleren van de geschiedenis van de pomp is mislukt, controleer de pomp. Als een bolus is toegediend, wordt deze toegevoegd aan Behandelingen tijdens de volgende verbinding met de pomp.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Niet genoeg insuline aanwezig in reservoir voor de bolus</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight pomp</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Verwisseld</string>
@@ -847,7 +844,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="data_choices">Data Keuzes</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Sta automatische crashrapporten en verder gebruik van data toe zodat deze naar de ontwikkelaars via fabric.io kan verzonden worden.</string>
-    <string name="g5appnotdetected">Update dexcom G5 app naar de ondersteunde versie</string>
     <string name="start_activity_tt">Start inspanning TT</string>
     <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
     <string name="temptargetshort">TT</string>
