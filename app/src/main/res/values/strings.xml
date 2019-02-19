@@ -1296,12 +1296,13 @@
     <string name="max_recovery_duration">Max. recovery duration [s]</string>
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="recovery_duration">Recovery duration</string>
+    <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
-    <string name="key_dexcom_lognssensorchange">dexcom_lognssensorchange</string>
+    <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
     <string name="dexcom_lognssensorchange_title">Log sensor change to NS</string>
     <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automaticaly on sensor start</string>
     <string name="tomato">Tomato (MiaoMiao)</string>

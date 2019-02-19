@@ -705,8 +705,6 @@
     <string name="btwatchdog_summary">Wyłącza bluetooth telefonu na jedną sekundę, jeśli nie jest możliwe połączenie z pompą. Może to pomóc w niektórych telefonach, w których blokuje się bluetooth.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="dexcomg5_nsupload_title">Przekaż dane BG do NS</string>
-    <string name="bgsource_upload">G5 prześlij ustawienia</string>
-    <string name="poctech_upload">Poctech ustawienia przesyłania</string>
     <string name="wear_detailed_delta_title">Pokaż szczegółowe delta</string>
     <string name="wear_detailed_delta_summary">Pokaż deltę z jednym więcej miejscem dziesiętnym</string>
     <string name="smbmaxminutes_summary">Maks. ilość minut dawki bazowej do ograniczenia SMB</string>
@@ -772,7 +770,6 @@
     <string name="combo_error_bolus_verification_failed">Dostarczanie bolusa i sprawdzenia historii pompy nie powiodło się, Sprawdź pompę. Jeśli dostarczono bolusa, dane zostaną uzupełnione podczas następnego połączenia z pompą.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Za mało insuliny na bolus pozostało w zbiorniku</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Pompa Insight</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Zmieniono</string>
@@ -847,7 +844,6 @@
     <string name="data_choices">Wybór Danych</string>
     <string name="fabric_upload">Przesyłanie danych fabric</string>
     <string name="allow_automated_crash_reporting">Zezwalaj na automatyczne zgłaszanie awarii i danych o użytkowaniu aplikacji do deweloperów za pośrednictwem usługi fabric.io.</string>
-    <string name="g5appnotdetected">Proszę uaktualnić aplikację G5 do wspieranej wersji</string>
     <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
     <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
     <string name="temptargetshort">TT</string>

@@ -704,8 +704,6 @@
     <string name="btwatchdog_summary">Startar om bluetooth på telefonen om anslutning till pumpen misslyckas. Detta hjälper på en del telefoner där bluetooth ibland hänger sig.</string>
     <string name="DexcomG5">DexcomG5 App (modifierad)</string>
     <string name="dexcomg5_nsupload_title">Ladda upp BG-data till Nightscout</string>
-    <string name="bgsource_upload">Uppladdningsinställningar för G5</string>
-    <string name="poctech_upload">Uppladdningsinställningar för Poctech</string>
     <string name="wear_detailed_delta_title">Visa detaljerad delta</string>
     <string name="wear_detailed_delta_summary">Visa delta med en extra decimal</string>
     <string name="smbmaxminutes_summary">Max antal minuter som kan bli SMB</string>
@@ -771,7 +769,6 @@
     <string name="combo_error_bolus_verification_failed">Leverans av bolus och kontroll av pumpens historik misslyckades. Vänligen kontrollera pumpen manuellt. Om en bolus levererades, kommer den att läggas till som behandling vid nästa anslutning till pumpen.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Inte tillräckligt med insulin i reservoaren för att ge bolus</string>
     <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight-pump</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Ändrad</string>
@@ -846,7 +843,6 @@
     <string name="data_choices">Dataval</string>
     <string name="fabric_upload">Uppladdning till Fabric</string>
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
-    <string name="g5appnotdetected">Vänligen uppdatera din G5-app till en supportad version</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
     <string name="temptargetshort">TT</string>

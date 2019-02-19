@@ -1535,8 +1535,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
 
     @Override
     public void onStateChanged(InsightState state) {
-        if (state == InsightState.CONNECTED) statusLoaded = false;
-        else if (state == InsightState.NOT_PAIRED) {
+        if (state == InsightState.CONNECTED) {
+            statusLoaded = false;
+            new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)));
+        } else if (state == InsightState.NOT_PAIRED) {
             connectionService.withdrawConnectionRequest(this);
             statusLoaded = false;
             profileBlocks = null;
@@ -1556,5 +1558,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public void onPumpPaired() {
         ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Pump paired", null);
+    }
+
+    @Override
+    public void onTimeoutDuringHandshake() {
+        Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, MainApp.gs(R.string.timeout_during_handshake), Notification.URGENT);
+        new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventNewNotification(notification)));
     }
 }
