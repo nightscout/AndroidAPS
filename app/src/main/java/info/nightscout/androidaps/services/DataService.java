@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
+import info.nightscout.androidaps.plugins.Source.SourceTomatoPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.logging.BundleLogger;
@@ -76,6 +77,8 @@ public class DataService extends IntentService {
             SourceDexcomG6Plugin.getPlugin().handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
             SourcePoctechPlugin.getPlugin().handleNewData(intent);
+        } else if (Intents.TOMATO_BG.equals(action)) {
+            SourceTomatoPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.EVERSENSE_BG.equals(action)) {
             SourceEversensePlugin.getPlugin().handleNewData(intent);
         } else if (Intents.ACTION_NEW_SGV.equals(action)) {
