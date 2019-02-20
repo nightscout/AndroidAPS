@@ -1383,8 +1383,8 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
-        return null;
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }

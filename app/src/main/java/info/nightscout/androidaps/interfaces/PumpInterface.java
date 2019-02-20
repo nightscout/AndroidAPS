@@ -64,6 +64,6 @@ public interface PumpInterface {
 
     List<CustomAction> getCustomActions();
 
-    PumpEnactResult executeCustomAction(CustomActionType customActionType);
+    void executeCustomAction(CustomActionType customActionType);
 
 }

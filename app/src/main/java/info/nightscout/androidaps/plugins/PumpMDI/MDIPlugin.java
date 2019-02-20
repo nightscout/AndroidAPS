@@ -249,8 +249,8 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
-        return null;
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }

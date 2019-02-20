@@ -940,8 +940,8 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
     }
 
     @Override
-    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
-        return null;
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }

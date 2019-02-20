@@ -816,8 +816,8 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
-        return null;
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }

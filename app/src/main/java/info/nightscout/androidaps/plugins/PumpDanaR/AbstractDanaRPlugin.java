@@ -476,9 +476,10 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return null;
     }
 
+
     @Override
-    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
-        return null;
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }
