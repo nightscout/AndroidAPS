@@ -11,12 +11,19 @@ public class CustomAction {
     private int name;
     private String iconName;
     private CustomActionType customActionType;
+    private int iconResourceId;
 
 
-    public CustomAction(int nameResourceId, CustomActionType actionType)
-    {
+    public CustomAction(int nameResourceId, CustomActionType actionType) {
         this.name = nameResourceId;
         this.customActionType = actionType;
+        this.iconResourceId = R.drawable.icon_actions_profileswitch;
+    }
+
+    public CustomAction(int nameResourceId, CustomActionType actionType, int iconResourceId) {
+        this.name = nameResourceId;
+        this.customActionType = actionType;
+        this.iconResourceId = iconResourceId;
     }
 
 
@@ -25,23 +32,16 @@ public class CustomAction {
         return name;
     }
 
-    public String getIconName() {
 
-        return iconName;
-    }
 
-    public void setIconName(String iconName) {
-
-        this.iconName = iconName;
-    }
 
     public CustomActionType getCustomActionType() {
 
         return customActionType;
     }
 
-    public void setCustomActionType(CustomActionType customActionType) {
 
-        this.customActionType = customActionType;
+    public int getIconResourceId() {
+        return iconResourceId;
     }
 }

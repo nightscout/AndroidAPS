@@ -32,7 +32,7 @@ public class CommandTempBasalAbsolute extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result rate: " + absoluteRate + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)

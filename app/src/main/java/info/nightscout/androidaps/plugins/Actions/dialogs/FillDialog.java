@@ -103,7 +103,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         insulinCartridgeChangeCheckbox = view.findViewById(R.id.fill_cartridge_change);
 
         Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
-        double bolusstep = ConfigBuilderPlugin.getActivePump().getPumpDescription().bolusStep;
+        double bolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         editInsulin = view.findViewById(R.id.fill_insulinamount);
         editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
 
@@ -185,7 +185,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                 confirmMessage.add(MainApp.gs(R.string.fillwarning));
                 confirmMessage.add("");
                 confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>");
-                if (!insulinAfterConstraints.equals(insulin))
+                if (Math.abs(insulinAfterConstraints - insulin) > 0.01d)
                     confirmMessage.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
             }
 
@@ -223,7 +223,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                             detailedBolusInfo.source = Source.USER;
                             detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
                             detailedBolusInfo.notes = notes;
-                            ConfigBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, new Callback() {
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                                 @Override
                                 public void run() {
                                     if (!result.success) {

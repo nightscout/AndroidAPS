@@ -137,7 +137,7 @@ public class ProfileTest {
                         "03:00    110.0 mmol/U", p.getIsfList());
 
         // Test hour alignment
-        MainApp.getConfigBuilder().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
+        ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
         ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
         p = new Profile(new JSONObject(notAllignedBasalValidProfile), 100, 0);
         p.isValid("Test");
@@ -151,7 +151,7 @@ public class ProfileTest {
         AAPSMocker.mockStrings();
         AAPSMocker.prepareMockedBus();
 
-        when(MainApp.getConfigBuilder().getActivePump()).thenReturn(pump);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         PowerMockito.mockStatic(FabricPrivacy.class);
 //        PowerMockito.doNothing().when(FabricPrivacy.log(""));

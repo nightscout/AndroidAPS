@@ -97,7 +97,7 @@ public class LoopPluginTest {
         loopPlugin = LoopPlugin.getPlugin();
         virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
 
-        when(ConfigBuilderPlugin.getActivePump()).thenReturn(virtualPumpPlugin);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
     }
 
     class MockedBus extends Bus {

@@ -119,7 +119,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         return result;
@@ -139,6 +139,12 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     public double getBaseBasalRate() {
         return 0d;
     }
+
+    @Override
+    public double getReservoirLevel() { return -1; }
+
+    @Override
+    public int getBatteryLevel() { return -1; }
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {

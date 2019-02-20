@@ -437,6 +437,23 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return pump.basalProfile.hourlyRates[currentHour];
     }
 
+    @Override
+    public double getReservoirLevel() {
+        return pump.reservoirLevel;
+    }
+
+    @Override
+    public int getBatteryLevel() {
+        switch (pump.state.batteryState) {
+            case PumpState.EMPTY:
+                return 5;
+            case PumpState.LOW:
+                return 25;
+            default:
+                return 100;
+        }
+    }
+
     private static BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
         switch (state) {
@@ -655,11 +672,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         }
     }
 
-    /**
-     * Updates a DetailedBolusInfo from a pump bolus and adds it as a Treatment to the DB.
-     * Handles edge cases when dates aren't unique which are extremely unlikely to occur,
-     * but if they do, the user should be warned since a bolus will be missing from calculations.
-     */
+    /** Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus. */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo dbi = detailedBolusInfo.copy();
         dbi.date = calculateFakeBolusDate(lastPumpBolus);
@@ -667,15 +680,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         dbi.source = Source.PUMP;
         dbi.insulin = lastPumpBolus.amount;
         try {
-            boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
-            if (!treatmentCreated) {
-                log.error("Adding treatment record overrode an existing record: " + dbi);
-                if (dbi.isSMB) {
-                    Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
-                return false;
-            }
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true);
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
             if (dbi.isSMB) {
@@ -900,7 +905,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                             Notification.URGENT);
                     n.soundId = R.raw.alarm;
                     MainApp.bus().post(new EventNewNotification(n));
-                    ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
                 }
                 updateLocalData(commandResult);
             }
@@ -1079,7 +1084,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 n.soundId = R.raw.alarm;
                 MainApp.bus().post(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
-                ConfigBuilderPlugin.getCommandQueue().cancelTempBasal(true, null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
             }
         }
     }
@@ -1151,6 +1156,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return historyResult.success;
     }
 
+    /** Return value indicates whether a new record was created. */
     private boolean updateDbFromPumpHistory(@NonNull PumpHistory history) {
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
@@ -1160,8 +1166,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
             dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
-            if (TreatmentsPlugin.getPlugin().getService().getPumpRecordById(dbi.pumpId) == null) {
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, false);
+            if (TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }
         }

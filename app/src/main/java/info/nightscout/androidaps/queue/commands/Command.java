@@ -25,7 +25,10 @@ public abstract class Command {
         READSTATUS,
         LOADHISTORY, // TDDs and so far only Dana specific
         LOADEVENTS, // so far only Dana specific
-        SETUSERSETTINGS // so far only Dana specific
+        SETUSERSETTINGS, // so far only Dana specific,
+        START_PUMP,
+        STOP_PUMP,
+        INSIGHT_SET_TBR_OVER_ALARM
     }
 
     public CommandType commandType;

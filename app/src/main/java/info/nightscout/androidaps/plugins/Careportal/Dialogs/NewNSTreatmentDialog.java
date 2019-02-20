@@ -49,14 +49,15 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DefaultValueHelper;
 import info.nightscout.utils.FabricPrivacy;
 import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.JsonHelper;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -173,7 +174,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
         // profile
         profile = ProfileFunctions.getInstance().getProfile();
-        profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
+        profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile();
         if (profileStore == null) {
             if (options.eventType == R.id.careportal_profileswitch) {
                 log.error("Profile switch called but plugin doesn't contain valid profile");
@@ -269,7 +270,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if (profile == null) {
             editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
             editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
-        } else if (profile.getUnits().equals(Constants.MMOL)) {
+        } else if (units.equals(Constants.MMOL)) {
             editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
             editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
         } else {
@@ -278,7 +279,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits());
+            Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
             if (savedInstanceState != null && savedInstanceState.getDouble("editBg") != bg1) {
                 editBg.setValue(savedInstanceState.getDouble("editBg"));
             } else {
@@ -458,7 +459,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if ((data.size() > 0) &&
                 (data.get(0).date > millis - 7 * 60 * 1000L) &&
                 (data.get(0).date < millis + 7 * 60 * 1000L)) {
-            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, profile != null ? profile.getUnits() : Constants.MGDL));
+            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, units));
         }
     }
 
@@ -735,8 +736,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                         .reason(reason)
                         .source(Source.USER);
                 if (tempTarget.durationInMinutes != 0) {
-                    tempTarget.low(Profile.toMgdl(targetBottom, profile.getUnits()))
-                            .high(Profile.toMgdl(targetTop, profile.getUnits()));
+                    tempTarget.low(Profile.toMgdl(targetBottom, units))
+                            .high(Profile.toMgdl(targetTop, units));
                 } else {
                     tempTarget.low(0).high(0);
                 }
@@ -767,7 +768,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profileSwitch.source = Source.USER;
         profileSwitch.profileName = profileName;
         profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
-        profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
+        profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
         profileSwitch.durationInMinutes = duration;
         profileSwitch.isCPP = percentage != 100 || timeshift != 0;
         profileSwitch.timeshift = timeshift;
@@ -789,7 +790,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = ProfileFunctions.getInstance().getProfileName(System.currentTimeMillis(), false);
             profileSwitch.profileJson = ProfileFunctions.getInstance().getProfile().getData().toString();
-            profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
+            profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeshift != 0;
             profileSwitch.timeshift = timeshift;

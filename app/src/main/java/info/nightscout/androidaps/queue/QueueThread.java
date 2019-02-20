@@ -54,7 +54,7 @@ public class QueueThread extends Thread {
 
         try {
             while (true) {
-                PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+                PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                 if (pump == null) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("pump == null");

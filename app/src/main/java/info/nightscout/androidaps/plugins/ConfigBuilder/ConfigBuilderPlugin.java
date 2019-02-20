@@ -19,7 +19,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -42,16 +41,15 @@ public class ConfigBuilderPlugin extends PluginBase {
     }
 
     private BgSourceInterface activeBgSource;
-    private static PumpInterface activePump;
-    private static ProfileInterface activeProfile;
-    private static TreatmentsInterface activeTreatments;
-    private static APSInterface activeAPS;
-    private static InsulinInterface activeInsulin;
-    private static SensitivityInterface activeSensitivity;
+    private PumpInterface activePump;
+    private ProfileInterface activeProfile;
+    private APSInterface activeAPS;
+    private InsulinInterface activeInsulin;
+    private SensitivityInterface activeSensitivity;
 
-    private static ArrayList<PluginBase> pluginList;
+    private ArrayList<PluginBase> pluginList;
 
-    private static CommandQueue commandQueue = new CommandQueue();
+    private CommandQueue commandQueue = new CommandQueue();
 
     public ConfigBuilderPlugin() {
         super(new PluginDescription()
@@ -230,7 +228,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         }
     }
 
-    public static CommandQueue getCommandQueue() {
+    public CommandQueue getCommandQueue() {
         return commandQueue;
     }
 
@@ -242,19 +240,19 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeProfile;
     }
 
-    public static InsulinInterface getActiveInsulin() {
+    public InsulinInterface getActiveInsulin() {
         return activeInsulin;
     }
 
-    public static APSInterface getActiveAPS() {
+    public APSInterface getActiveAPS() {
         return activeAPS;
     }
 
-    public static PumpInterface getActivePump() {
+    public PumpInterface getActivePump() {
         return activePump;
     }
 
-    public static SensitivityInterface getActiveSensitivity() {
+    public SensitivityInterface getActiveSensitivity() {
         return activeSensitivity;
     }
 
@@ -322,7 +320,6 @@ public class ConfigBuilderPlugin extends PluginBase {
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
 
         // PluginType.TREATMENT
-        activeTreatments = this.determineActivePlugin(PluginType.TREATMENT);
     }
 
     /**

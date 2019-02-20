@@ -18,6 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpInsight.events.EventInsightUpdateGui;
 import info.nightscout.androidaps.plugins.PumpInsight.history.HistoryReceiver;
 import info.nightscout.androidaps.plugins.PumpInsight.history.LiveHistory;
@@ -459,7 +460,7 @@ public class Connector {
     public void tryToGetPumpStatusAgain() {
         if (Helpers.ratelimit("insight-retry-status-request", 5)) {
             try {
-                MainApp.getConfigBuilder().getCommandQueue().readStatus("Insight. Status missing", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Insight. Status missing", null);
             } catch (NullPointerException e) {
                 //
             }

@@ -35,6 +35,7 @@ import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelTempBasal;
 import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
+import info.nightscout.androidaps.queue.commands.CommandInsightSetTBROverNotification;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
 import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
@@ -42,6 +43,8 @@ import info.nightscout.androidaps.queue.commands.CommandReadStatus;
 import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
 import info.nightscout.androidaps.queue.commands.CommandSetUserSettings;
+import info.nightscout.androidaps.queue.commands.CommandStartPump;
+import info.nightscout.androidaps.queue.commands.CommandStopPump;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
@@ -96,7 +99,7 @@ public class CommandQueue {
     }
 
     private synchronized void removeAll(Command.CommandType type) {
-        for (int i = 0; i < queue.size(); i++) {
+        for (int i = queue.size() - 1; i >= 0; i--) {
             if (queue.get(i).commandType == type) {
                 queue.remove(i);
             }
@@ -239,13 +242,28 @@ public class CommandQueue {
         return true;
     }
 
+    public void stopPump(Callback callback) {
+        add(new CommandStopPump(callback));
+        notifyAboutNewCommand();
+    }
+
+    public void startPump(Callback callback) {
+        add(new CommandStartPump(callback));
+        notifyAboutNewCommand();
+    }
+
+    public void setTBROverNotification(Callback callback, boolean enable) {
+        add(new CommandInsightSetTBROverNotification(callback, enable));
+        notifyAboutNewCommand();
+    }
+
     public synchronized void cancelAllBoluses() {
         if (!isRunning(Command.CommandType.BOLUS)) {
             MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);
-        ConfigBuilderPlugin.getActivePump().stopBolusDelivering();
+        ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering();
     }
 
     // returns true if command is queued
@@ -369,7 +387,7 @@ public class CommandQueue {
 
         // Compare with pump limits
         Profile.BasalValue[] basalValues = profile.getBasalValues();
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         for (Profile.BasalValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
@@ -508,7 +526,7 @@ public class CommandQueue {
     }
 
     public boolean isThisProfileSet(Profile profile) {
-        PumpInterface activePump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
         Profile current = ProfileFunctions.getInstance().getProfile();
         if (activePump != null && current != null) {
             boolean result = activePump.isThisProfileSet(profile);

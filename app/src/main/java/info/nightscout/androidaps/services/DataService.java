@@ -26,6 +26,8 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
@@ -68,8 +70,14 @@ public class DataService extends IntentService {
             SourceGlimpPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.DEXCOMG5_BG.equals(action)) {
             SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
+        } else if (Intents.DEXCOMG5_BG_NEW.equals(action)) {
+            SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
+        } else if (Intents.DEXCOMG6_BG.equals(action)) {
+            SourceDexcomG6Plugin.getPlugin().handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
             SourcePoctechPlugin.getPlugin().handleNewData(intent);
+        } else if (Intents.EVERSENSE_BG.equals(action)) {
+            SourceEversensePlugin.getPlugin().handleNewData(intent);
         } else if (Intents.ACTION_NEW_SGV.equals(action)) {
             SourceNSClientPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {

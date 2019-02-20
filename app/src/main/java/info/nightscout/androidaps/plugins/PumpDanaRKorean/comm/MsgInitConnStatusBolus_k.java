@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -51,5 +52,9 @@ public class MsgInitConnStatusBolus_k extends MessageBase {
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
+
+        // This is last message of initial sequence
+        if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
+            ConfigBuilderPlugin.getPlugin().getActivePump().finishHandshaking();
     }
 }

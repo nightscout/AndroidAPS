@@ -211,7 +211,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
         lastDataTime = System.currentTimeMillis();
-        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
@@ -238,6 +238,12 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
             return 0d;
     }
 
+
+    @Override
+    public double getReservoirLevel() { return reservoirInUnits; }
+
+    @Override
+    public int getBatteryLevel() { return batteryPercent; }
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {

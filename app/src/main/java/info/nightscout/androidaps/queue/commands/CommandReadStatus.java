@@ -28,11 +28,11 @@ public class CommandReadStatus extends Command {
 
     @Override
     public void execute() {
-        ConfigBuilderPlugin.getActivePump().getPumpStatus();
+        ConfigBuilderPlugin.getPlugin().getActivePump().getPumpStatus();
         LocalAlertUtils.notifyPumpStatusRead();
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("CommandReadStatus executed. Reason: " + reason);
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         PumpEnactResult result = new PumpEnactResult().success(false);
         if (pump != null) {
             long lastConnection = pump.lastDataTime();

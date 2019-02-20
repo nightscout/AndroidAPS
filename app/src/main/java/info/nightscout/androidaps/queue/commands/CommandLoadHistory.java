@@ -27,7 +27,7 @@ public class CommandLoadHistory extends Command {
 
     @Override
     public void execute() {
-        PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump instanceof DanaRInterface) {
             DanaRInterface danaPump = (DanaRInterface) pump;
             PumpEnactResult r = danaPump.loadHistory(type);

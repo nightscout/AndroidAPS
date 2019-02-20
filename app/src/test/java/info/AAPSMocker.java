@@ -24,6 +24,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
@@ -100,6 +101,9 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.careportal_profileswitch)).thenReturn("Profile Switch");
         when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
         when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
+        when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
+        when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
+        when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
     }
 
     public static MainApp mockMainApp() {
@@ -113,7 +117,7 @@ public class AAPSMocker {
     public static void mockConfigBuilder() {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
         ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
-        when(MainApp.getConfigBuilder()).thenReturn(configBuilderPlugin);
+        when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
     public static ConstraintChecker mockConstraintsChecker() {
@@ -158,7 +162,7 @@ public class AAPSMocker {
 
     public static void mockCommandQueue() {
         CommandQueue queue = mock(CommandQueue.class);
-        when(ConfigBuilderPlugin.getCommandQueue()).thenReturn(queue);
+        when(ConfigBuilderPlugin.getPlugin().getCommandQueue()).thenReturn(queue);
     }
 
     public static TreatmentsPlugin mockTreatmentPlugin() {
@@ -176,8 +180,10 @@ public class AAPSMocker {
     public static DanaRPlugin mockDanaRPlugin() {
         PowerMockito.mockStatic(DanaRPlugin.class);
         DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
+        DanaRv2Plugin danaRv2Plugin = mock(DanaRv2Plugin.class);
         DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
         when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
+        when(MainApp.getSpecificPlugin(DanaRv2Plugin.class)).thenReturn(danaRv2Plugin);
         when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
         return danaRPlugin;
     }

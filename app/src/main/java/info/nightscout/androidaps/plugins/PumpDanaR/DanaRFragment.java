@@ -148,7 +148,7 @@ public class DanaRFragment extends SubscriberFragment {
         if (L.isEnabled(L.PUMP))
             log.debug("Clicked connect to pump");
         DanaRPump.getInstance().lastConnection = 0;
-        ConfigBuilderPlugin.getCommandQueue().readStatus("Clicked connect to pump", null);
+        ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked connect to pump", null);
     }
 
     @Subscribe
@@ -228,9 +228,9 @@ public class DanaRFragment extends SubscriberFragment {
 
                     dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getActivePump().getBaseBasalRate()) + " U/h");
+                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h");
                     // DanaRPlugin, DanaRKoreanPlugin
-                    if (ConfigBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+                    if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
                         if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
                             tempBasalView.setText(TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                         } else {
@@ -265,7 +265,7 @@ public class DanaRFragment extends SubscriberFragment {
                     bolusStepView.setText("" + pump.bolusStep);
                     serialNumberView.setText("" + pump.serialNumber);
                     if (queueView != null) {
-                        Spanned status = ConfigBuilderPlugin.getCommandQueue().spannedStatus();
+                        Spanned status = ConfigBuilderPlugin.getPlugin().getCommandQueue().spannedStatus();
                         if (status.toString().equals("")) {
                             queueView.setVisibility(View.GONE);
                         } else {

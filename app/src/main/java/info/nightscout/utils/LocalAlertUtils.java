@@ -78,7 +78,7 @@ public class LocalAlertUtils {
     public static void notifyPumpStatusRead() {
         //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
 
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         final Profile profile = ProfileFunctions.getInstance().getProfile();
         if (pump != null && profile != null) {
             long lastConnection = pump.lastDataTime();

@@ -187,7 +187,7 @@ public class APSResultTest {
         ConstraintChecker constraintChecker = AAPSMocker.mockConstraintsChecker();
 
         virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
-        when(ConfigBuilderPlugin.getActivePump()).thenReturn(virtualPumpPlugin);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
 
         when(constraintChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled);
 

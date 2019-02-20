@@ -59,6 +59,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.LocalInsightPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
@@ -67,6 +68,8 @@ import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.Source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
@@ -93,7 +96,6 @@ public class MainApp extends Application {
     public static Resources sResources;
 
     private static DatabaseHelper sDatabaseHelper = null;
-    private static ConfigBuilderPlugin sConfigBuilder = null;
     private static ConstraintChecker sConstraintsChecker = null;
 
     private static ArrayList<PluginBase> pluginsList = null;
@@ -158,9 +160,10 @@ public class MainApp extends Application {
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.PUMPDRIVERS && engineeringMode) pluginsList.add(LocalInsightPlugin.getInstance());
             pluginsList.add(CareportalPlugin.getPlugin());
-            if (Config.PUMPDRIVERS && engineeringMode)
-                pluginsList.add(InsightPlugin.getPlugin()); // <-- Enable Insight plugin here
+            /*if (Config.PUMPDRIVERS && engineeringMode)
+                pluginsList.add(InsightPlugin.getPlugin());*/
             if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());
@@ -179,7 +182,9 @@ public class MainApp extends Application {
             pluginsList.add(SourceMM640gPlugin.getPlugin());
             pluginsList.add(SourceGlimpPlugin.getPlugin());
             pluginsList.add(SourceDexcomG5Plugin.getPlugin());
+            pluginsList.add(SourceDexcomG6Plugin.getPlugin());
             pluginsList.add(SourcePoctechPlugin.getPlugin());
+            pluginsList.add(SourceEversensePlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
             pluginsList.add(FoodPlugin.getPlugin());
 
@@ -189,18 +194,18 @@ public class MainApp extends Application {
             pluginsList.add(NSClientPlugin.getPlugin());
             pluginsList.add(MaintenancePlugin.initPlugin(this));
 
-            pluginsList.add(sConfigBuilder = ConfigBuilderPlugin.getPlugin());
+            pluginsList.add(ConfigBuilderPlugin.getPlugin());
 
-            MainApp.getConfigBuilder().initialize();
+            ConfigBuilderPlugin.getPlugin().initialize();
         }
 
         NSUpload.uploadAppStart();
 
-        final PumpInterface pump = ConfigBuilderPlugin.getActivePump();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump != null) {
             new Thread(() -> {
                 SystemClock.sleep(5000);
-                ConfigBuilderPlugin.getCommandQueue().readStatus("Initialization", null);
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Initialization", null);
                 startKeepAliveService();
             }).start();
         }
@@ -295,10 +300,6 @@ public class MainApp extends Application {
             sDatabaseHelper.close();
             sDatabaseHelper = null;
         }
-    }
-
-    public static ConfigBuilderPlugin getConfigBuilder() {
-        return sConfigBuilder;
     }
 
     public static ConstraintChecker getConstraintChecker() {

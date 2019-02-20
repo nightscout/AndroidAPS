@@ -121,7 +121,7 @@ public class TreatmentsFragment extends SubscriberFragment implements View.OnCli
 
     @Override
     protected void updateGUI() {
-        if (ConfigBuilderPlugin.getActivePump().getPumpDescription().isExtendedBolusCapable
+        if (ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().isExtendedBolusCapable
                 || TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().size() > 0) {
             extendedBolusesTab.setVisibility(View.VISIBLE);
         } else {
