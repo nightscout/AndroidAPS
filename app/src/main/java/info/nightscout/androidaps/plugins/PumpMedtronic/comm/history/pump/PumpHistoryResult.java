@@ -128,8 +128,8 @@ public class PumpHistoryResult {
 
 
     public String toString() {
-        return "PumpHistoryResult [unprocessed=" + unprocessedEntries.size() + //
-            ", valid=" + validEntries.size() + //
+        return "PumpHistoryResult [unprocessed=" + (unprocessedEntries != null ? "" + unprocessedEntries.size() : "0") + //
+            ", valid=" + (validEntries != null ? "" + validEntries.size() : "0") + //
             ", searchEntry=" + searchEntry + //
             ", searchDate=" + searchDate + //
             ", searchType=" + searchType + //

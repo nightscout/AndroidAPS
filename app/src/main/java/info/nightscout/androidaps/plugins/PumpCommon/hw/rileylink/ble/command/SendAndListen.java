@@ -55,8 +55,10 @@ public class SendAndListen extends RileyLinkCommand {
     @Override
     public byte[] getRaw() {
 
-        boolean isPacketV2 = RileyLinkUtil.getFirmwareVersion().isSameVersion(
-            RileyLinkFirmwareVersion.Version2AndHigher);
+        // If firmware version is not set (error reading version from device, shouldn't happen),
+        // we will default to version 2
+        boolean isPacketV2 = RileyLinkUtil.getFirmwareVersion() != null ? RileyLinkUtil.getFirmwareVersion()
+            .isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher) : true;
 
         ArrayList<Byte> bytes = new ArrayList<Byte>();
         bytes.add(this.getCommandType().code);

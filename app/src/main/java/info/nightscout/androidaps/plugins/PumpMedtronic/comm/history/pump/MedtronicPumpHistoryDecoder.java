@@ -465,7 +465,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         // Bolus=1.7, Fodd, Corr, Manual=1.7,
         // Num bOlus=1, food/corr, Food+corr, manual bolus=1
 
-        DailyTotalsDTO totals = new DailyTotalsDTO(entry.getEntryType(), entry.getBody());
+        DailyTotalsDTO totals = new DailyTotalsDTO(entry);
 
         // System.out.println("Totals:" + totals);
 
@@ -487,6 +487,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
         // }
         //
         // }
+        entry.addDecodedData("Object", totals);
 
         System.out.println("" + totals.toString());
 
@@ -563,7 +564,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    private String getFormattedValue(float value, int decimals) {
+    public static String getFormattedValue(float value, int decimals) {
         return String.format(Locale.ENGLISH, "%." + decimals + "f", value);
     }
 

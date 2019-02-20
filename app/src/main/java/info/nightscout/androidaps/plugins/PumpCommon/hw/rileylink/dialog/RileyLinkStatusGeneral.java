@@ -91,7 +91,7 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
         RileyLinkTargetDevice targetDevice = RileyLinkUtil.getTargetDevice();
 
-        this.connectionStatus.setText(MainApp.gs(rileyLinkServiceData.serviceState.getResourceId(targetDevice)));
+        this.connectionStatus.setText(MainApp.gs(RileyLinkUtil.getServiceState().getResourceId(targetDevice)));
         this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
         this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
         "-"

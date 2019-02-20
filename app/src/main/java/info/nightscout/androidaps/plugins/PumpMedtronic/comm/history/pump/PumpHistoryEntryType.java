@@ -144,17 +144,15 @@ public enum PumpHistoryEntryType // implements CodeEnum
     BolusReminder(0x69, "Bolus Reminder", PumpHistoryEntryGroup.Configuration, 2, 5, 0), // Ian69
     DeleteAlarmClockTime(0x6a, "Delete Alarm Clock Time", PumpHistoryEntryGroup.Configuration, 2, 5, 7), // 14
 
-    DailyTotals515(0x6c, "Daily Totals (515)", PumpHistoryEntryGroup.Statistic, 0, 0, 36), //
-    DailyTotals522(0x6d, "Daily Totals (522)", PumpHistoryEntryGroup.Statistic, 1, 2, 41), // // hack1(0x6d, "hack1",
-                                                                                           // 46,
-                                                                                           // 5, 0), // 1,2,41
+    DailyTotals515(0x6c, "Daily Totals (515)", PumpHistoryEntryGroup.Statistic, 1, 2, 33), // v4: 0,0,36. v5: 1,2,33
+    DailyTotals522(0x6d, "Daily Totals (522)", PumpHistoryEntryGroup.Statistic, 1, 2, 41), //
     DailyTotals523(0x6e, "Daily Totals (523)", PumpHistoryEntryGroup.Statistic, 1, 2, 49), // 1102014-03-17T00:00:00
-    ChangeCarbUnits((byte)0x6f, "Change Carb Units", PumpHistoryEntryGroup.Configuration), //
-    /**/EventUnknown_MM522_0x70((byte)0x70, "Unknown Event 0x70", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
+    ChangeCarbUnits((byte) 0x6f, "Change Carb Units", PumpHistoryEntryGroup.Configuration), //
+    /**/EventUnknown_MM522_0x70((byte) 0x70, "Unknown Event 0x70", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
 
     BasalProfileStart(0x7b, "Basal Profile Start", PumpHistoryEntryGroup.Basal, 2, 5, 3), // // 722
-    ChangeWatchdogEnable((byte)0x7c, "Change Watchdog Enable", PumpHistoryEntryGroup.Configuration), //
-    ChangeOtherDeviceID((byte)0x7d, "Change Other Device ID", PumpHistoryEntryGroup.Configuration, 2, 5, 30), //
+    ChangeWatchdogEnable((byte) 0x7c, "Change Watchdog Enable", PumpHistoryEntryGroup.Configuration), //
+    ChangeOtherDeviceID((byte) 0x7d, "Change Other Device ID", PumpHistoryEntryGroup.Configuration, 2, 5, 30), //
 
     ChangeWatchdogMarriageProfile(0x81, "Change Watchdog Marriage Profile", PumpHistoryEntryGroup.Configuration, 2, 5, 5), // 12
     DeleteOtherDeviceID(0x82, "Delete Other Device ID", PumpHistoryEntryGroup.Configuration, 2, 5, 5), //
@@ -184,6 +182,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     UnknownBasePacket(0xff, "Unknown Base Packet", PumpHistoryEntryGroup.Unknown);
 
     private static Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<Integer, PumpHistoryEntryType>();
+    private static PumpHistoryEntryType tddType;
 
     static {
         for (PumpHistoryEntryType type : values()) {
@@ -206,6 +205,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     private List<SpecialRule> specialRulesBody;
     private boolean hasSpecialRules = false;
     private PumpHistoryEntryGroup group = PumpHistoryEntryGroup.Unknown;
+    private static Object TDDType;
 
 
     PumpHistoryEntryType(int opCode, String name, PumpHistoryEntryGroup group) {
@@ -239,10 +239,10 @@ public enum PumpHistoryEntryType // implements CodeEnum
         Bolus.addSpecialRuleHead(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8));
         // BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
         BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 143)); // V5:
-                                                                                                                // 522
-                                                                                                                // has
-                                                                                                                // old
-                                                                                                                // form
+        // 522
+        // has
+        // old
+        // form
         BolusWizardBolusEstimate.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15));
         BolusReminder.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 2));
     }
@@ -272,32 +272,32 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     public static boolean isAAPSRelevantEntry(PumpHistoryEntryType entryType) {
         return (entryType == PumpHistoryEntryType.Bolus || // Treatments
-            entryType == PumpHistoryEntryType.TempBasalRate || //
-            entryType == PumpHistoryEntryType.TempBasalDuration || //
+                entryType == PumpHistoryEntryType.TempBasalRate || //
+                entryType == PumpHistoryEntryType.TempBasalDuration || //
 
-            entryType == PumpHistoryEntryType.Prime || // Pump Status Change
-            entryType == PumpHistoryEntryType.PumpSuspend || //
-            entryType == PumpHistoryEntryType.PumpResume || //
-            entryType == PumpHistoryEntryType.Rewind || //
-            entryType == PumpHistoryEntryType.NoDeliveryAlarm || // no delivery
-            entryType == PumpHistoryEntryType.BasalProfileStart || //
+                entryType == PumpHistoryEntryType.Prime || // Pump Status Change
+                entryType == PumpHistoryEntryType.PumpSuspend || //
+                entryType == PumpHistoryEntryType.PumpResume || //
+                entryType == PumpHistoryEntryType.Rewind || //
+                entryType == PumpHistoryEntryType.NoDeliveryAlarm || // no delivery
+                entryType == PumpHistoryEntryType.BasalProfileStart || //
 
-            entryType == PumpHistoryEntryType.ChangeTime || // Time Change
-            entryType == PumpHistoryEntryType.NewTimeSet || //
+                entryType == PumpHistoryEntryType.ChangeTime || // Time Change
+                entryType == PumpHistoryEntryType.NewTimeSet || //
 
-            entryType == PumpHistoryEntryType.ChangeBasalPattern || // Configuration
-            entryType == PumpHistoryEntryType.ClearSettings || //
-            entryType == PumpHistoryEntryType.SaveSettings || //
-            entryType == PumpHistoryEntryType.ChangeMaxBolus || //
-            entryType == PumpHistoryEntryType.ChangeMaxBasal || //
-            entryType == PumpHistoryEntryType.ChangeTempBasalType || //
+                entryType == PumpHistoryEntryType.ChangeBasalPattern || // Configuration
+                entryType == PumpHistoryEntryType.ClearSettings || //
+                entryType == PumpHistoryEntryType.SaveSettings || //
+                entryType == PumpHistoryEntryType.ChangeMaxBolus || //
+                entryType == PumpHistoryEntryType.ChangeMaxBasal || //
+                entryType == PumpHistoryEntryType.ChangeTempBasalType || //
 
-            entryType == PumpHistoryEntryType.ChangeBasalProfile_NewProfile || // Basal profile
+                entryType == PumpHistoryEntryType.ChangeBasalProfile_NewProfile || // Basal profile
 
-            entryType == PumpHistoryEntryType.DailyTotals515 || // Daily Totals
-            entryType == PumpHistoryEntryType.DailyTotals522 || //
-            entryType == PumpHistoryEntryType.DailyTotals523 || //
-        entryType == PumpHistoryEntryType.EndResultTotals);
+                entryType == PumpHistoryEntryType.DailyTotals515 || // Daily Totals
+                entryType == PumpHistoryEntryType.DailyTotals522 || //
+                entryType == PumpHistoryEntryType.DailyTotals523 || //
+                entryType == PumpHistoryEntryType.EndResultTotals);
     }
 
 

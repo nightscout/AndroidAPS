@@ -395,6 +395,15 @@ public class ByteUtil {
     }
 
 
+    public static byte[] createByteArrayFromHexString(String dataFull) {
+
+        String data = dataFull.replace(" 0x", "");
+        data = data.replace("0x", "");
+
+        return createByteArrayFromCompactString(data, 0, data.length());
+    }
+
+
     public static byte[] createByteArrayFromCompactString(String dataFull, int startIndex) {
         return createByteArrayFromCompactString(dataFull, startIndex, dataFull.length());
     }

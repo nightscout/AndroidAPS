@@ -131,7 +131,8 @@ public class RileyLinkUtil {
 
         } else {
 
-            return RileyLinkUtil.rileyLinkServiceData.serviceState;
+            return RileyLinkUtil.rileyLinkServiceData.serviceState == null ? RileyLinkServiceState.NotStarted
+                : RileyLinkUtil.rileyLinkServiceData.serviceState;
 
         }
 

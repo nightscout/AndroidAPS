@@ -70,6 +70,7 @@ import info.nightscout.utils.ToastUtils;
  * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+
     private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
@@ -111,11 +112,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private int oldVersion = 0;
     private int newVersion = 0;
 
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         onCreate(getWritableDatabase(), getConnectionSource());
         //onUpgrade(getWritableDatabase(), getConnectionSource(), 1,1);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
@@ -139,6 +142,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
@@ -172,19 +176,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         log.info("Do nothing for downgrading...");
         log.debug("oldVersion: {}, newVersion: {}", oldVersion, newVersion);
     }
 
+
     public int getOldVersion() {
         return oldVersion;
     }
 
+
     public int getNewVersion() {
         return newVersion;
     }
+
 
     /**
      * Close the database connections and clear any cached DAOs.
@@ -198,6 +206,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public long size(String database) {
         return DatabaseUtils.queryNumEntries(getReadableDatabase(), database);
     }
+
 
     // --------------------- DB resets ---------------------
 
@@ -243,6 +252,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         );
     }
 
+
     public void resetTempTargets() {
         try {
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
@@ -252,6 +262,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         scheduleTemporaryTargetChange();
     }
+
 
     public void resetTemporaryBasals() {
         try {
@@ -265,6 +276,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTemporaryBasalChange();
     }
 
+
     public void resetExtededBoluses() {
         try {
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
@@ -276,6 +288,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleExtendedBolusChange();
     }
 
+
     public void resetCareportalEvents() {
         try {
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
@@ -285,6 +298,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         scheduleCareportalEventChange();
     }
+
 
     public void resetProfileSwitch() {
         try {
@@ -296,6 +310,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleProfileSwitchChange();
     }
 
+
     public void resetTDDs() {
         try {
             TableUtils.dropTable(connectionSource, TDD.class, true);
@@ -305,39 +320,48 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     // ------------------ getDao -------------------------------------------
 
     private Dao<TempTarget, Long> getDaoTempTargets() throws SQLException {
         return getDao(TempTarget.class);
     }
 
+
     private Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
         return getDao(BgReading.class);
     }
+
 
     private Dao<DanaRHistoryRecord, String> getDaoDanaRHistory() throws SQLException {
         return getDao(DanaRHistoryRecord.class);
     }
 
+
     private Dao<TDD, String> getDaoTDD() throws SQLException {
         return getDao(TDD.class);
     }
+
 
     private Dao<DbRequest, String> getDaoDbRequest() throws SQLException {
         return getDao(DbRequest.class);
     }
 
+
     private Dao<TemporaryBasal, Long> getDaoTemporaryBasal() throws SQLException {
         return getDao(TemporaryBasal.class);
     }
+
 
     private Dao<ExtendedBolus, Long> getDaoExtendedBolus() throws SQLException {
         return getDao(ExtendedBolus.class);
     }
 
+
     private Dao<CareportalEvent, Long> getDaoCareportalEvents() throws SQLException {
         return getDao(CareportalEvent.class);
     }
+
 
     private Dao<ProfileSwitch, Long> getDaoProfileSwitch() throws SQLException {
         return getDao(ProfileSwitch.class);
@@ -362,7 +386,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 log.debug("Rounding " + date + " to " + rounded);
         return rounded;
     }
-    // -------------------  BgReading handling -----------------------
+
+
+    // ------------------- BgReading handling -----------------------
 
     public boolean createIfNotExists(BgReading bgReading, String from) {
         try {
@@ -391,6 +417,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return false;
     }
 
+
     public void update(BgReading bgReading) {
         bgReading.date = roundDateToSec(bgReading.date);
         try {
@@ -400,8 +427,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     private static void scheduleBgChange(@Nullable final BgReading bgReading) {
         class PostRunnable implements Runnable {
+
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventNewBg");
@@ -418,6 +447,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduledBgPost = bgWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
+
 
     /*
      * Return last BgReading from database or null if db is empty
@@ -443,6 +473,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         else
             return null;
     }
+
 
     /*
      * Return bg reading if not old ( <9 min )
@@ -479,6 +510,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
+
     public List<BgReading> getBgreadingsDataFromTime(long start, long end, boolean ascending) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
@@ -495,6 +527,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return new ArrayList<BgReading>();
     }
+
 
     public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
         try {
@@ -513,7 +546,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
-    // -------------------  TDD handling -----------------------
+
+    // ------------------- TDD handling -----------------------
     public void createOrUpdateTDD(TDD tdd) {
         try {
             Dao<TDD, String> dao = getDaoTDD();
@@ -523,6 +557,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
     }
+
 
     public List<TDD> getTDDs() {
         List<TDD> tddList;
@@ -574,6 +609,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     public int delete(DbRequest dbr) {
         try {
             return getDaoDbRequest().delete(dbr);
@@ -583,6 +619,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return 0;
     }
 
+
     public int deleteDbRequest(String nsClientId) {
         try {
             return getDaoDbRequest().deleteById(nsClientId);
@@ -591,6 +628,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return 0;
     }
+
 
     public void deleteDbRequestbyMongoId(String action, String id) {
         try {
@@ -608,6 +646,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     public void deleteAllDbRequests() {
         try {
             TableUtils.clearTable(connectionSource, DbRequest.class);
@@ -615,6 +654,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
     }
+
 
     public CloseableIterator getDbRequestInterator() {
         try {
@@ -625,7 +665,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    //  -------------------- TREATMENT HANDLING -------------------
+
+    // -------------------- TREATMENT HANDLING -------------------
 
     public static void updateEarliestDataChange(long newDate) {
         if (earliestDataChange == null) {
@@ -636,6 +677,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             earliestDataChange = newDate;
         }
     }
+
 
     // ---------------- TempTargets handling ---------------
 
@@ -655,6 +697,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return new ArrayList<TempTarget>();
     }
+
 
     public boolean createOrUpdate(TempTarget tempTarget) {
         try {
@@ -714,6 +757,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return false;
     }
 
+
     public void delete(TempTarget tempTarget) {
         try {
             getDaoTempTargets().delete(tempTarget);
@@ -723,8 +767,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     private static void scheduleTemporaryTargetChange() {
         class PostRunnable implements Runnable {
+
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventTempTargetChange");
@@ -742,20 +788,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     }
 
- /*
- {
-    "_id": "58795998aa86647ba4d68ce7",
-    "enteredBy": "",
-    "eventType": "Temporary Target",
-    "reason": "Eating Soon",
-    "targetTop": 80,
-    "targetBottom": 80,
-    "duration": 120,
-    "created_at": "2017-01-13T22:50:00.782Z",
-    "carbs": null,
-    "insulin": null
-}
-  */
+
+    /*
+     * {
+     * "_id": "58795998aa86647ba4d68ce7",
+     * "enteredBy": "",
+     * "eventType": "Temporary Target",
+     * "reason": "Eating Soon",
+     * "targetTop": 80,
+     * "targetBottom": 80,
+     * "duration": 120,
+     * "created_at": "2017-01-13T22:50:00.782Z",
+     * "carbs": null,
+     * "insulin": null
+     * }
+     */
 
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
@@ -774,6 +821,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     public void deleteTempTargetById(String _id) {
         TempTarget stored = findTempTargetById(_id);
         if (stored != null) {
@@ -782,6 +830,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             scheduleTemporaryTargetChange();
         }
     }
+
 
     public TempTarget findTempTargetById(String _id) {
         try {
@@ -802,6 +851,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
+
     // ----------------- DanaRHistory handling --------------------
 
     public void createOrUpdate(DanaRHistoryRecord record) {
@@ -817,6 +867,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
     }
+
 
     public List<DanaRHistoryRecord> getDanaRHistoryRecordsByType(byte type) {
         List<DanaRHistoryRecord> historyList;
@@ -834,6 +885,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return historyList;
     }
+
 
     public void updateDanaRHistoryRecordId(JSONObject trJson) {
         try {
@@ -859,6 +911,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception: " + trJson.toString(), e);
         }
     }
+
 
     // ------------ TemporaryBasal handling ---------------
 
@@ -953,6 +1006,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return false;
     }
 
+
     public void delete(TemporaryBasal tempBasal) {
         try {
             getDaoTemporaryBasal().delete(tempBasal);
@@ -962,6 +1016,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         scheduleTemporaryBasalChange();
     }
+
 
     public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
         try {
@@ -979,8 +1034,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<TemporaryBasal>();
     }
 
+
     private static void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
+
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventTempBasalChange");
@@ -1001,6 +1058,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduledTemBasalsPost = tempBasalsWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
+
 
     /*
     {
@@ -1074,6 +1132,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     public void deleteTempBasalById(String _id) {
         TemporaryBasal stored = findTempBasalById(_id);
         if (stored != null) {
@@ -1084,6 +1143,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             scheduleTemporaryBasalChange();
         }
     }
+
 
     public TemporaryBasal findTempBasalById(String _id) {
         try {
@@ -1104,6 +1164,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return null;
     }
+
 
     // ------------ ExtendedBolus handling ---------------
 
@@ -1222,6 +1283,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleExtendedBolusChange();
     }
 
+
     public List<ExtendedBolus> getExtendedBolusDataFromTime(long mills, boolean ascending) {
         try {
             List<ExtendedBolus> extendedBoluses;
@@ -1238,6 +1300,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<ExtendedBolus>();
     }
 
+
     public void deleteExtendedBolusById(String _id) {
         ExtendedBolus stored = findExtendedBolusById(_id);
         if (stored != null) {
@@ -1248,6 +1311,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             scheduleExtendedBolusChange();
         }
     }
+
 
     public ExtendedBolus findExtendedBolusById(String _id) {
         try {
@@ -1268,6 +1332,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return null;
     }
+
 
     /*
 {
@@ -1292,8 +1357,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             createOrUpdate(extendedBolus);
     }
 
+
     private static void scheduleExtendedBolusChange() {
         class PostRunnable implements Runnable {
+
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventExtendedBolusChange");
@@ -1327,6 +1394,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleCareportalEventChange();
     }
 
+
     public void delete(CareportalEvent careportalEvent) {
         try {
             getDaoCareportalEvents().delete(careportalEvent);
@@ -1336,6 +1404,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleCareportalEventChange();
     }
 
+
     public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
         try {
             return getDaoCareportalEvents().queryForId(timestamp);
@@ -1344,6 +1413,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return null;
     }
+
 
     @Nullable
     public CareportalEvent getLastCareportalEvent(String event) {
@@ -1366,6 +1436,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
+
     public List<CareportalEvent> getCareportalEventsFromTime(long mills, boolean ascending) {
         try {
             List<CareportalEvent> careportalEvents;
@@ -1383,6 +1454,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
+
     public void preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
         OverlappingIntervals offlineEvents = new OverlappingIntervals();
         for (int i = 0; i < list.size(); i++) {
@@ -1392,6 +1464,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
     }
+
 
     public List<CareportalEvent> getCareportalEventsFromTime(long mills, String type, boolean ascending) {
         try {
@@ -1410,6 +1483,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
+
     public List<CareportalEvent> getCareportalEvents(boolean ascending) {
         try {
             List<CareportalEvent> careportalEvents;
@@ -1424,6 +1498,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return new ArrayList<>();
     }
+
 
     public void deleteCareportalEventById(String _id) {
         try {
@@ -1447,6 +1522,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
     }
+
 
     public void createCareportalEventFromJsonIfNotExists(JSONObject trJson) {
         try {
@@ -1481,8 +1557,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     private static void scheduleCareportalEventChange() {
         class PostRunnable implements Runnable {
+
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing scheduleCareportalEventChange");
@@ -1499,6 +1577,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduledCareportalEventPost = careportalEventWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
+
 
     // ---------------- ProfileSwitch handling ---------------
 
@@ -1518,6 +1597,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
+
     public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
         try {
             Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
@@ -1535,6 +1615,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return new ArrayList<>();
     }
+
 
     public boolean createOrUpdate(ProfileSwitch profileSwitch) {
         try {
@@ -1597,6 +1678,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return false;
     }
 
+
     public void delete(ProfileSwitch profileSwitch) {
         try {
             getDaoProfileSwitch().delete(profileSwitch);
@@ -1606,8 +1688,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     private static void scheduleProfileSwitchChange() {
         class PostRunnable implements Runnable {
+
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventProfileSwitchChange");
@@ -1690,6 +1774,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     public void deleteProfileSwitchById(String _id) {
         ProfileSwitch stored = findProfileSwitchById(_id);
         if (stored != null) {
@@ -1699,6 +1784,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             scheduleTemporaryTargetChange();
         }
     }
+
 
     public ProfileSwitch findProfileSwitchById(String _id) {
         try {

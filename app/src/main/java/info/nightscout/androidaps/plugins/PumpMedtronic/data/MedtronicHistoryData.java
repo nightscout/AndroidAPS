@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.data;
 
+import com.google.common.base.Splitter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Splitter;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHi
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryResult;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
 
 //import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 
@@ -128,7 +129,7 @@ public class MedtronicHistoryData {
     // FIXME not just 50 records, last 24 hours
     public void finalizeNewHistoryRecords() {
 
-        List<PumpHistoryEntry> filteredListByLastRecord = getFilteredListByLastRecord((PumpHistoryEntryType)null);
+        List<PumpHistoryEntry> filteredListByLastRecord = getFilteredListByLastRecord((PumpHistoryEntryType) null);
 
         LOG.debug("New records: " + filteredListByLastRecord.size());
 
@@ -173,12 +174,12 @@ public class MedtronicHistoryData {
     public boolean hasRelevantConfigurationChanged() {
 
         return getStateFromFilteredList( //
-            PumpHistoryEntryType.ChangeBasalPattern, //
-            PumpHistoryEntryType.ClearSettings, //
-            PumpHistoryEntryType.SaveSettings, //
-            PumpHistoryEntryType.ChangeMaxBolus, //
-            PumpHistoryEntryType.ChangeMaxBasal, //
-            PumpHistoryEntryType.ChangeTempBasalType);
+                PumpHistoryEntryType.ChangeBasalPattern, //
+                PumpHistoryEntryType.ClearSettings, //
+                PumpHistoryEntryType.SaveSettings, //
+                PumpHistoryEntryType.ChangeMaxBolus, //
+                PumpHistoryEntryType.ChangeMaxBasal, //
+                PumpHistoryEntryType.ChangeTempBasalType);
 
     }
 
@@ -198,13 +199,13 @@ public class MedtronicHistoryData {
         if (wasPumpSuspended == null) { // suspension status not known
 
             List<PumpHistoryEntry> items = getFilteredItems(PumpHistoryEntryType.Bolus, //
-                PumpHistoryEntryType.TempBasalCombined, //
-                PumpHistoryEntryType.Prime, //
-                PumpHistoryEntryType.PumpSuspend, //
-                PumpHistoryEntryType.PumpResume, //
-                PumpHistoryEntryType.Rewind, //
-                PumpHistoryEntryType.NoDeliveryAlarm, //
-                PumpHistoryEntryType.BasalProfileStart);
+                    PumpHistoryEntryType.TempBasalCombined, //
+                    PumpHistoryEntryType.Prime, //
+                    PumpHistoryEntryType.PumpSuspend, //
+                    PumpHistoryEntryType.PumpResume, //
+                    PumpHistoryEntryType.Rewind, //
+                    PumpHistoryEntryType.NoDeliveryAlarm, //
+                    PumpHistoryEntryType.BasalProfileStart);
 
             if (items.size() == 0)
                 return wasPumpSuspended == null ? false : wasPumpSuspended;
@@ -212,20 +213,20 @@ public class MedtronicHistoryData {
             PumpHistoryEntry pumpHistoryEntry = items.get(0);
 
             return !(pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.TempBasalCombined || //
-                pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.BasalProfileStart || //
-                pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.Bolus || //
-            pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.PumpResume);
+                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.BasalProfileStart || //
+                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.Bolus || //
+                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.PumpResume);
 
         } else {
 
             List<PumpHistoryEntry> items = getFilteredItems(PumpHistoryEntryType.Bolus, //
-                PumpHistoryEntryType.TempBasalCombined, //
-                PumpHistoryEntryType.Prime, //
-                PumpHistoryEntryType.PumpSuspend, //
-                PumpHistoryEntryType.PumpResume, //
-                PumpHistoryEntryType.Rewind, //
-                PumpHistoryEntryType.NoDeliveryAlarm, //
-                PumpHistoryEntryType.BasalProfileStart);
+                    PumpHistoryEntryType.TempBasalCombined, //
+                    PumpHistoryEntryType.Prime, //
+                    PumpHistoryEntryType.PumpSuspend, //
+                    PumpHistoryEntryType.PumpResume, //
+                    PumpHistoryEntryType.Rewind, //
+                    PumpHistoryEntryType.NoDeliveryAlarm, //
+                    PumpHistoryEntryType.BasalProfileStart);
 
             if (wasPumpSuspended) {
 
@@ -235,9 +236,9 @@ public class MedtronicHistoryData {
                 PumpHistoryEntry pumpHistoryEntry = items.get(0);
 
                 if (pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.TempBasalCombined || //
-                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.BasalProfileStart || //
-                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.Bolus || //
-                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.PumpResume)
+                        pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.BasalProfileStart || //
+                        pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.Bolus || //
+                        pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.PumpResume)
                     return false;
                 else
                     return true;
@@ -250,8 +251,8 @@ public class MedtronicHistoryData {
                 PumpHistoryEntry pumpHistoryEntry = items.get(0);
 
                 if (pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.NoDeliveryAlarm || //
-                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.PumpSuspend || //
-                    pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.Prime)
+                        pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.PumpSuspend || //
+                        pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.Prime)
                     return true;
 
             }
@@ -266,16 +267,35 @@ public class MedtronicHistoryData {
 
     public List<PumpHistoryEntry> getTDDs() {
 
-        return getFilteredListByLastRecord(PumpHistoryEntryType.EndResultTotals);
+        return getFilteredListByLastRecord(getTDDType());
 
     }
 
 
-    // FIXME remove
-    public List<PumpHistoryEntry> getTDDs2() {
+    private PumpHistoryEntryType getTDDType() {
 
-        return getFilteredListByLastRecord(PumpHistoryEntryType.DailyTotals515, PumpHistoryEntryType.DailyTotals522,
-            PumpHistoryEntryType.DailyTotals523);
+
+        switch (MedtronicUtil.getMedtronicPumpModel()) {
+
+            case Medtronic_515:
+            case Medtronic_715:
+                return PumpHistoryEntryType.DailyTotals515;
+
+
+            case Medtronic_522:
+            case Medtronic_722:
+                return PumpHistoryEntryType.DailyTotals522;
+
+            case Medtronic_523_Revel:
+            case Medtronic_723_Revel:
+            case Medtronic_554_Veo:
+            case Medtronic_754_Veo:
+                return PumpHistoryEntryType.DailyTotals523;
+
+            default: {
+                return PumpHistoryEntryType.EndResultTotals;
+            }
+        }
 
     }
 
@@ -283,8 +303,8 @@ public class MedtronicHistoryData {
     public List<PumpHistoryEntry> getTreatments() {
 
         return getFilteredListByLastRecord( //
-            PumpHistoryEntryType.Bolus, //
-            PumpHistoryEntryType.TempBasalCombined);
+                PumpHistoryEntryType.Bolus, //
+                PumpHistoryEntryType.TempBasalCombined);
 
     }
 
@@ -373,7 +393,7 @@ public class MedtronicHistoryData {
 
         if (newProfile != null) {
             LOG.debug("processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
-            BasalProfile basalProfile = (BasalProfile)newProfile.getDecodedData().get("Object");
+            BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
             mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
         }
 
@@ -391,7 +411,7 @@ public class MedtronicHistoryData {
     public boolean hasPumpTimeChanged() {
 
         return getStateFromFilteredList(PumpHistoryEntryType.NewTimeSet, //
-            PumpHistoryEntryType.ChangeTime);
+                PumpHistoryEntryType.ChangeTime);
 
     }
 

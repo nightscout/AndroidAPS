@@ -6,10 +6,15 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.MoreObjects;
 
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntryType;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
+import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 
 /**
  * Created by andy on 11/3/18.
+ */
+
+/**
+ * NOTE: Decoding is only done for insulin part, everything else is pretty must left undecoded.
  */
 
 public class DailyTotalsDTO {
@@ -21,54 +26,87 @@ public class DailyTotalsDTO {
     // Insulin=19.8[8,9], Basal[10,11], Bolus[13,14], Carbs,
     // Bolus=1.7, Fodd, Corr, Manual=1.7,
     // Num bOlus=1, food/corr, Food+corr, manual bolus=1
-    Double bgAvg;
-    Double bgLow;
-    Double bgHigh;
-    Integer bgCount;
+    private Double bgAvg;
+    private Double bgLow;
+    private Double bgHigh;
+    private Integer bgCount;
 
-    Double sensorAvg;
-    Double sensorMin;
-    Double sensorMax;
-    Integer sensorCalcCount;
-    Integer sensorDataCount;
+    private Double sensorAvg;
+    private Double sensorMin;
+    private Double sensorMax;
+    private Integer sensorCalcCount;
+    private Integer sensorDataCount;
 
-    Double insulinTotal;
-    Double insulinBasal;
-    Double insulinBolus;
-    Double insulinCarbs;
+    private Double insulinTotal;
+    private Double insulinBasal;
+    private Double insulinBolus;
+    private Double insulinCarbs;
 
-    Double bolusTotal;
-    Double bolusFood;
-    Double bolusFoodAndCorr;
-    Double bolusCorrection;
-    Double bolusManual;
+    private Double bolusTotal;
+    private Double bolusFood;
+    private Double bolusFoodAndCorr;
+    private Double bolusCorrection;
+    private Double bolusManual;
 
-    Integer bolusCount;
-    Integer bolusCountFoodOrCorr;
+    private Integer bolusCount;
+    private Integer bolusCountFoodOrCorr;
     // Integer bolusCountCorr;
     Integer bolusCountFoodAndCorr;
     Integer bolusCountManual;
     private Integer bolusCountFood;
     private Integer bolusCountCorr;
 
+    PumpHistoryEntry entry;
 
-    public DailyTotalsDTO(PumpHistoryEntryType entryType, byte[] data) {
-        switch (entryType) {
+
+    public DailyTotalsDTO(PumpHistoryEntry entry) {
+        this.entry = entry;
+
+        switch (entry.getEntryType()) {
+            case EndResultTotals:
+                decodeEndResultsTotals(entry);
+                break;
 
             case DailyTotals515:
-                decodeDailyTotals515(data);
+                decodeDailyTotals515(entry.getBody());
                 break;
 
             case DailyTotals522:
-                decodeDailyTotals522(data);
+                decodeDailyTotals522(entry.getBody());
                 break;
             case DailyTotals523:
-                decodeDailyTotals523(data);
+                decodeDailyTotals523(entry.getBody());
                 break;
 
             default:
                 break;
         }
+
+        // setDisplayable();
+    }
+
+
+    private void setDisplayable() {
+
+        if (this.insulinBasal == null) {
+            this.entry.setDisplayableValue("Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
+        } else {
+            this.entry.setDisplayableValue("Basal Insulin: " + StringUtil.getFormatedValueUS(this.insulinBasal, 2)
+                + ", Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
+        }
+
+    }
+
+
+    private void decodeEndResultsTotals(PumpHistoryEntry entry) {
+        double totals = ByteUtil.toInt((int)entry.getHead()[0], (int)entry.getHead()[1], (int)entry.getHead()[2],
+            (int)entry.getHead()[3], ByteUtil.BitConversion.BIG_ENDIAN) * 0.025d;
+
+        this.insulinTotal = totals;
+
+        entry.addDecodedData("Totals", totals);
+        // entry.setDisplayableValue(getFormattedValue(totals, 3));
+
     }
 
 
@@ -100,9 +138,18 @@ public class DailyTotalsDTO {
 
 
     private void decodeDailyTotals515(byte[] data) {
-        LOG.debug("Can't decode DailyTotals515: Body={}", ByteUtil.getHex(data));
+        // LOG.debug("Can't decode DailyTotals515: Body={}", ByteUtil.getHex(data));
 
-        testDecode(data);
+        this.insulinTotal = ByteUtil.toInt(data[8], data[9]) / 40.0d;
+        this.insulinBasal = ByteUtil.toInt(data[10], data[11]) / 40.0d;
+        this.insulinBolus = ByteUtil.toInt(data[13], data[14]) / 40.0d;
+
+        // Delivery Stats: BG AVG: Bg Low/Hi=none,Number BGs=0
+        // Delivery Stats: INSULIN: Basal 22.30, Bolus=4.20, Catbs = 0g (26.5)
+        // Delivery Stats: BOLUS: Food=0.00, Corr=0.00, Manual=4.20
+        // Delivery Stats: NUM BOLUS: Food/Corr=0,Food+Corr=0, Manual=3
+
+        LOG.debug("515: {}", toString());
     }
 
 
