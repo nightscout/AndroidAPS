@@ -92,6 +92,8 @@
                 <action android:name="com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST" />
                 <!-- Receiver from Poctech -->
                 <action android:name="com.china.poctech.data" />
+                <!-- Receiver from Tomato -->
+                <action android:name="com.fanqies.tomatofn.BgEstimate" />
             </intent-filter>
         </receiver>
         <!-- Receiver keepalive, scheduled every 30 min -->

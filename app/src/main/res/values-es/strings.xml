@@ -703,8 +703,6 @@
     <string name="btwatchdog_summary">Apaga el bluetooth del móvil por un segundo si no hay conexión con la bomba. Esto ayuda con algunos móviles con problemas de establecer conexión bluetooth estable.</string>
     <string name="DexcomG5">Aplicación de DexcomG5 (parcheada)</string>
     <string name="dexcomg5_nsupload_title">Subir datos BG a NS</string>
-    <string name="bgsource_upload">Ajuste de subida datos G5</string>
-    <string name="poctech_upload">Configuración de carga Poctech</string>
     <string name="wear_detailed_delta_title">Mostrar detalles delta</string>
     <string name="wear_detailed_delta_summary">Mostrar delta con un decimal mas</string>
     <string name="smbmaxminutes_summary">Minutos máximos de basal para limitar SMB</string>
@@ -770,7 +768,6 @@
     <string name="combo_error_bolus_verification_failed">Entrega del bolo y verificación del historial de la bomba falló, por favor, revise la bomba. Si un bolo fue puesto por la bomba, se añadirá a los tratamientos en la próxima conexión a la bomba.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">No hay suficiente insulina en el depósito para emitir bolo</string>
     <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Bomba Insight</string>
     <string name="status_no_colon">Estado</string>
     <string name="changed">Modificado</string>
@@ -845,7 +842,6 @@
     <string name="data_choices">Opciones de datos</string>
     <string name="fabric_upload">Reporte fallos a Fabric.io</string>
     <string name="allow_automated_crash_reporting">Permita que los informes automáticos de errores y los datos de uso de funciones se envíen a los desarrolladores a través del servicio fabric.io.</string>
-    <string name="g5appnotdetected">Por favor actualiza la aplicación G5 a una soportada</string>
     <string name="start_activity_tt">Inicio OT Actividad</string>
     <string name="start_eating_soon_tt">Inicio OT ComiendoPronto</string>
     <string name="temptargetshort">OT</string>

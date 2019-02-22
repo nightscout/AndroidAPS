@@ -710,8 +710,6 @@
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
-    <string name="bgsource_upload">G5 настройки за качване</string>
-    <string name="poctech_upload">Poctech настройки за качване</string>
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
     <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
@@ -777,7 +775,6 @@
     <string name="combo_error_bolus_verification_failed">Свързването с помпата и стартирането на болус се провали. Моля, проверете ръчно в историята на помпата доставен ли е болусът. Ако болусът е доставен, ще бъде добавен автоматично при следващото свързване с помпата.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Помпа Insight</string>
     <string name="status_no_colon">Статус</string>
     <string name="changed">Променено</string>
@@ -852,7 +849,6 @@
     <string name="data_choices">Избор на данни</string>
     <string name="fabric_upload">Качване на статистики във Fabric</string>
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
-    <string name="g5appnotdetected">Моля обновете G5 приложението до поддържана версия.</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
     <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
     <string name="temptargetshort">Вр.цел</string>
@@ -1080,7 +1076,6 @@
     <string name="log_alerts">Записвай аларми</string>
     <string name="enable_tbr_emulation">Разреши емулация на временни базали</string>
     <string name="enable_tbr_emulation_summary">Използвайте разширената болуси вместо временни базали да се заобиколи ограничението от 250 %</string>
-    <string name="recovery_duration">Продължителност на възстановяване [сек]</string>
     <string name="disconnect_delay">Забавяне при прекъсване на връзката [сек]</string>
     <string name="serial_number">Сериен номер</string>
     <string name="release_software_version">Софтуер версия</string>

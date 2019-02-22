@@ -54,4 +54,5 @@ public interface Intents {
     String EVERSENSE_BG = "com.senseonics.AndroidAPSEventSubscriber.BROADCAST";
 
     String POCTECH_BG = "com.china.poctech.data";
+    String TOMATO_BG = "com.fanqies.tomatofn.BgEstimate";
 }

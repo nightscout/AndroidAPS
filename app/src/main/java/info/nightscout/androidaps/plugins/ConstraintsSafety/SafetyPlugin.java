@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.ConstraintsSafety;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
@@ -122,17 +123,19 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
 
-        double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
-        absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxvalueinpreferences)), this);
+        if (Config.APS) {
+            double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+            absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
-        // Check percentRate but absolute rate too, because we know real current basal in pump
-        Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
-        double maxFromBasalMult = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
-        absoluteRate.setIfSmaller(maxFromBasalMult, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromBasalMult, MainApp.gs(R.string.maxbasalmultiplier)), this);
+            // Check percentRate but absolute rate too, because we know real current basal in pump
+            Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
+            double maxFromBasalMult = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
+            absoluteRate.setIfSmaller(maxFromBasalMult, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromBasalMult, MainApp.gs(R.string.maxbasalmultiplier)), this);
 
-        Double maxBasalFromDaily = SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
-        double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
-        absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)), this);
+            Double maxBasalFromDaily = SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
+            double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
+            absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)), this);
+        }
 
         absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(MainApp.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), MainApp.gs(R.string.hardlimit)), this);
 
@@ -199,7 +202,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         return insulin;
     }
 
-   @Override
+    @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
         insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingextendedbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
 

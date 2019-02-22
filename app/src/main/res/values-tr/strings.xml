@@ -705,8 +705,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="btwatchdog_summary">Pompa ile herhangi bir bağlantı sorunu yaşanıyorsa, Akıllı telefonunuzda Bluetooth bağlantısını kapatıp açın. Bu bluetooth bağlantı sorununu giderecektir.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
     <string name="dexcomg5_nsupload_title">KŞ verilerini NighScout\'a yükle</string>
-    <string name="bgsource_upload">G5 yükleme ayarları</string>
-    <string name="poctech_upload">Poctech yükleme ayarları</string>
     <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
     <string name="wear_detailed_delta_summary">Bir ondalık basamakla deltayı göster</string>
     <string name="smbmaxminutes_summary">SMB\'yi sınırlamak için maksimum bazal dakika</string>
@@ -772,7 +770,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="combo_error_bolus_verification_failed">Bolusun teslimi ve pompa tarihinin doğrulanması başarısız oldu. Lütfen pompanızı kontrol edin. Bir bolus verildiğinde, sonraki bağlantıdaki tedavilere eklenir.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuarda bolus için yeterli insülin yok</string>
     <string name="extendedbolusdeliveryerror">Yayım bolus gönderme hatası</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight Pompası</string>
     <string name="status_no_colon">Durum</string>
     <string name="changed">Değiştir</string>
@@ -847,7 +844,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="data_choices">Veri seçenekleri</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
-    <string name="g5appnotdetected">Lütfen G5 uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="start_activity_tt">Eğzersiz başlat TT</string>
     <string name="start_eating_soon_tt">Yakında Yemeğe Başla TT</string>
     <string name="temptargetshort">TT</string>
