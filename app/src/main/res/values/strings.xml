@@ -1289,7 +1289,7 @@
     <string name="short_status_last_connected">Last conn: %1$d min ago</string>
     <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
     <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
-    <string name="short_status_multiwave">Extended: %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
