@@ -96,6 +96,18 @@ public class SP {
         editor.apply();
     }
 
+    static public void putDouble(String key, double value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, Double.toString(value));
+        editor.apply();
+    }
+
+    static public void putDouble(int resourceID, double value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MainApp.gs(resourceID), Double.toString(value));
+        editor.apply();
+    }
+
     static public void putLong(String key, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
