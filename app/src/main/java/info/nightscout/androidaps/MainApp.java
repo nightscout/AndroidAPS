@@ -58,7 +58,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
 import info.nightscout.androidaps.plugins.PumpInsightLocal.LocalInsightPlugin;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -161,10 +160,8 @@ public class MainApp extends Application {
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRv2Plugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(DanaRSPlugin.getPlugin());
-            if (Config.PUMPDRIVERS && engineeringMode) pluginsList.add(LocalInsightPlugin.getInstance());
+            if (Config.PUMPDRIVERS && engineeringMode) pluginsList.add(LocalInsightPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
-            /*if (Config.PUMPDRIVERS && engineeringMode)
-                pluginsList.add(InsightPlugin.getPlugin());*/
             if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());

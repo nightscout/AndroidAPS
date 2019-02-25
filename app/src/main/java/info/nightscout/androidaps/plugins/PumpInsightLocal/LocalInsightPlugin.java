@@ -169,7 +169,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
 
-    public static LocalInsightPlugin getInstance() {
+    public static LocalInsightPlugin getPlugin() {
         if (instance == null) instance = new LocalInsightPlugin();
         return instance;
     }

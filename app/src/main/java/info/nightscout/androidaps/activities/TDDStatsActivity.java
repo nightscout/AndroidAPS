@@ -46,7 +46,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
+import info.nightscout.androidaps.plugins.PumpInsightLocal.LocalInsightPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
@@ -550,7 +550,7 @@ public class TDDStatsActivity extends Activity {
         PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
         PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
         PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-        PumpInterface insight = MainApp.getSpecificPlugin(InsightPlugin.class);
+        PumpInterface insight = MainApp.getSpecificPlugin(LocalInsightPlugin.class);
 
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 
