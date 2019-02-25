@@ -1308,6 +1308,8 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
 
+    <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
+
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

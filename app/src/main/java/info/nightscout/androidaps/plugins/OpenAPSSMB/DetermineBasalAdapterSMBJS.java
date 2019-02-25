@@ -255,7 +255,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
         mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering);
         mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
-        mProfile.put("maxSMBBasalMinutes", SP.getInt("key_smbmaxminutes", SMBDefaults.maxSMBBasalMinutes));
+        mProfile.put("maxSMBBasalMinutes", SP.getInt(R.string.key_smbmaxminutes, SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
         mProfile.put("current_basal", basalrate);
