@@ -78,6 +78,8 @@ public class GraphData {
         if (bgReadingsArray == null || bgReadingsArray.size() == 0) {
             if (L.isEnabled(L.OVERVIEW))
                 log.debug("No BG data.");
+            maxY = 10;
+            minY = 0;
             return;
         }
 
