@@ -250,11 +250,13 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap);
         mProfile.put("enableUAM", uamAllowed);
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
-        mProfile.put("enableSMB_with_COB", SP.getBoolean(R.string.key_enableSMB_with_COB, false));
-        mProfile.put("enableSMB_with_temptarget", SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
-        mProfile.put("allowSMB_with_high_temptarget", SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
-        mProfile.put("enableSMB_always", SP.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering);
-        mProfile.put("enableSMB_after_carbs", SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
+
+        boolean smbEnabled = SP.getBoolean(MainApp.gs(R.string.key_use_smb), false);
+        mProfile.put("enableSMB_with_COB", smbEnabled && SP.getBoolean(R.string.key_enableSMB_with_COB, false));
+        mProfile.put("enableSMB_with_temptarget", smbEnabled && SP.getBoolean(R.string.key_enableSMB_with_temptarget, false));
+        mProfile.put("allowSMB_with_high_temptarget", smbEnabled && SP.getBoolean(R.string.key_allowSMB_with_high_temptarget, false));
+        mProfile.put("enableSMB_always", smbEnabled && SP.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering);
+        mProfile.put("enableSMB_after_carbs", smbEnabled && SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt(R.string.key_smbmaxminutes, SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("carbsReqThreshold", SMBDefaults.carbsReqThreshold);
 
