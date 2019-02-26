@@ -42,14 +42,14 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Treatments.CarbsGenerator;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.DefaultValueHelper;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DefaultValueHelper;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.ToastUtils;
 
-import static info.nightscout.utils.DateUtil.now;
+import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class NewCarbsDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NewCarbsDialog.class);

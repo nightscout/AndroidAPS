@@ -11,7 +11,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by mike on 02.07.2016.

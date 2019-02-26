@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.utils.DateUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 
 public class DetermineBasalResultSMB extends APSResult {
     private static final Logger log = LoggerFactory.getLogger(L.APS);

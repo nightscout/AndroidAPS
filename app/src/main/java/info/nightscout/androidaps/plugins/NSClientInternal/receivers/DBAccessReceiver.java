@@ -20,8 +20,8 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);

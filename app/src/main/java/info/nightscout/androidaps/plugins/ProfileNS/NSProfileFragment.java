@@ -27,8 +27,8 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.OKDialog;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.OKDialog;
 
 import static butterknife.OnItemSelected.Callback.NOTHING_SELECTED;
 

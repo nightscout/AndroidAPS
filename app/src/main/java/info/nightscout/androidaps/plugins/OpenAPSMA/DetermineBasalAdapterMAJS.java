@@ -25,7 +25,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
     private static Logger log = LoggerFactory.getLogger(L.APS);

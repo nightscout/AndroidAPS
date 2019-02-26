@@ -16,7 +16,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class AckAlarmReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);

@@ -21,9 +21,9 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.logging.BundleLogger;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.Round;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 25.06.2017.

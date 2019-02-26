@@ -9,7 +9,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 
 /**

@@ -4,7 +4,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.T;
 
 public class Objective5 extends Objective {
 

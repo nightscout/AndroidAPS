@@ -24,8 +24,8 @@ import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.data.QuickWizardEntry;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventQuickWizardChange;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SafeParse;
 
 public class EditQuickWizardDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(EditQuickWizardDialog.class);

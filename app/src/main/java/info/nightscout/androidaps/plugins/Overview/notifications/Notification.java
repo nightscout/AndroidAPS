@@ -1,9 +1,6 @@
 
 package info.nightscout.androidaps.plugins.Overview.notifications;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
@@ -11,7 +8,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 // Added by Rumen for debugging
 

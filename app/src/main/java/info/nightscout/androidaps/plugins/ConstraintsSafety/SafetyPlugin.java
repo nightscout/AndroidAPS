@@ -20,10 +20,10 @@ import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.HardLimits;
-import info.nightscout.utils.Round;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.HardLimits;
+import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.

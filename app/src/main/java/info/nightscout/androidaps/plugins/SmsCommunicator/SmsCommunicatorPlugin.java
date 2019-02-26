@@ -44,13 +44,13 @@ import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.T;
-import info.nightscout.utils.XdripCalibrations;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.XdripCalibrations;
 
 /**
  * Created by mike on 05.08.2016.

@@ -4,8 +4,6 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
@@ -13,7 +11,6 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -32,11 +29,11 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.HardLimits;
-import info.nightscout.utils.Profiler;
-import info.nightscout.utils.Round;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.HardLimits;
+import info.nightscout.androidaps.utils.Profiler;
+import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.

@@ -27,10 +27,10 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
-import info.nightscout.utils.DateUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.Translator;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.Translator;
 
 /**
  * Created by mike on 13/01/17.

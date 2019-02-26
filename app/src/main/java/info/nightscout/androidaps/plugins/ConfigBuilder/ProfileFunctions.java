@@ -24,7 +24,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class ProfileFunctions {
     private static Logger log = LoggerFactory.getLogger(L.PROFILE);

@@ -21,8 +21,8 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 
 public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder> {
     private static Logger log = LoggerFactory.getLogger(L.NOTIFICATION);

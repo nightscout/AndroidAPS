@@ -29,7 +29,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class MaintenancePlugin extends PluginBase {
 

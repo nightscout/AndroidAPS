@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.IobCobCalculator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 public class CobInfo {
     /** All COB up to now, including carbs not yet processed by IobCob calculation. */

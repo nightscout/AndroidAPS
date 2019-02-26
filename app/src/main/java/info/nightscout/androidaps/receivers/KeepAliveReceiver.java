@@ -21,10 +21,10 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.LocalAlertUtils;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.LocalAlertUtils;
+import info.nightscout.androidaps.utils.T;
 
 
 /**

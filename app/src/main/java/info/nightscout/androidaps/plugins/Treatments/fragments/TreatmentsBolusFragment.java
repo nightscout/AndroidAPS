@@ -21,8 +21,6 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -40,12 +38,12 @@ import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.dialogs.WizardInfoDialog;
 import info.nightscout.androidaps.services.Intents;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
 
-import static info.nightscout.utils.DateUtil.now;
+import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
     RecyclerView recyclerView;

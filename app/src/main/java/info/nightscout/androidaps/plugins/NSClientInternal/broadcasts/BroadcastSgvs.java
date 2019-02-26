@@ -12,7 +12,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.services.Intents;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 22.02.2016.

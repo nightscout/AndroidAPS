@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterService;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by adrian on 17/11/16.

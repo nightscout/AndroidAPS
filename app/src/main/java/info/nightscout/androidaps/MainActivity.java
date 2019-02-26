@@ -53,12 +53,12 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
-import info.nightscout.utils.AndroidPermission;
-import info.nightscout.utils.LocaleHelper;
-import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.PasswordProtection;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.VersionChecker;
+import info.nightscout.androidaps.utils.AndroidPermission;
+import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.PasswordProtection;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.VersionChecker;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.CORE);

@@ -6,7 +6,6 @@ import com.squareup.otto.Bus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -16,7 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyBoolean;

@@ -15,9 +15,9 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.BolusWizard;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.BolusWizard;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 25.12.2017.

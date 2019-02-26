@@ -52,8 +52,8 @@
             android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".activities.AgreementActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRUserOptionsActivity" />
+        <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
+        <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
         <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
@@ -62,14 +62,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.PumpDanaRS.activities.BLEScanActivity">
+        <activity android:name=".plugins.pump.danaRS.activities.BLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
+        <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".activities.HistoryBrowseActivity" />
 
         <receiver
@@ -150,19 +150,19 @@
             android:name=".services.DataService"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
+            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService"
+            android:name=".plugins.pump.danaRKorean.services.DanaRKoreanExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRv2.services.DanaRv2ExecutionService"
+            android:name=".plugins.pump.danaRv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRS.services.DanaRSService"
+            android:name=".plugins.pump.danaRS.services.DanaRSService"
             android:enabled="true"
             android:exported="true" />
         <service
@@ -185,8 +185,8 @@
             android:exported="false" />
 
         <service android:name=".plugins.Persistentnotification.DummyService" />
-        <service android:name=".plugins.PumpInsightLocal.connection_service.InsightConnectionService" />
-        <service android:name=".plugins.PumpInsightLocal.InsightAlertService" />
+        <service android:name=".plugins.pump.insight.connection_service.InsightConnectionService" />
+        <service android:name=".plugins.pump.insight.InsightAlertService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -203,15 +203,15 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.Maintenance.activities.LogSettingActivity"></activity>
         <activity
-            android:name=".plugins.PumpInsightLocal.activities.InsightPairingActivity"
+            android:name=".plugins.pump.insight.activities.InsightPairingActivity"
             android:theme="@style/AppTheme"
             android:label="@string/insight_pairing" />
         <activity
-            android:name=".plugins.PumpInsightLocal.activities.InsightAlertActivity"
+            android:name=".plugins.pump.insight.activities.InsightAlertActivity"
             android:label="@string/pump_alert"
             android:theme="@style/InsightAlertDialog" />
         <activity
-            android:name=".plugins.PumpInsightLocal.activities.InsightPairingInformationActivity"
+            android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
             android:theme="@style/AppTheme"
             android:label="@string/pairing_information" />
     </application>

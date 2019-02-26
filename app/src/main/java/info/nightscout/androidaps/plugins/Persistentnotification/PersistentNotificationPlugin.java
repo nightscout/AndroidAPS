@@ -14,8 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 // Android Auto
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 
 
@@ -48,7 +46,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 /**
  * Created by adrian on 23/12/16.

@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static info.nightscout.androidaps.plugins.Careportal.CareportalFragment.PROFILESWITCH;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;

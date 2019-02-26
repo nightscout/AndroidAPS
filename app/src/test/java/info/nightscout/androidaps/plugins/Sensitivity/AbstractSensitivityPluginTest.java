@@ -10,7 +10,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.assertEquals;
 

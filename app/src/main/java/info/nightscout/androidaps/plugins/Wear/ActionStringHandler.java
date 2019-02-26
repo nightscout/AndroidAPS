@@ -40,22 +40,22 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.LocalInsightPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
 import info.nightscout.androidaps.plugins.Treatments.CarbsGenerator;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.BolusWizard;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.HardLimits;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.BolusWizard;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.HardLimits;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by adrian on 09/02/17.

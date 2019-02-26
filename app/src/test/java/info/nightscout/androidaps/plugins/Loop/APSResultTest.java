@@ -18,11 +18,11 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
@@ -19,9 +18,9 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 21.05.2017.

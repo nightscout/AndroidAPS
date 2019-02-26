@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.utils.Round;
 
 /**
  * Created by Adrian on 15.04.2018.

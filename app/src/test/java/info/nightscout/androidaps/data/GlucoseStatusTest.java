@@ -18,8 +18,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;

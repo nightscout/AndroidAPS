@@ -15,9 +15,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.JSONFormatter;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.JSONFormatter;
 
 public class OpenAPSMAFragment extends SubscriberFragment implements View.OnClickListener {
     Button run;

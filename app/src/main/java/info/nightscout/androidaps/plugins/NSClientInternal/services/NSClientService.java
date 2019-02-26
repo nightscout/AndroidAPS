@@ -63,11 +63,11 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientU
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;

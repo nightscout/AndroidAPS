@@ -31,7 +31,7 @@ import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class DetermineBasalAdapterAMAJS {
     private static Logger log = LoggerFactory.getLogger(L.APS);

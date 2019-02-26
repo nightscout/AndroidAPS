@@ -15,9 +15,6 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
@@ -25,16 +22,15 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.TimeListEdit;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.TimeListEdit;
 
 public class LocalProfileFragment extends SubscriberFragment {
     NumberPicker diaView;

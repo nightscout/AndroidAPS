@@ -38,10 +38,10 @@ import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
-import static info.nightscout.utils.DateUtil.now;
+import static info.nightscout.androidaps.utils.DateUtil.now;
 
 /**
  * Created by mike on 24.04.2017.

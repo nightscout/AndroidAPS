@@ -25,8 +25,8 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 09.06.2016.

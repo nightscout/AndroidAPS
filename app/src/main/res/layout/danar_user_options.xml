@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRUserOptionsActivity">
+    tools:context=".plugins.pump.danaR.activities.DanaRUserOptionsActivity">
 
 
     <RelativeLayout
@@ -226,7 +226,7 @@
                         android:text="@string/danar_screentimeout"
                         android:textSize="14sp" />
 
-                    <info.nightscout.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.NumberPicker
                         android:id="@+id/danar_screentimeout"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -266,7 +266,7 @@
                         android:text="@string/danar_backlight"
                         android:textSize="14sp" />
 
-                    <info.nightscout.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.NumberPicker
                         android:id="@+id/danar_backlight"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -340,7 +340,7 @@
                         android:textSize="14sp" />
 
 
-                    <info.nightscout.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.NumberPicker
                         android:id="@+id/danar_shutdown"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -380,7 +380,7 @@
                         android:text="@string/danar_lowreservoir"
                         android:textSize="14sp" />
 
-                    <info.nightscout.utils.NumberPicker
+                    <info.nightscout.androidaps.utils.NumberPicker
                         android:id="@+id/danar_lowreservoir"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"

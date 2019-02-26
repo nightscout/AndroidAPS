@@ -15,7 +15,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 24.02.2016.

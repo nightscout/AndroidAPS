@@ -13,9 +13,6 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,7 +22,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class LoopFragment extends SubscriberFragment {
     @BindView(R.id.loop_run)

@@ -18,9 +18,9 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, L.class})

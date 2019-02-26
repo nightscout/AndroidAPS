@@ -19,9 +19,9 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.Mockito.when;
 

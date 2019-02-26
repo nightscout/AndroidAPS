@@ -116,19 +116,19 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.BolusWizard;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.DefaultValueHelper;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.Profiler;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SingleClickButton;
-import info.nightscout.utils.T;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.BolusWizard;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DefaultValueHelper;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.Profiler;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SingleClickButton;
+import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.ToastUtils;
 
-import static info.nightscout.utils.DateUtil.now;
+import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);

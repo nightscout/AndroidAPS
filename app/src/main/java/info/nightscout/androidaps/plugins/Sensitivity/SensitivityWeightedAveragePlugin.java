@@ -20,8 +20,8 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 24.06.2017.

@@ -9,19 +9,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 /**
  * Created by adrian on 17/08/17.

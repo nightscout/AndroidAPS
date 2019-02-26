@@ -19,15 +19,14 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.XdripCalibrations;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.XdripCalibrations;
 
 public class CalibrationDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CalibrationDialog.class);

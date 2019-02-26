@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.T;
 
 public class Objective6 extends Objective {
 

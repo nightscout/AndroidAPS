@@ -50,10 +50,10 @@ import info.nightscout.androidaps.setupwizard.elements.SWPlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton;
 import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
-import info.nightscout.utils.AndroidPermission;
-import info.nightscout.utils.LocaleHelper;
-import info.nightscout.utils.PasswordProtection;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.AndroidPermission;
+import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.PasswordProtection;
+import info.nightscout.androidaps.utils.SP;
 
 public class SWDefinition {
     private static Logger log = LoggerFactory.getLogger(SWDefinition.class);

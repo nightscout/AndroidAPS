@@ -8,8 +8,8 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 public abstract class Objective {
 

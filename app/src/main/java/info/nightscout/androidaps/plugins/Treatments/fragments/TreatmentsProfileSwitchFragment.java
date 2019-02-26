@@ -36,10 +36,10 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 13/01/17.

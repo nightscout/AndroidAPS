@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -29,9 +28,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by mike on 03.07.2016.

@@ -6,17 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.json.JSONObject;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.JsonHelper;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.JsonHelper;
 
 public class WizardInfoDialog extends DialogFragment implements OnClickListener {
     JSONObject json;

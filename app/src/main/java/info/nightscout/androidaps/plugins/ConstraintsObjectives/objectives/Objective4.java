@@ -5,7 +5,7 @@ import java.util.List;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.T;
 
 public class Objective4 extends Objective {
 

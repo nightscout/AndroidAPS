@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CareportalFragment.class);

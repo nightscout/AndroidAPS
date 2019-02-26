@@ -21,8 +21,8 @@ import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventQuickWizardChange;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 public class QuickWizardListActivity extends AppCompatActivity implements View.OnClickListener {
 

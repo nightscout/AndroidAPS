@@ -32,9 +32,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SpinnerHelper;
+import info.nightscout.androidaps.utils.SpinnerHelper;
 
 /**
  * Created by mike on 16.10.2017.

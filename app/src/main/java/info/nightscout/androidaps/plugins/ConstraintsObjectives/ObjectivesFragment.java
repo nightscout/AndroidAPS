@@ -24,7 +24,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class ObjectivesFragment extends SubscriberFragment {
     RecyclerView recyclerView;

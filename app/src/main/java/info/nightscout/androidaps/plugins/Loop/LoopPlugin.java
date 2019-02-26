@@ -51,16 +51,16 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.T;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.

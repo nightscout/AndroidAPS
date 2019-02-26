@@ -75,7 +75,7 @@
                 android:textStyle="bold"
                 android:text="@string/overview_insulin_label" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/fill_insulinamount"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 30.05.2016.

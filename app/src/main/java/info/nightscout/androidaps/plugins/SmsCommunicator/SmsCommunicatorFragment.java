@@ -21,8 +21,8 @@ import java.util.Comparator;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 
 /**
  * A simple {@link Fragment} subclass.

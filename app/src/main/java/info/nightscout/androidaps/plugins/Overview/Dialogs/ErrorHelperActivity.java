@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class ErrorHelperActivity extends AppCompatActivity {
     public ErrorHelperActivity() {

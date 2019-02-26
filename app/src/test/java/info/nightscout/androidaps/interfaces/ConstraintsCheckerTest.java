@@ -26,15 +26,15 @@ import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
-import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.LocalInsightPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.Mockito.when;
 

@@ -64,14 +64,14 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensC
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.BolusWizard;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.BolusWizard;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 public class WizardDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener, Spinner.OnItemSelectedListener {
     private static Logger log = LoggerFactory.getLogger(WizardDialog.class);

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.Insulin;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by adrian on 14/08/17.

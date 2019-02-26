@@ -5,14 +5,13 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.powermock.api.mockito.PowerMockito.mock;
 

@@ -25,9 +25,9 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 16.10.2017.

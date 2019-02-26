@@ -20,18 +20,14 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
 
 public class NSClientFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private TextView logTextView;

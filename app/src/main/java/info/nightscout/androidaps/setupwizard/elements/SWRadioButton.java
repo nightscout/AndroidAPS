@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class SWRadioButton extends SWItem {
     private static Logger log = LoggerFactory.getLogger(SWRadioButton.class);

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.crashlytics.android.answers.CustomEvent;
 
-import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +23,9 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NewExtendedBolusDialog.class);

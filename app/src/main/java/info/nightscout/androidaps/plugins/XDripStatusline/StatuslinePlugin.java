@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 
 import com.squareup.otto.Subscribe;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -29,11 +28,10 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 /**
  * Created by adrian on 17/11/16.

@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -19,8 +18,8 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.

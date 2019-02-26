@@ -34,8 +34,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientN
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 public class NSClientPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.NSCLIENT);

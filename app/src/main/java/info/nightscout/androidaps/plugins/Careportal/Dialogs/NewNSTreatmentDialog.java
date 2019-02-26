@@ -53,15 +53,15 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DefaultValueHelper;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.HardLimits;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.Translator;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DefaultValueHelper;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.HardLimits;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.Translator;
 
 public class NewNSTreatmentDialog extends DialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static Logger log = LoggerFactory.getLogger(NewNSTreatmentDialog.class);

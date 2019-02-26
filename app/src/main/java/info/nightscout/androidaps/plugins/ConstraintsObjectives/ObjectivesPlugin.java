@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objec
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective6;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective7;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.objectives.Objective8;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.

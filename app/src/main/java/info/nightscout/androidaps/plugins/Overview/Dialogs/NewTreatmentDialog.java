@@ -35,11 +35,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NewTreatmentDialog.class);

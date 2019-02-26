@@ -11,9 +11,9 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.T;
 
-import static info.nightscout.utils.DateUtil.now;
+import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class CarbsGenerator {
     public static void generateCarbs(int amount, long startTime, int duration, @Nullable String notes) {

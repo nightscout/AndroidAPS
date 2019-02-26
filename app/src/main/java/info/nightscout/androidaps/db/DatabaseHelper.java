@@ -48,15 +48,15 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.database.InsightBolusID;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.database.InsightHistoryOffset;
-import info.nightscout.androidaps.plugins.PumpInsightLocal.database.InsightPumpID;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.PercentageSplitter;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
+import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
+import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
+import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.PercentageSplitter;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling

@@ -30,8 +30,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.LoggerCallback;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
 
 public class DetermineBasalAdapterSMBJS {
     private static Logger log = LoggerFactory.getLogger(L.APS);

@@ -24,13 +24,13 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;

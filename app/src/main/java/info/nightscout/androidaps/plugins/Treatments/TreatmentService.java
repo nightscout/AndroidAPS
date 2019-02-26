@@ -15,7 +15,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.utils.JsonHelper;
+import info.nightscout.androidaps.utils.JsonHelper;
 
 
 /**

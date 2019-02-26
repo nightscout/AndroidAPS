@@ -15,7 +15,7 @@ import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.receivers.ChargingStateReceiver;
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 class NsClientReceiverDelegate {
 

@@ -45,7 +45,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.ScaledDataPoi
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.utils.Round;
 
 /**
  * Created by mike on 18.10.2017.

@@ -38,7 +38,6 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.IobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -50,10 +49,10 @@ import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.ToastUtils;
 
 public class WatchUpdaterService extends WearableListenerService implements
         GoogleApiClient.ConnectionCallbacks,

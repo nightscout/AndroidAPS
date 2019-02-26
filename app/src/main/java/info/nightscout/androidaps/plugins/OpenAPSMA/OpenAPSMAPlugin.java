@@ -11,7 +11,6 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -25,13 +24,13 @@ import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.HardLimits;
-import info.nightscout.utils.Profiler;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.HardLimits;
+import info.nightscout.androidaps.utils.Profiler;
+import info.nightscout.androidaps.utils.Round;
 
-import static info.nightscout.utils.HardLimits.checkOnlyHardLimits;
-import static info.nightscout.utils.HardLimits.verifyHardLimits;
+import static info.nightscout.androidaps.utils.HardLimits.checkOnlyHardLimits;
+import static info.nightscout.androidaps.utils.HardLimits.verifyHardLimits;
 
 /**
  * Created by mike on 05.08.2016.

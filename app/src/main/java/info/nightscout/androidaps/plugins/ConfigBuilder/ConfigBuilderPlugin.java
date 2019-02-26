@@ -21,10 +21,10 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.CommandQueue;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.

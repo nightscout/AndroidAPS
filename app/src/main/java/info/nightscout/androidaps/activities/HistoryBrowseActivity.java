@@ -42,8 +42,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventIobCalcul
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphData.GraphData;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
 public class HistoryBrowseActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);

@@ -21,8 +21,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 25.04.2017.

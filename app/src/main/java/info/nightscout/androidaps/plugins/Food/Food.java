@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-import info.nightscout.utils.JsonHelper;
+import info.nightscout.androidaps.utils.JsonHelper;
 
 /**
  * Created by mike on 20.09.2017.
