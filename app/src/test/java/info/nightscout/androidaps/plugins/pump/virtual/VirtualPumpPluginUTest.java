@@ -12,7 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;

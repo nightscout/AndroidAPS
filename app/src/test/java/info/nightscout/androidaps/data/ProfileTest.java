@@ -18,7 +18,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 

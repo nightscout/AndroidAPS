@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
 /**
  * Created by mike on 22.02.2017.

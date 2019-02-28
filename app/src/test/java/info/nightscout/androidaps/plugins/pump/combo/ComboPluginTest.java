@@ -13,7 +13,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.ToastUtils;

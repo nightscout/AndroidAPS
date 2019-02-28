@@ -26,8 +26,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity;
@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTabl
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.utils.SP;
 
 /**

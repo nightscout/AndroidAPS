@@ -7,8 +7,8 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 
 
 public class ToastUtils {

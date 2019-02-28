@@ -9,7 +9,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 
 public class MsgStatusTempBasal extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);

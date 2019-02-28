@@ -9,8 +9,8 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 
 /**
  * Created by mike on 11.10.2016.

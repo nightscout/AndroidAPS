@@ -22,14 +22,14 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 

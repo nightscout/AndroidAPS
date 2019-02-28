@@ -16,8 +16,8 @@ import java.util.List;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
 

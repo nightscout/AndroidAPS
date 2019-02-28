@@ -14,11 +14,11 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
 /**
  * Created by mike on 20.07.2016.

@@ -10,7 +10,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.*;

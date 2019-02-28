@@ -11,7 +11,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;

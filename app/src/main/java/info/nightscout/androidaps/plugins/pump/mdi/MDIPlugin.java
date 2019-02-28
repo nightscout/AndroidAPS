@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 
 /**

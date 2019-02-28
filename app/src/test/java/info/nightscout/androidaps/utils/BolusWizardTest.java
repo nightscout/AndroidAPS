@@ -13,8 +13,8 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin;
 
 import static org.mockito.Mockito.mock;

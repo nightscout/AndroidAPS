@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by mike on 11.07.2016.

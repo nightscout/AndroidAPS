@@ -13,10 +13,10 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class MsgHistoryEvents_v2 extends MessageBase {

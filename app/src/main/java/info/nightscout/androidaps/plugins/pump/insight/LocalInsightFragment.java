@@ -19,8 +19,8 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;

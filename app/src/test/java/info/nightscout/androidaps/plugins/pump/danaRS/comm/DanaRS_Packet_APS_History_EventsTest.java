@@ -16,10 +16,10 @@ import info.AAPSMocker;
 import info.SPMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.assertEquals;

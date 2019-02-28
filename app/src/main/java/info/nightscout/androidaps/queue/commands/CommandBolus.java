@@ -7,9 +7,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 

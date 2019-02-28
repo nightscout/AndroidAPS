@@ -12,8 +12,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileGraph;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.treatments.fragments.ProfileGraph;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 
 /**

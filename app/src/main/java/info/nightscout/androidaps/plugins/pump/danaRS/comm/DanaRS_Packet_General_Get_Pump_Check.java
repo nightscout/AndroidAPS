@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 
 public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {

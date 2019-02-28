@@ -10,10 +10,10 @@ import android.support.v4.content.ContextCompat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.Overview.notifications.NotificationWithAction;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction;
 
 public class AndroidPermission {
 

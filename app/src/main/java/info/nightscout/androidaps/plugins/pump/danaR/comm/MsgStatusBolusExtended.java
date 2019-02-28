@@ -10,7 +10,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class MsgStatusBolusExtended extends MessageBase {

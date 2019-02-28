@@ -10,13 +10,13 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 
 /**
  * Created by adrian on 17/12/17.

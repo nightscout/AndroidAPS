@@ -9,8 +9,8 @@ import info.nightscout.androidaps.R;
 import com.cozmo.danar.util.BleCommandUtil;
 
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 
 public class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);

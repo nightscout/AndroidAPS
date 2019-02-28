@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 
 public class MsgSetBasalProfile extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);

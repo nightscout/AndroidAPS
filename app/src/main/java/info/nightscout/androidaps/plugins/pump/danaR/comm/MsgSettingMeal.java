@@ -7,9 +7,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 

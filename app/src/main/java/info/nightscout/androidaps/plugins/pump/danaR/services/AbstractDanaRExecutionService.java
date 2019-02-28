@@ -38,7 +38,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgPCCommStart;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgPCCommStop;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;

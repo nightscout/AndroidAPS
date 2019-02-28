@@ -9,8 +9,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.*;
