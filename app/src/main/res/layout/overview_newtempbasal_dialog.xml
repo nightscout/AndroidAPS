@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog">
+    tools:context=".plugins.general.actions.dialogs.NewTempBasalDialog">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/overview_newtempbasal_basalpercentinput"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -111,7 +111,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/overview_newtempbasal_basalabsoluteinput"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -131,7 +131,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/overview_newtempbasal_duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp"

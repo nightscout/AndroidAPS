@@ -17,24 +17,27 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
-import info.nightscout.androidaps.plugins.Source.SourceMM640gPlugin;
-import info.nightscout.androidaps.plugins.Source.SourceNSClientPlugin;
-import info.nightscout.androidaps.plugins.Source.SourcePoctechPlugin;
-import info.nightscout.androidaps.plugins.Source.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
+import info.nightscout.androidaps.plugins.source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
+import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.source.SourceMM640gPlugin;
+import info.nightscout.androidaps.plugins.source.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.source.SourcePoctechPlugin;
+import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
+import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.logging.BundleLogger;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.SP;
 
 
 public class DataService extends IntentService {
@@ -68,8 +71,16 @@ public class DataService extends IntentService {
             SourceGlimpPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.DEXCOMG5_BG.equals(action)) {
             SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
+        } else if (Intents.DEXCOMG5_BG_NEW.equals(action)) {
+            SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
+        } else if (Intents.DEXCOMG6_BG.equals(action)) {
+            SourceDexcomG6Plugin.getPlugin().handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
             SourcePoctechPlugin.getPlugin().handleNewData(intent);
+        } else if (Intents.TOMATO_BG.equals(action)) {
+            SourceTomatoPlugin.getPlugin().handleNewData(intent);
+        } else if (Intents.EVERSENSE_BG.equals(action)) {
+            SourceEversensePlugin.getPlugin().handleNewData(intent);
         } else if (Intents.ACTION_NEW_SGV.equals(action)) {
             SourceNSClientPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {

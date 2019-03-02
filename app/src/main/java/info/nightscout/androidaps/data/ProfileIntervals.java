@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.utils.DateUtil;
 
 /**
  * Created by mike on 09.05.2017.

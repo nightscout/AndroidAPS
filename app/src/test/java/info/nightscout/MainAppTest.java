@@ -10,9 +10,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Maintenance.LoggerUtils;
-import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
+import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 
 
 /**
@@ -72,7 +71,7 @@ public class MainAppTest {
         if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
-            expected = 7;
+            expected = 8;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsList(PluginType.PUMP).size());
     }
 
@@ -83,7 +82,7 @@ public class MainAppTest {
         if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
-            expected = 7;
+            expected = 8;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsVisibleInList(PluginType.PUMP).size());
     }
 
@@ -94,7 +93,7 @@ public class MainAppTest {
         if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
-            expected = 7;
+            expected = 8;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsListByInterface(PumpInterface.class).size());
     }
 
@@ -105,7 +104,7 @@ public class MainAppTest {
         if (Config.NSCLIENT)
             expected = 1; // VirtualPump only
         else
-            expected = 7;
+            expected = 8;
         Assert.assertEquals(expected, mainApp.getSpecificPluginsVisibleInListByInterface(PumpInterface.class, PluginType.PUMP).size());
     }
 

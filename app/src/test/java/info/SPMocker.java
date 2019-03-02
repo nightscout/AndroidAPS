@@ -6,7 +6,7 @@ import org.powermock.api.mockito.PowerMockito;
 
 import java.util.HashMap;
 
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class SPMocker {
 

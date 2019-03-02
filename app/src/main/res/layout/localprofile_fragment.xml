@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.ProfileLocal.LocalProfileFragment">
+    tools:context=".plugins.profile.local.LocalProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                     android:minWidth="80dp"
                     android:visibility="invisible"/>
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/localprofile_dia"
                     android:layout_width="130dp"
                     android:layout_height="40dp"

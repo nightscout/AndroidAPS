@@ -1,29 +1,20 @@
 package info.nightscout.androidaps.data;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Spanned;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.Round;
 
 /**
  * Created by mike on 04.01.2017.
@@ -60,22 +51,28 @@ public class GlucoseStatus {
     }
 
 
-
     @Nullable
-    public static GlucoseStatus getGlucoseStatusData(){
+    public static GlucoseStatus getGlucoseStatusData() {
         return getGlucoseStatusData(false);
     }
 
     @Nullable
     public static GlucoseStatus getGlucoseStatusData(boolean allowOldData) {
         // load 45min
-        long fromtime = DateUtil.now() - 60 * 1000L * 45;
-        List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
+        //long fromtime = DateUtil.now() - 60 * 1000L * 45;
+        //List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
+
+        List<BgReading> data = IobCobCalculatorPlugin.getPlugin().getBgReadings();
+
+        if (data == null)
+            return null;
 
         int sizeRecords = data.size();
         if (sizeRecords == 0) {
             return null;
         }
+
+        sizeRecords = Math.min(sizeRecords, 9);
 
         if (data.get(0).date < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
             return null;
@@ -100,7 +97,7 @@ public class GlucoseStatus {
         ArrayList<Double> short_deltas = new ArrayList<Double>();
         ArrayList<Double> long_deltas = new ArrayList<Double>();
 
-        for (int i = 1; i < data.size(); i++) {
+        for (int i = 1; i < sizeRecords; i++) {
             if (data.get(i).value > 38) {
                 BgReading then = data.get(i);
                 long then_date = then.date;

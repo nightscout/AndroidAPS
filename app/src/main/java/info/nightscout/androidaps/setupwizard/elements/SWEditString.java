@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.setupwizard.SWTextValidator;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 
 public class SWEditString extends SWItem {

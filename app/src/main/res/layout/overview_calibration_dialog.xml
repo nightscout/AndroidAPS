@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog">
+    tools:context=".plugins.general.overview.Dialogs.CalibrationDialog">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:layout_marginBottom="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/overview_calibration_bg"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
