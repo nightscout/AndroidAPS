@@ -6,7 +6,7 @@ import org.joda.time.LocalDateTime;
 
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpStatusType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 
 /**

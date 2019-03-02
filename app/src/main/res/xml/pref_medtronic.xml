@@ -60,7 +60,7 @@
             android:selectable="true"
             android:title="@string/medtronic_pump_encoding" />
 
-        <info.nightscout.androidaps.plugins.PumpCommon.ui.RileyLinkSelectPreference
+        <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
             android:id="@+id/rileylink_mac_address_mdt"
             android:enabled="true"
             android:summary=""
@@ -68,7 +68,7 @@
             android:key="pref_rileylink_mac_address">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
 
-        </info.nightscout.androidaps.plugins.PumpCommon.ui.RileyLinkSelectPreference>
+        </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
 
         <!-- android:key="rileylink_scanner" -->
 

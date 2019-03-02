@@ -221,11 +221,11 @@
             android:label="@string/pairing_information" />
 
         <service
-            android:name=".plugins.PumpMedtronic.service.RileyLinkMedtronicService"
+            android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".plugins.PumpCommon.dialog.RileyLinkBLEScanActivity">
+        <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
 
@@ -234,11 +234,11 @@
         </activity>
 
         <activity
-            android:name=".plugins.PumpCommon.hw.rileylink.dialog.RileyLinkStatusActivity"
+            android:name=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
             android:label="@string/title_activity_rileylink_settings"
             android:theme="@style/Theme.AppCompat.NoTitle" />
 
-        <activity android:name=".plugins.PumpMedtronic.dialog.MedtronicHistoryActivity" />
+        <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
 
     </application>
 
