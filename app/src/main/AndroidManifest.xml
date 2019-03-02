@@ -57,7 +57,7 @@
         <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
