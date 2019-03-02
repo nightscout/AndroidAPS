@@ -44,6 +44,8 @@
     <string name="description_sensitivity_oref1">Citlivost je počítána za 8h a sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
     <string name="description_sensitivity_weighted_average">Citlivost je počítána jako vážený průměr z odchylek. Novější mají vyšší prioritu. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení. Tento algoritmus sleduje nejrychleji změny citlivosti.</string>
     <string name="description_source_dexcom_g5">Příjem glykémií z modifikované Dexcom G5 aplikace.</string>
+    <string name="description_source_dexcom_g6">Příjem glykémií z modifikované Dexcom G6 aplikace.</string>
+    <string name="description_source_eversense">Příjem glykémií z modifikované Eversense aplikace.</string>
     <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
     <string name="description_source_mm640g">Příjem glykémií z Uploaderu 640G.</string>
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
@@ -408,6 +410,7 @@
     <string name="array_of_elements">Pole %1$d prvků.\nAktuální hodnota:</string>
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
+    <string name="openapsama_useautosens">Používat autodetekci senzitivity</string>
     <string name="refresheventsfromnightscout">Obnovit události z NS</string>
     <string name="deletefuturetreatments">Smazat události v budoucnosti</string>
     <string name="eatingsoon">Před jídlem</string>
@@ -549,6 +552,12 @@
     <string name="insulin_shortname">INZ</string>
     <string name="enablesuperbolus">Povolit superbolus</string>
     <string name="enablesuperbolus_summary">Povolení superbolusu v kalkulátoru. Nepovolujte, dokud se nenaučíte, co to opravdu dělá. MŮŽE ZPŮSOBIT PŘEDÁVKOVÁNÍ INZULÍNEM PŘI NESPRÁVNÉM POUŽITÍ!</string>
+    <string name="show_statuslights">Zobrazit stavové indikátory na domovské obrazovce</string>
+    <string name="show_statuslights_summary">Povolte stavové indikátory pro stáří kanyly, inzulínu, senzoru, zásobníku a baterie na domovské obrazovce.</string>
+    <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
+    <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
+    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
+    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -703,7 +712,10 @@
     <string name="btwatchdog_title">Hlídač BT</string>
     <string name="btwatchdog_summary">Vypne na 1 sek bluetooth v telefonu, pokud se nedaří připojit k pumpě. Může to pomoci u telefonů, které mají problémy s BT</string>
     <string name="DexcomG5">DexcomG5 aplikace (upravená)</string>
+    <string name="DexcomG6">Dexcom G6 aplikace (upravená)</string>
+    <string name="eversense">Eversense aplikace (upravená)</string>
     <string name="dexcomg5_nsupload_title">Nahrávat data do NS</string>
+    <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
     <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
     <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
     <string name="smbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB</string>
@@ -769,6 +781,7 @@
     <string name="combo_error_bolus_verification_failed">Podání bolusu a kontrola historie pumpy selhala. Zkontrolujte pumpu. Pokus bolus proběhl, načte se při příštím připojení automaticky.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nedostatek inzulínu pro takovýto bolus</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
+    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight</string>
     <string name="status_no_colon">Stav</string>
     <string name="changed">Změněno</string>
@@ -843,6 +856,7 @@
     <string name="data_choices">Možnosti dat</string>
     <string name="fabric_upload">Odesílání do Fabric</string>
     <string name="allow_automated_crash_reporting">Automatické odesílání chyb aplikace a statistiky používání vývojářům pomocí služby fabric.io.</string>
+    <string name="g5appnotdetected">Prosím aktualizujte Dexcom aplikaci na podporovanou verzi</string>
     <string name="start_activity_tt">Spustit Dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit Dočasný cíl Blížící se jídlo</string>
     <string name="temptargetshort">DoCíl</string>
@@ -1008,6 +1022,7 @@
     <string name="nth_objective">%1$d. cíl</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Získávat glykémie z aplikace Poctech</string>
+    <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cíl zvýší senzitivitu</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšení senzitivity pro dočasné cíle >= 5.5]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Nízký dočasný cíl sníží senzitivitu</string>
@@ -1100,6 +1115,8 @@
     <string name="extended_bolus">Prodloužený bolus</string>
     <string name="multiwave_bolus">Duální bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U %3$d min</string>
+    <string name="enable_tbr_over_notification">Povolit oznamování konce dočasného bazálu\n(nastavení pumpy)</string>
+    <string name="disable_tbr_over_notification">Zakázat oznamování konce dočasného bazálu\n(nastavení pumpy)</string>
     <string name="refresh">Obnovit</string>
     <string name="description_pump_insight_local">Integrace pro pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Není vloženo</string>
@@ -1110,10 +1127,18 @@
     <string name="short_status_tdd">CDD: %1$.2f</string>
     <string name="short_status_reservoir">Zásobník: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
+    <string name="max_recovery_duration">Max. doba čekání na obnovení spojení [s]</string>
+    <string name="min_recovery_duration">Min. doba čekání na obnovení spojení [s]</string>
+    <string name="recovery_duration">Doba čekání na obnovení spojení</string>
+    <string name="timeout_during_handshake">Vypršel limit spojení - resetujte Bluetooth</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
+    <string name="dexcom_lognssensorchange_title">Zaznamenávat výměnu senzoru do NS</string>
+    <string name="dexcom_lognssensorchange_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
