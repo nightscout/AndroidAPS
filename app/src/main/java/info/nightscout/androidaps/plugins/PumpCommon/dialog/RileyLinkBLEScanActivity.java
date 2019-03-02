@@ -49,7 +49,7 @@ import info.nightscout.androidaps.plugins.PumpCommon.utils.LocationHelper;
 import info.nightscout.androidaps.plugins.PumpMedtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 public class RileyLinkBLEScanActivity extends AppCompatActivity {

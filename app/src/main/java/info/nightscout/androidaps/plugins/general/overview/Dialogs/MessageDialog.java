@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview.Dialogs;
+package info.nightscout.androidaps.plugins.general.overview.Dialogs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

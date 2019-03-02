@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
 
+import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.PumpCommon.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.StringUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.history.pump.PumpHistoryEntry;
 
@@ -38,8 +40,8 @@ public class DailyTotalsDTO {
     private Integer sensorDataCount;
 
     private Double insulinTotal;
-    private Double insulinBasal;
-    private Double insulinBolus;
+    private Double insulinBasal = 0.0d;
+    private Double insulinBolus = 0.0d;
     private Double insulinCarbs;
 
     private Double bolusTotal;
@@ -237,4 +239,18 @@ public class DailyTotalsDTO {
             .omitNullValues() //
             .toString();
     }
+
+
+    public void setTDD(TDD tdd) {
+        tdd.date = DateTimeUtil.toMillisFromATD(this.entry.atechDateTime);
+        tdd.basal = insulinBasal;
+        tdd.bolus = insulinBolus;
+        tdd.total = insulinTotal;
+    }
+
+
+    public boolean doesEqual(TDD tdd) {
+        return tdd.total == this.insulinTotal && tdd.bolus == this.insulinBolus && tdd.basal == this.insulinBasal;
+    }
+
 }

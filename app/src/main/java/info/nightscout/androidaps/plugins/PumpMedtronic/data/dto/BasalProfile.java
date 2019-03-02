@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.Expose;
 
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.PumpCommon.utils.FabricUtil;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 
 /**
  * Created by geoff on 6/1/15.

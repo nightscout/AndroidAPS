@@ -5,6 +5,7 @@ package info.nightscout.androidaps.plugins.PumpCommon.utils;
  */
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.joda.time.LocalDateTime;
@@ -103,6 +104,21 @@ public class DateTimeUtil {
     }
 
 
+    public static long toATechDate(Date date) {
+
+        long atechDateTime = 0L;
+
+        atechDateTime += date.getYear() * 10000000000L;
+        atechDateTime += date.getMonth() * 100000000L;
+        atechDateTime += date.getDay() * 1000000L;
+        atechDateTime += date.getHours() * 10000L;
+        atechDateTime += date.getMinutes() * 100L;
+        atechDateTime += date.getSeconds();
+
+        return atechDateTime;
+    }
+
+
     public static String toString(long atechDateTime) {
         int year = (int)(atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
@@ -135,5 +151,45 @@ public class DateTimeUtil {
 
         int year = (int)(atechDateTime / 10000000000L);
         return year;
+    }
+
+
+    public static boolean isSameDayATDAndMillis(long atechDateTime, long date) {
+
+        Date dt = new Date(date);
+        long entryDate = toATechDate(dt);
+
+        return (isSameDay(atechDateTime, entryDate));
+    }
+
+
+    public static long toMillisFromATD(long atechDateTime) {
+
+        int year = (int)(atechDateTime / 10000000000L);
+        atechDateTime -= year * 10000000000L;
+
+        int month = (int)(atechDateTime / 100000000L);
+        atechDateTime -= month * 100000000L;
+
+        int dayOfMonth = (int)(atechDateTime / 1000000L);
+        atechDateTime -= dayOfMonth * 1000000L;
+
+        int hourOfDay = (int)(atechDateTime / 10000L);
+        atechDateTime -= hourOfDay * 10000L;
+
+        int minute = (int)(atechDateTime / 100L);
+        atechDateTime -= minute * 100L;
+
+        int second = (int)atechDateTime;
+
+        Date d = new Date();
+        d.setDate(dayOfMonth);
+        d.setMonth(month - 1);
+        d.setYear(year);
+        d.setHours(hourOfDay);
+        d.setMinutes(minute);
+        d.setSeconds(second);
+
+        return d.getTime();
     }
 }

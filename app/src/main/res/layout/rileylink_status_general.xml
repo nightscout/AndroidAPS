@@ -136,6 +136,33 @@
                     android:text="         " />
             </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv13"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_firmware_version" />
+
+                <TextView
+                    android:id="@+id/rls_t1_firmware_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="         " />
+            </LinearLayout>
+
             <!-- Group - Device -->
             <LinearLayout
                 android:layout_width="match_parent"

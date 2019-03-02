@@ -5,12 +5,14 @@ import static info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUti
 import java.util.Date;
 import java.util.Map;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BatteryStatusDTO;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicNotificationType;
@@ -130,21 +132,25 @@ public class MedtronicUIPostprocessor {
 
     private void processTime(MedtronicUITask uiTask) {
 
-        LocalDateTime ldt = (LocalDateTime)uiTask.returnData;
+        ClockDTO clockDTO = (ClockDTO)uiTask.returnData;
 
-        Date d1 = ldt.toDate();
+        Duration dur = new Duration(clockDTO.localDeviceTime.toDateTime(DateTimeZone.UTC),
+            clockDTO.pumpTime.toDateTime(DateTimeZone.UTC));
 
-        long currentTimeMillis = System.currentTimeMillis();
-        long diff = Math.abs(d1.getTime() - currentTimeMillis);
+        clockDTO.timeDifference = dur.getStandardSeconds();
 
-        LOG.debug("Pump Time: " + ldt + ", DeviceTime=" + d1 + //
-            ", diff: " + diff / 1000 + " s");
+        MedtronicUtil.setPumpTime(clockDTO);
 
-        if (diff >= 10 * 60 * 1000) {
-            LOG.warn("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
+        LOG.debug("Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime + //
+            ", diff: " + dur.getStandardSeconds() + " s");
+
+        if (dur.getStandardMinutes() >= 10) {
+            LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
+                + dur.getStandardSeconds() + " s)");
             sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
-        } else if (diff >= 4 * 60 * 1000) {
-            LOG.warn("Pump clock needs update, pump time: " + ldt + " (" + ldt + ")");
+        } else if (dur.getStandardMinutes() >= 4) {
+            LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
+                + dur.getStandardSeconds() + " s)");
             sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
         }
 

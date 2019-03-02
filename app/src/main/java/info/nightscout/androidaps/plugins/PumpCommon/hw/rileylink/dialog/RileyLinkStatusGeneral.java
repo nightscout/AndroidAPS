@@ -37,6 +37,7 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
     TextView pumpFrequency;
     TextView lastUsedFrequency;
     TextView lastDeviceContact;
+    TextView firmwareVersion;
 
     RileyLinkServiceData rileyLinkServiceData;
 
@@ -67,12 +68,13 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
         this.pumpFrequency = getActivity().findViewById(R.id.rls_t1_pump_frequency);
         this.lastUsedFrequency = getActivity().findViewById(R.id.rls_t1_last_used_frequency);
         this.lastDeviceContact = getActivity().findViewById(R.id.rls_t1_last_device_contact);
+        this.firmwareVersion = getActivity().findViewById(R.id.rls_t1_firmware_version);
 
         if (!first) {
 
             // 7-12
             int[] ids = { R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
-            R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12 };
+            R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13 };
 
             for (int id : ids) {
 
@@ -96,6 +98,9 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
         this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
         "-"
             : MainApp.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
+
+        this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + "\nCC110: "
+            + rileyLinkServiceData.versionCC110.toString());
 
         // TODO add handling for Omnipod pump status
         this.medtronicPumpStatus = MedtronicUtil.getPumpStatus();

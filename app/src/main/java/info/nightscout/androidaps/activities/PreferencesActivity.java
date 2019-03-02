@@ -19,14 +19,18 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
+import info.nightscout.androidaps.plugins.PumpMedtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
@@ -38,16 +42,15 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     MyPreferenceFragment myPreferenceFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
     }
 
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         MainApp.bus().post(new EventPreferenceChange(key));
@@ -67,41 +71,46 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
             MainApp.bus().post(new EventRefreshGui(true));
-            //recreate() does not update language so better close settings
+            // recreate() does not update language so better close settings
             finish();
         }
         if (key.equals("short_tabtitles")) {
             MainApp.bus().post(new EventRefreshGui());
         }
-        if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
-            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
+        if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens))
+            && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
+            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity),
+                MainApp.gs(R.string.sensitivity_warning), null);
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
 
+
     private static void updatePrefSummary(Preference pref) {
         if (pref instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) pref;
+            ListPreference listPref = (ListPreference)pref;
             pref.setSummary(listPref.getEntry());
         }
         if (pref instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference) pref;
+            EditTextPreference editTextPref = (EditTextPreference)pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
             } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
                 pref.setSummary(SP.getString(R.string.key_danars_name, ""));
             } else if (editTextPref.getText() != null) {
-                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
+                ((EditTextPreference)pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {
+            } else if (pref.getKey().contains("smscommunicator_allowednumbers")
+                && TextUtils.isEmpty(editTextPref.getText().trim())) {
                 pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }
     }
 
+
     public static void initSummary(Preference p) {
         if (p instanceof PreferenceGroup) {
-            PreferenceGroup pGrp = (PreferenceGroup) p;
+            PreferenceGroup pGrp = (PreferenceGroup)p;
             for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
                 initSummary(pGrp.getPreference(i));
             }
@@ -111,7 +120,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment {
+
         private Integer id;
+
 
         @Override
         public void setArguments(Bundle args) {
@@ -119,10 +130,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             id = args.getInt("id");
         }
 
+
         void addPreferencesFromResourceIfEnabled(PluginBase p, PluginType type) {
             if (p.isEnabled(type) && p.getPreferencesId() != -1)
                 addPreferencesFromResource(p.getPreferencesId());
         }
+
 
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -155,7 +168,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
 
                 addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginType.SENSITIVITY);
-                addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), PluginType.SENSITIVITY);
+                addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(),
+                    PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref1Plugin.getPlugin(), PluginType.SENSITIVITY);
 
@@ -169,9 +183,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
 
                     if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                            || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                            || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
-                            || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
+                        || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
+                        || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
+                        || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
                         addPreferencesFromResource(R.xml.pref_danarprofile);
                     }
                 }
@@ -195,10 +209,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (Config.NSCLIENT) {
                 PreferenceScreen scrnAdvancedSettings = (PreferenceScreen)findPreference(getString(R.string.key_advancedsettings));
                 if (scrnAdvancedSettings != null) {
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
+                    scrnAdvancedSettings
+                        .removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
+                    scrnAdvancedSettings
+                        .removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
+                    scrnAdvancedSettings
+                        .removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
+                    scrnAdvancedSettings
+                        .removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
                 }
             }
@@ -206,11 +224,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             initSummary(getPreferenceScreen());
         }
 
+
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putInt("id", id);
         }
+
 
         public Preference getPreference(String key) {
             return findPreference(key);

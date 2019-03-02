@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.defs;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 
 /**
  * Created by andy on 10/15/18.

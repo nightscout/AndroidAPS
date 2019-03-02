@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.PumpMedtronic.service.tasks;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.PumpCommon.hw.rileylink.service.tasks.PumpTask;
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.MedtronicCommunicationManager;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.service.RileyLinkMedtronicService;
@@ -62,10 +62,10 @@ public class MedtronicPumpTask extends PumpTask {
                 break;
 
             case RealTimeClock: {
-                LocalDateTime pumpResponse = communicationManager.getPumpTime();
+                ClockDTO pumpResponse = communicationManager.getPumpTime();
                 if (pumpResponse != null) {
-                    LOG.info("ReadPumpClock: " + pumpResponse.toString("HH:mm:ss"));
-                    medtronicPumpResult.addParameter("PumpTime", pumpResponse);
+                    LOG.info("ReadPumpClock: " + pumpResponse.pumpTime.toString("HH:mm:ss"));
+                    medtronicPumpResult.addParameter("PumpTime", pumpResponse.pumpTime);
                 } else {
                     LOG.warn("handleServiceCommand(" + mTransport.getOriginalCommandName() + ") pumpResponse is null");
                     medtronicPumpResult.setError();

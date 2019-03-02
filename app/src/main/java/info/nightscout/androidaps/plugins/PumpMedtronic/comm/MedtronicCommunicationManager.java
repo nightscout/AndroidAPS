@@ -37,13 +37,14 @@ import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.PumpAckMess
 import info.nightscout.androidaps.plugins.PumpMedtronic.comm.message.PumpMessage;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.BatteryStatusDTO;
+import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.PumpMedtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.PumpMedtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.PumpMedtronic.util.MedtronicUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Original file created by geoff on 5/30/16.
@@ -693,19 +694,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    // See ButtonPressCarelinkMessageBody
-    // public void pressButton(int which) {
-    // if (doWakeUpBeforeCommand)
-    // wakeUp(receiverDeviceAwakeForMinutes, false);
-    //
-    // PumpMessage pressButtonMessage = makePumpMessage(MedtronicCommandType.PushButton,
-    // new ButtonPressCarelinkMessageBody(which));
-    // PumpMessage resp = sendAndListen(pressButtonMessage);
-    // if (resp.commandType != MedtronicCommandType.CommandACK) {
-    // LOG.error("Pump did not ack button press.");
-    // }
-    // }
-
     @Override
     public byte[] createPumpMessageContent(RLMessageType type) {
         switch (type) {
@@ -1001,11 +989,19 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
-    public LocalDateTime getPumpTime() {
+    public ClockDTO getPumpTime() {
+
+        ClockDTO clockDTO = new ClockDTO();
+        clockDTO.localDeviceTime = new LocalDateTime();
 
         Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.RealTimeClock);
 
-        return responseObject == null ? null : (LocalDateTime)responseObject;
+        if (responseObject != null) {
+            clockDTO.pumpTime = (LocalDateTime)responseObject;
+            return clockDTO;
+        }
+
+        return null;
     }
 
 

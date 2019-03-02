@@ -38,6 +38,7 @@
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +53,7 @@
             android:name=".plugins.general.overview.Dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".plugins.Overview.Dialogs.MessageHelperActivity"
+            android:name=".plugins.general.overview.Dialogs.MessageHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
 
         <activity android:name=".activities.AgreementActivity" />

@@ -1374,6 +1374,8 @@
     <string name="rileylink_device_model">Device Model</string>
     <string name="rileylink_last_used_frequency">Last used frequency</string>
     <string name="rileylink_last_device_contact">Last device contact</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
+
 
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth Initializing…</string>
