@@ -1,30 +1,30 @@
-package info.nightscout.androidaps.plugins.DstHelper;
+package info.nightscout.androidaps.plugins.constraints.dstHelper;
 
 import android.content.Context;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import junit.framework.Assert;
-
-import info.AAPSMocker;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.T;
-
-import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import info.AAPSMocker;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class})
 public class DstHelperPluginTest {
     DstHelperPlugin plugin = new DstHelperPlugin();
+
     @Test
-    public void runTest()  throws Exception  {
+    public void runTest() throws Exception {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
         // test different time zones
