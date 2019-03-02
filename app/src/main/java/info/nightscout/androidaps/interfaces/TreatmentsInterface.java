@@ -10,7 +10,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.ProfileIntervals;
 

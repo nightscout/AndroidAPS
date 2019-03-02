@@ -2,15 +2,12 @@ package info.nightscout.androidaps.data;
 
 import android.content.Context;
 
-import com.rits.cloning.Cloner;
-
 import org.json.JSONObject;
 
 import java.util.Date;
 
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
  * Created by mike on 29.05.2017.

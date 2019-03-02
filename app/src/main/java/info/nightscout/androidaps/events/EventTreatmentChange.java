@@ -2,7 +2,7 @@ package info.nightscout.androidaps.events;
 
 import android.support.annotation.Nullable;
 
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 
 /**
  * Created by mike on 04.06.2016.

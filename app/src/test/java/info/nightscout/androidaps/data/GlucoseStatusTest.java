@@ -16,13 +16,12 @@ import java.util.List;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -30,8 +29,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, DatabaseHelper.class, DateUtil.class})
+@PrepareForTest({MainApp.class, IobCobCalculatorPlugin.class, DateUtil.class})
 public class GlucoseStatusTest {
+    IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     @Test
     public void toStringShouldBeOverloaded() {
@@ -48,7 +48,7 @@ public class GlucoseStatusTest {
 
     @Test
     public void calculateValidGlucoseStatus() {
-        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateValidBgData());
+        when(iobCobCalculatorPlugin.getBgReadings()).thenReturn(generateValidBgData());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
@@ -62,7 +62,7 @@ public class GlucoseStatusTest {
 
     @Test
     public void calculateMostRecentGlucoseStatus() {
-        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateMostRecentBgData());
+        when(iobCobCalculatorPlugin.getBgReadings()).thenReturn(generateMostRecentBgData());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
@@ -76,7 +76,7 @@ public class GlucoseStatusTest {
 
     @Test
     public void oneRecordShouldProduceZeroDeltas() {
-        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateOneCurrentRecordBgData());
+        when(iobCobCalculatorPlugin.getBgReadings()).thenReturn(generateOneCurrentRecordBgData());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
@@ -90,7 +90,7 @@ public class GlucoseStatusTest {
 
     @Test
     public void insuffientDataShouldReturnNull() {
-        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateInsufficientBgData());
+        when(iobCobCalculatorPlugin.getBgReadings()).thenReturn(generateInsufficientBgData());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Assert.assertEquals(null, glucoseStatus);
@@ -98,7 +98,7 @@ public class GlucoseStatusTest {
 
     @Test
     public void oldDataShouldReturnNull() {
-        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateOldBgData());
+        when(iobCobCalculatorPlugin.getBgReadings()).thenReturn(generateOldBgData());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Assert.assertEquals(null, glucoseStatus);
@@ -106,7 +106,7 @@ public class GlucoseStatusTest {
 
     @Test
     public void returnOldDataIfAllowed() {
-        when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateOldBgData());
+        when(iobCobCalculatorPlugin.getBgReadings()).thenReturn(generateOldBgData());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData(true);
         Assert.assertNotEquals(null, glucoseStatus);
@@ -121,7 +121,10 @@ public class GlucoseStatusTest {
     public void initMocking() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockDatabaseHelper();
+
+        PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
+        iobCobCalculatorPlugin = mock(IobCobCalculatorPlugin.class);
+        when(IobCobCalculatorPlugin.getPlugin()).thenReturn(iobCobCalculatorPlugin);
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());

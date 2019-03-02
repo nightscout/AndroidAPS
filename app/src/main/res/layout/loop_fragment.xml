@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="2dp"
-    tools:context="info.nightscout.androidaps.plugins.Loop.LoopFragment">
+    tools:context=".plugins.aps.loop.LoopFragment">
 
     <ScrollView
         android:layout_width="match_parent"

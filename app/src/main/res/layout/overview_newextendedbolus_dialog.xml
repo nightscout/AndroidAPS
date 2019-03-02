@@ -32,7 +32,7 @@
             android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textStyle="bold" />
 
-        <info.nightscout.utils.NumberPicker
+        <info.nightscout.androidaps.utils.NumberPicker
             android:id="@+id/overview_newextendedbolus_insulin"
             android:layout_width="130dp"
             android:layout_height="40dp" />
@@ -65,7 +65,7 @@
             android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textStyle="bold" />
 
-        <info.nightscout.utils.NumberPicker
+        <info.nightscout.androidaps.utils.NumberPicker
             android:id="@+id/overview_newextendedbolus_duration"
             android:layout_width="130dp"
             android:layout_height="40dp" />

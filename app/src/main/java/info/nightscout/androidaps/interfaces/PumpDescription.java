@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.interfaces;
 
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpCapability;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpTempBasalType;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpCapability;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpTempBasalType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 
 /**
  * Created by mike on 08.12.2016.
