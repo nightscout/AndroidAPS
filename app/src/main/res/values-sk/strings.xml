@@ -1022,6 +1022,7 @@
     <string name="nth_objective">%1$d. Cieľ</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
+    <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cieľ zvýši citlivosť</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšenie citlivosti pre dočasné ciele >= 5.5]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Nízky dočasný cieľ zníži citlivosť</string>
@@ -1129,13 +1130,15 @@
     <string name="max_recovery_duration">Max. doba trvania obnovenia [s]</string>
     <string name="min_recovery_duration">Min. doba trvania obnovenia [s]</string>
     <string name="recovery_duration">Trvanie obnovenia</string>
+    <string name="timeout_during_handshake">Vypršal čas na pripojenie - reštartuj Bluetooth</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
-    <string name="key_dexcom_lognssensorchange">dexcom_lognssensorchange</string>
     <string name="dexcom_lognssensorchange_title">Ulož výmenu senzora do NS</string>
     <string name="dexcom_lognssensorchange_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
