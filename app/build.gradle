@@ -99,19 +99,19 @@ android {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
-            versionName version
+            versionName version + "-pumpcontrol"
             manifestPlaceholders = [
                     appIcon: "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
         }
         pumpcontrol {
-            applicationId "info.nightscout.androidaps"
+            applicationId "info.nightscout.aapspumpcontrol"
             dimension "standard"
-            resValue "string", "app_name", "AndroidAPS"
+            resValue "string", "app_name", "Pumpcontrol"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/blueowl",
+                    appIcon: "@mipmap/ic_pumpcontrol",
                     appIconRound: "@null"
             ]
         }
@@ -121,7 +121,7 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl",
+                    appIcon: "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -131,7 +131,7 @@ android {
             resValue "string", "app_name", "NSClient2"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/yellowowl",
+                    appIcon: "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }

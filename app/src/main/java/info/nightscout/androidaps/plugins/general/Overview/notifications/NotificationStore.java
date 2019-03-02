@@ -126,12 +126,8 @@ public class NotificationStore {
     private void raiseSystemNotification(Notification n) {
         Context context = MainApp.instance().getApplicationContext();
         NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.blueowl);
-        int smallIcon = R.drawable.ic_notification;
-        if (Config.NSCLIENT) {
-            largeIcon = BitmapFactory.decodeResource(MainApp.instance().getResources(), R.mipmap.yellowowl);
-            smallIcon = R.drawable.nsclient_smallicon;
-        }
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), MainApp.getIcon());
+        int smallIcon = MainApp.getNotificationIcon();
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context, CHANNEL_ID)

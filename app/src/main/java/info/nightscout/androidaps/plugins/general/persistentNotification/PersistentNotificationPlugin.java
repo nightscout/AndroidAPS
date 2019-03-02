@@ -11,17 +11,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-// Android Auto
 import android.support.v4.app.RemoteInput;
-
-
-
+import android.support.v4.app.TaskStackBuilder;
 
 import com.squareup.otto.Subscribe;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -165,8 +159,8 @@ public class PersistentNotificationPlugin extends PluginBase {
         IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
 
-        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
-        String line2_aa = MainApp.gs(R.string.treatments_iob_label_string) + " " +  DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + MainApp.gs(R.string.cob)+": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + ".";
+        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob) + ": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
+        String line2_aa = MainApp.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + MainApp.gs(R.string.cob) + ": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + ".";
 
 
         String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h";
@@ -210,7 +204,7 @@ public class PersistentNotificationPlugin extends PluginBase {
                         .setLatestTimestamp(System.currentTimeMillis())
                         .setReadPendingIntent(msgReadPendingIntent)
                         .setReplyAction(msgReplyPendingIntent, remoteInput);
-        
+
         /// Add dot to produce a "more natural sounding result"
         unreadConversationBuilder.addMessage(line3_aa);
         /// End Android Auto
@@ -220,15 +214,9 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setOngoing(true);
         builder.setOnlyAlertOnce(true);
         builder.setCategory(NotificationCompat.CATEGORY_STATUS);
-        if (Config.NSCLIENT){
-            builder.setSmallIcon(R.drawable.nsclient_smallicon);
-            Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.yellowowl);
-            builder.setLargeIcon(largeIcon);
-        } else {
-            builder.setSmallIcon(R.drawable.ic_notification);
-            Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.blueowl);
-            builder.setLargeIcon(largeIcon);
-        }
+        builder.setSmallIcon(MainApp.getNotificationIcon());
+        Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), MainApp.getIcon());
+        builder.setLargeIcon(largeIcon);
         builder.setContentTitle(line1);
         builder.setContentText(line2);
         builder.setSubText(line3);

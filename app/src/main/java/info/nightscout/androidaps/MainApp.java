@@ -29,27 +29,31 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.actions.ActionsFragment;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.actions.ActionsFragment;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin;
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessReceiver;
-import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
-import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
@@ -65,7 +69,6 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomG6Plugin;
 import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
@@ -76,14 +79,11 @@ import info.nightscout.androidaps.plugins.source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import io.fabric.sdk.android.Fabric;
 
 
@@ -388,6 +388,24 @@ public class MainApp extends Application {
 
     public static boolean isDev() {
         return devBranch;
+    }
+
+    public static int getIcon() {
+        if (Config.NSCLIENT)
+            return R.mipmap.ic_yellowowl;
+        else if (Config.PUMPCONTROL)
+            return R.mipmap.ic_pumpcontrol;
+        else
+            return R.mipmap.ic_launcher;
+    }
+
+    public static int getNotificationIcon() {
+        if (Config.NSCLIENT)
+            return R.drawable.ic_notif_nsclient;
+        else if (Config.PUMPCONTROL)
+            return R.drawable.ic_notif_pumpcontrol;
+        else
+            return R.drawable.ic_notif_aaps;
     }
 
     @Override
