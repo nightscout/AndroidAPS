@@ -29,6 +29,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.DstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
@@ -194,6 +195,8 @@ public class MainApp extends Application {
             pluginsList.add(MaintenancePlugin.initPlugin(this));
 
             pluginsList.add(ConfigBuilderPlugin.getPlugin());
+
+            pluginsList.add(DstHelperPlugin.getPlugin());
 
             ConfigBuilderPlugin.getPlugin().initialize();
         }
