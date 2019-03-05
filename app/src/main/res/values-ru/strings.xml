@@ -1141,4 +1141,6 @@ Context | Edit Context</string>
     <string name="dexcom_lognssensorchange_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
+    <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Переход на летнее/зимнее время менее чем через 3 часа - замкнутый цикл отключен</string>
 </resources>

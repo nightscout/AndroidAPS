@@ -63,7 +63,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "2.1.1"
+        version "2.1.2"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
@@ -99,7 +99,7 @@ android {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
-            versionName version + "-pumpcontrol"
+            versionName version
             manifestPlaceholders = [
                     appIcon: "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
@@ -109,7 +109,7 @@ android {
             applicationId "info.nightscout.aapspumpcontrol"
             dimension "standard"
             resValue "string", "app_name", "Pumpcontrol"
-            versionName version
+            versionName version + "-pumpcontrol"
             manifestPlaceholders = [
                     appIcon: "@mipmap/ic_pumpcontrol",
                     appIconRound: "@null"
