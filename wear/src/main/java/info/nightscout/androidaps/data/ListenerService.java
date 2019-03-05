@@ -7,16 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.ChannelApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMap;
@@ -33,12 +36,15 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
+import info.nightscout.androidaps.interaction.utils.WearUtil;
+
 
 /**
  * Created by emmablack on 12/26/14.
  */
 public class ListenerService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, ChannelApi.ChannelListener {
+
     private static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
     private static final String WEARABLE_CANCELBOLUS_PATH = "/nightscout_watch_cancel_bolus";
@@ -67,18 +73,34 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
+
     GoogleApiClient googleApiClient;
     private long lastRequest = 0;
     private DismissThread confirmThread;
     private DismissThread bolusprogressThread;
+    private static final String TAG = "ListenerService";
+
+    private DataRequester mDataRequester = null;
 
 
     public class DataRequester extends AsyncTask<Void, Void, Void> {
         Context mContext;
+        String path;
+        byte[] payload;
 
-        DataRequester(Context context) {
-            mContext = context;
+//        DataRequester(Context context) {
+//            mContext = context;
+//        }
+
+
+
+        DataRequester(Context context, String thispath, byte[] thispayload) {
+            path = thispath;
+            payload = thispayload;
+            Log.d(TAG, "DataRequester DataRequester: " + thispath + " lastRequest:" + lastRequest);
         }
+
+
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -154,6 +176,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         @Override
         protected Void doInBackground(Void... params) {
+
+            forceGoogleApiConnect();
+
             if (googleApiClient.isConnected()) {
                 NodeApi.GetConnectedNodesResult nodes =
                         Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
@@ -176,7 +201,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
     public void requestData() {
-        new DataRequester(this).execute();
+        sendData(WEARABLE_RESEND_PATH, null);
     }
 
     public void cancelBolus() {
@@ -191,13 +216,68 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         new MessageActionTask(this, WEARABLE_INITIATE_ACTIONSTRING_PATH, actionstring).execute();
     }
 
-    public void googleApiConnect() {
+
+    private synchronized void sendData(String path, byte[] payload) {
+        if (path == null) return;
+        if (mDataRequester != null) {
+            Log.d(TAG, "sendData DataRequester != null lastRequest:" + WearUtil.dateTimeText(lastRequest));
+            if (mDataRequester.getStatus() != AsyncTask.Status.FINISHED) {
+                Log.d(TAG, "sendData Should be canceled?  Let run 'til finished.");
+                //mDataRequester.cancel(true);
+            }
+            //mDataRequester = null;
+        }
+
+        Log.d(TAG, "sendData: execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
+        mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
+
+
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//            Log.d(TAG, "sendData SDK < M call execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
+//            mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
+//        } else {
+//            Log.d(TAG, "sendData SDK >= M call executeOnExecutor lastRequest:" + WearUtil.dateTimeText(lastRequest));
+//            // TODO xdrip executor
+//            mDataRequester = (DataRequester) new DataRequester(this, path, payload).executeOnExecutor(xdrip.executor);
+//        }
+    }
+
+
+    private void googleApiConnect() {
+        if (googleApiClient != null) {
+            // Remove old listener(s)
+            try {
+                Wearable.ChannelApi.removeListener(googleApiClient, this);
+            } catch (Exception e) {
+                //
+            }
+            try {
+                Wearable.MessageApi.removeListener(googleApiClient, this);
+            } catch (Exception e) {
+                //
+            }
+        }
+
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
         Wearable.MessageApi.addListener(googleApiClient, this);
+    }
+
+
+
+    private void forceGoogleApiConnect() {
+        if ((googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) || googleApiClient == null) {
+            try {
+                Log.d(TAG, "forceGoogleApiConnect: forcing google api reconnection");
+                googleApiConnect();
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                //
+            }
+        }
     }
 
 
@@ -261,8 +341,10 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
             if (event.getType() == DataEvent.TYPE_CHANGED) {
 
-
                 String path = event.getDataItem().getUri().getPath();
+
+                Log.d(TAG, "Path: {}" + path + ", Event=" + event);
+
                 if (path.equals(OPEN_SETTINGS)) {
                     Intent intent = new Intent(this, AAPSPreferences.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -480,6 +562,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.d(TAG, "onConnected call requestData");
+
+        Wearable.ChannelApi.addListener(googleApiClient, this);
         requestData();
     }
 
@@ -499,8 +584,10 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
+
         if (googleApiClient != null) {
             Wearable.MessageApi.removeListener(googleApiClient, this);
+            Wearable.ChannelApi.removeListener(googleApiClient, this);
         }
-    }
+  }
 }

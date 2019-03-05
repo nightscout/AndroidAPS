@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 ext {
-    wearableVersion = "2.4.0"
-    playServicesWearable = "16.0.1"
+    wearableVersion = "2.0.1"
+    playServicesWearable = "9.4.0"
 }
 
 def generateGitBuild = { ->
