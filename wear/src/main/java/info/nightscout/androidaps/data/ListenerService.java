@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.data;
 
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,11 +17,16 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.CapabilityApi;
+import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.ChannelApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -81,55 +89,154 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String TAG = "ListenerService";
 
     private DataRequester mDataRequester = null;
+    private static final int GET_CAPABILITIES_TIMEOUT_MS = 5000;
 
+    // Phone
+    private static final String CAPABILITY_PHONE_APP = "phone_app_sync_bgs";
+    private static final String MESSAGE_PATH_PHONE = "/phone_message_path";
+    // Wear
+    private static final String CAPABILITY_WEAR_APP = "wear_app_sync_bgs";
+    private static final String MESSAGE_PATH_WEAR = "/wear_message_path";
+    private String mPhoneNodeId = null;
+    private String localnode = null;
+    private String logPrefix = ""; // "WR: "
 
     public class DataRequester extends AsyncTask<Void, Void, Void> {
         Context mContext;
         String path;
         byte[] payload;
 
-//        DataRequester(Context context) {
-//            mContext = context;
-//        }
-
-
 
         DataRequester(Context context, String thispath, byte[] thispayload) {
             path = thispath;
             payload = thispayload;
-            Log.d(TAG, "DataRequester DataRequester: " + thispath + " lastRequest:" + lastRequest);
+            // Log.d(TAG, logPrefix + "DataRequester DataRequester: " + thispath + " lastRequest:" + lastRequest);
         }
 
 
 
         @Override
         protected Void doInBackground(Void... params) {
-            if (googleApiClient.isConnected()) {
-                if (System.currentTimeMillis() - lastRequest > 20 * 1000) { // enforce 20-second debounce period
-                    lastRequest = System.currentTimeMillis();
+            // Log.d(TAG, logPrefix + "DataRequester: doInBack: " + params);
 
-                    NodeApi.GetConnectedNodesResult nodes =
-                            Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
-                    for (Node node : nodes.getNodes()) {
-                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_RESEND_PATH, null);
-                    }
+            try {
+
+                forceGoogleApiConnect();
+                DataMap datamap;
+
+                if (isCancelled()) {
+                    Log.d(TAG, "doInBackground CANCELLED programmatically");
+                    return null;
                 }
-            } else {
-                googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
-                if (googleApiClient.isConnected()) {
-                    if (System.currentTimeMillis() - lastRequest > 20 * 1000) { // enforce 20-second debounce period
+
+                if (googleApiClient != null) {
+                    if (!googleApiClient.isConnected())
+                        googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
+                }
+
+                // this code might not be needed in this way, but we need to see that later
+                if ((googleApiClient != null) && (googleApiClient.isConnected())) {
+                    if ((System.currentTimeMillis() - lastRequest > 20 * 1000)) {
+
+                        // enforce 20-second debounce period
                         lastRequest = System.currentTimeMillis();
 
-                        NodeApi.GetConnectedNodesResult nodes =
-                                Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
-                        for (Node node : nodes.getNodes()) {
-                            Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_RESEND_PATH, null);
+                        // NodeApi.GetConnectedNodesResult nodes =
+                        // Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                        if (localnode == null || (localnode != null && localnode.isEmpty()))
+                            setLocalNodeName();
+
+                        CapabilityInfo capabilityInfo = getCapabilities();
+
+                        int count = 0;
+                        Node phoneNode = null;
+
+                        if (capabilityInfo != null) {
+                            phoneNode = updatePhoneSyncBgsCapability(capabilityInfo);
+                            count = capabilityInfo.getNodes().size();
                         }
+
+                        Log.d(TAG, "doInBackground connected.  CapabilityApi.GetCapabilityResult mPhoneNodeID="
+                            + (phoneNode != null ? phoneNode.getId() : "") + " count=" + count + " localnode="
+                            + localnode);// KS
+
+                        if (count > 0) {
+
+                            for (Node node : capabilityInfo.getNodes()) {
+
+                                // Log.d(TAG, "doInBackground path: " + path);
+
+                                switch (path) {
+                                // simple send as is payloads
+
+                                    case WEARABLE_RESEND_PATH:
+                                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(),
+                                            WEARABLE_RESEND_PATH, null);
+                                        break;
+                                    case WEARABLE_DATA_PATH:
+                                    case WEARABLE_CANCELBOLUS_PATH:
+                                    case WEARABLE_CONFIRM_ACTIONSTRING_PATH:
+                                    case WEARABLE_INITIATE_ACTIONSTRING_PATH:
+                                    case OPEN_SETTINGS:
+                                    case NEW_STATUS_PATH:
+                                    case NEW_PREFERENCES_PATH:
+                                    case BASAL_DATA_PATH:
+                                    case BOLUS_PROGRESS_PATH:
+                                    case ACTION_CONFIRMATION_REQUEST_PATH:
+                                    case NEW_CHANGECONFIRMATIONREQUEST_PATH:
+                                    case ACTION_CANCELNOTIFICATION_REQUEST_PATH: {
+                                        Log.w(TAG, logPrefix + "Unhandled path");
+                                        // sendMessagePayload(node, path, path, payload);
+                                    }
+
+                                    default:// SYNC_ALL_DATA
+                                        // this fall through is messy and non-deterministic for new paths
+
+                                }
+                            }
+                        } else {
+
+                            Log.d(TAG, logPrefix + "doInBackground connected but getConnectedNodes returns 0.");
+
+                        }
+                    } else {
+                        // no resend
+                        Log.d(TAG, logPrefix + "Inside the timeout, will not be executed");
+
+                    }
+                } else {
+                    Log.d(TAG, logPrefix + "Not connected for sending: api "
+                        + ((googleApiClient == null) ? "is NULL!" : "not null"));
+                    if (googleApiClient != null) {
+                        googleApiClient.connect();
+                    } else {
+                        googleApiConnect();
                     }
                 }
+
+            } catch (Exception ex) {
+                Log.e(TAG, logPrefix + "Error executing DataRequester in background. Exception: " + ex.getMessage());
             }
+
             return null;
         }
+    }
+
+
+    public CapabilityInfo getCapabilities() {
+
+        CapabilityApi.GetCapabilityResult capabilityResult = Wearable.CapabilityApi.getCapability(googleApiClient,
+            CAPABILITY_PHONE_APP, CapabilityApi.FILTER_REACHABLE).await(GET_CAPABILITIES_TIMEOUT_MS,
+            TimeUnit.MILLISECONDS);
+
+        if (!capabilityResult.getStatus().isSuccess()) {
+            Log.e(TAG, logPrefix + "doInBackground Failed to get capabilities, status: "
+                + capabilityResult.getStatus().getStatusMessage());
+            return null;
+        }
+
+        return capabilityResult.getCapability();
+
     }
 
     public class BolusCancelTask extends AsyncTask<Void, Void, Void> {
@@ -141,6 +248,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         @Override
         protected Void doInBackground(Void... params) {
+            // Log.d(TAG, logPrefix + "BolusCancelTask: doInBack: " + params);
+
             if (googleApiClient.isConnected()) {
                 NodeApi.GetConnectedNodesResult nodes =
                         Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
@@ -217,29 +326,54 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
 
-    private synchronized void sendData(String path, byte[] payload) {
-        if (path == null) return;
-        if (mDataRequester != null) {
-            Log.d(TAG, "sendData DataRequester != null lastRequest:" + WearUtil.dateTimeText(lastRequest));
-            if (mDataRequester.getStatus() != AsyncTask.Status.FINISHED) {
-                Log.d(TAG, "sendData Should be canceled?  Let run 'til finished.");
-                //mDataRequester.cancel(true);
+    private Node updatePhoneSyncBgsCapability(CapabilityInfo capabilityInfo) {
+        // Log.d(TAG, "CapabilityInfo: " + capabilityInfo);
+
+        Set<Node> connectedNodes = capabilityInfo.getNodes();
+        return pickBestNode(connectedNodes);
+        // mPhoneNodeId = pickBestNodeId(connectedNodes);
+    }
+
+
+    private Node pickBestNode(Set<Node> nodes) {
+        Node bestNode = null;
+        // Find a nearby node or pick one arbitrarily
+        for (Node node : nodes) {
+            if (node.isNearby()) {
+                return node;
             }
-            //mDataRequester = null;
+            bestNode = node;
+        }
+        return bestNode;
+    }
+
+
+    private synchronized void sendData(String path, byte[] payload) {
+        // Log.d(TAG, "WR: sendData: path: " + path + ", payload=" + payload);
+
+        if (path == null)
+            return;
+        if (mDataRequester != null) {
+            // Log.d(TAG, logPrefix + "sendData DataRequester != null lastRequest:" +
+            // WearUtil.dateTimeText(lastRequest));
+            if (mDataRequester.getStatus() != AsyncTask.Status.FINISHED) {
+                // Log.d(TAG, logPrefix + "sendData Should be canceled?  Let run 'til finished.");
+                // mDataRequester.cancel(true);
+            }
         }
 
-        Log.d(TAG, "sendData: execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
-        mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
+        Log.d(TAG, logPrefix + "sendData: execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
+        mDataRequester = (DataRequester)new DataRequester(this, path, payload).execute();
+        // executeTask(mDataRequester);
 
-
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//            Log.d(TAG, "sendData SDK < M call execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
-//            mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
-//        } else {
-//            Log.d(TAG, "sendData SDK >= M call executeOnExecutor lastRequest:" + WearUtil.dateTimeText(lastRequest));
-//            // TODO xdrip executor
-//            mDataRequester = (DataRequester) new DataRequester(this, path, payload).executeOnExecutor(xdrip.executor);
-//        }
+        // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        // Log.d(TAG, "sendData SDK < M call execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
+        // mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
+        // } else {
+        // Log.d(TAG, "sendData SDK >= M call executeOnExecutor lastRequest:" + WearUtil.dateTimeText(lastRequest));
+        // // TODO xdrip executor
+        // mDataRequester = (DataRequester) new DataRequester(this, path, payload).executeOnExecutor(xdrip.executor);
+        // }
     }
 
 
@@ -283,6 +417,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        // Log.d(TAG, logPrefix + "onStartCommand: Intent: " + intent);
+
         if (intent != null && ACTION_RESEND.equals(intent.getAction())) {
             googleApiConnect();
             requestData();
@@ -336,6 +473,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public void onDataChanged(DataEventBuffer dataEvents) {
 
         DataMap dataMap;
+        // Log.d(TAG, logPrefix + "onDataChanged: DataEvents=" + dataEvents);
 
         for (DataEvent event : dataEvents) {
 
@@ -343,7 +481,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
                 String path = event.getDataItem().getUri().getPath();
 
-                Log.d(TAG, "Path: {}" + path + ", Event=" + event);
+                //Log.d(TAG, "WR: onDataChanged: Path: " + path + ", EventDataItem=" + event.getDataItem());
 
                 if (path.equals(OPEN_SETTINGS)) {
                     Intent intent = new Intent(this, AAPSPreferences.class);
@@ -562,7 +700,19 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected call requestData");
+        // Log.d(TAG, logPrefix + "onConnected call requestData");
+
+        CapabilityApi.CapabilityListener capabilityListener = new CapabilityApi.CapabilityListener() {
+
+            @Override
+            public void onCapabilityChanged(CapabilityInfo capabilityInfo) {
+                updatePhoneSyncBgsCapability(capabilityInfo);
+                Log.d(TAG, logPrefix + "onConnected onCapabilityChanged mPhoneNodeID:" + mPhoneNodeId
+                    + ", Capability: " + capabilityInfo);
+            }
+        };
+
+        Wearable.CapabilityApi.addCapabilityListener(googleApiClient, capabilityListener, CAPABILITY_PHONE_APP);
 
         Wearable.ChannelApi.addListener(googleApiClient, this);
         requestData();
@@ -577,6 +727,28 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
+
+
+    private void setLocalNodeName() {
+        forceGoogleApiConnect();
+        PendingResult<NodeApi.GetLocalNodeResult> result = Wearable.NodeApi.getLocalNode(googleApiClient);
+        result.setResultCallback(new ResultCallback<NodeApi.GetLocalNodeResult>() {
+
+            @Override
+            public void onResult(NodeApi.GetLocalNodeResult getLocalNodeResult) {
+                if (!getLocalNodeResult.getStatus().isSuccess()) {
+                    Log.e(TAG, "ERROR: failed to getLocalNode Status="
+                        + getLocalNodeResult.getStatus().getStatusMessage());
+                } else {
+                    Log.d(TAG, "getLocalNode Status=: " + getLocalNodeResult.getStatus().getStatusMessage());
+                    Node getnode = getLocalNodeResult.getNode();
+                    localnode = getnode != null ? getnode.getDisplayName() + "|" + getnode.getId() : "";
+                    Log.d(TAG, "setLocalNodeName.  localnode=" + localnode);
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onDestroy() {

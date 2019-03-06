@@ -68,6 +68,7 @@ android {
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
         ndk {
             moduleName "BleCommandUtil"
@@ -194,7 +195,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:1.7.12"
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
-    implementation "com.google.android.gms:play-services-wearable:7.5.0"
+    implementation 'com.google.android.gms:play-services-wearable:10.2.1'
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation(name: "sightparser-release", ext: "aar")
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
