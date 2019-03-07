@@ -1312,7 +1312,8 @@
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
     <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
     <string name="dst_loop_disabled_warning">Dayligh Saving time change in less than 3 hours - Closed loop diabled</string>
-
+    <string name="storage">internal storage constraint</string>
+    <string name="diskfull">Free at least 200Mb from internal storage! Loop disabled!</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
