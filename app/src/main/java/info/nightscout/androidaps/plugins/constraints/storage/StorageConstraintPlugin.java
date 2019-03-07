@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -16,6 +17,9 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 
 /**
  * Created by Rumen on 06.03.2019.
@@ -47,9 +51,14 @@ public class StorageConstraintPlugin extends PluginBase implements ConstraintsIn
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
         long diskfree = getAvailableInternalMemorySize();
-        log.debug("Internal storage free (Mb):"+diskfree);
-        if (diskfree < 200) {
-            value.set(false, MainApp.gs(R.string.diskfull), this);
+        if (L.isEnabled(L.CONSTRAINTS))
+            log.debug("Internal storage free (Mb):" + diskfree);
+        if (diskfree < Constants.MINIMUM_FREE_SPACE) {
+            value.set(false, MainApp.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), this);
+            Notification notification = new Notification(Notification.DISKFULL, MainApp.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL);
+            MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.DISKFULL));
         }
 
         return value;
