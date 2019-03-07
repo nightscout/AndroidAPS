@@ -178,7 +178,7 @@ public class LoopPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
-        new Thread(() -> LoopPlugin.getPlugin().invoke("EventTempTargetChange", true)).start();
+        new Thread(() -> invoke("EventTempTargetChange", true)).start();
         FabricPrivacy.getInstance().logCustom(new CustomEvent("TT_Loop_Run"));
     }
 
