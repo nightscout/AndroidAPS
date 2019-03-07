@@ -63,7 +63,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "2.1.2"
+        version "2.1.3-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
