@@ -152,7 +152,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             .addOnConnectionFailedListener(this).addApi(Wearable.API).build();
         Wearable.MessageApi.addListener(googleApiClient, this);
         if (googleApiClient.isConnected()) {
-            Log.d(TAG, logPrefix + "API client is connected");
+            log.debug(logPrefix + "API client is connected");
         } else {
             // Log.d("WatchUpdater", logPrefix + "API client is not connected and is trying to connect");
             googleApiClient.connect();
@@ -703,7 +703,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             debugData("sendCancelNotificationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
-            Log.e("cancelNotificationRequest", "No connection to wearable available!");
+            Log.e("cancelNotificationReq", "No connection to wearable available!");
         }
     }
 
