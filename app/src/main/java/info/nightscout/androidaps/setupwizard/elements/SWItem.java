@@ -15,7 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class SWItem {
     private static Logger log = LoggerFactory.getLogger(SWItem.class);

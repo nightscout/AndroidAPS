@@ -1,15 +1,11 @@
 package info.nightscout.androidaps.interfaces;
 
-import net.bytebuddy.build.Plugin;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
-
-import static org.junit.Assert.*;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
 
 @RunWith(PowerMockRunner.class)
 public class PluginDescriptionTest {

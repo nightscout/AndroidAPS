@@ -70,7 +70,7 @@
             android:dialogMessage="@string/smbmaxminutes"
             android:digits="0123456789"
             android:inputType="number"
-            android:key="key_smbmaxminutes"
+            android:key="@string/key_smbmaxminutes"
             android:maxLines="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"

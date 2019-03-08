@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces;
 
-import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 
 /**
  * Created by mike on 10.06.2016.

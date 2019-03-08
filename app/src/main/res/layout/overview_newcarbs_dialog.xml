@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.NewCarbsDialog">
+    tools:context=".plugins.general.overview.Dialogs.NewCarbsDialog">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                     android:textStyle="bold"
                     android:text="@string/time_offset" />
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/newcarbs_time"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -119,7 +119,7 @@
                     android:textStyle="bold"
                     android:text="@string/duration"/>
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/new_carbs_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -147,7 +147,7 @@
                     android:textStyle="bold"
                     android:text="@string/overview_carbs_label" />
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/newcarb_carbsamount"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"

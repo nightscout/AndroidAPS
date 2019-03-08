@@ -1,6 +1,6 @@
 package info.nightscout.androidaps;
 
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 07.06.2016.
@@ -67,5 +67,8 @@ public class Constants {
 
     //SMS Communicator
     public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
+
+    //Storage [MB]
+    public static final long MINIMUM_FREE_SPACE = 200;
 
 }

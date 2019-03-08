@@ -7,8 +7,8 @@ import java.util.List;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.Actions.defs.CustomAction;
-import info.nightscout.androidaps.plugins.Actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 
 /**
  * Created by mike on 04.06.2016.

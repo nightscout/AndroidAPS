@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.Round;
 
 public class IobTotal {
     private static Logger log = LoggerFactory.getLogger(IobTotal.class);

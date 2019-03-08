@@ -10,9 +10,8 @@ import android.view.MenuItem;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.utils.PasswordProtection;
+import info.nightscout.androidaps.utils.PasswordProtection;
 
 public class SingleFragmentActivity extends AppCompatActivity {
 

@@ -117,7 +117,7 @@
     <string name="tempbasal">ВремБазал</string>
     <string name="treatments">назначения</string>
     <string name="virtualpump">виртуальная помпа</string>
-    <string name="careportal">портал назначений</string>
+    <string name="careportal">Портал лечения / назначений</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AndroidAPS?</string>
     <string name="configbuilder_treatments">назначения</string>
@@ -382,7 +382,7 @@
     <string name="high_mark">Отметка ВЫСОКИЙ</string>
     <string name="wear">Смарт-часы Wear</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
-    <string name="open_settings_on_wear">открыть настройки для Wear</string>
+    <string name="open_settings_on_wear">Открыть настройки на Wear</string>
     <string name="pumperror">ошибка помпы</string>
     <string name="lowbattery">низкий заряд батареи</string>
     <string name="pumpshutdown">Выключение помпы</string>
@@ -443,7 +443,7 @@
     <string name="virtualpump_shortname">ВиртПомпа</string>
     <string name="profileviewer_shortname">профильNS</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
-    <string name="careportal_shortname">ПОРТНаз</string>
+    <string name="careportal_shortname">ПОРТЛЕЧ</string>
     <string name="objectives_shortname">ЦЕЛИ</string>
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -1024,6 +1024,7 @@ Context | Edit Context</string>
     <string name="nth_objective">%1$d. Цель</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Получать данные гликемии от приложения Poctech</string>
+    <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Высокая врем. цель temptarget повышает чувствительность</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Повысить чувствительность для temptargets > = 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Низкая временная цель temptarget снижает чувствительность</string>
@@ -1131,11 +1132,15 @@ Context | Edit Context</string>
     <string name="max_recovery_duration">Макс продолжительность восстановления [s]</string>
     <string name="min_recovery_duration">Мин. продолжительность восстановления [s]</string>
     <string name="recovery_duration">Продолжительность восстановления</string>
+    <string name="timeout_during_handshake">Тайм-аут сопряжения - сбросьте bluetooth</string>
     <string name="profile_total">== ∑  %1$s ед</string>
     <string name="profile_ins_units_per_hout">Ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <string name="profile_per_unit">/ед</string>
-    <string name="key_dexcom_lognssensorchange">dexcom_lognssensorchange</string>
     <string name="dexcom_lognssensorchange_title">Внести замену сенсора в лог NS</string>
     <string name="dexcom_lognssensorchange_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
+    <string name="tomato">Томато (MiaoMiao)</string>
+    <string name="tomato_short">Томато</string>
+    <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Переход на летнее/зимнее время менее чем через 3 часа - замкнутый цикл отключен</string>
 </resources>
