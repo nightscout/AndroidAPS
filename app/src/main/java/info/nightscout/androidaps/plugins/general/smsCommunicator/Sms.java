@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator;
 
 import android.telephony.SmsMessage;
 
-import info.nightscout.utils.DateUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 
 class Sms {
     String phoneNumber;
