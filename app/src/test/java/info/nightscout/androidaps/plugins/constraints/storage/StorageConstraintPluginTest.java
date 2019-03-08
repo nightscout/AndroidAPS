@@ -43,13 +43,11 @@ public class StorageConstraintPluginTest extends StorageConstraintPlugin{
         when(StorageConstraintPlugin.getAvailableInternalMemorySize()).thenReturn(150L);
         Constraint<Boolean> c = new Constraint<>(true);
         c = storageConstraintPlugin.isClosedLoopAllowed(c);
-        Assert.assertEquals(true, c.getReasons().contains(MainApp.gs(R.string.diskfull)));
         Assert.assertEquals(Boolean.FALSE, c.value());
         // Set free space over 200(Mb) to enable loop
         when(StorageConstraintPlugin.getAvailableInternalMemorySize()).thenReturn(300L);
         Constraint<Boolean> c2 = new Constraint<>(true);
         c2 = storageConstraintPlugin.isClosedLoopAllowed(c2);
-        Assert.assertEquals(false, c2.getReasons().contains(MainApp.gs(R.string.diskfull)));
         Assert.assertEquals(Boolean.TRUE, c2.value());
     }
 
@@ -74,6 +72,7 @@ public class StorageConstraintPluginTest extends StorageConstraintPlugin{
     public void prepareMock() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockStrings();
+        AAPSMocker.mockBus();
         mockedFile = mock(File.class);
         mockedStatFs = mock(StatFs.class);
         storageConstraintPlugin = StorageConstraintPlugin.getPlugin();
