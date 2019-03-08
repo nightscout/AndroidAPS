@@ -363,6 +363,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             }
                         } else if (splited[1].endsWith("%")) {
                             int tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(splited[1],"%"));
+                            int duration = 30;
+                            if (splited.length > 2)
+                                duration = SafeParse.stringToInt(splited[2]);
                             Profile profile = ProfileFunctions.getInstance().getProfile();
                             if (profile == null) {
                                 reply = MainApp.gs(R.string.noprofile);
@@ -376,12 +379,12 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                     passCode = generatePasscode();
                                     reply = String.format(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, passCode);
                                     receivedSms.processed = true;
-                                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasalPct) {
+                                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasalPct, duration) {
                                         @Override
                                         public void run() {
                                             Profile profile = ProfileFunctions.getInstance().getProfile();
                                             if (profile != null)
-                                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(anInteger, 30, true, profile, new Callback() {
+                                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(anInteger, secondInteger, true, profile, new Callback() {
                                                     @Override
                                                     public void run() {
                                                         if (result.success) {
@@ -408,6 +411,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             }
                         } else {
                             Double tempBasal = SafeParse.stringToDouble(splited[1]);
+                            int duration = 30;
+                            if (splited.length > 2)
+                                duration = SafeParse.stringToInt(splited[2]);
                             Profile profile = ProfileFunctions.getInstance().getProfile();
                             if (profile == null) {
                                 reply = MainApp.gs(R.string.noprofile);
@@ -418,12 +424,12 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                     passCode = generatePasscode();
                                     reply = String.format(MainApp.gs(R.string.smscommunicator_basalreplywithcode), tempBasal, passCode);
                                     receivedSms.processed = true;
-                                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasal) {
+                                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasal, duration) {
                                         @Override
                                         public void run() {
                                             Profile profile = ProfileFunctions.getInstance().getProfile();
                                             if (profile != null)
-                                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(aDouble, 30, true, profile, new Callback() {
+                                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(aDouble, secondInteger, true, profile, new Callback() {
                                                     @Override
                                                     public void run() {
                                                         if (result.success) {
