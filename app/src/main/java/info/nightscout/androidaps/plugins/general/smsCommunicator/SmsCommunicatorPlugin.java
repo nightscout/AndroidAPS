@@ -518,6 +518,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             Notification notification = new Notification(Notification.MISSING_SMS_PERMISSION, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
         }
+        MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
     }
 
     private String generatePasscode() {
