@@ -11,6 +11,7 @@ class Sms {
     boolean received = false;
     boolean sent = false;
     boolean processed = false;
+    boolean ignored = false;
 
     Sms(SmsMessage message) {
         phoneNumber = message.getOriginatingAddress();

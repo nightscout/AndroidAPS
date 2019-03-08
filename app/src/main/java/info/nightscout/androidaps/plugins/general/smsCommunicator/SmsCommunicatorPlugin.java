@@ -142,6 +142,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
         if (!isAllowedNumber(receivedSms.phoneNumber)) {
             log.debug("Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed");
+            receivedSms.ignored = true;
+            messages.add(receivedSms);
+            MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
             return;
         }
 

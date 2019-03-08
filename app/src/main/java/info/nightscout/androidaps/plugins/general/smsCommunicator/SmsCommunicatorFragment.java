@@ -59,7 +59,9 @@ public class SmsCommunicatorFragment extends SubscriberFragment {
                 String logText = "";
                 for (int x = start; x < SmsCommunicatorPlugin.getPlugin().messages.size(); x++) {
                     Sms sms = SmsCommunicatorPlugin.getPlugin().messages.get(x);
-                    if (sms.received) {
+                    if (sms.ignored) {
+                        logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + "░ " + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
+                    } else if (sms.received) {
                         logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
                     } else if (sms.sent) {
                         logText += DateUtil.timeString(sms.date) + " &gt;&gt;&gt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
