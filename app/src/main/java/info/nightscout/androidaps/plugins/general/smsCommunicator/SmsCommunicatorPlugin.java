@@ -477,7 +477,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     }
                     break;
                 default: // expect passCode here
-                    if (splited[0].startsWith("#")) {
+                    if (!Character.isLetter(splited[0].charAt(0))) {
                         // user text .... ignore
                     } else if (messageToConfirm != null) {
                         messageToConfirm.action(splited[0]);
