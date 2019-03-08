@@ -369,6 +369,7 @@
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h reply with code %2$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% reply with code %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d %%  for %2$d min started successfully</string>
@@ -1315,6 +1316,7 @@
     <string name="dst_loop_disabled_warning">Dayligh Saving time change in less than 3 hours - Closed loop diabled</string>
     <string name="storage">internal storage constraint</string>
     <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
+    <string name="wrongformat">Wrong format</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

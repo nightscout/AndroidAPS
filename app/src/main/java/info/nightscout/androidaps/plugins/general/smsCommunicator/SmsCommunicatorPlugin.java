@@ -9,6 +9,7 @@ import android.telephony.SmsMessage;
 
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -359,6 +360,51 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             } else {
                                 reply = MainApp.gs(R.string.smscommunicator_remotebasalnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                            }
+                        } else if (splited[1].endsWith("%")) {
+                            int tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(splited[1],"%"));
+                            Profile profile = ProfileFunctions.getInstance().getProfile();
+                            if (profile == null) {
+                                reply = MainApp.gs(R.string.noprofile);
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                            } else if (tempBasalPct == 0 && !splited[1].equals("0%")) {
+                                reply = MainApp.gs(R.string.wrongformat);
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                            } else {
+                                tempBasalPct = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(tempBasalPct), profile).value();
+                                if (remoteCommandsAllowed) {
+                                    passCode = generatePasscode();
+                                    reply = String.format(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, passCode);
+                                    receivedSms.processed = true;
+                                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasalPct) {
+                                        @Override
+                                        public void run() {
+                                            Profile profile = ProfileFunctions.getInstance().getProfile();
+                                            if (profile != null)
+                                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(anInteger, 30, true, profile, new Callback() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (result.success) {
+                                                            String reply;
+                                                            if (result.isPercent)
+                                                                reply = String.format(MainApp.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration);
+                                                            else
+                                                                reply = String.format(MainApp.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
+                                                            reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
+                                                            sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                                                        } else {
+                                                            String reply = MainApp.gs(R.string.smscommunicator_tempbasalfailed);
+                                                            reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
+                                                            sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                                                        }
+                                                    }
+                                                });
+                                        }
+                                    });
+                                } else {
+                                    reply = MainApp.gs(R.string.smscommunicator_remotebasalnotallowed);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                                }
                             }
                         } else {
                             Double tempBasal = SafeParse.stringToDouble(splited[1]);
