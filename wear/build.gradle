@@ -56,9 +56,9 @@ android {
             versionName version
         }
         pumpcontrol {
-            applicationId "info.nightscout.androidaps"
+            applicationId "info.nightscout.aapspumpcontrol"
             dimension "standard"
-            versionName version
+            versionName version + "-pumpcontrol"
         }
         nsclient {
             applicationId "info.nightscout.nsclient"

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Overview.OverviewFragment">
+    tools:context=".plugins.general.overview.OverviewFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -543,7 +543,7 @@
                 android:orientation="horizontal"
                 android:paddingRight="5dp">
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -557,7 +557,7 @@
                     android:textColor="@color/colorTreatmentButton"
                     android:textSize="10sp" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_insulinbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -572,7 +572,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_carbsbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -587,7 +587,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -602,7 +602,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/bgsource_upload">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_dexcomg5_nsupload"
+            android:title="@string/dexcomg5_nsupload_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_dexcomg5_xdripupload"
+            android:summary="@string/dexcomg5_xdripupload_summary"
+            android:title="@string/dexcomg5_xdripupload_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_dexcom_lognssensorchange"
+            android:summary="@string/dexcom_lognssensorchange_summary"
+            android:title="@string/dexcom_lognssensorchange_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

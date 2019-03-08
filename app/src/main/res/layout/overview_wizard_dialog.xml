@@ -28,7 +28,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/treatments_wizard_bginput"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
@@ -61,7 +61,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/treatments_wizard_carbsinput"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -95,7 +95,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/treatments_wizard_correctioninput"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -129,7 +129,7 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.utils.NumberPicker
+            <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/treatments_wizard_carbtimeinput"
                 android:layout_width="130dp"
                 android:layout_height="40dp"

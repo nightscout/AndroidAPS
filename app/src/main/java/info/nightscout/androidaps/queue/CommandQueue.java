@@ -21,20 +21,21 @@ import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
-import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.general.overview.Dialogs.BolusProgressHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.queue.commands.CommandBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelExtendedBolus;
 import info.nightscout.androidaps.queue.commands.CommandCancelTempBasal;
 import info.nightscout.androidaps.queue.commands.CommandExtendedBolus;
+import info.nightscout.androidaps.queue.commands.CommandInsightSetTBROverNotification;
 import info.nightscout.androidaps.queue.commands.CommandLoadEvents;
 import info.nightscout.androidaps.queue.commands.CommandLoadHistory;
 import info.nightscout.androidaps.queue.commands.CommandLoadTDDs;
@@ -42,6 +43,8 @@ import info.nightscout.androidaps.queue.commands.CommandReadStatus;
 import info.nightscout.androidaps.queue.commands.CommandSMBBolus;
 import info.nightscout.androidaps.queue.commands.CommandSetProfile;
 import info.nightscout.androidaps.queue.commands.CommandSetUserSettings;
+import info.nightscout.androidaps.queue.commands.CommandStartPump;
+import info.nightscout.androidaps.queue.commands.CommandStopPump;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute;
 import info.nightscout.androidaps.queue.commands.CommandTempBasalPercent;
 
@@ -237,6 +240,21 @@ public class CommandQueue {
         notifyAboutNewCommand();
 
         return true;
+    }
+
+    public void stopPump(Callback callback) {
+        add(new CommandStopPump(callback));
+        notifyAboutNewCommand();
+    }
+
+    public void startPump(Callback callback) {
+        add(new CommandStartPump(callback));
+        notifyAboutNewCommand();
+    }
+
+    public void setTBROverNotification(Callback callback, boolean enable) {
+        add(new CommandInsightSetTBROverNotification(callback, enable));
+        notifyAboutNewCommand();
     }
 
     public synchronized void cancelAllBoluses() {

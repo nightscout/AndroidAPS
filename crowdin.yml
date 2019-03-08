@@ -1,5 +1,5 @@
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%two_letters_code%/strings.xml
-  - source: /app/src/main/res/values/insight_alerts.xml
-    translation: /app/src/main/res/values-%two_letters_code%/insight_alerts.xml
+  - source: /app/src/main/res/values/insight_*.xml
+    translation: /app/src/main/res/values-%two_letters_code%/%original_file_name%

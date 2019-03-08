@@ -21,15 +21,16 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentService;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -100,6 +101,10 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.careportal_profileswitch)).thenReturn("Profile Switch");
         when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
         when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
+        when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
+        when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
+        when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
+        when(MainApp.gs(R.string.diskfull)).thenReturn("Free at least 200Mb from internal storage! Loop disabled!");
     }
 
     public static MainApp mockMainApp() {
@@ -176,8 +181,10 @@ public class AAPSMocker {
     public static DanaRPlugin mockDanaRPlugin() {
         PowerMockito.mockStatic(DanaRPlugin.class);
         DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
+        DanaRv2Plugin danaRv2Plugin = mock(DanaRv2Plugin.class);
         DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
         when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
+        when(MainApp.getSpecificPlugin(DanaRv2Plugin.class)).thenReturn(danaRv2Plugin);
         when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
         return danaRPlugin;
     }

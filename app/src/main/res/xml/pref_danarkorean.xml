@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:title="@string/danar_pump_settings">
 
-        <info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference
+        <info.nightscout.androidaps.plugins.pump.danaR.BluetoothDevicePreference
             android:dialogTitle="@string/danar_bt_name_title"
             android:key="@string/key_danar_bt_name"
             android:title="@string/danar_bt_name_title" />

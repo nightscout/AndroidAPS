@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment">
+    tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

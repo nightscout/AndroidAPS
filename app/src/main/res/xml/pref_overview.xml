@@ -138,16 +138,74 @@
         <Preference
             android:key="quickwizard"
             android:title="@string/quickwizardsettings">
-            <intent android:action="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+            <intent android:action="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
         </Preference>
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <PreferenceScreen android:title="@string/advancedsettings_title" android:key="@string/key_advancedsettings">
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_usesuperbolus"
                 android:summary="@string/enablesuperbolus_summary"
                 android:title="@string/enablesuperbolus" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_show_statuslights"
+                android:summary="@string/show_statuslights_summary"
+                android:title="@string/show_statuslights" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="80"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_res_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_res_warning"
+                validate:maxNumber="300"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="10"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_res_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_res_critical"
+                validate:maxNumber="300"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="25"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_bat_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_bat_warning"
+                validate:maxNumber="100"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="5"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_bat_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_bat_critical"
+                validate:maxNumber="100"
+                validate:minNumber="0"
+                validate:testType="numericRange" />
 
         </PreferenceScreen>
 
