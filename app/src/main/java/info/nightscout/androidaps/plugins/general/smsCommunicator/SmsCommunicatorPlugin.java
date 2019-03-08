@@ -378,7 +378,11 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                                     @Override
                                                     public void run() {
                                                         if (result.success) {
-                                                            String reply = String.format(MainApp.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
+                                                            String reply;
+                                                            if (result.isPercent)
+                                                                reply = String.format(MainApp.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration);
+                                                            else
+                                                                reply = String.format(MainApp.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
                                                             reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
                                                             sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
                                                         } else {
