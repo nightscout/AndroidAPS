@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator;
 
 import android.telephony.SmsMessage;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.utils.DateUtil;
 
 class Sms {
@@ -23,6 +24,13 @@ class Sms {
     Sms(String phoneNumber, String text) {
         this.phoneNumber = phoneNumber;
         this.text = text;
+        this.date = DateUtil.now();
+        sent = true;
+    }
+
+    Sms(String phoneNumber, int textId) {
+        this.phoneNumber = phoneNumber;
+        this.text = MainApp.gs(textId);
         this.date = DateUtil.now();
         sent = true;
     }
