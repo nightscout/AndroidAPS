@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.*;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.*;
 import org.json.JSONException;
@@ -1057,6 +1059,16 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public PumpEnactResult loadTDDs() {
         return new PumpEnactResult().success(true);
+    }
+
+    @Override
+    public List<CustomAction> getCustomActions() {
+        return null;
+    }
+
+    @Override
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
     private void readHistory() {

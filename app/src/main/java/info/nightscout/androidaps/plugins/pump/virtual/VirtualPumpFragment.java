@@ -20,10 +20,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+
 
 public class VirtualPumpFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpFragment.class);
@@ -119,4 +122,6 @@ public class VirtualPumpFragment extends SubscriberFragment {
                 }
             });
     }
+
+
 }
