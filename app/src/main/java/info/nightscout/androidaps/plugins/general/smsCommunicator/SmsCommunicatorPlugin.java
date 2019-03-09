@@ -358,11 +358,11 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                     }
                                 });
                             } else {
-                                reply = MainApp.gs(R.string.smscommunicator_remotebasalnotallowed);
+                                reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply));
                             }
                         } else if (splited[1].endsWith("%")) {
-                            int tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(splited[1],"%"));
+                            int tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(splited[1], "%"));
                             int duration = 30;
                             if (splited.length > 2)
                                 duration = SafeParse.stringToInt(splited[2]);
@@ -405,7 +405,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                         }
                                     });
                                 } else {
-                                    reply = MainApp.gs(R.string.smscommunicator_remotebasalnotallowed);
+                                    reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply));
                                 }
                             }
@@ -450,7 +450,76 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                         }
                                     });
                                 } else {
-                                    reply = MainApp.gs(R.string.smscommunicator_remotebasalnotallowed);
+                                    reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "EXTENDED":
+                    if (splited.length > 1) {
+                        if (splited[1].toUpperCase().equals("CANCEL") || splited[1].toUpperCase().equals("STOP")) {
+                            if (remoteCommandsAllowed) {
+                                passCode = generatePasscode();
+                                reply = String.format(MainApp.gs(R.string.smscommunicator_extendedstopreplywithcode), passCode);
+                                receivedSms.processed = true;
+                                messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction() {
+                                    @Override
+                                    public void run() {
+                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(new Callback() {
+                                            @Override
+                                            public void run() {
+                                                if (result.success) {
+                                                    String reply = MainApp.gs(R.string.smscommunicator_extendedcanceled);
+                                                    reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
+                                                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                                                } else {
+                                                    String reply = MainApp.gs(R.string.smscommunicator_extendedcancelfailed);
+                                                    reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
+                                                    sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                            }
+                        } else {
+                            if (splited.length < 3) {
+                                reply = MainApp.gs(R.string.wrongformat);
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                            } else {
+                                Double extended = SafeParse.stringToDouble(splited[1]);
+                                int duration = SafeParse.stringToInt(splited[2]);
+                                extended = MainApp.getConstraintChecker().applyExtendedBolusConstraints(new Constraint<>(extended)).value();
+                                if (remoteCommandsAllowed) {
+                                    passCode = generatePasscode();
+                                    reply = String.format(MainApp.gs(R.string.smscommunicator_extendedreplywithcode), extended, duration, passCode);
+                                    receivedSms.processed = true;
+                                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(extended, duration) {
+                                        @Override
+                                        public void run() {
+                                            ConfigBuilderPlugin.getPlugin().getCommandQueue().extendedBolus(aDouble, secondInteger, new Callback() {
+                                                @Override
+                                                public void run() {
+                                                    if (result.success) {
+                                                        String reply = String.format(MainApp.gs(R.string.smscommunicator_extendedset), aDouble, duration);
+                                                        reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
+                                                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                                                    } else {
+                                                        String reply = MainApp.gs(R.string.smscommunicator_extendedfailed);
+                                                        reply += "\n" + ConfigBuilderPlugin.getPlugin().getActivePump().shortStatus(true);
+                                                        sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply));
                                 }
                             }
@@ -459,7 +528,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     break;
                 case "BOLUS":
                     if (System.currentTimeMillis() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
-                        reply = MainApp.gs(R.string.smscommunicator_remotebolusnotallowed);
+                        reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply));
                     } else if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended()) {
                         reply = MainApp.gs(R.string.pumpsuspended);
@@ -500,7 +569,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 }
                             });
                         } else {
-                            reply = MainApp.gs(R.string.smscommunicator_remotebolusnotallowed);
+                            reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply));
                         }
                     }
@@ -526,7 +595,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 }
                             });
                         } else {
-                            reply = MainApp.gs(R.string.smscommunicator_remotecalibrationnotallowed);
+                            reply = MainApp.gs(R.string.smscommunicator_remotecommandnotallowed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply));
                         }
                     }

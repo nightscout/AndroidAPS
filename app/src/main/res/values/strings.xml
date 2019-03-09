@@ -298,7 +298,6 @@
     <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusdelivering" formatted="false">Delivering %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -366,17 +365,22 @@
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Value %s is out of hard limits</string>
-    <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h reply with code %2$s</string>
+    <string name="smscommunicator_extendedreplywithcode">To start extended bolus %1$.2fU for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% reply with code %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
+    <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d %%  for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
+    <string name="smscommunicator_extendedfailed">Extended bolus start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
+    <string name="smscommunicator_extendedstopreplywithcode" formatted="false">To stop extended bolus reply with code %s</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
+    <string name="smscommunicator_extendedcanceled">Extended bolus canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
+    <string name="smscommunicator_extendedcancelfailed">Canceling extended bolus failed</string>
     <string name="smscommunicator_unknowncommand">Uknown command or wrong reply</string>
 
     <string name="quickwizard">QuickWizard</string>
@@ -510,7 +514,6 @@
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Remote calibration not allowed</string>
     <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
     <string name="pumpsuspended">Pump suspended</string>
