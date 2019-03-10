@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
 import org.junit.Before;
-import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 
@@ -90,7 +89,7 @@ public class MedtronicPumpHistoryDecoderUTest {
     }
 
 
-    @Test
+    // @Test
     public void decodeDailyTotals515() {
 
         byte[] data = ByteUtil
@@ -111,7 +110,7 @@ public class MedtronicPumpHistoryDecoderUTest {
     }
 
 
-    @Test
+    // @Test
     public void decodeDailyTotals523() {
 
         byte[] data = new byte[] {

@@ -560,8 +560,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             rawHistoryPage.dumpToDebug();
 
-            List<PumpHistoryEntry> medtronicHistoryEntries = pumpHistoryDecoder.processPageAndCreateRecords(
-                rawHistoryPage, false, PumpHistoryEntry.class);
+            List<PumpHistoryEntry> medtronicHistoryEntries = pumpHistoryDecoder
+                .processPageAndCreateRecords(rawHistoryPage);
 
             LOG.debug("getPumpHistory: Found {} history entries.", medtronicHistoryEntries.size());
 

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus;
 
 /**
@@ -35,7 +34,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
  * Author: Andy {andy@atech-software.com}
  */
 
-public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
+public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHistoryEntry> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicCGMSHistoryDecoder.class);
 
@@ -46,7 +45,17 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    public RecordDecodeStatus decodeRecord(MedtronicHistoryEntry entryIn) {
+    // @Override
+    // public Class<CGMSHistoryEntry> getHistoryEntryClass() {
+    // return CGMSHistoryEntry.class;
+    // }
+
+    // @Override
+    // public Class getHistoryEntryClass() {
+    // return CGMSHistoryEntry.class;
+    // }
+
+    public RecordDecodeStatus decodeRecord(CGMSHistoryEntry entryIn) {
         CGMSHistoryEntry precord = (CGMSHistoryEntry)entryIn;
         try {
             return decodeRecord(precord, false);
@@ -110,7 +119,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
     }
 
 
-    protected <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClearInput, Class<E> clazz) {
+    public List<CGMSHistoryEntry> createRecords(List<Byte> dataClearInput) {
         // List<MinimedHistoryEntry> listRecords = new
         // ArrayList<MinimedHistoryEntry>();
 
@@ -126,7 +135,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
         int counter = 0;
         int record = 0;
 
-        List<E> outList = new ArrayList<E>();
+        List<CGMSHistoryEntry> outList = new ArrayList<CGMSHistoryEntry>();
 
         // create CGMS entries (without dates)
         do {
@@ -156,7 +165,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
 
                     // System.out.println("Record: " + pe);
 
-                    outList.add((E)pe);
+                    outList.add(pe);
                 } else {
                     List<Byte> listRawData = new ArrayList<Byte>();
                     listRawData.add((byte)opCode);
@@ -174,7 +183,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
 
                     // System.out.println("Record: " + pe);
 
-                    outList.add((E)pe);
+                    outList.add(pe);
                 }
             } else {
                 CGMSHistoryEntry pe = new CGMSHistoryEntry();
@@ -188,7 +197,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder {
 
                 // System.out.println("Record: " + pe);
 
-                outList.add((E)pe);
+                outList.add(pe);
             }
 
         } while (counter < dataClear.size());

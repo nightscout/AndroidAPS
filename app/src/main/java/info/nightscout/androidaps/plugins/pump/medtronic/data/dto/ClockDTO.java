@@ -12,5 +12,7 @@ public class ClockDTO {
 
     public LocalDateTime pumpTime;
 
-    public long timeDifference; // s
+    //public Duration timeDifference;
+
+    public int timeDifference; // s
 }

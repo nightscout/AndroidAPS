@@ -1712,12 +1712,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
 
     public int getBackgroundColor(OverviewColorScheme scheme) {
-        return MainApp.gc(scheme.getBackground(isNewColor));
+        return MainApp.gc(scheme.getBackground(useNewRibbonColors));
     }
 
 
     public int getTextColor(OverviewColorScheme scheme) {
-        return MainApp.gc(scheme.getTextColor(isNewColor));
+        return MainApp.gc(scheme.getTextColor(useNewRibbonColors));
     }
 
 

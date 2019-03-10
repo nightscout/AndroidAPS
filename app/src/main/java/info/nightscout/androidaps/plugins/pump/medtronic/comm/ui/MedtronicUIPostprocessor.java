@@ -137,7 +137,7 @@ public class MedtronicUIPostprocessor {
         Duration dur = new Duration(clockDTO.localDeviceTime.toDateTime(DateTimeZone.UTC),
             clockDTO.pumpTime.toDateTime(DateTimeZone.UTC));
 
-        clockDTO.timeDifference = dur.getStandardSeconds();
+        clockDTO.timeDifference = (int)dur.getStandardSeconds();
 
         MedtronicUtil.setPumpTime(clockDTO);
 

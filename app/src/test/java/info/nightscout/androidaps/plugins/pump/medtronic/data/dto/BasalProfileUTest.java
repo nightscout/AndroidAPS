@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
+import static org.mockito.Mockito.when;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -14,12 +16,12 @@ import info.SPMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by andy on 6/16/18.

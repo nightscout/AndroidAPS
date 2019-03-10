@@ -198,6 +198,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
+    // TODO remove
     private void migrateSettings() {
 
         if ("US (916 MHz)".equals(SP.getString(MedtronicConst.Prefs.PumpFrequency, null))) {
@@ -457,6 +458,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         this.pumpState = PumpDriverState.Connected;
 
+        // time (1h)
+        medtronicUIComm.executeCommand(MedtronicCommandType.RealTimeClock);
+        scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 30);
+
         readPumpHistory();
 
         // TODO rewrite reading of data to be done in background or different thread perhaps ??
@@ -471,10 +476,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         // configuration (once and then if history shows config changes)
         medtronicUIComm.executeCommand(MedtronicCommandType.getSettings(MedtronicUtil.getMedtronicPumpModel()));
-
-        // time (1h)
-        medtronicUIComm.executeCommand(MedtronicCommandType.RealTimeClock);
-        scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 30);
 
         // read profile (once, later its controlled by isThisProfileSet method)
         medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
@@ -511,86 +512,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        return isThisProfileSet_New(profile);
-    }
-
-
-    @Deprecated
-    public boolean isThisProfileSet_Old(Profile profile) {
-
-        if (!this.isInitialized) {
-            return true;
-        }
-
-        // LOG.info("isThisProfileSet: check");
-
-        LOG.info("isThisProfileSet: check [basalProfileChanged={}, basalByHourSet={}, isBasalProfileInvalid={}",
-            basalProfileChanged, getMDTPumpStatus().basalsByHour != null, isBasalProfileInvalid);
-
-        if (!basalProfileChanged && getMDTPumpStatus().basalsByHour != null && !isBasalProfileInvalid) {
-            if (isLoggingEnabled())
-                LOG.debug("isThisProfileSet: profile has not changed and is not invalid.");
-
-            return isProfileSame(profile);
-        }
-
-        setRefreshButtonEnabled(false);
-
-        if (isPumpNotReachable()) {
-            MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable);
-            setRefreshButtonEnabled(true);
-
-            return true; // we don't won't setting profile if pump unreachable
-        }
-
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
-
-        if (isLoggingEnabled())
-            LOG.debug("isThisProfileSet: profile possible changed, reading from Pump.");
-
-        MedtronicUITask responseTask = medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
-
-        boolean valid = false;
-        boolean noData = false;
-
-        LOG.debug("isThisProfileSet: haveData={}", responseTask.hasData());
-
-        if (responseTask.hasData()) {
-
-            valid = isProfileSame(profile);
-
-            LOG.debug("isThisProfileSet: valid={}", valid);
-
-            if (valid) {
-                basalProfileChanged = false;
-            }
-
-        } else {
-            noData = true;
-
-            if (isLoggingEnabled())
-                LOG.debug("Basal profile NO DATA");
-        }
-
-        isBasalProfileInvalid = !valid;
-
-        setRefreshButtonEnabled(true);
-
-        // we don't want to force set profile if we couldn't read the profile (noData)
-
-        return (noData || valid);
-    }
-
-
-    public boolean isThisProfileSet_New(Profile profile) {
-
         LOG.debug("isThisProfileSet: basalInitalized={}", getMDTPumpStatus().basalProfileStatus);
 
         if (getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.ProfileOK)
             return true;
 
         return isProfileSame(profile);
-
     }
 
 

@@ -34,7 +34,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * <p>
  * Author: Andy {andy@atech-software.com}
  */
-public abstract class MedtronicHistoryDecoder {
+public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> implements MedtronicHistoryDecoderInterface<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedtronicHistoryDecoder.class);
 
@@ -51,8 +51,9 @@ public abstract class MedtronicHistoryDecoder {
     }
 
 
-    public abstract RecordDecodeStatus decodeRecord(MedtronicHistoryEntry record);
+    // public abstract <E extends MedtronicHistoryEntry> Class<E> getHistoryEntryClass();
 
+    // public abstract RecordDecodeStatus decodeRecord(T record);
 
     public abstract void postProcess();
 
@@ -92,7 +93,7 @@ public abstract class MedtronicHistoryDecoder {
 
     // TODO_ extend this to also use bigger pages (for now we support only 1024
     // pages)
-    public List<Byte> checkPage(RawHistoryPage page, boolean partial) throws RuntimeException {
+    private List<Byte> checkPage(RawHistoryPage page, boolean partial) throws RuntimeException {
         List<Byte> byteList = new ArrayList<Byte>();
 
         // if (!partial && page.getData().length != 1024 /* page.commandType.getRecordLength() */) {
@@ -120,9 +121,8 @@ public abstract class MedtronicHistoryDecoder {
     // public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page,
     // boolean partial) throws Exception;
 
-    public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
-            Class<E> clazz) throws Exception {
-        return processPageAndCreateRecords(rawHistoryPage, false, clazz);
+    public List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage) {
+        return processPageAndCreateRecords(rawHistoryPage, false);
     }
 
 
@@ -213,12 +213,19 @@ public abstract class MedtronicHistoryDecoder {
     }
 
 
-    public <E extends MedtronicHistoryEntry> List<E> processPageAndCreateRecords(RawHistoryPage rawHistoryPage,
-            boolean partial, Class<E> clazz) {
-        List<Byte> dataClear = checkPage(rawHistoryPage, partial);
-        List<E> records = createRecords(dataClear, clazz);
+    // public List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage) {
+    // return processPageAndCreateRecords(rawHistoryPage, false, getHistoryEntryClass());
+    // }
 
-        for (MedtronicHistoryEntry record : records) {
+    // public List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage, boolean partial) {
+    // return processPageAndCreateRecords(rawHistoryPage, partial, getHistoryEntryClass());
+    // }
+
+    private List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage, boolean partial) {
+        List<Byte> dataClear = checkPage(rawHistoryPage, partial);
+        List<T> records = createRecords(dataClear);
+
+        for (T record : records) {
             decodeRecord(record);
         }
 
@@ -227,7 +234,6 @@ public abstract class MedtronicHistoryDecoder {
         return records;
     }
 
-
-    protected abstract <E extends MedtronicHistoryEntry> List<E> createRecords(List<Byte> dataClear, Class<E> clazz);
+    // public abstract List<T> createRecords(List<Byte> dataClear);
 
 }
