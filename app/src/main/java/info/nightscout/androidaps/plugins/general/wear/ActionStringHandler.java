@@ -693,7 +693,7 @@ public class ActionStringHandler {
 
         //send profile to pumpe
         new NewNSTreatmentDialog(); //init
-        NewNSTreatmentDialog.doProfileSwitch(0, percentage, timeshift);
+        ProfileFunctions.doProfileSwitch(0, percentage, timeshift);
     }
 
     private static void generateTempTarget(int duration, double low, double high) {

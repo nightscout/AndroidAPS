@@ -4,6 +4,7 @@ abstract class SmsAction implements Runnable {
     Double aDouble;
     Integer anInteger;
     Integer secondInteger;
+    String aString;
 
     SmsAction()  {}
 
@@ -13,6 +14,11 @@ abstract class SmsAction implements Runnable {
 
     SmsAction(Double aDouble, Integer secondInteger) {
         this.aDouble = aDouble;
+        this.secondInteger = secondInteger;
+    }
+
+    SmsAction(String aString, Integer secondInteger) {
+        this.aString = aString;
         this.secondInteger = secondInteger;
     }
 

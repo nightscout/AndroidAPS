@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
@@ -34,6 +35,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
@@ -183,6 +185,14 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     break;
                 case "PUMP":
                     processPUMP(splitted, receivedSms);
+                    break;
+                case "PROFILE":
+                    if (!remoteCommandsAllowed)
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
+                    else if (splitted.length == 2 || splitted.length == 3)
+                        processPROFILE(splitted, receivedSms);
+                    else
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
                     break;
                 case "BASAL":
                     if (!remoteCommandsAllowed)
@@ -406,6 +416,72 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 }
             }
         });
+        receivedSms.processed = true;
+    }
+
+    private void processPROFILE(String[] splitted, Sms receivedSms) {
+        // load profiles
+        ProfileInterface anInterface = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+        if (anInterface == null) {
+            sendSMS(new Sms(receivedSms.phoneNumber, R.string.notconfigured));
+            receivedSms.processed = true;
+            return;
+        }
+        ProfileStore store = anInterface.getProfile();
+        if (store == null) {
+            sendSMS(new Sms(receivedSms.phoneNumber, R.string.notconfigured));
+            receivedSms.processed = true;
+            return;
+        }
+        final ArrayList<CharSequence> list = store.getProfileList();
+
+        if (splitted[1].toUpperCase().equals("STATUS")) {
+            sendSMS(new Sms(receivedSms.phoneNumber, ProfileFunctions.getInstance().getProfileName()));
+        } else if (splitted[1].toUpperCase().equals("LIST")) {
+            if (list.isEmpty())
+                sendSMS(new Sms(receivedSms.phoneNumber, R.string.invalidprofile));
+            else {
+                String reply = "";
+                for (int i = 0; i < list.size(); i++) {
+                    if (i > 0)
+                        reply += "\n";
+                    reply += (i + 1) + ". ";
+                    reply += list.get(i);
+                }
+                sendSMS(new Sms(receivedSms.phoneNumber, reply));
+            }
+        } else {
+
+            int pindex = SafeParse.stringToInt(splitted[1]);
+            int percentage = 100;
+            if (splitted.length > 2)
+                percentage = SafeParse.stringToInt(splitted[2]);
+
+            if (pindex > list.size())
+                sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+            else if (percentage == 0)
+                sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+            else if (pindex == 0)
+                sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+            else {
+                final Profile profile = store.getSpecificProfile((String) list.get(pindex - 1));
+                if (profile == null)
+                    sendSMS(new Sms(receivedSms.phoneNumber, R.string.noprofile));
+                else {
+                    String passCode = generatePasscode();
+                    String reply = String.format(MainApp.gs(R.string.smscommunicator_profilereplywithcode), list.get(pindex - 1), percentage, passCode);
+                    receivedSms.processed = true;
+                    int finalPercentage = percentage;
+                    messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction((String) list.get(pindex - 1), finalPercentage) {
+                        @Override
+                        public void run() {
+                            ProfileFunctions.doProfileSwitch(store, (String) list.get(pindex - 1), 0, finalPercentage, 0);
+                            sendSMS(new Sms(receivedSms.phoneNumber, R.string.profileswitchcreated));
+                        }
+                    });
+                }
+            }
+        }
         receivedSms.processed = true;
     }
 
