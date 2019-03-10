@@ -1708,7 +1708,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    boolean isNewColor = false;
+    public static boolean useNewRibbonColors = true;
 
 
     public int getBackgroundColor(OverviewColorScheme scheme) {
