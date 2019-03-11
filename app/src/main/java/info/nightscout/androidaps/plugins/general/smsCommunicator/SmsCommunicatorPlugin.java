@@ -669,21 +669,26 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
                         @Override
                         public void run() {
-                            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-                            if (result.success) {
-                                SystemClock.sleep(T.secs(15).msecs()); // wait some time to get history
-                                String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
-                                if (pump != null)
-                                    reply += "\n" + pump.shortStatus(true);
-                                lastRemoteBolusTime = new Date();
-                                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
-                            } else {
-                                SystemClock.sleep(T.secs(60).msecs()); // wait some time to get history
-                                String reply = MainApp.gs(R.string.smscommunicator_bolusfailed);
-                                if (pump != null)
-                                    reply += "\n" + pump.shortStatus(true);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply));
-                            }
+                            final boolean resultSuccess = result.success;
+                            final double resultBolusDelivered = result.bolusDelivered;
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("SMS", new Callback() {
+                                @Override
+                                public void run() {
+                                    PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+                                    if (resultSuccess) {
+                                        String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered);
+                                        if (pump != null)
+                                            reply += "\n" + pump.shortStatus(true);
+                                        lastRemoteBolusTime = new Date();
+                                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                                    } else {
+                                        String reply = MainApp.gs(R.string.smscommunicator_bolusfailed);
+                                        if (pump != null)
+                                            reply += "\n" + pump.shortStatus(true);
+                                        sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                                    }
+                                }
+                            });
                         }
                     });
                 }
