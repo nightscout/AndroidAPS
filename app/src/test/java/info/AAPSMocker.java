@@ -104,7 +104,6 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
         when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
         when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
-        when(MainApp.gs(R.string.diskfull)).thenReturn("Free at least 200Mb from internal storage! Loop disabled!");
     }
 
     public static MainApp mockMainApp() {
