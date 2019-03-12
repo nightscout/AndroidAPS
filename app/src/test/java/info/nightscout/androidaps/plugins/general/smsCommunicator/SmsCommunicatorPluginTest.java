@@ -30,13 +30,11 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({SmsCommunicatorPlugin.class, L.class, SP.class, MainApp.class, DateUtil.class, ProfileFunctions.class, TreatmentsPlugin.class, SmsManager.class, IobCobCalculatorPlugin.class})
+@PrepareForTest({L.class, SP.class, MainApp.class, DateUtil.class, ProfileFunctions.class, TreatmentsPlugin.class, SmsManager.class, IobCobCalculatorPlugin.class})
 
 public class SmsCommunicatorPluginTest {
 
     SmsCommunicatorPlugin smsCommunicatorPlugin;
-    String sentNumber;
-    String sentText;
 
     @Test
     public void processSettingsTest() {
