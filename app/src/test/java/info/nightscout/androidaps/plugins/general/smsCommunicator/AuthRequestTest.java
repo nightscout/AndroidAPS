@@ -60,6 +60,10 @@ public class AuthRequestTest {
         actionCalled = false;
         authRequest.action("ABC");
         Assert.assertTrue(actionCalled);
+        // second time action should not be called
+        actionCalled = false;
+        authRequest.action("ABC");
+        Assert.assertFalse(actionCalled);
 
         // test timed out message
         long now = 10000;
