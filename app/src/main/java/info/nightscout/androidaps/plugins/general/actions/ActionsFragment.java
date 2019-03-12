@@ -3,15 +3,22 @@ package info.nightscout.androidaps.plugins.general.actions;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
@@ -25,18 +32,21 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SingleClickButton;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +59,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         return actionsPlugin;
     }
 
+    View actionsFragmentView;
     SingleClickButton profileSwitch;
     SingleClickButton tempTarget;
     SingleClickButton extendedBolus;
@@ -58,6 +69,9 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     SingleClickButton fill;
     SingleClickButton tddStats;
     SingleClickButton history;
+
+    private Map<String,CustomAction> pumpCustomActions = new HashMap<>();
+    private List<SingleClickButton> pumpCustomButtons = new ArrayList<>();
 
     public ActionsFragment() {
         super();
@@ -89,6 +103,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             fill.setOnClickListener(this);
             history.setOnClickListener(this);
             tddStats.setOnClickListener(this);
+
+            actionsFragmentView = view;
 
             updateGUI();
             return view;
@@ -192,10 +208,84 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                     else
                         tempTarget.setVisibility(View.VISIBLE);
 
-                    if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().supportsTDDs) tddStats.setVisibility(View.GONE);
-                    else tddStats.setVisibility(View.VISIBLE);
+                    if (!pump.getPumpDescription().supportsTDDs)
+                        tddStats.setVisibility(View.GONE);
+                    else
+                        tddStats.setVisibility(View.VISIBLE);
+
+                    checkPumpCustomActions();
+
                 }
             });
+    }
+
+
+    View.OnClickListener pumpCustomActionsListener = v -> {
+
+        SingleClickButton btn = (SingleClickButton)v;
+
+        CustomAction customAction = this.pumpCustomActions.get(btn.getText().toString());
+
+        ConfigBuilderPlugin.getPlugin().getActivePump().executeCustomAction(customAction.getCustomActionType());
+
+    };
+
+
+    private void checkPumpCustomActions() {
+
+        PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
+
+        removePumpCustomActions();
+
+        if (activePump == null) {
+            return;
+        }
+
+        List<CustomAction> customActions = activePump.getCustomActions();
+
+        if (customActions != null && customActions.size()>0) {
+
+            LinearLayout ll = actionsFragmentView.findViewById(R.id.action_buttons_layout);
+
+            for (CustomAction customAction : customActions) {
+
+                SingleClickButton btn = new SingleClickButton(getContext(), null, android.R.attr.buttonStyle);
+                btn.setText(MainApp.gs(customAction.getName()));
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f);
+                layoutParams.setMargins(20, 8, 20, 8); // 10,3,10,3
+
+                btn.setLayoutParams(layoutParams);
+                btn.setOnClickListener(pumpCustomActionsListener);
+
+                Drawable top = getResources().getDrawable(customAction.getIconResourceId());
+                btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+
+                ll.addView(btn);
+
+                this.pumpCustomActions.put(MainApp.gs(customAction.getName()), customAction);
+                this.pumpCustomButtons.add(btn);
+
+            }
+        }
+
+    }
+
+
+    private void removePumpCustomActions() {
+
+        if (pumpCustomActions.size()==0)
+            return;
+
+        LinearLayout ll = actionsFragmentView.findViewById(R.id.action_buttons_layout);
+
+        for (SingleClickButton customButton : pumpCustomButtons) {
+            ll.removeView(customButton);
+        }
+
+        pumpCustomButtons.clear();
+        pumpCustomActions.clear();
     }
 
 

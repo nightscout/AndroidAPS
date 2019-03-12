@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -17,8 +19,11 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+
 
 /**
  * Created by mike on 05.08.2016.
@@ -137,14 +142,10 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public double getReservoirLevel() {
-        return -1;
-    }
+    public double getReservoirLevel() { return -1; }
 
     @Override
-    public int getBatteryLevel() {
-        return -1;
-    }
+    public int getBatteryLevel() { return -1; }
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
@@ -247,6 +248,16 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     @Override
     public String shortStatus(boolean veryShort) {
         return deviceID();
+    }
+
+    @Override
+    public List<CustomAction> getCustomActions() {
+        return null;
+    }
+
+    @Override
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }

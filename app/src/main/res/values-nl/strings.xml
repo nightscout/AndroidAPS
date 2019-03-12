@@ -1140,6 +1140,8 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="dexcom_lognssensorchange_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
+    <string name="dst_loop_disabled_warning">Zomer/wintertijd omschakeling in minder dan 3 uur - Closed loop gedeactiveerd</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>

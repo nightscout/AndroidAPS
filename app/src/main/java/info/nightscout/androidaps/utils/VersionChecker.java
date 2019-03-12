@@ -43,7 +43,6 @@ public class VersionChecker {
                     if (inputStream != null) {
                         String result = findLine(inputStream);
                         if (result != null) {
-                            result = result.replace("version", "").replace("\"", "").replace("\\s+", "").trim();
                             int compare = result.compareTo(BuildConfig.VERSION_NAME.replace("\"", ""));
                             if (compare == 0) {
                                 log.debug("Version equal to master");
@@ -75,14 +74,14 @@ public class VersionChecker {
     private static String findLine(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
-        String regex = "(.*)version(.*)\"(\\d+)\\.(\\d+)\"(.*)";
+        String regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)";
         Pattern p = Pattern.compile(regex);
 
         while ((line = bufferedReader.readLine()) != null) {
             Matcher m = p.matcher(line);
             if (m.matches()) {
                 log.debug("+++ " + line);
-                return line;
+                return m.group(3);
             } else {
                 log.debug("--- " + line);
             }
