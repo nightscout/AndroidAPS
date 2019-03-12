@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.IobCobCalculatorPlugin;
+package info.nightscout.androidaps.plugins.iob.iobCobCalculatorPlugin;
 
 import android.content.Context;
 
