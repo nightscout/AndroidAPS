@@ -797,7 +797,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
     private void executeTask(AsyncTask task, DataMap... parameters) {
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, parameters);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object[])parameters);
         // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
         // task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         // } else {
