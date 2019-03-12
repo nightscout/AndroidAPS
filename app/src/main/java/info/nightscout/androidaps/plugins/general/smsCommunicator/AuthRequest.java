@@ -38,6 +38,7 @@ class AuthRequest {
             return;
         }
         if (!confirmCode.equals(codeReceived)) {
+            processed = true;
             if (L.isEnabled(L.SMS))
                 log.debug("Wrong code");
             plugin.sendSMS(new Sms(requester.phoneNumber, R.string.sms_wrongcode));
