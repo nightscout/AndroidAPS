@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
@@ -52,7 +51,6 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
-import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.XdripCalibrations;
 
 /**
@@ -71,7 +69,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         return smsCommunicatorPlugin;
     }
 
-    private List<String> allowedNumbers = new ArrayList<>();
+    List<String> allowedNumbers = new ArrayList<>();
 
     private AuthRequest messageToConfirm = null;
 
@@ -79,7 +77,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     ArrayList<Sms> messages = new ArrayList<>();
 
-    private SmsCommunicatorPlugin() {
+    SmsCommunicatorPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(SmsCommunicatorFragment.class.getName())
@@ -118,7 +116,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
     }
 
-    private boolean isAllowedNumber(String number) {
+    boolean isAllowedNumber(String number) {
         for (String num : allowedNumbers) {
             if (num.equals(number)) return true;
         }
@@ -139,7 +137,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
     }
 
-    private void processSms(final Sms receivedSms) {
+    void processSms(final Sms receivedSms) {
         if (!isEnabled(PluginType.GENERAL)) {
             log.debug("Ignoring SMS. Plugin disabled.");
             return;
@@ -757,7 +755,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         passCode += Character.toString((char) (startChar2 + Math.random() * ('z' - 'a' + 1)));
         int startChar3 = Math.random() > 0.5 ? 'a' : 'A';
         passCode += Character.toString((char) (startChar3 + Math.random() * ('z' - 'a' + 1)));
-        passCode.replace('l','k').replace('I', 'J');
+        passCode.replace('l', 'k').replace('I', 'J');
         return passCode;
     }
 

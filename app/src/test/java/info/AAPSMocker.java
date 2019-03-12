@@ -17,6 +17,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -24,11 +25,12 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.SP;
 
@@ -105,6 +107,9 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
         when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
         when(MainApp.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.");
+        when(MainApp.gs(R.string.sms_iob)).thenReturn("IOB:");
+        when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
+        when(MainApp.gs(R.string.sms_minago)).thenReturn("%1$dmin ago");
     }
 
     public static MainApp mockMainApp() {
@@ -144,7 +149,7 @@ public class AAPSMocker {
         when(L.isEnabled(any())).thenReturn(true);
     }
 
-    public static void mockNSUpload(){
+    public static void mockNSUpload() {
         PowerMockito.mockStatic(NSUpload.class);
     }
 
@@ -170,12 +175,17 @@ public class AAPSMocker {
         PowerMockito.mockStatic(TreatmentsPlugin.class);
         TreatmentsPlugin treatmentsPlugin = PowerMockito.mock(TreatmentsPlugin.class);
         when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
+        when(treatmentsPlugin.getLastCalculationTreatments()).thenReturn(new IobTotal(0));
+        when(treatmentsPlugin.getLastCalculationTempBasals()).thenReturn(new IobTotal(0));
         return treatmentsPlugin;
     }
 
-    public static void mockTreatmentService() throws Exception {
+    public static void mockTreatmentService() {
         TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
-        PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+        try {
+            PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+        } catch (Exception e) {
+        }
     }
 
     public static DanaRPlugin mockDanaRPlugin() {
@@ -222,6 +232,13 @@ public class AAPSMocker {
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
+        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
+    }
+
+    public static void mockIobCobCalculatorPlugin() {
+        PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
+        IobCobCalculatorPlugin iobCobCalculatorPlugin = PowerMockito.mock(IobCobCalculatorPlugin.class);
+        PowerMockito.when(IobCobCalculatorPlugin.getPlugin()).thenReturn(iobCobCalculatorPlugin);
     }
 
     private static MockedBus bus = new MockedBus();
