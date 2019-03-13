@@ -411,7 +411,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 if (result.success) {
                     if (pump != null) {
                         String reply = pump.shortStatus(true);
-                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                        sendSMS(new Sms(receivedSms.phoneNumber, reply));
                     }
                 } else {
                     String reply = MainApp.gs(R.string.readstatusfailed);

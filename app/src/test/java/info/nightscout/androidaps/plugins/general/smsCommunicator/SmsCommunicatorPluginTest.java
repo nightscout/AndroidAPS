@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
@@ -35,6 +36,7 @@ import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -308,6 +310,13 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("NSCLIENT BLABLA", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
 
+        //PUMP
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PUMP");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PUMP", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Virtual Pump", smsCommunicatorPlugin.messages.get(1).text);
+
     }
 
     @Before
@@ -351,6 +360,15 @@ public class SmsCommunicatorPluginTest {
             return null;
         }).when(AAPSMocker.queue).cancelTempBasal(anyBoolean(), any(Callback.class));
 
+        Mockito.doAnswer((Answer) invocation -> {
+            Callback callback = invocation.getArgument(1);
+            callback.result = new PumpEnactResult().success(true);
+            callback.run();
+            return null;
+        }).when(AAPSMocker.queue).readStatus(anyString(), any(Callback.class));
+
+        VirtualPumpPlugin virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
     }
 
 }
