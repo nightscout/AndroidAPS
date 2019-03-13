@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -39,6 +41,8 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -811,6 +815,16 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     @Override
     public PumpEnactResult loadTDDs() {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+    }
+
+    @Override
+    public List<CustomAction> getCustomActions() {
+        return null;
+    }
+
+    @Override
+    public void executeCustomAction(CustomActionType customActionType) {
+
     }
 
 }
