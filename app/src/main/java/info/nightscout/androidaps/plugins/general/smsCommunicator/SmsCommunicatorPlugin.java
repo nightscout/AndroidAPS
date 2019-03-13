@@ -164,7 +164,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 case "LOOP":
                     if (!remoteCommandsAllowed)
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
-                    else if (splitted.length == 2)
+                    else if (splitted.length == 2 || splitted.length == 3)
                         processLOOP(splitted, receivedSms);
                     else
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
@@ -236,7 +236,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         messageToConfirm.action(splitted[0]);
                         messageToConfirm = null;
                     } else
-                        sendSMS(new Sms(receivedSms.phoneNumber, MainApp.gs(R.string.smscommunicator_unknowncommand)));
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand));
                     break;
             }
         }
@@ -294,6 +294,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             sendSMS(new Sms(receivedSms.phoneNumber, reply));
                         }
                     });
+                } else {
+                    sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopisdisabled));
                 }
                 receivedSms.processed = true;
                 break;
@@ -304,6 +306,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, true);
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loophasbeenenabled));
                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_START"));
+                } else {
+                    sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopisenabled));
                 }
                 receivedSms.processed = true;
                 break;
@@ -326,18 +330,16 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 LoopPlugin.getPlugin().suspendTo(0);
                 MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_RESUME"));
                 NSUpload.uploadOpenAPSOffline(0);
-                reply = MainApp.gs(R.string.smscommunicator_loopresumed);
-                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopresumed));
                 break;
             case "SUSPEND":
                 int duration = 0;
-                if (splitted.length >= 3)
+                if (splitted.length == 3)
                     duration = SafeParse.stringToInt(splitted[2]);
                 duration = Math.max(0, duration);
                 duration = Math.min(180, duration);
                 if (duration == 0) {
-                    reply = MainApp.gs(R.string.smscommunicator_wrongduration);
-                    sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                    sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_wrongduration));
                 } else {
                     String passCode = generatePasscode();
                     reply = String.format(MainApp.gs(R.string.smscommunicator_suspendreplywithcode), duration, passCode);
