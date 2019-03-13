@@ -122,6 +122,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isSuperBolusEnabledTest() throws Exception {
+        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
 
         Constraint<Boolean> c = constraintChecker.isSuperBolusEnabled();
         Assert.assertEquals(Boolean.FALSE, c.value()); // SMB should limit
