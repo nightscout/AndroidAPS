@@ -71,7 +71,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     List<String> allowedNumbers = new ArrayList<>();
 
-    private AuthRequest messageToConfirm = null;
+    AuthRequest messageToConfirm = null;
 
     private Date lastRemoteBolusTime = new Date(0);
 
@@ -339,7 +339,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 duration = Math.max(0, duration);
                 duration = Math.min(180, duration);
                 if (duration == 0) {
+                    receivedSms.processed = true;
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_wrongduration));
+                    return;
                 } else {
                     String passCode = generatePasscode();
                     reply = String.format(MainApp.gs(R.string.smscommunicator_suspendreplywithcode), duration, passCode);
@@ -368,6 +370,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         }
                     });
                 }
+                break;
             default:
                 sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
                 break;
@@ -388,7 +391,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
     }
 
     private void processNSCLIENT(String[] splitted, Sms receivedSms) {
-        if (splitted[2].toUpperCase().equals("RESTART")) {
+        if (splitted[1].toUpperCase().equals("RESTART")) {
             Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
             MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
             List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);

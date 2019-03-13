@@ -57,9 +57,9 @@ public class SmsCommunicatorPluginTest {
     @Test
     public void processSettingsTest() {
         // called from constructor
-        Assert.assertEquals(smsCommunicatorPlugin.allowedNumbers.get(0), "1234");
-        Assert.assertEquals(smsCommunicatorPlugin.allowedNumbers.get(1), "5678");
-        Assert.assertEquals(smsCommunicatorPlugin.allowedNumbers.size(), 2);
+        Assert.assertEquals("1234", smsCommunicatorPlugin.allowedNumbers.get(0));
+        Assert.assertEquals("5678", smsCommunicatorPlugin.allowedNumbers.get(1));
+        Assert.assertEquals(2, smsCommunicatorPlugin.allowedNumbers.size());
     }
 
     @Test
@@ -76,20 +76,20 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("12", "aText");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertTrue(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "aText");
+        Assert.assertEquals("aText", smsCommunicatorPlugin.messages.get(0).text);
 
         //UNKNOWN
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "UNKNOWN");
         smsCommunicatorPlugin.processSms(sms);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "UNKNOWN");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Uknown command or wrong reply");
+        Assert.assertEquals("UNKNOWN", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Uknown command or wrong reply", smsCommunicatorPlugin.messages.get(1).text);
 
         //BG
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "BG");
         smsCommunicatorPlugin.processSms(sms);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "BG");
+        Assert.assertEquals("BG", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("IOB:"));
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("Last BG: 100"));
 
@@ -99,7 +99,7 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP STATUS");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("Remote command is not allowed"));
         when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
 
@@ -108,8 +108,8 @@ public class SmsCommunicatorPluginTest {
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP STATUS");
         smsCommunicatorPlugin.processSms(sms);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop is disabled");
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop is disabled", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP STATUS : suspended
         when(loopPlugin.minutesToEndOfSuspend()).thenReturn(10);
@@ -118,8 +118,8 @@ public class SmsCommunicatorPluginTest {
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP STATUS");
         smsCommunicatorPlugin.processSms(sms);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Suspended (10 m)");
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Suspended (10 m)", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP STATUS : enabled
         when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
@@ -128,8 +128,8 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP STATUS");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop is enabled");
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop is enabled", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP : wrong format
         when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
@@ -137,8 +137,8 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Wrong format");
+        Assert.assertEquals("LOOP", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP DISABLE : already disabled
         when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(false);
@@ -146,8 +146,8 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP DISABLE");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP DISABLE");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop is disabled");
+        Assert.assertEquals("LOOP DISABLE", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop is disabled", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP DISABLE : from enabled
         hasBeenRun = false;
@@ -160,8 +160,8 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP DISABLE");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP DISABLE");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop has been disabled Temp basal canceled");
+        Assert.assertEquals("LOOP DISABLE", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop has been disabled Temp basal canceled", smsCommunicatorPlugin.messages.get(1).text);
         Assert.assertTrue(hasBeenRun);
 
         //LOOP ENABLE : already enabled
@@ -170,8 +170,8 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP ENABLE");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP ENABLE");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop is enabled");
+        Assert.assertEquals("LOOP ENABLE", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop is enabled", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP ENABLE : from disabled
         hasBeenRun = false;
@@ -184,8 +184,8 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP ENABLE");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP ENABLE");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop has been enabled");
+        Assert.assertEquals("LOOP ENABLE", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop has been enabled", smsCommunicatorPlugin.messages.get(1).text);
         Assert.assertTrue(hasBeenRun);
 
         //LOOP RESUME : already enabled
@@ -193,48 +193,120 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "LOOP RESUME");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP RESUME");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop resumed");
+        Assert.assertEquals("LOOP RESUME", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Loop resumed", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP SUSPEND 1 2: wrong format
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP SUSPEND 1 2");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP SUSPEND 1 2");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Wrong format");
+        Assert.assertEquals("LOOP SUSPEND 1 2", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
 
         //LOOP SUSPEND 0 : wrong duration
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP SUSPEND 0");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP SUSPEND 0");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Wrong duration");
+        Assert.assertEquals("LOOP SUSPEND 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong duration", smsCommunicatorPlugin.messages.get(1).text);
 
-        //LOOP SUSPEND 100 : suspend for 100 min
+        //LOOP SUSPEND 100 : suspend for 100 min + correct answer
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP SUSPEND 100");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP SUSPEND 100");
+        Assert.assertEquals("LOOP SUSPEND 100", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To suspend loop for 100 minutes reply with code "));
+        String passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Loop suspended Temp basal canceled", smsCommunicatorPlugin.messages.get(3).text);
 
-        //LOOP SUSPEND 200 : limit to 180 min
+        //LOOP SUSPEND 200 : limit to 180 min + wrong answer
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP SUSPEND 200");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP SUSPEND 200");
+        Assert.assertEquals("LOOP SUSPEND 200", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To suspend loop for 180 minutes reply with code "));
+        passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", "XXXX"));
+        Assert.assertEquals("XXXX", smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Wrong code. Command cancelled.", smsCommunicatorPlugin.messages.get(3).text);
+        //then correct code should not work
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(4).text);
+        Assert.assertEquals("Uknown command or wrong reply", smsCommunicatorPlugin.messages.get(5).text);
 
         //LOOP BLABLA
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "LOOP BLABLA");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertFalse(sms.ignored);
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP BLABLA");
-        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Wrong format");
+        Assert.assertEquals("LOOP BLABLA", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //TREATMENTS REFRESH
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "TREATMENTS REFRESH");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("TREATMENTS REFRESH", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("TREATMENTS REFRESH"));
+
+        //TREATMENTS BLA BLA
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "TREATMENTS BLA BLA");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("TREATMENTS BLA BLA", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //TREATMENTS BLABLA
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "TREATMENTS BLABLA");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("TREATMENTS BLABLA", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //NSCLIENT RESTART
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "NSCLIENT RESTART");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("NSCLIENT RESTART", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("NSCLIENT RESTART"));
+
+        //NSCLIENT BLA BLA
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "NSCLIENT BLA BLA");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("NSCLIENT BLA BLA", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //NSCLIENT BLABLA
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "NSCLIENT BLABLA");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("NSCLIENT BLABLA", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
 
     }
 
@@ -248,6 +320,7 @@ public class SmsCommunicatorPluginTest {
         AAPSMocker.mockBus();
         AAPSMocker.mockProfileFunctions();
         AAPSMocker.mockTreatmentPlugin();
+        AAPSMocker.mockTreatmentService();
         AAPSMocker.mockIobCobCalculatorPlugin();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();
@@ -265,7 +338,7 @@ public class SmsCommunicatorPluginTest {
         when(SmsManager.getDefault()).thenReturn(smsManager);
 
         when(SP.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678");
-        smsCommunicatorPlugin = new SmsCommunicatorPlugin();
+        smsCommunicatorPlugin = SmsCommunicatorPlugin.getPlugin();
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true);
 
         loopPlugin = mock(LoopPlugin.class);

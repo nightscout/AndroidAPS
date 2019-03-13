@@ -12,7 +12,7 @@ class AuthRequest {
     private static Logger log = LoggerFactory.getLogger(L.SMS);
 
     private Sms requester;
-    private String confirmCode;
+    String confirmCode;
     private Runnable action;
 
     private long date;

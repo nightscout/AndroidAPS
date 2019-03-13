@@ -2,6 +2,7 @@ package info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
 import com.squareup.otto.Bus;
@@ -176,6 +177,8 @@ public class AAPSMocker {
         Resources mResources = mock(Resources.class);
         when(MainApp.instance().getApplicationContext()).thenReturn(mockedContext);
         when(mockedContext.getResources()).thenReturn(mResources);
+        PackageManager packageManager = mock(PackageManager.class);
+        when(mockedContext.getPackageManager()).thenReturn(packageManager);
     }
 
     public static DatabaseHelper mockDatabaseHelper() {
@@ -195,6 +198,9 @@ public class AAPSMocker {
         when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
         when(treatmentsPlugin.getLastCalculationTreatments()).thenReturn(new IobTotal(0));
         when(treatmentsPlugin.getLastCalculationTempBasals()).thenReturn(new IobTotal(0));
+
+        TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
+        when(treatmentsPlugin.getService()).thenReturn(treatmentService);
         return treatmentsPlugin;
     }
 
@@ -204,6 +210,7 @@ public class AAPSMocker {
             PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
         } catch (Exception e) {
         }
+
     }
 
     public static DanaRPlugin mockDanaRPlugin() {
