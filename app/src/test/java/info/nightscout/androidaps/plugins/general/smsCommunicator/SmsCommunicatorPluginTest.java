@@ -19,6 +19,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -35,6 +36,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class SmsCommunicatorPluginTest {
 
     SmsCommunicatorPlugin smsCommunicatorPlugin;
+    LoopPlugin loopPlugin;
 
     @Test
     public void processSettingsTest() {
@@ -60,14 +62,53 @@ public class SmsCommunicatorPluginTest {
         Assert.assertTrue(sms.ignored);
         Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "aText");
 
+        // test remote control disabled
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "LOOP STATUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("Remote command is not allowed"));
+
+        // enable remote control for next tests
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
         //BG
         smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("1234", "BG");
         smsCommunicatorPlugin.processSms(sms);
-        Assert.assertFalse(sms.ignored);
         Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "BG");
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("IOB:"));
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("Last BG: 100"));
+
+        //LOOP STATUS : disabled
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "LOOP STATUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop is disabled");
+
+        //LOOP STATUS : suspended
+        when(loopPlugin.minutesToEndOfSuspend()).thenReturn(10);
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(true);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "LOOP STATUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Suspended (10 m)");
+
+        //LOOP STATUS : enabled
+        when(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true);
+        when(loopPlugin.isSuspended()).thenReturn(false);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "LOOP STATUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(0).text, "LOOP STATUS");
+        Assert.assertEquals(smsCommunicatorPlugin.messages.get(1).text, "Loop is enabled");
     }
 
     @Before
@@ -96,6 +137,9 @@ public class SmsCommunicatorPluginTest {
         when(SP.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678");
         smsCommunicatorPlugin = new SmsCommunicatorPlugin();
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true);
+
+        loopPlugin = mock(LoopPlugin.class);
+        when(MainApp.getSpecificPlugin(LoopPlugin.class)).thenReturn(loopPlugin);
     }
 
 }

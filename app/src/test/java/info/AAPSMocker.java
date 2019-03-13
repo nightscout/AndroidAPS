@@ -110,6 +110,10 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.sms_iob)).thenReturn("IOB:");
         when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
         when(MainApp.gs(R.string.sms_minago)).thenReturn("%1$dmin ago");
+        when(MainApp.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed");
+        when(MainApp.gs(R.string.loopsuspendedfor)).thenReturn("Suspended (%1$d m)");
+        when(MainApp.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled");
+        when(MainApp.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled");
     }
 
     public static MainApp mockMainApp() {

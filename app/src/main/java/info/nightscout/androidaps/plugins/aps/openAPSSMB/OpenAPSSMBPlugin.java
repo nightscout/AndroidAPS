@@ -13,6 +13,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -38,7 +39,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
 /**
  * Created by mike on 05.08.2016.
  */
-public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
+public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static OpenAPSSMBPlugin openAPSSMBPlugin;
@@ -264,6 +265,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
         }
         return newvalue;
+    }
+
+    public Constraint<Boolean> isSuperBolusEnabled(Constraint<Boolean> value) {
+        value.set(false);
+        return value;
     }
 
 }
