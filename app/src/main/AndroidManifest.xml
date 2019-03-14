@@ -135,7 +135,6 @@
             </intent-filter>
         </receiver>
 
-        <!--
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -144,7 +143,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
-        </provider> -->
+        </provider>
 
         <!-- Service processing incomming data -->
         <service
