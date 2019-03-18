@@ -25,16 +25,16 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
 
 public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
@@ -212,7 +212,7 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG ignored) {
+    public void onStatusEvent(final EventAutosensCalculationFinished ignored) {
         updateGUI();
     }
 
