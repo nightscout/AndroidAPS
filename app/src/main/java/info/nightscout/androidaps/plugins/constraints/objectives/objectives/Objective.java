@@ -42,6 +42,10 @@ public abstract class Objective {
         return true;
     }
 
+    public boolean isRevertable() {
+        return false;
+    }
+
     public boolean isAccomplished() {
         return accomplishedOn != null;
     }
