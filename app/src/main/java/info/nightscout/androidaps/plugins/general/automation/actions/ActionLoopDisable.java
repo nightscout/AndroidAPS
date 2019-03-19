@@ -11,7 +11,7 @@ import info.nightscout.androidaps.queue.Callback;
 
 public class ActionLoopDisable extends Action {
     @Override
-    int friendlyName() {
+    public int friendlyName() {
         return R.string.disableloop;
     }
 

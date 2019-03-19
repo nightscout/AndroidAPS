@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
@@ -73,7 +74,7 @@ public class AutomationFragment extends SubscriberFragment {
     public static class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>  {
         private final List<AutomationEvent> mEventList;
 
-        EventListAdapter(List<AutomationEvent> events) {
+        public EventListAdapter(List<AutomationEvent> events) {
             this.mEventList = events;
         }
 
@@ -106,6 +107,51 @@ public class AutomationFragment extends SubscriberFragment {
                 super(view);
                 eventTitle = view.findViewById(R.id.viewEventTitle);
                 eventDescription = view.findViewById(R.id.viewEventDescription);
+            }
+        }
+    }
+
+    /**
+     * RecyclerViewAdapter to display event lists.
+     */
+    public static class ActionListAdapter extends RecyclerView.Adapter<ActionListAdapter.ViewHolder>  {
+        private final List<Action> mActionList;
+        private final FragmentManager mFragmentManager;
+
+        public ActionListAdapter(FragmentManager manager, List<Action> events) {
+            this.mActionList = events;
+            this.mFragmentManager = manager;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.automation_action_item, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            final Action action = mActionList.get(position);
+            holder.actionTitle.setText(action.friendlyName());
+            holder.itemRoot.setOnClickListener(v -> action.openConfigurationDialog(mFragmentManager));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mActionList.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView actionTitle;
+            TextView actionDescription;
+            LinearLayout itemRoot;
+
+            public ViewHolder(View view) {
+                super(view);
+                itemRoot = view.findViewById(R.id.itemRoot);
+                actionTitle = view.findViewById(R.id.viewActionTitle);
+                actionDescription = view.findViewById(R.id.viewActionDescription);
             }
         }
     }

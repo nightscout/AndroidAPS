@@ -374,6 +374,12 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
+    public double getReservoirLevel() { return DanaRPump.getInstance().reservoirRemainingUnits; }
+
+    @Override
+    public int getBatteryLevel() { return DanaRPump.getInstance().batteryRemaining; }
+
+    @Override
     public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -415,6 +421,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             if (!result.success) {
                 String error = "" + DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode;
                 switch (DanaRS_Packet_Bolus_Set_Step_Bolus_Start.errorCode) {
+                    // 4 reported as max bolus violation. Check later
                     case 0x10:
                         error = MainApp.gs(R.string.maxbolusviolation);
                         break;

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
+import android.support.v4.app.FragmentManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,9 +9,11 @@ import info.nightscout.androidaps.queue.Callback;
 
 public abstract class Action {
 
-    abstract int friendlyName();
+    public abstract int friendlyName();
 
     abstract void doAction(Callback callback);
+
+    public void openConfigurationDialog(FragmentManager manager) { }
 
     public String toJSON() {
         JSONObject o = new JSONObject();

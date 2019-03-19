@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
+import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
@@ -28,10 +31,17 @@ public class EditEventDialog extends DialogFragment {
     @BindView(R.id.editTrigger)
     TextView mEditTrigger;
 
+    @BindView(R.id.editAction)
+    TextView mEditAction;
+
     @BindView(R.id.triggerDescription)
     TextView mTriggerDescription;
 
+    @BindView(R.id.actionListView)
+    RecyclerView mActionListView;
+
     private Unbinder mUnbinder;
+    private AutomationFragment.ActionListAdapter mActionListAdapter;
 
     public static EditEventDialog newInstance(AutomationEvent event) {
         mEvent = event; // FIXME
@@ -59,6 +69,7 @@ public class EditEventDialog extends DialogFragment {
         // display root trigger
         mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
 
+        // setup trigger click event listener
         mEditTrigger.setOnClickListener(v -> {
             EditTriggerDialog dialog = EditTriggerDialog.newInstance(mEvent.getTrigger());
             dialog.show(getFragmentManager(), "EditTriggerDialog");
@@ -67,6 +78,22 @@ public class EditEventDialog extends DialogFragment {
                 mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
             });
         });
+
+        // setup action list view
+        mActionListAdapter = new AutomationFragment.ActionListAdapter(getFragmentManager(), mEvent.getActions());
+        mActionListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mActionListView.setAdapter(mActionListAdapter);
+
+        // setup action click event listener
+        mEditAction.setOnClickListener(v -> {
+            ChooseActionDialog dialog = ChooseActionDialog.newInstance();
+            dialog.show(getFragmentManager(), "ChooseActionDialog");
+            dialog.setOnClickListener(newActionObject -> {
+                mEvent.addAction(newActionObject);
+                mActionListAdapter.notifyDataSetChanged();
+            });
+        });
+
 
         return view;
     }

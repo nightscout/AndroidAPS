@@ -408,6 +408,12 @@ public class InsightPlugin extends PluginBase implements PumpInterface, Constrai
         return basalRate;
     }
 
+    @Override
+    public double getReservoirLevel() { return reservoirInUnits; }
+
+    @Override
+    public int getBatteryLevel() { return batteryPercent; }
+
     public String getBaseBasalRateString() {
         final DecimalFormat df = new DecimalFormat("#.##");
         return df.format(basalRate);

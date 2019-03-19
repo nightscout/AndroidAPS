@@ -49,7 +49,7 @@ public class ChooseTriggerDialog extends DialogFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.automation_dialog_trigger, container, false);
+        View view = inflater.inflate(R.layout.automation_dialog_choose_trigger, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
         for(Trigger t : triggerDummyObjects) {

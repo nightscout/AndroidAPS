@@ -24,6 +24,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
@@ -55,8 +56,8 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal_k
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic_k;
 import info.nightscout.androidaps.plugins.Treatments.Treatment;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
-import info.nightscout.utils.SP;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.T;
 
 public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
@@ -137,6 +138,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     }
 
     public void getPumpStatus() {
+        DanaRPump danaRPump = DanaRPump.getInstance();
         try {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpstatus)));
             //MsgStatus_k statusMsg = new MsgStatus_k();
@@ -145,7 +147,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
             MsgCheckValue_k checkValue = new MsgCheckValue_k();
 
-            if (mDanaRPump.isNewPump) {
+            if (danaRPump.isNewPump) {
                 mSerialIOThread.sendMessage(checkValue);
                 if (!checkValue.received) {
                     return;
@@ -161,11 +163,11 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingbolusstatus)));
 
             long now = System.currentTimeMillis();
-            mDanaRPump.lastConnection = now;
+            danaRPump.lastConnection = now;
 
             Profile profile = ProfileFunctions.getInstance().getProfile();
             PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-            if (profile != null && Math.abs(mDanaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
+            if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
                 if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
@@ -173,7 +175,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 }
             }
 
-            if (mDanaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
+            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
@@ -184,29 +186,31 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                long timeDiff = (mDanaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
+                long timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                 if (L.isEnabled(L.PUMP))
                     log.debug("Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
-                    mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
+                    waitForWholeMinute(); // Dana can set only whole minute
+                    // add 10sec to be sure we are over minute (will be cutted off anyway)
+                    mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime());
-                    timeDiff = (mDanaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
+                    timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                     if (L.isEnabled(L.PUMP))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
-                mDanaRPump.lastSettingsRead = now;
+                danaRPump.lastSettingsRead = now;
             }
 
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
-            if (mDanaRPump.dailyTotalUnits > mDanaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 if (L.isEnabled(L.PUMP))
-                    log.debug("Approaching daily limit: " + mDanaRPump.dailyTotalUnits + "/" + mDanaRPump.maxDailyTotalUnits);
+                    log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(reportFail));
-                    NSUpload.uploadError(MainApp.gs(R.string.approachingdailylimit) + ": " + mDanaRPump.dailyTotalUnits + "/" + mDanaRPump.maxDailyTotalUnits + "U");
+                    NSUpload.uploadError(MainApp.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }
@@ -216,8 +220,9 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     }
 
     public boolean tempBasal(int percent, int durationInHours) {
+        DanaRPump danaRPump = DanaRPump.getInstance();
         if (!isConnected()) return false;
-        if (mDanaRPump.isTempBasalInProgress) {
+        if (danaRPump.isTempBasalInProgress) {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
             mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
             SystemClock.sleep(500);
@@ -318,12 +323,13 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     }
 
     public boolean updateBasalsInPump(final Profile profile) {
+        DanaRPump danaRPump = DanaRPump.getInstance();
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.updatingbasalrates)));
         double[] basal = DanaRPump.getInstance().buildDanaRProfileRecord(profile);
         MsgSetSingleBasalProfile msgSet = new MsgSetSingleBasalProfile(basal);
         mSerialIOThread.sendMessage(msgSet);
-        mDanaRPump.lastSettingsRead = 0; // force read full settings
+        danaRPump.lastSettingsRead = 0; // force read full settings
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;

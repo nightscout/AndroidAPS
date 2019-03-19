@@ -60,10 +60,6 @@
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
 
-    <color name="loopenabled">#47c8ff</color>
-    <color name="loopdisabled">#FFDD7792</color>
-    <color name="looppumpsuspended">#ff0400</color>
-
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
@@ -75,6 +71,13 @@
     <color name="deviationgreen">#7200FF00</color>
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
+
+    <color name="ribbonDefault">#5a595b</color>
+    <color name="ribbonWarning">#f4d700</color>
+    <color name="ribbonCritical">#ff0400</color>
+    <color name="ribbonTextDefault">#FFFFFF</color>
+    <color name="ribbonTextWarning">#303030</color>
+    <color name="ribbonTextCritical">#FFFFFF</color>
 
     <color name="ic_launcher_background">#424242</color>
 </resources>

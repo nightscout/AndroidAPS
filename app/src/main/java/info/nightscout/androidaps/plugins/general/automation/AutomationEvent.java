@@ -28,6 +28,8 @@ public class AutomationEvent {
         return actions;
     }
 
+    public void addAction(Action action) { actions.add(action); }
+
     public String getTitle() {
         return title;
     }

@@ -63,7 +63,7 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
         versionCode 1500
-        version "2.0g-dev"
+        version "2.0"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
@@ -198,6 +198,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-wearable:7.5.0"
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation(name: "sightparser-release", ext: "aar")
+    implementation 'com.madgag.spongycastle:core:1.58.0.0'
 
     implementation("com.google.android:flexbox:0.3.0") {
         exclude group: "com.android.support"

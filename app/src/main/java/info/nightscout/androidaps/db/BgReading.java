@@ -220,14 +220,8 @@ public class BgReading implements DataPointWithLabelInterface {
     @Override
     public int getColor() {
         String units = ProfileFunctions.getInstance().getProfileUnits();
-        Double lowLine = SP.getDouble("low_mark", 0d);
-        Double highLine = SP.getDouble("high_mark", 0d);
-        if (lowLine < 1) {
-            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        }
-        if (highLine < 1) {
-            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
-        }
+        Double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
+        Double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
         int color = MainApp.gc(R.color.inrange);
         if (isPrediction())
             return getPredectionColor();

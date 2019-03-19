@@ -183,6 +183,7 @@
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="af_lang" translatable="false">Afrikaans</string>
     <string name="cs_lang" translatable="false">Czech</string>
     <string name="en_lang" translatable="false">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -247,7 +248,8 @@
     <string name="sv_lang" translatable="false">Swedish</string>
     <string name="fr_lang" translatable="false">French</string>
     <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="pl_lang" translatable="false">Polski</string>
+    <string name="tr_lang" translatable="false">Turkish</string>
+    <string name="pl_lang" translatable="false">Polish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
@@ -436,7 +438,7 @@
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
-    <string name="openapsama_useautosens">Use AMA autosens feature</string>
+    <string name="openapsama_useautosens">Use Autosens feature</string>
     <string name="refresheventsfromnightscout">Refresh events from NS</string>
     <string name="deletefuturetreatments">Delete treatments in the future</string>
     <string name="eatingsoon">Eating Soon</string>
@@ -477,6 +479,7 @@
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="key_advancedsettings" translatable="false">key_advancedsettings</string>
     <string name="danar_model">Model: %1$02X Protocol: %2$02X Code: %3$02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
@@ -573,6 +576,7 @@
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
+    <string name="suspendloop">Suspend loop</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
@@ -583,6 +587,7 @@
     <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
     <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
     <string name="resume">Resume</string>
+    <string name="reconnect">Reconnect Pump</string>
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
     <string name="smscommunicator_loopresumed">Loop resumed</string>
@@ -602,6 +607,17 @@
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
+    <string name="key_show_statuslights" translatable="false">key_show_statuslights</string>
+    <string name="show_statuslights">Show status lights on home screen</string>
+    <string name="show_statuslights_summary">Enable status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
+    <string name="key_statuslights_res_warning" translatable="false">key_statuslights_res_warning</string>
+    <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
+    <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
+    <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
+    <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
+    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
+    <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
+    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -609,6 +625,7 @@
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+    <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">xDrip Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -1006,6 +1023,8 @@
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
     <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
+    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
+    <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
     <string name="pumplimit">pump limit</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
@@ -1089,7 +1108,7 @@
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtualpump_pump_def_extended_note">* Ranged basal/bolus values are not supported by Virtual Pump.</string>
+    <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
     <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
@@ -1171,9 +1190,10 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email</string>
-    <string name="key_maintenance_logs_email" translatable="false">email</string>
+    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="invalid_email_message">Invalid Email</string>
-    <string name="key_maintenance_logs_amount" translatable="false">amount of logs to send</string>
+    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
+    <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
     <string name="maintenance_amount">No of Logs to send</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1205,6 +1225,70 @@
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
+    <string name="pairfirst">Please pair your pump with your phone!</string>
+    <string name="searching_for_devices">Searching for devices…</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="pairing_completed">Pairing completed</string>
+    <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>
+    <string name="insight_pairing">Insight pairing</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2fU / %2$.2fU delivered</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
+    <string name="tube_changed">Tube changed</string>
+    <string name="pump_time_updated">Pump time updated</string>
+    <string name="confirm">Confirm</string>
+    <string name="mute_alert">Mute</string>
+    <string name="pump_alert">Pump alert</string>
+    <string name="log_site_changes">Log site changes</string>
+    <string name="log_tube_changes">Log tube changes</string>
+    <string name="log_battery_changes">Log battery changes</string>
+    <string name="log_operating_mode_changes">Log operating mode changes</string>
+    <string name="log_alerts">Log alerts</string>
+    <string name="enable_tbr_emulation">Enable TBR emulation</string>
+    <string name="enable_tbr_emulation_summary">Use extended boluses instead of TBRs to bypass the 250% limit</string>
+    <string name="recovery_duration">Recovery duration [s]</string>
+    <string name="disconnect_delay">Disconnect delay [s]</string>
+    <string name="serial_number">Serial number</string>
+    <string name="release_software_version">Release software version</string>
+    <string name="ui_processor_software_version">UI processor software version</string>
+    <string name="pc_processor_software_version">PC processor software version</string>
+    <string name="md_tel_processor_software_version">MD tel processor software version</string>
+    <string name="safety_processor_software_version">Safety processor software version</string>
+    <string name="bt_info_page_version">BT info page version</string>
+    <string name="bluetooth_address">Bluetooth address</string>
+    <string name="system_id_appendix">System ID appendix</string>
+    <string name="manufacturing_date">Manufacturing date</string>
+    <string name="delete_pairing">Delete pairing</string>
+    <string name="pairing_information">Pairing information</string>
+    <string name="refreh_status">Refresh status</string>
+    <string name="start_pump">Start pump</string>
+    <string name="stop_pump">Stop pump</string>
+    <string name="operating_mode">Operating mode</string>
+    <string name="insight_status">Status</string>
+    <string name="tdd_bolus">TDD Bolus</string>
+    <string name="tdd_basal">TDD Basal</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="recovering">Recovering</string>
+    <string name="not_paired">Not paired</string>
+    <string name="last_connected">Last connected</string>
+    <string name="started">Started</string>
+    <string name="stopped">Stopped</string>
+    <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
+    <string name="extended_bolus">Extended bolus</string>
+    <string name="multiwave_bolus">Multiwave bolus</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
+    <string name="enable_tbr_over_notification">Enable TBR over notification</string>
+    <string name="disable_tbr_over_notification">Disable TBR over notification</string>
+    <string name="refresh">Refresh</string>
+    <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
+    <string name="not_inserted">Not inserted</string>
+    <string name="short_status_last_connected">Last conn: %1$d min ago</string>
+    <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
+    <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_multiwave">Extended: %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
+    <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="automation">Automation</string>
     <string name="automation_short">Auto</string>
     <string name="automation_description">User defined automation tasks</string>
@@ -1245,6 +1329,11 @@
     <string name="weekday_friday_short">Fri</string>
     <string name="weekday_saturday_short">Sat</string>
     <string name="weekday_sunday_short">Sun</string>
+
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

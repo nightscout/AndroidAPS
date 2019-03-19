@@ -156,7 +156,7 @@ public class LocalProfileFragment extends SubscriberFragment {
     public String getSumLabel() {
         ProfileStore profile = LocalProfilePlugin.getPlugin().createProfileStore();
         if (profile != null)
-            return " ∑" + DecimalFormatter.to2Decimal(profile.getDefaultProfile().baseBasalSum()) + "U";
+            return " ∑" + DecimalFormatter.to2Decimal(profile.getDefaultProfile().baseBasalSum()) + MainApp.gs(R.string.insulin_unit_shortname);
         else
             return MainApp.gs(R.string.localprofile);
     }

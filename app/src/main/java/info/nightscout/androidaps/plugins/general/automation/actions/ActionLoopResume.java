@@ -12,7 +12,7 @@ import info.nightscout.androidaps.queue.Callback;
 
 public class ActionLoopResume extends Action {
     @Override
-    int friendlyName() {
+    public int friendlyName() {
         return R.string.resumeloop;
     }
 
