@@ -21,10 +21,10 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
@@ -67,7 +67,7 @@ public class BGSourceFragment extends SubscriberFragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG unused) {
+    public void onStatusEvent(final EventAutosensCalculationFinished unused) {
         updateGUI();
     }
 

@@ -464,7 +464,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<BgReading>();
+        return new ArrayList<>();
     }
 
     public List<BgReading> getBgreadingsDataFromTime(long start, long end, boolean ascending) {
@@ -481,7 +481,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<BgReading>();
+        return new ArrayList<>();
     }
 
     public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
