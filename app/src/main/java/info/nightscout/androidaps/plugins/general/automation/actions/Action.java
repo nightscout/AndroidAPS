@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +16,9 @@ public abstract class Action {
 
     abstract void doAction(Callback callback);
 
-    public void openConfigurationDialog(FragmentManager manager) { }
+    public void generateDialog(LinearLayout root) { }
+
+    public void saveFromDialog() { }
 
     public String toJSON() {
         JSONObject o = new JSONObject();

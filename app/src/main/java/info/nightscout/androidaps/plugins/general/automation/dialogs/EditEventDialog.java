@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 public class EditEventDialog extends DialogFragment {
-
     private static AutomationEvent mEvent;
 
     @BindView(R.id.inputEventTitle)

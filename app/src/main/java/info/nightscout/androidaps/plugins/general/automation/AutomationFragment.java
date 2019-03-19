@@ -27,6 +27,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog;
+import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
@@ -134,7 +135,10 @@ public class AutomationFragment extends SubscriberFragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final Action action = mActionList.get(position);
             holder.actionTitle.setText(action.friendlyName());
-            holder.itemRoot.setOnClickListener(v -> action.openConfigurationDialog(mFragmentManager));
+            holder.itemRoot.setOnClickListener(v -> {
+                EditActionDialog dialog = EditActionDialog.newInstance(action);
+                dialog.show(mFragmentManager, "EditActionDialog");
+            });
         }
 
         @Override

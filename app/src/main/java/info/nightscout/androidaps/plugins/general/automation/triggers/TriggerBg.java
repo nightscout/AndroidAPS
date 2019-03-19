@@ -177,7 +177,7 @@ public class TriggerBg extends Trigger {
         layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(layout);
 
-        // input filed for threshold
+        // input field for threshold
         NumberPicker numberPicker = new NumberPicker(context, null);
         numberPicker.setParams(0d, 0d, (double) 500, 1d, new DecimalFormat("0"), false, textWatcher);
         numberPicker.setValue(threshold);
