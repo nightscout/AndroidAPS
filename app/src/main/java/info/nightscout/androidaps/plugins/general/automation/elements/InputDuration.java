@@ -22,7 +22,6 @@ public class InputDuration extends Element {
         this.value = value;
     }
 
-
     @Override
     public void generateDialog(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
@@ -46,11 +45,19 @@ public class InputDuration extends Element {
         return value;
     }
 
-    public int getMinutes() {
+    public void setMinutes(double value) {
         if (unit.equals(TimeUnit.MINUTES)) {
-            return (int)value;
+            this.value = value;
         } else {
-            return (int)(value * 60d);
+            this.value = value / 60d;
+        }
+    }
+
+    public double getMinutes() {
+        if (unit.equals(TimeUnit.MINUTES)) {
+            return value;
+        } else {
+            return value * 60d;
         }
     }
 }

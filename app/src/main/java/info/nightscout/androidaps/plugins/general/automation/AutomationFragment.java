@@ -136,8 +136,10 @@ public class AutomationFragment extends SubscriberFragment {
             final Action action = mActionList.get(position);
             holder.actionTitle.setText(action.friendlyName());
             holder.itemRoot.setOnClickListener(v -> {
-                EditActionDialog dialog = EditActionDialog.newInstance(action);
-                dialog.show(mFragmentManager, "EditActionDialog");
+                if (action.hasDialog()) {
+                    EditActionDialog dialog = EditActionDialog.newInstance(action);
+                    dialog.show(mFragmentManager, "EditActionDialog");
+                }
             });
         }
 
@@ -203,11 +205,11 @@ public class AutomationFragment extends SubscriberFragment {
                 buttonAdd.setText("Add New");
                 buttonAdd.setOnClickListener(v -> {
                     ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
-                    dialog.show(mFragmentManager, "ChooseTriggerDialog");
                     dialog.setOnClickListener(newTriggerObject -> {
                         mRootConnector.add(newTriggerObject);
                         rebuild();
                     });
+                    dialog.show(mFragmentManager, "ChooseTriggerDialog");
                 });
                 mRootLayout.addView(buttonAdd);
             }

@@ -67,15 +67,23 @@ public class InputBg extends Element {
         return units;
     }
 
+    public void setUnits(String units) {
+        if (!this.units.equals(units)) {
+            String previousUnits = this.units;
+            this.units = units;
+            value = Profile.toUnits(Profile.toMgdl(value, previousUnits), Profile.toMmol(value, previousUnits), units);
+        }
+    }
+
     public double getValue() {
         return value;
     }
 
-    public double getMgdl() {
-        return Profile.toMgdl(value, units);
+    public int getMgdl() {
+        return (int)Profile.toMgdl(value, units);
     }
 
-    public void setMgdl(double value) {
+    public void setMgdl(int value) {
         this.value = Profile.fromMgdlToUnits(value, units);
     }
 }

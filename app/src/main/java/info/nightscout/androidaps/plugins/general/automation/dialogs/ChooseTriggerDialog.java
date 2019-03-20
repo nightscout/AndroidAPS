@@ -59,9 +59,23 @@ public class ChooseTriggerDialog extends DialogFragment {
             mRadioGroup.addView(radioButton);
         }
 
-        ((RadioButton)mRadioGroup.getChildAt(0)).setChecked(true);
+        // restore checked radio button
+        int checkedIndex = 0;
+        if (savedInstanceState != null) {
+            checkedIndex = savedInstanceState.getInt("checkedIndex");
+        }
+
+        ((RadioButton)mRadioGroup.getChildAt(checkedIndex)).setChecked(true);
 
         return view;
+    }
+
+    private int getCheckedIndex() {
+        for(int i = 0; i < mRadioGroup.getChildCount(); ++i) {
+            if (((RadioButton)mRadioGroup.getChildAt(i)).isChecked())
+                return i;
+        }
+        return -1;
     }
 
     private Class getTriggerClass() {
@@ -111,4 +125,8 @@ public class ChooseTriggerDialog extends DialogFragment {
         dismiss();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        bundle.putInt("checkedIndex", getCheckedIndex());
+    }
 }

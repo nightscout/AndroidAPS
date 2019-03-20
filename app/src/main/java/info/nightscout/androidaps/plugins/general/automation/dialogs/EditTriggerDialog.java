@@ -21,12 +21,13 @@ public class EditTriggerDialog extends DialogFragment {
         void onClick(Trigger newTriggerObject);
     }
 
+    private static OnClickListener mClickListener = null;
+
     @BindView(R.id.layoutTrigger)
     LinearLayout mLayoutTrigger;
 
     private Trigger mTrigger;
     private Unbinder mUnbinder;
-    private OnClickListener mClickListener = null;
 
     public static EditTriggerDialog newInstance(Trigger trigger) {
         Bundle args = new Bundle();
@@ -54,7 +55,7 @@ public class EditTriggerDialog extends DialogFragment {
         return view;
     }
 
-    public void setOnClickListener(OnClickListener clickListener) {
+    public static void setOnClickListener(OnClickListener clickListener) {
         mClickListener = clickListener;
     }
 

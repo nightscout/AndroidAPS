@@ -18,7 +18,7 @@ public abstract class Action {
 
     public void generateDialog(LinearLayout root) { }
 
-    public void saveFromDialog() { }
+    public boolean hasDialog() { return false; }
 
     public String toJSON() {
         JSONObject o = new JSONObject();
@@ -30,11 +30,18 @@ public abstract class Action {
         return o.toString();
     }
 
+    public void copy(Action action) { }
+
+    /*package*/ Action fromJSON(String data) {
+        return this;
+    }
+
     public static Action instantiate(JSONObject object) {
         try {
             String type = object.getString("type");
+            JSONObject data = object.getJSONObject("data");
             Class clazz = Class.forName(type);
-            return (Action) clazz.newInstance();
+            return ((Action) clazz.newInstance()).fromJSON(data.toString());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
             e.printStackTrace();
         }

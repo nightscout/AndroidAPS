@@ -30,6 +30,8 @@ public class ChooseActionDialog extends DialogFragment {
         void onClick(Action newActionObject);
     }
 
+    private static OnClickListener mClickListener = null;
+
     private static final List<Action> actionDummyObjects = new ArrayList<Action>() {{
         add(new ActionLoopDisable());
         add(new ActionLoopEnable());
@@ -39,7 +41,6 @@ public class ChooseActionDialog extends DialogFragment {
     }};
 
     private Unbinder mUnbinder;
-    private OnClickListener mClickListener = null;
 
     @BindView(R.id.radioGroup)
     RadioGroup mRadioGroup;
@@ -65,9 +66,23 @@ public class ChooseActionDialog extends DialogFragment {
             mRadioGroup.addView(radioButton);
         }
 
-        ((RadioButton)mRadioGroup.getChildAt(0)).setChecked(true);
+        // restore checked radio button
+        int checkedIndex = 0;
+        if (savedInstanceState != null) {
+            checkedIndex = savedInstanceState.getInt("checkedIndex");
+        }
+
+        ((RadioButton)mRadioGroup.getChildAt(checkedIndex)).setChecked(true);
 
         return view;
+    }
+
+    private int getCheckedIndex() {
+        for(int i = 0; i < mRadioGroup.getChildCount(); ++i) {
+            if (((RadioButton)mRadioGroup.getChildAt(i)).isChecked())
+                return i;
+        }
+        return -1;
     }
 
     private Class getActionClass() {
@@ -94,7 +109,7 @@ public class ChooseActionDialog extends DialogFragment {
     }
 
 
-    public void setOnClickListener(OnClickListener clickListener) {
+    public static void setOnClickListener(OnClickListener clickListener) {
         mClickListener = clickListener;
     }
 
@@ -117,4 +132,8 @@ public class ChooseActionDialog extends DialogFragment {
         dismiss();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        bundle.putInt("checkedIndex", getCheckedIndex());
+    }
 }

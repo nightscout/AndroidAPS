@@ -3,6 +3,9 @@ package info.nightscout.androidaps.plugins.general.automation.actions;
 import android.support.annotation.StringRes;
 import android.widget.LinearLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -16,22 +19,20 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDurat
 import info.nightscout.androidaps.plugins.general.automation.elements.Label;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.JsonHelper;
 
 public class ActionStartTempTarget extends Action {
     private String reason;
-    private double valueInMgdl;
-    private String units;
-    private int durationInMinutes;
 
-    private InputBg inputBg;
-    private InputDuration inputDuration;
+    private InputBg value;
+    private InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
 
     public ActionStartTempTarget() {
-        units = Constants.MGDL;
+        value = new InputBg(Constants.MGDL);
     }
 
     public ActionStartTempTarget(String units) {
-        this.units = Constants.MGDL;
+        value = new InputBg(units);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ActionStartTempTarget extends Action {
 
     @Override
     void doAction(Callback callback) {
-        TempTarget tempTarget = new TempTarget().date(DateUtil.now()).duration(durationInMinutes).reason(reason).source(Source.USER).low(valueInMgdl).high(valueInMgdl);
+        TempTarget tempTarget = new TempTarget().date(DateUtil.now()).duration((int)duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
@@ -49,21 +50,56 @@ public class ActionStartTempTarget extends Action {
 
     @Override
     public void generateDialog(LinearLayout root) {
-        inputBg = new InputBg(units);
-        if (valueInMgdl != 0d) inputBg.setMgdl(valueInMgdl);
-        inputDuration = new InputDuration(durationInMinutes, InputDuration.TimeUnit.MINUTES);
-
-        int unitResId = units.equals(Constants.MGDL) ? R.string.mgdl : R.string.mmol;
-        Label labelBg = new Label(MainApp.gs(R.string.careportal_newnstreatment_percentage_label), MainApp.gs(unitResId), inputBg);
+        int unitResId = value.getUnits().equals(Constants.MGDL) ? R.string.mgdl : R.string.mmol;
+        Label labelBg = new Label(MainApp.gs(R.string.careportal_newnstreatment_percentage_label), MainApp.gs(unitResId), value);
         labelBg.generateDialog(root);
-
-        Label labelDuration = new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", inputDuration);
+        Label labelDuration = new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", duration);
         labelDuration.generateDialog(root);
     }
 
     @Override
-    public void saveFromDialog() {
-        valueInMgdl = inputBg.getMgdl();
-        durationInMinutes = inputDuration.getMinutes();
+    public boolean hasDialog() {
+        return true;
+    }
+
+    @Override
+    public String toJSON() {
+        JSONObject o = new JSONObject();
+        try {
+            o.put("type", ActionStartTempTarget.class.getName());
+            JSONObject data = new JSONObject();
+            data.put("reason", reason);
+            data.put("valueInMg", value.getMgdl());
+            data.put("units", value.getUnits());
+            data.put("durationInMinutes", duration.getMinutes());
+            o.put("data", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return o.toString();
+    }
+
+    @Override
+    Action fromJSON(String data) {
+        try {
+            JSONObject d = new JSONObject(data);
+            reason = JsonHelper.safeGetString(d, "reason");
+            value.setUnits(JsonHelper.safeGetString(d, "units"));
+            value.setMgdl(JsonHelper.safeGetInt(d, "valueInMg"));
+            duration.setMinutes(JsonHelper.safeGetDouble(d, "durationInMinutes"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    @Override
+    public void copy(Action action) {
+        if (action instanceof ActionStartTempTarget) {
+            ActionStartTempTarget src = (ActionStartTempTarget)action;
+            this.duration = src.duration;
+            this.value = src.value;
+            this.reason = src.reason;
+        }
     }
 }

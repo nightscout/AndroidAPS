@@ -69,13 +69,13 @@ public class EditEventDialog extends DialogFragment {
         mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
 
         // setup trigger click event listener
+        EditTriggerDialog.setOnClickListener(trigger -> {
+            mEvent.setTrigger(trigger);
+            mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
+        });
         mEditTrigger.setOnClickListener(v -> {
             EditTriggerDialog dialog = EditTriggerDialog.newInstance(mEvent.getTrigger());
             dialog.show(getFragmentManager(), "EditTriggerDialog");
-            dialog.setOnClickListener(trigger -> {
-                mEvent.setTrigger(trigger);
-                mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
-            });
         });
 
         // setup action list view
@@ -84,13 +84,13 @@ public class EditEventDialog extends DialogFragment {
         mActionListView.setAdapter(mActionListAdapter);
 
         // setup action click event listener
+        ChooseActionDialog.setOnClickListener(newActionObject -> {
+            mEvent.addAction(newActionObject);
+            mActionListAdapter.notifyDataSetChanged();
+        });
         mEditAction.setOnClickListener(v -> {
             ChooseActionDialog dialog = ChooseActionDialog.newInstance();
             dialog.show(getFragmentManager(), "ChooseActionDialog");
-            dialog.setOnClickListener(newActionObject -> {
-                mEvent.addAction(newActionObject);
-                mActionListAdapter.notifyDataSetChanged();
-            });
         });
 
 
