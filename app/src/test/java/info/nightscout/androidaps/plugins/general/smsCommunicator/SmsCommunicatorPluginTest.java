@@ -20,6 +20,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
@@ -38,6 +39,8 @@ import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -413,6 +416,92 @@ public class SmsCommunicatorPluginTest {
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
         Assert.assertEquals("Profile switch created", smsCommunicatorPlugin.messages.get(3).text);
+    }
+
+    @Test
+    public void processBasalTest() {
+        Sms sms;
+
+        //BASAL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
+        //BASAL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //BASAL CANCEL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL CANCEL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL CANCEL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To stop temp basal reply with code"));
+        String passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Temp basal canceled\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+
+        //BASAL a%
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL a%");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL a%", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //BASAL 10% 0
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL 10% 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL 10% 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(MainApp.getConstraintChecker().applyBasalPercentConstraints(any(), any())).thenReturn(new Constraint<>(20));
+
+        //BASAL 20% 20
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL 20% 20");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL 20% 20", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start basal 20% reply with code"));
+        passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Temp basal 20%  for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+
+        //BASAL a
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL a");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL a", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //BASAL 1 0
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL 1 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL 1 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(new Constraint<>(1d));
+
+        //BASAL 1 20
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BASAL 1 20");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BASAL 1 20", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start basal 1.00U/h reply with code"));
+        passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Temp basal 1.00U/h for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
 
     }
 
@@ -431,6 +520,7 @@ public class SmsCommunicatorPluginTest {
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();
         AAPSMocker.mockNSUpload();
+        AAPSMocker.mockConstraintsChecker();
 
         BgReading reading = new BgReading();
         reading.value = 100;
@@ -450,19 +540,33 @@ public class SmsCommunicatorPluginTest {
         loopPlugin = mock(LoopPlugin.class);
         when(MainApp.getSpecificPlugin(LoopPlugin.class)).thenReturn(loopPlugin);
 
-        Mockito.doAnswer((Answer) invocation -> {
+        Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(1);
             callback.result = new PumpEnactResult().success(true);
             callback.run();
             return null;
         }).when(AAPSMocker.queue).cancelTempBasal(anyBoolean(), any(Callback.class));
 
-        Mockito.doAnswer((Answer) invocation -> {
+        Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(1);
             callback.result = new PumpEnactResult().success(true);
             callback.run();
             return null;
         }).when(AAPSMocker.queue).readStatus(anyString(), any(Callback.class));
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(4);
+            callback.result = new PumpEnactResult().success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1));
+            callback.run();
+            return null;
+        }).when(AAPSMocker.queue).tempBasalPercent(anyInt(), anyInt(), anyBoolean(), any(), any(Callback.class));
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(4);
+            callback.result = new PumpEnactResult().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1));
+            callback.run();
+            return null;
+        }).when(AAPSMocker.queue).tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), any(), any(Callback.class));
 
         VirtualPumpPlugin virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);

@@ -374,11 +374,11 @@
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
-    <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d %%  for %2$d min started successfully</string>
+    <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%%  for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_extendedfailed">Extended bolus start failed</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
-    <string name="smscommunicator_extendedstopreplywithcode" formatted="false">To stop extended bolus reply with code %s</string>
+    <string name="smscommunicator_basalstopreplywithcode">To stop temp basal reply with code %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">To stop extended bolus reply with code %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
     <string name="smscommunicator_extendedcanceled">Extended bolus canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
