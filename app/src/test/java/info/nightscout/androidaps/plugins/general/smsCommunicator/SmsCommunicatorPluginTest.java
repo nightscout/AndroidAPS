@@ -21,12 +21,14 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -46,7 +48,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({
         L.class, SP.class, MainApp.class, DateUtil.class, ProfileFunctions.class,
         TreatmentsPlugin.class, SmsManager.class, IobCobCalculatorPlugin.class,
-        CommandQueue.class, ConfigBuilderPlugin.class, NSUpload.class
+        CommandQueue.class, ConfigBuilderPlugin.class, NSUpload.class, ProfileInterface.class,
+        SimpleProfilePlugin.class
 })
 
 public class SmsCommunicatorPluginTest {
@@ -316,6 +319,100 @@ public class SmsCommunicatorPluginTest {
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertEquals("PUMP", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertEquals("Virtual Pump", smsCommunicatorPlugin.messages.get(1).text);
+
+    }
+
+    @Test
+    public void processProfileTest() {
+        Sms sms;
+
+        //PROFILE
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
+        //PROFILE
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //PROFILE LIST (no profile interface)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE LIST");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE LIST", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Not configured", smsCommunicatorPlugin.messages.get(1).text);
+
+        ProfileInterface profileInterface = mock(SimpleProfilePlugin.class);
+        when(ConfigBuilderPlugin.getPlugin().getActiveProfileInterface()).thenReturn(profileInterface);
+
+        //PROFILE LIST (no profile defined)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE LIST");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE LIST", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Not configured", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(profileInterface.getProfile()).thenReturn(AAPSMocker.getValidProfileStore());
+
+        //PROFILE STATUS
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE STATUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE STATUS", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals(AAPSMocker.TESTPROFILENAME, smsCommunicatorPlugin.messages.get(1).text);
+
+        //PROFILE LIST
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE LIST");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE LIST", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("1. " + AAPSMocker.TESTPROFILENAME, smsCommunicatorPlugin.messages.get(1).text);
+
+        //PROFILE 2 (non existing)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE 2");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE 2", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //PROFILE 1 0(wrong percentage)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE 1 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE 1 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //PROFILE 0(wrong index)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //PROFILE 1(OK)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE 1");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE 1", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To switch profile to someProfile 100% reply with code"));
+
+        //PROFILE 1 90(OK)
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "PROFILE 1 90");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("PROFILE 1 90", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To switch profile to someProfile 90% reply with code"));
+        String passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Profile switch created", smsCommunicatorPlugin.messages.get(3).text);
 
     }
 
