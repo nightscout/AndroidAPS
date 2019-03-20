@@ -1292,6 +1292,9 @@
     <string name="automation">Automation</string>
     <string name="automation_short">Auto</string>
     <string name="automation_description">User defined automation tasks</string>
+    <string name="automation_missing_task_name">Please enter a task name.</string>
+    <string name="automation_missing_trigger">Please specify at least one trigger.</string>
+    <string name="automation_missing_action">Please specify at least one action.</string>
     <string name="alreadyenabled">Already enabled</string>
     <string name="alreadydisabled">Already disabled</string>
     <string name="alreadysuspended">Already suspended</string>

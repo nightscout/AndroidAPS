@@ -51,6 +51,11 @@ public class AutomationFragment extends SubscriberFragment {
         mEventListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mEventListView.setAdapter(mEventListAdapter);
 
+        EditEventDialog.setOnClickListener(event -> {
+            plugin.getAutomationEvents().add(event);
+            mEventListAdapter.notifyDataSetChanged();
+        });
+
         updateGUI();
 
         return view;

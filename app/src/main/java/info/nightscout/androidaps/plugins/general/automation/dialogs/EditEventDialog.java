@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +23,16 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 public class EditEventDialog extends DialogFragment {
+    public interface OnClickListener {
+        void onClick(AutomationEvent event);
+    }
+
+    private static OnClickListener mClickListener = null;
     private static AutomationEvent mEvent;
+
+    public static void setOnClickListener(OnClickListener clickListener) {
+        mClickListener = clickListener;
+    }
 
     @BindView(R.id.inputEventTitle)
     TextInputEditText mEditEventTitle;
@@ -105,14 +115,28 @@ public class EditEventDialog extends DialogFragment {
 
     @OnClick(R.id.ok)
     public void onButtonOk(View view) {
+        // check for title
         String title = mEditEventTitle.getText().toString();
-        if (title.isEmpty()) return;
-
+        if (title.isEmpty()) {
+            Toast.makeText(getContext(), R.string.automation_missing_task_name, Toast.LENGTH_LONG).show();
+            return;
+        }
         mEvent.setTitle(title);
 
-        final AutomationPlugin plugin = AutomationPlugin.getPlugin();
-        plugin.getAutomationEvents().add(mEvent);
+        // check for at least one trigger
+        TriggerConnector con = (TriggerConnector) mEvent.getTrigger();
+        if (con.size() == 0) {
+            Toast.makeText(getContext(), R.string.automation_missing_trigger, Toast.LENGTH_LONG).show();
+            return;
+        }
 
+        // check for at least one action
+        if (mEvent.getActions().isEmpty()) {
+            Toast.makeText(getContext(), R.string.automation_missing_action, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (mClickListener != null) mClickListener.onClick(mEvent);
         dismiss();
     }
 

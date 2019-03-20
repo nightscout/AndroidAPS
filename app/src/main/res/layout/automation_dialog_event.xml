@@ -20,7 +20,7 @@
                 android:id="@+id/inputEventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Event Name" />
+                android:hint="Task Name" />
 
             <View
                 android:layout_width="fill_parent"
