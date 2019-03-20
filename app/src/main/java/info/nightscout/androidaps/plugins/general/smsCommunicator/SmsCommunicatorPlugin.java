@@ -203,7 +203,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 case "EXTENDED":
                     if (!remoteCommandsAllowed)
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
-                    else if (splitted.length == 3)
+                    else if (splitted.length == 2 || splitted.length == 3)
                         processEXTENDED(splitted, receivedSms);
                     else
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
@@ -622,6 +622,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     });
                 }
             });
+        } else if (splitted.length != 3) {
+            sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
         } else {
             Double extended = SafeParse.stringToDouble(splitted[1]);
             int duration = SafeParse.stringToInt(splitted[2]);

@@ -505,6 +505,66 @@ public class SmsCommunicatorPluginTest {
 
     }
 
+    @Test
+    public void processExtendedTest() {
+        Sms sms;
+
+        //EXTENDED
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "EXTENDED");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("EXTENDED", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
+        //EXTENDED
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "EXTENDED");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("EXTENDED", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //EXTENDED CANCEL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "EXTENDED CANCEL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("EXTENDED CANCEL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To stop extended bolus reply with code"));
+        String passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Extended bolus canceled\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+
+        //EXTENDED a%
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "EXTENDED a%");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("EXTENDED a%", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(MainApp.getConstraintChecker().applyExtendedBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+
+        //EXTENDED 1 0
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "EXTENDED 1 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("EXTENDED 1 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //EXTENDED 1 20
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "EXTENDED 1 20");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("EXTENDED 1 20", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start extended bolus 1.00U for 20 min reply with code"));
+        passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+
+    }
+
     @Before
     public void prepareTests() {
         AAPSMocker.mockMainApp();
@@ -548,6 +608,13 @@ public class SmsCommunicatorPluginTest {
         }).when(AAPSMocker.queue).cancelTempBasal(anyBoolean(), any(Callback.class));
 
         Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(0);
+            callback.result = new PumpEnactResult().success(true);
+            callback.run();
+            return null;
+        }).when(AAPSMocker.queue).cancelExtended(any(Callback.class));
+
+        Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(1);
             callback.result = new PumpEnactResult().success(true);
             callback.run();
@@ -567,6 +634,13 @@ public class SmsCommunicatorPluginTest {
             callback.run();
             return null;
         }).when(AAPSMocker.queue).tempBasalAbsolute(anyDouble(), anyInt(), anyBoolean(), any(), any(Callback.class));
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(2);
+            callback.result = new PumpEnactResult().success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1));
+            callback.run();
+            return null;
+        }).when(AAPSMocker.queue).extendedBolus(anyDouble(), anyInt(), any(Callback.class));
 
         VirtualPumpPlugin virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
