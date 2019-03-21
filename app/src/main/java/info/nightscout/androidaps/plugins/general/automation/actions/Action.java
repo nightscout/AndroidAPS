@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
-import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.widget.LinearLayout;
+
+import com.google.common.base.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +28,8 @@ public abstract class Action {
         }
         return o.toString();
     }
+
+    public abstract Optional<Integer> icon();
 
     public void copy(Action action) { }
 

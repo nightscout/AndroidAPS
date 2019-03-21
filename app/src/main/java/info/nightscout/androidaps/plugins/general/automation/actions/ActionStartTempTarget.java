@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
-import android.support.annotation.StringRes;
 import android.widget.LinearLayout;
+
+import com.google.common.base.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +10,6 @@ import org.json.JSONObject;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
@@ -101,5 +101,10 @@ public class ActionStartTempTarget extends Action {
             this.value = src.value;
             this.reason = src.reason;
         }
+    }
+
+    @Override
+    public Optional<Integer> icon() {
+        return Optional.of(R.drawable.icon_cp_cgm_target);
     }
 }

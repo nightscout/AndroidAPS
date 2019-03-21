@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.dpro.widgets.WeekdaysPicker;
+import com.google.common.base.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -228,6 +229,11 @@ public class TriggerTime extends Trigger {
         } else {
             return MainApp.gs(R.string.atspecifiedtime, DateUtil.dateAndTimeString(runAt));
         }
+    }
+
+    @Override
+    public Optional<Integer> icon() {
+        return Optional.of(R.drawable.ic_access_alarm_24dp);
     }
 
     @Override

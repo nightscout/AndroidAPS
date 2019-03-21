@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -88,16 +92,48 @@ public class AutomationFragment extends SubscriberFragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.automation_event_item, parent, false);
-            return new ViewHolder(v);
+            return new ViewHolder(v, parent.getContext());
+        }
+
+        private void addImage(@DrawableRes int res, Context context, LinearLayout layout) {
+            ImageView iv = new ImageView(context);
+            iv.setImageResource(res);
+            iv.setLayoutParams(new LinearLayout.LayoutParams(MainApp.dpToPx(24),MainApp.dpToPx(24)));
+            layout.addView(iv);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final AutomationEvent event = mEventList.get(position);
             holder.eventTitle.setText(event.getTitle());
+            holder.iconLayout.removeAllViews();
+
+            // trigger icons
+            HashSet<Integer> triggerIcons = new HashSet<>();
+            TriggerConnector.fillIconSet((TriggerConnector)event.getTrigger(), triggerIcons);
+            for(int res : triggerIcons) {
+                addImage(res, holder.context, holder.iconLayout);
+            }
+
+            // arrow icon
+            ImageView iv = new ImageView(holder.context);
+            iv.setImageResource(R.drawable.ic_arrow_forward_white_24dp);
+            iv.setLayoutParams(new LinearLayout.LayoutParams(MainApp.dpToPx(24),MainApp.dpToPx(24)));
+            iv.setPadding(MainApp.dpToPx(4), 0, MainApp.dpToPx(4), 0);
+            holder.iconLayout.addView(iv);
+
+            // action icons
+            HashSet<Integer> actionIcons = new HashSet<>();
+            for(Action action : event.getActions()) {
+                if (action.icon().isPresent())
+                    actionIcons.add(action.icon().get());
+            }
+            for(int res : actionIcons) {
+                addImage(res, holder.context, holder.iconLayout);
+            }
 
             // TODO: check null
-            holder.eventDescription.setText(event.getTrigger().friendlyDescription());
+            //holder.eventDescription.setText(event.getTrigger().friendlyDescription());
         }
 
         @Override
@@ -106,13 +142,17 @@ public class AutomationFragment extends SubscriberFragment {
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
-            TextView eventTitle;
-            TextView eventDescription;
+            final RelativeLayout rootLayout;
+            final LinearLayout iconLayout;
+            final TextView eventTitle;
+            final Context context;
 
-            public ViewHolder(View view) {
+            public ViewHolder(View view, Context context) {
                 super(view);
+                this.context = context;
                 eventTitle = view.findViewById(R.id.viewEventTitle);
-                eventDescription = view.findViewById(R.id.viewEventDescription);
+                rootLayout = view.findViewById(R.id.rootLayout);
+                iconLayout = view.findViewById(R.id.iconLayout);
             }
         }
     }

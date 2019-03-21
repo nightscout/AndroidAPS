@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -56,6 +59,19 @@ public class TriggerConnector extends Trigger {
                 list.add(MainApp.gs(t.getStringRes()));
             }
             return list;
+        }
+    }
+
+    public static void fillIconSet(TriggerConnector connector, HashSet<Integer> set) {
+        for(Trigger t : connector.list) {
+            if (t instanceof TriggerConnector) {
+                fillIconSet((TriggerConnector) t, set);
+            } else {
+                Optional<Integer> icon = t.icon();
+                if (icon.isPresent()) {
+                    set.add(icon.get());
+                }
+            }
         }
     }
 
@@ -168,6 +184,11 @@ public class TriggerConnector extends Trigger {
             result.append(t.friendlyDescription());
         }
         return result.toString();
+    }
+
+    @Override
+    public Optional<Integer> icon() {
+        return Optional.absent();
     }
 
     @Override

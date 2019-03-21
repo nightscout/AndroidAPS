@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
+import com.google.common.base.Optional;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -32,5 +34,10 @@ public class ActionLoopDisable extends Action {
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.alreadydisabled)).run();
         }
+    }
+
+    @Override
+    public Optional<Integer> icon() {
+        return Optional.of(R.drawable.ic_stop_24dp);
     }
 }

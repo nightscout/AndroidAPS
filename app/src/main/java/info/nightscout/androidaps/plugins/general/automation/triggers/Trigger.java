@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,6 +96,8 @@ public abstract class Trigger {
     public abstract int friendlyName();
 
     public abstract String friendlyDescription();
+
+    public abstract Optional<Integer> icon();
 
     void notifyAboutRun(long time) {
     }

@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -122,6 +124,11 @@ public class TriggerBg extends Trigger {
             return MainApp.gs(R.string.glucoseisnotavailable);
         else
             return MainApp.gs(R.string.glucosecompared, MainApp.gs(comparator.getStringRes()), threshold, units);
+    }
+
+    @Override
+    public Optional<Integer> icon() {
+        return Optional.of(R.drawable.icon_cp_bgcheck);
     }
 
     @Override
