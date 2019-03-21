@@ -133,9 +133,9 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.smscommunicator_profilereplywithcode)).thenReturn("To switch profile to %1$s %2$d%% reply with code %3$s");
         when(MainApp.gs(R.string.profileswitchcreated)).thenReturn("Profile switch created");
         when(MainApp.gs(R.string.smscommunicator_basalstopreplywithcode)).thenReturn("To stop temp basal reply with code %1$s");
-        when(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode)).thenReturn("To start basal %1$d%% reply with code %2$s");
-        when(MainApp.gs(R.string.smscommunicator_tempbasalset_percent)).thenReturn("Temp basal %1$d%%  for %2$d min started successfully");
-        when(MainApp.gs(R.string.smscommunicator_basalreplywithcode)).thenReturn("To start basal %1$.2fU/h reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode)).thenReturn("To start basal %1$d%% for %2$d min reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_tempbasalset_percent)).thenReturn("Temp basal %1$d%% for %2$d min started successfully");
+        when(MainApp.gs(R.string.smscommunicator_basalreplywithcode)).thenReturn("To start basal %1$.2fU/h for %2$d min reply with code %3$s");
         when(MainApp.gs(R.string.smscommunicator_tempbasalset)).thenReturn("Temp basal %1$.2fU/h for %2$d min started successfully");
         when(MainApp.gs(R.string.smscommunicator_extendedstopreplywithcode)).thenReturn("To stop extended bolus reply with code %1$s");
         when(MainApp.gs(R.string.smscommunicator_extendedcanceled)).thenReturn("Extended bolus canceled");

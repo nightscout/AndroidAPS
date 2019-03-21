@@ -475,11 +475,11 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "BASAL 20% 20");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertEquals("BASAL 20% 20", smsCommunicatorPlugin.messages.get(0).text);
-        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start basal 20% reply with code"));
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start basal 20% for 20 min reply with code"));
         passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
-        Assert.assertEquals("Temp basal 20%  for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+        Assert.assertEquals("Temp basal 20% for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
 
         //BASAL a
         smsCommunicatorPlugin.messages = new ArrayList<>();
@@ -502,7 +502,7 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "BASAL 1 20");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertEquals("BASAL 1 20", smsCommunicatorPlugin.messages.get(0).text);
-        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start basal 1.00U/h reply with code"));
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To start basal 1.00U/h for 20 min reply with code"));
         passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);

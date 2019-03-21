@@ -527,7 +527,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             else {
                 tempBasalPct = MainApp.getConstraintChecker().applyBasalPercentConstraints(new Constraint<>(tempBasalPct), profile).value();
                 String passCode = generatePasscode();
-                String reply = String.format(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, passCode);
+                String reply = String.format(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, duration, passCode);
                 receivedSms.processed = true;
                 messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasalPct, duration) {
                     @Override
@@ -568,7 +568,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             else {
                 tempBasal = MainApp.getConstraintChecker().applyBasalConstraints(new Constraint<>(tempBasal), profile).value();
                 String passCode = generatePasscode();
-                String reply = String.format(MainApp.gs(R.string.smscommunicator_basalreplywithcode), tempBasal, passCode);
+                String reply = String.format(MainApp.gs(R.string.smscommunicator_basalreplywithcode), tempBasal, duration, passCode);
                 receivedSms.processed = true;
                 messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(tempBasal, duration) {
                     @Override
