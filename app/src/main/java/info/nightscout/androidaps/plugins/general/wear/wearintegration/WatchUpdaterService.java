@@ -1,9 +1,17 @@
 package info.nightscout.androidaps.plugins.general.wear.wearintegration;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,8 +22,11 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.CapabilityApi;
+import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -42,21 +53,24 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.ToastUtils;
 
-public class WatchUpdaterService extends WearableListenerService implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
     public static final String ACTION_SEND_STATUS = WatchUpdaterService.class.getName().concat(".SendStatus");
@@ -91,6 +105,17 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private Handler handler;
 
+    // Phone
+    private static final String CAPABILITY_PHONE_APP = "phone_app_sync_bgs";
+    private static final String MESSAGE_PATH_PHONE = "/phone_message_path";
+    // Wear
+    private static final String CAPABILITY_WEAR_APP = "wear_app_sync_bgs";
+    private static final String MESSAGE_PATH_WEAR = "/wear_message_path";
+    private String mWearNodeId = null;
+    private String localnode = null;
+    private String logPrefix = ""; // "WR: "
+
+
     @Override
     public void onCreate() {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -112,24 +137,24 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     public void setSettings() {
         wear_integration = WearPlugin.getPlugin().isEnabled(PluginType.GENERAL);
+        // Log.d(TAG, "WR: wear_integration=" + wear_integration);
         if (wear_integration) {
             googleApiConnect();
         }
     }
 
-    public void googleApiConnect() {
+
+    private void googleApiConnect() {
         if (googleApiClient != null && (googleApiClient.isConnected() || googleApiClient.isConnecting())) {
             googleApiClient.disconnect();
         }
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Wearable.API)
-                .build();
+        googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this).addApi(Wearable.API).build();
         Wearable.MessageApi.addListener(googleApiClient, this);
         if (googleApiClient.isConnected()) {
-            Log.d("WatchUpdater", "API client is connected");
+            log.debug(logPrefix + "API client is connected");
         } else {
+            // Log.d("WatchUpdater", logPrefix + "API client is not connected and is trying to connect");
             googleApiClient.connect();
         }
     }
@@ -137,6 +162,8 @@ public class WatchUpdaterService extends WearableListenerService implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent != null ? intent.getAction() : null;
+
+        // Log.d(TAG, logPrefix + "onStartCommand: " + action);
 
         if (wear_integration) {
             handler.post(() -> {
@@ -177,13 +204,63 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
 
+    private void updateWearSyncBgsCapability(CapabilityInfo capabilityInfo) {
+        Log.d("WatchUpdaterService", logPrefix + "CabilityInfo: " + capabilityInfo);
+        Set<Node> connectedNodes = capabilityInfo.getNodes();
+        mWearNodeId = pickBestNodeId(connectedNodes);
+    }
+
+
+    private String pickBestNodeId(Set<Node> nodes) {
+        String bestNodeId = null;
+        // Find a nearby node or pick one arbitrarily
+        for (Node node : nodes) {
+            if (node.isNearby()) {
+                return node.getId();
+            }
+            bestNodeId = node.getId();
+        }
+        return bestNodeId;
+    }
+
+
     @Override
     public void onConnected(Bundle connectionHint) {
+        CapabilityApi.CapabilityListener capabilityListener = capabilityInfo -> {
+            updateWearSyncBgsCapability(capabilityInfo);
+            // Log.d(TAG, logPrefix + "onConnected onCapabilityChanged mWearNodeID:" + mWearNodeId);
+            // new CheckWearableConnected().execute();
+        };
+
+        Wearable.CapabilityApi.addCapabilityListener(googleApiClient, capabilityListener, CAPABILITY_WEAR_APP);
         sendData();
     }
 
+
+    @Override
+    public void onPeerConnected(com.google.android.gms.wearable.Node peer) {// KS
+        super.onPeerConnected(peer);
+        String id = peer.getId();
+        String name = peer.getDisplayName();
+        // Log.d(TAG, logPrefix + "onPeerConnected peer name & ID: " + name + "|" + id);
+    }
+
+
+    @Override
+    public void onPeerDisconnected(com.google.android.gms.wearable.Node peer) {// KS
+        super.onPeerDisconnected(peer);
+        String id = peer.getId();
+        String name = peer.getDisplayName();
+        // Log.d(TAG, logPrefix + "onPeerDisconnected peer name & ID: " + name + "|" + id);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    }
+
+
     @Override
     public void onMessageReceived(MessageEvent event) {
+
+        // Log.d(TAG, logPrefix + "onMessageRecieved: " + event);
+
         if (wear_integration) {
             if (event != null && event.getPath().equals(WEARABLE_RESEND_PATH)) {
                 resendData();
@@ -214,6 +291,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void sendData() {
 
         BgReading lastBG = DatabaseHelper.lastBg();
+        // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
@@ -228,10 +306,11 @@ public class WatchUpdaterService extends WearableListenerService implements
                     return;
                 }
 
-                new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(dataMap);
+                executeTask(new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient), dataMap);
             }
         }
     }
+
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
         String units = ProfileFunctions.getInstance().getProfileUnits();
@@ -239,7 +318,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(mPrefs.getString("high_mark", "0"));
 
-        //convert to mg/dl
+        // convert to mg/dl
         if (!units.equals(Constants.MGDL)) {
             lowLine *= Constants.MMOLL_TO_MGDL;
             highLine *= Constants.MMOLL_TO_MGDL;
@@ -287,7 +366,6 @@ public class WatchUpdaterService extends WearableListenerService implements
             deltastring += "+";
         } else {
             deltastring += "-";
-
         }
 
         boolean detailed = SP.getBoolean("wear_detailed_delta", false);
@@ -352,7 +430,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 }
             }
             entries.putDataMapArrayList("entries", dataMaps);
-            new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
+            executeTask(new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient), entries);
         }
         sendPreferences();
         sendBasals();
@@ -501,7 +579,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         dm.putDataMapArrayList("boluses", boluses);
         dm.putDataMapArrayList("predictions", predictions);
 
-        new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient).execute(dm);
+        executeTask(new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient), dm);
     }
 
     private DataMap tempDatamap(long startTime, double startBasal, long to, double toBasal, double amount) {
@@ -548,6 +626,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("openSettings", "openSettings");
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendNotification", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("OpenSettings", "No connection to wearable available!");
@@ -563,6 +642,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("progressstatus", status);
             dataMapRequest.getDataMap().putInt("progresspercent", progresspercent);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendBolusProgress", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("BolusProgress", "No connection to wearable available!");
@@ -582,6 +662,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             log.debug("Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendActionConfirmationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("confirmationRequest", "No connection to wearable available!");
@@ -601,6 +682,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             log.debug("Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendChangeConfirmationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("changeConfirmRequest", "No connection to wearable available!");
@@ -618,9 +700,10 @@ public class WatchUpdaterService extends WearableListenerService implements
             log.debug("Canceling notification on wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendCancelNotificationRequest", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
-            Log.e("cancelNotificationRequest", "No connection to wearable available!");
+            Log.e("cancelNotificationReq", "No connection to wearable available!");
         }
     }
 
@@ -683,6 +766,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putBoolean("showBgi", mPrefs.getBoolean("wear_showbgi", false));
             dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendStatus", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("SendStatus", "No connection to wearable available!");
@@ -699,11 +783,28 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            debugData("sendPreferences", putDataRequest);
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("SendStatus", "No connection to wearable available!");
         }
     }
+
+
+    private void debugData(String source, Object data) {
+        // Log.d(TAG, "WR: " + source + " " + data);
+    }
+
+
+    private void executeTask(AsyncTask task, DataMap... parameters) {
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object[])parameters);
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        // task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        // } else {
+        // task.execute();
+        // }
+    }
+
 
     @NonNull
     private String generateStatusString(Profile profile, String currentBasal, String iobSum, String iobDetail, String bgiString) {
