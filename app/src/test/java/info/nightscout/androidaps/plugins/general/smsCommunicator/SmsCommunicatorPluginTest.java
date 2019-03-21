@@ -685,6 +685,14 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("Calibration sent. Receiving must be enabled in xDrip.", smsCommunicatorPlugin.messages.get(3).text);
     }
 
+    @Test
+    public void sendNotificationToAllNumbers() {
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        smsCommunicatorPlugin.sendNotificationToAllNumbers("abc");
+        Assert.assertEquals("abc", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("abc", smsCommunicatorPlugin.messages.get(1).text);
+    }
+
     @Before
     public void prepareTests() {
         AAPSMocker.mockMainApp();
