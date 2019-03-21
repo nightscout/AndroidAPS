@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
@@ -73,7 +72,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     AuthRequest messageToConfirm = null;
 
-    private Date lastRemoteBolusTime = new Date(0);
+    long lastRemoteBolusTime = 0;
 
     ArrayList<Sms> messages = new ArrayList<>();
 
@@ -211,9 +210,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 case "BOLUS":
                     if (!remoteCommandsAllowed)
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
-                    else if (DateUtil.now() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance)
+                    else if (splitted.length == 2 && DateUtil.now() - lastRemoteBolusTime < Constants.remoteBolusMinDistance)
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotebolusnotallowed));
-                    else if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended())
+                    else if (splitted.length == 2 && ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended())
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.pumpsuspended));
                     else if (splitted.length == 2)
                         processBOLUS(splitted, receivedSms);
@@ -684,7 +683,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                         String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered);
                                         if (pump != null)
                                             reply += "\n" + pump.shortStatus(true);
-                                        lastRemoteBolusTime = new Date();
+                                        lastRemoteBolusTime = DateUtil.now();
                                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
                                     } else {
                                         String reply = MainApp.gs(R.string.smscommunicator_bolusfailed);

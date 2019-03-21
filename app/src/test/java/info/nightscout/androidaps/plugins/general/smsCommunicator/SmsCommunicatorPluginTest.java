@@ -16,13 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.AAPSMocker;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -36,6 +39,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.XdripCalibrations;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -52,15 +56,15 @@ import static org.powermock.api.mockito.PowerMockito.when;
         L.class, SP.class, MainApp.class, DateUtil.class, ProfileFunctions.class,
         TreatmentsPlugin.class, SmsManager.class, IobCobCalculatorPlugin.class,
         CommandQueue.class, ConfigBuilderPlugin.class, NSUpload.class, ProfileInterface.class,
-        SimpleProfilePlugin.class
+        SimpleProfilePlugin.class, XdripCalibrations.class, VirtualPumpPlugin.class
 })
 
 public class SmsCommunicatorPluginTest {
 
-    SmsCommunicatorPlugin smsCommunicatorPlugin;
-    LoopPlugin loopPlugin;
+    private SmsCommunicatorPlugin smsCommunicatorPlugin;
+    private LoopPlugin loopPlugin;
 
-    boolean hasBeenRun = false;
+    private boolean hasBeenRun = false;
 
     @Test
     public void processSettingsTest() {
@@ -81,6 +85,7 @@ public class SmsCommunicatorPluginTest {
         Sms sms;
 
         // SMS from not allowed number should be ignored
+        smsCommunicatorPlugin.messages = new ArrayList<>();
         sms = new Sms("12", "aText");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertTrue(sms.ignored);
@@ -562,7 +567,122 @@ public class SmsCommunicatorPluginTest {
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
         Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+    }
 
+    @Test
+    public void processBolusTest() {
+        Sms sms;
+
+        //BOLUS
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
+        //BOLUS
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+
+        when(DateUtil.now()).thenReturn(1000L);
+        //BOLUS 1
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 1");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Remote bolus not available. Try again later.", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(0d));
+
+        when(DateUtil.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L);
+
+        //BOLUS 0
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //BOLUS a
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS a");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS a", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(MainApp.getConstraintChecker().applyExtendedBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+
+        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+
+        //BOLUS 1
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 1");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To deliver bolus 1.00U reply with code"));
+        String passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Bolus 1.00U delivered successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+
+        //BOLUS 1 (Suspended pump)
+        smsCommunicatorPlugin.lastRemoteBolusTime = 0;
+        PumpInterface pump = mock(VirtualPumpPlugin.class);
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
+        when(pump.isSuspended()).thenReturn(true);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 1");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Pump suspended", smsCommunicatorPlugin.messages.get(1).text);
+        when(pump.isSuspended()).thenReturn(false);
+    }
+
+    @Test
+    public void processCalTest() {
+        Sms sms;
+
+        //CAL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "CAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CAL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
+        //CAL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "CAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CAL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //CAL 0
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "CAL 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CAL 0", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        when(XdripCalibrations.sendIntent(any())).thenReturn(true);
+        //CAL 1
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "CAL 1");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CAL 1", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To send calibration 1.00 reply with code"));
+        String passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Calibration sent. Receiving must be enabled in xDrip.", smsCommunicatorPlugin.messages.get(3).text);
     }
 
     @Before
@@ -588,6 +708,7 @@ public class SmsCommunicatorPluginTest {
         bgList.add(reading);
         PowerMockito.when(IobCobCalculatorPlugin.getPlugin().getBgReadings()).thenReturn(bgList);
 
+        mockStatic(XdripCalibrations.class);
         mockStatic(DateUtil.class);
         mockStatic(SmsManager.class);
         SmsManager smsManager = mock(SmsManager.class);
@@ -620,6 +741,13 @@ public class SmsCommunicatorPluginTest {
             callback.run();
             return null;
         }).when(AAPSMocker.queue).readStatus(anyString(), any(Callback.class));
+
+        Mockito.doAnswer(invocation -> {
+            Callback callback = invocation.getArgument(1);
+            callback.result = new PumpEnactResult().success(true).bolusDelivered(1);
+            callback.run();
+            return null;
+        }).when(AAPSMocker.queue).bolus(any(DetailedBolusInfo.class), any(Callback.class));
 
         Mockito.doAnswer(invocation -> {
             Callback callback = invocation.getArgument(4);

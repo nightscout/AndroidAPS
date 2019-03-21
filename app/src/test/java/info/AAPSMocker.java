@@ -141,6 +141,12 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.smscommunicator_extendedcanceled)).thenReturn("Extended bolus canceled");
         when(MainApp.gs(R.string.smscommunicator_extendedreplywithcode)).thenReturn("To start extended bolus %1$.2fU for %2$d min reply with code %3$s");
         when(MainApp.gs(R.string.smscommunicator_extendedset)).thenReturn("Extended bolus %1$.2fU for %2$d min started successfully");
+        when(MainApp.gs(R.string.smscommunicator_bolusreplywithcode)).thenReturn("To deliver bolus %1$.2fU reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_bolusdelivered)).thenReturn("Bolus %1$.2fU delivered successfully");
+        when(MainApp.gs(R.string.smscommunicator_remotebolusnotallowed)).thenReturn("Remote bolus not available. Try again later.");
+        when(MainApp.gs(R.string.smscommunicator_calibrationreplywithcode)).thenReturn("To send calibration %1$.2f reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.");
+        when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
     }
 
     public static MainApp mockMainApp() {
