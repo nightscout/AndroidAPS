@@ -384,7 +384,7 @@
     <string name="smscommunicator_extendedcanceled">Extended bolus canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
     <string name="smscommunicator_extendedcancelfailed">Canceling extended bolus failed</string>
-    <string name="smscommunicator_unknowncommand">Uknown command or wrong reply</string>
+    <string name="smscommunicator_unknowncommand">Unknown command or wrong reply</string>
 
     <string name="quickwizard">QuickWizard</string>
     <string name="quickwizardsettings">QuickWizard settings</string>

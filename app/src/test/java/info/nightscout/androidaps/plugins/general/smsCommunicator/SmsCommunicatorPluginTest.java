@@ -96,7 +96,7 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "UNKNOWN");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertEquals("UNKNOWN", smsCommunicatorPlugin.messages.get(0).text);
-        Assert.assertEquals("Uknown command or wrong reply", smsCommunicatorPlugin.messages.get(1).text);
+        Assert.assertEquals("Unknown command or wrong reply", smsCommunicatorPlugin.messages.get(1).text);
 
         //BG
         smsCommunicatorPlugin.messages = new ArrayList<>();
@@ -251,7 +251,7 @@ public class SmsCommunicatorPluginTest {
         //then correct code should not work
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(4).text);
-        Assert.assertEquals("Uknown command or wrong reply", smsCommunicatorPlugin.messages.get(5).text);
+        Assert.assertEquals("Unknown command or wrong reply", smsCommunicatorPlugin.messages.get(5).text);
 
         //LOOP BLABLA
         smsCommunicatorPlugin.messages = new ArrayList<>();

@@ -128,7 +128,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.smscommunicator_wrongduration)).thenReturn("Wrong duration");
         when(MainApp.gs(R.string.smscommunicator_suspendreplywithcode)).thenReturn("To suspend loop for %1$d minutes reply with code %2$s");
         when(MainApp.gs(R.string.smscommunicator_loopsuspended)).thenReturn("Loop suspended");
-        when(MainApp.gs(R.string.smscommunicator_unknowncommand)).thenReturn("Uknown command or wrong reply");
+        when(MainApp.gs(R.string.smscommunicator_unknowncommand)).thenReturn("Unknown command or wrong reply");
         when(MainApp.gs(R.string.notconfigured)).thenReturn("Not configured");
         when(MainApp.gs(R.string.smscommunicator_profilereplywithcode)).thenReturn("To switch profile to %1$s %2$d%% reply with code %3$s");
         when(MainApp.gs(R.string.profileswitchcreated)).thenReturn("Profile switch created");
