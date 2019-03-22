@@ -20,7 +20,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
-import info.nightscout.utils.JsonHelper;
+import info.nightscout.androidaps.utils.JsonHelper;
 
 public class TriggerConnector extends Trigger {
     public enum Type {

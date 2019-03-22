@@ -408,7 +408,6 @@
     <string name="array_of_elements">Πεδίο %1$d Στοιχεία.\nΤρέχουσα τιμή:</string>
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Εντοπισμός σφαλμάτων δέσμης ενεργειών</string>
-    <string name="openapsama_useautosens">Χρήση του AMA autosense</string>
     <string name="refresheventsfromnightscout">Ανανέωσε συμβάντα από NS</string>
     <string name="deletefuturetreatments">Διαγραφή συμβάντων στο μέλλον</string>
     <string name="eatingsoon">Γεύμα Σύντομα</string>
@@ -704,8 +703,6 @@
     <string name="btwatchdog_summary">Απενεργοποιεί το bluetooth του τηλεφώνου για ένα δευτερόλεπτο αν δεν είναι δυνατή η σύνδεση με την αντλία. Αυτό μπορεί να βοηθήσει σε ορισμένα τηλέφωνα όπου το bluetooth παγώνει.</string>
     <string name="DexcomG5">Εφαρμογή DexcomG5 (τροποποιημένη)</string>
     <string name="dexcomg5_nsupload_title">Ανέβασμα δεδομένων BG στο NS</string>
-    <string name="dexcomg5_upload">Ανέβασμα ρυθμίσεων G5</string>
-    <string name="poctech_upload">Ανέβασμα ρυθμίσεων Poctech</string>
     <string name="wear_detailed_delta_title">Εμφάνιση λεπτομερών στατιστικών</string>
     <string name="wear_detailed_delta_summary">Δείξτε τη διαφορά με ένα επιπλέον δεκαδικό ψηφίο</string>
     <string name="smbmaxminutes_summary">Τα μέγιστα λεπτά του βασικού ρυθμού που περιορίζουν το SMB να</string>
@@ -771,7 +768,6 @@
     <string name="combo_error_bolus_verification_failed">Η έγχυση του bolus και η επαλήθευση του ιστορικού αντλίας απέτυχε, ελέγξτε την αντλία. Εάν έχει γίνει έγχυση bolus, θα προστεθεί στις θεραπείες κατά την επόμενη σύνδεση με την αντλία.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Δεν υπάρχει αρκετή ινσουλίνη στην αμπούλα για το bolus</string>
     <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Αντλία Insight</string>
     <string name="status_no_colon">Κατάσταση</string>
     <string name="changed">Τροποποίηση</string>
@@ -846,7 +842,6 @@
     <string name="data_choices">Επιλογές δεδομένων</string>
     <string name="fabric_upload">Αποστολή δεδομένων στο εργοστάσιο</string>
     <string name="allow_automated_crash_reporting">Να επιτρέπεται η αυτόματη αποστολή αναφορών σφάλματος και χαρακτηριστικά χρήσης δεδομένων στους προγραμματιστές μέσω του fabric.io. service.</string>
-    <string name="g5appnotdetected">Ενημερώστε την εφαρμογή G5 στην υποστηριζόμενη έκδοση</string>
     <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
     <string name="temptargetshort">TT</string>

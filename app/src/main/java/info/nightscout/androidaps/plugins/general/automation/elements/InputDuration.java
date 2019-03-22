@@ -4,7 +4,7 @@ import android.widget.LinearLayout;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.utils.NumberPicker;
+import info.nightscout.androidaps.utils.NumberPicker;
 
 public class InputDuration extends Element {
     public enum TimeUnit {

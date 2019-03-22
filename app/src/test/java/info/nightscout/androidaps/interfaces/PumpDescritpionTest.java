@@ -3,12 +3,9 @@ package info.nightscout.androidaps.interfaces;
 import org.junit.Assert;
 import org.junit.Test;
 
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpCapability;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpTempBasalType;
-import info.nightscout.androidaps.plugins.PumpCommon.defs.PumpType;
-
-import static org.junit.Assert.*;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpCapability;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpTempBasalType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 
 /**
  * Created by andy on 5/13/18.

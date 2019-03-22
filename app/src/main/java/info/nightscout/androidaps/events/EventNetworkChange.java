@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.events;
 
 
-import info.nightscout.utils.StringUtils;
+import info.nightscout.androidaps.utils.StringUtils;
 
 public class EventNetworkChange extends Event {
 

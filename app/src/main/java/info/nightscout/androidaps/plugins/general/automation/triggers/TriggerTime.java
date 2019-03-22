@@ -19,9 +19,9 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.T;
 
 public class TriggerTime extends Trigger {
 

@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.data;
 
-import android.text.Html;
-import android.text.Spanned;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -11,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.Round;
 
 public class PumpEnactResult {
     private static Logger log = LoggerFactory.getLogger(L.APS);

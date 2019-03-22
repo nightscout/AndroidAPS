@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -44,6 +44,8 @@
     <string name="description_sensitivity_oref1">Sensitivity is calculated from 8h data in the past and carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_dexcom_g5">Receive BG values from the patched Dexcom G5 app.</string>
+    <string name="description_source_dexcom_g6">Receive BG values from the patched Dexcom G6 app.</string>
+    <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
     <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
@@ -53,6 +55,7 @@
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
+    <string name="objectives_button_back">Back</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
@@ -812,10 +815,11 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="DexcomG5">DexcomG5 App (patched)</string>
+    <string name="DexcomG6">DexcomG6 App (patched)</string>
+    <string name="eversense">Eversense App (patched)</string>
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
-    <string name="dexcomg5_upload">G5 upload settings</string>
-    <string name="poctech_upload">Poctech upload settings</string>
+    <string name="bgsource_upload">BG upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
@@ -884,7 +888,7 @@
     <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump. If a bolus was delivered, it will be added to treatments during the next connection to the pump.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
-    <string name="insightpump_shortname">Insight</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insightpump">Insight Pump</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Changed</string>
@@ -910,7 +914,7 @@
     <string name="insight_not_connected_to_companion_app">Not connected to companion app!</string>
     <string name="insight_companion_app_not_installed">Companion app does not appear to be installed!</string>
     <string name="insight_incompatible_compantion_app_we_need_version">Incompatible companion app, we need version</string>
-    <string name="unknown">Unknown</string>
+    <string name="insight_unknown">Unknown</string>
     <string name="insight_waiting_for_code">Waiting for code confirmation</string>
     <string name="insight_code_rejected">Code rejected</string>
     <string name="insight_app_binding">App binding</string>
@@ -973,12 +977,14 @@
     <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
     <string name="dexcomG5_shortname" translatable="false">G5</string>
+    <string name="dexcomG6_shortname" translatable="false">G6</string>
+    <string name="eversense_shortname" translatable="false">EVR</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>
     <string name="data_choices">Data Choices</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
-    <string name="g5appnotdetected">Please update your G5 app to supported version</string>
+    <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
@@ -1173,6 +1179,7 @@
     <string name="nth_objective">%1$d. Objective</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
+    <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
     <string translatable="false" name="key_high_temptarget_raises_sensitivity">high_temptarget_raises_sensitivity</string>
     <string translatable="false" name="key_low_temptarget_lowers_sensitivity">low_temptarget_lowers_sensitivity</string>
     <string name="high_temptarget_raises_sensitivity_title">High temptarget raises sensitivity</string>
@@ -1246,7 +1253,6 @@
     <string name="log_alerts">Log alerts</string>
     <string name="enable_tbr_emulation">Enable TBR emulation</string>
     <string name="enable_tbr_emulation_summary">Use extended boluses instead of TBRs to bypass the 250% limit</string>
-    <string name="recovery_duration">Recovery duration [s]</string>
     <string name="disconnect_delay">Disconnect delay [s]</string>
     <string name="serial_number">Serial number</string>
     <string name="release_software_version">Release software version</string>
@@ -1277,20 +1283,36 @@
     <string name="extended_bolus">Extended bolus</string>
     <string name="multiwave_bolus">Multiwave bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
-    <string name="enable_tbr_over_notification">Enable TBR over notification</string>
-    <string name="disable_tbr_over_notification">Disable TBR over notification</string>
+    <string name="enable_tbr_over_notification">Enable notification of TBR end\n(pump setting)</string>
+    <string name="disable_tbr_over_notification">Disable notification of TBR end\n(pump setting)</string>
     <string name="refresh">Refresh</string>
     <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
     <string name="not_inserted">Not inserted</string>
     <string name="short_status_last_connected">Last conn: %1$d min ago</string>
     <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
     <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
-    <string name="short_status_multiwave">Extended: %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U for %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="automation">Automation</string>
-    <string name="automation_short">Auto</string>
+    <string name="max_recovery_duration">Max. recovery duration [s]</string>
+    <string name="min_recovery_duration">Min. recovery duration [s]</string>
+    <string name="recovery_duration">Recovery duration</string>
+    <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
+    <string name="weekday_sunday_short">Sun</string>
+    <string name="weekday_saturday_short">Sat</string>
+    <string name="weekday_friday_short">Fri</string>
+    <string name="weekday_thursday_short">Thu</string>
+    <string name="weekday_wednesday_short">Wed</string>
+    <string name="weekday_tuesday_short">Tue</string>
+    <string name="weekday_monday_short">Mon</string>
+    <string name="weekday_sunday">Sunday</string>
+    <string name="weekday_saturday">Saturday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_monday">Monday</string>
     <string name="automation_description">User defined automation tasks</string>
     <string name="automation_missing_task_name">Please enter a task name.</string>
     <string name="automation_missing_trigger">Please specify at least one trigger.</string>
@@ -1307,6 +1329,7 @@
     <string name="isequalorgreater">is equal or greater than</string>
     <string name="isgreater">is greater than</string>
     <string name="isnotavailable">is not available</string>
+    <string name="unknown">unknown</string>
     <string name="glucoseisnotavailable">Glucose is not available</string>
     <string name="glucosecompared">Glucose %1$s %2$.2f %3$s</string>
     <string name="and">And</string>
@@ -1318,26 +1341,25 @@
     <string name="use_passive_location">Use passive location</string>
     <string name="locationservice">Location service</string>
     <string name="key_location" translatable="false">location</string>
-    <string name="weekday_monday">Monday</string>
-    <string name="weekday_tuesday">Tuesday</string>
-    <string name="weekday_wednesday">Wednesday</string>
-    <string name="weekday_thursday">Thursday</string>
-    <string name="weekday_friday">Friday</string>
-    <string name="weekday_saturday">Saturday</string>
-    <string name="weekday_sunday">Sunday</string>
-    <string name="weekday_monday_short">Mon</string>
-    <string name="weekday_tuesday_short">Tue</string>
-    <string name="weekday_wednesday_short">Wed</string>
-    <string name="weekday_thursday_short">Thu</string>
-    <string name="weekday_friday_short">Fri</string>
-    <string name="weekday_saturday_short">Sat</string>
-    <string name="weekday_sunday_short">Sun</string>
+    <string name="automation_short">Auto</string>
+    <string name="automation">Automation</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
+    <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
+    <string name="dexcom_lognssensorchange_title">Log sensor change to NS</string>
+    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automaticaly on sensor start</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
 
+    <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
+    <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
+    <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
+    <string name="dst_loop_disabled_warning">Dayligh Saving time change in less than 3 hours - Closed loop diabled</string>
+    <string name="storage">internal storage constraint</string>
+    <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

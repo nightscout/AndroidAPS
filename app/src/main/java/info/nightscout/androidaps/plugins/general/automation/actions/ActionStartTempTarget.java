@@ -13,13 +13,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.automation.elements.Label;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.JsonHelper;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionStartTempTarget extends Action {
     private String reason;

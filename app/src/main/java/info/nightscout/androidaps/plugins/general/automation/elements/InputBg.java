@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.utils.NumberPicker;
+import info.nightscout.androidaps.utils.NumberPicker;
 
 public class InputBg extends Element {
     final private TextWatcher textWatcher = new TextWatcher() {

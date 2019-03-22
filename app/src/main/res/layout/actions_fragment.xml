@@ -2,18 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Actions.ActionsFragment">
+    tools:context=".plugins.general.actions.ActionsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/action_buttons_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_profileswitch"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -26,7 +27,7 @@
                 android:drawableTop="@drawable/icon_actions_profileswitch"
                 android:text="@string/careportal_profileswitch" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_temptarget"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -39,7 +40,7 @@
                 android:drawableTop="@drawable/icon_actions_temptarget"
                 android:text="@string/careportal_temporarytarget" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_settempbasal"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -52,7 +53,7 @@
                 android:drawableTop="@drawable/icon_actions_starttempbasal"
                 android:text="@string/overview_tempbasal_button" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_canceltempbasal"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -65,7 +66,7 @@
                 android:drawableTop="@drawable/icon_cancelbasal"
                 android:text="Cancel temp basal" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_extendedbolus"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -78,7 +79,7 @@
                 android:drawableTop="@drawable/icon_actions_startextbolus"
                 android:text="@string/overview_extendedbolus_button" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_extendedbolus_cancel"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -91,7 +92,7 @@
                 android:drawableTop="@drawable/icon_actions_cancelextbolus"
                 android:text="@string/overview_extendedbolus_cancel_button" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_fill"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -104,7 +105,7 @@
                 android:drawableTop="@drawable/icon_cp_pump_canula"
                 android:text="@string/primefill" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_historybrowser"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
@@ -117,7 +118,7 @@
                 android:drawableTop="@drawable/icon_danarhistory"
                 android:text="@string/nav_historybrowser" />
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/actions_tddstats"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"

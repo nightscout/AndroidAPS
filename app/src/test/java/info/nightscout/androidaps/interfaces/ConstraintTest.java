@@ -9,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 19.03.2018.

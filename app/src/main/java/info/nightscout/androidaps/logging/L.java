@@ -3,7 +3,7 @@ package info.nightscout.androidaps.logging;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class L {
 

@@ -408,7 +408,6 @@
     <string name="array_of_elements">Matriks van %1$d elemente. \nWerklike waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Skrip foutopspoor</string>
-    <string name="openapsama_useautosens">Gebruik AMA autosens kenmerk</string>
     <string name="refresheventsfromnightscout">Verfris gebeure van NS</string>
     <string name="deletefuturetreatments">Skrap behandelings in die toekoms</string>
     <string name="eatingsoon">Eet binnekort</string>
@@ -705,8 +704,6 @@
     <string name="btwatchdog_summary">Skakel asb die foon se bluetooth af vir een sekonde Indien geen verbinding met die pomp moontlik is nie. Dit mag help vir sommige selfone waar die bluetooth stapel vries.</string>
     <string name="DexcomG5">DexcomG5 App (gelapte)</string>
     <string name="dexcomg5_nsupload_title">BG data oplaai na NS</string>
-    <string name="dexcomg5_upload">G5 oplaai instellings</string>
-    <string name="poctech_upload">Poctech oplaai instellings</string>
     <string name="wear_detailed_delta_title">Wys gedetailleerde delta</string>
     <string name="wear_detailed_delta_summary">Wys delta met een meer desimale plek</string>
     <string name="smbmaxminutes_summary">Maks minute van basale beperk SMB tot</string>
@@ -772,7 +769,6 @@
     <string name="combo_error_bolus_verification_failed">Lewering van die bolus en verifiëring van die pomp se geskiedenis het misluk, Kontroleer asseblief die pomp. As \'n bolus afgelewer is, sal dit bygevoeg word om behandelings gedurende die volgende verbinding met die pomp.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Nie genoeg insulien vir bolus oor in reserwe</string>
     <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight Pomp</string>
     <string name="status_no_colon">Status</string>
     <string name="changed">Verander</string>
@@ -847,7 +843,6 @@
     <string name="data_choices">Data keuses</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Laat outomatiese Foutverslagdoening en kenmerk data stuur na die ontwikkelaars via die fabric.io diens.</string>
-    <string name="g5appnotdetected">Werk asseblief jou G5 toepassing na ondersteunde weergawe</string>
     <string name="start_activity_tt">Begin aktiwiteit TT</string>
     <string name="start_eating_soon_tt">Begin eet gou TT</string>
     <string name="temptargetshort">TT</string>

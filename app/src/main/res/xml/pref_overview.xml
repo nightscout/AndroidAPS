@@ -138,7 +138,7 @@
         <Preference
             android:key="quickwizard"
             android:title="@string/quickwizardsettings">
-            <intent android:action="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+            <intent android:action="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
         </Preference>
 
         <PreferenceScreen android:title="@string/advancedsettings_title" android:key="@string/key_advancedsettings">

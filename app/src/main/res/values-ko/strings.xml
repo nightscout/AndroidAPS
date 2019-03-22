@@ -408,7 +408,6 @@
     <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">스크립트 디버그</string>
-    <string name="openapsama_useautosens">AMA Autosens 기능 사용하기</string>
     <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="deletefuturetreatments">미래시점의 관리 삭제</string>
     <string name="eatingsoon">식사직전</string>
@@ -703,8 +702,6 @@
     <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
     <string name="DexcomG5">DexcomG5 앱(패치버전)</string>
     <string name="dexcomg5_nsupload_title">NS에 혈당데이터 업로드하기</string>
-    <string name="dexcomg5_upload">G5업로드 세팅</string>
-    <string name="poctech_upload">Poctech 업로드 설정</string>
     <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
     <string name="wear_detailed_delta_summary">소수점 자리 추가된 증분값 보여주기</string>
     <string name="smbmaxminutes_summary">SMB가 Basal을 제한할 수 있는 최대 시간(분)</string>
@@ -770,7 +767,6 @@
     <string name="combo_error_bolus_verification_failed">Bolus를 주입하고 펌프 이력을 확인하는데 실패하였습니다. 펌프를 확인해보세요. 만약 Bolus 주입이 되었다면 펌프와 다음번 연결시 그 내용이 관리에 추가될 것입니다.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Bolus 주입 위한 인슐린이 주사기에 부족합니다.</string>
     <string name="extendedbolusdeliveryerror">확장Bolus 주입 에러</string>
-    <string name="insightpump_shortname">Insight</string>
     <string name="insightpump">Insight 펌프</string>
     <string name="status_no_colon">상태</string>
     <string name="changed">변경됨</string>
@@ -845,7 +841,6 @@
     <string name="data_choices">데이터선택</string>
     <string name="fabric_upload">Fabric 업로드</string>
     <string name="allow_automated_crash_reporting">fabric.io 서비스를 통해 개발자에게 앱 오류 및 특정 데이터를 자동 전송합니다.</string>
-    <string name="g5appnotdetected">G5앱을 지원가능한 버전으로 업데이트하세요.</string>
     <string name="start_activity_tt">활동 임시목표 시작</string>
     <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
     <string name="temptargetshort">TT</string>

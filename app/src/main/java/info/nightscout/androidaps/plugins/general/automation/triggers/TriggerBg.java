@@ -24,9 +24,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.utils.JsonHelper;
-import info.nightscout.utils.NumberPicker;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.NumberPicker;
 
 public class TriggerBg extends Trigger {
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".plugins.Maintenance.activities.LogSettingActivity">
+    tools:context=".plugins.general.maintenance.activities.LogSettingActivity">
 
     <Button
         android:id="@+id/logsettings_reset"

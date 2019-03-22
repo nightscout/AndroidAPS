@@ -408,7 +408,6 @@
     <string name="array_of_elements">Matrice di %1$d elementi. \nActual valore:</string>
     <string name="openapsma_autosensdata_label">Autosens dati</string>
     <string name="openapsma_scriptdebugdata_label">Debug di script</string>
-    <string name="openapsama_useautosens">Funzionalità di utilizzo AMA autosens</string>
     <string name="refresheventsfromnightscout">Aggiornare gli eventi da NS</string>
     <string name="deletefuturetreatments">Eliminare trattamenti in futuro</string>
     <string name="eatingsoon">Pranzo</string>
@@ -703,8 +702,6 @@
     <string name="btwatchdog_summary">Spegnere il bluetooth del telefono per un secondo se non è possibile alcuna connessione al micro. Questo può aiutare in alcuni telefoni.</string>
     <string name="DexcomG5">DexcomG5 App (con correzione)</string>
     <string name="dexcomg5_nsupload_title">Caricare dati di BG al NS</string>
-    <string name="dexcomg5_upload">Impostazioni caricamento G5</string>
-    <string name="poctech_upload">Impostazioni di caricamento Poctech</string>
     <string name="wear_detailed_delta_title">Visualizza dettagliata delta</string>
     <string name="wear_detailed_delta_summary">Visualizza delta con una cifra decimale più</string>
     <string name="smbmaxminutes_summary">Minuti max di basale per limitare SMB per</string>
@@ -770,7 +767,6 @@
     <string name="combo_error_bolus_verification_failed">Erogare il bolo e la verifica di storia della pompa non è riuscita, si prega di controllare la pompa. Se è stato somministrato un bolo, si aggiungerà ai trattamenti durante il successivo collegamento alla pompa.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Poca insulina per erogare il bolo</string>
     <string name="extendedbolusdeliveryerror">Errore di avvio bolo esteso</string>
-    <string name="insightpump_shortname">Approfondimento</string>
     <string name="insightpump">Pompa di Insight</string>
     <string name="status_no_colon">Stato</string>
     <string name="changed">Cambia</string>
@@ -845,7 +841,6 @@
     <string name="data_choices">Opzioni dati</string>
     <string name="fabric_upload">Upload di fabbrica</string>
     <string name="allow_automated_crash_reporting">Consentire l\'invio degli errori a fine di ricerca agli sviluppatori tramite il servizio fabric.io.</string>
-    <string name="g5appnotdetected">Si prega di aggiornare l\'app G5</string>
     <string name="start_activity_tt">Inizia attività</string>
     <string name="start_eating_soon_tt">Iniziare a mangiare presto TT</string>
     <string name="temptargetshort">TT</string>
