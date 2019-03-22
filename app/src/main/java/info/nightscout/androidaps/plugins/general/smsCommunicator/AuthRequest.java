@@ -11,7 +11,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 class AuthRequest {
     private static Logger log = LoggerFactory.getLogger(L.SMS);
 
-    private Sms requester;
+    Sms requester;
     String confirmCode;
     private Runnable action;
 

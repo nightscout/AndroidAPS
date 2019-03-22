@@ -115,6 +115,25 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
     }
 
+    boolean isCommand(String command, String number) {
+        switch(command.toUpperCase()) {
+            case "BG":
+            case "LOOP":
+            case "TREATMENTS":
+            case "NSCLIENT":
+            case "PUMP":
+            case "BASAL":
+            case "BOLUS":
+            case "EXTENDED":
+            case "CAL":
+            case "PROFILE":
+                return true;
+        }
+        if (messageToConfirm != null && messageToConfirm.requester.phoneNumber.equals(number))
+            return true;
+        return false;
+    }
+
     boolean isAllowedNumber(String number) {
         for (String num : allowedNumbers) {
             if (num.equals(number)) return true;
@@ -155,7 +174,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         String[] splitted = receivedSms.text.split("\\s+");
         boolean remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
 
-        if (splitted.length > 0) {
+        if (splitted.length > 0 && isCommand(splitted[0].toUpperCase(), receivedSms.phoneNumber)) {
             switch (splitted[0].toUpperCase()) {
                 case "BG":
                     processBG(splitted, receivedSms);
@@ -228,10 +247,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
                     break;
                 default: // expect passCode here
-                    //noinspection StatementWithEmptyBody
-                    if (!Character.isLetter(splitted[0].charAt(0))) {
-                        // user text .... ignore
-                    } else if (messageToConfirm != null) {
+                    if (messageToConfirm != null && messageToConfirm.requester.phoneNumber.equals(receivedSms.phoneNumber)) {
                         messageToConfirm.action(splitted[0]);
                         messageToConfirm = null;
                     } else

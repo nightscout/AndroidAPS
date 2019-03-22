@@ -75,6 +75,21 @@ public class SmsCommunicatorPluginTest {
     }
 
     @Test
+    public void isCommandTest() {
+        Assert.assertTrue(smsCommunicatorPlugin.isCommand("BOLUS", ""));
+        smsCommunicatorPlugin.messageToConfirm = null;
+        Assert.assertFalse(smsCommunicatorPlugin.isCommand("BLB", ""));
+        smsCommunicatorPlugin.messageToConfirm = new AuthRequest(smsCommunicatorPlugin, new Sms("1234", "ddd"), "RequestText", "ccode", new SmsAction() {
+            @Override
+            public void run() {
+            }
+        });
+        Assert.assertTrue(smsCommunicatorPlugin.isCommand("BLB", "1234"));
+        Assert.assertFalse(smsCommunicatorPlugin.isCommand("BLB", "2345"));
+        smsCommunicatorPlugin.messageToConfirm = null;
+    }
+
+    @Test
     public void isAllowedNumberTest() {
         Assert.assertTrue(smsCommunicatorPlugin.isAllowedNumber("5678"));
         Assert.assertFalse(smsCommunicatorPlugin.isAllowedNumber("56"));
@@ -96,7 +111,6 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "UNKNOWN");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertEquals("UNKNOWN", smsCommunicatorPlugin.messages.get(0).text);
-        Assert.assertEquals("Unknown command or wrong reply", smsCommunicatorPlugin.messages.get(1).text);
 
         //BG
         smsCommunicatorPlugin.messages = new ArrayList<>();
@@ -245,13 +259,15 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("LOOP SUSPEND 200", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To suspend loop for 180 minutes reply with code "));
         passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        // ignore from other number
+        smsCommunicatorPlugin.processSms(new Sms("5678", passCode));
         smsCommunicatorPlugin.processSms(new Sms("1234", "XXXX"));
-        Assert.assertEquals("XXXX", smsCommunicatorPlugin.messages.get(2).text);
-        Assert.assertEquals("Wrong code. Command cancelled.", smsCommunicatorPlugin.messages.get(3).text);
+        Assert.assertEquals("XXXX", smsCommunicatorPlugin.messages.get(3).text);
+        Assert.assertEquals("Wrong code. Command cancelled.", smsCommunicatorPlugin.messages.get(4).text);
         //then correct code should not work
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
-        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(4).text);
-        Assert.assertEquals("Unknown command or wrong reply", smsCommunicatorPlugin.messages.get(5).text);
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(5).text);
+        Assert.assertEquals(6, smsCommunicatorPlugin.messages.size()); // processed as common message
 
         //LOOP BLABLA
         smsCommunicatorPlugin.messages = new ArrayList<>();
