@@ -14,6 +14,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 
+// Android Auto
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
+
+
+
+
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Constants;

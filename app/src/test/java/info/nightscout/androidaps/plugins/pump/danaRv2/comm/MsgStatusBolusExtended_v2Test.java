@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.danaRv2.comm;
+package info.nightscout.androidaps.plugins.PumpdanaRv2.comm;
 
 import android.content.Context;
 
@@ -11,9 +11,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSUpload;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusBolusExtended_v2;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.utils.SP;
 
 import static org.junit.Assert.*;
 

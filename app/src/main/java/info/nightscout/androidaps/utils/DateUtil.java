@@ -187,4 +187,8 @@ public class DateUtil {
         long diff = Math.abs(date - now());
         return diff < T.mins(2).msecs();
     }
+
+    public static GregorianCalendar gregorianCalendar() {
+        return new GregorianCalendar();
+    }
 }

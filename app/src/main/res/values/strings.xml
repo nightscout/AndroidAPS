@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -579,6 +579,7 @@
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
+    <string name="suspendloop">Suspend loop</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
@@ -1298,6 +1299,50 @@
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="recovery_duration">Recovery duration</string>
     <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
+    <string name="weekday_sunday_short">Sun</string>
+    <string name="weekday_saturday_short">Sat</string>
+    <string name="weekday_friday_short">Fri</string>
+    <string name="weekday_thursday_short">Thu</string>
+    <string name="weekday_wednesday_short">Wed</string>
+    <string name="weekday_tuesday_short">Tue</string>
+    <string name="weekday_monday_short">Mon</string>
+    <string name="weekday_sunday">Sunday</string>
+    <string name="weekday_saturday">Saturday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_monday">Monday</string>
+    <string name="automation_description">User defined automation tasks</string>
+    <string name="automation_missing_task_name">Please enter a task name.</string>
+    <string name="automation_missing_trigger">Please specify at least one trigger.</string>
+    <string name="automation_missing_action">Please specify at least one action.</string>
+    <string name="alreadyenabled">Already enabled</string>
+    <string name="alreadydisabled">Already disabled</string>
+    <string name="alreadysuspended">Already suspended</string>
+    <string name="resumeloop">Resume loop</string>
+    <string name="notsuspended">Not suspended</string>
+    <string name="starttemptarget">Start temp target</string>
+    <string name="islower">is lower than</string>
+    <string name="isequalorlower">is equal or lower than</string>
+    <string name="isequal">is equal to</string>
+    <string name="isequalorgreater">is equal or greater than</string>
+    <string name="isgreater">is greater than</string>
+    <string name="isnotavailable">is not available</string>
+    <string name="unknown">unknown</string>
+    <string name="glucoseisnotavailable">Glucose is not available</string>
+    <string name="glucosecompared">Glucose %1$s %2$.2f %3$s</string>
+    <string name="and">And</string>
+    <string name="or">Or</string>
+    <string name="xor">Exclusive or</string>
+    <string name="atspecifiedtime">At %1$s</string>
+    <string name="use_network_location">Use network location</string>
+    <string name="use_gps_location">Use GPS location</string>
+    <string name="use_passive_location">Use passive location</string>
+    <string name="locationservice">Location service</string>
+    <string name="key_location" translatable="false">location</string>
+    <string name="automation_short">Auto</string>
+    <string name="automation">Automation</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>

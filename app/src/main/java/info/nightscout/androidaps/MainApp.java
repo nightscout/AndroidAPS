@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugi
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin;
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
@@ -195,6 +196,7 @@ public class MainApp extends Application {
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
             pluginsList.add(MaintenancePlugin.initPlugin(this));
+            pluginsList.add(AutomationPlugin.getPlugin());
 
             pluginsList.add(ConfigBuilderPlugin.getPlugin());
 
@@ -423,5 +425,10 @@ public class MainApp extends Application {
             sDatabaseHelper.close();
             sDatabaseHelper = null;
         }
+    }
+
+    public static int dpToPx(int dp) {
+        float scale = sResources.getDisplayMetrics().density;
+        return (int) (dp*scale + 0.5f);
     }
 }

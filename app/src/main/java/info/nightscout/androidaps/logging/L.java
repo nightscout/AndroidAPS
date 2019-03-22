@@ -95,6 +95,7 @@ public class L {
     public static final String PROFILE = "PROFILE";
     public static final String CONFIGBUILDER = "CONFIGBUILDER";
     public static final String UI = "UI";
+    public static final String LOCATION = "LOCATION";
 
     private static void initialize() {
         logElements = new ArrayList<>();
@@ -109,6 +110,7 @@ public class L {
         logElements.add(new LogElement(DATASERVICE, true));
         logElements.add(new LogElement(DATATREATMENTS, true));
         logElements.add(new LogElement(EVENTS, false, true));
+        logElements.add(new LogElement(LOCATION, true));
         logElements.add(new LogElement(NOTIFICATION, true));
         logElements.add(new LogElement(NSCLIENT, true));
         logElements.add(new LogElement(OVERVIEW, true));

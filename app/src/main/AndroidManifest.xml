@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="sugar.free.sightremote.HISTORY_BROADCASTS" />
@@ -150,7 +151,10 @@
             android:name=".services.DataService"
             android:exported="false" />
         <service
-            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
+            android:name=".services.LocationService"
+            android:exported="false" />
+        <service
+            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
