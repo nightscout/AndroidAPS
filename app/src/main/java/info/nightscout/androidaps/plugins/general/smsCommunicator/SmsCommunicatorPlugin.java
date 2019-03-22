@@ -291,7 +291,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
         reply += MainApp.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + MainApp.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                + MainApp.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)"
+                + MainApp.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U), "
                 + MainApp.gs(R.string.cob) + ": " + cobInfo.generateCOBString();
 
         sendSMS(new Sms(receivedSms.phoneNumber, reply));
