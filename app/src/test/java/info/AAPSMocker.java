@@ -27,6 +27,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
@@ -147,6 +148,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.smscommunicator_calibrationreplywithcode)).thenReturn("To send calibration %1$.2f reply with code %2$s");
         when(MainApp.gs(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.");
         when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
+        when(MainApp.gs(R.string.cob)).thenReturn("COB");
+        when(MainApp.gs(R.string.value_unavailable_short)).thenReturn("n/a");
     }
 
     public static MainApp mockMainApp() {

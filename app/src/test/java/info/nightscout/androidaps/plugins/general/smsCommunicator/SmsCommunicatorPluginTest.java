@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
@@ -119,6 +120,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BG", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("IOB:"));
         Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("Last BG: 100"));
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("COB: 10(2)g"));
 
         // LOOP : test remote control disabled
         when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false);
@@ -731,6 +733,7 @@ public class SmsCommunicatorPluginTest {
         List<BgReading> bgList = new ArrayList<>();
         bgList.add(reading);
         PowerMockito.when(IobCobCalculatorPlugin.getPlugin().getBgReadings()).thenReturn(bgList);
+        PowerMockito.when(IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "SMS COB")).thenReturn(new CobInfo(10d, 2d));
 
         mockStatic(XdripCalibrations.class);
         mockStatic(DateUtil.class);

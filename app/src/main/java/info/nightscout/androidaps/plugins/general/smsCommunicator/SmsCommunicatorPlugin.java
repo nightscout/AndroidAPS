@@ -43,6 +43,8 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.services.Intents;
@@ -284,9 +286,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
         TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
         IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
 
+        String cobText = MainApp.gs(R.string.value_unavailable_short);
+        CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "SMS COB");
+
         reply += MainApp.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + MainApp.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                + MainApp.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+                + MainApp.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)"
+                + MainApp.gs(R.string.cob) + ": " + cobInfo.generateCOBString();
 
         sendSMS(new Sms(receivedSms.phoneNumber, reply));
         receivedSms.processed = true;
