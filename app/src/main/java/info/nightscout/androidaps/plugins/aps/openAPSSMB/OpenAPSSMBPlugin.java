@@ -147,7 +147,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         if (L.isEnabled(L.APS))
             Profiler.log(log, "getMealData()", startPart);
 
-        double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
+        Constraint<Double> maxIOBAllowedConstraint = MainApp.getConstraintChecker().getMaxIOBAllowed();
+        inputConstraints.copyReasons(maxIOBAllowedConstraint);
+        double maxIob = maxIOBAllowedConstraint.value();
 
         minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
