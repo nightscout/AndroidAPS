@@ -265,12 +265,7 @@
     <string name="smscommunicator_bolusreplywithcode">要输注大剂量胰岛素%1$.2fU 回复如下代码 %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">要发送校准值 %1$.2f 回复如下代码 %2$s</string>
     <string name="smscommunicator_bolusfailed">大剂量输注失败</string>
-    <string name="bolusdelivered" formatted="false">成功输注大剂量%.2fU</string>
-    <string name="bolusrequested" formatted="false">将要输注 %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">成功输注大剂量%.2fU</string>
-    <string name="bolusdelivering" formatted="false">正在输注 %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">通过SMS短信允许远程命令</string>
-    <string name="smscommunicator_remotebolusnotallowed">远程大剂量没有被允许</string>
     <string name="glucosetype_finger">手指</string>
     <string name="glucosetype_sensor">传感器</string>
     <string name="manual">手动</string>
@@ -338,16 +333,12 @@
     <string name="smscommunicator_loopisenabled">闭环被启用</string>
     <string name="valuelimitedto">%1$.2f 超过 %2$.2f的限制</string>
     <string name="valueoutofrange" formatted="false">值 %s 超过了硬限制</string>
-    <string name="smscommunicator_remotebasalnotallowed">远程基础率设置没有被允许</string>
     <string name="smscommunicator_remotecommandnotallowed">远程命令没有被允许</string>
-    <string name="smscommunicator_basalreplywithcode">要开始基础率 %1$.2fU/h 请回复如下代码 %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">要暂停闭环 %1$d 分钟请回复如下代码 %2$s</string>
     <string name="smscommunicator_tempbasalset">临时基础率 %1$.2fU/h 持续 %2$d 分钟启用成功了</string>
     <string name="smscommunicator_tempbasalfailed">开始临时基础率失败了</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">要停止临时基础率，请回复如下代码 %s</string>
     <string name="smscommunicator_tempbasalcanceled">临时基础率取消了</string>
     <string name="smscommunicator_tempbasalcancelfailed">取消临时基础率失败</string>
-    <string name="smscommunicator_unknowncommand">未知的命令或错误的回复</string>
     <string name="quickwizard">快速向导</string>
     <string name="quickwizardsettings">快速向导设置</string>
     <string name="overview_editquickwizard_buttontext">按钮文本:</string>
@@ -471,7 +462,6 @@
     <string name="send_calibration" formatted="false">确认将校准值 %.1f 发送到 xDrip 吗？</string>
     <string name="xdripnotinstalled">没有安装xDrip+</string>
     <string name="calibrationsent">校准发送到 xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">远程校准没有被允许</string>
     <string name="smscommunicator_calibrationsent">校准值发送了，必须在xDrip开启允许通过其他app使用它的校准功能</string>
     <string name="smscommunicator_calibrationfailed">xDrip 没有收到校准</string>
     <string name="pumpsuspended">泵暂停了</string>

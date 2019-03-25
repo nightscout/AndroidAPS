@@ -263,12 +263,7 @@
     <string name="smscommunicator_bolusreplywithcode">Per fornire risposta %1$.2fU bolo con codice %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Invia la taratura %1$.2f risposta con codice %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolo fallito</string>
-    <string name="bolusdelivered" formatted="false">Bolo %.2fU inviato correttamente</string>
-    <string name="bolusrequested" formatted="false">Inviando %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolo %.2fU inviato correttamente</string>
-    <string name="bolusdelivering" formatted="false">Inviare %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Consenti comandi remoti tramite SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Il bolo da remoto non e\' permesso</string>
     <string name="glucosetype_finger">Dito</string>
     <string name="glucosetype_sensor">Sensore</string>
     <string name="manual">Manuale</string>
@@ -336,16 +331,12 @@
     <string name="smscommunicator_loopisenabled">Loop abilitato</string>
     <string name="valuelimitedto">%1$.2f limitato a %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Valore %s è fuori limiti massimi</string>
-    <string name="smscommunicator_remotebasalnotallowed">Impostare basale da remoto non e\' permesso</string>
     <string name="smscommunicator_remotecommandnotallowed">il comando da remoto non e\' permesso</string>
-    <string name="smscommunicator_basalreplywithcode">Per iniziare basale %1$.2fU/h risposta con codice %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Sospendi il loop per %1$d minuti riprendi %2$s</string>
     <string name="smscommunicator_tempbasalset">Basale temporanea %1$.2fU/h for %2$d min avviata con successo</string>
     <string name="smscommunicator_tempbasalfailed">Avvio Basale temporanea fallita</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Per interrompere la risposta basale della temperatura con il codice %s</string>
     <string name="smscommunicator_tempbasalcanceled">Baasale temporanea cancellata</string>
     <string name="smscommunicator_tempbasalcancelfailed">Cancellazione temporanea fallita</string>
-    <string name="smscommunicator_unknowncommand">Comando errato</string>
     <string name="quickwizard">QuickWizard</string>
     <string name="quickwizardsettings">Impostazioni QuickWizard</string>
     <string name="overview_editquickwizard_buttontext">Tasto testo:</string>
@@ -468,7 +459,6 @@
     <string name="send_calibration" formatted="false">Invia calibrazione %.1f a xDrip?</string>
     <string name="xdripnotinstalled">xDrip non installato</string>
     <string name="calibrationsent">Invio calibrazione xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">La calibrazione da remoto non e\' permesso</string>
     <string name="smscommunicator_calibrationsent">La calibrazione è stata inviata. La ricezione deve essere abilitata in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip non ha ricevuto la calibrazione</string>
     <string name="pumpsuspended">Sospensione Micro</string>

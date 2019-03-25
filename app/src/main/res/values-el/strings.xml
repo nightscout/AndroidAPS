@@ -263,12 +263,7 @@
     <string name="smscommunicator_bolusreplywithcode">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_bolusfailed">Αποτυχία Bolus</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU παραδόθηκε επιτυχώς</string>
-    <string name="bolusrequested" formatted="false">Προς έγχυση %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU παραδόθηκε επιτυχώς</string>
-    <string name="bolusdelivering" formatted="false">Έγχυση %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Άδεια για απομακρυσμένες εντολές μέσω SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Δεν επιτρέπεται απομακρυσμένο bolus</string>
     <string name="glucosetype_finger">Δάκτυλο</string>
     <string name="glucosetype_sensor">Αισθητήρας</string>
     <string name="manual">Χειροκίνητα</string>
@@ -336,16 +331,12 @@
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
     <string name="valuelimitedto">Το %1$.2f περιορίζεται σε %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Η τιμή %s είναι έξω από τα όρια</string>
-    <string name="smscommunicator_remotebasalnotallowed">Δεν επιτρέπεται η απομακρυσμένη ρύθμιση βασικού ρυθμού </string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
-    <string name="smscommunicator_basalreplywithcode">Για έναρξη βασικού %1$.2fU/h στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Για αναστολή κυκλκώματος για %1$d λεπτών στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_tempbasalset">Προσωρινός Ρυθμός %1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
     <string name="smscommunicator_tempbasalfailed">Εκκίνηση Προσωρινού Ρυθμού απέτυχε</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Για να σταματήσετε Προσωρινό Ρυθμό στείλτε με κωδικό %s</string>
     <string name="smscommunicator_tempbasalcanceled">Ο Προσωρινός Ρυθμός ακυρώθηκε</string>
     <string name="smscommunicator_tempbasalcancelfailed">Ακύρωση Προσωρινού Ρυθμού απέτυχε</string>
-    <string name="smscommunicator_unknowncommand">Άγνωστη εντολή ή λάθος απάντηση</string>
     <string name="quickwizard">Γρήγορος Οδηγός</string>
     <string name="quickwizardsettings">Ρυθμίσεις Γρήγορου Οδηγού</string>
     <string name="overview_editquickwizard_buttontext">Κείμενο στο πλήκτρο:</string>
@@ -468,7 +459,6 @@
     <string name="send_calibration" formatted="false">Να στείλω το καλιμπράρισμα %.1f στο xDrip;</string>
     <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
     <string name="calibrationsent">Το καλιμπράρισμα εστάλει στο xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Δεν επιτρέπεται απομακρυσμένο καλιμπράρισμα</string>
     <string name="smscommunicator_calibrationsent">Το καλιμπράρισμα στάλθηκε. Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip.</string>
     <string name="smscommunicator_calibrationfailed">το xDrip δεν λαμβάνει καλιμπραρίσματα</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>

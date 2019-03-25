@@ -266,12 +266,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_bolusreplywithcode">För att ge bolus %1$.2f enheter, svara med kod %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">För att skicka kalibrering %1$.2f, svara med kod %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus misslyckades</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2f enheter korrekt levererad</string>
-    <string name="bolusrequested" formatted="false">Kommer att leverera %.2f enheter</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2f enheter levererad</string>
-    <string name="bolusdelivering" formatted="false">Levererar %.2f enheter</string>
     <string name="smscommunicator_remotecommandsallowed">Tillåt fjärrstyrning via SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Fjärrbolus är inte tillåtet</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
@@ -339,16 +334,12 @@ Eversense-appen.</string>
     <string name="smscommunicator_loopisenabled">Loop är aktiverad</string>
     <string name="valuelimitedto">%1$.2f begränsat till %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Värdet %s är utanför hård begränsning</string>
-    <string name="smscommunicator_remotebasalnotallowed">Fjärrkommandon för att ändra basaler tillåts ej</string>
     <string name="smscommunicator_remotecommandnotallowed">Otillåtet fjärrkommando</string>
-    <string name="smscommunicator_basalreplywithcode">För att starta temp basal %1$.2f enheter/tim, svara med kod %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">För att pausa loop i %1$d minuter, svara med kod %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2f enheter/tim i %2$d min startad</string>
     <string name="smscommunicator_tempbasalfailed">Fel vid start av temp basal</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">För att stoppa temp basal, svara med kod %s</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal avbruten</string>
     <string name="smscommunicator_tempbasalcancelfailed">Misslyckades med att avbryta temp basal</string>
-    <string name="smscommunicator_unknowncommand">Okänt kommando eller fel svar</string>
     <string name="quickwizard">Kalkylator</string>
     <string name="quickwizardsettings">Kalkylatorinställningar</string>
     <string name="overview_editquickwizard_buttontext">Knapptext:</string>
@@ -472,7 +463,6 @@ Eversense-appen.</string>
     <string name="send_calibration" formatted="false">Skicka kalibrering %.1f till xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ inte installerat</string>
     <string name="calibrationsent">Kalibrering skickad till xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Kalibrering från andra källor inte tillåtna</string>
     <string name="smscommunicator_calibrationsent">Kalibrering skickad. Observera att xDrip måste vara inställd att ta emot kalibreringar.</string>
     <string name="smscommunicator_calibrationfailed">xDrip tar inte emot kalibreringar</string>
     <string name="pumpsuspended">Pump pausad</string>

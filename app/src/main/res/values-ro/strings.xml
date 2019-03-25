@@ -265,12 +265,7 @@
     <string name="smscommunicator_bolusreplywithcode">Pentru a livra un bolus de %1$.2fU răspundeți cu codul %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Pentru a trimite calibrarea cu %1$.2f răspundeți cu codul %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolusare eșuată</string>
-    <string name="bolusdelivered" formatted="false">Bolusul de %.2fU livrat cu succes</string>
-    <string name="bolusrequested" formatted="false">Se va livra un bolus de %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolusul de %.2fU a fost livrat cu succes</string>
-    <string name="bolusdelivering" formatted="false">Se livrează %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Permite comenzi de la distanță, prin SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolusarea prin comenzi de la distanță nu este permisă</string>
     <string name="glucosetype_finger">Deget</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Manual</string>
@@ -338,16 +333,12 @@
     <string name="smscommunicator_loopisenabled">Bucla este activată</string>
     <string name="valuelimitedto">%1$.2f este limitată la %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Valoarea %s este mai mare decât limita fizică</string>
-    <string name="smscommunicator_remotebasalnotallowed">Setarea de la distanță a bazalei nu este permisă</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
-    <string name="smscommunicator_basalreplywithcode">Pentru pornirea bazalei de %1$.2fU/h trimiteți codul %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
     <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
     <string name="smscommunicator_tempbasalfailed">Trimiterea bazalei temporare a eșuat</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Pentru oprirea bazalei temporare trimiteți codul %s</string>
     <string name="smscommunicator_tempbasalcanceled">Bazala temporară a fost anulată</string>
     <string name="smscommunicator_tempbasalcancelfailed">Renunțarea la bazala temporară a eșuat</string>
-    <string name="smscommunicator_unknowncommand">Comandă necunoscută sau răspuns greșit</string>
     <string name="quickwizard">AsistentRapid</string>
     <string name="quickwizardsettings">Setări AsistentRapid</string>
     <string name="overview_editquickwizard_buttontext">Text buton:</string>
@@ -471,7 +462,6 @@
     <string name="send_calibration" formatted="false">Trimite calibrarea %.1f către xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ nu este instalat.</string>
     <string name="calibrationsent">Calibrare trimisă către xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Calibrarea la distanță nu este permisă</string>
     <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip nu recepționează calibrări</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
