@@ -76,8 +76,8 @@ public class TriggerConnectorTest {
         Assert.assertFalse(t.shouldRun());
     }
 
-    String empty = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[]},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\"}";
-    String oneItem = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[]},\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\\\"}\"]},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\"}";
+    static public final String empty = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[]},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\"}";
+    static public final String oneItem = "{\"data\":{\"connectorType\":\"AND\",\"triggerList\":[\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[]},\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\\\"}\"]},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\"}";
 
     @Test
     public void toJSONTest() {

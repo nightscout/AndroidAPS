@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import com.google.common.base.Optional;
+
 public class DummyTrigger extends Trigger {
     private boolean result;
 
@@ -32,6 +34,11 @@ public class DummyTrigger extends Trigger {
     @Override
     public String friendlyDescription() {
         return null;
+    }
+
+    @Override
+    public Optional<Integer> icon() {
+        return Optional.absent();
     }
 
     @Override

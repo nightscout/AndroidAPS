@@ -16,10 +16,8 @@ import java.util.GregorianCalendar;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
