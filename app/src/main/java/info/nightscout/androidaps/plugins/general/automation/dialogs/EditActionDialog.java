@@ -36,7 +36,13 @@ public class EditActionDialog extends DialogFragment {
         Bundle args = new Bundle();
         EditActionDialog fragment = new EditActionDialog();
         fragment.setArguments(args);
-        resultAction = action;
+
+        // clone action to static object
+        try {
+            resultAction = action.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
 
         return fragment;
     }

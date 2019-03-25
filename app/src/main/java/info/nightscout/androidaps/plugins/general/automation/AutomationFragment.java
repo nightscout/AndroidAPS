@@ -51,14 +51,11 @@ public class AutomationFragment extends SubscriberFragment {
         unbinder = ButterKnife.bind(this, view);
 
         final AutomationPlugin plugin = AutomationPlugin.getPlugin();
-        mEventListAdapter = new EventListAdapter(plugin.getAutomationEvents());
+        mEventListAdapter = new EventListAdapter(plugin.getAutomationEvents(), getFragmentManager());
         mEventListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mEventListView.setAdapter(mEventListAdapter);
 
-        EditEventDialog.setOnClickListener(event -> {
-            plugin.getAutomationEvents().add(event);
-            mEventListAdapter.notifyDataSetChanged();
-        });
+        EditEventDialog.setOnClickListener(event -> mEventListAdapter.notifyDataSetChanged());
 
         updateGUI();
 
@@ -74,7 +71,7 @@ public class AutomationFragment extends SubscriberFragment {
 
     @OnClick(R.id.fabAddEvent)
     void onClickAddEvent(View v) {
-        EditEventDialog dialog = EditEventDialog.newInstance(new AutomationEvent());
+        EditEventDialog dialog = EditEventDialog.newInstance(new AutomationEvent(), true);
         dialog.show(getFragmentManager(), "EditEventDialog");
     }
 
@@ -83,9 +80,11 @@ public class AutomationFragment extends SubscriberFragment {
      */
     public static class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>  {
         private final List<AutomationEvent> mEventList;
+        private final FragmentManager mFragmentManager;
 
-        public EventListAdapter(List<AutomationEvent> events) {
+        public EventListAdapter(List<AutomationEvent> events, FragmentManager fragmentManager) {
             this.mEventList = events;
+            this.mFragmentManager = fragmentManager;
         }
 
         @NonNull
@@ -132,8 +131,17 @@ public class AutomationFragment extends SubscriberFragment {
                 addImage(res, holder.context, holder.iconLayout);
             }
 
-            // TODO: check null
-            //holder.eventDescription.setText(event.getTrigger().friendlyDescription());
+            // action: remove
+            holder.iconTrash.setOnClickListener(v -> {
+                mEventList.remove(event);
+                notifyDataSetChanged();
+            });
+
+            // action: edit
+            holder.rootLayout.setOnClickListener(v -> {
+                EditEventDialog dialog = EditEventDialog.newInstance(event, false);
+                dialog.show(mFragmentManager, "EditEventDialog");
+            });
         }
 
         @Override
@@ -146,6 +154,7 @@ public class AutomationFragment extends SubscriberFragment {
             final LinearLayout iconLayout;
             final TextView eventTitle;
             final Context context;
+            final ImageView iconTrash;
 
             public ViewHolder(View view, Context context) {
                 super(view);
@@ -153,6 +162,7 @@ public class AutomationFragment extends SubscriberFragment {
                 eventTitle = view.findViewById(R.id.viewEventTitle);
                 rootLayout = view.findViewById(R.id.rootLayout);
                 iconLayout = view.findViewById(R.id.iconLayout);
+                iconTrash =  view.findViewById(R.id.iconTrash);
             }
         }
     }
@@ -224,6 +234,17 @@ public class AutomationFragment extends SubscriberFragment {
             build();
         }
 
+        public Context getContext() {
+            return mContext;
+        }
+
+        public LinearLayout getRootLayout() {
+            return mRootLayout;
+        }
+
+        public FragmentManager getFragmentManager() {
+            return mFragmentManager;
+        }
 
         public void destroy() {
             mRootLayout.removeAllViews();

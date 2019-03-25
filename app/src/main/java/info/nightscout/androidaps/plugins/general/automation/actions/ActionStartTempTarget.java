@@ -23,7 +23,6 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionStartTempTarget extends Action {
     private String reason;
-
     private InputBg value;
     private InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
 
@@ -101,6 +100,15 @@ public class ActionStartTempTarget extends Action {
             this.value = src.value;
             this.reason = src.reason;
         }
+    }
+
+    @Override
+    public ActionStartTempTarget clone() throws CloneNotSupportedException {
+        ActionStartTempTarget a = (ActionStartTempTarget) super.clone();
+        a.reason = reason;
+        a.value = value;
+        a.duration = duration;
+        return a;
     }
 
     @Override

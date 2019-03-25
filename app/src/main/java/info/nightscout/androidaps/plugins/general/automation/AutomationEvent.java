@@ -10,7 +10,7 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 
-public class AutomationEvent {
+public class AutomationEvent implements Cloneable {
 
     private Trigger trigger;
     private List<Action> actions = new ArrayList<>();
@@ -57,17 +57,41 @@ public class AutomationEvent {
         try {
             JSONObject d = new JSONObject(data);
             // title
-            title = d.getString("title");
+            title = d.optString("title", "");
             // trigger
             trigger = Trigger.instantiate(d.getString("trigger"));
             // actions
             JSONArray array = d.getJSONArray("actions");
             for (int i = 0; i < array.length(); i++) {
-                actions.add(Action.instantiate(array.getJSONObject(i)));
+                actions.add(Action.instantiate(new JSONObject(array.getString(i))));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return this;
+    }
+
+    public void apply(AutomationEvent event) {
+        trigger = event.trigger;
+        actions = event.actions;
+        title = event.title;
+    }
+
+    @Override
+    public AutomationEvent clone() throws CloneNotSupportedException {
+        AutomationEvent e = (AutomationEvent) super.clone();
+        e.title = title;
+
+        // clone actions
+        e.actions = new ArrayList<>();
+        for(Action a : actions) {
+            e.actions.add(a.clone());
+        }
+
+        // clone triggers
+        if (trigger != null) {
+            e.trigger = trigger.clone();
+        }
+        return e;
     }
 }

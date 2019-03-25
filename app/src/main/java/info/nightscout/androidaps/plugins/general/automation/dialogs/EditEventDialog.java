@@ -28,7 +28,7 @@ public class EditEventDialog extends DialogFragment {
     }
 
     private static OnClickListener mClickListener = null;
-    private static AutomationEvent mEvent;
+    private static AutomationEvent staticEvent;
 
     public static void setOnClickListener(OnClickListener clickListener) {
         mClickListener = clickListener;
@@ -51,14 +51,22 @@ public class EditEventDialog extends DialogFragment {
 
     private Unbinder mUnbinder;
     private AutomationFragment.ActionListAdapter mActionListAdapter;
+    private AutomationEvent mEvent;
+    private boolean mAddNew;
 
-    public static EditEventDialog newInstance(AutomationEvent event) {
-        mEvent = event; // FIXME
+    public static EditEventDialog newInstance(AutomationEvent event, boolean addNew) {
+        staticEvent = event;
 
         Bundle args = new Bundle();
         EditEventDialog fragment = new EditEventDialog();
         fragment.setArguments(args);
-
+        // clone event
+        try {
+            fragment.mEvent = event.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        fragment.mAddNew = addNew;
         return fragment;
     }
 
@@ -70,10 +78,14 @@ public class EditEventDialog extends DialogFragment {
         // load data from bundle
         if (savedInstanceState != null) {
             String eventData = savedInstanceState.getString("event");
-            if (eventData != null) mEvent.fromJSON(eventData);
-        } else {
+            if (eventData != null) mEvent = new AutomationEvent().fromJSON(eventData);
+            mAddNew = savedInstanceState.getBoolean("addNew");
+        } else if (mAddNew) {
             mEvent.setTrigger(new TriggerConnector(TriggerConnector.Type.OR));
         }
+
+        // event title
+        mEditEventTitle.setText(mEvent.getTitle());
 
         // display root trigger
         mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
@@ -136,6 +148,15 @@ public class EditEventDialog extends DialogFragment {
             return;
         }
 
+        // apply changes
+        staticEvent.apply(mEvent);
+
+        // add new
+        if (mAddNew) {
+            final AutomationPlugin plugin = AutomationPlugin.getPlugin();
+            plugin.getAutomationEvents().add(mEvent);
+        }
+
         if (mClickListener != null) mClickListener.onClick(mEvent);
         dismiss();
     }
@@ -148,6 +169,7 @@ public class EditEventDialog extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         bundle.putString("event", mEvent.toJSON());
+        bundle.putBoolean("addNew", mAddNew);
     }
 
 }

@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import info.nightscout.androidaps.queue.Callback;
 
-public abstract class Action {
+public abstract class Action implements Cloneable {
 
     public abstract int friendlyName();
 
@@ -33,6 +33,11 @@ public abstract class Action {
 
     public void copy(Action action) { }
 
+    @Override
+    public Action clone() throws CloneNotSupportedException {
+        return (Action) super.clone();
+    }
+
     /*package*/ Action fromJSON(String data) {
         return this;
     }
@@ -40,9 +45,9 @@ public abstract class Action {
     public static Action instantiate(JSONObject object) {
         try {
             String type = object.getString("type");
-            JSONObject data = object.getJSONObject("data");
+            JSONObject data = object.optJSONObject("data");
             Class clazz = Class.forName(type);
-            return ((Action) clazz.newInstance()).fromJSON(data.toString());
+            return ((Action) clazz.newInstance()).fromJSON(data != null ? data.toString() : "");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
             e.printStackTrace();
         }

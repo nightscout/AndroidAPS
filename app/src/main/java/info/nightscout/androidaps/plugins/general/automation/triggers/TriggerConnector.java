@@ -259,4 +259,16 @@ public class TriggerConnector extends Trigger {
         return this;
     }
 
+
+    @Override
+    public TriggerConnector clone() throws CloneNotSupportedException {
+        TriggerConnector tc = (TriggerConnector) super.clone();
+        tc.list = new ArrayList<>();
+        for(Trigger t : list) {
+            tc.list.add(t.clone());
+        }
+        if (adapter != null)
+            tc.adapter = new AutomationFragment.TriggerListAdapter(adapter.getContext(), adapter.getFragmentManager(), adapter.getRootLayout(), tc);
+        return tc;
+    }
 }
