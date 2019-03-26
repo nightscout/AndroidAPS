@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionStartTempTarget extends Action {
-    private String reason;
+    private String reason = "";
     private InputBg value;
     private InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
 

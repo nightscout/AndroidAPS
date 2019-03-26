@@ -21,8 +21,12 @@ public class AutomationEventTest {
         event.setTrigger(Trigger.instantiate(TriggerConnectorTest.oneItem));
         event.addAction(new ActionLoopEnable());
 
+        // export to json
+        final String eventJsonExpected = "{\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"data\\\\\\\":{\\\\\\\"connectorType\\\\\\\":\\\\\\\"AND\\\\\\\",\\\\\\\"triggerList\\\\\\\":[]},\\\\\\\"type\\\\\\\":\\\\\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\\\\\\\"}\\\"]},\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector\\\"}\",\"title\":\"Test\",\"actions\":[\"{\\\"type\\\":\\\"info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable\\\"}\"]}";
+        Assert.assertEquals(eventJsonExpected, event.toJSON());
+
         // clone
-        AutomationEvent clone = event.clone();
+        AutomationEvent clone = new AutomationEvent().fromJSON(eventJsonExpected);
 
         // check title
         Assert.assertEquals(event.getTitle(), clone.getTitle());
@@ -31,11 +35,11 @@ public class AutomationEventTest {
         Assert.assertNotNull(clone.getTrigger());
         Assert.assertFalse(event.getTrigger() == clone.getTrigger()); // not the same object reference
         Assert.assertEquals(event.getTrigger().getClass(), clone.getTrigger().getClass());
-        // TODO: check trigger details
+        Assert.assertEquals(event.getTrigger().toJSON(), clone.getTrigger().toJSON());
 
         // check action
         Assert.assertEquals(1, clone.getActions().size());
         Assert.assertFalse(event.getActions() == clone.getActions()); // not the same object reference
-        // TODO: check action details
+        Assert.assertEquals(clone.toJSON(), clone.toJSON());
     }
 }
