@@ -63,6 +63,7 @@ public class AutomationEvent {
             trigger = Trigger.instantiate(d.getString("trigger"));
             // actions
             JSONArray array = d.getJSONArray("actions");
+            actions.clear();
             for (int i = 0; i < array.length(); i++) {
                 actions.add(Action.instantiate(new JSONObject(array.getString(i))));
             }

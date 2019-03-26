@@ -160,6 +160,7 @@ public class TriggerConnector extends Trigger {
             JSONObject d = new JSONObject(data);
             connectorType = Type.valueOf(JsonHelper.safeGetString(d, "connectorType"));
             JSONArray array = d.getJSONArray("triggerList");
+            list.clear();
             for (int i = 0; i < array.length(); i++) {
                 Trigger newItem = instantiate(new JSONObject(array.getString(i)));
                 add(newItem);

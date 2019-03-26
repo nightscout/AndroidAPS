@@ -131,13 +131,13 @@ public class AutomationFragment extends SubscriberFragment {
                 addImage(res, holder.context, holder.iconLayout);
             }
 
-            // action: remove
+            // remove event
             holder.iconTrash.setOnClickListener(v -> {
                 mEventList.remove(event);
                 notifyDataSetChanged();
             });
 
-            // action: edit
+            // edit event
             holder.rootLayout.setOnClickListener(v -> {
                 EditEventDialog dialog = EditEventDialog.newInstance(event, false);
                 dialog.show(mFragmentManager, "EditEventDialog");
@@ -168,7 +168,7 @@ public class AutomationFragment extends SubscriberFragment {
     }
 
     /**
-     * RecyclerViewAdapter to display event lists.
+     * RecyclerViewAdapter to display action lists.
      */
     public static class ActionListAdapter extends RecyclerView.Adapter<ActionListAdapter.ViewHolder>  {
         private final List<Action> mActionList;
@@ -190,11 +190,15 @@ public class AutomationFragment extends SubscriberFragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final Action action = mActionList.get(position);
             holder.actionTitle.setText(action.friendlyName());
-            holder.itemRoot.setOnClickListener(v -> {
+            holder.layoutText.setOnClickListener(v -> {
                 if (action.hasDialog()) {
                     EditActionDialog dialog = EditActionDialog.newInstance(action);
                     dialog.show(mFragmentManager, "EditActionDialog");
                 }
+            });
+            holder.iconTrash.setOnClickListener(v -> {
+                mActionList.remove(action);
+                notifyDataSetChanged();
             });
         }
 
@@ -206,13 +210,15 @@ public class AutomationFragment extends SubscriberFragment {
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView actionTitle;
             TextView actionDescription;
-            LinearLayout itemRoot;
+            LinearLayout layoutText;
+            ImageView iconTrash;
 
             public ViewHolder(View view) {
                 super(view);
-                itemRoot = view.findViewById(R.id.itemRoot);
+                layoutText = view.findViewById(R.id.layoutText);
                 actionTitle = view.findViewById(R.id.viewActionTitle);
                 actionDescription = view.findViewById(R.id.viewActionDescription);
+                iconTrash = view.findViewById(R.id.iconTrash);
             }
         }
     }
