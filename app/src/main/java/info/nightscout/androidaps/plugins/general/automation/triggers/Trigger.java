@@ -19,7 +19,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
-public abstract class Trigger implements Cloneable {
+public abstract class Trigger {
 
     public enum Comparator {
         IS_LOWER,
@@ -138,12 +138,5 @@ public abstract class Trigger implements Cloneable {
         root.addView(title);
 
         return root;
-    }
-
-    @Override
-    public Trigger clone() throws CloneNotSupportedException {
-        Trigger t = (Trigger) super.clone();
-        t.connector = connector; // parent should already be cloned
-        return t;
     }
 }
