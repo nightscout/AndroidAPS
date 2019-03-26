@@ -9,10 +9,11 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
-public class AutomationEvent implements Cloneable {
+public class AutomationEvent {
 
-    private Trigger trigger;
+    private Trigger trigger = new TriggerConnector();
     private List<Action> actions = new ArrayList<>();
     private String title;
 
@@ -69,29 +70,5 @@ public class AutomationEvent implements Cloneable {
             e.printStackTrace();
         }
         return this;
-    }
-
-    public void apply(AutomationEvent event) {
-        trigger = event.trigger;
-        actions = event.actions;
-        title = event.title;
-    }
-
-    @Override
-    public AutomationEvent clone() throws CloneNotSupportedException {
-        AutomationEvent e = (AutomationEvent) super.clone();
-        e.title = title;
-
-        // clone actions
-        e.actions = new ArrayList<>();
-        for(Action a : actions) {
-            e.actions.add(a.clone());
-        }
-
-        // clone triggers
-        if (trigger != null) {
-            e.trigger = trigger.clone();
-        }
-        return e;
     }
 }

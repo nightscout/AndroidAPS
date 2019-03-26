@@ -36,13 +36,7 @@ public class EditActionDialog extends DialogFragment {
         Bundle args = new Bundle();
         EditActionDialog fragment = new EditActionDialog();
         fragment.setArguments(args);
-
-        // clone action to static object
-        try {
-            resultAction = action.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        resultAction = action;
 
         return fragment;
     }
@@ -52,18 +46,22 @@ public class EditActionDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_action, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
+        // get json data for action
+        String actionData = null;
         if (savedInstanceState != null) {
-            String actionData = savedInstanceState.getString("action");
-            if (actionData != null) {
-                try {
-                    mAction = Action.instantiate(new JSONObject(actionData));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+            actionData = savedInstanceState.getString("action");
         }
-        if (mAction == null)
-            mAction = resultAction;
+        if (actionData == null) {
+            actionData = resultAction.toJSON();
+        }
+
+        // create action from json
+        try {
+            mAction = Action.instantiate(new JSONObject(actionData));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         mViewActionTitle.setText(mAction.friendlyName());
         mRootLayout.removeAllViews();
@@ -80,7 +78,7 @@ public class EditActionDialog extends DialogFragment {
 
     @OnClick(R.id.ok)
     public void onButtonOk(View view) {
-        resultAction.copy(mAction);
+        resultAction.apply(mAction);
         dismiss();
     }
 

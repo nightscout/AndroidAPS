@@ -62,8 +62,8 @@ public class EditEventDialog extends DialogFragment {
         fragment.setArguments(args);
         // clone event
         try {
-            fragment.mEvent = event.clone();
-        } catch (CloneNotSupportedException e) {
+            fragment.mEvent = new AutomationEvent().fromJSON(event.toJSON());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         fragment.mAddNew = addNew;
@@ -149,7 +149,7 @@ public class EditEventDialog extends DialogFragment {
         }
 
         // apply changes
-        staticEvent.apply(mEvent);
+        staticEvent.fromJSON(mEvent.toJSON());
 
         // add new
         if (mAddNew) {

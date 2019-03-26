@@ -81,7 +81,7 @@ public class ActionStartTempTarget extends Action {
     }
 
     @Override
-    Action fromJSON(String data) {
+    public Action fromJSON(String data) {
         try {
             JSONObject d = new JSONObject(data);
             reason = JsonHelper.safeGetString(d, "reason");
@@ -92,25 +92,6 @@ public class ActionStartTempTarget extends Action {
             e.printStackTrace();
         }
         return this;
-    }
-
-    @Override
-    public void copy(Action action) {
-        if (action instanceof ActionStartTempTarget) {
-            ActionStartTempTarget src = (ActionStartTempTarget)action;
-            this.duration = src.duration;
-            this.value = src.value;
-            this.reason = src.reason;
-        }
-    }
-
-    @Override
-    public ActionStartTempTarget clone() throws CloneNotSupportedException {
-        ActionStartTempTarget a = (ActionStartTempTarget) super.clone();
-        a.reason = reason;
-        a.value = value;
-        a.duration = duration;
-        return a;
     }
 
     @Override
