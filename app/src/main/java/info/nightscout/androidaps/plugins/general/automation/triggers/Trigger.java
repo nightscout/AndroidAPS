@@ -22,8 +22,8 @@ import info.nightscout.androidaps.R;
 public abstract class Trigger {
 
     public enum Comparator {
-        IS_LOWER,
-        IS_EQUAL_OR_LOWER,
+        IS_LESSER,
+        IS_EQUAL_OR_LESSER,
         IS_EQUAL,
         IS_EQUAL_OR_GREATER,
         IS_GREATER,
@@ -31,10 +31,10 @@ public abstract class Trigger {
 
         public @StringRes int getStringRes() {
             switch (this) {
-                case IS_LOWER:
-                    return R.string.islower;
-                case IS_EQUAL_OR_LOWER:
-                    return R.string.isequalorlower;
+                case IS_LESSER:
+                    return R.string.islesser;
+                case IS_EQUAL_OR_LESSER:
+                    return R.string.isequalorlesser;
                 case IS_EQUAL:
                     return R.string.isequal;
                 case IS_EQUAL_OR_GREATER:
@@ -54,9 +54,9 @@ public abstract class Trigger {
 
             int comparison = obj1.compareTo(obj2);
             switch (this) {
-                case IS_LOWER:
+                case IS_LESSER:
                     return comparison < 0;
-                case IS_EQUAL_OR_LOWER:
+                case IS_EQUAL_OR_LESSER:
                     return comparison <= 0;
                 case IS_EQUAL:
                     return comparison == 0;
