@@ -13,6 +13,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
@@ -50,10 +51,11 @@ public class ActionStartTempTarget extends Action {
     @Override
     public void generateDialog(LinearLayout root) {
         int unitResId = value.getUnits().equals(Constants.MGDL) ? R.string.mgdl : R.string.mmol;
-        Label labelBg = new Label(MainApp.gs(R.string.careportal_newnstreatment_percentage_label), MainApp.gs(unitResId), value);
-        labelBg.generateDialog(root);
-        Label labelDuration = new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", duration);
-        labelDuration.generateDialog(root);
+
+        new LayoutBuilder()
+            .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_percentage_label), MainApp.gs(unitResId), value))
+            .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", duration))
+            .build(root);
     }
 
     @Override

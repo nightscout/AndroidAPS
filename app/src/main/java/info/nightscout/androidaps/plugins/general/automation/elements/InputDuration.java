@@ -21,7 +21,7 @@ public class InputDuration extends Element {
     }
 
     @Override
-    public void generateDialog(LinearLayout root) {
+    public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
         if (unit.equals(TimeUnit.MINUTES)) {
             // Minutes

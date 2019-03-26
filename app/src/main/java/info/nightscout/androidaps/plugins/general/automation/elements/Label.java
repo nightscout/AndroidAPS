@@ -19,7 +19,7 @@ public class Label extends Element {
     }
 
     @Override
-    public void generateDialog(LinearLayout root) {
+    public void addToLayout(LinearLayout root) {
         // container layout
         LinearLayout layout = new LinearLayout(root.getContext());
         layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -38,7 +38,7 @@ public class Label extends Element {
         layout.addView(textViewPre);
 
         // add element to layout
-        element.generateDialog(layout);
+        element.addToLayout(layout);
 
         // text view post element
         if (textPost != null) {

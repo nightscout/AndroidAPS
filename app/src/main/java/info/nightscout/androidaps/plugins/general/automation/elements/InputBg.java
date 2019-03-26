@@ -53,7 +53,7 @@ public class InputBg extends Element {
     }
 
     @Override
-    public void generateDialog(LinearLayout root) {
+    public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
         numberPicker.setParams(0d, minValue, maxValue, step, decimalFormat, false, textWatcher);
         numberPicker.setValue(value);
