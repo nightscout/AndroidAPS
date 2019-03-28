@@ -455,6 +455,11 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         return pumpType;
     }
 
+    @Override
+    public boolean canHandleDST() {
+        return true;
+    }
+
 
     public void refreshConfiguration() {
         String pumptype = SP.getString(R.string.key_virtualpump_type, "Generic AAPS");

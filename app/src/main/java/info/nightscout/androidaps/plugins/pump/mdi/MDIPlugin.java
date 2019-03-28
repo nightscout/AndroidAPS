@@ -260,4 +260,9 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     }
 
+    @Override
+    public boolean canHandleDST() {
+        return true;
+    }
+
 }
