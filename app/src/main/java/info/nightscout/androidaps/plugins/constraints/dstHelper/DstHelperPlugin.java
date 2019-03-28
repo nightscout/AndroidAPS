@@ -77,7 +77,7 @@ public class DstHelperPlugin extends PluginBase implements ConstraintsInterface 
 
         if (wasDST(cal)) {
             LoopPlugin loopPlugin = LoopPlugin.getPlugin();
-            if (loopPlugin.isSuspended()) {
+            if (!loopPlugin.isSuspended()) {
                 warnUser(Notification.DST_LOOP_DISABLED, MainApp.gs(R.string.dst_loop_disabled_warning));
             } else {
                 log.debug("Loop already suspended");
