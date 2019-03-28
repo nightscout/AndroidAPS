@@ -12,8 +12,10 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.utils.T;
@@ -92,12 +94,19 @@ public class DstHelperPlugin extends PluginBase implements ConstraintsInterface 
     //Return false if time to DST change is less than 91 and positive
     @Override
     public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
+
+        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        if (pump == null || pump.canHandleDST()) {
+            log.debug("Pump can handle DST");
+            return value;
+        }
+
         try {
             this.dstTest(Calendar.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (this.minutesToChange <= 90 && minutesToChange > 0 && value.value()) {
+        if (this.minutesToChange <= 180 && minutesToChange > 0 && value.value()) {
             try {
                 LoopPlugin loopPlugin = LoopPlugin.getPlugin();
                 if (loopPlugin.suspendedTo() == 0L) {

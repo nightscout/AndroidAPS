@@ -488,4 +488,12 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
 
     }
 
+    @Override
+    public boolean canHandleDST() {
+        return false;
+    }
+
+
+
+
 }

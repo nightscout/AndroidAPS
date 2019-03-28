@@ -65,6 +65,7 @@ public interface PumpInterface {
 
     PumpEnactResult loadTDDs();
 
+   public boolean canHandleDST();
 
     List<CustomAction> getCustomActions();
 

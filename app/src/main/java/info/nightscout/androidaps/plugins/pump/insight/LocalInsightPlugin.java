@@ -1569,4 +1569,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, MainApp.gs(R.string.timeout_during_handshake), Notification.URGENT);
         new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventNewNotification(notification)));
     }
+
+    @Override
+    public boolean canHandleDST() {
+        return true;
+    }
 }
