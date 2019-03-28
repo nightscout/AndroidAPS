@@ -1112,6 +1112,7 @@
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_reservoir">Reser:%1$.2fU</string>
+    <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="recovery_duration">Duração da recuperação</string>
@@ -1121,8 +1122,12 @@
     <string name="profile_per_unit">/U</string>
     <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
     <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
     <string name="storage">restrição de armazenamento interno</string>
     <string name="diskfull">Liberte pelo menos %1$d MB do armazenamento interno! Loop desativado!</string>
+    <string name="notconfigured">Não configurado</string>
+    <string name="profileswitchcreated">Troca de perfil criada</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

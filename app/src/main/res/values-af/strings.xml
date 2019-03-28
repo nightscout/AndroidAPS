@@ -1130,7 +1130,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Daglig spaar tyd verandering in 24 h of minder</string>
-    <string name="dst_loop_disabled_warning">Daglig spaar tyd verander in minder as 3 ure - geslote lus afgeskakel</string>
     <string name="storage">interne berging beperking</string>
     <string name="diskfull">Bevry ten minste %1$d MB van intene stoorspasie! Lus gedeaktiveer!</string>
     <plurals name="objective_days">

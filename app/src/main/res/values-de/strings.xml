@@ -1133,7 +1133,6 @@ Unerwartetes Verhalten.</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Zeitumstellung in weniger als 24 Stunden</string>
-    <string name="dst_loop_disabled_warning">Zeitumstellung in weniger als 3 Stunden - Closed loop deaktiviert</string>
     <string name="storage">interne Speicherbegrenzung</string>
     <string name="diskfull">Mindestens %1$d MB freier interer Speicher benötigt! Loop abgeschaltet!</string>
     <plurals name="objective_days">
