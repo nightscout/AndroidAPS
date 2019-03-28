@@ -182,4 +182,9 @@ public class DateUtil {
     public static long roundDateToSec(long date) {
         return date - date % 1000;
     }
+
+    public static boolean isCloseToNow(long date) {
+        long diff = Math.abs(date - now());
+        return diff < T.mins(2).msecs();
+    }
 }

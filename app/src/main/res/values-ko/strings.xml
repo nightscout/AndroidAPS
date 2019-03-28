@@ -263,12 +263,7 @@
     <string name="smscommunicator_bolusreplywithcode">Bolus %1$.2fU 을 주입하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_calibrationreplywithcode">보정값 %1$.2f을 전송하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU이 주입되었습니다.</string>
-    <string name="bolusrequested" formatted="false">%.2fU 주입 예정입니다.</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
-    <string name="bolusdelivering" formatted="false">%.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
-    <string name="smscommunicator_remotebolusnotallowed">원격 Bolus 허용되지 않음</string>
     <string name="glucosetype_finger">체혈</string>
     <string name="glucosetype_sensor">센서</string>
     <string name="manual">수동</string>
@@ -336,16 +331,12 @@
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
     <string name="valuelimitedto">%1$.2f, %2$.2f으로 제한됨</string>
     <string name="valueoutofrange" formatted="false">%s값이 하드한계(Hard Limit)를 벗어났습니다</string>
-    <string name="smscommunicator_remotebasalnotallowed">원격 Basal 설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
-    <string name="smscommunicator_basalreplywithcode">Basal %1$.2fU/h 을 주입하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d분동안 Loop 일시중지하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalset">Temp Basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp Basal start failed</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">임시Basal을 중지하려면 %s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalcanceled">Temp Basal canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling Temp Basal failed</string>
-    <string name="smscommunicator_unknowncommand">알려지지 않은 명령이거나 잘못된 답장입니다.</string>
     <string name="quickwizard">빠른마법사</string>
     <string name="quickwizardsettings">빠른마법사 설정</string>
     <string name="overview_editquickwizard_buttontext">버튼명:</string>
@@ -468,7 +459,6 @@
     <string name="send_calibration" formatted="false">보정값 %.1f을 xDrip에 전송하시겠습니까?</string>
     <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
     <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">원격보정이 허용되지 않았습니다</string>
     <string name="smscommunicator_calibrationsent">보정 전송됨. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
     <string name="smscommunicator_calibrationfailed">xDrip에서 보정을 받지 못합니다.</string>
     <string name="pumpsuspended">펌프 일시중지됨</string>

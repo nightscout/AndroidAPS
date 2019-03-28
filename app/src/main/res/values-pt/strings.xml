@@ -54,6 +54,7 @@
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
     <string name="description_sms_communicator">Controlar remotamente o AndroidAPS usando comandos SMS.</string>
+    <string name="objectives_button_back">Anterior</string>
     <string name="objectives_button_start">Iniciar</string>
     <string name="objectives_button_verify">Verificar</string>
     <string name="nsprofileview_units_label">Unidades</string>
@@ -265,12 +266,7 @@
     <string name="smscommunicator_bolusreplywithcode">Para dar bolus %1$.2fU responder com código %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibração %1$.2f responder com código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bólus falhado</string>
-    <string name="bolusdelivered" formatted="false">Bólus %.2fU enviado com êxito</string>
-    <string name="bolusrequested" formatted="false">Vai ser enviado %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bólus %.2fU enviado com êxito</string>
-    <string name="bolusdelivering" formatted="false">A enviar %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos remotos via SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bólus remoto não permitido</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -338,16 +334,12 @@
     <string name="smscommunicator_loopisenabled">Loop activado</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange" formatted="false">O valor %s está fora dos limites permitidos</string>
-    <string name="smscommunicator_remotebasalnotallowed">A configuração remota de basal não é permitida</string>
     <string name="smscommunicator_remotecommandnotallowed">O comando remoto não é permitido</string>
-    <string name="smscommunicator_basalreplywithcode">Para começar basal %1$.2fU/h responda com código %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_tempbasalfailed">Início basal temp falhou </string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar a basal temporaria responda com o código %s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temp cancelada</string>
     <string name="smscommunicator_tempbasalcancelfailed">Não foi possivel cancelar a basal temp</string>
-    <string name="smscommunicator_unknowncommand">Comando desconhecido ou resposta errada</string>
     <string name="quickwizard">Assistente Rápido</string>
     <string name="quickwizardsettings">Definições do Assistente Rápido</string>
     <string name="overview_editquickwizard_buttontext">Texto do botão:</string>
@@ -471,7 +463,6 @@
     <string name="send_calibration" formatted="false">Enviar calibração %.1f para o xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
     <string name="calibrationsent">Calibração enviada para o xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Calibração remota não permitida</string>
     <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada no xDrip.</string>
     <string name="smscommunicator_calibrationfailed">O xDrip não esta a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
@@ -553,6 +544,11 @@
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
     <string name="enablesuperbolus_summary">Habilite a funcionalidade de superbolus no assistente. Não habilite até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE USAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
+    <string name="show_statuslights_summary">Ativar as luzes de status para idade da cânula, idade da insulina, idade do sensor, reservatório e bateria no ecrã inicial.</string>
+    <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
+    <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
+    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
+    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1017,6 +1013,7 @@
     <string name="nth_objective">%1$d. Objectivo</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
+    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Baixo alvotemp baixa sensibilidade</string>
@@ -1062,6 +1059,7 @@
     <string name="searching_for_devices">A pesquisar dispositivos…</string>
     <string name="please_wait">Por favor aguarde…</string>
     <string name="pairing_completed">Emparelhamento concluído</string>
+    <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_delivered">%1$.2fU / %2$.2fU entregue</string>
@@ -1071,9 +1069,13 @@
     <string name="confirm">Confirmar</string>
     <string name="mute_alert">Silêncio</string>
     <string name="pump_alert">Alerta da Bomba</string>
+    <string name="log_site_changes">Registar alterações de local</string>
+    <string name="log_tube_changes">Registar alterações de tubo</string>
+    <string name="log_battery_changes">Registar mudanças de bateria</string>
     <string name="log_operating_mode_changes">Alterações do modo de funcionamento de registo</string>
     <string name="log_alerts">Alertas de registo</string>
     <string name="enable_tbr_emulation">Ativar a emulação TBR</string>
+    <string name="enable_tbr_emulation_summary">Usar bolus estendidos em vez de TBRs para contornar o limite de 250%</string>
     <string name="serial_number">Número de série</string>
     <string name="release_software_version">Lançar versão de software</string>
     <string name="ui_processor_software_version">Versão de software do processador de interface do utilizador</string>
@@ -1089,17 +1091,43 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="insight_status">Estado</string>
+    <string name="tdd_bolus">DDT de Bolus</string>
+    <string name="tdd_basal">DDT Basal</string>
+    <string name="tdd_total">DDT Total</string>
     <string name="recovering">A recuperar</string>
     <string name="not_paired">Não emparelhado</string>
     <string name="last_connected">Última ligação</string>
     <string name="started">Iniciado</string>
     <string name="stopped">Parado</string>
+    <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="extended_bolus">Bólus estendido</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
+    <string name="disable_tbr_over_notification">Desativar notificação do fim da basal temporária\n(configuração da bomba)</string>
+    <string name="refresh">Actualizar</string>
+    <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
+    <string name="not_inserted">Não inserido</string>
+    <string name="short_status_last_connected">Última conexão:%1$d minutos atrás</string>
+    <string name="short_status_tbr">Basal temporária: %1$d%% para %2$d / %3$d minutos</string>
+    <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
+    <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
+    <string name="short_status_reservoir">Reser:%1$.2fU</string>
+    <string name="short_status_battery">Bat.: %1$d%%</string>
+    <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
+    <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
+    <string name="recovery_duration">Duração da recuperação</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
+    <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
+    <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="storage">restrição de armazenamento interno</string>
+    <string name="diskfull">Liberte pelo menos %1$d MB do armazenamento interno! Loop desativado!</string>
+    <string name="notconfigured">Não configurado</string>
+    <string name="profileswitchcreated">Troca de perfil criada</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

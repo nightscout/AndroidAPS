@@ -265,12 +265,7 @@
     <string name="smscommunicator_bolusreplywithcode">Para entregar bolo %1$.2fU responder con código %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibración %1$.2f responder con código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolo falló</string>
-    <string name="bolusdelivered" formatted="false">Bolo %.2fU entregado con éxito</string>
-    <string name="bolusrequested" formatted="false">Entregaré %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolo %.2fU enviado correctamente</string>
-    <string name="bolusdelivering" formatted="false">Entregando %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos remotos vía SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolo remoto no permitido</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manualmente</string>
@@ -338,16 +333,12 @@
     <string name="smscommunicator_loopisenabled">Lazo activo</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Valor %s fuera de limites</string>
-    <string name="smscommunicator_remotebasalnotallowed">No permitidos ajustes basales remotos</string>
     <string name="smscommunicator_remotecommandnotallowed">Comando remoto no permitido</string>
-    <string name="smscommunicator_basalreplywithcode">Para iniciar basal %1$.2fU/h responder con código %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para cancelar lazo por %1$d minutos responde con código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Para parar basal temporal responder con código %s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temporal cancelada</string>
     <string name="smscommunicator_tempbasalcancelfailed">Fallo cancelación basal temporal</string>
-    <string name="smscommunicator_unknowncommand">Comando desconocido o respuesta incorrecta</string>
     <string name="quickwizard">Asistente</string>
     <string name="quickwizardsettings">Asistente configuración</string>
     <string name="overview_editquickwizard_buttontext">Botón Texto:</string>
@@ -471,7 +462,6 @@
     <string name="send_calibration" formatted="false">¿Mandar calibración %.1f a xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ no instalado</string>
     <string name="calibrationsent">Calibración mandada a xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Calibración remota no admitida</string>
     <string name="smscommunicator_calibrationsent">Calibración enviada. La recepción debe estar habilitada en xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip no recibe calibraciones</string>
     <string name="pumpsuspended">Bomba parada</string>

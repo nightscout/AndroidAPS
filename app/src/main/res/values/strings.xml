@@ -55,6 +55,7 @@
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
+    <string name="objectives_button_back">Back</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
@@ -293,12 +294,11 @@
     <string name="smscommunicator_bolusreplywithcode">To deliver bolus %1$.2fU reply with code %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">To send calibration %1$.2f reply with code %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
-    <string name="bolusrequested" formatted="false">Going to deliver %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
-    <string name="bolusdelivering" formatted="false">Delivering %.2fU</string>
+    <string name="bolusdelivered">Bolus %1$.2fU delivered successfully</string>
+    <string name="bolusrequested">Going to deliver %1$.2fU</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU delivered successfully</string>
+    <string name="bolusdelivering">Delivering %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -366,16 +366,25 @@
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Value %s is out of hard limits</string>
-    <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
-    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h reply with code %2$s</string>
+    <string name="smscommunicator_remotebolusnotallowed">Remote bolus not available. Try again later.</string>
+    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">To switch profile to %1$s %2$d%% reply with code %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">To start extended bolus %1$.2fU for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
+    <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
+    <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
+    <string name="smscommunicator_extendedfailed">Extended bolus start failed</string>
+    <string name="smscommunicator_basalstopreplywithcode">To stop temp basal reply with code %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">To stop extended bolus reply with code %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
+    <string name="smscommunicator_extendedcanceled">Extended bolus canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
-    <string name="smscommunicator_unknowncommand">Uknown command or wrong reply</string>
+    <string name="smscommunicator_extendedcancelfailed">Canceling extended bolus failed</string>
+    <string name="smscommunicator_unknowncommand">Unknown command or wrong reply</string>
 
     <string name="quickwizard">QuickWizard</string>
     <string name="quickwizardsettings">QuickWizard settings</string>
@@ -508,7 +517,6 @@
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Remote calibration not allowed</string>
     <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
     <string name="pumpsuspended">Pump suspended</string>
@@ -1311,8 +1319,13 @@
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
     <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
-    <string name="dst_loop_disabled_warning">Dayligh Saving time change in less than 3 hours - Closed loop diabled</string>
-
+    <string name="dst_loop_disabled_warning">Dayligh Saving time change less than 3 hours ago - Closed loop diabled</string>
+    <string name="storage">internal storage constraint</string>
+    <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
+    <string name="wrongformat">Wrong format</string>
+    <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
+    <string name="notconfigured">Not configured</string>
+    <string name="profileswitchcreated">Profile switch created</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

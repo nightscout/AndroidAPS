@@ -68,4 +68,7 @@ public class Constants {
     //SMS Communicator
     public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
 
+    //Storage [MB]
+    public static final long MINIMUM_FREE_SPACE = 200;
+
 }

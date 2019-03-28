@@ -9,10 +9,10 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
-    <string name="danar_useextended_title">Для величин &gt;200% пользуйтесь удлиненным болюсом</string>
+    <string name="danar_useextended_title">Для величин &gt;200% пользуйтесь пролонгированным болюсом</string>
     <string name="danar_bt_name_title">устройство блутус danaR</string>
     <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
-    <string name="alert_dialog_storage_permission_text">Пожалуйста перезагрузите телефон или перезапустите AndroidAPS из системных настроек \nиначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
+    <string name="alert_dialog_storage_permission_text">Пожалуйста перезагрузите телефон или перезапустите AndroidAPS из системных настроек \иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_careportal">Введите дополнительные записи логов.</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
@@ -54,6 +54,7 @@
     <string name="description_wear">Мониторить и контролировать AndroidAPS при помощи часов WearOS.</string>
     <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
     <string name="description_sms_communicator">Дистанционное управление AndroidAPS при помощи команд SMS.</string>
+    <string name="objectives_button_back">Назад</string>
     <string name="objectives_button_start">старт</string>
     <string name="objectives_button_verify">Верификация</string>
     <string name="nsprofileview_units_label">единицы</string>
@@ -265,12 +266,11 @@
     <string name="smscommunicator_bolusreplywithcode">Чтобы подать болюс %1$.2fU ответьте кодом %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
     <string name="smscommunicator_bolusfailed">Подача болюса не состоялась</string>
-    <string name="bolusdelivered" formatted="false">Болюс %.2fU подан успешно</string>
-    <string name="bolusrequested" formatted="false">Начинается подача болюса %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Болюс %.2fU дан успешно</string>
-    <string name="bolusdelivering" formatted="false">Подается болюс %.2fU</string>
+    <string name="bolusdelivered">Болюс %1$.2fед. подан успешно</string>
+    <string name="bolusrequested">Начинается подача болюса %1$.2fед.</string>
+    <string name="smscommunicator_bolusdelivered">Болюс %1$.2fед. подан успешно</string>
+    <string name="bolusdelivering">Подается болюс %1$.2fед.</string>
     <string name="smscommunicator_remotecommandsallowed">разрешить команды через смс</string>
-    <string name="smscommunicator_remotebolusnotallowed">Команда на удаленный болюс не разрешена</string>
     <string name="glucosetype_finger">палец</string>
     <string name="glucosetype_sensor">сенсор</string>
     <string name="manual">вручную</string>
@@ -338,16 +338,25 @@
     <string name="smscommunicator_loopisenabled">зцикл работает</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
     <string name="valueoutofrange" formatted="false">величина %s недопустима</string>
-    <string name="smscommunicator_remotebasalnotallowed">удаленная настройка базала не разрешена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
-    <string name="smscommunicator_basalreplywithcode">чтобы начать базал %1$.2fU/h ответьте кодом %2$s</string>
+    <string name="smscommunicator_remotebolusnotallowed">Удаленный болюс недоступен, повторите попытку позже.</string>
+    <string name="smscommunicator_basalreplywithcode">Чтобы подать базал %1$.2fед./ч в течение %2$d мин. ответьте кодом %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Для переключения профиля на %1$s %2$d%% ответьте кодом %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Для начала подачи пролонгированного болюса %1$.2fед. за %2$d мин. ответьте кодом %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Для начала подачи базала %1$d%% на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_tempbasalset">врем базал %1$.2fU/h на %2$d мин начат успешно</string>
+    <string name="smscommunicator_extendedset">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
+    <string name="smscommunicator_tempbasalset_percent">Врем. базал %1$d%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_tempbasalfailed">неуспех старта врем базала</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">чтобы прекратить врем базал ответьте кодом %s</string>
+    <string name="smscommunicator_extendedfailed">Не удалось начать подачу пролонгированного болюса</string>
+    <string name="smscommunicator_basalstopreplywithcode">Для прекращения подачи врем. базала ответьте кодом %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Для прекращения подачи пролонгированного болюса ответьте кодом %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">врем базал отменен</string>
+    <string name="smscommunicator_extendedcanceled">Пролонгированный болюс отменен</string>
     <string name="smscommunicator_tempbasalcancelfailed">отмена врем базала не состоялась</string>
-    <string name="smscommunicator_unknowncommand">неизвестная команда или неверный ответ</string>
+    <string name="smscommunicator_extendedcancelfailed">Сбой отмены пролонгированного болюса</string>
+    <string name="smscommunicator_unknowncommand">Неизвестная команда или неверный ответ</string>
     <string name="quickwizard">БыстрыйБолюс</string>
     <string name="quickwizardsettings">БыстрыйБолюс настройки</string>
     <string name="overview_editquickwizard_buttontext">текст на кнопке</string>
@@ -404,7 +413,7 @@
     <string name="minago">%1$d мин. назад</string>
     <string name="sms_minago">%1$d мин. назад</string>
     <string name="localprofile">локальный профиль</string>
-    <string name="openapsama">Помощник болюса OpenAPS MA</string>
+    <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="short_avgdelta">краткосрочная средняя дельта</string>
     <string name="long_avgdelta">Долгосрочная средняя дельта</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
@@ -413,7 +422,7 @@
     <string name="openapsama_useautosens">Пользоваться функцией Autosens</string>
     <string name="refresheventsfromnightscout">обновить данные из NS</string>
     <string name="deletefuturetreatments">Удалить назначения из будущего</string>
-    <string name="eatingsoon">Близкий прием пищи</string>
+    <string name="eatingsoon">Ожидаемый прием пищи</string>
     <string name="hypo">Гипо</string>
     <string name="activity">Нагрузка</string>
     <string name="removerecord">удалить запись</string>
@@ -471,7 +480,6 @@
     <string name="send_calibration" formatted="false">отправить калибровку %.1f на xdrip?</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>
     <string name="calibrationsent">калибровка передается на xdrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">удаленная калибровка не разрешена</string>
     <string name="smscommunicator_calibrationsent">калибровка отправлена. в xdrip должен быть активирован прием</string>
     <string name="smscommunicator_calibrationfailed">xdrip не получает калибровок</string>
     <string name="pumpsuspended">Работа помпы остановлена</string>
@@ -640,7 +648,7 @@
     <string name="enableuam">Включить непредвиденный прием пищи UAM</string>
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
-    <string name="enableuam_summary">Поиск непредвиденного приема пищи</string>
+    <string name="enableuam_summary">Поиск незапланированного приема пищи</string>
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="free_peak_oref">Свободный от пиков Oref</string>
@@ -858,7 +866,7 @@
     <string name="allow_automated_crash_reporting">Разрешить отправлять сообщения о неполадках и данные об использовании опций разработчикам при помощи сервиса fabric.io.</string>
     <string name="g5appnotdetected">Пожалуйста, обновите приложение Dexcom до поддерживаемой версии</string>
     <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
-    <string name="start_eating_soon_tt">Включить временную цель TT Скорый прием пищи</string>
+    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
     <string name="temptargetshort">Временная цель (TT)</string>
     <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
     <string name="category">Категория</string>
@@ -1142,5 +1150,10 @@ Context | Edit Context</string>
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
-    <string name="dst_loop_disabled_warning">Переход на летнее/зимнее время менее чем через 3 часа - замкнутый цикл отключен</string>
+    <string name="storage">ограничение по объему карты памяти</string>
+    <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
+    <string name="wrongformat">Неверный формат</string>
+    <string name="sms_wrongcode">Неверный код. Команда отменена.</string>
+    <string name="notconfigured">Не сконфигурировано</string>
+    <string name="profileswitchcreated">Переключатель профиля создан</string>
 </resources>

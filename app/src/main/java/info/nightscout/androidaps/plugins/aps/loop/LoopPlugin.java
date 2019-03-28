@@ -34,6 +34,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -174,6 +175,14 @@ public class LoopPlugin extends PluginBase {
     public long suspendedTo() {
         return loopSuspendedTill;
     }
+
+    @Subscribe
+    public void onStatusEvent(final EventTempTargetChange ev) {
+        new Thread(() -> invoke("EventTempTargetChange", true)).start();
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("TT_Loop_Run"));
+    }
+
+
 
     public void suspendTo(long endTime) {
         loopSuspendedTill = endTime;

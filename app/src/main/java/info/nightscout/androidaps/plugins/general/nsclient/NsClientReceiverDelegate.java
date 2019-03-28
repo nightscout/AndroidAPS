@@ -48,9 +48,7 @@ class NsClientReceiverDelegate {
             bus.post(event);
 
         context.registerReceiver(chargingStateReceiver,
-                new IntentFilter(Intent.ACTION_POWER_CONNECTED));
-        context.registerReceiver(chargingStateReceiver,
-                new IntentFilter(Intent.ACTION_POWER_DISCONNECTED));
+                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         EventChargingState eventChargingState = chargingStateReceiver.grabChargingState(context);
         if (eventChargingState != null)
@@ -97,7 +95,7 @@ class NsClientReceiverDelegate {
     }
 
     void processStateChange() {
-        boolean newAllowedState =  allowedChargingState && allowedNetworkState;
+        boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
             bus.post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
@@ -109,7 +107,9 @@ class NsClientReceiverDelegate {
 
         boolean newAllowedState = true;
 
-        if (!ev.isCharging && chargingOnly) newAllowedState = false;
+        if (!ev.isCharging && chargingOnly) {
+            newAllowedState = false;
+        }
 
         return newAllowedState;
     }

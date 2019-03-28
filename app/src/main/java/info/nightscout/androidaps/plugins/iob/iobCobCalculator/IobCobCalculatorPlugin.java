@@ -65,8 +65,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private volatile List<BgReading> bgReadings = null; // newest at index 0
     private volatile List<BgReading> bucketed_data = null;
 
-    private double dia = Constants.defaultDIA;
-
     final Object dataLock = new Object();
 
     boolean stopCalculationTrigger = false;
@@ -118,11 +116,22 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return rounded;
     }
 
-    void loadBgData(long now) {
-        long start = (long) (now - 60 * 60 * 1000L * (24 + dia));
-        bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, now, false);
-        if (L.isEnabled(L.AUTOSENS))
-            log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start) + " End date: " + DateUtil.dateAndTimeString(now));
+    void loadBgData(long to) {
+        Profile profile = ProfileFunctions.getInstance().getProfile(to);
+        double dia = Constants.defaultDIA;
+        if (profile != null) dia = profile.getDia();
+        long start = to - T.hours((long) (24 + dia)).msecs();
+        if (DateUtil.isCloseToNow(to)) {
+            // if close to now expect there can be some readings with time in close future (caused by wrong time setting)
+            // so read all records
+            bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, false);
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start));
+        } else {
+            bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, to, false);
+            if (L.isEnabled(L.AUTOSENS))
+                log.debug("BG data loaded. Size: " + bgReadings.size() + " Start date: " + DateUtil.dateAndTimeString(start) + " End date: " + DateUtil.dateAndTimeString(to));
+        }
     }
 
     public boolean isAbout5minData() {
@@ -608,10 +617,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
         if (ConfigBuilderPlugin.getPlugin() == null)
             return; // app still initializing
-        Profile profile = ProfileFunctions.getInstance().getProfile();
-        if (profile == null)
-            return; // app still initializing
-        dia = profile.getDia();
         if (ev == null) { // on init no need of reset
             return;
         }
