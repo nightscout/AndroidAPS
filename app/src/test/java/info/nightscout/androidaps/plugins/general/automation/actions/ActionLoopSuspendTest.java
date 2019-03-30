@@ -59,6 +59,15 @@ public class ActionLoopSuspendTest {
         Assert.assertEquals(true, LoopPlugin.getPlugin().isSuspended());
     }
 
+    @Test
+    public void applyTest() {
+        ActionLoopSuspend a = new ActionLoopSuspend();
+        a.minutes = 20;
+        ActionLoopSuspend b = new ActionLoopSuspend();
+        b.apply(a);
+        Assert.assertEquals(20, b.minutes);
+    }
+
     @Before
     public void prepareTest() {
         AAPSMocker.mockMainApp();

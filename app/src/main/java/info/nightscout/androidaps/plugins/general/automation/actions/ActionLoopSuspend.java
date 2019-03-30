@@ -2,6 +2,9 @@ package info.nightscout.androidaps.plugins.general.automation.actions;
 
 import com.google.common.base.Optional;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -34,4 +37,30 @@ public class ActionLoopSuspend extends Action {
     public Optional<Integer> icon() {
         return Optional.of(R.drawable.ic_pause_circle_outline_24dp);
     }
+
+    @Override
+    public String toJSON() {
+        JSONObject o = new JSONObject();
+        JSONObject data = new JSONObject();
+        try {
+            data.put("minutes", minutes);
+            o.put("type", this.getClass().getName());
+            o.put("data", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return o.toString();
+    }
+
+    @Override
+    public Action fromJSON(String data) {
+        try {
+            JSONObject o = new JSONObject(data);
+            minutes = o.getInt("minutes");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
 }
