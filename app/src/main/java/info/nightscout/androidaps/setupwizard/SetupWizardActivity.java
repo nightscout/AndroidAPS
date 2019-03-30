@@ -24,14 +24,14 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.events.EventObjectivesSaved;
-import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
+import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesSaved;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
-import info.nightscout.utils.AndroidPermission;
-import info.nightscout.utils.LocaleHelper;
-import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.AndroidPermission;
+import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.SP;
 
 public class SetupWizardActivity extends AppCompatActivity {
     //logging

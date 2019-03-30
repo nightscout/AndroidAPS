@@ -17,7 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
 public class LocationService extends Service {
     private static Logger log = LoggerFactory.getLogger(L.LOCATION);

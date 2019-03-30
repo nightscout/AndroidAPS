@@ -15,28 +15,26 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
-import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
-import info.nightscout.androidaps.plugins.PumpInsight.connector.StatusTaskRunner;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.Source.SourceGlimpPlugin;
-import info.nightscout.utils.FabricPrivacy;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.Mockito.when;
 
@@ -55,7 +53,8 @@ public class ConstraintsCheckerTest {
     ComboPlugin comboPlugin;
     DanaRPlugin danaRPlugin;
     DanaRSPlugin danaRSPlugin;
-    InsightPlugin insightPlugin;
+    LocalInsightPlugin insightPlugin;
+    OpenAPSSMBPlugin openAPSSMBPlugin;
 
     boolean notificationSent = false;
 
@@ -122,6 +121,14 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
+    public void isSuperBolusEnabledTest() throws Exception {
+        OpenAPSSMBPlugin.getPlugin().setPluginEnabled(PluginType.APS, true);
+
+        Constraint<Boolean> c = constraintChecker.isSuperBolusEnabled();
+        Assert.assertEquals(Boolean.FALSE, c.value()); // SMB should limit
+    }
+
+    @Test
     public void isSMBModeEnabledTest() throws Exception {
         objectivesPlugin.objectives.get(7).setStartedOn(null);
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
@@ -142,10 +149,10 @@ public class ConstraintsCheckerTest {
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         // Insight
-        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
-        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
-        result.maximumBasalAmount = 1.1d;
-        insightPlugin.setStatusResult(result);
+//        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
+//        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+//        result.maximumBasalAmount = 1.1d;
+//        insightPlugin.setStatusResult(result);
 
         // No limit by default
         when(SP.getDouble(R.string.key_openapsma_max_basal, 1d)).thenReturn(1d);
@@ -169,10 +176,10 @@ public class ConstraintsCheckerTest {
         DanaRPump.getInstance().maxBasal = 0.8d;
 
         // Insight
-        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
-        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
-        result.maximumBasalAmount = 1.1d;
-        insightPlugin.setStatusResult(result);
+//        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
+//        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+//        result.maximumBasalAmount = 1.1d;
+//        insightPlugin.setStatusResult(result);
 
         // No limit by default
         when(SP.getDouble(R.string.key_openapsma_max_basal, 1d)).thenReturn(1d);
@@ -183,7 +190,7 @@ public class ConstraintsCheckerTest {
         // Apply all limits
         Constraint<Integer> i = constraintChecker.getMaxBasalPercentAllowed(AAPSMocker.getValidProfile());
         Assert.assertEquals((Integer) 100, i.value());
-        Assert.assertEquals(9, i.getReasonList().size()); // 6x Safety & RS & R & Insight
+        Assert.assertEquals(8, i.getReasonList().size()); // 6x Safety & RS & R
         Assert.assertEquals("Safety: Limiting percent rate to 100% because of pump limit", i.getMostLimitedReasons());
 
     }
@@ -197,10 +204,10 @@ public class ConstraintsCheckerTest {
         DanaRPump.getInstance().maxBolus = 6d;
 
         // Insight
-        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
-        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
-        result.maximumBolusAmount = 7d;
-        insightPlugin.setStatusResult(result);
+//        insightPlugin.setPluginEnabled(PluginType.PUMP, true);
+//        StatusTaskRunner.Result result = new StatusTaskRunner.Result();
+//        result.maximumBolusAmount = 7d;
+//        insightPlugin.setStatusResult(result);
 
         // No limit by default
         when(SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d)).thenReturn(3d);
@@ -209,7 +216,7 @@ public class ConstraintsCheckerTest {
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxBolusAllowed();
         Assert.assertEquals(3d, d.value());
-        Assert.assertEquals(true, d.getReasonList().size() == 5); // 2x Safety & RS & R & Insight
+        Assert.assertEquals(4, d.getReasonList().size()); // 2x Safety & RS & R
         Assert.assertEquals("Safety: Limiting bolus to 3.0 U because of max value in preferences", d.getMostLimitedReasons());
 
     }
@@ -289,7 +296,8 @@ public class ConstraintsCheckerTest {
         comboPlugin = ComboPlugin.getPlugin();
         danaRPlugin = DanaRPlugin.getPlugin();
         danaRSPlugin = DanaRSPlugin.getPlugin();
-        insightPlugin = InsightPlugin.getPlugin();
+        insightPlugin = LocalInsightPlugin.getPlugin();
+        openAPSSMBPlugin = OpenAPSSMBPlugin.getPlugin();
         ArrayList<PluginBase> constraintsPluginsList = new ArrayList<>();
         constraintsPluginsList.add(safetyPlugin);
         constraintsPluginsList.add(objectivesPlugin);
@@ -297,6 +305,7 @@ public class ConstraintsCheckerTest {
         constraintsPluginsList.add(danaRPlugin);
         constraintsPluginsList.add(danaRSPlugin);
         constraintsPluginsList.add(insightPlugin);
+        constraintsPluginsList.add(openAPSSMBPlugin);
         when(mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class)).thenReturn(constraintsPluginsList);
 
     }

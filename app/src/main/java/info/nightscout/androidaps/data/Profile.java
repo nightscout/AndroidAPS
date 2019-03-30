@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
@@ -17,12 +16,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.Overview.notifications.Notification;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.MidnightTime;
 
 public class Profile {
     private static Logger log = LoggerFactory.getLogger(Profile.class);
@@ -381,7 +381,7 @@ public class Profile {
     }
 
     public double getIsf() {
-        return getIsfTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getIsfTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getIsf(long time) {
@@ -397,11 +397,11 @@ public class Profile {
     public String getIsfList() {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
-        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + "/U");
+        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + MainApp.gs(R.string.profile_per_unit));
     }
 
     public double getIc() {
-        return getIcTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getIcTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getIc(long time) {
@@ -417,11 +417,11 @@ public class Profile {
     public String getIcList() {
         if (ic_v == null)
             ic_v = convertToSparseArray(ic);
-        return getValuesList(ic_v, null, new DecimalFormat("0.0"), "g/U");
+        return getValuesList(ic_v, null, new DecimalFormat("0.0"), MainApp.gs(R.string.profile_carbs_per_unit));
     }
 
     public double getBasal() {
-        return getBasalTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getBasalTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getBasal(long time) {
@@ -438,7 +438,7 @@ public class Profile {
     public String getBasalList() {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
-        return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U/h");
+        return getValuesList(basal_v, null, new DecimalFormat("0.00"), MainApp.gs(R.string.profile_ins_units_per_hout));
     }
 
     public class BasalValue {
@@ -465,7 +465,7 @@ public class Profile {
     }
 
     public double getTarget() {
-        return getTarget(secondsFromMidnight(System.currentTimeMillis()));
+        return getTarget(secondsFromMidnight());
     }
 
     protected double getTarget(int timeAsSeconds) {
@@ -473,7 +473,7 @@ public class Profile {
     }
 
     public double getTargetLow() {
-        return getTargetLowTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getTargetLowTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getTargetLow(long time) {
@@ -487,7 +487,7 @@ public class Profile {
     }
 
     public double getTargetHigh() {
-        return getTargetHighTimeFromMidnight(secondsFromMidnight(System.currentTimeMillis()));
+        return getTargetHighTimeFromMidnight(secondsFromMidnight());
     }
 
     public double getTargetHigh(long time) {
@@ -518,24 +518,13 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        Calendar c = Calendar.getInstance();
-        long now = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = now - c.getTimeInMillis();
+        long passed = DateUtil.now() - MidnightTime.calc();
         return (int) (passed / 1000);
     }
 
     public static int secondsFromMidnight(long date) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(date);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = date - c.getTimeInMillis();
+        long midnight = MidnightTime.calc(date);
+        long passed = date - midnight;
         return (int) (passed / 1000);
     }
 

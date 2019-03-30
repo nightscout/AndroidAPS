@@ -19,10 +19,10 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -36,48 +36,48 @@ public class TriggerBgTest {
     public void shouldRunTest() {
         when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(generateOneCurrentRecordBgData());
 
-        TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.ISEQUAL);
+        TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.Comparator.IS_EQUAL);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.ISEQUAL);
+        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.Comparator.IS_EQUAL);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.ISEQUALORGREATER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.Comparator.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.ISEQUALORLOWER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.Comparator.IS_EQUAL_OR_LOWER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(215).comparator(Trigger.ISEQUAL);
+        t = new TriggerBg().units(Constants.MGDL).threshold(215).comparator(Trigger.Comparator.IS_EQUAL);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(215).comparator(Trigger.ISEQUALORLOWER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(215).comparator(Trigger.Comparator.IS_EQUAL_OR_LOWER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(215).comparator(Trigger.ISEQUALORGREATER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(215).comparator(Trigger.Comparator.IS_EQUAL_OR_GREATER);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.ISEQUALORGREATER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.Comparator.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.ISEQUALORLOWER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.Comparator.IS_EQUAL_OR_LOWER);
         Assert.assertFalse(t.shouldRun());
 
         when(MainApp.getDbHelper().getBgreadingsDataFromTime(anyLong(), anyBoolean())).thenReturn(new ArrayList<>());
-        t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.ISEQUALORLOWER);
+        t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.Comparator.IS_EQUAL_OR_LOWER);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerBg().comparator(Trigger.ISNOTAVAILABLE);
+        t = new TriggerBg().comparator(Trigger.Comparator.IS_NOT_AVAILABLE);
         Assert.assertTrue(t.shouldRun());
     }
 
-    String bgJson = "{\"data\":\"{\\\"comparator\\\":0,\\\"threshold\\\":4.1,\\\"units\\\":\\\"mmol\\\"}\",\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}";
+    String bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"threshold\":4.1,\"units\":\"mmol\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}";
 
     @Test
     public void toJSONTest() {
-        TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.ISEQUAL);
+        TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.Comparator.IS_EQUAL);
         Assert.assertEquals(bgJson, t.toJSON());
     }
 
     @Test
     public void fromJSONTest() throws JSONException {
-        TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.ISEQUAL);
+        TriggerBg t = new TriggerBg().units(Constants.MMOL).threshold(4.1d).comparator(Trigger.Comparator.IS_EQUAL);
 
         TriggerBg t2 = (TriggerBg) Trigger.instantiate(new JSONObject(t.toJSON()));
-        Assert.assertEquals(Trigger.ISEQUAL, t2.comparator);
-        Assert.assertEquals(4.1d, t2.threshold, 0.01d);
-        Assert.assertEquals(Constants.MMOL, t2.units);
+        Assert.assertEquals(Trigger.Comparator.IS_EQUAL, t2.getComparator());
+        Assert.assertEquals(4.1d, t2.getThreshold(), 0.01d);
+        Assert.assertEquals(Constants.MMOL, t2.getUnits());
     }
 
     @Before

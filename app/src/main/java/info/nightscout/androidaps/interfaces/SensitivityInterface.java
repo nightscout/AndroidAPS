@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 
 /**
  * Created by mike on 24.06.2017.

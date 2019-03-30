@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
 
 /**
@@ -92,6 +92,8 @@ public abstract class PluginBase {
         if (type == pluginDescription.mainType)
             return state == State.ENABLED && specialEnableCondition();
         if (type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.PUMP && isEnabled(PluginType.PUMP))
+            return true;
+        if (type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.APS && isEnabled(PluginType.APS))
             return true;
         if (type == PluginType.PROFILE && pluginDescription.mainType == PluginType.PUMP)
             return isProfileInterfaceEnabled;

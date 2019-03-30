@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 
 /**
  * Created by mike on 17.04.2017.

@@ -2,9 +2,13 @@ package info.nightscout.androidaps.interfaces;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 
 /**
  * Created by mike on 04.06.2016.
@@ -33,6 +37,10 @@ public interface PumpInterface {
 
     double getBaseBasalRate(); // base basal rate, not temp basal
 
+    double getReservoirLevel();
+
+    int getBatteryLevel();  // in percent as integer
+
     PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo);
     void stopBolusDelivering();
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew);
@@ -56,5 +64,10 @@ public interface PumpInterface {
     boolean isFakingTempsByExtendedBoluses();
 
     PumpEnactResult loadTDDs();
+
+
+    List<CustomAction> getCustomActions();
+
+    void executeCustomAction(CustomActionType customActionType);
 
 }

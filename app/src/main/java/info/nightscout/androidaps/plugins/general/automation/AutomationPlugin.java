@@ -18,7 +18,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.services.LocationService;
 
 public class AutomationPlugin extends PluginBase {
@@ -31,10 +31,10 @@ public class AutomationPlugin extends PluginBase {
         return plugin;
     }
 
-    List<AutomationEvent> automationEvents = new ArrayList<>();
-    EventLocationChange eventLocationChange;
-    EventChargingState eventChargingState;
-    EventNetworkChange eventNetworkChange;
+    private final List<AutomationEvent> automationEvents = new ArrayList<>();
+    private EventLocationChange eventLocationChange;
+    private EventChargingState eventChargingState;
+    private EventNetworkChange eventNetworkChange;
 
     private AutomationPlugin() {
         super(new PluginDescription()
@@ -62,6 +62,22 @@ public class AutomationPlugin extends PluginBase {
         context.stopService(new Intent(context, LocationService.class));
 
         MainApp.bus().unregister(this);
+    }
+
+    public List<AutomationEvent> getAutomationEvents() {
+        return automationEvents;
+    }
+
+    public EventLocationChange getEventLocationChange() {
+        return eventLocationChange;
+    }
+
+    public EventChargingState getEventChargingState() {
+        return eventChargingState;
+    }
+
+    public EventNetworkChange getEventNetworkChange() {
+        return eventNetworkChange;
     }
 
     @Subscribe
