@@ -23,12 +23,17 @@ public class ActionTest extends Action {
 
     @Override
     void doAction(Callback callback) {
-
     }
 
     @Override
     public Optional<Integer> icon() {
         return null;
+    }
+
+    @Test
+    public void hasDialogTest() {
+        Assert.assertEquals(false, hasDialog());
+        generateDialog(null); // coverage only
     }
 
     @Test
