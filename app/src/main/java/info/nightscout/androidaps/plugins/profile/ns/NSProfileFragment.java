@@ -22,7 +22,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI;
@@ -157,7 +156,7 @@ public class NSProfileFragment extends SubscriberFragment {
             Profile profile = store.getSpecificProfile(name);
             if (profile != null) {
                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-                        NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
+                        ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0)
                 );
             }
         }

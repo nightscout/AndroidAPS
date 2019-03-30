@@ -265,12 +265,7 @@
     <string name="smscommunicator_bolusreplywithcode">Pre podanie bolusu %1$.2fU odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Pre odoslanie kalibrácie %1$.2f odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_bolusfailed">Chyba pri aplikovaní bolusu</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU aplikovaný úspešne</string>
-    <string name="bolusrequested" formatted="false">Spúšťam podávanie %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU podaný úspešne</string>
-    <string name="bolusdelivering" formatted="false">Podané %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Povoliť príkazy na diaľku cez SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Diaľkovo ovládaný bolus nie je povolený</string>
     <string name="glucosetype_finger">Prst</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Iný</string>
@@ -338,16 +333,12 @@
     <string name="smscommunicator_loopisenabled">Uzavretý okruh je aktivovaný</string>
     <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Hodnota %s je mimo prednastavený rozsah</string>
-    <string name="smscommunicator_remotebasalnotallowed">Ovládanie bazálu na diaľku nie je povolené</string>
     <string name="smscommunicator_remotecommandnotallowed">Príkazy na diaľku nie sú povolené</string>
-    <string name="smscommunicator_basalreplywithcode">Pre spustenie bazálu %1$.2fU/h odpovedaj SMS s kódom %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fU/h spustený na %2$d minút</string>
     <string name="smscommunicator_tempbasalfailed">Spustenie dočasného bazálu zlyhalo</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Pre ukončenie dočasného bazálu odpovedaj SMS s kódom %s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočasný bazál zrušený</string>
     <string name="smscommunicator_tempbasalcancelfailed">Zrušenie dočasného bazálu zlyhalo</string>
-    <string name="smscommunicator_unknowncommand">Neznámý príkaz alebo chybná odpoveď</string>
     <string name="quickwizard">Rýchly bolus</string>
     <string name="quickwizardsettings">Nastavenie rýchleho bolusu</string>
     <string name="overview_editquickwizard_buttontext">Text na tlačidle:</string>
@@ -471,7 +462,6 @@
     <string name="send_calibration" formatted="false">Poslať kalibráciu %.1f do xDripu?</string>
     <string name="xdripnotinstalled">xDrip+ nie je nainštalovaný</string>
     <string name="calibrationsent">Kalibrácia odoslaná do xDripu</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Kalibrácia na diaľku nie je povolená</string>
     <string name="smscommunicator_calibrationsent">Kalibrácia odoslaná. Príjem kalibrácií musí byť v xDripe povolený.</string>
     <string name="smscommunicator_calibrationfailed">xDrip neprijíma kalibrácie</string>
     <string name="pumpsuspended">Pumpa pozastavená</string>

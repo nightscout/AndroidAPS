@@ -50,6 +50,10 @@ public class ConstraintChecker implements ConstraintsInterface {
         return isAdvancedFilteringEnabled(new Constraint<>(true));
     }
 
+    public Constraint<Boolean> isSuperBolusEnabled() {
+        return isSuperBolusEnabled(new Constraint<>(true));
+    }
+
     public Constraint<Double> getMaxBasalAllowed(Profile profile) {
         return applyBasalConstraints(new Constraint<>(Constants.REALLYHIGHBASALRATE), profile);
     }
@@ -153,6 +157,17 @@ public class ConstraintChecker implements ConstraintsInterface {
             ConstraintsInterface constraint = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
             constraint.isAdvancedFilteringEnabled(value);
+        }
+        return value;
+    }
+
+    @Override
+    public Constraint<Boolean> isSuperBolusEnabled(Constraint<Boolean> value) {
+        ArrayList<PluginBase> constraintsPlugins = mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constraint = (ConstraintsInterface) p;
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue;
+            constraint.isSuperBolusEnabled(value);
         }
         return value;
     }

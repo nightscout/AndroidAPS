@@ -44,6 +44,8 @@
     <string name="description_sensitivity_oref1">Sensibilité est calculée à partir des données des dernières 8 heures et des glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Plugin calcule également UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
     <string name="description_source_dexcom_g5">Recevoir les valeurs de glycémie de l’app Dexcom G5 patchée.</string>
+    <string name="description_source_dexcom_g6">Recevoir les valeurs de glycémie de l’app Dexcom G6 patchée.</string>
+    <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
     <string name="description_source_mm640g">Recevoir les glycémies depuis le 600SeriesAndroidUploder.</string>
     <string name="description_source_ns_client">Télécharge les glycémies depuis Nightscout</string>
@@ -52,6 +54,7 @@
     <string name="description_wear">Surveillez et contrôlez AndroidAPS en utilisant votre montre WearOS.</string>
     <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
     <string name="description_sms_communicator">Commander à distance AndroidAPS en utilisant les commandes SMS.</string>
+    <string name="objectives_button_back">Retour</string>
     <string name="objectives_button_start">Démarrer</string>
     <string name="objectives_button_verify">Vérifier</string>
     <string name="nsprofileview_units_label">Unités</string>
@@ -264,12 +267,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_bolusreplywithcode">Renvoyer le code %2$s pour injecter le bolus %1$.2fU</string>
     <string name="smscommunicator_calibrationreplywithcode">Renvoyer le code %2$s pour envoyer la calibration %1$.2f</string>
     <string name="smscommunicator_bolusfailed">Échec du Bolus</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU délivré avec succès</string>
-    <string name="bolusrequested" formatted="false">%.2fU va être injecté</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">%.2fU de bolus injecté avec succès</string>
-    <string name="bolusdelivering" formatted="false">En train d\'injecter %.2fU</string>
+    <string name="bolusdelivered">Bolus %1$.2fU délivré avec succès</string>
+    <string name="bolusrequested">%1$.2fU vont être injectées</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU délivré avec succès</string>
+    <string name="bolusdelivering">En train d\'injecter %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Autoriser les commandes à distance par SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolus à distance non autorisé</string>
     <string name="glucosetype_finger">Doigt</string>
     <string name="glucosetype_sensor">Capteur</string>
     <string name="manual">Manuel</string>
@@ -337,16 +339,25 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loopisenabled">La Boucle est activée</string>
     <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
     <string name="valueoutofrange" formatted="false">La valeur %s est hors des limites strictes</string>
-    <string name="smscommunicator_remotebasalnotallowed">Le réglage du basal à distance n\'est pas autorisé</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
-    <string name="smscommunicator_basalreplywithcode">Envoyer le code %2$s pour initier le basal %1$.2fU/h</string>
+    <string name="smscommunicator_remotebolusnotallowed">Bolus à distance non disponible. Réessayez plus tard.</string>
+    <string name="smscommunicator_basalreplywithcode">Pour démarrer Basal %1$.2fU/h pendant %2$d min, renvoyer le code %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Pour changer le profil vers %1$s %2$d%%, renvoyer le code %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Pour démarrer le Bolus étendu %1$.2fU pendant %2$d min, renvoyer le code %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Pour démarrer le Basal %1$d% pendant %2$d min, renvoyer le code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Envoyer le code %2$s pour suspendre la Boucle pour %1$d minutes</string>
     <string name="smscommunicator_tempbasalset">Démarrage réussi pour %1$.2fU/h de basal temporaire pour %2$d min</string>
+    <string name="smscommunicator_extendedset">Le Bolus étendu %1$.2fU pendant %2$d min a commencé avec succès</string>
+    <string name="smscommunicator_tempbasalset_percent">Démarrage réussi pour %1$d%% de Basal temporaire pour %2$d min</string>
     <string name="smscommunicator_tempbasalfailed">Le démarrage du basal temporaire a échoué</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Envoyer le code %s pour arrêter le basal temporaire</string>
+    <string name="smscommunicator_extendedfailed">Le départ du Bolus étendu a échoué</string>
+    <string name="smscommunicator_basalstopreplywithcode">Envoyer le code %1$s pour arrêter le Basal temporaire</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Pour arrêter le Bolus étendu, renvoyer le code %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temporaire annulé</string>
+    <string name="smscommunicator_extendedcanceled">Bolus étendu annulé</string>
     <string name="smscommunicator_tempbasalcancelfailed">Echec de l\'annulation du basal temporaire</string>
-    <string name="smscommunicator_unknowncommand">Commande inconnue ou fausse réponse</string>
+    <string name="smscommunicator_extendedcancelfailed">Échec de l\'annulation du Bolus étendu</string>
+    <string name="smscommunicator_unknowncommand">Commande inconnue ou mauvaise réponse</string>
     <string name="quickwizard">Assistant Rapide</string>
     <string name="quickwizardsettings">Paramètres de l\'Assistant Rapide</string>
     <string name="overview_editquickwizard_buttontext">Texte du bouton :</string>
@@ -409,6 +420,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="array_of_elements">Tableau de %1$d éléments.\nValeur Actuelle :</string>
     <string name="openapsma_autosensdata_label">Données Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Débogage du Script</string>
+    <string name="openapsama_useautosens">Utiliser la fonction Autosens</string>
     <string name="refresheventsfromnightscout">Actualiser les événements depuis NS</string>
     <string name="deletefuturetreatments">Supprimer les futurs traitements</string>
     <string name="eatingsoon">Repas imminent</string>
@@ -469,7 +481,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="send_calibration" formatted="false">Transmettre l\'étalonnage %.1f à xDrip ?</string>
     <string name="xdripnotinstalled">xDrip+ n\'est pas installé</string>
     <string name="calibrationsent">Étalonnage envoyé à xDrip</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">L\'étalonnage à distance n\'est pas autorisé</string>
     <string name="smscommunicator_calibrationsent">Étalonnage envoyé. La réception doit être activée dans xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip ne reçoit pas les étalonnages</string>
     <string name="pumpsuspended">Pompe arrêtée</string>
@@ -550,6 +561,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
     <string name="enablesuperbolus_summary">Activer la fonctionnalité SuperBolus dans l’Assistant. Ne pas l’activer avant de bien comprendre comment cela fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT !</string>
+    <string name="show_statuslights">Afficher les lumières d\'état sur l\'écran d\'accueil</string>
+    <string name="show_statuslights_summary">Activer les lumières d\'état pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
+    <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
+    <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
+    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
+    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%]</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -704,7 +721,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Ceci va arrêter le Bluetooth du téléphone pour une seconde si la connexion pompe n’est pas possible. Cela peut assister certains téléphones dont la connexion Bluetooth se bloque.</string>
     <string name="DexcomG5">App Dexcom G5 (adaptée)</string>
+    <string name="DexcomG6">App DexcomG6 (patché)</string>
+    <string name="eversense">App Eversense (patché)</string>
     <string name="dexcomg5_nsupload_title">Remonter les données glycémiques vers NS</string>
+    <string name="bgsource_upload">Paramètres de téléchargement des glycémies</string>
     <string name="wear_detailed_delta_title">Afficher le delta détaillé</string>
     <string name="wear_detailed_delta_summary">Afficher delta avec une décimale supplémentaire</string>
     <string name="smbmaxminutes_summary">Max. minutes de basal pour limiter le SMB</string>
@@ -770,6 +790,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_error_bolus_verification_failed">L\'administration de bolus et la vérification de l\'historique de la pompe ont échoué. Vérifiez la pompe manuellement. Si un bolus a été administré, il sera ajouté aux traitements au cours de la prochaine connexion avec la pompe.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Pas assez d\'insuline dans le réservoir pour le bolus</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
+    <string name="insightpump_shortname">Vue</string>
     <string name="insightpump">Pompe Insight</string>
     <string name="status_no_colon">État</string>
     <string name="changed">Modifié</string>
@@ -844,6 +865,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="data_choices">Choix de données</string>
     <string name="fabric_upload">Téléchargement Fabric</string>
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
+    <string name="g5appnotdetected">SVP actualisez votre app Dexcom vers une version compatible</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
     <string name="temptargetshort">Traitement</string>
@@ -1009,6 +1031,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="nth_objective">%1$d. Objectif</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Recevoir les glycémies depuis l\'app Poctech</string>
+    <string name="description_source_tomato">Recevoir les valeurs de glycémie de l\'application Tomato (appareil MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Cible temp. haute élève la sensibilité</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmente la Sensibilité pour les cibles temporaires >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Cible temp. basse abaisse la sensibilité</string>
@@ -1051,10 +1074,87 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_openmode_min_change">Changement minimum possible [%]</string>
     <string name="loop_openmode_min_change_summary">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur. Par défaut, la valeur est 20%</string>
     <string name="pairfirst">Appairez SVP votre pompe avec votre téléphone !</string>
+    <string name="searching_for_devices">Recherche d\'appareils en cours…</string>
+    <string name="please_wait">Merci de patienter...</string>
+    <string name="pairing_completed">Appairage terminé</string>
+    <string name="code_compare">Les codes affichés sur cet appareil et sur la pompe sont-ils identiques ?</string>
+    <string name="insight_pairing">Appairage de Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_delivered">%1$.2fU / %2$.2fU injecté</string>
+    <string name="insight_alert_formatter">%1$s : %2$s</string>
+    <string name="tube_changed">Tubulure changée</string>
+    <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
+    <string name="confirm">Confirmer</string>
+    <string name="mute_alert">Coupure son</string>
+    <string name="pump_alert">Alerte de la pompe</string>
+    <string name="log_site_changes">Enreg. changement de site</string>
+    <string name="log_tube_changes">Enreg. changement de tubulure</string>
+    <string name="log_battery_changes">Enreg. changement batterie</string>
+    <string name="log_operating_mode_changes">Enreg. changement mode de fonctionnement</string>
+    <string name="log_alerts">Enreg. alertes</string>
+    <string name="enable_tbr_emulation">Activer l’émulation de DBT</string>
+    <string name="enable_tbr_emulation_summary">Utilisez des Bolus étendus au lieu de DBTs pour contourner la limite de 250%</string>
+    <string name="disconnect_delay">Délai de déconnexion [s]</string>
+    <string name="serial_number">Numéro de série</string>
+    <string name="release_software_version">Version du logiciel</string>
+    <string name="ui_processor_software_version">Version du logiciel de processeur UI</string>
+    <string name="pc_processor_software_version">Version du logiciel du processeur PC</string>
+    <string name="md_tel_processor_software_version">Version du logiciel MD tel processeur</string>
+    <string name="safety_processor_software_version">Version logicielle du processeur de sécurité</string>
+    <string name="bt_info_page_version">Version de la page d\'info BT</string>
+    <string name="bluetooth_address">Adresse Bluetooth</string>
+    <string name="system_id_appendix">Annexe ID Système</string>
+    <string name="manufacturing_date">Date de fabrication</string>
+    <string name="delete_pairing">Supprimer l’appairage</string>
+    <string name="pairing_information">Information sur l’appairage</string>
+    <string name="refreh_status">Actualiser le status</string>
+    <string name="start_pump">Démarrer la pompe</string>
+    <string name="stop_pump">Arrêter la pompe</string>
+    <string name="operating_mode">Mode de fonctionnement</string>
+    <string name="insight_status">État</string>
+    <string name="tdd_bolus">Bolus DTI</string>
+    <string name="tdd_basal">DTI basale</string>
+    <string name="tdd_total">Total DTI</string>
+    <string name="recovering">Récupération en cours.</string>
+    <string name="not_paired">Non appairé</string>
+    <string name="last_connected">Dernière connexion</string>
+    <string name="started">Démarré</string>
+    <string name="stopped">Arrêté</string>
+    <string name="tbr_formatter">%1$d%% pour %2$d / %3$d min</string>
+    <string name="extended_bolus">Bolus étendu</string>
+    <string name="multiwave_bolus">Bolus mixte</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
+    <string name="enable_tbr_over_notification">Activer la notification de la fin DBT\n(réglage de pompe)</string>
+    <string name="disable_tbr_over_notification">Activer la notification de la fin de DBT\n(réglage de pompe)</string>
+    <string name="refresh">Actualiser</string>
+    <string name="description_pump_insight_local">Intégration des pompes Accu-Chek Insight</string>
+    <string name="not_inserted">Non inséré</string>
+    <string name="short_status_last_connected">Dernière conn : il y a %1$d min</string>
+    <string name="short_status_tbr">DBT : %1$d%% pour %2$d / %3$d min</string>
+    <string name="short_status_extended">Étendue : %1$.2f / %2$.2f U pour %3$d min</string>
+    <string name="short_status_multiwave">Mixte : %1$.2f / %2$.2f U pour %3$d min</string>
+    <string name="short_status_tdd">DTI : %1$.2f</string>
+    <string name="short_status_reservoir">Réserv. : %1$.2fU</string>
+    <string name="short_status_battery">Batt.: %1$d%%</string>
+    <string name="max_recovery_duration">Durée max. de récupération [s]</string>
+    <string name="min_recovery_duration">Durée min. de récupération [s]</string>
+    <string name="recovery_duration">Durée de récupération</string>
+    <string name="timeout_during_handshake">Expiration pendant l\'appairage - réinitialiser le Bluetooth</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
+    <string name="dexcom_lognssensorchange_title">Enreg. du changement de capteur sur NS</string>
+    <string name="dexcom_lognssensorchange_summary">Créer automatiquement sur NS un événement \"Changement de capteur\" au démarrage du capteur</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="dst_in_24h_warning">Changement d\'heure d\'été dans moins de 24 heures</string>
+    <string name="storage">stockage interne limité</string>
+    <string name="diskfull">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
+    <string name="wrongformat">Format incorrect</string>
+    <string name="sms_wrongcode">Code incorrect. Commande annulée.</string>
+    <string name="notconfigured">Non configuré</string>
+    <string name="profileswitchcreated">Changement de profil effectué</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

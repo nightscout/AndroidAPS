@@ -13,6 +13,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -38,7 +39,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
 /**
  * Created by mike on 05.08.2016.
  */
-public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
+public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static OpenAPSSMBPlugin openAPSSMBPlugin;
@@ -147,7 +148,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
         if (L.isEnabled(L.APS))
             Profiler.log(log, "getMealData()", startPart);
 
-        double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
+        Constraint<Double> maxIOBAllowedConstraint = MainApp.getConstraintChecker().getMaxIOBAllowed();
+        inputConstraints.copyReasons(maxIOBAllowedConstraint);
+        double maxIob = maxIOBAllowedConstraint.value();
 
         minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
@@ -264,6 +267,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
         }
         return newvalue;
+    }
+
+    public Constraint<Boolean> isSuperBolusEnabled(Constraint<Boolean> value) {
+        value.set(false);
+        return value;
     }
 
 }

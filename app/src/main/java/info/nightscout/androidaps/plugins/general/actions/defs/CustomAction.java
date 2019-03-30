@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.actions.defs;
 
+import info.nightscout.androidaps.R;
+
 /**
  * Created by andy on 9/20/18.
  */
@@ -9,13 +11,21 @@ public class CustomAction {
     private int name;
     private String iconName;
     private CustomActionType customActionType;
+    private int iconResourceId;
     private boolean enabled = true;
 
 
     public CustomAction(int nameResourceId, CustomActionType actionType) {
-        this(nameResourceId, actionType, true);
+        this.name = nameResourceId;
+        this.customActionType = actionType;
+        this.iconResourceId = R.drawable.icon_actions_profileswitch;
     }
 
+    public CustomAction(int nameResourceId, CustomActionType actionType, int iconResourceId) {
+        this.name = nameResourceId;
+        this.customActionType = actionType;
+        this.iconResourceId = iconResourceId;
+    }
 
     public CustomAction(int nameResourceId, CustomActionType actionType, boolean enabled) {
         this.name = nameResourceId;
@@ -30,16 +40,6 @@ public class CustomAction {
     }
 
 
-    public String getIconName() {
-
-        return iconName;
-    }
-
-
-    public void setIconName(String iconName) {
-
-        this.iconName = iconName;
-    }
 
 
     public CustomActionType getCustomActionType() {
@@ -48,11 +48,9 @@ public class CustomAction {
     }
 
 
-    public void setCustomActionType(CustomActionType customActionType) {
-
-        this.customActionType = customActionType;
+    public int getIconResourceId() {
+        return iconResourceId;
     }
-
 
     public boolean isEnabled() {
         return enabled;
@@ -62,4 +60,5 @@ public class CustomAction {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
 }

@@ -263,12 +263,7 @@
     <string name="smscommunicator_bolusreplywithcode">Bolus %1$.2fU gönderilecek, kod ile cevap ver %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Kalibrasyon %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus başarısız oldu</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU başarıyla gönderildi</string>
-    <string name="bolusrequested" formatted="false">%.2fU Gönderilecek</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU başarıyla gönderildi</string>
-    <string name="bolusdelivering" formatted="false">%.2fU Gönderiliyor</string>
     <string name="smscommunicator_remotecommandsallowed">SMS ile uzaktan komutlara izin ver</string>
-    <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus\'a izin verilmiyor</string>
     <string name="glucosetype_finger">Parmak</string>
     <string name="glucosetype_sensor">Sensör</string>
     <string name="manual">Manuel</string>
@@ -336,16 +331,12 @@
     <string name="smscommunicator_loopisenabled">Döngü etkin</string>
     <string name="valuelimitedto">%1$.2f dan %2$.2f olarak sınırlı</string>
     <string name="valueoutofrange" formatted="false">Değer %s sabit sınırları dışında olduğunu</string>
-    <string name="smscommunicator_remotebasalnotallowed">Uzak bazal ayarına izin verilmez</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
-    <string name="smscommunicator_basalreplywithcode">Bazal\'ı %1$.2fÜ/s başlatmak için kodu %2$s ile yanıtlayın</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d dakika için Döngü\'yü askıya almak için %2$s kodunu yanıtla</string>
     <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
     <string name="smscommunicator_tempbasalfailed">Temp bazal başlatma başarısız oldu</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Geçici bazal oranını iptal etmek için kodla %s yanıtla</string>
     <string name="smscommunicator_tempbasalcanceled">Geçici bazal iptal</string>
     <string name="smscommunicator_tempbasalcancelfailed">Geçici bazal iptali hata verdi</string>
-    <string name="smscommunicator_unknowncommand">Bilinmeyen komut veya yanlış cevap</string>
     <string name="quickwizard">Kurulum Sihirbazı</string>
     <string name="quickwizardsettings">Kurulum Sihirbazı Ayarları</string>
     <string name="overview_editquickwizard_buttontext">Düğme Metni:</string>
@@ -469,7 +460,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="send_calibration" formatted="false">Kalibrasyon %.1f xDrip\'e gönderilsin mi?</string>
     <string name="xdripnotinstalled">xDrip+ uygulaması yüklenmemiş</string>
     <string name="calibrationsent">Kalibrasyon xDrip+ a gönderildi</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Uzaktan kalibrasyona izin verilmiyor</string>
     <string name="smscommunicator_calibrationsent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ kalibrasyonları almıyor</string>
     <string name="pumpsuspended">Pompa durduldu</string>

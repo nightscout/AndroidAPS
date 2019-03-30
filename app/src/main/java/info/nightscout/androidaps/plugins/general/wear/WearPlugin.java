@@ -10,7 +10,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdat
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -157,7 +157,7 @@ public class WearPlugin extends PluginBase {
 
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
+    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         sendDataToWatch(true, true, true);
     }
 
