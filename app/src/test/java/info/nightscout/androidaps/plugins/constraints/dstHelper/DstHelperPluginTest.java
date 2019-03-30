@@ -9,7 +9,11 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import info.AAPSMocker;
@@ -27,39 +31,46 @@ public class DstHelperPluginTest {
     public void runTest() throws Exception {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
-        // test different time zones
-        //Starting with Europe/Sofia
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("Europe/Sofia"));
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-10-28T02:00:00Z").getTime());
-        int minutesLeftToChange = plugin.dstTest(c);
-        Assert.assertEquals(60, minutesLeftToChange);
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-03-25T02:00:00Z").getTime());
-        minutesLeftToChange = plugin.dstTest(c);
-        Assert.assertEquals(60, minutesLeftToChange);
-        // try something with half hour somewhere in Australia
-        c = Calendar.getInstance(TimeZone.getTimeZone("Australia/Lord_Howe"));
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-04-01T00:00:00Z").getTime());
-        minutesLeftToChange = plugin.dstTest(c);
-        // try something with half hour somewhere in Australia
-        c = Calendar.getInstance(TimeZone.getTimeZone("Australia/Lord_Howe"));
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-04-01T00:00:00Z").getTime());
-        minutesLeftToChange = plugin.dstTest(c);
-        Assert.assertEquals(90, minutesLeftToChange);
-        c = Calendar.getInstance(TimeZone.getTimeZone("Australia/Lord_Howe"));
-        // and back
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-10-07T00:00:00Z").getTime());
-        minutesLeftToChange = plugin.dstTest(c);
-        Assert.assertEquals(120, minutesLeftToChange);
 
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-10-08T00:00:00Z").getTime());
-        minutesLeftToChange = plugin.dstTest(c);
-        Assert.assertEquals(0, minutesLeftToChange);
+        TimeZone tz = TimeZone.getTimeZone("Europe/Rome");
+        TimeZone.setDefault(tz);
+        Calendar cal = Calendar.getInstance(tz, Locale.ITALIAN);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ITALIAN);
+        Date dateBeforeDST = df.parse("2018-03-25 01:55");
+        cal.setTime(dateBeforeDST);
+        Assert.assertEquals(false, plugin.wasDST(cal));
+        Assert.assertEquals(true, plugin.willBeDST(cal));
 
-        // DST event was 30 mins
-        c.setTimeInMillis(DateUtil.fromISODateString("2018-04-01T02:00:00Z").getTime());
-        minutesLeftToChange = plugin.dstTest(c);
-//        Assert.assertEquals(630, plugin.zoneOffsetInMinutes(c));
-        Assert.assertEquals(0, minutesLeftToChange);
+
+        TimeZone.setDefault(tz);
+        cal = Calendar.getInstance(tz, Locale.ITALIAN);
+        dateBeforeDST = df.parse("2018-03-25 03:05");
+        cal.setTime(dateBeforeDST);
+        Assert.assertEquals(true, plugin.wasDST(cal));
+        Assert.assertEquals(false, plugin.willBeDST(cal));
+
+
+        TimeZone.setDefault(tz);
+        cal = Calendar.getInstance(tz, Locale.ITALIAN);
+        dateBeforeDST = df.parse("2018-03-25 02:05"); //Cannot happen!!!
+        cal.setTime(dateBeforeDST);
+        Assert.assertEquals(true, plugin.wasDST(cal));
+        Assert.assertEquals(false, plugin.willBeDST(cal));
+
+        TimeZone.setDefault(tz);
+        cal = Calendar.getInstance(tz, Locale.ITALIAN);
+        dateBeforeDST = df.parse("2018-03-25 05:55"); //Cannot happen!!!
+        cal.setTime(dateBeforeDST);
+        Assert.assertEquals(true, plugin.wasDST(cal));
+        Assert.assertEquals(false, plugin.willBeDST(cal));
+
+        TimeZone.setDefault(tz);
+        cal = Calendar.getInstance(tz, Locale.ITALIAN);
+        dateBeforeDST = df.parse("2018-03-25 06:05"); //Cannot happen!!!
+        cal.setTime(dateBeforeDST);
+        Assert.assertEquals(false, plugin.wasDST(cal));
+        Assert.assertEquals(false, plugin.willBeDST(cal));
+
     }
 
 }

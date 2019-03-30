@@ -413,7 +413,7 @@
     <string name="minago">%1$d мин. назад</string>
     <string name="sms_minago">%1$d мин. назад</string>
     <string name="localprofile">локальный профиль</string>
-    <string name="openapsama">Помощник болюса OpenAPS MA</string>
+    <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="short_avgdelta">краткосрочная средняя дельта</string>
     <string name="long_avgdelta">Долгосрочная средняя дельта</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
@@ -422,7 +422,7 @@
     <string name="openapsama_useautosens">Пользоваться функцией Autosens</string>
     <string name="refresheventsfromnightscout">обновить данные из NS</string>
     <string name="deletefuturetreatments">Удалить назначения из будущего</string>
-    <string name="eatingsoon">Близкий прием пищи</string>
+    <string name="eatingsoon">Ожидаемый прием пищи</string>
     <string name="hypo">Гипо</string>
     <string name="activity">Нагрузка</string>
     <string name="removerecord">удалить запись</string>
@@ -648,7 +648,7 @@
     <string name="enableuam">Включить непредвиденный прием пищи UAM</string>
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
-    <string name="enableuam_summary">Поиск непредвиденного приема пищи</string>
+    <string name="enableuam_summary">Поиск незапланированного приема пищи</string>
     <string name="insulin_oref_peak">Время пика действующего инс IOB</string>
     <string name="insulin_peak_time">время пика (в мин.)</string>
     <string name="free_peak_oref">Свободный от пиков Oref</string>
@@ -866,7 +866,7 @@
     <string name="allow_automated_crash_reporting">Разрешить отправлять сообщения о неполадках и данные об использовании опций разработчикам при помощи сервиса fabric.io.</string>
     <string name="g5appnotdetected">Пожалуйста, обновите приложение Dexcom до поддерживаемой версии</string>
     <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
-    <string name="start_eating_soon_tt">Включить временную цель TT Скорый прием пищи</string>
+    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
     <string name="temptargetshort">Временная цель (TT)</string>
     <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
     <string name="category">Категория</string>
@@ -1150,7 +1150,6 @@ Context | Edit Context</string>
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
-    <string name="dst_loop_disabled_warning">Переход на летнее/зимнее время менее чем через 3 часа - замкнутый цикл отключен</string>
     <string name="storage">ограничение по объему карты памяти</string>
     <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <string name="wrongformat">Неверный формат</string>

@@ -827,4 +827,9 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
     }
 
+    @Override
+    public boolean canHandleDST() {
+        return false;
+    }
+
 }

@@ -1131,7 +1131,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
-    <string name="dst_loop_disabled_warning">Zomer/wintertijd omschakeling in minder dan 3 uur - Closed loop gedeactiveerd</string>
     <string name="storage">interne opslag bijna vol</string>
     <string name="diskfull">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <plurals name="objective_days">
