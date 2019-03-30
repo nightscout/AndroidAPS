@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 public class ActionLoopSuspend extends Action {
-    private int minutes;
+    public int minutes;
 
     @Override
     public int friendlyName() {

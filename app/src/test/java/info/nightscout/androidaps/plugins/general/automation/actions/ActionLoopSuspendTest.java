@@ -16,6 +16,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.SP;
@@ -24,36 +25,38 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class})
-public class ActionLoopEnableTest {
-    ActionLoopEnable actionLoopEnable = new ActionLoopEnable();
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, NSUpload.class})
+public class ActionLoopSuspendTest {
+    ActionLoopSuspend actionLoopSuspend = new ActionLoopSuspend();
 
     @Test
     public void friendlyNameTest() {
-        Assert.assertEquals(R.string.enableloop, actionLoopEnable.friendlyName());
+        Assert.assertEquals(R.string.suspendloop, actionLoopSuspend.friendlyName());
     }
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.ic_play_circle_outline_24dp), actionLoopEnable.icon());
+        Assert.assertEquals(Optional.of(R.drawable.ic_pause_circle_outline_24dp), actionLoopSuspend.icon());
     }
 
     @Test
     public void doActionTest() {
-        LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, false);
-        actionLoopEnable.doAction(new Callback() {
+        actionLoopSuspend.minutes = 30;
+
+        LoopPlugin.getPlugin().suspendTo(0);
+        actionLoopSuspend.doAction(new Callback() {
             @Override
             public void run() {
             }
         });
-        Assert.assertEquals(true, LoopPlugin.getPlugin().isEnabled(PluginType.LOOP));
-        // another call should keep it enabled
-        actionLoopEnable.doAction(new Callback() {
+        Assert.assertEquals(true, LoopPlugin.getPlugin().isSuspended());
+        // another call should keep it suspended
+        actionLoopSuspend.doAction(new Callback() {
             @Override
             public void run() {
             }
         });
-        Assert.assertEquals(true, LoopPlugin.getPlugin().isEnabled(PluginType.LOOP));
+        Assert.assertEquals(true, LoopPlugin.getPlugin().isSuspended());
     }
 
     @Before
@@ -63,14 +66,8 @@ public class ActionLoopEnableTest {
         AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockNSUpload();
         AAPSMocker.mockCommandQueue();
-
-        VirtualPumpPlugin pump = mock(VirtualPumpPlugin.class);
-        when(pump.specialEnableCondition()).thenReturn(true);
-        PumpDescription pumpDescription = new PumpDescription();
-        pumpDescription.isTempBasalCapable = true;
-        when(pump.getPumpDescription()).thenReturn(pumpDescription);
-        when(AAPSMocker.configBuilderPlugin.getActivePump()).thenReturn(pump);
 
     }
 }
