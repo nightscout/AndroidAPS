@@ -154,7 +154,7 @@
             android:name=".services.LocationService"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
+            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
