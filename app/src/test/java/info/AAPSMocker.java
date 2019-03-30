@@ -59,6 +59,7 @@ public class AAPSMocker {
     public static Intent intentSent = null;
 
     public static CommandQueue queue;
+    public static ConfigBuilderPlugin configBuilderPlugin;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -162,7 +163,7 @@ public class AAPSMocker {
 
     public static void mockConfigBuilder() {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
-        ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
+        configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
