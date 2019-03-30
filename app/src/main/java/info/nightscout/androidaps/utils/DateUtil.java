@@ -72,14 +72,11 @@ public class DateUtil {
     }
 
     public static Date toDate(Integer seconds) {
-        Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.set(Calendar.YEAR, 2000);
-        calendar.set(Calendar.MONTH, Calendar.JANUARY);
-        calendar.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.MONTH, 0); // Set january to be sure we miss DST changing
         calendar.set(Calendar.HOUR_OF_DAY, seconds / 60 / 60);
         calendar.set(Calendar.MINUTE, (seconds / 60) % 60);
         calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
     }
 
