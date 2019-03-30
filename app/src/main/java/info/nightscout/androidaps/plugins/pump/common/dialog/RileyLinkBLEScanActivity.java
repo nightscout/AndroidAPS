@@ -283,6 +283,9 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
 
     private void scanLeDevice(final boolean enable) {
 
+        if (mLEScanner == null)
+            return;
+
         if (enable) {
 
             mLeDeviceListAdapter.clear();

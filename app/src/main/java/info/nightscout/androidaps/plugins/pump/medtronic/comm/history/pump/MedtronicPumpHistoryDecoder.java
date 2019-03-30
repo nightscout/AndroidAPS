@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -708,24 +707,24 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             : PumpBolusType.Normal);
         bolus.setAtechDateTime(entry.atechDateTime);
 
-        String dateTime = entry.DT;
+        // String dateTime = entry.DT;
 
-        if (bolus.getBolusType() == PumpBolusType.Extended) {
-            // we check if we have coresponding normal entry
-            if (bolusHistory.containsKey(dateTime)) {
-                BolusDTO bolusDTO = bolusHistory.get(dateTime);
-
-                bolusDTO.setImmediateAmount(bolus.getDeliveredAmount());
-                bolusDTO.setBolusType(PumpBolusType.Multiwave);
-
-                return;
-            }
-        }
+        // if (bolus.getBolusType() == PumpBolusType.Extended) {
+        // // we check if we have coresponding normal entry
+        // if (bolusHistory.containsKey(dateTime)) {
+        // BolusDTO bolusDTO = bolusHistory.get(dateTime);
+        //
+        // bolusDTO.setImmediateAmount(bolus.getDeliveredAmount());
+        // bolusDTO.setBolusType(PumpBolusType.Multiwave);
+        //
+        // return;
+        // }
+        // }
 
         entry.addDecodedData("Object", bolus);
         entry.setDisplayableValue(bolus.getDisplayableValue());
 
-        bolusHistory.put(dateTime, bolus);
+        // bolusHistory.put(dateTime, bolus);
 
     }
 
@@ -771,12 +770,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         entry.addDecodedData("Object", tbr);
         entry.setDisplayableValue(tbr.getDescription());
 
-        // entry.addDecodedData("Rate 1: ", tbrRate.getHead()[0] * 0.025);
-        // entry.addDecodedData("Rate 2: ", ByteUtil.asUINT8(tbrRate.getHead()[0]) * 0.025d);
-        // entry.addDecodedData("Rate 1.b: ", tbrRate.getHead()[0]);
-        // entry.addDecodedData("Rate 2.b: ", ByteUtil.asUINT8(tbrRate.getHead()[0]));
-        // entry.addDecodedData("Rate 3: ", (ByteUtil.asUINT8(tbrRate.getHead()[0])) / 40.0d);
-
     }
 
 
@@ -800,9 +793,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             int year = fix2DigitYear(dt[4] & 0x3F); // Assuming this is correct, need to verify. Otherwise this will be
                                                     // a problem in 2016.
 
-            LocalDateTime atdate = new LocalDateTime(year, month, dayOfMonth, hour, minutes, seconds);
-
-            // entry.setLocalDateTime(atdate); // TODO remove
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
 
         } else if (entry.getDateTimeLength() == 2) {
@@ -824,8 +814,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             // int month = (((dt[0] & 0xE0) >> 4) + ((dt[1] & 0x80) >> 7));
             // int year = fix2DigitYear(dt[1] & 0x3F);
 
-            LocalDateTime atdate = null;
-
             LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
 
             if (dayOfMonth == 32) {
@@ -835,22 +823,16 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             }
 
             if (entry.getEntryType() == PumpHistoryEntryType.EndResultTotals) {
-                atdate = new LocalDateTime(year, month, dayOfMonth, 23, 59, 59);
                 hour = 23;
                 minutes = 59;
                 seconds = 59;
-            } else {
-                atdate = new LocalDateTime(year, month, dayOfMonth, 0, 0);
             }
 
-            // entry.setLocalDateTime(atdate);
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds));
 
         } else {
             LOG.warn("Unknown datetime format: " + entry.getDateTimeLength());
         }
-        // return new DateTime(year + 2000, month, dayOfMonth, hour, minutes,
-        // seconds);
 
     }
 

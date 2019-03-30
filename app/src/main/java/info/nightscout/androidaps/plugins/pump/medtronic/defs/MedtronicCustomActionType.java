@@ -8,7 +8,9 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 
 public enum MedtronicCustomActionType implements CustomActionType {
 
-    WakeUpAndTune()
+    WakeUpAndTune(), //
+    ClearBolusBlock(), //
+    ResetRileyLink(), //
 
     ;
 

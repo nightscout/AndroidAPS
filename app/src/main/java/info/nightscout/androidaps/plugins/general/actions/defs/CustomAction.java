@@ -9,11 +9,18 @@ public class CustomAction {
     private int name;
     private String iconName;
     private CustomActionType customActionType;
+    private boolean enabled = true;
 
 
     public CustomAction(int nameResourceId, CustomActionType actionType) {
+        this(nameResourceId, actionType, true);
+    }
+
+
+    public CustomAction(int nameResourceId, CustomActionType actionType, boolean enabled) {
         this.name = nameResourceId;
         this.customActionType = actionType;
+        this.enabled = enabled;
     }
 
 
@@ -44,5 +51,15 @@ public class CustomAction {
     public void setCustomActionType(CustomActionType customActionType) {
 
         this.customActionType = customActionType;
+    }
+
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

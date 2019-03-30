@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -73,6 +75,8 @@ import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by andy on 23.04.18.
+ *
+ * @author Andy Rozman (andy.rozman@gmail.com)
  */
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
 
@@ -97,6 +101,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     public static Gson gsonInstancePretty = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
         .setPrettyPrinting().create();
+
+    public static boolean isBusy = false;
+    private List<Long> busyTimestamps = new ArrayList<>();
 
 
     private MedtronicPumpPlugin() {
@@ -198,7 +205,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    // TODO remove
     private void migrateSettings() {
 
         if ("US (916 MHz)".equals(SP.getString(MedtronicConst.Prefs.PumpFrequency, null))) {
@@ -222,7 +228,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         StatusRefreshAction.GetData, null, null);
 
                     if (doWeHaveAnyStatusNeededRefereshing(statusRefresh)) {
-                        ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Scheduled Status Refresh", null);
+                        if (!ConfigBuilderPlugin.getPlugin().getCommandQueue().statusInQueue()) {
+                            ConfigBuilderPlugin.getPlugin().getCommandQueue()
+                                .readStatus("Scheduled Status Refresh", null);
+                        }
                     }
                 }
 
@@ -274,10 +283,49 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isBusy() {
-        // TODO remove
-        if (isLoggingEnabled())
+        if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug("MedtronicPumpPlugin::isBusy");
-        return isServiceSet() && medtronicService.isBusy();
+
+        if (isServiceSet()) {
+
+            if (isBusy)
+                return true;
+
+            if (busyTimestamps.size() > 0) {
+
+                clearBusyQueue();
+
+                if (busyTimestamps.size() > 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    private void clearBusyQueue() {
+
+        Set<Long> deleteFromQueue = new HashSet<>();
+
+        for (Long busyTimestamp : busyTimestamps) {
+
+            if (System.currentTimeMillis() > busyTimestamp) {
+                deleteFromQueue.add(busyTimestamp);
+            }
+        }
+
+        if (deleteFromQueue.size() == busyTimestamps.size()) {
+            busyTimestamps.clear();
+            this.customActionClearBolusBlock.setEnabled(false);
+            refreshCustomActionsList();
+        }
+
+        if (deleteFromQueue.size() > 0) {
+            busyTimestamps.removeAll(deleteFromQueue);
+        }
+
     }
 
 
@@ -691,7 +739,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     }).start();
                 }
 
-                // FIXME this needs to be fixed to read info from history
                 boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
@@ -699,6 +746,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
                     : MedtronicConst.Statistics.StandardBoluses);
+
+                if (response) {
+                    int bolusTime = (int)(detailedBolusInfo.insulin * 42.0d);
+                    long time = System.currentTimeMillis() + (bolusTime * 1000);
+
+                    this.busyTimestamps.add(time);
+                    this.customActionClearBolusBlock.setEnabled(true);
+                    refreshCustomActionsList();
+                }
 
                 return new PumpEnactResult().success(response) //
                     .enacted(response) //
@@ -912,13 +968,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (this.getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.NotInitialized
             && medtronicHistoryData.hasBasalProfileChanged()) {
             medtronicHistoryData.processLastBasalProfileChange(getMDTPumpStatus());
-            // this.basalProfileChanged = true;
         }
 
         PumpDriverState previousState = this.pumpState;
 
-        if (medtronicHistoryData.isPumpSuspended(this.pumpState == PumpDriverState.Suspended)) {
-            // scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, -1);
+        if (medtronicHistoryData.isPumpSuspended()) {
             this.pumpState = PumpDriverState.Suspended;
             if (isLoggingEnabled())
                 LOG.debug(getLogPrefix() + "isPumpSuspended: true");
@@ -1325,17 +1379,18 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     List<CustomAction> customActions = null;
 
+    CustomAction customActionWakeUpAndTune = new CustomAction(R.string.medtronic_custom_action_wake_and_tune,
+        MedtronicCustomActionType.WakeUpAndTune);
+
+    CustomAction customActionClearBolusBlock = new CustomAction(R.string.medtronic_custom_action_clear_bolus_block,
+        MedtronicCustomActionType.ClearBolusBlock);
+
 
     @Override
     public List<CustomAction> getCustomActions() {
 
         if (customActions == null) {
-
-            this.customActions = new ArrayList<>();
-
-            CustomAction ca = new CustomAction(R.string.medtronic_custom_action_wake_and_tune,
-                MedtronicCustomActionType.WakeUpAndTune);
-            this.customActions.add(ca);
+            this.customActions = Arrays.asList(customActionWakeUpAndTune, customActionClearBolusBlock);
         }
 
         return this.customActions;
@@ -1353,10 +1408,23 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 ServiceTaskExecutor.startTask(new WakeAndTuneTask());
                 break;
 
+            case ClearBolusBlock: {
+                this.busyTimestamps.clear();
+                this.customActionClearBolusBlock.setEnabled(false);
+                refreshCustomActionsList();
+            }
+                break;
+
             default:
                 break;
         }
 
         return null;
     }
+
+
+    private void refreshCustomActionsList() {
+        MainApp.bus().post(new EventCustomActionsChanged());
+    }
+
 }

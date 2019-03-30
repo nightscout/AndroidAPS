@@ -54,6 +54,14 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
         this.sizes[0] = entryType.getHeadLength();
         this.sizes[1] = entryType.getDateLength();
         this.sizes[2] = entryType.getBodyLength();
+
+        if (this.entryType != null && this.atechDateTime != null)
+            setPumpId();
+    }
+
+
+    private void setPumpId() {
+        this.pumpId = this.entryType.getCode() + (this.atechDateTime * 1000L);
     }
 
 

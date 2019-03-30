@@ -308,8 +308,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         List<Treatment> in5minback = new ArrayList<>();
         long time = System.currentTimeMillis();
         synchronized (treatments) {
-            for (Integer pos = 0; pos < treatments.size(); pos++) {
-                Treatment t = treatments.get(pos);
+            for (Treatment t : treatments) {
                 if (!t.isValid)
                     continue;
                 if (t.date <= time && t.date > (time - minutesAgo * 60 * 1000))

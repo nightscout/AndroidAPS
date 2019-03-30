@@ -489,6 +489,6 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static ClockDTO getPumpTime() {
-        return pumpTime;
+        return MedtronicUtil.pumpTime;
     }
 }

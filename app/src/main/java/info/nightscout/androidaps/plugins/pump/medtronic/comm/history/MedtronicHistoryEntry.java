@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +39,6 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     protected List<Byte> rawData;
 
-    protected static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss");
     public static final Logger LOG = LoggerFactory.getLogger(MedtronicHistoryEntry.class);
 
     protected int[] sizes = new int[3];
@@ -56,10 +53,34 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     public String DT;
 
     @Expose
-    public long atechDateTime;
+    public Long atechDateTime;
 
     @Expose
     protected Map<String, Object> decodedData;
+
+    public long phoneDateTime; // time on phone
+
+    /**
+     * Pump id that will be used with AAPS object (time * 1000 + historyType (max is FF = 255)
+     */
+    public long pumpId;
+
+    /**
+     * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's are not actually
+     * linked))
+     */
+    public boolean linked = false;
+
+    /**
+     * Linked object, see linked
+     */
+    public Object linkedObject = null;
+
+
+    public void setLinkedObject(Object linkedObject) {
+        this.linked = true;
+        this.linkedObject = linkedObject;
+    }
 
 
     public void setData(List<Byte> listRawData, boolean doNotProcess) {

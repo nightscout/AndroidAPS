@@ -18,7 +18,6 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.SystemClock;
-import android.widget.Toast;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -330,6 +329,12 @@ public class RileyLinkBLE {
 
 
     public boolean discoverServices() {
+
+        if (bluetoothConnectionGatt == null) {
+            // shouldn't happen, but if it does we exit
+            return false;
+        }
+
         if (bluetoothConnectionGatt.discoverServices()) {
             LOG.warn("Starting to discover GATT Services.");
             return true;
@@ -367,7 +372,7 @@ public class RileyLinkBLE {
         // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null) {
             LOG.error("Failed to connect to Bluetooth Low Energy device at " + bluetoothAdapter.getAddress());
-            Toast.makeText(context, "No Rileylink at " + bluetoothAdapter.getAddress(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(context, "No Rileylink at " + bluetoothAdapter.getAddress(), Toast.LENGTH_SHORT).show();
         } else {
             if (gattDebugEnabled) {
                 LOG.debug("Gatt Connected?");

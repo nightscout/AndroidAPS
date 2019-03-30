@@ -130,10 +130,9 @@ public class RileyLinkUtil {
             return null;
 
         } else {
-
-            return RileyLinkUtil.rileyLinkServiceData.serviceState == null ? RileyLinkServiceState.NotStarted
+            return (RileyLinkUtil.rileyLinkServiceData == null || RileyLinkUtil.rileyLinkServiceData.serviceState == null) ? //
+            RileyLinkServiceState.NotStarted
                 : RileyLinkUtil.rileyLinkServiceData.serviceState;
-
         }
 
     }

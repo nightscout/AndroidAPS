@@ -222,9 +222,19 @@ public class BasalProfile {
             if ((mRawData[i] == 0) && (mRawData[i + 1] == 0) && (mRawData[i + 2] == 0))
                 break;
 
+            if ((mRawData[i] == 0) && (mRawData[i + 1] == 0) && (mRawData[i + 2] == 0x3f))
+                break;
+
             r = MedtronicUtil.makeUnsignedShort(mRawData[i + 1], mRawData[i]); // readUnsignedByte(mRawData[i]);
             st = readUnsignedByte(mRawData[i + 2]);
-            entries.add(new BasalProfileEntry(r, st));
+
+            try {
+                entries.add(new BasalProfileEntry(r, st));
+            } catch (Exception ex) {
+                LOG.error("Error decoding basal profile from bytes: {}", ByteUtil.getHex(mRawData));
+                throw ex;
+            }
+
         }
 
         return entries;
