@@ -1149,6 +1149,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Changement d\'heure d\'été dans moins de 24 heures</string>
+    <string name="dst_loop_disabled_warning">Changement d\'heure d\'été dans moins de 3 heures - Boucle fermée désactivée</string>
     <string name="storage">stockage interne limité</string>
     <string name="diskfull">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <string name="wrongformat">Format incorrect</string>

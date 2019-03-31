@@ -266,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">Para dar bolus %1$.2fU responder com código %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibração %1$.2f responder com código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bólus falhado</string>
+    <string name="bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
+    <string name="bolusrequested">Vai ser enviado %1$.2fU</string>
+    <string name="smscommunicator_bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
+    <string name="bolusdelivering">A enviar %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos remotos via SMS</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
