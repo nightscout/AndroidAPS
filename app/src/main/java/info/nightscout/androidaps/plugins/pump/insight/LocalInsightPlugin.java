@@ -510,15 +510,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = new PumpEnactResult();
-        if (detailedBolusInfo.insulin > 0) {
+        double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
+        if (insulin > 0) {
             try {
-                detailedBolusInfo.insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
                 synchronized ($bolusLock) {
                     DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
                     bolusMessage.setBolusType(BolusType.STANDARD);
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
-                    bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
+                    bolusMessage.setImmediateAmount(insulin);
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -528,7 +528,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 t.isSMB = detailedBolusInfo.isSMB;
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 bolusingEvent.t = t;
-                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, detailedBolusInfo.insulin);
+                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, insulin);
                 bolusingEvent.percent = 0;
                 MainApp.bus().post(bolusingEvent);
                 int trials = 0;
@@ -566,7 +566,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
+                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, insulin, insulin);
                                     bolusingEvent.percent = 100;
                                     MainApp.bus().post(bolusingEvent);
                                 }
@@ -593,7 +593,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
         }
         result.carbsDelivered = detailedBolusInfo.carbs;
-        result.bolusDelivered = detailedBolusInfo.insulin;
+        result.bolusDelivered = insulin;
         return result;
     }
 
