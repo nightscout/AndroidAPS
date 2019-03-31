@@ -54,6 +54,7 @@
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
     <string name="description_sms_communicator">Ovládaj na diaľku AndroidAPS použitím SMS príkazov.</string>
+    <string name="objectives_button_back">Naspäť</string>
     <string name="objectives_button_start">Začiatok</string>
     <string name="objectives_button_verify">Overenie</string>
     <string name="nsprofileview_units_label">Jednotky</string>
@@ -265,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">Pre podanie bolusu %1$.2fU odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Pre odoslanie kalibrácie %1$.2f odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_bolusfailed">Chyba pri aplikovaní bolusu</string>
+    <string name="bolusdelivered">Bolus %1$.2fU podaný úspešne</string>
+    <string name="bolusrequested">Podávanie %1$.2fU inzulínu</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU podaný úspešne</string>
+    <string name="bolusdelivering">Podávanie %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Povoliť príkazy na diaľku cez SMS</string>
     <string name="glucosetype_finger">Prst</string>
     <string name="glucosetype_sensor">Senzor</string>
@@ -334,11 +339,24 @@
     <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Hodnota %s je mimo prednastavený rozsah</string>
     <string name="smscommunicator_remotecommandnotallowed">Príkazy na diaľku nie sú povolené</string>
+    <string name="smscommunicator_remotebolusnotallowed">Diaľkovo ovládaný bolus nie je momentálne povolený. Skúste to neskôr.</string>
+    <string name="smscommunicator_basalreplywithcode">Pre spustenie bazálu %1$.2fU/h na %2$d min odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Pre prepnutie profilu na %1$s %2$d%% odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Pre spustenie predĺženého bolusu %1$.2fU na %2$d min odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Pre spustenie bazálu %1$d%% na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fU/h spustený na %2$d minút</string>
+    <string name="smscommunicator_extendedset">Predĺžený bolus %1$.2fU na %2$d min úspešne spustený</string>
+    <string name="smscommunicator_tempbasalset_percent">Dočasný bazál %1$d%% na %2$d minút úspešne spustený</string>
     <string name="smscommunicator_tempbasalfailed">Spustenie dočasného bazálu zlyhalo</string>
+    <string name="smscommunicator_extendedfailed">Spustenie predĺženého bolusu zlyhalo</string>
+    <string name="smscommunicator_basalstopreplywithcode">Na zastavenie dočasného bazálu odpovedzte SMS s kódom %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Na zastavenie predĺženého bolusu odpovedzte SMS s kódom %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočasný bazál zrušený</string>
+    <string name="smscommunicator_extendedcanceled">Predĺžený bolus zastavený</string>
     <string name="smscommunicator_tempbasalcancelfailed">Zrušenie dočasného bazálu zlyhalo</string>
+    <string name="smscommunicator_extendedcancelfailed">Zastavenie predĺženého bolusu zlyhalo</string>
+    <string name="smscommunicator_unknowncommand">Neznámy príkaz alebo chybná odpoveď</string>
     <string name="quickwizard">Rýchly bolus</string>
     <string name="quickwizardsettings">Nastavenie rýchleho bolusu</string>
     <string name="overview_editquickwizard_buttontext">Text na tlačidle:</string>
@@ -1129,6 +1147,13 @@
     <string name="dexcom_lognssensorchange_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
+    <string name="storage">obmedzenie interného úložiska</string>
+    <string name="diskfull">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
+    <string name="wrongformat">Chybný formát</string>
+    <string name="sms_wrongcode">Nesprávný kód. Príkaz zrušený.</string>
+    <string name="notconfigured">Nie je nakonfigurované</string>
+    <string name="profileswitchcreated">Prepnutie profilu vytvorené</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
