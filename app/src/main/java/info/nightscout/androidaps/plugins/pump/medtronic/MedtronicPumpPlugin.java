@@ -258,6 +258,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
+    @Override
+    public boolean canHandleDST() {
+        return false;
+    }
+
+
     // Pump Plugin
 
     private boolean isServiceSet() {
@@ -1377,13 +1383,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // LOG.debug("MedtronicPumpPlugin::stopConnecting");
     // }
 
-    List<CustomAction> customActions = null;
+    private List<CustomAction> customActions = null;
 
-    CustomAction customActionWakeUpAndTune = new CustomAction(R.string.medtronic_custom_action_wake_and_tune,
+    private CustomAction customActionWakeUpAndTune = new CustomAction(R.string.medtronic_custom_action_wake_and_tune,
         MedtronicCustomActionType.WakeUpAndTune);
 
-    CustomAction customActionClearBolusBlock = new CustomAction(R.string.medtronic_custom_action_clear_bolus_block,
-        MedtronicCustomActionType.ClearBolusBlock);
+    private CustomAction customActionClearBolusBlock = new CustomAction(
+        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock);
 
 
     @Override
@@ -1398,7 +1404,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public PumpEnactResult executeCustomAction(CustomActionType customActionType) {
+    public void executeCustomAction(CustomActionType customActionType) {
 
         MedtronicCustomActionType mcat = (MedtronicCustomActionType)customActionType;
 
@@ -1419,7 +1425,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 break;
         }
 
-        return null;
     }
 
 
