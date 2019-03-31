@@ -42,6 +42,11 @@ public class ActionStartTempTargetTest {
     }
 
     @Test
+    public void shortDescriptionTest() {
+        Assert.assertEquals(R.string.starttemptarget, actionStartTempTarget.friendlyName());
+    }
+
+    @Test
     public void iconTest() {
         Assert.assertEquals(Optional.of(R.drawable.icon_cp_cgm_target), actionStartTempTarget.icon());
     }

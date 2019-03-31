@@ -35,6 +35,11 @@ public class ActionLoopSuspendTest {
     }
 
     @Test
+    public void shortDescriptionTest() {
+        Assert.assertEquals(R.string.suspendloop, actionLoopSuspend.friendlyName());
+    }
+
+    @Test
     public void iconTest() {
         Assert.assertEquals(Optional.of(R.drawable.ic_pause_circle_outline_24dp), actionLoopSuspend.icon());
     }

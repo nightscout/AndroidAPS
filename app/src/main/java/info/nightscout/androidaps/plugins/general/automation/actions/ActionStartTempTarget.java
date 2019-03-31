@@ -26,6 +26,7 @@ public class ActionStartTempTarget extends Action {
     String reason = "";
     InputBg value;
     InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
+    TempTarget tempTarget;
 
     public ActionStartTempTarget() {
         value = new InputBg(Constants.MGDL);
@@ -41,8 +42,13 @@ public class ActionStartTempTarget extends Action {
     }
 
     @Override
-    void doAction(Callback callback) {
-        TempTarget tempTarget = new TempTarget().date(DateUtil.now()).duration((int)duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
+    public String shortDescription() {
+        return MainApp.gs(R.string.resumeloop) + ": " + tempTarget.toString();
+    }
+
+    @Override
+    public void doAction(Callback callback) {
+        tempTarget = new TempTarget().date(DateUtil.now()).duration((int)duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();

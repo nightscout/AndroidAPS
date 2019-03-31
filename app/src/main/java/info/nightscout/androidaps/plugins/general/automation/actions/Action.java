@@ -9,11 +9,43 @@ import org.json.JSONObject;
 
 import info.nightscout.androidaps.queue.Callback;
 
+/*
+    Action ideas:
+
+    * cancel temp target
+    * change preference setting
+    * enable/disable plugin
+    * create notification
+    * create ugly alarm
+    * create profile switch
+    * set/cancel tbr
+    * set/cancel extended bolus
+    * run bolus wizard
+
+    Trigger ideas:
+
+    * location (close to)
+    * connected to specific wifi
+    * internet available/not available
+    * nsclient connected/disconnected
+    * iob
+    * cob
+    * autosens value
+    * delta, short delta, long delta
+    * last bolus ago
+    * is tbr running
+    * bolus wizard result
+    * loop is enabled, disabled, suspended, running
+
+*/
+
+
 public abstract class Action {
 
     public abstract int friendlyName();
+    public abstract String shortDescription();
 
-    abstract void doAction(Callback callback);
+    public abstract void doAction(Callback callback);
 
     public void generateDialog(LinearLayout root) { }
 

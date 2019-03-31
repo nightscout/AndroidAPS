@@ -28,6 +28,13 @@
             android:src="@drawable/ic_add_black_24dp"
             android:backgroundTint="@color/defaulttext"/>
 
+        <TextView
+            android:id="@+id/logView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Log" />
+
     </RelativeLayout>
 
 </FrameLayout>

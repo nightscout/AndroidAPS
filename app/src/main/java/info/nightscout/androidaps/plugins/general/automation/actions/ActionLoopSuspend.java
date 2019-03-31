@@ -21,7 +21,12 @@ public class ActionLoopSuspend extends Action {
     }
 
     @Override
-    void doAction(Callback callback) {
+    public String shortDescription() {
+        return MainApp.gs(R.string.suspendloop);
+    }
+
+    @Override
+    public void doAction(Callback callback) {
         if (!LoopPlugin.getPlugin().isSuspended()) {
             LoopPlugin.getPlugin().suspendLoop(minutes);
             MainApp.bus().post(new EventRefreshOverview("ActionLoopSuspend"));

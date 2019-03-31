@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -33,6 +35,7 @@ import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
@@ -40,6 +43,8 @@ public class AutomationFragment extends SubscriberFragment {
 
     @BindView(R.id.eventListView)
     RecyclerView mEventListView;
+    @BindView(R.id.logView)
+    TextView mLogView;
 
     private EventListAdapter mEventListAdapter;
 
@@ -62,11 +67,24 @@ public class AutomationFragment extends SubscriberFragment {
         return view;
     }
 
+    @Subscribe
+    public void onEvent(EventAutomationUpdateGui unused) {
+        updateGUI();
+    }
+
     @Override
     public void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> mEventListAdapter.notifyDataSetChanged());
+            activity.runOnUiThread(() -> {
+                mEventListAdapter.notifyDataSetChanged();
+                StringBuilder sb = new StringBuilder();
+                for (String l : AutomationPlugin.getPlugin().executionLog) {
+                    sb.append(l);
+                    sb.append("\n");
+                }
+                mLogView.setText(sb.toString());
+            });
     }
 
     @OnClick(R.id.fabAddEvent)
@@ -78,7 +96,7 @@ public class AutomationFragment extends SubscriberFragment {
     /**
      * RecyclerViewAdapter to display event lists.
      */
-    public static class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>  {
+    public static class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
         private final List<AutomationEvent> mEventList;
         private final FragmentManager mFragmentManager;
 
@@ -97,7 +115,7 @@ public class AutomationFragment extends SubscriberFragment {
         private void addImage(@DrawableRes int res, Context context, LinearLayout layout) {
             ImageView iv = new ImageView(context);
             iv.setImageResource(res);
-            iv.setLayoutParams(new LinearLayout.LayoutParams(MainApp.dpToPx(24),MainApp.dpToPx(24)));
+            iv.setLayoutParams(new LinearLayout.LayoutParams(MainApp.dpToPx(24), MainApp.dpToPx(24)));
             layout.addView(iv);
         }
 
@@ -109,25 +127,25 @@ public class AutomationFragment extends SubscriberFragment {
 
             // trigger icons
             HashSet<Integer> triggerIcons = new HashSet<>();
-            TriggerConnector.fillIconSet((TriggerConnector)event.getTrigger(), triggerIcons);
-            for(int res : triggerIcons) {
+            TriggerConnector.fillIconSet((TriggerConnector) event.getTrigger(), triggerIcons);
+            for (int res : triggerIcons) {
                 addImage(res, holder.context, holder.iconLayout);
             }
 
             // arrow icon
             ImageView iv = new ImageView(holder.context);
             iv.setImageResource(R.drawable.ic_arrow_forward_white_24dp);
-            iv.setLayoutParams(new LinearLayout.LayoutParams(MainApp.dpToPx(24),MainApp.dpToPx(24)));
+            iv.setLayoutParams(new LinearLayout.LayoutParams(MainApp.dpToPx(24), MainApp.dpToPx(24)));
             iv.setPadding(MainApp.dpToPx(4), 0, MainApp.dpToPx(4), 0);
             holder.iconLayout.addView(iv);
 
             // action icons
             HashSet<Integer> actionIcons = new HashSet<>();
-            for(Action action : event.getActions()) {
+            for (Action action : event.getActions()) {
                 if (action.icon().isPresent())
                     actionIcons.add(action.icon().get());
             }
-            for(int res : actionIcons) {
+            for (int res : actionIcons) {
                 addImage(res, holder.context, holder.iconLayout);
             }
 
@@ -162,7 +180,7 @@ public class AutomationFragment extends SubscriberFragment {
                 eventTitle = view.findViewById(R.id.viewEventTitle);
                 rootLayout = view.findViewById(R.id.rootLayout);
                 iconLayout = view.findViewById(R.id.iconLayout);
-                iconTrash =  view.findViewById(R.id.iconTrash);
+                iconTrash = view.findViewById(R.id.iconTrash);
             }
         }
     }
@@ -170,7 +188,7 @@ public class AutomationFragment extends SubscriberFragment {
     /**
      * RecyclerViewAdapter to display action lists.
      */
-    public static class ActionListAdapter extends RecyclerView.Adapter<ActionListAdapter.ViewHolder>  {
+    public static class ActionListAdapter extends RecyclerView.Adapter<ActionListAdapter.ViewHolder> {
         private final List<Action> mActionList;
         private final FragmentManager mFragmentManager;
 
@@ -257,7 +275,7 @@ public class AutomationFragment extends SubscriberFragment {
         }
 
         private void build() {
-            for(int i = 0; i < mRootConnector.size(); ++i) {
+            for (int i = 0; i < mRootConnector.size(); ++i) {
                 final Trigger trigger = mRootConnector.get(i);
 
                 // spinner
@@ -317,7 +335,8 @@ public class AutomationFragment extends SubscriberFragment {
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) { }
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
             mRootLayout.addView(spinner);
         }
@@ -352,7 +371,7 @@ public class AutomationFragment extends SubscriberFragment {
                 dialog.show(mFragmentManager, "ChooseTriggerDialog");
                 dialog.setOnClickListener(newTriggerObject -> {
                     TriggerConnector connector = trigger.getConnector();
-                    connector.add(connector.pos(trigger)+1, newTriggerObject);
+                    connector.add(connector.pos(trigger) + 1, newTriggerObject);
                     connector.simplify().rebuildView();
                 });
             });
@@ -363,7 +382,7 @@ public class AutomationFragment extends SubscriberFragment {
             buttonCopy.setText("copy");
             buttonCopy.setOnClickListener(v -> {
                 TriggerConnector connector = trigger.getConnector();
-                connector.add(connector.pos(trigger)+1, trigger.duplicate());
+                connector.add(connector.pos(trigger) + 1, trigger.duplicate());
                 connector.simplify().rebuildView();
             });
             buttonLayout.addView(buttonCopy);
@@ -377,7 +396,7 @@ public class AutomationFragment extends SubscriberFragment {
                 TriggerConnector newConnector = new TriggerConnector(newConnectorType);
 
                 // move trigger from pos and pos+1 into new connector
-                for(int i = 0; i < 2; ++i) {
+                for (int i = 0; i < 2; ++i) {
                     Trigger t = connector.get(pos);
                     newConnector.add(t);
                     connector.remove(t);

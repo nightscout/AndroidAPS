@@ -31,6 +31,11 @@ public class ActionLoopResumeTest {
     }
 
     @Test
+    public void shortDescriptionTest() {
+        Assert.assertEquals(R.string.resumeloop, actionLoopResume.friendlyName());
+    }
+
+    @Test
     public void iconTest() {
         Assert.assertEquals(Optional.of(R.drawable.ic_replay_24dp), actionLoopResume.icon());
     }

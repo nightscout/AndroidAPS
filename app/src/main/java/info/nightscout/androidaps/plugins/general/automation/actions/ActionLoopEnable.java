@@ -18,7 +18,12 @@ public class ActionLoopEnable extends Action {
     }
 
     @Override
-    void doAction(Callback callback) {
+    public String shortDescription() {
+        return MainApp.gs(R.string.enableloop);
+    }
+
+    @Override
+    public void doAction(Callback callback) {
         if (!LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
             LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, true);
             ConfigBuilderPlugin.getPlugin().storeSettings("ActionLoopEnable");

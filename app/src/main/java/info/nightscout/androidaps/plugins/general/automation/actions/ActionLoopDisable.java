@@ -18,7 +18,12 @@ public class ActionLoopDisable extends Action {
     }
 
     @Override
-    void doAction(Callback callback) {
+    public String shortDescription() {
+        return MainApp.gs(R.string.disableloop);
+    }
+
+    @Override
+    public void doAction(Callback callback) {
         if (LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
             LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, false);
             ConfigBuilderPlugin.getPlugin().storeSettings("ActionLoopDisable");

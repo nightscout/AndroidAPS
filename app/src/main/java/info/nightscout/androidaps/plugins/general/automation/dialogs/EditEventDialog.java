@@ -16,10 +16,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 public class EditEventDialog extends DialogFragment {
@@ -82,6 +84,7 @@ public class EditEventDialog extends DialogFragment {
             mAddNew = savedInstanceState.getBoolean("addNew");
         } else if (mAddNew) {
             mEvent.setTrigger(new TriggerConnector(TriggerConnector.Type.OR));
+
         }
 
         // event title
@@ -159,6 +162,7 @@ public class EditEventDialog extends DialogFragment {
 
         if (mClickListener != null) mClickListener.onClick(mEvent);
         dismiss();
+        MainApp.bus().post(new EventAutomationDataChanged());
     }
 
     @OnClick(R.id.cancel)

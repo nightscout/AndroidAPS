@@ -34,6 +34,11 @@ public class ActionLoopDisableTest {
     }
 
     @Test
+    public void shortDescriptionTest() {
+        Assert.assertEquals(R.string.disableloop, actionLoopDisable.friendlyName());
+    }
+
+    @Test
     public void iconTest() {
         Assert.assertEquals(Optional.of(R.drawable.ic_stop_24dp), actionLoopDisable.icon());
     }

@@ -22,7 +22,12 @@ public class ActionTest extends Action {
     }
 
     @Override
-    void doAction(Callback callback) {
+    public String shortDescription() {
+        return null;
+    }
+
+    @Override
+    public void doAction(Callback callback) {
     }
 
     @Override

@@ -2,9 +2,15 @@ package info.nightscout.androidaps.plugins.general.automation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
+import android.os.Handler;
 
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +24,21 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.automation.actions.Action;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.services.LocationService;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 public class AutomationPlugin extends PluginBase {
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
+    private final String key_AUTOMATION_EVENTS = "AUTOMATION_EVENTS";
     static AutomationPlugin plugin = null;
 
     public static AutomationPlugin getPlugin() {
@@ -35,6 +51,16 @@ public class AutomationPlugin extends PluginBase {
     private EventLocationChange eventLocationChange;
     private EventChargingState eventChargingState;
     private EventNetworkChange eventNetworkChange;
+    List<String> executionLog = new ArrayList<>();
+
+    private Handler loopHandler = new Handler();
+    private Runnable refreshLoop = new Runnable() {
+        @Override
+        public void run() {
+            processActions();
+            loopHandler.postDelayed(refreshLoop, T.mins(1).msecs());
+        }
+    };
 
     private AutomationPlugin() {
         super(new PluginDescription()
@@ -54,10 +80,13 @@ public class AutomationPlugin extends PluginBase {
 
         MainApp.bus().register(this);
         super.onStart();
+        loadFromSP();
+        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs());
     }
 
     @Override
     protected void onStop() {
+        loopHandler.removeCallbacks(refreshLoop);
         Context context = MainApp.instance().getApplicationContext();
         context.stopService(new Intent(context, LocationService.class));
 
@@ -80,6 +109,36 @@ public class AutomationPlugin extends PluginBase {
         return eventNetworkChange;
     }
 
+    private void storeToSP() {
+        JSONArray array = new JSONArray();
+        try {
+            for (AutomationEvent event : getAutomationEvents()) {
+                array.put(new JSONObject(event.toJSON()));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        SP.putString(key_AUTOMATION_EVENTS, array.toString());
+    }
+
+    private void loadFromSP() {
+        automationEvents.clear();
+        String data = SP.getString(key_AUTOMATION_EVENTS, "");
+        if (!data.equals("")) {
+            try {
+                JSONArray array = new JSONArray(data);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject o = array.getJSONObject(i);
+                    AutomationEvent event = new AutomationEvent().fromJSON(o.toString());
+                    automationEvents.add(event);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     @Subscribe
     public void onEventPreferenceChange(EventPreferenceChange e) {
         if (e.isChanged(R.string.key_location)) {
@@ -87,6 +146,11 @@ public class AutomationPlugin extends PluginBase {
             context.stopService(new Intent(context, LocationService.class));
             context.startService(new Intent(context, LocationService.class));
         }
+    }
+
+    @Subscribe
+    public void onEvent(EventAutomationDataChanged e) {
+        storeToSP();
     }
 
     @Subscribe
@@ -112,9 +176,33 @@ public class AutomationPlugin extends PluginBase {
         processActions();
     }
 
-    // TODO keepalive
-
-    void processActions() {
+    synchronized void processActions() {
+        log.debug("processActions");
+        for (AutomationEvent event : getAutomationEvents()) {
+            if (event.getTrigger().shouldRun()) {
+                List<Action> actions = event.getActions();
+                for (Action action : actions) {
+                    action.doAction(new Callback() {
+                        @Override
+                        public void run() {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(DateUtil.timeString(DateUtil.now()));
+                            sb.append(" ");
+                            sb.append(result.success ? "☺" : "X");
+                            sb.append(" ");
+                            sb.append(event.getTitle());
+                            sb.append(": ");
+                            sb.append(action.shortDescription());
+                            sb.append(": ");
+                            sb.append(result.comment);
+                            executionLog.add(sb.toString());
+                            log.debug(sb.toString());
+                            MainApp.bus().post(new EventAutomationUpdateGui());
+                        }
+                    });
+                }
+            }
+        }
 
     }
 }

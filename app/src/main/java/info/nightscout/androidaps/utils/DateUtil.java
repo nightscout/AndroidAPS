@@ -106,11 +106,19 @@ public class DateUtil {
     }
 
     public static String timeString(Date date) {
-        return new DateTime(date).toString(DateTimeFormat.shortTime());
+        String format = "hh:mma";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "HH:mm";
+        }
+        return new DateTime(date).toString(DateTimeFormat.forPattern(format));
     }
 
     public static String timeString(long mills) {
-        return new DateTime(mills).toString(DateTimeFormat.shortTime());
+        String format = "hh:mma";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "HH:mm";
+        }
+        return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
     }
 
     public static String timeFullString(long mills) {

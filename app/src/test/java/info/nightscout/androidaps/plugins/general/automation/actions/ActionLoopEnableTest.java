@@ -34,6 +34,11 @@ public class ActionLoopEnableTest {
     }
 
     @Test
+    public void shortDescriptionTest() {
+        Assert.assertEquals(R.string.enableloop, actionLoopEnable.friendlyName());
+    }
+
+    @Test
     public void iconTest() {
         Assert.assertEquals(Optional.of(R.drawable.ic_play_circle_outline_24dp), actionLoopEnable.icon());
     }
