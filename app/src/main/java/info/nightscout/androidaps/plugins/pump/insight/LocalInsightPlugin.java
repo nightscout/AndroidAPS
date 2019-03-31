@@ -171,7 +171,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 .preferencesId(R.xml.pref_insight_local));
 
         pumpDescription = new PumpDescription();
-        pumpDescription.setPumpDescription(PumpType.AccuChekInsight);
+        pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -1535,6 +1535,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             insulin.set(0d, String.format(MainApp.gs(R.string.limitingbolus), minimumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
         }
         return insulin;
+    }
+
+    @Override
+    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+        return applyBolusConstraints(insulin);
     }
 
     @Override
