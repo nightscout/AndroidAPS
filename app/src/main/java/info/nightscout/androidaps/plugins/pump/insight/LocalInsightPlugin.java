@@ -512,6 +512,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         PumpEnactResult result = new PumpEnactResult();
         if (detailedBolusInfo.insulin > 0) {
             try {
+                detailedBolusInfo.insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
                 synchronized ($bolusLock) {
                     DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
                     bolusMessage.setBolusType(BolusType.STANDARD);
@@ -592,6 +593,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
         }
         result.carbsDelivered = detailedBolusInfo.carbs;
+        result.bolusDelivered = detailedBolusInfo.insulin;
         return result;
     }
 
