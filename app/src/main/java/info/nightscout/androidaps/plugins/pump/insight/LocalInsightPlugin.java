@@ -421,7 +421,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             BasalProfileBlock profileBlock = new BasalProfileBlock();
-            profileBlock.setBasalAmount(basalValue.value);
+            profileBlock.setBasalAmount(basalValue.value > 5 ? Math.round(basalValue.value / 0.1) * 0.1 : Math.round(basalValue.value / 0.01) * 0.01);
             profileBlock.setDuration((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
             profileBlocks.add(profileBlock);
         }
@@ -476,7 +476,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > 0.01D)
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.1 : 0.01))
                 return false;
         }
         return true;
