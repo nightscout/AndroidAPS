@@ -17,7 +17,6 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -26,10 +25,11 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 
@@ -115,7 +115,7 @@ public class StatuslinePlugin extends PluginBase {
 
         if (ConfigBuilderPlugin.getPlugin().getActivePump() == null)
             return "";
-        
+
         LoopPlugin loopPlugin = LoopPlugin.getPlugin();
 
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
@@ -138,7 +138,7 @@ public class StatuslinePlugin extends PluginBase {
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)+"U";
+        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U";
 
 
         if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {
@@ -182,7 +182,7 @@ public class StatuslinePlugin extends PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
+    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         sendStatus();
     }
 

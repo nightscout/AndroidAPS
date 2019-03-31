@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.general.wear.wearintegration;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -15,11 +12,13 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Created by emmablack on 12/26/14.
  */
-class SendToDataLayerThread extends AsyncTask<DataMap, Void, Void> {
-
+class SendToDataLayerThread extends AsyncTask<DataMap,Void,Void> {
     private GoogleApiClient googleApiClient;
     private static final String TAG = "SendToDataLayerThread";
     private String path;

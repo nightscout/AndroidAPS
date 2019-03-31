@@ -65,6 +65,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_start" />
+
+        <Button
+            android:id="@+id/objective_back"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/objectives_button_back" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

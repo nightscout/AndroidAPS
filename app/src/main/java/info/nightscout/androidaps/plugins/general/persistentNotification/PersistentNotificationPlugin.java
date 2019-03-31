@@ -27,7 +27,6 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -39,6 +38,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 
@@ -283,7 +283,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
+    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         triggerNotificationUpdate();
     }
 

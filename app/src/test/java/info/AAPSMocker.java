@@ -2,6 +2,7 @@ package info;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
 import com.squareup.otto.Bus;
@@ -9,6 +10,7 @@ import com.squareup.otto.Bus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.Locale;
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -24,11 +27,14 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.SP;
 
@@ -36,6 +42,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +57,8 @@ public class AAPSMocker {
     public static final String TESTPROFILENAME = "someProfile";
 
     public static Intent intentSent = null;
+
+    public static CommandQueue queue;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -104,6 +113,43 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
         when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
         when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
+        when(MainApp.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.");
+        when(MainApp.gs(R.string.sms_iob)).thenReturn("IOB:");
+        when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
+        when(MainApp.gs(R.string.sms_minago)).thenReturn("%1$dmin ago");
+        when(MainApp.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed");
+        when(MainApp.gs(R.string.loopsuspendedfor)).thenReturn("Suspended (%1$d m)");
+        when(MainApp.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled");
+        when(MainApp.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled");
+        when(MainApp.gs(R.string.wrongformat)).thenReturn("Wrong format");
+        when(MainApp.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled");
+        when(MainApp.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled");
+        when(MainApp.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled");
+        when(MainApp.gs(R.string.smscommunicator_loopresumed)).thenReturn("Loop resumed");
+        when(MainApp.gs(R.string.smscommunicator_wrongduration)).thenReturn("Wrong duration");
+        when(MainApp.gs(R.string.smscommunicator_suspendreplywithcode)).thenReturn("To suspend loop for %1$d minutes reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_loopsuspended)).thenReturn("Loop suspended");
+        when(MainApp.gs(R.string.smscommunicator_unknowncommand)).thenReturn("Unknown command or wrong reply");
+        when(MainApp.gs(R.string.notconfigured)).thenReturn("Not configured");
+        when(MainApp.gs(R.string.smscommunicator_profilereplywithcode)).thenReturn("To switch profile to %1$s %2$d%% reply with code %3$s");
+        when(MainApp.gs(R.string.profileswitchcreated)).thenReturn("Profile switch created");
+        when(MainApp.gs(R.string.smscommunicator_basalstopreplywithcode)).thenReturn("To stop temp basal reply with code %1$s");
+        when(MainApp.gs(R.string.smscommunicator_basalpctreplywithcode)).thenReturn("To start basal %1$d%% for %2$d min reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_tempbasalset_percent)).thenReturn("Temp basal %1$d%% for %2$d min started successfully");
+        when(MainApp.gs(R.string.smscommunicator_basalreplywithcode)).thenReturn("To start basal %1$.2fU/h for %2$d min reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_tempbasalset)).thenReturn("Temp basal %1$.2fU/h for %2$d min started successfully");
+        when(MainApp.gs(R.string.smscommunicator_extendedstopreplywithcode)).thenReturn("To stop extended bolus reply with code %1$s");
+        when(MainApp.gs(R.string.smscommunicator_extendedcanceled)).thenReturn("Extended bolus canceled");
+        when(MainApp.gs(R.string.smscommunicator_extendedreplywithcode)).thenReturn("To start extended bolus %1$.2fU for %2$d min reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_extendedset)).thenReturn("Extended bolus %1$.2fU for %2$d min started successfully");
+        when(MainApp.gs(R.string.smscommunicator_bolusreplywithcode)).thenReturn("To deliver bolus %1$.2fU reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_bolusdelivered)).thenReturn("Bolus %1$.2fU delivered successfully");
+        when(MainApp.gs(R.string.smscommunicator_remotebolusnotallowed)).thenReturn("Remote bolus not available. Try again later.");
+        when(MainApp.gs(R.string.smscommunicator_calibrationreplywithcode)).thenReturn("To send calibration %1$.2f reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.");
+        when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
+        when(MainApp.gs(R.string.cob)).thenReturn("COB");
+        when(MainApp.gs(R.string.value_unavailable_short)).thenReturn("n/a");
     }
 
     public static MainApp mockMainApp() {
@@ -143,7 +189,7 @@ public class AAPSMocker {
         when(L.isEnabled(any())).thenReturn(true);
     }
 
-    public static void mockNSUpload(){
+    public static void mockNSUpload() {
         PowerMockito.mockStatic(NSUpload.class);
     }
 
@@ -152,6 +198,8 @@ public class AAPSMocker {
         Resources mResources = mock(Resources.class);
         when(MainApp.instance().getApplicationContext()).thenReturn(mockedContext);
         when(mockedContext.getResources()).thenReturn(mResources);
+        PackageManager packageManager = mock(PackageManager.class);
+        when(mockedContext.getPackageManager()).thenReturn(packageManager);
     }
 
     public static DatabaseHelper mockDatabaseHelper() {
@@ -161,7 +209,7 @@ public class AAPSMocker {
     }
 
     public static void mockCommandQueue() {
-        CommandQueue queue = mock(CommandQueue.class);
+        queue = mock(CommandQueue.class);
         when(ConfigBuilderPlugin.getPlugin().getCommandQueue()).thenReturn(queue);
     }
 
@@ -169,12 +217,21 @@ public class AAPSMocker {
         PowerMockito.mockStatic(TreatmentsPlugin.class);
         TreatmentsPlugin treatmentsPlugin = PowerMockito.mock(TreatmentsPlugin.class);
         when(TreatmentsPlugin.getPlugin()).thenReturn(treatmentsPlugin);
+        when(treatmentsPlugin.getLastCalculationTreatments()).thenReturn(new IobTotal(0));
+        when(treatmentsPlugin.getLastCalculationTempBasals()).thenReturn(new IobTotal(0));
+
+        TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
+        when(treatmentsPlugin.getService()).thenReturn(treatmentService);
         return treatmentsPlugin;
     }
 
-    public static void mockTreatmentService() throws Exception {
+    public static void mockTreatmentService() {
         TreatmentService treatmentService = PowerMockito.mock(TreatmentService.class);
-        PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+        try {
+            PowerMockito.whenNew(TreatmentService.class).withNoArguments().thenReturn(treatmentService);
+        } catch (Exception e) {
+        }
+
     }
 
     public static DanaRPlugin mockDanaRPlugin() {
@@ -221,6 +278,14 @@ public class AAPSMocker {
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
+        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
+        PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
+    }
+
+    public static void mockIobCobCalculatorPlugin() {
+        PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
+        IobCobCalculatorPlugin iobCobCalculatorPlugin = PowerMockito.mock(IobCobCalculatorPlugin.class);
+        PowerMockito.when(IobCobCalculatorPlugin.getPlugin()).thenReturn(iobCobCalculatorPlugin);
     }
 
     private static MockedBus bus = new MockedBus();

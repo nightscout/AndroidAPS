@@ -503,7 +503,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<BgReading>();
+        return new ArrayList<>();
     }
 
 
@@ -521,7 +521,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        return new ArrayList<BgReading>();
+        return new ArrayList<>();
     }
 
 

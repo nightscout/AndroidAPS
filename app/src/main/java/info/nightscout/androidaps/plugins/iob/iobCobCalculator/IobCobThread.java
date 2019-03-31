@@ -41,6 +41,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
@@ -60,7 +61,7 @@ public class IobCobThread extends Thread {
 
     private PowerManager.WakeLock mWakeLock;
 
-    public IobCobThread(IobCobCalculatorPlugin plugin, String from, long end, boolean bgDataReload, boolean limitDataToOldestAvailable, Event cause) {
+    IobCobThread(IobCobCalculatorPlugin plugin, String from, long end, boolean bgDataReload, boolean limitDataToOldestAvailable, Event cause) {
         super();
 
         this.iobCobCalculatorPlugin = plugin;
@@ -71,13 +72,15 @@ public class IobCobThread extends Thread {
         this.end = end;
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "iobCobThread");
+        if (powerManager != null)
+            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, MainApp.gs(R.string.app_name) + ":iobCobThread");
     }
 
     @Override
     public final void run() {
         long start = DateUtil.now();
-        mWakeLock.acquire();
+        if (mWakeLock != null)
+            mWakeLock.acquire(T.mins(10).msecs());
         try {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("AUTOSENSDATA thread started: " + from);
@@ -172,7 +175,7 @@ public class IobCobThread extends Thread {
 
                     double bgi = -iob.activity * sens * 5;
                     double deviation = delta - bgi;
-                    double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
+                    double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000d;
 
                     double slopeFromMaxDeviation = 0;
                     double slopeFromMinDeviation = 999;
@@ -321,7 +324,8 @@ public class IobCobThread extends Thread {
                 MainApp.bus().post(new EventAutosensCalculationFinished(cause));
             }).start();
         } finally {
-            mWakeLock.release();
+            if (mWakeLock != null)
+                mWakeLock.release();
             MainApp.bus().post(new EventIobCalculationProgress(""));
             if (L.isEnabled(L.AUTOSENS)) {
                 log.debug("AUTOSENSDATA thread ended: " + from);
