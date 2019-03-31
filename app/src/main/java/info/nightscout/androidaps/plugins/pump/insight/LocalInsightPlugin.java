@@ -476,7 +476,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) >= (basalValue.value > 5 ? 0.05 : 0.005))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.05 : 0.005))
                 return false;
         }
         return true;
