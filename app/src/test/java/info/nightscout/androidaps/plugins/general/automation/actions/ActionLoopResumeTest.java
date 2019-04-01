@@ -32,7 +32,7 @@ public class ActionLoopResumeTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals(R.string.resumeloop, actionLoopResume.friendlyName());
+        Assert.assertEquals("Resume loop", actionLoopResume.shortDescription());
     }
 
     @Test
@@ -62,6 +62,7 @@ public class ActionLoopResumeTest {
     public void prepareTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockStrings();
         AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         AAPSMocker.mockConfigBuilder();

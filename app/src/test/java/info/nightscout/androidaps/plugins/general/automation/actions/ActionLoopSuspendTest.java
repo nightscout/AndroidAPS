@@ -36,7 +36,7 @@ public class ActionLoopSuspendTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals(R.string.suspendloop, actionLoopSuspend.friendlyName());
+        Assert.assertEquals("Suspend loop", actionLoopSuspend.shortDescription());
     }
 
     @Test
@@ -77,6 +77,7 @@ public class ActionLoopSuspendTest {
     public void prepareTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockStrings();
         AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         AAPSMocker.mockConfigBuilder();

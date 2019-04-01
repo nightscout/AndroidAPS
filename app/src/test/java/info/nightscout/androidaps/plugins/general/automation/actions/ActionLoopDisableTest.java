@@ -35,7 +35,7 @@ public class ActionLoopDisableTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals(R.string.disableloop, actionLoopDisable.friendlyName());
+        Assert.assertEquals("Disable loop", actionLoopDisable.shortDescription());
     }
 
     @Test
@@ -69,6 +69,7 @@ public class ActionLoopDisableTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();
+        AAPSMocker.mockStrings();
 
         VirtualPumpPlugin pump = mock(VirtualPumpPlugin.class);
         when(pump.specialEnableCondition()).thenReturn(true);

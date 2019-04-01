@@ -43,7 +43,7 @@ public class ActionStartTempTargetTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals(R.string.starttemptarget, actionStartTempTarget.friendlyName());
+        Assert.assertEquals("Start temp target: null", actionStartTempTarget.shortDescription());
     }
 
     @Test
@@ -60,15 +60,6 @@ public class ActionStartTempTargetTest {
             }
         });
         Assert.assertNotEquals(null, tempTargetAdded);
-    }
-
-    @Test
-    public void applyTest() {
-        ActionLoopSuspend a = new ActionLoopSuspend();
-        a.minutes = 20;
-        ActionLoopSuspend b = new ActionLoopSuspend();
-        b.apply(a);
-        Assert.assertEquals(20, b.minutes);
     }
 
     @Test
@@ -89,7 +80,7 @@ public class ActionStartTempTargetTest {
     @Test
     public void fromJSONTest() {
         actionStartTempTarget = new ActionStartTempTarget();
-        actionStartTempTarget.fromJSON("{\"reason\":\"Test\",\"valueInMg\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget\"");
+        actionStartTempTarget.fromJSON("{\"reason\":\"Test\",\"valueInMg\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"}");
         Assert.assertEquals(Constants.MGDL, actionStartTempTarget.value.getUnits());
         Assert.assertEquals(100, actionStartTempTarget.value.getValue(), 0.001d);
         Assert.assertEquals(30, actionStartTempTarget.duration.getMinutes(), 0.001);
@@ -99,6 +90,7 @@ public class ActionStartTempTargetTest {
     public void prepareTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockSP();
+        AAPSMocker.mockStrings();
         treatmentsPlugin = AAPSMocker.mockTreatmentPlugin();
 
         Mockito.doAnswer(invocation -> {

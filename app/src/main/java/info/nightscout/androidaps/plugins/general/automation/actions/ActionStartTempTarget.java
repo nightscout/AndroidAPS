@@ -32,10 +32,6 @@ public class ActionStartTempTarget extends Action {
         value = new InputBg(Constants.MGDL);
     }
 
-    public ActionStartTempTarget(String units) {
-        value = new InputBg(units);
-    }
-
     @Override
     public int friendlyName() {
         return R.string.starttemptarget;
@@ -43,7 +39,7 @@ public class ActionStartTempTarget extends Action {
 
     @Override
     public String shortDescription() {
-        return MainApp.gs(R.string.resumeloop) + ": " + tempTarget.toString();
+        return MainApp.gs(R.string.starttemptarget) + ": " + (tempTarget == null ? "null" : tempTarget.toString());
     }
 
     @Override

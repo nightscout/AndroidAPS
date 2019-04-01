@@ -35,7 +35,7 @@ public class ActionLoopEnableTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals(R.string.enableloop, actionLoopEnable.friendlyName());
+        Assert.assertEquals(MainApp.gs(R.string.enableloop), actionLoopEnable.shortDescription());
     }
 
     @Test

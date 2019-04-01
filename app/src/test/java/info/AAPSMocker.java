@@ -151,6 +151,12 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
         when(MainApp.gs(R.string.cob)).thenReturn("COB");
         when(MainApp.gs(R.string.value_unavailable_short)).thenReturn("n/a");
+        when(MainApp.gs(R.string.starttemptarget)).thenReturn("Start temp target");
+        when(MainApp.gs(R.string.stoptemptarget)).thenReturn("Stop temp target");
+        when(MainApp.gs(R.string.disableloop)).thenReturn("Disable loop");
+        when(MainApp.gs(R.string.enableloop)).thenReturn("Enable loop");
+        when(MainApp.gs(R.string.resumeloop)).thenReturn("Resume loop");
+        when(MainApp.gs(R.string.suspendloop)).thenReturn("Suspend loop");
     }
 
     public static MainApp mockMainApp() {
