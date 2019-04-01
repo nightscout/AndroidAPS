@@ -2,7 +2,7 @@
 
 This is the main Integration/Development branch for Medtronic driver in AAPS.
 
-Every integration will be done from this [repository](https://github.com/andyrozman/AndroidAPS) where now main branch is riley_link_medtronic. After all development is done, it will be merged into Milos Kozak's dev, but this will be done after all internal Milestones have been done (all 7 of them), which from time view probably won't be before end of year. if you want more details look at next section.
+Every integration will be done from this [repository](https://github.com/andyrozman/AndroidAPS) where now main branch is medtronic_andy. After all development is done, it will be merged into Milos Kozak's dev, but this will be done after all internal Milestones have been done (all 7 of them). If you want more details look at next section.
 
 # [Roundtrip2RileyLinkAAPS](https://github.com/andyrozman/Roundtrip2RileyLinkAAPS)
 
