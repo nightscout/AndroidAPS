@@ -19,6 +19,7 @@ import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
 
 public class ChooseTriggerDialog extends DialogFragment {
@@ -28,8 +29,9 @@ public class ChooseTriggerDialog extends DialogFragment {
     }
 
     private static final List<Trigger> triggerDummyObjects = new ArrayList<Trigger>() {{
-       add(new TriggerBg());
-       add(new TriggerTime());
+        add(new TriggerBg());
+        add(new TriggerTime());
+        add(new TriggerRecurringTime());
     }};
 
     private Unbinder mUnbinder;
@@ -52,7 +54,7 @@ public class ChooseTriggerDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_choose_trigger, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        for(Trigger t : triggerDummyObjects) {
+        for (Trigger t : triggerDummyObjects) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(t.friendlyName());
             radioButton.setTag(t);
@@ -65,14 +67,14 @@ public class ChooseTriggerDialog extends DialogFragment {
             checkedIndex = savedInstanceState.getInt("checkedIndex");
         }
 
-        ((RadioButton)mRadioGroup.getChildAt(checkedIndex)).setChecked(true);
+        ((RadioButton) mRadioGroup.getChildAt(checkedIndex)).setChecked(true);
 
         return view;
     }
 
     private int getCheckedIndex() {
-        for(int i = 0; i < mRadioGroup.getChildCount(); ++i) {
-            if (((RadioButton)mRadioGroup.getChildAt(i)).isChecked())
+        for (int i = 0; i < mRadioGroup.getChildCount(); ++i) {
+            if (((RadioButton) mRadioGroup.getChildAt(i)).isChecked())
                 return i;
         }
         return -1;
