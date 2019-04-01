@@ -127,9 +127,7 @@ public class GlucoseStatus {
                     // long_deltas are calculated from everything ~20-40 minutes ago
                 } else if (17.5 < minutesago && minutesago < 42.5) {
                     long_deltas.add(avgdelta);
-                }
-                else
-                {
+                } else {
                     // Do not process any more records after >= 42.5 minutes
                     break;
                 }
