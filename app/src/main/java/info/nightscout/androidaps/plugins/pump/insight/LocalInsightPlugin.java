@@ -1189,6 +1189,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void processCannulaFilledEvent(CannulaFilledEvent event) {
+        if (!SP.getBoolean("insight_log_site_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, CareportalEvent.SITECHANGE);
@@ -1216,7 +1217,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void processSniffingDoneEvent(SniffingDoneEvent event) {
-        if (!SP.getBoolean("insight_log_site_changes", false)) return;
+        if (!SP.getBoolean("insight_log_reservoir_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, CareportalEvent.INSULINCHANGE);
