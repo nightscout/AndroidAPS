@@ -419,7 +419,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /*
      * Return last BgReading from database or null if db is empty
      */
-    @NullablecreateTemptargetFromJsonIfNotExists
+    @Nullable
     public static BgReading lastBg() {
         List<BgReading> bgList = IobCobCalculatorPlugin.getPlugin().getBgReadings();
 
