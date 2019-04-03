@@ -1253,6 +1253,7 @@
     <string name="mute_alert">Mute</string>
     <string name="pump_alert">Pump alert</string>
     <string name="log_site_changes">Log site changes</string>
+    <string name="log_reservoir_changes">Log reservoir changes</string>
     <string name="log_tube_changes">Log tube changes</string>
     <string name="log_battery_changes">Log battery changes</string>
     <string name="log_operating_mode_changes">Log operating mode changes</string>
