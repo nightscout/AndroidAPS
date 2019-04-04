@@ -9,7 +9,7 @@ import android.support.annotation.PluralsRes;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
@@ -97,6 +97,8 @@ public class MainApp extends Application {
     private static MainApp sInstance;
     public static Resources sResources;
 
+    private static FirebaseAnalytics mFirebaseAnalytics;
+
     private static DatabaseHelper sDatabaseHelper = null;
     private static ConstraintChecker sConstraintsChecker = null;
 
@@ -123,12 +125,13 @@ public class MainApp extends Application {
         try {
             if (FabricPrivacy.fabricEnabled()) {
                 Fabric.with(this, new Crashlytics());
-                Fabric.with(this, new Answers());
                 Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
             }
         } catch (Exception e) {
             log.error("Error with Fabric init! " + e);
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         JodaTimeAndroid.init(this);
 
@@ -305,6 +308,10 @@ public class MainApp extends Application {
             sDatabaseHelper.close();
             sDatabaseHelper = null;
         }
+    }
+
+    public static FirebaseAnalytics getFirebaseAnalytics() {
+        return mFirebaseAnalytics;
     }
 
     public static ConstraintChecker getConstraintChecker() {

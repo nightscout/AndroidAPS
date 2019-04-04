@@ -34,7 +34,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
 
@@ -83,19 +82,14 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
@@ -109,18 +103,22 @@ import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizar
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationRecyclerViewAdapter;
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore;
+import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomG6Plugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog;
-import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.SP;
@@ -268,15 +266,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         sage = (TextView) view.findViewById(R.id.careportal_sensorage);
         pbage = (TextView) view.findViewById(R.id.careportal_pbage);
 
-            iageView = (TextView) view.findViewById(R.id.overview_insulinage);
-            cageView = (TextView) view.findViewById(R.id.overview_canulaage);
-            reservoirView = (TextView) view.findViewById(R.id.overview_reservoirlevel);
-            sageView = (TextView) view.findViewById(R.id.overview_sensorage);
-            batteryView = (TextView) view.findViewById(R.id.overview_batterylevel);
-            statuslightsLayout = (LinearLayout) view.findViewById(R.id.overview_statuslights);
+        iageView = (TextView) view.findViewById(R.id.overview_insulinage);
+        cageView = (TextView) view.findViewById(R.id.overview_canulaage);
+        reservoirView = (TextView) view.findViewById(R.id.overview_reservoirlevel);
+        sageView = (TextView) view.findViewById(R.id.overview_sensorage);
+        batteryView = (TextView) view.findViewById(R.id.overview_batterylevel);
+        statuslightsLayout = (LinearLayout) view.findViewById(R.id.overview_statuslights);
 
-            bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
-            iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
+        bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
+        iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
 
         treatmentButton = (SingleClickButton) view.findViewById(R.id.overview_treatmentbutton);
         treatmentButton.setOnClickListener(this);
@@ -475,7 +473,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     menu.add(MainApp.gs(R.string.suspendloopfor2h));
                     menu.add(MainApp.gs(R.string.suspendloopfor3h));
                     menu.add(MainApp.gs(R.string.suspendloopfor10h));
-                }  else  {
+                } else {
                     if (!loopPlugin.isDisconnected()) {
                         menu.add(MainApp.gs(R.string.resume));
                     }
@@ -488,7 +486,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             if (!loopPlugin.isDisconnected()) {
                 showSuspendtPump(menu, pumpDescription);
-            }  else {
+            } else {
                 menu.add(MainApp.gs(R.string.reconnect));
             }
 
@@ -892,7 +890,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             } else {
                                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                             }
-                            FabricPrivacy.getInstance().logCustom(new CustomEvent("QuickWizard"));
                         }
                     }
                 });

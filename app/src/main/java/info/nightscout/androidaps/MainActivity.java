@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         VersionChecker.check();
+        FabricPrivacy.setUserStats();
     }
 
     private void checkPluginPreferences(ViewPager viewPager) {

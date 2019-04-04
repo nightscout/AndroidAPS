@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
@@ -34,7 +33,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 
 
 public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
@@ -175,7 +173,6 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
                                 UploadQueue.removeID("dbAdd", _id);
                             }
                             MainApp.getDbHelper().delete(tempBasal);
-                            FabricPrivacy.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                         builder.show();
