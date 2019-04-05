@@ -54,6 +54,7 @@
     <string name="description_wear">Monitoruj i kontroluj AndroidAPS, korzystając z SmartWatch WearOS.</string>
     <string name="description_xdrip_status_line">Pokaż informacje o swojej pętli na watchface xDrip+.</string>
     <string name="description_sms_communicator">Zdalne sterowanie AndroidAPS za pomocą poleceń SMS.</string>
+    <string name="objectives_button_back">Cofnij</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Sprawdź</string>
     <string name="nsprofileview_units_label">Jednostki</string>
@@ -265,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">Aby dostarczyć bolus %1$.2fU wprowadź kod %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Aby wysłać kalibrację %1$.2f wprowadź kod %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus nieudany</string>
+    <string name="bolusdelivered">Bolus %1$.2fU dostarczony prawidłowo</string>
+    <string name="bolusrequested">Zamierzam podać %1$.2fU</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU dostarczony prawidłowo</string>
+    <string name="bolusdelivering">Dostarczam %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Zezwalaj na komendy zdalne via SMS</string>
     <string name="glucosetype_finger">Palec</string>
     <string name="glucosetype_sensor">Sensor</string>

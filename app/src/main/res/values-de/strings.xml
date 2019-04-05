@@ -1089,6 +1089,7 @@ Unerwartetes Verhalten.</string>
     <string name="mute_alert">Stumm</string>
     <string name="pump_alert">Pumpenalarm</string>
     <string name="log_site_changes">Katheterwechsel protokollieren</string>
+    <string name="log_reservoir_changes">Reservoirwechsel aufzeichnen</string>
     <string name="log_tube_changes">Schlauchwechsel protokollieren</string>
     <string name="log_battery_changes">Batteriewechsel protokollieren</string>
     <string name="log_operating_mode_changes">Wechsel des Betriebsmodus protokollieren</string>

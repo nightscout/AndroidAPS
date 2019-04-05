@@ -1088,6 +1088,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="mute_alert">Coupure son</string>
     <string name="pump_alert">Alerte de la pompe</string>
     <string name="log_site_changes">Enreg. changement de site</string>
+    <string name="log_reservoir_changes">Enregistrer changements de réservoir</string>
     <string name="log_tube_changes">Enreg. changement de tubulure</string>
     <string name="log_battery_changes">Enreg. changement batterie</string>
     <string name="log_operating_mode_changes">Enreg. changement mode de fonctionnement</string>

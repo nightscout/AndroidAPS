@@ -561,7 +561,7 @@
     <string name="enablesuperbolus">Povoliť superbolus</string>
     <string name="enablesuperbolus_summary">Povolenie superbolusu v kalkulátore. Nepovoľujte, pokiaľ se nenaučíte, čo to v skutočnosti robí. MÔŽE SPÔSOBIŤ PREDÁVKOVANIE INZULÍNOM PRI NESPRÁVNOM POUŽITÍ!</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
-    <string name="show_statuslights_summary">Povoliť indikátory stavu pre CAGE, IAGE, SAGE, RESERVOIR a BATTERY LEVEL na domovskej obrazovke.</string>
+    <string name="show_statuslights_summary">Povoliť indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [U]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [U]</string>
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
@@ -1087,6 +1087,7 @@
     <string name="mute_alert">Stlmiť</string>
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="log_site_changes">Zaznamenať výmenu kanyly</string>
+    <string name="log_reservoir_changes">Zaznamenať výmenu zásobníka</string>
     <string name="log_tube_changes">Zaznamenať výmenu hadičky</string>
     <string name="log_battery_changes">Zaznamenať výmenu batérie</string>
     <string name="log_operating_mode_changes">Zaznamenať zmenu režimu prevádzky</string>

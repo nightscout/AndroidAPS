@@ -12,11 +12,13 @@
     <string name="alert_w34_title">Fora da Garantia</string>
     <string name="alert_w36_title">Basal temporária cancelada</string>
     <string name="alert_w38_title">Bolus cancelado</string>
+    <string name="alert_w39_title">Aviso de periodo de empréstimo</string>
     <string name="alert_m20_title">Cartucho não inserido</string>
     <string name="alert_m21_title">Cartucho vazio</string>
     <string name="alert_m22_title">Bateria vazia</string>
     <string name="alert_m23_title">Desligar automático - bomba parada</string>
     <string name="alert_m24_title">Oclusão</string>
+    <string name="alert_m25_title">Fim de período de empréstimo - Fim de operação</string>
     <string name="alert_m26_title">Mudança de Cartucho não concluída</string>
     <string name="alert_m27_title">Falha no download de dados</string>
     <string name="alert_m28_title">Tempo limite de modo de pausa</string>
