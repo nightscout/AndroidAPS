@@ -77,12 +77,10 @@ public class DateUtilTest {
         assertTrue(DateUtil.dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"));
     }
 
-    /*
     @Test
     public void timeStringFromSecondsTest() {
         Assert.assertEquals("1:00 AM", DateUtil.timeStringFromSeconds((int) T.hours(1).secs()));
     }
-    */
 
     @Test
     public void timeFrameStringTest() {
