@@ -171,7 +171,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 .preferencesId(R.xml.pref_insight_local));
 
         pumpDescription = new PumpDescription();
-        pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
+        pumpDescription.setPumpDescription(PumpType.AccuChekInsight);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -315,7 +315,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         calendar.set(Calendar.HOUR_OF_DAY, pumpTime.getHour());
         calendar.set(Calendar.MINUTE, pumpTime.getMinute());
         calendar.set(Calendar.SECOND, pumpTime.getSecond());
-        if (calendar.get(Calendar.HOUR_OF_DAY) != pumpTime.getHour() || Math.abs(calendar.getTimeInMillis() - System.currentTimeMillis()) > 10000) {
+        if (Math.abs(calendar.getTimeInMillis() - System.currentTimeMillis()) > 10000) {
             calendar.setTime(new Date());
             pumpTime.setYear(calendar.get(Calendar.YEAR));
             pumpTime.setMonth(calendar.get(Calendar.MONTH) + 1);
@@ -421,7 +421,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             BasalProfileBlock profileBlock = new BasalProfileBlock();
-            profileBlock.setBasalAmount(basalValue.value > 5 ? Math.round(basalValue.value / 0.1) * 0.1 : Math.round(basalValue.value / 0.01) * 0.01);
+            profileBlock.setBasalAmount(basalValue.value);
             profileBlock.setDuration((((nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds) / 60));
             profileBlocks.add(profileBlock);
         }
@@ -476,7 +476,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.05 : 0.005))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > 0.01D)
                 return false;
         }
         return true;
@@ -510,15 +510,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = new PumpEnactResult();
-        double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
-        if (insulin > 0) {
+        if (detailedBolusInfo.insulin > 0) {
             try {
                 synchronized ($bolusLock) {
                     DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
                     bolusMessage.setBolusType(BolusType.STANDARD);
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
-                    bolusMessage.setImmediateAmount(insulin);
+                    bolusMessage.setImmediateAmount(detailedBolusInfo.insulin);
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -528,7 +527,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 t.isSMB = detailedBolusInfo.isSMB;
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 bolusingEvent.t = t;
-                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, insulin);
+                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, detailedBolusInfo.insulin);
                 bolusingEvent.percent = 0;
                 MainApp.bus().post(bolusingEvent);
                 int trials = 0;
@@ -566,7 +565,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, insulin, insulin);
+                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, detailedBolusInfo.insulin, detailedBolusInfo.insulin);
                                     bolusingEvent.percent = 100;
                                     MainApp.bus().post(bolusingEvent);
                                 }
@@ -593,7 +592,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             result.enacted = true;
         }
         result.carbsDelivered = detailedBolusInfo.carbs;
-        result.bolusDelivered = insulin;
         return result;
     }
 
@@ -1189,7 +1187,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void processCannulaFilledEvent(CannulaFilledEvent event) {
-        if (!SP.getBoolean("insight_log_site_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, CareportalEvent.SITECHANGE);
@@ -1217,7 +1214,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     private void processSniffingDoneEvent(SniffingDoneEvent event) {
-        if (!SP.getBoolean("insight_log_reservoir_changes", false)) return;
+        if (!SP.getBoolean("insight_log_site_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, CareportalEvent.INSULINCHANGE);
@@ -1538,11 +1535,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             insulin.set(0d, String.format(MainApp.gs(R.string.limitingbolus), minimumBolusAmount, MainApp.gs(R.string.pumplimit)), this);
         }
         return insulin;
-    }
-
-    @Override
-    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
-        return applyBolusConstraints(insulin);
     }
 
     @Override
