@@ -1088,6 +1088,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="mute_alert">Coupure son</string>
     <string name="pump_alert">Alerte de la pompe</string>
     <string name="log_site_changes">Enreg. changement de site</string>
+    <string name="log_reservoir_changes">Enregistrer changements de réservoir</string>
     <string name="log_tube_changes">Enreg. changement de tubulure</string>
     <string name="log_battery_changes">Enreg. changement batterie</string>
     <string name="log_operating_mode_changes">Enreg. changement mode de fonctionnement</string>
@@ -1149,6 +1150,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Changement d\'heure d\'été dans moins de 24 heures</string>
+    <string name="dst_loop_disabled_warning">Changement d\'heure d\'été dans moins de 3 heures - Boucle fermée désactivée</string>
     <string name="storage">stockage interne limité</string>
     <string name="diskfull">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <string name="wrongformat">Format incorrect</string>

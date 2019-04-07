@@ -49,8 +49,14 @@ public enum PumpType {
     AccuChekInsight("Accu-Chek Insight", 0.05d, DoseStepSize.InsightBolus, //
             new DoseSettings(0.05d, 15, 24*60, 0.05d), //
             PumpTempBasalType.Percent,
-            new DoseSettings(10,  15, 12*60,0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
+            new DoseSettings(10,  15, 24*60,0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
             0.02d, 0.01d, null, PumpCapability.InsightCapabilities), //
+
+    AccuChekInsightBluetooth("Accu-Chek Insight", 0.01d, null, //
+            new DoseSettings(0.01d, 15, 24*60, 0.05d), //
+            PumpTempBasalType.Percent,
+            new DoseSettings(10,  15, 24*60,0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
+            0.02d, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities), //
 
     // Animas
     AnimasVibe("Animas Vibe", 0.05d, null, // AnimasBolus?
