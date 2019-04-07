@@ -729,7 +729,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             String passCode = generatePasscode();
             String reply = String.format(MainApp.gs(R.string.smscommunicator_calibrationreplywithcode), cal, passCode);
             receivedSms.processed = true;
-            messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction() {
+            messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(cal) {
                 @Override
                 public void run() {
                     boolean result = XdripCalibrations.sendIntent(aDouble);
