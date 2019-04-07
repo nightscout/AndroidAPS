@@ -496,6 +496,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
             log.debug("AUTOSENSDATA null: Exception catched (" + reason + ")");
             return null;
         }
+        if (data == null) {
+            log.debug("AUTOSENSDATA null: data==null");
+            return null;
+        }
         if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastdata=" + DateUtil.dateAndTimeString(data.time));
