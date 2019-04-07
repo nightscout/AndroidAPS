@@ -21,11 +21,9 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -71,7 +69,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -555,10 +552,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             pumpState = PumpDriverState.Initialized;
         }
 
-        FabricPrivacy.getInstance().logCustom( //
-            new CustomEvent("MedtronicInitializePump") //
-                .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION) //
-                .putCustomAttribute("version", BuildConfig.VERSION));
+        // MainApp.getFirebaseAnalytics().logCustomEvent(FirebaseAnalytics.Event.SELECT_CONTENT, event);
+        //
+        // FabricPrivacy.getInstance().logCustom( //
+        // new CustomEvent("MedtronicInitializePump") //
+        // .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION) //
+        // .putCustomAttribute("version", BuildConfig.VERSION));
+        //
+        //
+        //
+        // MainApp.getFirebaseAnalytics().logEvent();
+        //
 
         isInitialized = true;
         // this.pumpState = PumpDriverState.Initialized;

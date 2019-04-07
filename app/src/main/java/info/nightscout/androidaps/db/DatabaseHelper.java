@@ -20,7 +20,6 @@ import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -438,7 +437,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventNewBg");
-                Log.d("DatabaseHelper", "WR: Firing EventNewBg");
                 MainApp.bus().post(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
@@ -807,7 +805,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
             String units = JsonHelper.safeGetString(trJson, "units", Constants.MGDL);
-            TempTarget tempTarget = new TempTarget().date(trJson.getLong("mills")).duration(trJson.getInt("duration"))
+            TempTarget tempTarget = new TempTarget().date(trJson.getLong("mills"))
+                .duration(JsonHelper.safeGetInt(trJson, "duration"))
                 .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
                 .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
                 .reason(JsonHelper.safeGetString(trJson, "reason", ""))._id(trJson.getString("_id"))

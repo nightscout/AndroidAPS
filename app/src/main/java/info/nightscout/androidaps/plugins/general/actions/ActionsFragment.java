@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -242,7 +241,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
     View.OnClickListener pumpCustomActionsListener = v -> {
 
-        SingleClickButton btn = (SingleClickButton)v;
+        SingleClickButton btn = (SingleClickButton) v;
 
         CustomAction customAction = this.pumpCustomActions.get(btn.getText().toString());
 
@@ -338,13 +337,11 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             case R.id.actions_extendedbolus_cancel:
                 if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(null);
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
                 if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;
             case R.id.actions_settempbasal:

@@ -5,8 +5,6 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.util.LongSparseArray;
 
-import com.crashlytics.android.answers.CustomEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -26,13 +23,13 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -224,13 +221,6 @@ public class IobCobOref1Thread extends Thread {
                             } catch (Exception e) {
                                 log.error("Unhandled exception", e);
                                 FabricPrivacy.logException(e);
-                                FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
-                                        .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                                        .putCustomAttribute("version", BuildConfig.VERSION)
-                                        .putCustomAttribute("autosensDataTable", iobCobCalculatorPlugin.getAutosensDataTable().toString())
-                                        .putCustomAttribute("for_data", ">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + "hourAgoData=" + hourAgoData.toString())
-                                        .putCustomAttribute("past", past)
-                                );
                                 log.debug(autosensDataTable.toString());
                                 log.debug(bucketed_data.toString());
                                 log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
@@ -364,7 +354,8 @@ public class IobCobOref1Thread extends Thread {
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
                     // add an extra negative deviation if a high temptarget is running and exercise mode is set
-                    if (SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                    // TODO AS-FIX
+                    if (false && SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(bgTime);
                         if (tempTarget != null && tempTarget.target() >= 100) {
                             autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20);

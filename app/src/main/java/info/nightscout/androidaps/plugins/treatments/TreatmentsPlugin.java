@@ -8,9 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.answers.CustomEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.Constants;
@@ -595,9 +596,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MainApp.instance().startActivity(i);
 
-            CustomEvent customEvent = new CustomEvent("TreatmentClash");
-            customEvent.putCustomAttribute("status", status);
-            FabricPrivacy.getInstance().logCustom(customEvent);
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TreatmentClash");
+            bundle.putString(FirebaseAnalytics.Param.VALUE, status);
+            FabricPrivacy.getInstance().logCustom(bundle);
         }
 
         return newRecordCreated;

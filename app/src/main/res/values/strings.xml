@@ -1216,7 +1216,6 @@
 
     <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), delay: %3$d m</string>
-    <string name="key_plugin_stats_report_timestamp" translatable="false">key_plugin_stats_report_timestamp</string>
     <string name="openaps_noasdata">No autosens data available</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
@@ -1253,6 +1252,7 @@
     <string name="mute_alert">Mute</string>
     <string name="pump_alert">Pump alert</string>
     <string name="log_site_changes">Log site changes</string>
+    <string name="log_reservoir_changes">Log reservoir changes</string>
     <string name="log_tube_changes">Log tube changes</string>
     <string name="log_battery_changes">Log battery changes</string>
     <string name="log_operating_mode_changes">Log operating mode changes</string>

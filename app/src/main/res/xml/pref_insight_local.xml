@@ -10,13 +10,18 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="insight_log_site_changes"
-            android:title="@string/log_site_changes" />
+            android:key="insight_log_reservoir_changes"
+            android:title="@string/log_reservoir_changes" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="insight_log_tube_changes"
             android:title="@string/log_tube_changes" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="insight_log_site_changes"
+            android:title="@string/log_site_changes" />
 
         <SwitchPreference
             android:defaultValue="false"

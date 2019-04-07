@@ -1089,6 +1089,7 @@ Context | Edit Context</string>
     <string name="mute_alert">Отключить звук</string>
     <string name="pump_alert">Оповещение помпы</string>
     <string name="log_site_changes">Журнал изменений места установки</string>
+    <string name="log_reservoir_changes">Отслеживать замену резервуара</string>
     <string name="log_tube_changes">Журнал замены трубки катетера</string>
     <string name="log_battery_changes">Журнал замен батареи</string>
     <string name="log_operating_mode_changes">Журнал изменений режима работы</string>
@@ -1150,6 +1151,7 @@ Context | Edit Context</string>
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Переход на летнее время меньше 3 часов назад - Замкнутый цикл отключен</string>
     <string name="storage">ограничение по объему карты памяти</string>
     <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <string name="wrongformat">Неверный формат</string>

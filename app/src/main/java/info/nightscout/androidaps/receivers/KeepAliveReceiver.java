@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
-import com.crashlytics.android.answers.CustomEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,6 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         LocalAlertUtils.shortenSnoozeInterval();
         LocalAlertUtils.checkStaleBGAlert();
         checkPump();
-        FabricPrivacy.uploadDailyStats();
 
         if (L.isEnabled(L.CORE))
             log.debug("KeepAlive received");
@@ -87,7 +84,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         }
         if (lastRun != 0 && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
             log.error("KeepAlive fail");
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("KeepAliveFail"));
+            FabricPrivacy.getInstance().logCustom("KeepAliveFail");
         }
         lastRun = System.currentTimeMillis();
     }

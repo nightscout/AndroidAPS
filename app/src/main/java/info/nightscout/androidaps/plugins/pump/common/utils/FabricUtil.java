@@ -7,7 +7,6 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.google.common.base.Splitter;
 
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 
 /**
  * Created by andy on 10/26/18.
@@ -45,7 +44,7 @@ public class FabricUtil {
             }
         }
 
-        FabricPrivacy.getInstance().logCustom(customEvent);
+        // FabricPrivacy.getInstance().logCustom(customEvent);
     }
 
 }
