@@ -128,7 +128,7 @@ public class RileyLinkStatusActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter.addFragment(new RileyLinkStatusGeneral(), MainApp.gs(R.string.rileylink_settings_tab1));
         mSectionsPagerAdapter.addFragment(new RileyLinkStatusHistory(), MainApp.gs(R.string.rileylink_settings_tab2));
-        // mSectionsPagerAdapter.addFragment(new RileyLinkSettingsTab3(), "Tab 3");
+        //mSectionsPagerAdapter.addFragment(new RileyLinkStatusDevice(), "Medtronic");
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }

@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.treatments;
 
+import java.util.Date;
+import java.util.Objects;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
-import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
+
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -60,8 +61,10 @@ public class Treatment implements DataPointWithLabelInterface {
     @DatabaseField
     public String boluscalc;
 
+
     public Treatment() {
     }
+
 
     public static Treatment createFromJson(JSONObject json) throws JSONException {
         Treatment treatment = new Treatment();
@@ -69,11 +72,11 @@ public class Treatment implements DataPointWithLabelInterface {
         treatment.date = DateUtil.roundDateToSec(JsonHelper.safeGetLong(json, "mills"));
         if (treatment.date == 0L)
             return null;
-        treatment.carbs = JsonHelper.safeGetDouble(json,"carbs");
-        treatment.insulin = JsonHelper.safeGetDouble(json,"insulin");
+        treatment.carbs = JsonHelper.safeGetDouble(json, "carbs");
+        treatment.insulin = JsonHelper.safeGetDouble(json, "insulin");
         treatment.pumpId = JsonHelper.safeGetLong(json, "pumpId");
         treatment._id = json.getString("_id");
-        treatment.isSMB = JsonHelper.safeGetBoolean(json,"isSMB");
+        treatment.isSMB = JsonHelper.safeGetBoolean(json, "isSMB");
         if (json.has("eventType")) {
             treatment.mealBolus = !json.get("eventType").equals("Correction Bolus");
             double carbs = treatment.carbs;
@@ -90,19 +93,13 @@ public class Treatment implements DataPointWithLabelInterface {
         return treatment;
     }
 
+
     public String toString() {
-        return "Treatment{" +
-                "date= " + date +
-                ", date= " + new Date(date).toLocaleString() +
-                ", isValid= " + isValid +
-                ", isSMB= " + isSMB +
-                ", _id= " + _id +
-                ", pumpId= " + pumpId +
-                ", insulin= " + insulin +
-                ", carbs= " + carbs +
-                ", mealBolus= " + mealBolus +
-                "}";
+        return "Treatment{" + "date= " + date + ", date= " + new Date(date).toLocaleString() + ", isValid= " + isValid
+            + ", isSMB= " + isSMB + ", _id= " + _id + ", pumpId= " + pumpId + ", insulin= " + insulin + ", carbs= "
+            + carbs + ", mealBolus= " + mealBolus + "}";
     }
+
 
     public boolean isDataChanging(Treatment other) {
         if (date != other.date)
@@ -113,6 +110,7 @@ public class Treatment implements DataPointWithLabelInterface {
             return true;
         return false;
     }
+
 
     public boolean isEqual(Treatment other) {
         if (date != other.date)
@@ -132,15 +130,17 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+
     @Nullable
     public JSONObject getBoluscalc() {
         try {
             if (boluscalc != null)
-            return new JSONObject(boluscalc);
+                return new JSONObject(boluscalc);
         } catch (JSONException ignored) {
         }
         return null;
     }
+
 
     /*
      * mealBolus, _id and isSMB cannot be known coming from pump. Only compare rest
@@ -159,6 +159,7 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+
     public void copyFrom(Treatment t) {
         date = t.date;
         _id = t._id;
@@ -167,7 +168,9 @@ public class Treatment implements DataPointWithLabelInterface {
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
         isSMB = t.isSMB;
+        source = t.source;
     }
+
 
     public void copyBasics(Treatment t) {
         date = t.date;
@@ -177,7 +180,8 @@ public class Treatment implements DataPointWithLabelInterface {
         source = t.source;
     }
 
-    //  ----------------- DataPointInterface --------------------
+
+    // ----------------- DataPointInterface --------------------
     @Override
     public double getX() {
         return date;
@@ -186,24 +190,29 @@ public class Treatment implements DataPointWithLabelInterface {
     // default when no sgv around available
     private double yValue = 0;
 
+
     @Override
     public double getY() {
         return isSMB ? OverviewPlugin.getPlugin().determineLowLine() : yValue;
     }
 
+
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin) + "U";
+        if (insulin > 0)
+            label += DecimalFormatter.toPumpSupportedBolus(insulin) + "U";
         if (carbs > 0)
             label += "~" + DecimalFormatter.to0Decimal(carbs) + "g";
         return label;
     }
 
+
     @Override
     public long getDuration() {
         return 0;
     }
+
 
     @Override
     public PointsWithLabelGraphSeries.Shape getShape() {
@@ -213,10 +222,12 @@ public class Treatment implements DataPointWithLabelInterface {
             return PointsWithLabelGraphSeries.Shape.BOLUS;
     }
 
+
     @Override
     public float getSize() {
         return 2;
     }
+
 
     @Override
     public int getColor() {
@@ -228,12 +239,14 @@ public class Treatment implements DataPointWithLabelInterface {
             return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
     }
 
+
     @Override
     public void setY(double y) {
         yValue = y;
     }
 
-    //  ----------------- DataPointInterface end --------------------
+
+    // ----------------- DataPointInterface end --------------------
 
     public Iob iobCalc(long time, double dia) {
         if (!isValid)

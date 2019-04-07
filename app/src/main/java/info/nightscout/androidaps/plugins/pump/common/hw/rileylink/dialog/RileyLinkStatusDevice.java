@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,23 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.CommandValueDefinition;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.CommandValueDefinitionType;
+//import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.CommandValueDefinition;
+//import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
+//import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.CommandValueDefinitionType;
+//import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 
 /**
  * Created by andy on 5/19/18.
  */
 
 // FIXME needs to be implemented
-@Deprecated
+
 public class RileyLinkStatusDevice extends Fragment implements RefreshableInterface {
 
-    // @BindView(R.id.rileylink_history_list)
     ListView listView;
 
     RileyLinkCommandListAdapter adapter;
@@ -45,11 +50,16 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
     public void onStart() {
         super.onStart();
 
-        this.listView = (ListView)getActivity().findViewById(R.id.rileylink_history_list);
+        this.listView = (ListView)getActivity().findViewById(R.id.rileyLinkDeviceList);
 
         listView.setAdapter(adapter);
 
-        refreshData();
+        setElements();
+    }
+
+
+    private void setElements() {
+
     }
 
 
@@ -60,66 +70,55 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
 
     static class ViewHolder {
 
-        TextView itemTime;
-        TextView itemSource;
         TextView itemDescription;
+        Button itemValue;
     }
 
     private class RileyLinkCommandListAdapter extends BaseAdapter {
 
-        private List<RLHistoryItem> historyItemList;
+        private List<CommandValueDefinition> commandValueList;
+        private Map<CommandValueDefinitionType, CommandValueDefinition> commandValueMap;
         private LayoutInflater mInflator;
 
 
         public RileyLinkCommandListAdapter() {
             super();
-            historyItemList = new ArrayList<>();
+            commandValueList = new ArrayList<>();
             mInflator = RileyLinkStatusDevice.this.getLayoutInflater();
         }
 
 
-        public void addItem(RLHistoryItem item) {
-            if (!historyItemList.contains(item)) {
-                historyItemList.add(item);
-                notifyDataSetChanged();
-            }
-        }
+        public void addItems(List<CommandValueDefinition> list) {
+            commandValueList.addAll(list);
 
-
-        public RLHistoryItem getHistoryItem(int position) {
-            return historyItemList.get(position);
-        }
-
-
-        public void addItemsAndClean(List<RLHistoryItem> items) {
-            this.historyItemList.clear();
-
-            for (RLHistoryItem item : items) {
-
-                if (!historyItemList.contains(item)) {
-                    historyItemList.add(item);
-                }
+            for (CommandValueDefinition commandValueDefinition : list) {
+                commandValueMap.put(commandValueDefinition.definitionType, commandValueDefinition);
             }
 
             notifyDataSetChanged();
         }
 
 
+        public CommandValueDefinition getCommandValueItem(int position) {
+            return commandValueList.get(position);
+        }
+
+
         public void clear() {
-            historyItemList.clear();
+            commandValueList.clear();
             notifyDataSetChanged();
         }
 
 
         @Override
         public int getCount() {
-            return historyItemList.size();
+            return commandValueList.size();
         }
 
 
         @Override
         public Object getItem(int i) {
-            return historyItemList.get(i);
+            return commandValueList.get(i);
         }
 
 
@@ -136,18 +135,17 @@ public class RileyLinkStatusDevice extends Fragment implements RefreshableInterf
             if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_status_device_item, null);
                 viewHolder = new RileyLinkStatusDevice.ViewHolder();
-                viewHolder.itemTime = (TextView)view.findViewById(R.id.rileylink_history_time);
-                viewHolder.itemSource = (TextView)view.findViewById(R.id.rileylink_history_source);
-                viewHolder.itemDescription = (TextView)view.findViewById(R.id.rileylink_history_description);
+                viewHolder.itemDescription = (TextView)view.findViewById(R.id.rileylink_device_label);
+                viewHolder.itemValue = (Button)view.findViewById(R.id.rileylink_device_action);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (RileyLinkStatusDevice.ViewHolder)view.getTag();
             }
-
-            RLHistoryItem item = historyItemList.get(i);
-            viewHolder.itemTime.setText(StringUtil.toDateTimeString(item.getDateTime()));
-            viewHolder.itemSource.setText("Riley Link"); // for now
-            viewHolder.itemDescription.setText(item.getDescription());
+            // Z
+            // RLHistoryItem item = historyItemList.get(i);
+            // viewHolder.itemTime.setText(StringUtil.toDateTimeString(item.getDateTime()));
+            // viewHolder.itemSource.setText("Riley Link"); // for now
+            // viewHolder.itemDescription.setText(item.getDescription());
 
             return view;
         }

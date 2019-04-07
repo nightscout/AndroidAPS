@@ -39,7 +39,7 @@ public class DailyTotalsDTO {
     private Integer sensorCalcCount;
     private Integer sensorDataCount;
 
-    private Double insulinTotal;
+    private Double insulinTotal = 0.0d;
     private Double insulinBasal = 0.0d;
     private Double insulinBolus = 0.0d;
     private Double insulinCarbs;
@@ -84,7 +84,7 @@ public class DailyTotalsDTO {
                 break;
         }
 
-        // setDisplayable();
+        setDisplayable();
     }
 
 

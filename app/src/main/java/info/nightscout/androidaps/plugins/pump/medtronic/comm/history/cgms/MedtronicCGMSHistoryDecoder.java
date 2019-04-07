@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,25 +14,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicH
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus;
 
 /**
- * Application: GGC - GNU Gluco Control
- * Plug-in: GGC PlugIn Base (base class for all plugins)
- * <p>
- * See AUTHORS for copyright information.
- * <p>
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * <p>
- * Filename: MinimedCGMSHistoryDecoder Description: Decoder for CGMS history data. For now we support just data from
- * GlucoseHistory command. ISIGHistory and VCntrHistory are IGNORED for now.
- * <p>
- * Author: Andy {andy@atech-software.com}
+ * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
 
 public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHistoryEntry> {
@@ -45,68 +30,83 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
     }
 
 
-    // @Override
-    // public Class<CGMSHistoryEntry> getHistoryEntryClass() {
-    // return CGMSHistoryEntry.class;
-    // }
-
-    // @Override
-    // public Class getHistoryEntryClass() {
-    // return CGMSHistoryEntry.class;
-    // }
-
-    public RecordDecodeStatus decodeRecord(CGMSHistoryEntry entryIn) {
-        CGMSHistoryEntry precord = (CGMSHistoryEntry)entryIn;
+    public RecordDecodeStatus decodeRecord(CGMSHistoryEntry record) {
         try {
-            return decodeRecord(precord, false);
+            return decodeRecord(record, false);
         } catch (Exception ex) {
-            LOG.error("     Error decoding: type={}, ex={}", precord.getEntryType().name(), ex.getMessage(), ex);
+            LOG.error("     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
             return RecordDecodeStatus.Error;
         }
     }
 
 
     public RecordDecodeStatus decodeRecord(CGMSHistoryEntry entry, boolean x) {
-        // FIXME
-        // TODO
-        // CGMSHistoryEntry entry = (CGMSHistoryEntry) entryIn;
 
         if (entry.getDateTimeLength() > 0) {
-            Long dt = parseDate(entry);
-            System.out.println("DT: " + dt);
+            parseDate(entry);
         }
 
-        // LOG.debug("decodeRecord: type={}", entry.getEntryType());
+        switch (entry.getEntryType()) {
 
-        switch ((CGMSHistoryEntryType)entry.getEntryType()) {
+            case SensorPacket:
+                decodeSensorPacket(entry);
+                break;
 
-            case SensorWeakSignal:
+            case SensorError:
+                decodeSensorError(entry);
                 break;
-            case SensorCal:
+
+            case SensorDataLow:
+                decodeDataHighLow(entry, 40);
                 break;
+
+            case SensorDataHigh:
+                decodeDataHighLow(entry, 400);
+                break;
+
             case SensorTimestamp:
+                decodeSensorTimestamp(entry);
                 break;
-            case BatteryChange:
+
+            case SensorCal:
+                decodeSensorCal(entry);
                 break;
+
+            case SensorCalFactor:
+                decodeSensorCalFactor(entry);
+                break;
+
+            case SensorSync:
+                decodeSensorSync(entry);
+                break;
+
             case SensorStatus:
+                decodeSensorStatus(entry);
                 break;
+
+            case CalBGForGH:
+                decodeCalBGForGH(entry);
+                break;
+
+            case GlucoseSensorData:
+                decodeGlucoseSensorData(entry);
+                break;
+
+            // just timestamp
+            case BatteryChange:
+            case Something10:
             case DateTimeChange:
                 break;
-            case SensorSync:
-                break;
-            case CalBGForGH:
-                break;
-            case SensorCalFactor:
-                LOG.debug("{}", entry.toString());
-                break;
-            case Something10:
-                break;
+
+            // just relative timestamp
             case Something19:
+            case DataEnd:
+            case SensorWeakSignal:
                 break;
 
             case None:
-            case DataEnd:
                 break;
+
         }
 
         return RecordDecodeStatus.NotSupported;
@@ -126,14 +126,14 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
         LOG.debug("createRecords not implemented... WIP");
         // return listRecords;
 
-        List<Byte> dataClear = reverseList(dataClearInput);
+        List<Byte> dataClear = reverseList(dataClearInput, Byte.class);
 
         System.out.println("Reversed:" + ByteUtil.getHex(ByteUtil.getByteArrayFromList(dataClear)));
 
         prepareStatistics();
 
         int counter = 0;
-        int record = 0;
+        // int record = 0;
 
         List<CGMSHistoryEntry> outList = new ArrayList<CGMSHistoryEntry>();
 
@@ -151,22 +151,18 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
 
                 if (entryType == CGMSHistoryEntryType.None) {
                     this.unknownOpCodes.put(opCode, opCode);
-                    // System.out.println("Unknown code: " + opCode);
+                    LOG.warn("GlucoseHistoryEntry with unknown code: " + opCode);
 
                     CGMSHistoryEntry pe = new CGMSHistoryEntry();
                     pe.setEntryType(CGMSHistoryEntryType.None);
                     pe.setOpCode(opCode);
 
-                    // List<Byte> listRawData = new ArrayList<Byte>();
-                    // listRawData.add((byte) opCode);
-
-                    // pe.setOpCode(opCode);
                     pe.setData(Arrays.asList((byte)opCode), false);
-
-                    // System.out.println("Record: " + pe);
 
                     outList.add(pe);
                 } else {
+                    // System.out.println("OpCode: " + opCode);
+
                     List<Byte> listRawData = new ArrayList<Byte>();
                     listRawData.add((byte)opCode);
 
@@ -189,59 +185,47 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
                 CGMSHistoryEntry pe = new CGMSHistoryEntry();
                 pe.setEntryType(CGMSHistoryEntryType.GlucoseSensorData);
 
-                // List<Byte> listRawData = new ArrayList<Byte>();
-                // listRawData.add((byte) opCode);
-
-                // pe.setOpCode(opCode);
                 pe.setData(Arrays.asList((byte)opCode), false);
-
-                // System.out.println("Record: " + pe);
 
                 outList.add(pe);
             }
 
         } while (counter < dataClear.size());
 
-        int i = outList.size() - 1;
+        List<CGMSHistoryEntry> reversedOutList = reverseList(outList, CGMSHistoryEntry.class);
 
-        for (; i >= 0; i--) {
-            // CGMSHistoryEntryType type = (CGMSHistoryEntryType) outList.get(i).getDateLength();
+        Long timeStamp = null;
+        LocalDateTime dateTime = null;
+        int getIndex = 0;
 
-            if (outList.get(i).getDateLength() > 0) {
-                System.out.println("Recordccc2: " + outList.get(i));
+        for (CGMSHistoryEntry entry : reversedOutList) {
 
-                decodeRecord(outList.get(i));
-                // 2015-04-11T14:02:00
+            decodeRecord(entry);
 
-                break;
+            if (entry.hasTimeStamp()) {
+                timeStamp = entry.atechDateTime;
+                dateTime = DateTimeUtil.toLocalDateTime(timeStamp);
+                getIndex = 0;
+            } else if (entry.getEntryType() == CGMSHistoryEntryType.GlucoseSensorData) {
+                getIndex++;
+                if (dateTime != null)
+                    entry.setDateTime(dateTime, getIndex);
+            } else {
+                if (dateTime != null)
+                    entry.setDateTime(dateTime, getIndex);
             }
 
-            // System.out.println("Record2: " + outList.get(i));
-
+            LOG.debug("Record: {}", entry);
         }
 
-        // System.exit(1);
-
-        // FIXME
-        for (; i >= 0; i--) {
-            // System.out.println("Record2: " + outList.get(i));
-
-            CGMSHistoryEntry che = (CGMSHistoryEntry)outList.get(i);
-
-            parseDate(che);
-
-            System.out.println("Record2: " + outList.get(i));
-
-        }
-
-        return outList;
+        return reversedOutList;
 
     }
 
 
-    private List<Byte> reverseList(List<Byte> dataClearInput) {
+    private <E extends Object> List<E> reverseList(List<E> dataClearInput, Class<E> clazz) {
 
-        List<Byte> outList = new ArrayList<Byte>();
+        List<E> outList = new ArrayList<E>();
 
         for (int i = dataClearInput.size() - 1; i > 0; i--) {
             outList.add(dataClearInput.get(i));
@@ -302,10 +286,16 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
 
 
     private Long parseDate(CGMSHistoryEntry entry) {
-        if (entry.getEntryType().hasDate())
+
+        // System.out.println("parseDate [entryType=" + entry.getEntryType() + ",hasDate="
+        // + entry.getEntryType().hasDate() + "]");
+
+        if (!entry.getEntryType().hasDate())
             return null;
 
         byte data[] = entry.getDatetime();
+
+        // System.out.println("parseDate: " + data);
 
         // def parse_date (data, unmask=False, strict=False,
         // minute_specific=False):
@@ -340,10 +330,14 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
             // parseHours(data[2]), parseMinutes(data[1]), 0,
             // ATechDateType.DateAndTimeSec);
 
-            entry.atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3]), parseMonths(data[0], data[1]),
+            Long atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3]), parseMonths(data[0], data[1]),
                 parseDay(data[2]), parseHours(data[0]), parseMinutes(data[1]), 0);
 
-            return entry.atechDateTime;
+            // System.out.println("atechDateTime: " + atechDateTime);
+
+            entry.setAtechDateTime(atechDateTime);
+
+            return atechDateTime;
 
         } else if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.SecondSpecific) {
             LOG.warn("parseDate for SecondSpecific type is not implemented.");
@@ -352,6 +346,184 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
         } else
             return null;
 
+    }
+
+
+    private void decodeGlucoseSensorData(CGMSHistoryEntry entry) {
+        int sgv = entry.getUnsignedRawDataByIndex(0) * 2;
+        entry.addDecodedData("sgv", sgv);
+    }
+
+
+    private void decodeCalBGForGH(CGMSHistoryEntry entry) {
+
+        int amount = ((entry.getRawDataByIndex(3) & 0b00100000) << 3) | entry.getRawDataByIndex(5);
+        //
+        String originType;
+
+        switch (entry.getRawDataByIndex(3) >> 5 & 0b00000011) {
+            case 0x00:
+                originType = "rf";
+                break;
+
+            default:
+                originType = "unknown";
+
+        }
+
+        entry.addDecodedData("amount", amount);
+        entry.addDecodedData("originType", originType);
+
+    }
+
+
+    private void decodeSensorSync(CGMSHistoryEntry entry) {
+
+        String syncType;
+
+        switch (entry.getRawDataByIndex(3) >> 5 & 0b00000011) {
+            case 0x01:
+                syncType = "new";
+                break;
+
+            case 0x02:
+                syncType = "old";
+                break;
+
+            default:
+                syncType = "find";
+                break;
+
+        }
+
+        entry.addDecodedData("syncType", syncType);
+    }
+
+
+    private void decodeSensorStatus(CGMSHistoryEntry entry) {
+
+        String statusType;
+
+        switch (entry.getRawDataByIndex(3) >> 5 & 0b00000011) {
+            case 0x00:
+                statusType = "off";
+                break;
+
+            case 0x01:
+                statusType = "on";
+                break;
+
+            case 0x02:
+                statusType = "lost";
+                break;
+
+            default:
+                statusType = "unknown";
+        }
+
+        entry.addDecodedData("statusType", statusType);
+
+    }
+
+
+    private void decodeSensorCalFactor(CGMSHistoryEntry entry) {
+
+        double factor = (entry.getRawDataByIndex(5) << 8 | entry.getRawDataByIndex(6)) / 1000.0d;
+
+        entry.addDecodedData("factor", factor);
+    }
+
+
+    private void decodeSensorCal(CGMSHistoryEntry entry) {
+
+        String calibrationType;
+
+        switch (entry.getRawDataByIndex(1)) {
+            case 0x00:
+                calibrationType = "meter_bg_now";
+                break;
+
+            case 0x01:
+                calibrationType = "waiting";
+                break;
+
+            case 0x02:
+                calibrationType = "cal_error";
+                break;
+
+            default:
+                calibrationType = "unknown";
+        }
+
+        entry.addDecodedData("calibrationType", calibrationType);
+
+    }
+
+
+    private void decodeSensorTimestamp(CGMSHistoryEntry entry) {
+
+        String sensorTimestampType;
+
+        switch (entry.getRawDataByIndex(3) >> 5 & 0b00000011) {
+
+            case 0x00:
+                sensorTimestampType = "LastRf";
+                break;
+
+            case 0x01:
+                sensorTimestampType = "PageEnd";
+                break;
+
+            case 0x02:
+                sensorTimestampType = "Gap";
+                break;
+
+            default:
+                sensorTimestampType = "Unknown";
+                break;
+
+        }
+
+        entry.addDecodedData("sensorTimestampType", sensorTimestampType);
+    }
+
+
+    private void decodeSensorPacket(CGMSHistoryEntry entry) {
+
+        String packetType;
+
+        switch (entry.getRawDataByIndex(1)) {
+            case 0x02:
+                packetType = "init";
+                break;
+
+            default:
+                packetType = "unknown";
+        }
+
+        entry.addDecodedData("packetType", packetType);
+    }
+
+
+    private void decodeSensorError(CGMSHistoryEntry entry) {
+
+        String errorType;
+
+        switch (entry.getRawDataByIndex(1)) {
+            case 0x01:
+                errorType = "end";
+                break;
+
+            default:
+                errorType = "unknown";
+        }
+
+        entry.addDecodedData("errorType", errorType);
+    }
+
+
+    private void decodeDataHighLow(CGMSHistoryEntry entry, int sgv) {
+        entry.addDecodedData("sgv", sgv);
     }
 
 

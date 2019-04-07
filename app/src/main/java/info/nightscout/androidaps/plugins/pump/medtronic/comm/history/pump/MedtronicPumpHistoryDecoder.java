@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BolusDTO;
@@ -25,24 +22,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
- * Application: GGC - GNU Gluco Control
- * Plug-in: GGC PlugIn Base (base class for all plugins)
- * <p>
- * See AUTHORS for copyright information.
- * <p>
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * <p>
- * Filename: MedtronicPumpHistoryDecoder Description: Decoder for history data.
- * <p>
- * Author: Andy {andy@atech-software.com}
+ * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
 
 public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHistoryEntry> {
@@ -52,7 +34,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     // PumpValuesWriter pumpValuesWriter = null;
 
     // DataAccessPlugInBase dataAccess = DataAccessPump.getInstance();
-    Map<String, BolusDTO> bolusHistory = new HashMap<>();
+    // Map<String, BolusDTO> bolusHistory = new HashMap<>();
     // Temporary records for processing
     private PumpHistoryEntry tbrPreviousRecord;
     private PumpHistoryEntry changeTimeRecord;
@@ -62,11 +44,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     public MedtronicPumpHistoryDecoder() {
     }
 
-
-    // @Override
-    // public Class<PumpHistoryEntry> getHistoryEntryClass() {
-    // return PumpHistoryEntry.class;
-    // }
 
     public List<PumpHistoryEntry> createRecords(List<Byte> dataClear) {
         prepareStatistics();
@@ -207,66 +184,26 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    public RecordDecodeStatus decodeRecord(PumpHistoryEntry entryIn) {
-        PumpHistoryEntry precord = (PumpHistoryEntry)entryIn;
+    public RecordDecodeStatus decodeRecord(PumpHistoryEntry record) {
         try {
-            return decodeRecord(entryIn, false);
+            return decodeRecord(record, false);
         } catch (Exception ex) {
-            LOG.error("     Error decoding: type={}, ex={}", precord.getEntryType().name(), ex.getMessage(), ex);
+            LOG.error("     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
             return RecordDecodeStatus.Error;
         }
     }
 
 
-    public RecordDecodeStatus decodeRecord(MedtronicHistoryEntry entryIn, boolean x) {
-        // FIXME
-        // TODO
-        PumpHistoryEntry entry = (PumpHistoryEntry)entryIn;
+    public RecordDecodeStatus decodeRecord(PumpHistoryEntry entry, boolean x) {
 
         if (entry.getDateTimeLength() > 0) {
             decodeDateTime(entry);
         }
 
-        // LOG.debug("decodeRecord: type={}", entry.getEntryType());
-        // decodeDateTime(entry);
-
         switch (entry.getEntryType()) {
-        // not implemented
-
-            case DailyTotals522:
-            case DailyTotals523:
-            case DailyTotals515:
-            case EndResultTotals:
-                return decodeDailyTotals(entry); // Not supported at the moment
 
             case ChangeBasalPattern:
                 return RecordDecodeStatus.OK; // Not supported at the moment
-
-                // WORK IN PROGRESS
-
-                // POSSIBLY READY
-
-            case ChangeBasalProfile_OldProfile:
-            case ChangeBasalProfile_NewProfile:
-                return decodeBasalProfile(entry);
-
-            case BasalProfileStart:
-                return decodeBasalProfileStart(entry);
-
-                // AAPS Implementation - Not yet done
-
-                // AAPS Implementation - OK entries
-            case ChangeTempBasalType:
-            case ChangeMaxBolus:
-            case ChangeMaxBasal:
-            case ClearSettings:
-            case SaveSettings:
-                return RecordDecodeStatus.OK;
-                // AAPS events (Tbr, Bolus)
-
-                // AAPS alerts
-
-                // AAPS TDDs
 
                 // AAPS Implementation - Ignored entries
             case CalBGForPH:
@@ -352,6 +289,19 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
                 // **** Implemented records ****
 
+            case DailyTotals522:
+            case DailyTotals523:
+            case DailyTotals515:
+            case EndResultTotals:
+                return decodeDailyTotals(entry);
+
+            case ChangeBasalProfile_OldProfile:
+            case ChangeBasalProfile_NewProfile:
+                return decodeBasalProfile(entry);
+
+            case BasalProfileStart:
+                return decodeBasalProfileStart(entry);
+
             case ChangeTime:
                 changeTimeRecord = entry;
                 return RecordDecodeStatus.OK;
@@ -372,10 +322,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 decodeBolus(entry);
                 return RecordDecodeStatus.OK;
 
-                // case EndResultTotals:
-                // decodeEndResultTotals(entry);
-                // return RecordDecodeStatus.OK;
-
             case BatteryChange:
                 decodeBatteryActivity(entry);
                 return RecordDecodeStatus.OK;
@@ -385,23 +331,15 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 return RecordDecodeStatus.OK;
 
             case LowBattery:
-                // this.writeData(PumpBaseType.Event, PumpEventType.BatteryLow, entry.getATechDate());
-                return RecordDecodeStatus.OK;
-
             case PumpSuspend:
-                // this.writeData(PumpBaseType.Event, PumpEventType.BasalStop, entry.getATechDate());
-                return RecordDecodeStatus.OK;
-
             case PumpResume:
-                // this.writeData(PumpBaseType.Event, PumpEventType.BasalRun, entry.getATechDate());
-                return RecordDecodeStatus.OK;
-
             case Rewind:
-                // this.writeData(PumpBaseType.Event, PumpEventType.CartridgeRewind, entry.getATechDate());
-                return RecordDecodeStatus.OK;
-
             case NoDeliveryAlarm:
-                // this.writeData(PumpBaseType.Alarm, PumpAlarms.NoDelivery, entry.getATechDate());
+            case ChangeTempBasalType:
+            case ChangeMaxBolus:
+            case ChangeMaxBasal:
+            case ClearSettings:
+            case SaveSettings:
                 return RecordDecodeStatus.OK;
 
             case BolusWizardBolusEstimate:

@@ -367,7 +367,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
             int agoMin = (int)(agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " min ago\n";
         }
-        if (pumpStatus.lastBolusTime.getTime() != 0) {
+        if (pumpStatus.lastBolusTime != null && pumpStatus.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pumpStatus.lastBolusAmount) + "U @" + //
                 android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
         }
@@ -381,10 +381,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
-        if (!veryShort) {
-            ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
-                + pumpStatus.maxDailyTotalUnits + " U\n";
-        }
+        // if (!veryShort) {
+        // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
+        // + pumpStatus.maxDailyTotalUnits + " U\n";
+        // }
         ret += "IOB: " + pumpStatus.iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + pumpStatus.batteryRemaining + "\n";

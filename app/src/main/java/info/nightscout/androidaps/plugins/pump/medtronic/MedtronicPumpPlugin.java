@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -274,7 +275,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     public boolean isInitialized() {
         // TODO remove
-        if (isLoggingEnabled())
+        if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug("MedtronicPumpPlugin::isInitialized");
         return isServiceSet() && isInitialized;
     }
@@ -337,8 +338,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isConnected() {
-        // TODO remove
-        if (isLoggingEnabled())
+        if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug("MedtronicPumpPlugin::isConnected");
         return isServiceSet() && medtronicService.isInitialized();
     }
@@ -346,8 +346,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isConnecting() {
-        // TODO remove
-        if (isLoggingEnabled())
+        if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug("MedtronicPumpPlugin::isConnecting");
         return !isServiceSet() || !medtronicService.isInitialized();
     }
@@ -368,7 +367,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    public void resetStatusState() {
+    void resetStatusState() {
         firstRun = true;
         isRefresh = true;
     }
@@ -411,40 +410,44 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
 
-        Set<MedtronicStatusRefreshType> refreshTypesNeededToReschedule = new HashSet<>();
-
         // execute
-        for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefresh.entrySet()) {
+        if (statusRefresh != null) {
 
-            if (refreshType.getValue() > 0 && System.currentTimeMillis() > refreshType.getValue()) {
+            Set<MedtronicStatusRefreshType> refreshTypesNeededToReschedule = new HashSet<>();
 
-                switch (refreshType.getKey()) {
-                    case PumpHistory: {
-                        readPumpHistory();
+            for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefresh.entrySet()) {
+
+                if (refreshType.getValue() > 0 && System.currentTimeMillis() > refreshType.getValue()) {
+
+                    switch (refreshType.getKey()) {
+                        case PumpHistory: {
+                            readPumpHistory();
+                        }
+                            break;
+
+                        case PumpTime:
+                        case BatteryStatus:
+                        case RemainingInsulin: {
+                            medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
+                            refreshTypesNeededToReschedule.add(refreshType.getKey());
+                            resetTime = true;
+                        }
+                            break;
+
+                        case Configuration: {
+                            medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
+                            resetTime = true;
+                        }
+                            break;
                     }
-                        break;
-
-                    case PumpTime:
-                    case BatteryStatus:
-                    case RemainingInsulin: {
-                        medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
-                        refreshTypesNeededToReschedule.add(refreshType.getKey());
-                        resetTime = true;
-                    }
-                        break;
-
-                    case Configuration: {
-                        medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
-                        resetTime = true;
-                    }
-                        break;
                 }
             }
-        }
 
-        // reschedule
-        for (MedtronicStatusRefreshType refreshType : refreshTypesNeededToReschedule) {
-            scheduleNextRefresh(refreshType);
+            // reschedule
+            for (MedtronicStatusRefreshType refreshType : refreshTypesNeededToReschedule) {
+                scheduleNextRefresh(refreshType);
+            }
+
         }
 
         if (resetTime)
@@ -568,10 +571,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public boolean isThisProfileSet(Profile profile) {
         LOG.debug("isThisProfileSet: basalInitalized={}", getMDTPumpStatus().basalProfileStatus);
 
-        if (getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.ProfileOK)
-            return true;
-
-        return isProfileSame(profile);
+        return (getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.ProfileOK) || isProfileSame(profile);
     }
 
 
@@ -584,7 +584,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             LOG.debug("Current Basals (h):   "
                 + (basalsByHour == null ? "null" : BasalProfile.getProfilesByHourToString(basalsByHour)));
 
-        int index = 0;
+        // int index = 0;
 
         if (basalsByHour == null)
             return true; // we don't want to set profile again, unless we are sure
@@ -599,7 +599,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 invalid = true;
             }
 
-            stringBuilder.append(String.format("%.3f", basalValue.value));
+            stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValue.value));
             stringBuilder.append(" ");
         }
 
@@ -745,7 +745,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     }).start();
                 }
 
-                boolean treatmentCreated = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 getMDTPumpStatus().reservoirRemainingUnits -= detailedBolusInfo.insulin;
@@ -753,7 +753,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
                     : MedtronicConst.Statistics.StandardBoluses);
 
-                if (response) {
+                // if (response)
+                {
                     int bolusTime = (int)(detailedBolusInfo.insulin * 42.0d);
                     long time = System.currentTimeMillis() + (bolusTime * 1000);
 
@@ -762,8 +763,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     refreshCustomActionsList();
                 }
 
-                return new PumpEnactResult().success(response) //
-                    .enacted(response) //
+                return new PumpEnactResult().success(true) //
+                    .enacted(true) //
                     .bolusDelivered(detailedBolusInfo.insulin) //
                     .carbsDelivered(detailedBolusInfo.carbs);
 
@@ -930,13 +931,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             finishAction("TBR");
 
-            return new PumpEnactResult().success(response).enacted(response) //
+            return new PumpEnactResult().success(true).enacted(true) //
                 .absolute(absoluteRate).duration(durationInMinutes);
 
         } else {
             finishAction("TBR");
 
-            return new PumpEnactResult().success(response).enacted(response) //
+            return new PumpEnactResult().success(false).enacted(false) //
                 .comment(MainApp.gs(R.string.medtronic_cmd_tbr_could_not_be_delivered));
         }
 
@@ -993,6 +994,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         medtronicHistoryData.processNewHistoryData();
 
         this.medtronicHistoryData.finalizeNewHistoryRecords();
+        // this.medtronicHistoryData.setLastHistoryRecordTime(this.lastPumpHistoryEntry.atechDateTime);
 
     }
 
@@ -1046,7 +1048,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - {}",
                     gsonInstancePretty.toJson(lastPumpHistoryEntry));
             medtronicHistoryData.setIsInInit(false);
-            medtronicHistoryData.setLastHistoryRecordTime(null);
+            // medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntry.atechDateTime);
 
             // targetDate = lastPumpHistoryEntry.atechDateTime;
         }
@@ -1136,7 +1138,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private enum StatusRefreshAction {
         Add, //
-        GetData;
+        GetData
     }
 
 
@@ -1246,7 +1248,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
 
-            return new PumpEnactResult().success(response).enacted(response) //
+            return new PumpEnactResult().success(true).enacted(true) //
                 .isTempCancel(true);
         } else {
             if (isLoggingEnabled())
@@ -1305,8 +1307,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
 
         if (response) {
-            medtronicHistoryData.setBasalProfileChanged();
-            return new PumpEnactResult().success(response).enacted(response);
+            // medtronicHistoryData.setBasalProfileChanged();
+            return new PumpEnactResult().success(true).enacted(true);
         } else {
             return new PumpEnactResult().success(response).enacted(response) //
                 .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_could_not_be_set));
@@ -1326,9 +1328,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         for (BasalProfileEntry profileEntry : basalProfile.getEntries()) {
 
             if (profileEntry.rate > pumpStatus.maxBasal) {
-
-                stringBuilder.append(profileEntry.startTime.toString("HH:mm") + "=" + profileEntry.rate);
-
+                stringBuilder.append(profileEntry.startTime.toString("HH:mm"));
+                stringBuilder.append("=");
+                stringBuilder.append(profileEntry.rate);
             }
         }
 
@@ -1361,27 +1363,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     // OPERATIONS not supported by Pump or Plugin
-
-    // public void connect(String reason) {
-    // // we don't use this.
-    // // we connect to RileyLink on startup and keep connection opened, then connection to pump
-    // // is established when needed.
-    //
-    // // TODO remove
-    // LOG.debug("MedtronicPumpPlugin::connect (reason: {})", reason);
-    // }
-
-    // public void disconnect(String reason) {
-    // // see comment in connect
-    // // TO DO remove
-    // LOG.debug("MedtronicPumpPlugin::disconnect (reason: {})", reason);
-    // }
-
-    // public void stopConnecting() {
-    // // see comment in connect
-    // // TO DO remove
-    // LOG.debug("MedtronicPumpPlugin::stopConnecting");
-    // }
 
     private List<CustomAction> customActions = null;
 

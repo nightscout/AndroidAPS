@@ -63,7 +63,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     /**
      * Pump id that will be used with AAPS object (time * 1000 + historyType (max is FF = 255)
      */
-    public long pumpId;
+    protected Long pumpId;
 
     /**
      * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's are not actually
@@ -235,6 +235,16 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     public List<Byte> getRawData() {
         return rawData;
+    }
+
+
+    public byte getRawDataByIndex(int index) {
+        return rawData.get(index);
+    }
+
+
+    public int getUnsignedRawDataByIndex(int index) {
+        return ByteUtil.convertUnsignedByteToInt(rawData.get(index));
     }
 
 

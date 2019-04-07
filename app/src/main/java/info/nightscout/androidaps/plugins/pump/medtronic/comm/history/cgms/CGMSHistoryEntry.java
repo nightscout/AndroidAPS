@@ -2,12 +2,19 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDateTime;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
 
 /**
- * Created by andy on 27.03.15.
+ * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
+
 public class CGMSHistoryEntry extends MedtronicHistoryEntry {
 
     private CGMSHistoryEntryType entryType;
@@ -63,10 +70,22 @@ public class CGMSHistoryEntry extends MedtronicHistoryEntry {
     }
 
 
-    @Override
-    public String getToStringStart() {
-        return "CGMSHistoryEntry [type=" + entryType.name() + " [" + getOpCode() + ", 0x"
-            + ByteUtil.getCorrectHexValue(getOpCode()) + "]";
+    public boolean hasTimeStamp() {
+        return (this.entryType.hasDate());
     }
 
+
+    @Override
+    public String getToStringStart() {
+
+        return "CGMSHistoryEntry [type=" + StringUtils.rightPad(entryType.name(), 18) + " ["
+            + StringUtils.leftPad("" + getOpCode(), 3) + ", 0x" + ByteUtil.getCorrectHexValue(getOpCode()) + "]";
+    }
+
+
+    public void setDateTime(LocalDateTime timeStamp, int getIndex) {
+
+        setAtechDateTime(DateTimeUtil.toATechDate(timeStamp.plusMinutes(getIndex * 5)));
+
+    }
 }

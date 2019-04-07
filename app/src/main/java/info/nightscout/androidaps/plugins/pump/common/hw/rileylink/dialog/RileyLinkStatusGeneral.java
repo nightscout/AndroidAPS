@@ -94,13 +94,18 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
         RileyLinkTargetDevice targetDevice = RileyLinkUtil.getTargetDevice();
 
         this.connectionStatus.setText(MainApp.gs(RileyLinkUtil.getServiceState().getResourceId(targetDevice)));
-        this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
-        this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
-        "-"
-            : MainApp.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
 
-        this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + "\nCC110: "
-            + rileyLinkServiceData.versionCC110.toString());
+        if (rileyLinkServiceData != null) {
+            this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
+            this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
+            "-"
+                : MainApp.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
+
+            this.firmwareVersion.setText("BLE113: " + //
+                rileyLinkServiceData.versionBLE113 == null ? "-" : rileyLinkServiceData.versionBLE113 + //
+                "\nCC110: " + rileyLinkServiceData.versionCC110 == null ? "-" : rileyLinkServiceData.versionCC110
+                .toString());
+        }
 
         // TODO add handling for Omnipod pump status
         this.medtronicPumpStatus = MedtronicUtil.getPumpStatus();

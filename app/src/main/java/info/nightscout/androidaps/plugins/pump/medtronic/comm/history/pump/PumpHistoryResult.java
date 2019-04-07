@@ -33,10 +33,15 @@ public class PumpHistoryResult {
 
     public PumpHistoryResult(PumpHistoryEntry searchEntry, Long targetDate) {
         if (searchEntry != null) {
-            this.searchEntry = searchEntry;
-            this.searchType = SearchType.LastEntry;
-            LOG.debug("PumpHistoryResult. Search parameters: Last Entry: " + searchEntry.atechDateTime + " type="
-                + searchEntry.getEntryType().name());
+            /*
+             * this.searchEntry = searchEntry;
+             * this.searchType = SearchType.LastEntry;
+             * LOG.debug("PumpHistoryResult. Search parameters: Last Entry: " + searchEntry.atechDateTime + " type="
+             * + searchEntry.getEntryType().name());
+             */
+            this.searchDate = searchEntry.atechDateTime;
+            this.searchType = SearchType.Date;
+            LOG.debug("PumpHistoryResult. Search parameters: Date(with searchEntry): " + targetDate);
         } else if (targetDate != null) {
             this.searchDate = targetDate;
             this.searchType = SearchType.Date;

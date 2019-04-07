@@ -408,6 +408,9 @@ public class MedtronicFragment extends SubscriberFragment {
         if (activity != null && basaBasalRateView != null)
             activity.runOnUiThread(() -> {
 
+                if (lastConnectionView == null) // ui not yet initialized
+                    return;
+
                 localActivity = activity;
                 MedtronicPumpPlugin plugin = (MedtronicPumpPlugin)MedtronicPumpPlugin.getPlugin();
                 MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();

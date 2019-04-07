@@ -229,11 +229,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                     else
                         tempTarget.setVisibility(View.VISIBLE);
 
-                    if (!Config.APS)
-                        tempTarget.setVisibility(View.GONE);
-                    else
-                        tempTarget.setVisibility(View.VISIBLE);
-
                     if (!pump.getPumpDescription().supportsTDDs)
                         tddStats.setVisibility(View.GONE);
                     else

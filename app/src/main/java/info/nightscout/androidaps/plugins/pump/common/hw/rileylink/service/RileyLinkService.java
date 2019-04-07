@@ -180,6 +180,11 @@ public abstract class RileyLinkService extends Service {
     // returns true if our Rileylink configuration changed
     public boolean reconfigureRileyLink(String deviceAddress) {
 
+        if (rileyLinkBLE == null) {
+            RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
+            return false;
+        }
+
         RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkInitializing);
 
         if (rileyLinkBLE.isConnected()) {

@@ -8,14 +8,14 @@
 
     <TextView
         android:id="@+id/rileylink_device_label"
-        android:layout_width="150dp"
+        android:layout_width="184dp"
         android:layout_height="match_parent"
-        android:text="Command"
         android:gravity="center_vertical"
+        android:text="Command"
         android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/rileylink_history_description"
+    <Button
+        android:id="@+id/rileylink_device_action"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:text="Description"

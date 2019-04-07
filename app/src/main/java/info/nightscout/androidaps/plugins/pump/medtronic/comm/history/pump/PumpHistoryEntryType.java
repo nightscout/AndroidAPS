@@ -9,27 +9,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
- * Application: GGC - GNU Gluco Control
- * Plug-in: GGC PlugIn Base (base class for all plugins)
- * <p>
- * See AUTHORS for copyright information.
- * <p>
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * <p>
- * Filename: PumpHistoryEntryType Description: Pump History Entry Type.
- * <p>
- * Data is from several sources, so in comments there are "versions". Version: v1 - default doc from decoding-carelink
- * v2 - nightscout code v3 - testing v4 - Andy testing (?) v5 - Loop code and another batch of testing with 512
- * <p>
- * Author: Andy {andy@atech-software.com}
+ * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
 
 public enum PumpHistoryEntryType // implements CodeEnum

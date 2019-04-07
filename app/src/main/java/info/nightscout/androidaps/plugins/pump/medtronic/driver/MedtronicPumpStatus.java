@@ -228,13 +228,21 @@ public class MedtronicPumpStatus extends PumpStatus {
                 }
             }
 
-            maxBolus = checkParameterValue(MedtronicConst.Prefs.MaxBolus, "25.0", 25.0d);
+            double maxBolusLcl = checkParameterValue(MedtronicConst.Prefs.MaxBolus, "25.0", 25.0d);
 
-            LOG.debug("Max Bolus from AAPS settings is " + maxBolus);
+            if (maxBolus == null || !maxBolus.equals(maxBolusLcl)) {
+                maxBolus = maxBolusLcl;
 
-            maxBasal = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0d);
+                LOG.debug("Max Bolus from AAPS settings is " + maxBolus);
+            }
 
-            LOG.debug("Max Basal from AAPS settings is " + maxBasal);
+            double maxBasalLcl = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0d);
+
+            if (maxBasal == null || !maxBasal.equals(maxBasalLcl)) {
+                maxBasal = maxBasalLcl;
+
+                LOG.debug("Max Basal from AAPS settings is " + maxBasal);
+            }
 
             startService();
 

@@ -185,7 +185,7 @@ public class DateTimeUtil {
         Date d = new Date();
         d.setDate(dayOfMonth);
         d.setMonth(month - 1);
-        d.setYear(year);
+        d.setYear(year - 1900);
         d.setHours(hourOfDay);
         d.setMinutes(minute);
         d.setSeconds(second);

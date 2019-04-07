@@ -7,7 +7,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 /**
- * Created by andy on 12/23/18.
+ * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
 
 public enum PumpHistoryEntryGroup {
