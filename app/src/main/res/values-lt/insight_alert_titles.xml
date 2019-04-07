@@ -5,11 +5,12 @@
     <string name="alert_r2_title">Praleistas bolusas</string>
     <string name="alert_r3_title">Žadintuvas</string>
     <string name="alert_r4_title">Keisti infuzijos rinkinį</string>
+    <string name="alert_r7_title">LBD baigtas</string>
     <string name="alert_w31_title">Mažai insulino rezervuare</string>
     <string name="alert_w32_title">Baterija senka</string>
     <string name="alert_w33_title">Netinkamas laikas/data</string>
     <string name="alert_w34_title">Garantija pasibaigė</string>
-    <string name="alert_w36_title">LB atšaukta</string>
+    <string name="alert_w36_title">LBD atšauktas</string>
     <string name="alert_w38_title">Bolusas atšauktas</string>
     <string name="alert_w39_title">Eksploatacijos laikas artėja prie pabaigos</string>
     <string name="alert_m20_title">Rezervuaras neįdėtas</string>

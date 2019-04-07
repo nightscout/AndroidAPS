@@ -1087,6 +1087,7 @@
     <string name="mute_alert">Demp</string>
     <string name="pump_alert">Pomp alarm</string>
     <string name="log_site_changes">Log ligging veranderings</string>
+    <string name="log_reservoir_changes">Log stoor veranderinge</string>
     <string name="log_tube_changes">Log voerpyp verandering</string>
     <string name="log_battery_changes">Log battery verandering</string>
     <string name="log_operating_mode_changes">Log bedryf modus veranderinge</string>
