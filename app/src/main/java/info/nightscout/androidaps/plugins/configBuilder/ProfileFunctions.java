@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -137,6 +138,46 @@ public class ProfileFunctions {
         }
         log.error("getProfile at the end: returning null");
         return null;
+    }
+
+    public static ProfileSwitch prepareProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift, long date) {
+        ProfileSwitch profileSwitch = new ProfileSwitch();
+        profileSwitch.date = date;
+        profileSwitch.source = Source.USER;
+        profileSwitch.profileName = profileName;
+        profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
+        profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
+        profileSwitch.durationInMinutes = duration;
+        profileSwitch.isCPP = percentage != 100 || timeshift != 0;
+        profileSwitch.timeshift = timeshift;
+        profileSwitch.percentage = percentage;
+        return profileSwitch;
+    }
+
+    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
+        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, System.currentTimeMillis());
+        TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
+        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+    }
+
+    public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
+        ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
+        if (profileSwitch != null) {
+            profileSwitch = new ProfileSwitch();
+            profileSwitch.date = System.currentTimeMillis();
+            profileSwitch.source = Source.USER;
+            profileSwitch.profileName = getInstance().getProfileName(System.currentTimeMillis(), false);
+            profileSwitch.profileJson = getInstance().getProfile().getData().toString();
+            profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
+            profileSwitch.durationInMinutes = duration;
+            profileSwitch.isCPP = percentage != 100 || timeshift != 0;
+            profileSwitch.timeshift = timeshift;
+            profileSwitch.percentage = percentage;
+            TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
+            FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+        } else {
+            log.error("No profile switch existing");
+        }
     }
 
 }

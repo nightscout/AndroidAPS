@@ -265,12 +265,7 @@
     <string name="smscommunicator_bolusreplywithcode">Om de bolus %1$.2fU toe te dienen antwoord met de code %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus mislukt</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU succesvol toegediend</string>
-    <string name="bolusrequested" formatted="false">Klaar om %.2fE toe te dienen</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU succesvol toegediend</string>
-    <string name="bolusdelivering" formatted="false">Toedienen %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Sta SMS commando\'s toe</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolus via sms niet toegestaan</string>
     <string name="glucosetype_finger">Vingerprik</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manueel</string>
@@ -339,16 +334,12 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="smscommunicator_loopisenabled">Loop is ingeschakeld</string>
     <string name="valuelimitedto">%1$.2f gelimiteerd tot %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Waarde %s is buiten de toegestane limieten</string>
-    <string name="smscommunicator_remotebasalnotallowed">Basale instellingen op afstand zijn niet toegestaan</string>
     <string name="smscommunicator_remotecommandnotallowed">Commando\'s op afstand zijn niet toegestaan</string>
-    <string name="smscommunicator_basalreplywithcode">Om het basaal %1$.2fE/uur te starten antwoord met de code %2$s</string>
     <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
     <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_tempbasalfailed">Start tijdelijk basaal mislukt</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Om het tijdelijke basaal te stoppen antwoord met de code %s</string>
     <string name="smscommunicator_tempbasalcanceled">Tijdelijk basaal afgebroken</string>
     <string name="smscommunicator_tempbasalcancelfailed">Afbreken van tijdelijk basaal mislukt</string>
-    <string name="smscommunicator_unknowncommand">Onbekend commando of verkeerd antwoord</string>
     <string name="quickwizard">Vaste maaltijd</string>
     <string name="quickwizardsettings">Vaste maaltijd instellingen</string>
     <string name="overview_editquickwizard_buttontext">Naam:</string>
@@ -472,7 +463,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="send_calibration" formatted="false">Verzend calibratie %.1f naar xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ niet geïnstalleerd</string>
     <string name="calibrationsent">Kalibratie naar xDrip verzonden</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Kalibratie op afstand is niet toegestaan</string>
     <string name="smscommunicator_calibrationsent">Kalibratie verzonden. Het ontvangen van kalibraties moet actief zijn in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">XDrip ontvangt geen kalibraties</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
@@ -633,7 +623,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="careportal_activity_label">ACTIVITEIT &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-    <string name="careportal_pump_label">POMO</string>
+    <string name="careportal_pump_label">POMP</string>
     <string name="overview_newtempbasal_basalabsolute">Basale waarde [E/uur]</string>
     <string name="careportal_newnstreatment_duration_min_label">Tijdsduur [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1141,7 +1131,8 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
-    <string name="dst_loop_disabled_warning">Zomer/wintertijd omschakeling in minder dan 3 uur - Closed loop gedeactiveerd</string>
+    <string name="storage">interne opslag bijna vol</string>
+    <string name="diskfull">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>

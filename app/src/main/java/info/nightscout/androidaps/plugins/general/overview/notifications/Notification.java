@@ -73,6 +73,7 @@ public class Notification {
     public static final int INSIGHT_TIMEOUT_DURING_HANDSHAKE = 48;
     public static final int DST_LOOP_DISABLED = 49;
     public static final int DST_IN_24H = 50;
+    public static final int DISKFULL = 51;
 
 
     public int id;

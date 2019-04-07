@@ -25,4 +25,9 @@ public class Objective4 extends Objective {
             }
         });
     }
+
+    @Override
+    public boolean isRevertable() {
+        return true;
+    }
 }

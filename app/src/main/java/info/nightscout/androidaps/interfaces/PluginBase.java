@@ -93,6 +93,8 @@ public abstract class PluginBase {
             return state == State.ENABLED && specialEnableCondition();
         if (type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.PUMP && isEnabled(PluginType.PUMP))
             return true;
+        if (type == PluginType.CONSTRAINTS && pluginDescription.mainType == PluginType.APS && isEnabled(PluginType.APS))
+            return true;
         if (type == PluginType.PROFILE && pluginDescription.mainType == PluginType.PUMP)
             return isProfileInterfaceEnabled;
         return false;

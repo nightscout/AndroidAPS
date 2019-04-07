@@ -54,6 +54,7 @@
     <string name="description_wear">Zobrazování stavu a řízení AndroidAPS z hodinek s WearOS</string>
     <string name="description_xdrip_status_line">Zobrazování informací o smyčce na xDrip+ watchface.</string>
     <string name="description_sms_communicator">Vzdálené řízení pomocí SMS příkazů</string>
+    <string name="objectives_button_back">Zpět</string>
     <string name="objectives_button_start">Začátek</string>
     <string name="objectives_button_verify">Kontrola</string>
     <string name="nsprofileview_units_label">Jednotky</string>
@@ -265,12 +266,11 @@
     <string name="smscommunicator_bolusreplywithcode">K potvrzení bolusu %1$.2fU odpověz SMS s kódem %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Odeslání kalibrace %1$.2f potvrďte kódem %2$s</string>
     <string name="smscommunicator_bolusfailed">Chyba při aplikování bolusu</string>
-    <string name="bolusdelivered" formatted="false">Bolus %.2fU aplikován úspěšně</string>
-    <string name="bolusrequested" formatted="false">Spouštím dodávání %.2fU</string>
-    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU aplikován úspěšně</string>
-    <string name="bolusdelivering" formatted="false">Aplikováno %.2fU</string>
+    <string name="bolusdelivered">Bolus %1$.2fU aplikován úspěšně</string>
+    <string name="bolusrequested">Podávání %1$.2fU inzulínu</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU aplikován úspěšně</string>
+    <string name="bolusdelivering">Aplikováno %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Povolit posílání příkazů přes SMS</string>
-    <string name="smscommunicator_remotebolusnotallowed">Vzdálený bolus není momentálně povolen</string>
     <string name="glucosetype_finger">Glukoměr</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Jiný</string>
@@ -338,15 +338,24 @@
     <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
     <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Hodnota %s je mimo přednastavený rozsah</string>
-    <string name="smscommunicator_remotebasalnotallowed">Vzdálené posílání příkazů není povoleno</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálený příkaz není povolen</string>
-    <string name="smscommunicator_basalreplywithcode">Na spuštění bazálu %1$.2fU/h odpověz SMS s kódem %2$s</string>
+    <string name="smscommunicator_remotebolusnotallowed">Vzdálený bolus není momentálně povolen. Zkuste to později.</string>
+    <string name="smscommunicator_basalreplywithcode">Pro spuštění bazálu %1$.2fU/h na %2$d min odpovězte SMS s kódem %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Pro přepnutí profilu na %1$s %2$d%% odpovězte SMS s kódem %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Pro spuštění prodlouženého bolusu %1$.2fU na %2$d min odpovězte SMS s kódem %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Pro spuštění bazálu %1$d%% na %2$d min odpovězte SMS s kódem %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">K pozastavení smyčky na %1$d minut odpověz SMS s kódem %2$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fU/h na %2$d minut spuštěn</string>
+    <string name="smscommunicator_extendedset">Prodloužený bolus %1$.2fU na %2$d min úspěšně spuštěn</string>
+    <string name="smscommunicator_tempbasalset_percent">Dočasný bazál %1$d%% na %2$d minut úspěšně spuštěn</string>
     <string name="smscommunicator_tempbasalfailed">Spuštění dočasného bazálu selhalo</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">Na ukončení bazálu odpověz SMS s kódem %s</string>
+    <string name="smscommunicator_extendedfailed">Spuštění prodlouženého bolusu selhalo</string>
+    <string name="smscommunicator_basalstopreplywithcode">Na zastavení dočasného bazálu odpovězte SMS s kódem %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Na zastavení prodlouženého bolusu odpovězte SMS s kódem %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočasný bazál zastaven</string>
+    <string name="smscommunicator_extendedcanceled">Prodloužený bolus zastaven</string>
     <string name="smscommunicator_tempbasalcancelfailed">Rušení dočasného bazálu selhalo</string>
+    <string name="smscommunicator_extendedcancelfailed">Zastavení prodlouženého bolusu selhalo</string>
     <string name="smscommunicator_unknowncommand">Neznámý příkaz nebo chybná odpověď</string>
     <string name="quickwizard">Rychlý bolus</string>
     <string name="quickwizardsettings">Nastavení rychlých bolusů</string>
@@ -471,7 +480,6 @@
     <string name="send_calibration" formatted="false">Poslat do xDripu kalibraci %.1f ?</string>
     <string name="xdripnotinstalled">xDrip+ není nainstalován</string>
     <string name="calibrationsent">Kalibrace odeslána do xDripu</string>
-    <string name="smscommunicator_remotecalibrationnotallowed">Vzdálené kalibrace nejsou povoleny</string>
     <string name="smscommunicator_calibrationsent">Kalibrace odeslána. Příjem musí být v xDripu povolený.</string>
     <string name="smscommunicator_calibrationfailed">xDrip nepřijímá kalibrace</string>
     <string name="pumpsuspended">Pumpa pozastavena</string>
@@ -1140,7 +1148,12 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Změna letního času za méně než 24 hodin</string>
-    <string name="dst_loop_disabled_warning">Změna letního času za méně než 3 hodiny - Uzavřená smyčka zastavena</string>
+    <string name="storage">omezení vnitřního úložiště</string>
+    <string name="diskfull">Uvolněte alespoň %1$d MB z vnitřního úložiště! Smyčka zakázána!</string>
+    <string name="wrongformat">Chybný formát</string>
+    <string name="sms_wrongcode">Nesprávný kód. Příkaz zrušen.</string>
+    <string name="notconfigured">Není nakonfigurováno</string>
+    <string name="profileswitchcreated">Přepnutí profilu vytvořeno</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
