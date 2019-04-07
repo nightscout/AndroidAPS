@@ -54,6 +54,7 @@
     <string name="description_wear">Monitor en beheer AndroidAPS met jou WearOS horlosie.</string>
     <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
     <string name="description_sms_communicator">Afstandbeheer AndroidAPS met SMS kodes.</string>
+    <string name="objectives_button_back">Terug</string>
     <string name="objectives_button_start">Begin</string>
     <string name="objectives_button_verify">Verifieer</string>
     <string name="nsprofileview_units_label">Eenhede</string>
@@ -265,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">Om %1$.2fU bolus te lewer antwoord met kode %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Om kalibrasie %1$.2f te stuur antwoord met kode %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus het misluk</string>
+    <string name="bolusdelivered">Bolus %1$.2fU suksesvol afgelewer</string>
+    <string name="bolusrequested">Gaan %1$.2fU lewer</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU suksesvol afgelewer</string>
+    <string name="bolusdelivering">Lewering van %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Laat afstandbeheerde bevele toe via SMS</string>
     <string name="glucosetype_finger">Vinger</string>
     <string name="glucosetype_sensor">Sensor</string>
@@ -334,11 +339,24 @@
     <string name="valuelimitedto">%1$.2f beperk tot %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Waarde %s is uit harde perke</string>
     <string name="smscommunicator_remotecommandnotallowed">Afstandbeheerde bevel word nie toegelaat nie</string>
+    <string name="smscommunicator_remotebolusnotallowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
+    <string name="smscommunicator_basalreplywithcode">Om %1$.2fU basale vir %2$d min te aktiveer antwoord met kode %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Om profiel te verander na %1$s %2$d%% antwoord met %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Om bolus %1$.2fU vir %2$d min te verleng kies %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Om basal e %1$d%% vir %2$d min te begin kies %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Om lus op te skort vir %1$d minute antwoord met kode %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basale %1$.2fU/h vir %2$d min suksesvol geaktiveerd</string>
+    <string name="smscommunicator_extendedset">Verlengde bolus %1$.2fU vir %2$d min is begin</string>
+    <string name="smscommunicator_tempbasalset_percent">Tydelike basale %1$d%% vir %2$d min hardloop</string>
     <string name="smscommunicator_tempbasalfailed">Tydelike basale aktivering het gefaal</string>
+    <string name="smscommunicator_extendedfailed">Verlengde bolus het misluk</string>
+    <string name="smscommunicator_basalstopreplywithcode">Stop tydelike basale antwoord met kode %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Stop tydelike basale antwoord met kode %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Tydelike basale gekanselleer</string>
+    <string name="smscommunicator_extendedcanceled">Verlengde bolus gekanselleer</string>
     <string name="smscommunicator_tempbasalcancelfailed">Kansellassie van tydelike basale het gefaal</string>
+    <string name="smscommunicator_extendedcancelfailed">Kansellasie van verlengde bolus het misluk</string>
+    <string name="smscommunicator_unknowncommand">Onbekende opdrag of verkeerde opsie</string>
     <string name="quickwizard">SlimNutsman</string>
     <string name="quickwizardsettings">SlimNutsman instellings</string>
     <string name="overview_editquickwizard_buttontext">Knoppie teks:</string>
@@ -1069,6 +1087,7 @@
     <string name="mute_alert">Demp</string>
     <string name="pump_alert">Pomp alarm</string>
     <string name="log_site_changes">Log ligging veranderings</string>
+    <string name="log_reservoir_changes">Log stoor veranderinge</string>
     <string name="log_tube_changes">Log voerpyp verandering</string>
     <string name="log_battery_changes">Log battery verandering</string>
     <string name="log_operating_mode_changes">Log bedryf modus veranderinge</string>
@@ -1130,8 +1149,13 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Daglig spaar tyd verandering in 24 h of minder</string>
+    <string name="dst_loop_disabled_warning">Daglig spaar tyd het verander minder as 3 ure terug - Geslote lus afgeskakel</string>
     <string name="storage">interne berging beperking</string>
     <string name="diskfull">Bevry ten minste %1$d MB van intene stoorspasie! Lus gedeaktiveer!</string>
+    <string name="wrongformat">Verkeerde formaat</string>
+    <string name="sms_wrongcode">Verkeerde kode. Opdrag gekanselleer.</string>
+    <string name="notconfigured">Nie gekonfigureer nie</string>
+    <string name="profileswitchcreated">Profiel skakelaar geskep</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>

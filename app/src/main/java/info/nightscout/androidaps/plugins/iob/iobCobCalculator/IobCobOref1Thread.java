@@ -364,7 +364,8 @@ public class IobCobOref1Thread extends Thread {
                     //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
                     // add an extra negative deviation if a high temptarget is running and exercise mode is set
-                    if (SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                    // TODO AS-FIX
+                    if (false && SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(bgTime);
                         if (tempTarget != null && tempTarget.target() >= 100) {
                             autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20);

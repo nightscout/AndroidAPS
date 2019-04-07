@@ -85,17 +85,24 @@
             android:summary="@string/enableuam_summary"
             android:title="@string/enableuam" />
 
+
+        <!-- TODO AS-FIX -->
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_high_temptarget_raises_sensitivity"
             android:summary="@string/high_temptarget_raises_sensitivity_summary"
-            android:title="@string/high_temptarget_raises_sensitivity_title" />
+            android:title="@string/high_temptarget_raises_sensitivity_title"
+            android:enabled="false"
+            />
 
+        <!-- TODO AS-FIX -->
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_low_temptarget_lowers_sensitivity"
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
-            android:title="@string/low_temptarget_lowers_sensitivity_title" />
+            android:title="@string/low_temptarget_lowers_sensitivity_title"
+            android:enabled="false"
+            />
 
         <PreferenceScreen android:title="@string/advancedsettings_title">
 

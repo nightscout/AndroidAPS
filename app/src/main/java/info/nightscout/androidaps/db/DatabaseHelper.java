@@ -726,7 +726,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             String units = JsonHelper.safeGetString(trJson, "units", Constants.MGDL);
             TempTarget tempTarget = new TempTarget()
                     .date(trJson.getLong("mills"))
-                    .duration(trJson.getInt("duration"))
+                    .duration(JsonHelper.safeGetInt(trJson, "duration"))
                     .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
                     .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
                     .reason(JsonHelper.safeGetString(trJson, "reason", ""))

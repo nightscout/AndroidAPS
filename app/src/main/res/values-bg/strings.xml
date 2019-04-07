@@ -266,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">За да доставите болус от %1$.2fЕ отговорете с код %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">За да изпратите калибрация %1$.2f отговорете с код %2$s</string>
     <string name="smscommunicator_bolusfailed">Болус отказан</string>
+    <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="bolusrequested">Ще стартира %1$.2fЕ болус</string>
+    <string name="smscommunicator_bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="bolusdelivering">Стартирам %1$.2fЕ</string>
     <string name="smscommunicator_remotecommandsallowed">Позволи отдалечени команди чрез SMS</string>
     <string name="glucosetype_finger">Пръст</string>
     <string name="glucosetype_sensor">Сензор</string>
@@ -335,11 +339,24 @@
     <string name="valuelimitedto">%1$.2f ограничен до %2$.2f</string>
     <string name="valueoutofrange" formatted="false">Стойността %s е извън границите</string>
     <string name="smscommunicator_remotecommandnotallowed">Отдалеченото управление е забранено</string>
+    <string name="smscommunicator_remotebolusnotallowed">Отдалечено стартиране на болус не е възможно. Опитайте отново по-късно.</string>
+    <string name="smscommunicator_basalreplywithcode">За да стартирате базал от %1$.2fЕ/ч за %2$d мин отговорете с код %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">За да превключите профила към %1$s %2$d%% отговорете с код %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">За да започнете удължен болус %1$.2fЕ за %2$d мин отговорете с код %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">За да стартирате базал от %1$d%Е/ч за %2$d мин отговорете с код %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">За да спрете APS за %1$d минути отговорете с код %2$s</string>
     <string name="smscommunicator_tempbasalset">Временен базал от %1$.2fЕ/ч за %2$d мин стартиран успешно</string>
+    <string name="smscommunicator_extendedset">Удължен болус %1$.2fU за %2$d мин стартиран успешно</string>
+    <string name="smscommunicator_tempbasalset_percent">Временен базал от %1$d%Е/ч за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_tempbasalfailed">Неуспешно стартиране на временен базал</string>
+    <string name="smscommunicator_extendedfailed">Неуспешно стартиране на удължен болус</string>
+    <string name="smscommunicator_basalstopreplywithcode">За да спрете времен базал отговорете с код %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">За да спрете удължения болус отговорете с код %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Временният базал е отменен</string>
+    <string name="smscommunicator_extendedcanceled">Удължен болус спрян</string>
     <string name="smscommunicator_tempbasalcancelfailed">Спирането на временния базал е неуспешно</string>
+    <string name="smscommunicator_extendedcancelfailed">Неуспешно спиране на удължен болус</string>
+    <string name="smscommunicator_unknowncommand">Непозната команда или грешен отговор</string>
     <string name="quickwizard">Бърз болус</string>
     <string name="quickwizardsettings">Настройки за бърз болус</string>
     <string name="overview_editquickwizard_buttontext">Текст на бутона:</string>
@@ -1070,6 +1087,7 @@
     <string name="mute_alert">Без звук</string>
     <string name="pump_alert">Аларма на помпата</string>
     <string name="log_site_changes">Записвай смяната на местата</string>
+    <string name="log_reservoir_changes">Записвай смените на резервоар</string>
     <string name="log_tube_changes">Записвай смените на резервоар</string>
     <string name="log_battery_changes">Записвай смяната на батерия</string>
     <string name="log_operating_mode_changes">Записвай промените в режима</string>
@@ -1131,8 +1149,13 @@
     <string name="tomato">Tomato(MяоМяо)</string>
     <string name="tomato_short">Tomato</string>
     <string name="dst_in_24h_warning">Смяна на времето след по-малко от 24ч</string>
+    <string name="dst_loop_disabled_warning">Смяна на времето след по-малко от 3 часа - минавам в отворен режим</string>
     <string name="storage">Ограничение поради липса на памет</string>
     <string name="diskfull">Освободете поне %1$d Мб в паметта на телефона! Loop изключен!</string>
+    <string name="wrongformat">Грешен формат</string>
+    <string name="sms_wrongcode">Грешен код. Командата не е изпълнена.</string>
+    <string name="notconfigured">Не е конфигуриран</string>
+    <string name="profileswitchcreated">Създаден запис - Промяна на профил</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
