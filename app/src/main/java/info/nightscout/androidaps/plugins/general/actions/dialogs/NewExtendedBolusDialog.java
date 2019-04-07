@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.answers.CustomEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +21,6 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.Dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.NumberPicker;
 import info.nightscout.androidaps.utils.SafeParse;
 
@@ -99,7 +96,6 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                                     }
                                 }
                             });
-                            FabricPrivacy.getInstance().logCustom(new CustomEvent("ExtendedBolus"));
                         }
                     });
                     builder.setNegativeButton(MainApp.gs(R.string.cancel), null);

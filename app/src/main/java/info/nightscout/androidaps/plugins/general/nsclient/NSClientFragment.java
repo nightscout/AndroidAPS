@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
@@ -91,11 +90,11 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
         switch (view.getId()) {
             case R.id.nsclientinternal_restart:
                 MainApp.bus().post(new EventNSClientRestart());
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientRestart"));
+                FabricPrivacy.getInstance().logCustom("NSClientRestart");
                 break;
             case R.id.nsclientinternal_delivernow:
                 NSClientPlugin.getPlugin().resend("GUI");
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientDeliverNow"));
+                FabricPrivacy.getInstance().logCustom("NSClientDeliverNow");
                 break;
             case R.id.nsclientinternal_clearlog:
                 NSClientPlugin.getPlugin().clearLog();
@@ -110,7 +109,7 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
                     public void onClick(DialogInterface dialog, int id) {
                         UploadQueue.clearQueue();
                         updateGUI();
-                        FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
+                        FabricPrivacy.getInstance().logCustom("NSClientClearQueue");
                     }
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
@@ -118,7 +117,6 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
                 break;
             case R.id.nsclientinternal_showqueue:
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", NSClientPlugin.getPlugin().queue().textList()));
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientShowQueue"));
                 break;
         }
     }
@@ -129,7 +127,7 @@ public class NSClientFragment extends SubscriberFragment implements View.OnClick
             case R.id.nsclientinternal_paused:
                 NSClientPlugin.getPlugin().pause(isChecked);
                 updateGUI();
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("NSClientPause"));
+                FabricPrivacy.getInstance().logCustom("NSClientPause");
                 break;
             case R.id.nsclientinternal_autoscroll:
                 SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);
