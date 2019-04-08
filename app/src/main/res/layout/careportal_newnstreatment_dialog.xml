@@ -528,7 +528,8 @@
                     android:id="@+id/careportal_newnstreatment_notes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:width="180dp" />
+                    android:width="180dp"
+                    android:inputType="text" />
 
             </LinearLayout>
 
