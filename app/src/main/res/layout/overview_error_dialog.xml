@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".plugins.general.overview.Dialogs.ErrorDialog"
+    tools:context=".plugins.general.overview.dialogs.ErrorDialog"
     android:paddingTop="15dp"
     android:paddingBottom="15dp">
 

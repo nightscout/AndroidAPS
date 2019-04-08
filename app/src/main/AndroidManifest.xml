@@ -46,10 +46,10 @@
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
         <activity
-            android:name=".plugins.general.overview.Dialogs.BolusProgressHelperActivity"
+            android:name=".plugins.general.overview.dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".plugins.general.overview.Dialogs.ErrorHelperActivity"
+            android:name=".plugins.general.overview.dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
