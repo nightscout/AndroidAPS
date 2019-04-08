@@ -120,7 +120,7 @@ public class NSClientService extends Service {
         }
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "NSClientService");
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService");
         initialize();
     }
 
@@ -499,7 +499,7 @@ public class NSClientService extends Service {
                 public void run() {
                     PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
                     PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                            "onDataUpdate");
+                            "AndroidAPS:NSClientService_onDataUpdate");
                     wakeLock.acquire();
                     try {
 

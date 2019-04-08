@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
             final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             if (keepScreenOn) {
-                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AndroidAPS:MainActivity_onEventPreferenceChange");
                 if (!mWakeLock.isHeld())
                     mWakeLock.acquire();
             } else {

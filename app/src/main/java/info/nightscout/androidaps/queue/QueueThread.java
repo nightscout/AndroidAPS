@@ -41,7 +41,7 @@ public class QueueThread extends Thread {
         Context context = MainApp.instance().getApplicationContext();
         if (context != null) {
             PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
+            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:QueueThread");
         }
     }
 
