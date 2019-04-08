@@ -38,6 +38,7 @@
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -175,57 +176,57 @@
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
 
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data" />
+                    android:pathPrefix="/nightscout_watch_data"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data_resend" />
+                    android:pathPrefix="/nightscout_watch_data_resend"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancel_bolus" />
+                    android:pathPrefix="/nightscout_watch_cancel_bolus"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_confirmactionstring" />
+                    android:pathPrefix="/nightscout_watch_confirmactionstring"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_initiateactionstring" />
+                    android:pathPrefix="/nightscout_watch_initiateactionstring"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/openwearsettings" />
+                    android:pathPrefix="/openwearsettings"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/sendstatustowear" />
+                    android:pathPrefix="/sendstatustowear"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/sendpreferencestowear" />
+                    android:pathPrefix="/sendpreferencestowear"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_basal" />
+                    android:pathPrefix="/nightscout_watch_basal"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_bolusprogress" />
+                    android:pathPrefix="/nightscout_watch_bolusprogress"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest" />
+                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest" />
+                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest" />
+                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
         <service
@@ -257,19 +258,19 @@
         <activity
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity"></activity>
+        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingActivity"
-            android:theme="@style/AppTheme"
-            android:label="@string/insight_pairing" />
+            android:label="@string/insight_pairing"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightAlertActivity"
             android:label="@string/pump_alert"
             android:theme="@style/InsightAlertDialog" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
-            android:theme="@style/AppTheme"
-            android:label="@string/pairing_information" />
+            android:label="@string/pairing_information"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
