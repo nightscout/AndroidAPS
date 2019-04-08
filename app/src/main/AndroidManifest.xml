@@ -76,7 +76,8 @@
         <receiver
             android:name=".receivers.DataReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
 
                 <!-- Receive new SMS messages -->
