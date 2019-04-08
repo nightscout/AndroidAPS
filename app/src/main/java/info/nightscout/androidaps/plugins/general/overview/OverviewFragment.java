@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -1458,7 +1459,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (sensitivityView != null) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Overview");
             if (autosensData != null)
-                sensitivityView.setText(String.format("%.0f%%", autosensData.autosensResult.ratio * 100));
+                sensitivityView.setText(String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100));
             else
                 sensitivityView.setText("");
         }
