@@ -118,7 +118,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
     }
 
     boolean isCommand(String command, String number) {
-        switch(command.toUpperCase()) {
+        switch (command.toUpperCase()) {
             case "BG":
             case "LOOP":
             case "TREATMENTS":
@@ -760,14 +760,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
     void sendSMS(Sms sms) {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
-        
+
         try {
             if (L.isEnabled(L.SMS))
                 log.debug("Sending SMS to " + sms.phoneNumber + ": " + sms.text);
-            if (sms.text.getBytes().length<=140)
+            if (sms.text.getBytes().length <= 140)
                 smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
-            else
-            {
+            else {
                 ArrayList<String> parts = smsManager.divideMessage(sms.text);
                 smsManager.sendMultipartTextMessage(sms.phoneNumber, null, parts,
                         null, null);
