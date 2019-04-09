@@ -283,7 +283,7 @@ public class MedtronicHistoryData {
 
         if (!forHistory) {
             newAndAll2 = filterPumpSuspend(newAndAll2, 10); // just last 10 (of relevant), for history we already
-                                                            // filtered
+            // filtered
         }
 
         return newAndAll2;
@@ -450,10 +450,11 @@ public class MedtronicHistoryData {
                     }
                 }
 
-                if (selectedBolus != null)
+                if (selectedBolus != null) {
                     boluses.remove(selectedBolus);
 
-                removeTreatmentsFromHistory.add(treatment);
+                    removeTreatmentsFromHistory.add(treatment);
+                }
             }
         }
 
@@ -607,11 +608,7 @@ public class MedtronicHistoryData {
                 case Normal: {
                     // DetailedBolusInfo normalBolus = new DetailedBolusInfo();
 
-                    DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage
-                        .findDetailedBolusInfo(tryToGetByLocalTime(bolus.atechDateTime));
-                    if (detailedBolusInfo == null) {
-                        detailedBolusInfo = new DetailedBolusInfo();
-                    }
+                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
 
                     detailedBolusInfo.date = tryToGetByLocalTime(bolus.atechDateTime);
                     detailedBolusInfo.source = Source.PUMP;
@@ -775,20 +772,22 @@ public class MedtronicHistoryData {
 
         LocalDateTime ldt = DateTimeUtil.toLocalDateTime(atechDateTime);
 
-        LOG.debug("TOE. Time of Entry: " + atechDateTime);
-        LOG.debug("TOE.   Clock Pump: " + pumpTime.pumpTime.toString("HH:mm:ss"));
-        LOG.debug("TOE.   LocalTime: " + pumpTime.localDeviceTime.toString("HH:mm:ss"));
-        LOG.debug("TOE.   Difference(s): " + pumpTime.timeDifference);
+        // LOG.debug("TOE. Time of Entry: " + atechDateTime);
+        // LOG.debug("TOE.   Clock Pump: " + pumpTime.pumpTime.toString("HH:mm:ss"));
+        // LOG.debug("TOE.   LocalTime: " + pumpTime.localDeviceTime.toString("HH:mm:ss"));
+        // LOG.debug("TOE.   Difference(s): " + pumpTime.timeDifference);
 
         ldt = ldt.plusSeconds(pumpTime.timeDifference);
+        ldt = ldt.millisOfSecond().setCopy(000);
 
-        LOG.debug("TOE. New Time Of Entry: " + ldt.toString("HH:mm:ss"));
+        // LOG.debug("TOE. New Time Of Entry: " + ldt.toString("HH:mm:ss"));
 
-        ldt.millisOfSecond().setCopy(000);
+        LOG.debug("tryToGetByLocalTime: [TimeOfEntry={}, ClockPump={}, LocalTime={}, DifferenceSec={}, "
+            + "NewTimeOfEntry={}, time={}", atechDateTime, pumpTime.pumpTime.toString("HH:mm:ss"),
+            pumpTime.localDeviceTime.toString("HH:mm:ss"), pumpTime.timeDifference, ldt.toString("HH:mm:ss"), ldt
+                .toDate().getTime());
 
         return ldt.toDate().getTime();
-
-        // return 0;
     }
 
 
@@ -803,19 +802,25 @@ public class MedtronicHistoryData {
             }
         }
 
-        LocalDateTime d = DateTimeUtil.toLocalDateTime(dt);
-        d.minusMinutes(5);
+        // LOG.debug("Oldest entry: {}, pumpTimeDifference={}", dt, this.pumpTime.timeDifference);
+
+        LocalDateTime oldestEntryTime = DateTimeUtil.toLocalDateTime(dt);
+        oldestEntryTime = oldestEntryTime.minusMinutes(5);
 
         if (this.pumpTime.timeDifference < 0) {
-            d.plusSeconds(this.pumpTime.timeDifference);
+            oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
         }
         // } else {
         // d.minusSeconds(this.pumpTime.timeDifference);
         // }
 
-        Minutes minutes = Minutes.minutesBetween(d, new LocalDateTime());
+        LocalDateTime now = new LocalDateTime();
 
-        // returns oldest time in history, with calculated time difference between pump and phone, minus 2 minutes
+        Minutes minutes = Minutes.minutesBetween(oldestEntryTime, now);
+
+        // returns oldest time in history, with calculated time difference between pump and phone, minus 5 minutes
+        LOG.debug("Oldest entry: {}, pumpTimeDifference={}, newDt={}, currentTime={}, differenceMin={}", dt,
+            this.pumpTime.timeDifference, oldestEntryTime, now, minutes.getMinutes());
 
         return minutes.getMinutes();
 

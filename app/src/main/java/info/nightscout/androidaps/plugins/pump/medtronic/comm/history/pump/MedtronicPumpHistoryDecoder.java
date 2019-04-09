@@ -631,9 +631,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
             MedtronicDeviceType.Medtronic_523andHigher)) {
-            bolus.setRequestedAmount(bitUtils.toInt(data[0], data[1]) / 40.0f);
-            bolus.setDeliveredAmount(bitUtils.toInt(data[2], data[3]) / 40.0f);
-            bolus.setInsulinOnBoard(bitUtils.toInt(data[4], data[5]) / 40.0f);
+            bolus.setRequestedAmount(ByteUtil.toInt(data[0], data[1]) / 40.0f);
+            bolus.setDeliveredAmount(ByteUtil.toInt(data[2], data[3]) / 40.0f);
+            bolus.setInsulinOnBoard(ByteUtil.toInt(data[4], data[5]) / 40.0f);
             bolus.setDuration(data[6] * 30);
         } else {
             bolus.setRequestedAmount(ByteUtil.asUINT8(data[0]) / 10.0f);

@@ -168,7 +168,6 @@ public class Treatment implements DataPointWithLabelInterface {
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
         isSMB = t.isSMB;
-        source = t.source;
     }
 
 

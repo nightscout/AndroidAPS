@@ -124,6 +124,11 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     // }
 
     public boolean isAfter(long atechDateTime) {
+        if (this.atechDateTime == null) {
+            LOG.error("Date is null. Show object: " + toString());
+            return false; // FIXME shouldn't happen
+        }
+
         return atechDateTime < this.atechDateTime;
     }
 

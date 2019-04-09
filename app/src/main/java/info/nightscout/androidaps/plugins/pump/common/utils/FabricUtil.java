@@ -44,6 +44,7 @@ public class FabricUtil {
             }
         }
 
+        // FIXME andy!!!
         // FabricPrivacy.getInstance().logCustom(customEvent);
     }
 
