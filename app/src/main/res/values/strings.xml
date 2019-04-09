@@ -1326,6 +1326,7 @@
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
+    <string name="versionChecker">Version Checker</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
