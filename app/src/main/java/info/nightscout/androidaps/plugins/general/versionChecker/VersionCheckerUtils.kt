@@ -24,16 +24,12 @@ fun isConnected(): Boolean {
 // convert inputstream to String
 @Throws(IOException::class)
 fun InputStream.findVersion(): String? {
-    var version: String? = null
-    val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)"
-
-    this.bufferedReader().forEachLine {
-        if (regex.toRegex().matches(it)) {
-            version = regex.toRegex().matchEntire(it)?.groupValues?.getOrNull(3)
-            return@forEachLine
-        }
-    }
-    return version
+    val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
+    return bufferedReader()
+            .readLines()
+            .filter { regex.matches(it) }
+            .mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
+            .firstOrNull()
 }
 
 private val log = LoggerFactory.getLogger(L.CORE)
