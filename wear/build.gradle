@@ -1,1 +1,102 @@
-/home/andy/Dropbox/workspaces/aaps/andy_AndroidAPS_Medtronic_Shared/wear/build.gradle
+apply plugin: 'com.android.application'
+
+ext {
+    wearableVersion = "2.0.1"
+    playServicesWearable = "16.0.1"
+}
+
+def generateGitBuild = { ->
+
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append('"')
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--always'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        stringBuilder.append('NoGitSystemAvailable')
+    }
+    stringBuilder.append('-')
+    stringBuilder.append((new Date()).format('yyyy.MM.dd'))
+    stringBuilder.append('"')
+    return stringBuilder.toString()
+}
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        applicationId "info.nightscout.androidaps"
+        minSdkVersion 23
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0.2"
+        buildConfigField "String", "BUILDVERSION", generateGitBuild()
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    productFlavors {
+        flavorDimensions "standard"
+        full {
+            applicationId "info.nightscout.androidaps"
+            dimension "standard"
+            versionName version
+        }
+        pumpcontrol {
+            applicationId "info.nightscout.aapspumpcontrol"
+            dimension "standard"
+            versionName version + "-pumpcontrol"
+        }
+        nsclient {
+            applicationId "info.nightscout.nsclient"
+            dimension "standard"
+            versionName version + "-nsclient"
+        }
+        nsclient2 {
+            applicationId "info.nightscout.nsclient2"
+            dimension "standard"
+            versionName version + "-nsclient"
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files("libs/hellocharts-library-1.5.5.jar")
+    //compile "com.ustwo.android:clockwise-wearable:1.0.2"
+    compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
+    implementation "com.google.android.support:wearable:${wearableVersion}"
+    implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
+    implementation(name: "ustwo-clockwise-debug", ext: "aar")
+    implementation "com.android.support:support-v4:27.0.1"
+    implementation 'com.android.support:wear:27.0.1'
+    implementation "me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0"
+}
