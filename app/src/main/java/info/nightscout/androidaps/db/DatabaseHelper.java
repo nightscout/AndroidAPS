@@ -131,6 +131,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
+            database.execSQL("UPDATE SQLITE_SEQUENCE SET seq = " + System.currentTimeMillis() + " WHERE name = " + DATABASE_INSIGHT_BOLUS_IDS);
+            database.execSQL("UPDATE SQLITE_SEQUENCE SET seq = " + System.currentTimeMillis() + " WHERE name = " + DATABASE_INSIGHT_PUMP_IDS);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -151,6 +153,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
                 TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
                 TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
+                database.execSQL("UPDATE SQLITE_SEQUENCE SET seq = " + System.currentTimeMillis() + " WHERE name = " + DATABASE_INSIGHT_BOLUS_IDS);
+                database.execSQL("UPDATE SQLITE_SEQUENCE SET seq = " + System.currentTimeMillis() + " WHERE name = " + DATABASE_INSIGHT_PUMP_IDS);
             } else {
                 log.info(DatabaseHelper.class.getName(), "onUpgrade");
                 TableUtils.dropTable(connectionSource, TempTarget.class, true);
