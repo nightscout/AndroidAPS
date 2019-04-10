@@ -103,7 +103,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.absolute)).thenReturn("Absolute");
         when(MainApp.gs(R.string.waitingforpumpresult)).thenReturn("Waiting for result");
         when(MainApp.gs(R.string.insulin_unit_shortname)).thenReturn("U");
-        when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("Basal value replaced by minimal supported value");
+        when(MainApp.gs(R.string.minimalbasalvaluereplaced)).thenReturn("Basal value replaced by minimal supported value: %1$s");
         when(MainApp.gs(R.string.basalprofilenotaligned)).thenReturn("Basal values not aligned to hours: %s");
         when(MainApp.gs(R.string.minago)).thenReturn("%d min ago");
         when(MainApp.gs(R.string.hoursago)).thenReturn("%.1fh ago");

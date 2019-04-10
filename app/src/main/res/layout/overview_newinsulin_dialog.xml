@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.general.overview.Dialogs.NewInsulinDialog">
+    tools:context=".plugins.general.overview.dialogs.NewInsulinDialog">
 
     <ScrollView
         android:layout_width="match_parent"

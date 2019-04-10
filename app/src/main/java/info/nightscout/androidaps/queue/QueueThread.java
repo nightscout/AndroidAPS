@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 09.11.2017.
@@ -28,9 +29,8 @@ public class QueueThread extends Thread {
 
     private CommandQueue queue;
 
-    private long lastCommandTime = 0;
     private boolean connectLogged = false;
-    public boolean waitingForDisconnect = false;
+    boolean waitingForDisconnect = false;
 
     private PowerManager.WakeLock mWakeLock;
 
@@ -41,14 +41,17 @@ public class QueueThread extends Thread {
         Context context = MainApp.instance().getApplicationContext();
         if (context != null) {
             PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "QueueThread");
+            if (powerManager != null)
+                mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:QueueThread");
         }
     }
 
     @Override
     public final void run() {
-        mWakeLock.acquire();
+        if (mWakeLock != null)
+            mWakeLock.acquire(T.mins(10).msecs());
         MainApp.bus().post(new EventQueueChanged());
+        long lastCommandTime;
         long connectionStartTime = lastCommandTime = System.currentTimeMillis();
 
         try {
@@ -72,7 +75,7 @@ public class QueueThread extends Thread {
 
                     //BLUETOOTH-WATCHDOG
                     boolean watchdog = SP.getBoolean(R.string.key_btwatchdog, false);
-                    long last_watchdog = SP.getLong(R.string.key_btwatchdog_lastbark, 0l);
+                    long last_watchdog = SP.getLong(R.string.key_btwatchdog_lastbark, 0L);
                     watchdog = watchdog && System.currentTimeMillis() - last_watchdog > (Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000);
                     if (watchdog) {
                         if (L.isEnabled(L.PUMPQUEUE))
@@ -170,7 +173,8 @@ public class QueueThread extends Thread {
                 }
             }
         } finally {
-            mWakeLock.release();
+            if (mWakeLock != null)
+                mWakeLock.release();
             if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("thread end");
         }

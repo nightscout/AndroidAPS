@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 
@@ -55,7 +57,7 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                 for (int profile = 0; profile < 4; profile++) {
                     for (int index = 0; index < 48; index++) {
                         try {
-                            log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
+                            log.debug("Basal profile " + profile + ": " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
                         } catch (Exception e){
                             log.error("Unhandled exception" , e);
                         }
@@ -67,8 +69,8 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                         //this is absurd  pump.pumpProfiles[profile][index] returns nullPointerException
                         try {
                             log.debug("Basal profile " + profile + ": " +
-                                    String.format("%02d", (index / 2)) +
-                                    ":" + String.format("%02d", (index % 2) * 30) + " : " +
+                                    String.format(Locale.ENGLISH, "%02d", (index / 2)) +
+                                    ":" + String.format(Locale.ENGLISH, "%02d", (index % 2) * 30) + " : " +
                                     pump.pumpProfiles[profile][index]);
                         } catch (Exception e){
                             log.error("Unhandled exception" , e);

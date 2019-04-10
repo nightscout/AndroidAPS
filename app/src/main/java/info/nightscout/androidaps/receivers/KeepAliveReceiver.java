@@ -44,7 +44,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:KeepAliveReciever");
         wl.acquire();
 
         LocalAlertUtils.shortenSnoozeInterval();

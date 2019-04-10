@@ -482,6 +482,8 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         for (; runningTime < now; runningTime += 5 * 60 * 1000) {
             Profile profileTB = ProfileFunctions.getInstance().getProfile(runningTime);
+            if (profileTB == null)
+                return;
             //basal rate
             endBasalValue = profile.getBasal(runningTime);
             if (endBasalValue != beginBasalValue) {

@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -195,6 +196,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (insulinInterface == null)
             return total;
 
+        PumpInterface pumpInterface = ConfigBuilderPlugin.getPlugin().getActivePump();
+        if (pumpInterface == null)
+            return total;
+
         double dia = profile.getDia();
 
         synchronized (treatments) {
@@ -222,7 +227,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
         }
 
-        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
+        if (!pumpInterface.isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);

@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -31,7 +33,7 @@ public class MsgSettingBasal extends MessageBase {
 
         if (L.isEnabled(L.PUMPCOMM))
             for (int index = 0; index < 24; index++) {
-                log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
+                log.debug("Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
             }
     }
 }

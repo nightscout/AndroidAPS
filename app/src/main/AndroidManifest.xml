@@ -274,7 +274,7 @@
             android:theme="@style/AppTheme" />
 
 
-    <!-- Medtronic service and activities -->
+        <!-- Medtronic service and activities -->
         <service
             android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
             android:enabled="true"

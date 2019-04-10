@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -52,12 +51,14 @@
 
                     <RadioButton
                         android:id="@+id/overview_newtempbasal_percent_radio"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:text="@string/overview_newtempbasal_percent_label" />
 
                     <RadioButton
                         android:id="@+id/overview_newtempbasal_absolute_radio"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="U/h" />
 
