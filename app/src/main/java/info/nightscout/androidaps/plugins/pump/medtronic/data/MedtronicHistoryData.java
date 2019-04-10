@@ -22,7 +22,6 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
@@ -655,39 +654,39 @@ public class MedtronicHistoryData {
 
             boolean old = false;
 
-            if (old) {
-                treatment.insulin = bolusDTO.getDeliveredAmount();
-                treatment.pumpId = bolus.getPumpId();
-                treatment.source = Source.PUMP;
+            // if (old) {
+            // treatment.insulin = bolusDTO.getDeliveredAmount();
+            // treatment.pumpId = bolus.getPumpId();
+            // treatment.source = Source.PUMP;
+            //
+            // bolus.setLinkedObject(treatment);
+            //
+            // TreatmentsPlugin.getPlugin().getService().createOrUpdate(treatment);
+            //
+            // LOG.debug("editBolus - [date={},pumpId={}, insulin={}]", treatment.date, treatment.pumpId,
+            // treatment.insulin);
+            //
+            // MainApp.bus().post(new EventTreatmentChange(treatment));
+            // } else {
 
-                bolus.setLinkedObject(treatment);
-
-                TreatmentsPlugin.getPlugin().getService().createOrUpdate(treatment);
-
-                LOG.debug("editBolus - [date={},pumpId={}, insulin={}]", treatment.date, treatment.pumpId,
-                    treatment.insulin);
-
-                MainApp.bus().post(new EventTreatmentChange(treatment));
-            } else {
-
-                DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(treatment.date);
-                if (detailedBolusInfo == null) {
-                    detailedBolusInfo = new DetailedBolusInfo();
-                }
-
-                detailedBolusInfo.date = treatment.date;
-                detailedBolusInfo.source = Source.PUMP;
-                detailedBolusInfo.pumpId = bolus.getPumpId();
-                detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
-
-                boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
-
-                bolus.setLinkedObject(detailedBolusInfo);
-
-                if (L.isEnabled(L.PUMPCOMM))
-                    LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
-                        detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
+            DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(treatment.date);
+            if (detailedBolusInfo == null) {
+                detailedBolusInfo = new DetailedBolusInfo();
             }
+
+            detailedBolusInfo.date = treatment.date;
+            detailedBolusInfo.source = Source.PUMP;
+            detailedBolusInfo.pumpId = bolus.getPumpId();
+            detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
+
+            boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+
+            bolus.setLinkedObject(detailedBolusInfo);
+
+            if (L.isEnabled(L.PUMPCOMM))
+                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
+                    detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
+            // }
         }
 
     }

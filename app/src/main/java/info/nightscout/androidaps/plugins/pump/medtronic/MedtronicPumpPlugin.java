@@ -21,9 +21,11 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -40,7 +42,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.MessageHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -69,6 +71,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -552,6 +555,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             pumpState = PumpDriverState.Initialized;
         }
 
+        // FIXME andy!!!
         // MainApp.getFirebaseAnalytics().logCustomEvent(FirebaseAnalytics.Event.SELECT_CONTENT, event);
         //
         // FabricPrivacy.getInstance().logCustom( //

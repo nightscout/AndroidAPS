@@ -78,9 +78,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             MainApp.bus().post(new EventRefreshGui());
         }
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens))
-            && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
+                && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
             OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity),
-                MainApp.gs(R.string.sensitivity_warning), null);
+                    MainApp.gs(R.string.sensitivity_warning), null);
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
@@ -88,20 +88,20 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
     private static void updatePrefSummary(Preference pref) {
         if (pref instanceof ListPreference) {
-            ListPreference listPref = (ListPreference)pref;
+            ListPreference listPref = (ListPreference) pref;
             pref.setSummary(listPref.getEntry());
         }
         if (pref instanceof EditTextPreference) {
-            EditTextPreference editTextPref = (EditTextPreference)pref;
+            EditTextPreference editTextPref = (EditTextPreference) pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
             } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
                 pref.setSummary(SP.getString(R.string.key_danars_name, ""));
             } else if (editTextPref.getText() != null) {
-                ((EditTextPreference)pref).setDialogMessage(editTextPref.getDialogMessage());
+                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             } else if (pref.getKey().contains("smscommunicator_allowednumbers")
-                && TextUtils.isEmpty(editTextPref.getText().trim())) {
+                    && TextUtils.isEmpty(editTextPref.getText().trim())) {
                 pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }
@@ -110,7 +110,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
     public static void initSummary(Preference p) {
         if (p instanceof PreferenceGroup) {
-            PreferenceGroup pGrp = (PreferenceGroup)p;
+            PreferenceGroup pGrp = (PreferenceGroup) p;
             for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
                 initSummary(pGrp.getPreference(i));
             }
@@ -169,7 +169,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(),
-                    PluginType.SENSITIVITY);
+                        PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), PluginType.SENSITIVITY);
                 addPreferencesFromResourceIfEnabled(SensitivityOref1Plugin.getPlugin(), PluginType.SENSITIVITY);
 
@@ -183,9 +183,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
 
                     if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                        || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                        || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
-                        || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
+                            || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
+                            || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
+                            || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
                         addPreferencesFromResource(R.xml.pref_danarprofile);
                     }
                 }
@@ -207,16 +207,16 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
 
             if (Config.NSCLIENT) {
-                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen)findPreference(getString(R.string.key_advancedsettings));
+                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) findPreference(getString(R.string.key_advancedsettings));
                 if (scrnAdvancedSettings != null) {
                     scrnAdvancedSettings
-                        .removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
+                            .removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
                     scrnAdvancedSettings
-                        .removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
+                            .removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
                     scrnAdvancedSettings
-                        .removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
+                            .removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
                     scrnAdvancedSettings
-                        .removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
+                            .removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
                 }
             }

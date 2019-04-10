@@ -53,8 +53,7 @@ public class MedtronicHistoryDataUTest {
         RawHistoryPage historyPage = new RawHistoryPage();
         historyPage.appendData(historyPageData);
 
-        List<PumpHistoryEntry> pumpHistoryEntries = decoder.processPageAndCreateRecords(historyPage,
-            PumpHistoryEntry.class);
+        List<PumpHistoryEntry> pumpHistoryEntries = decoder.processPageAndCreateRecords(historyPage);
 
         System.out.println("PumpHistoryEntries: " + pumpHistoryEntries.size());
 

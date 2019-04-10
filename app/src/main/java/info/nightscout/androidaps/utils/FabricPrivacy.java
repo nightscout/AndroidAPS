@@ -74,7 +74,8 @@ public class FabricPrivacy {
     }
 
     public static boolean fabricEnabled() {
-        return SP.getBoolean("enable_fabric", true);
+        //return SP.getBoolean("enable_fabric", true);
+        return true;
     }
 
     // Analytics logCustom

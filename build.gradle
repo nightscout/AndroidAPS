@@ -7,7 +7,6 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url 'https://maven.fabric.io/public' }
     }
-
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0'
         classpath 'com.google.gms:google-services:4.2.0'

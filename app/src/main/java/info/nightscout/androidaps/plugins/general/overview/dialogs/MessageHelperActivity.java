@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.Dialogs;
+package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,16 +9,15 @@ public class MessageHelperActivity extends AppCompatActivity {
         super();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         MessageDialog messageDialog = new MessageDialog();
         messageDialog.setHelperActivity(this);
         messageDialog.setStatus(getIntent().getStringExtra("status"));
 
         messageDialog.setTitle(getIntent().getStringExtra("title"));
         messageDialog.show(this.getSupportFragmentManager(), "Message");
-
     }
 }

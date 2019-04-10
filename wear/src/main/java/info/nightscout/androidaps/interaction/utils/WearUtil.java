@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interaction.utils;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -9,11 +8,9 @@ import java.util.Date;
 
 public class WearUtil {
 
-
     public static String dateTimeText(long timeInMs) {
         Date d = new Date(timeInMs);
         return "" + d.getDay() + "." + d.getMonth() + "." + d.getYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     }
-
 
 }

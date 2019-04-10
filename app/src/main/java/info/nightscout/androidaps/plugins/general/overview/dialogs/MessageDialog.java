@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.Dialogs;
+package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import info.nightscout.androidaps.R;
 public class MessageDialog extends DialogFragment implements View.OnClickListener {
 
     private static Logger log = LoggerFactory.getLogger(MessageDialog.class);
-    // Button muteButton;
+
     Button okButton;
     TextView statusView;
     MessageHelperActivity helperActivity;
@@ -24,8 +24,6 @@ public class MessageDialog extends DialogFragment implements View.OnClickListene
     static String status;
     static String title;
 
-
-    // static int soundId;
 
     public MessageDialog() {
         super();
@@ -51,14 +49,11 @@ public class MessageDialog extends DialogFragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().setTitle(title);
         View view = inflater.inflate(R.layout.overview_message_dialog, container, false);
-        // muteButton = (Button)view.findViewById(R.id.overview_error_mute);
         okButton = (Button)view.findViewById(R.id.overview_message_ok);
         statusView = (TextView)view.findViewById(R.id.overview_message_status);
-        // muteButton.setOnClickListener(this);
         okButton.setOnClickListener(this);
         setCancelable(false);
 
-        // startAlarm();
         return view;
     }
 
@@ -86,7 +81,7 @@ public class MessageDialog extends DialogFragment implements View.OnClickListene
         switch (view.getId()) {
 
             case R.id.overview_message_ok:
-                log.debug("Error dialog ok button pressed");
+                log.debug("Message dialog ok button pressed");
                 dismiss();
                 break;
         }

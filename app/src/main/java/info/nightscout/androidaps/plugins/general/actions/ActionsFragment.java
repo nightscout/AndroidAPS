@@ -1,9 +1,5 @@
 package info.nightscout.androidaps.plugins.general.actions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -44,8 +40,8 @@ import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SingleClickButton;
@@ -57,7 +53,6 @@ import info.nightscout.androidaps.utils.SingleClickButton;
 public class ActionsFragment extends SubscriberFragment implements View.OnClickListener {
 
     static ActionsPlugin actionsPlugin = new ActionsPlugin();
-
 
     static public ActionsPlugin getPlugin() {
         return actionsPlugin;
@@ -77,24 +72,24 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     private Map<String, CustomAction> pumpCustomActions = new HashMap<>();
     private List<SingleClickButton> pumpCustomButtons = new ArrayList<>();
 
-
     public ActionsFragment() {
         super();
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.actions_fragment, container, false);
 
-            profileSwitch = (SingleClickButton)view.findViewById(R.id.actions_profileswitch);
-            tempTarget = (SingleClickButton)view.findViewById(R.id.actions_temptarget);
-            extendedBolus = (SingleClickButton)view.findViewById(R.id.actions_extendedbolus);
-            extendedBolusCancel = (SingleClickButton)view.findViewById(R.id.actions_extendedbolus_cancel);
-            tempBasal = (SingleClickButton)view.findViewById(R.id.actions_settempbasal);
-            tempBasalCancel = (SingleClickButton)view.findViewById(R.id.actions_canceltempbasal);
-            fill = (SingleClickButton)view.findViewById(R.id.actions_fill);
+            profileSwitch = (SingleClickButton) view.findViewById(R.id.actions_profileswitch);
+            tempTarget = (SingleClickButton) view.findViewById(R.id.actions_temptarget);
+            extendedBolus = (SingleClickButton) view.findViewById(R.id.actions_extendedbolus);
+            extendedBolusCancel = (SingleClickButton) view.findViewById(R.id.actions_extendedbolus_cancel);
+            tempBasal = (SingleClickButton) view.findViewById(R.id.actions_settempbasal);
+            tempBasalCancel = (SingleClickButton) view.findViewById(R.id.actions_canceltempbasal);
+            fill = (SingleClickButton) view.findViewById(R.id.actions_fill);
             tddStats = view.findViewById(R.id.actions_tddstats);
             history = view.findViewById(R.id.actions_historybrowser);
 
@@ -119,47 +114,39 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         return null;
     }
 
-
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
         updateGUI();
     }
-
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
         updateGUI();
     }
 
-
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
         updateGUI();
     }
-
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
         updateGUI();
     }
 
-
     @Subscribe
     public void onStatusEvent(final EventCustomActionsChanged ev) {
         updateGUI();
     }
-
 
     @Override
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
-                    if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null
-                        && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null) {
+                    if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null) {
                         profileSwitch.setVisibility(View.VISIBLE);
                     } else {
                         profileSwitch.setVisibility(View.GONE);
@@ -177,37 +164,34 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
                     final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                     final boolean basalprofileEnabled = MainApp.isEngineeringModeOrRelease()
-                        && pump.getPumpDescription().isSetBasalProfileCapable;
+                            && pump.getPumpDescription().isSetBasalProfileCapable;
 
                     if (!basalprofileEnabled || !pump.isInitialized() || pump.isSuspended())
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
 
-                    if (!pump.getPumpDescription().isExtendedBolusCapable || !pump.isInitialized()
-                        || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses()) {
+                    if (!pump.getPumpDescription().isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses()) {
                         extendedBolus.setVisibility(View.GONE);
                         extendedBolusCancel.setVisibility(View.GONE);
                     } else {
-                        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(
-                            System.currentTimeMillis());
+                        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
                         if (activeExtendedBolus != null) {
                             extendedBolus.setVisibility(View.GONE);
                             extendedBolusCancel.setVisibility(View.VISIBLE);
-                            extendedBolusCancel.setText(MainApp.gs(R.string.cancel) + " "
-                                + activeExtendedBolus.toString());
+                            extendedBolusCancel.setText(MainApp.gs(R.string.cancel) + " " + activeExtendedBolus.toString());
                         } else {
                             extendedBolus.setVisibility(View.VISIBLE);
                             extendedBolusCancel.setVisibility(View.GONE);
                         }
                     }
 
+
                     if (!pump.getPumpDescription().isTempBasalCapable || !pump.isInitialized() || pump.isSuspended()) {
                         tempBasal.setVisibility(View.GONE);
                         tempBasalCancel.setVisibility(View.GONE);
                     } else {
-                        final TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(
-                            System.currentTimeMillis());
+                        final TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
                         if (activeTemp != null) {
                             tempBasal.setVisibility(View.GONE);
                             tempBasalCancel.setVisibility(View.VISIBLE);
@@ -239,6 +223,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             });
     }
 
+
     View.OnClickListener pumpCustomActionsListener = v -> {
 
         SingleClickButton btn = (SingleClickButton) v;
@@ -260,7 +245,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             return;
         }
 
-        // add new actions
         List<CustomAction> customActions = activePump.getCustomActions();
 
         if (customActions != null && customActions.size() > 0) {
@@ -276,7 +260,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 btn.setText(MainApp.gs(customAction.getName()));
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f);
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f);
                 layoutParams.setMargins(20, 8, 20, 8); // 10,3,10,3
 
                 btn.setLayoutParams(layoutParams);

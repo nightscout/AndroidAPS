@@ -242,7 +242,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             Treatment treatment = Treatment.createFromJson(json);
             if (treatment != null)
-                createOrUpdate(treatment);
+                createOrUpdate(treatment, true);
             else
                 log.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
@@ -251,7 +251,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     // return true if new record is created
-    public UpdateReturn createOrUpdate(Treatment treatment) {
+    public UpdateReturn createOrUpdate(Treatment treatment, boolean fromNightScout) {
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
@@ -315,11 +315,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             if (treatment.source == Source.NIGHTSCOUT) {
                 old = getDao().queryForId(treatment.date);
                 if (old != null) {
-                    if (!old.isEqual(treatment)) {
+                    if (!old.isEqualWithoutPumpId(treatment)) {
                         boolean historyChange = old.isDataChanging(treatment);
                         long oldDate = old.date;
                         getDao().delete(old); // need to delete/create because date may change too
-                        old.copyFrom(treatment);
+                        treatmentCopy(old, treatment, fromNightScout);
                         getDao().create(old);
                         if (L.isEnabled(L.DATATREATMENTS))
                             log.debug("Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
@@ -338,11 +338,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 if (treatment._id != null) {
                     old = findByNSId(treatment._id);
                     if (old != null) {
-                        if (!old.isEqual(treatment)) {
+                        if (!old.isEqualWithoutPumpId(treatment)) {
                             boolean historyChange = old.isDataChanging(treatment);
                             long oldDate = old.date;
                             getDao().delete(old); // need to delete/create because date may change too
-                            old.copyFrom(treatment);
+                            treatmentCopy(old, treatment, fromNightScout);
                             getDao().create(old);
                             if (L.isEnabled(L.DATATREATMENTS))
                                 log.debug("Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
@@ -377,6 +377,30 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             log.error("Unhandled exception", e);
         }
         return new UpdateReturn(false, false);
+    }
+
+    private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
+
+        log.debug("treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
+
+        if (fromNightScout) {
+            long pumpId_old = oldTreatment.pumpId;
+            oldTreatment.copyFrom(newTreatment);
+
+            if (pumpId_old != 0) {
+                oldTreatment.pumpId = pumpId_old;
+            }
+
+            if (oldTreatment.pumpId != 0 && oldTreatment.source != Source.PUMP) {
+                oldTreatment.source = Source.PUMP;
+            }
+
+        } else {
+            oldTreatment.copyFrom(newTreatment);
+        }
+
+        log.debug("treatmentCopy [newAfterChange={}]", oldTreatment.toString());
+
     }
 
     /**

@@ -43,7 +43,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
@@ -563,7 +563,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
         treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
-        TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment);
+        TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment, false);
         boolean newRecordCreated = creatOrUpdateResult.newRecord;
         // log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
@@ -577,7 +577,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                                                                                                             // records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
             carbsTreatment.source = detailedBolusInfo.source;
-            getService().createOrUpdate(carbsTreatment);
+            getService().createOrUpdate(carbsTreatment, false);
             // log.debug("Adding new Treatment record" + carbsTreatment);
         }
         if (newRecordCreated && detailedBolusInfo.isValid)

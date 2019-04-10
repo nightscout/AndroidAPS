@@ -34,16 +34,19 @@ public enum PumpCapability {
     PumpCapability[] children;
 
 
-    PumpCapability() {
+    PumpCapability()
+    {
     }
 
 
-    PumpCapability(PumpCapability... children) {
+    PumpCapability(PumpCapability...children)
+    {
         this.children = children;
     }
 
 
-    public boolean hasCapability(PumpCapability capability) {
+    public boolean hasCapability(PumpCapability capability)
+    {
         // we can only check presense of simple capabilities
         if (capability.children != null)
             return false;
@@ -51,15 +54,19 @@ public enum PumpCapability {
         if (this == capability)
             return true;
 
-        if (this.children != null) {
+        if (this.children!=null)
+        {
             for (PumpCapability child : children) {
                 if (child == capability)
                     return true;
             }
 
             return false;
-        } else
+        }
+        else
             return false;
     }
+
+
 
 }
