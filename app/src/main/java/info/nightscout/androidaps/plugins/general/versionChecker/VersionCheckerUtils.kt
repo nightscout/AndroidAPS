@@ -23,7 +23,7 @@ fun isConnected(): Boolean {
 
 // convert inputstream to String
 @Throws(IOException::class)
-fun InputStream.findVersion(): String? {
+inline fun InputStream.findVersion(): String? {
     val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
     return bufferedReader()
             .readLines()
@@ -41,19 +41,31 @@ fun checkVersion() = if (isConnected()) {
             val request = HttpGet("https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/build.gradle")
             val response: HttpResponse = DefaultHttpClient().execute(request)
             val version: String? = response.entity.content?.findVersion()
-            val comparison = version?.compareTo(BuildConfig.VERSION_NAME.replace("\"", "")) ?: 0
-            if (comparison == 0) {
-                log.debug("Version equal to master of fetch failed")
-            } else if (comparison > 0) {
-                log.debug("Version outdated. Found $version")
-                val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), version.toString()), Notification.LOW)
-                MainApp.bus().post(EventNewNotification(notification))
-            } else {
-                log.debug("Version newer than master. Are you developer?")
-            }
+            compareWithCurrentVersion(version, BuildConfig.VERSION_NAME)
         } catch (e: IOException) {
             log.debug("Github master version check error: $e")
         }
     }.start()
 } else
     log.debug("Github master version no checked. No connectivity")
+
+fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
+    val comparison = newVersion?.versionStrip()?.compareTo(currentVersion.versionStrip()) ?: 0
+    when {
+        comparison == 0 -> log.debug("Version equal to master of fetch failed")
+        comparison > 0 -> {
+            log.debug("Version ${currentVersion} outdated. Found $newVersion")
+            val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
+            MainApp.bus().post(EventNewNotification(notification))
+        }
+        else -> log.debug("Version newer than master. Are you developer?")
+    }
+}
+
+ fun String.versionStrip() = this.mapNotNull {
+     when (it) {
+         in '0'..'9' -> it
+         '.' -> it
+         else -> null
+     }
+ }.joinToString (separator = "")
