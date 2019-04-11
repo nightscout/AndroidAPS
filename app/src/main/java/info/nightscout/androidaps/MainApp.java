@@ -125,7 +125,6 @@ public class MainApp extends Application {
         try {
             if (FabricPrivacy.fabricEnabled()) {
                 Fabric.with(this, new Crashlytics());
-                Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
             }
         } catch (Exception e) {
             log.error("Error with Fabric init! " + e);
@@ -137,6 +136,7 @@ public class MainApp extends Application {
 
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
+        log.info("Remote: " + BuildConfig.REMOTE);
 
         String extFilesDir = LoggerUtils.getLogDirectory();
         File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
