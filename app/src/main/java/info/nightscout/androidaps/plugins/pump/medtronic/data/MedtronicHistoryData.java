@@ -605,8 +605,6 @@ public class MedtronicHistoryData {
 
             switch (bolusDTO.getBolusType()) {
                 case Normal: {
-                    // DetailedBolusInfo normalBolus = new DetailedBolusInfo();
-
                     DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
 
                     detailedBolusInfo.date = tryToGetByLocalTime(bolus.atechDateTime);
@@ -617,10 +615,6 @@ public class MedtronicHistoryData {
                     boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
                     bolus.setLinkedObject(detailedBolusInfo);
-
-                    // bolus.setLinkedObject(normalBolus);
-
-                    // TreatmentsPlugin.getPlugin().addToHistoryTreatment(normalBolus, false);
 
                     if (L.isEnabled(L.PUMPCOMM))
                         LOG.debug("addBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
@@ -652,23 +646,6 @@ public class MedtronicHistoryData {
 
         } else {
 
-            boolean old = false;
-
-            // if (old) {
-            // treatment.insulin = bolusDTO.getDeliveredAmount();
-            // treatment.pumpId = bolus.getPumpId();
-            // treatment.source = Source.PUMP;
-            //
-            // bolus.setLinkedObject(treatment);
-            //
-            // TreatmentsPlugin.getPlugin().getService().createOrUpdate(treatment);
-            //
-            // LOG.debug("editBolus - [date={},pumpId={}, insulin={}]", treatment.date, treatment.pumpId,
-            // treatment.insulin);
-            //
-            // MainApp.bus().post(new EventTreatmentChange(treatment));
-            // } else {
-
             DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(treatment.date);
             if (detailedBolusInfo == null) {
                 detailedBolusInfo = new DetailedBolusInfo();
@@ -678,6 +655,7 @@ public class MedtronicHistoryData {
             detailedBolusInfo.source = Source.PUMP;
             detailedBolusInfo.pumpId = bolus.getPumpId();
             detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
+            detailedBolusInfo.carbs = treatment.carbs;
 
             boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 

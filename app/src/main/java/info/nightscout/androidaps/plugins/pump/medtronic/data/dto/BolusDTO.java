@@ -29,16 +29,16 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType;
 public class BolusDTO extends PumpTimeStampedRecord {
 
     @Expose
-    private Float requestedAmount;
+    private Double requestedAmount;
     @Expose
-    private Float deliveredAmount;
+    private Double deliveredAmount;
     @Expose
-    private Float immediateAmount; // when Multiwave this is used
+    private Double immediateAmount; // when Multiwave this is used
     @Expose
     private Integer duration;
     @Expose
     private PumpBolusType bolusType;
-    private Float insulinOnBoard;
+    private Double insulinOnBoard;
 
 
     public BolusDTO() {
@@ -46,22 +46,22 @@ public class BolusDTO extends PumpTimeStampedRecord {
     }
 
 
-    public Float getRequestedAmount() {
+    public Double getRequestedAmount() {
         return requestedAmount;
     }
 
 
-    public void setRequestedAmount(Float requestedAmount) {
+    public void setRequestedAmount(Double requestedAmount) {
         this.requestedAmount = requestedAmount;
     }
 
 
-    public Float getDeliveredAmount() {
+    public Double getDeliveredAmount() {
         return deliveredAmount;
     }
 
 
-    public void setDeliveredAmount(Float deliveredAmount) {
+    public void setDeliveredAmount(Double deliveredAmount) {
         this.deliveredAmount = deliveredAmount;
     }
 
@@ -86,12 +86,12 @@ public class BolusDTO extends PumpTimeStampedRecord {
     }
 
 
-    public Float getInsulinOnBoard() {
+    public Double getInsulinOnBoard() {
         return insulinOnBoard;
     }
 
 
-    public void setInsulinOnBoard(Float insulinOnBoard) {
+    public void setInsulinOnBoard(Double insulinOnBoard) {
         this.insulinOnBoard = insulinOnBoard;
     }
 
@@ -112,10 +112,10 @@ public class BolusDTO extends PumpTimeStampedRecord {
             return getFormattedDecimal(this.deliveredAmount);
         } else if (bolusType == PumpBolusType.Extended) {
             return String.format("AMOUNT_SQUARE=%s;DURATION=%s", getFormattedDecimal(this.deliveredAmount),
-                getDurationString());
+                    getDurationString());
         } else {
             return String.format("AMOUNT=%s;AMOUNT_SQUARE=%s;DURATION=%s", getFormattedDecimal(this.immediateAmount),
-                getFormattedDecimal(this.deliveredAmount), getDurationString());
+                    getFormattedDecimal(this.deliveredAmount), getDurationString());
         }
     }
 
@@ -131,12 +131,12 @@ public class BolusDTO extends PumpTimeStampedRecord {
     }
 
 
-    public Float getImmediateAmount() {
+    public Double getImmediateAmount() {
         return immediateAmount;
     }
 
 
-    public void setImmediateAmount(Float immediateAmount) {
+    public void setImmediateAmount(Double immediateAmount) {
         this.immediateAmount = immediateAmount;
     }
 

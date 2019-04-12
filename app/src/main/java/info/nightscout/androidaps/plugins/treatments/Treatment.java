@@ -108,9 +108,9 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isDataChanging(Treatment other) {
         if (date != other.date)
             return true;
-        if (insulin != other.insulin)
+        if (!isSame(insulin, other.insulin))
             return true;
-        if (carbs != other.carbs)
+        if (!isSame(carbs, other.carbs))
             return true;
         return false;
     }
@@ -118,9 +118,9 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isEqual(Treatment other) {
         if (date != other.date)
             return false;
-        if (insulin != other.insulin)
+        if (!isSame(insulin, other.insulin))
             return false;
-        if (carbs != other.carbs)
+        if (!isSame(carbs, other.carbs))
             return false;
         if (mealBolus != other.mealBolus)
             return false;
@@ -136,9 +136,9 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isEqualWithoutPumpId(Treatment other) {
         if (date != other.date)
             return false;
-        if (insulin != other.insulin)
+        if (!isSame(insulin, other.insulin))
             return false;
-        if (carbs != other.carbs)
+        if (!isSame(carbs, other.carbs))
             return false;
         if (mealBolus != other.mealBolus)
             return false;
@@ -149,6 +149,11 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+    public boolean isSame(Double d1, Double d2) {
+        double diff = d1 - d2;
+
+        return (Math.abs(diff) <= 0.000001);
+    }
 
     @Nullable
     public JSONObject getBoluscalc() {
@@ -168,12 +173,13 @@ public class Treatment implements DataPointWithLabelInterface {
         if (date != other.date) {
             return false;
         }
-        if (insulin != other.insulin) {
+
+        if (!isSame(insulin, other.insulin))
             return false;
-        }
-        if (carbs != other.carbs) {
+
+        if (!isSame(carbs, other.carbs))
             return false;
-        }
+
         return true;
     }
 

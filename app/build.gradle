@@ -65,7 +65,7 @@ android {
         multiDexEnabled true
         versionCode 1500
         // dev_version: 2.2.3-dev
-        version "medtronic-0.9.2-SNAPSHOT"
+        version "medtronic-0.9.3-SNAPSHOT"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
