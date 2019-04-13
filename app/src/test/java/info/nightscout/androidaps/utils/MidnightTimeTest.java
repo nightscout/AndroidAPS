@@ -54,6 +54,13 @@ public class MidnightTimeTest {
     }
 
     @Test
+    public void resetCache() {
+        long now = DateUtil.now();
+        MidnightTime.calc(now);
+        MidnightTime.resetCache();
+        Assert.assertEquals(0, MidnightTime.times.size());
+    }
+    @Test
     public void log() {
         long now = DateUtil.now();
         MidnightTime.calc(now);

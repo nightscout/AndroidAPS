@@ -5,10 +5,12 @@ import android.util.LongSparseArray;
 import java.util.Calendar;
 
 public class MidnightTime {
-    private static final LongSparseArray<Long> times = new LongSparseArray<>();
+    static final LongSparseArray<Long> times = new LongSparseArray<>();
 
     private static long hits = 0;
     private static long misses = 0;
+
+    private static final int THRESHOLD = 100000;
 
     public static long calc() {
         Calendar c = Calendar.getInstance();
@@ -36,8 +38,15 @@ public class MidnightTime {
             m = c.getTimeInMillis();
             times.append(time, m);
             ++misses;
+            if (times.size() > THRESHOLD) resetCache();
         }
         return m;
+    }
+
+    static void resetCache() {
+        hits = 0;
+        misses = 0;
+        times.clear();
     }
 
     public static String log() {
