@@ -102,6 +102,11 @@ public class PumpHistoryResult {
                 // clearOrPrepareList();
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
+
+                    if (unprocessedEntry.atechDateTime==null || unprocessedEntry.atechDateTime==0) {
+                        continue;
+                    }
+
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {

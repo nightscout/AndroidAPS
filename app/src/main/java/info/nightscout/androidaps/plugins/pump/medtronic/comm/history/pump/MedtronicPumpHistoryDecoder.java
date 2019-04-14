@@ -211,7 +211,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case ClearAlarm:
             case ChangeAlarmNotifyMode: // ChangeUtility:
             case ToggleRemote:
-            case UnabsorbedInsulin:
             case BGReceived: // Ian3F: CGMS
             case SensorAlert: // Ian08 CGMS
             case ChangeTimeFormat:
@@ -272,10 +271,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case EventUnknown_MM522_0x4c:
             case EventUnknown_MM512_0x10:
             case EventUnknown_MM512_0x2e:
-
             case EventUnknown_MM512_0x37:
             case EventUnknown_MM512_0x38:
-
             case EventUnknown_MM512_0x4e:
             case EventUnknown_MM522_0x70:
             case EventUnknown_MM512_0x88:
@@ -286,6 +283,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case EventUnknown_MM522_0x05:
                 LOG.debug(" -- ignored Pump Entry: " + entry);
                 return RecordDecodeStatus.Ignored;
+
+            case UnabsorbedInsulin:
+		return RecordDecodeStatus.Ignored;
 
             // **** Implemented records ****
 
@@ -423,7 +423,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         // FIXME displayable
 
-        return RecordDecodeStatus.WIP;
+        return RecordDecodeStatus.OK;
     }
 
 

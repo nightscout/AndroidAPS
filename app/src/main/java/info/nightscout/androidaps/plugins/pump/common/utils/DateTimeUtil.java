@@ -147,7 +147,11 @@ public class DateTimeUtil {
     }
 
 
-    public static int getYear(long atechDateTime) {
+    public static int getYear(Long atechDateTime) {
+
+        if (atechDateTime==null || atechDateTime==0) {
+            return 2000;
+        }
 
         int year = (int)(atechDateTime / 10000000000L);
         return year;

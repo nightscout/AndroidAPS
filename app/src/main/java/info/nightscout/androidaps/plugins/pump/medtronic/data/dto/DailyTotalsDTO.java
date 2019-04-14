@@ -117,7 +117,7 @@ public class DailyTotalsDTO {
         // Daily
 
         byte body[] = data; // entry.getBody();
-        System.out.println("Totoals 522");
+        System.out.println("Totals 522");
 
         for (int i = 0; i < body.length - 2; i++) {
 
