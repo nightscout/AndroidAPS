@@ -73,7 +73,7 @@
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".activities.HistoryBrowseActivity" />
 
-        <!-- Receive new BG readings from other local aaps -->
+        <!-- Receive new BG readings from other local apps -->
         <receiver
                 android:name=".receivers.DataReceiver"
                 android:enabled="true"
