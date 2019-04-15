@@ -8,6 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.utils.SP
 import org.apache.http.HttpResponse
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
@@ -50,22 +51,34 @@ fun checkVersion() = if (isConnected()) {
     log.debug("Github master version no checked. No connectivity")
 
 fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
-    val comparison = newVersion?.versionStrip()?.compareTo(currentVersion.versionStrip()) ?: 0
+    val comparison: Int? = newVersion?.versionStrip()?.compareTo(currentVersion.versionStrip())
     when {
-        comparison == 0 -> log.debug("Version equal to master of fetch failed")
-        comparison > 0 -> {
-            log.debug("Version ${currentVersion} outdated. Found $newVersion")
-            val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
-            MainApp.bus().post(EventNewNotification(notification))
-        }
+        comparison == null -> onVersionNotDetectable()
+        comparison == 0 -> onSameVersionDetected()
+        comparison > 0 -> onNewVersionDetected(currentVersion = currentVersion, newVersion = newVersion)
         else -> log.debug("Version newer than master. Are you developer?")
     }
 }
 
- fun String.versionStrip() = this.mapNotNull {
-     when (it) {
-         in '0'..'9' -> it
-         '.' -> it
-         else -> null
-     }
- }.joinToString (separator = "")
+fun onSameVersionDetected() {
+    SP.remove(R.string.key_new_version_available_since)
+}
+
+fun onVersionNotDetectable() {
+    log.debug("fetch failed, ignore and smartcast to non-null")
+}
+
+fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
+    log.debug("Version ${currentVersion} outdated. Found $newVersion")
+    val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
+    MainApp.bus().post(EventNewNotification(notification))
+    SP.putLong(R.string.key_new_version_available_since, System.currentTimeMillis())
+}
+
+fun String.versionStrip() = this.mapNotNull {
+    when (it) {
+        in '0'..'9' -> it
+        '.' -> it
+        else -> null
+    }
+}.joinToString(separator = "")

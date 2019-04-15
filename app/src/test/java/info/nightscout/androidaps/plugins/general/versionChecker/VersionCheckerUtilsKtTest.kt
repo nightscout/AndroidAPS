@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.general.versionChecker
 
 import com.squareup.otto.Bus
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.utils.SP
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,33 +60,33 @@ class VersionCheckerUtilsKtTest {
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class)
+    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update1`() {
-        val bus = prepareCompareTests()
+        val bus = prepareBus()
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
         verify(bus, times(1)).post(any())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class)
+    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update2`() {
-        val bus = prepareCompareTests()
+        val bus = prepareBus()
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
         verify(bus, times(1)).post(any())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class)
+    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update3`() {
-        val bus = prepareCompareTests()
+        val bus = prepareBus()
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
         verify(bus, times(1)).post(any())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class)
+    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update4`() {
-        val bus = prepareCompareTests()
+        val bus = prepareBus()
 
         compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
 
@@ -92,29 +94,72 @@ class VersionCheckerUtilsKtTest {
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class)
+    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update5`() {
-        val bus = prepareCompareTests()
+        val bus = prepareBus()
         compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
         verify(bus, times(1)).post(any())
     }
 
     @Test
-    @PrepareForTest(MainApp::class, L::class)
+    @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update6`() {
-        val bus = prepareCompareTests()
+        val bus = prepareBus()
+        val sp = prepareSP()
         compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
         verify(bus, times(1)).post(any())
     }
 
+    @Test
+    @PrepareForTest(MainApp::class, L::class, SP::class)
+    fun `find same version`() {
+        val buildGradle = """blabla
+            |   android {
+            |      aosenuthoae
+            |   }
+            |   version = "2.2.2"
+            |   appName = "Aaoeu"
+        """.trimMargin()
+        val bus = prepareBus()
+        compareWithCurrentVersion(buildGradle.byteInputStream().findVersion(), currentVersion = "2.2.2")
+        verify(bus, times(0)).post(any())
+        verify(SP, times(1)).remove(R.string.key_new_version_available_since)
+    }
 
-    private fun prepareCompareTests(): Bus {
+    @Test
+    @PrepareForTest(MainApp::class, L::class, SP::class)
+    fun `find higher version`() {
+        val buildGradle = """blabla
+            |   android {
+            |      aosenuthoae
+            |   }
+            |   version = "3.0"
+            |   appName = "Aaoeu"
+        """.trimMargin()
+        val bus = prepareBus()
+        compareWithCurrentVersion(buildGradle.byteInputStream().findVersion(), currentVersion = "2.2.2")
+        verify(bus, times(1)).post(any())
+    }
+
+
+    private fun prepareBus(): Bus {
         PowerMockito.mockStatic(MainApp::class.java)
         val mainApp = mock<MainApp>(MainApp::class.java)
         `when`(MainApp.instance()).thenReturn(mainApp)
         val bus = mock(Bus::class.java)
         `when`(MainApp.bus()).thenReturn(bus)
         `when`(MainApp.gs(ArgumentMatchers.anyInt())).thenReturn("some dummy string")
+        prepareSP()
         return bus
     }
+
+    private fun prepareSP() {
+        PowerMockito.mockStatic(SP::class.java)
+    }
+
+    private fun prepareLogging() {
+            PowerMockito.mockStatic(L::class.java)
+            `when`(L.isEnabled(any())).thenReturn(true)
+    }
+
 }
