@@ -8,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -30,12 +29,11 @@ public class GlucoseStatus {
     public long date = 0L;
 
 
-    @Override
-    public String toString() {
-        return MainApp.gs(R.string.glucose) + " " + DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
-                MainApp.gs(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
-                MainApp.gs(R.string.short_avgdelta) + " " + DecimalFormatter.to2Decimal(short_avgdelta) + " mg/dl\n" +
-                MainApp.gs(R.string.long_avgdelta) + " " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl";
+    public String log() {
+        return "Glucose: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl " +
+                "Delta: " + DecimalFormatter.to0Decimal(delta) + " mg/dl" +
+                "Short avg. delta: " + " " + DecimalFormatter.to2Decimal(short_avgdelta) + " mg/dl " +
+                "Long avg. delta: " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl";
     }
 
     public GlucoseStatus() {
@@ -64,15 +62,22 @@ public class GlucoseStatus {
 
         List<BgReading> data = IobCobCalculatorPlugin.getPlugin().getBgReadings();
 
-        if (data == null)
+        if (data == null) {
+            if (L.isEnabled(L.GLUCOSE))
+                log.debug("data=null");
             return null;
+        }
 
         int sizeRecords = data.size();
         if (sizeRecords == 0) {
+            if (L.isEnabled(L.GLUCOSE))
+                log.debug("sizeRecords==0");
             return null;
         }
 
         if (data.get(0).date < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
+            if (L.isEnabled(L.GLUCOSE))
+                log.debug("olddata");
             return null;
         }
 
@@ -88,13 +93,15 @@ public class GlucoseStatus {
             status.long_avgdelta = 0d;
             status.avgdelta = 0d; // for OpenAPS MA
             status.date = now_date;
+            if (L.isEnabled(L.GLUCOSE))
+                log.debug("sizeRecords==1");
             return status.round();
         }
 
-        ArrayList<Double> now_value_list = new ArrayList<Double>();
-        ArrayList<Double> last_deltas = new ArrayList<Double>();
-        ArrayList<Double> short_deltas = new ArrayList<Double>();
-        ArrayList<Double> long_deltas = new ArrayList<Double>();
+        ArrayList<Double> now_value_list = new ArrayList<>();
+        ArrayList<Double> last_deltas = new ArrayList<>();
+        ArrayList<Double> short_deltas = new ArrayList<>();
+        ArrayList<Double> long_deltas = new ArrayList<>();
 
         // Use the latest sgv value in the now calculations
         now_value_list.add(now.value);
@@ -103,13 +110,16 @@ public class GlucoseStatus {
             if (data.get(i).value > 38) {
                 BgReading then = data.get(i);
                 long then_date = then.date;
-                double avgdelta = 0;
+                double avgdelta;
                 long minutesago;
 
                 minutesago = Math.round((now_date - then_date) / (1000d * 60));
                 // multiply by 5 to get the same units as delta, i.e. mg/dL/5m
                 change = now.value - then.value;
                 avgdelta = change / minutesago * 5;
+
+                if (L.isEnabled(L.GLUCOSE))
+                    log.debug(then.toString() + " minutesago=" + minutesago + " avgdelta=" + avgdelta);
 
                 // use the average of all data points in the last 2.5m for all further "now" calculations
                 if (0 < minutesago && minutesago < 2.5) {
@@ -149,6 +159,8 @@ public class GlucoseStatus {
         status.long_avgdelta = average(long_deltas);
         status.avgdelta = status.short_avgdelta; // for OpenAPS MA
 
+        if (L.isEnabled(L.GLUCOSE))
+            log.debug(status.log());
         return status.round();
     }
 

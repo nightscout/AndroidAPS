@@ -36,7 +36,7 @@ public class GlucoseStatusTest {
     @Test
     public void toStringShouldBeOverloaded() {
         GlucoseStatus glucoseStatus = new GlucoseStatus();
-        Assert.assertEquals(true, glucoseStatus.toString().contains("Delta"));
+        Assert.assertEquals(true, glucoseStatus.log().contains("Delta"));
     }
 
     @Test
