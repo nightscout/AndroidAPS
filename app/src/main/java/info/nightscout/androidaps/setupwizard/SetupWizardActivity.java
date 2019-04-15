@@ -22,7 +22,7 @@ import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
@@ -115,7 +115,7 @@ public class SetupWizardActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onEventProfileSwitchChange(EventProfileSwitchChange ignored) {
+    public void onEventProfileSwitchChange(EventProfileNeedsUpdate ignored) {
         updateButtons();
     }
 

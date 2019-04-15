@@ -27,13 +27,13 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -216,7 +216,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
     }
 
     @Subscribe
-    public void onStatusEvent(final EventProfileSwitchChange ev) {
+    public void onStatusEvent(final EventProfileNeedsUpdate ev) {
         updateGUI();
     }
 
