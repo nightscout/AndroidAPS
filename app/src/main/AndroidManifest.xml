@@ -73,31 +73,40 @@
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".activities.HistoryBrowseActivity" />
 
+        <!-- Receive new BG readings from other local apps -->
         <receiver
-            android:name=".receivers.DataReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS">
+                android:name=".receivers.DataReceiver"
+                android:enabled="true"
+                android:exported="true">
             <intent-filter>
-
-                <!-- Receive new SMS messages -->
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
-                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
                 <!-- Receiver from 640g uploader -->
-                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
                 <!-- Receiver from glimp -->
-                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
                 <!-- Receiver from DexcomG5 -->
-                <action android:name="com.dexcom.cgm.DATA" />
-                <action android:name="com.dexcom.cgm.AndroidAPSEVGCallback.BROADCAST" />
-                <action android:name="com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST" />
+                <action android:name="com.dexcom.cgm.DATA"/>
+                <action android:name="com.dexcom.cgm.AndroidAPSEVGCallback.BROADCAST"/>
+                <action android:name="com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST"/>
                 <!-- Receiver from Poctech -->
-                <action android:name="com.china.poctech.data" />
+                <action android:name="com.china.poctech.data"/>
                 <!-- Receiver from Tomato -->
-                <action android:name="com.fanqies.tomatofn.BgEstimate" />
+                <action android:name="com.fanqies.tomatofn.BgEstimate"/>
             </intent-filter>
         </receiver>
+
+        <!-- Receive new SMS messages -->
+        <receiver
+                android:name=".receivers.SmsReceiver"
+                android:enabled="true"
+                android:exported="true"
+                android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
