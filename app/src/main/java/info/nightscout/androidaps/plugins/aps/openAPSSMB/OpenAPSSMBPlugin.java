@@ -139,11 +139,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         long start = System.currentTimeMillis();
         long startPart = System.currentTimeMillis();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(profile);
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
-        startPart = System.currentTimeMillis();
         MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
         if (L.isEnabled(L.APS))
             Profiler.log(log, "getMealData()", startPart);
@@ -190,6 +186,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             lastAutosensResult.sensResult = "autosens disabled";
         }
 
+        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+        if (L.isEnabled(L.APS))
+            Profiler.log(log, "calculateIobArrayInDia()", startPart);
+
+        startPart = System.currentTimeMillis();
         Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
         MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);

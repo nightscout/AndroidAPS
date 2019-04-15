@@ -25,7 +25,7 @@ public interface TreatmentsInterface {
     IobTotal getLastCalculationTreatments();
     IobTotal getCalculationToTimeTreatments(long time);
     IobTotal getLastCalculationTempBasals();
-    IobTotal getCalculationToTimeTempBasals(long time, Profile profile);
+    IobTotal getCalculationToTimeTempBasals(long time);
 
     MealData getMealData();
 

@@ -21,6 +21,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -28,13 +29,11 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.BasalData;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint;
@@ -43,8 +42,13 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.BasalData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
 
 /**
@@ -373,6 +377,38 @@ public class GraphData {
         iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.gc(R.color.iob)); //50%
         iobSeries.setColor(MainApp.gc(R.color.iob));
         iobSeries.setThickness(3);
+
+        List<DataPointWithLabelInterface> iobPred = new ArrayList<>();
+
+        AutosensResult lastAutosensResult;
+        AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("GraphData");
+        if (autosensData == null)
+            lastAutosensResult = new AutosensResult();
+        else
+            lastAutosensResult = autosensData.autosensResult;
+        boolean isTempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis()) != null;
+        IobTotal[] iobPredArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+
+        for (IobTotal i : iobPredArray) {
+            iobPred.add(i.setColor(R.color.iobPredAS));
+            maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
+        }
+
+        log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray));
+
+        IobTotal[] iobPredArray2 = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(new AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+
+        for (IobTotal i : iobPredArray2) {
+            iobPred.add(i.setColor(R.color.iobPred));
+            maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
+        }
+
+        log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(1) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray2));
+
+        DataPointWithLabelInterface[] iobp = new DataPointWithLabelInterface[iobPred.size()];
+        iobp = iobPred.toArray(iobp);
+        addSeries(new PointsWithLabelGraphSeries<>(iobp));
+
 
         if (useForScale) {
             maxY = maxIobValueFound;

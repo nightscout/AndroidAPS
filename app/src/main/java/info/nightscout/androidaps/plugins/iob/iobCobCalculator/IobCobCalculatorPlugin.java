@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.T;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
@@ -342,6 +343,12 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
+    public IobTotal calculateFromTreatmentsAndTempsSynchronized(long time, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
+        synchronized (dataLock) {
+            return calculateFromTreatmentsAndTemps(time, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
+        }
+    }
+
     public IobTotal calculateFromTreatmentsAndTemps(long time, Profile profile) {
         long now = System.currentTimeMillis();
         time = roundUpTime(time);
@@ -352,7 +359,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             //log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
         }
         IobTotal bolusIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time, profile, true, now).round();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time, true, now).round();
         if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS)) {
             // Add expected zero temp basal for next 240 mins
             IobTotal basalIobWithZeroTemp = basalIob.copy();
@@ -373,6 +380,32 @@ public class IobCobCalculatorPlugin extends PluginBase {
             iobTable.put(time, iobTotal);
         }
         return iobTotal;
+    }
+
+    public IobTotal calculateFromTreatmentsAndTemps(long time, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
+        long now = DateUtil.now();
+
+        IobTotal bolusIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTreatments(time).round();
+        IobTotal basalIob = TreatmentsPlugin.getPlugin().getCalculationToTimeTempBasals(time, now, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget).round();
+        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS)) {
+            // Add expected zero temp basal for next 240 mins
+            IobTotal basalIobWithZeroTemp = basalIob.copy();
+            TemporaryBasal t = new TemporaryBasal()
+                    .date(now + 60 * 1000L)
+                    .duration(240)
+                    .absolute(0);
+            if (t.date < time) {
+                Profile profile = ProfileFunctions.getInstance().getProfile(t.date);
+                if (profile != null) {
+                    IobTotal calc = t.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
+                    basalIobWithZeroTemp.plus(calc);
+                }
+            }
+
+            basalIob.iobWithZeroTemp = IobTotal.combine(bolusIob, basalIobWithZeroTemp).round();
+        }
+
+        return IobTotal.combine(bolusIob, basalIob).round();
     }
 
     @Nullable
@@ -534,20 +567,30 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return array;
     }
 
-    public IobTotal[] calculateIobArrayForSMB(Profile profile) {
+    public IobTotal[] calculateIobArrayForSMB(AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         // predict IOB out to DIA plus 30m
-        long time = System.currentTimeMillis();
-        time = roundUpTime(time);
+        long now = DateUtil.now();
         int len = (4 * 60) / 5;
         IobTotal[] array = new IobTotal[len];
         int pos = 0;
         for (int i = 0; i < len; i++) {
-            long t = time + i * 5 * 60000;
-            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t, profile);
+            long t = now + i * 5 * 60000;
+            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
             array[pos] = iob;
             pos++;
         }
         return array;
+    }
+
+    public String iobArrayToString(IobTotal[] array) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (IobTotal i : array) {
+            sb.append(DecimalFormatter.to2Decimal(i.iob));
+            sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     public AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {

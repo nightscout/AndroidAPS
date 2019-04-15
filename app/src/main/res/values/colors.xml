@@ -3,7 +3,9 @@
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
     <color name="iob">#1e88e5</color>
+    <color name="iobPred">#00d2d2</color>
     <color name="bolus">#1ea3e5</color>
+    <color name="iobPredAS">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
     <color name="carbs">#FFFB8C00</color>
     <color name="uam">#c9bd60</color>
