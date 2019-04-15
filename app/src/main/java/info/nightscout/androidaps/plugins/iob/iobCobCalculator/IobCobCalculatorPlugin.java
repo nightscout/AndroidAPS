@@ -630,6 +630,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 log.debug("Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
+            basalDataTable = new LongSparseArray<>();
         }
         runCalculation("onNewProfile", System.currentTimeMillis(), false, true, ev);
     }
@@ -652,9 +653,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
             stopCalculation("onEventPreferenceChange");
             synchronized (dataLock) {
                 if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                    log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records" + " BasalData: " + basalDataTable.size() + " records");
                 iobTable = new LongSparseArray<>();
                 autosensDataTable = new LongSparseArray<>();
+                basalDataTable = new LongSparseArray<>();
             }
             runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, ev);
         }
@@ -730,6 +732,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 log.debug("Clearing cached data.");
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
+            basalDataTable = new LongSparseArray<>();
         }
     }
 
