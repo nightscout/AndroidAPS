@@ -42,5 +42,9 @@ public class DummyTrigger extends Trigger {
     }
 
     @Override
+    public void executed(long time) {
+    }
+
+    @Override
     public Trigger duplicate() { return new DummyTrigger(result); }
 }
