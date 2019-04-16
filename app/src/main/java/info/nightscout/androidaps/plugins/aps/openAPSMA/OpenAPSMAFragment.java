@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JSONFormatter;
@@ -61,7 +60,6 @@ public class OpenAPSMAFragment extends SubscriberFragment implements View.OnClic
         switch (view.getId()) {
             case R.id.openapsma_run:
                 OpenAPSMAPlugin.getPlugin().invoke("OpenAPSMA button", false);
-                FabricPrivacy.getInstance().logCustom(new CustomEvent("OpenAPS_MA_Run"));
                 break;
         }
 

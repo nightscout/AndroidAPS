@@ -6,6 +6,8 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
@@ -49,7 +51,7 @@ public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
 			log.debug("Max basal: " + pump.maxBasal + " U");
 			log.debug("Basal step: " + pump.basalStep + " U");
 			for (int index = 0; index < 24; index++)
-				log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
+				log.debug("Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
 		}
 
 		if (pump.basalStep != 0.01d) {

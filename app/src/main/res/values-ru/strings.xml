@@ -9,7 +9,7 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
-    <string name="danar_useextended_title">Для величин &gt;200% пользуйтесь пролонгированным болюсом</string>
+    <string name="danar_useextended_title">Для величин &gt;200%% пользуйтесь пролонгированным болюсом</string>
     <string name="danar_bt_name_title">устройство блутус danaR</string>
     <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
     <string name="alert_dialog_storage_permission_text">Пожалуйста перезагрузите телефон или перезапустите AndroidAPS из системных настроек \иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
@@ -314,7 +314,7 @@
     <string name="overview_bolusprogress_stop">стоп</string>
     <string name="overview_bolusprogress_stoppressed">нажат стоп</string>
     <string name="waitingforpump">ожидание помпы</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Будет доставлено %.2fU ед. инс</string>
+    <string name="overview_bolusprogress_goingtodeliver">Начинается подача болюса %1$.2fед.</string>
     <string name="objectives_0_objective">настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
     <string name="objectives_0_gate">убедитесь что СК и данные помпы передаются в NS</string>
     <string name="objectives_1_objective">старт незамкнутого цикла</string>
@@ -337,7 +337,7 @@
     <string name="smscommunicator_loopisdisabled">зцикл не работает</string>
     <string name="smscommunicator_loopisenabled">зцикл работает</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">величина %s недопустима</string>
+    <string name="valueoutofrange">Величина %1$s недопустима</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
     <string name="smscommunicator_remotebolusnotallowed">Удаленный болюс недоступен, повторите попытку позже.</string>
     <string name="smscommunicator_basalreplywithcode">Чтобы подать базал %1$.2fед./ч в течение %2$d мин. ответьте кодом %3$s</string>
@@ -464,7 +464,7 @@
     <string name="profile">профиль</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
-    <string name="openapsama_autosens_max_summary">знач по умолчанию:1,2. Это множитель для autosens (вскоре autotune) с лимитом 20% который определяет насколько высоко autosens может поднять базал, насколько низко опустиь ISF (чувствительность к инс)и целевые СК</string>
+    <string name="openapsama_autosens_max_summary">Значение по умолчанию: 1,2\n Это множитель для autosens ( и вскоре autotune) с лимитом 20%% который определяет лимит верхнего значения autosens, который в свою очередь предопределяет верхнюю границу базала, границы изменения чувствительности к инсулину ISF и нижние границы целевой ГК.</string>
     <string name="openapsama_autosens_min_summary">по умолчанию:0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК</string>
     <string name="openapsama_autosens_adjusttargets">Autosens тоже подстроит цели</string>
     <string name="openapsama_autosens_adjusttargets_summary">значение по умолчанию : верно. используется чтобы разрешить юстировку целевых СК, а также ISF и базала</string>
@@ -477,7 +477,7 @@
     <string name="error_phone_not_valid">неверный номер телефона</string>
     <string name="smscommunicator_invalidphonennumber">неверный номер телефона для смс</string>
     <string name="overview_calibration">калибровка</string>
-    <string name="send_calibration" formatted="false">отправить калибровку %.1f на xdrip?</string>
+    <string name="send_calibration">Отправить калибровку %1$.1f на xDrip?</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>
     <string name="calibrationsent">калибровка передается на xdrip</string>
     <string name="smscommunicator_calibrationsent">калибровка отправлена. в xdrip должен быть активирован прием</string>
@@ -618,7 +618,7 @@
     <string name="absorptionsettings_title">Настройки усваиваемости</string>
     <string name="absorption_maxtime_title">Максимальное время усваимости пищи [h] (час)</string>
     <string name="absorption_maxtime_summary">Ожидаемое время усваивания всех углеводов пищи в часах</string>
-    <string name="danar_visualizeextendedaspercentage_title">Просмотреть расширенный болюс %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Показать пролонгированный болюс в %%</string>
     <string name="careportal_sensorage_label_short">ВОЗРСенс</string>
     <string name="careportal_insulinage_label_short">ВозрИнс</string>
     <string name="careportal_canulaage_label_short">ВозрКан</string>
@@ -731,8 +731,8 @@
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
-    <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %s</string>
-    <string name="maximumbasalvaluereplaced">Значение базала заменено максимальной поддерживаемой величиной: %s</string>
+    <string name="minimalbasalvaluereplaced">Значение базала заменено минимальной поддерживаемой величиной: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Значение базала заменено максимальной поддерживаемой величиной: %1$s</string>
     <string name="overview_editquickwizard_usebg">Вычисление СК</string>
     <string name="overview_editquickwizard_usebolusiob">Расчет болюсного активного инсулина IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Расчет базального активного инсулина IOB</string>
@@ -750,8 +750,8 @@
     <string name="closedmodeenabled">Режим замкнутого цикла включен</string>
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
     <string name="hasbgdata">СК доступны из выбранного источника</string>
-    <string name="basalprofilenotaligned" formatted="false">Базальные значения не выровнены по часам: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Недопустимый профиль: %s</string>
+    <string name="basalprofilenotaligned">Базальные значения не выровнены по часам: %1$s</string>
+    <string name="zerovalueinprofile">Недопустимый профиль: %1$s</string>
     <string name="combo_programming_bolus">Помпа программируется для болюса</string>
     <string name="combo_refresh">Обновить</string>
     <string name="combo_pump_state_label">Состояние</string>
@@ -1089,12 +1089,13 @@ Context | Edit Context</string>
     <string name="mute_alert">Отключить звук</string>
     <string name="pump_alert">Оповещение помпы</string>
     <string name="log_site_changes">Журнал изменений места установки</string>
+    <string name="log_reservoir_changes">Отслеживать замену резервуара</string>
     <string name="log_tube_changes">Журнал замены трубки катетера</string>
     <string name="log_battery_changes">Журнал замен батареи</string>
     <string name="log_operating_mode_changes">Журнал изменений режима работы</string>
     <string name="log_alerts">Журнал оповещений</string>
     <string name="enable_tbr_emulation">Включить эмуляцию TBR</string>
-    <string name="enable_tbr_emulation_summary">Использовать пролонгированные болюсы вместо временных базалов TBR чтобы обойти лимит в 250%</string>
+    <string name="enable_tbr_emulation_summary">Использовать пролонгированные болюсы вместо временных базалов TBR чтобы обойти лимит в 250%%</string>
     <string name="disconnect_delay">Задержка разъединения [s]</string>
     <string name="serial_number">Серийный номер</string>
     <string name="release_software_version">Версия ПО</string>
@@ -1150,6 +1151,7 @@ Context | Edit Context</string>
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Переход на летнее время меньше 3 часов назад - Замкнутый цикл отключен</string>
     <string name="storage">ограничение по объему карты памяти</string>
     <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <string name="wrongformat">Неверный формат</string>

@@ -1,9 +1,10 @@
 package info.nightscout.androidaps.plugins.configBuilder;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.answers.CustomEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -18,11 +19,11 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -47,7 +48,7 @@ public class ProfileFunctions {
     }
 
     @Subscribe
-    public void onProfileSwitch(EventProfileSwitchChange ignored) {
+    public void onProfileSwitch(EventProfileNeedsUpdate ignored) {
         if (L.isEnabled(L.PROFILE))
             log.debug("onProfileSwitch");
         ConfigBuilderPlugin.getPlugin().getCommandQueue().setProfile(getProfile(), new Callback() {
@@ -61,7 +62,8 @@ public class ProfileFunctions {
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     MainApp.instance().startActivity(i);
                 }
-                MainApp.bus().post(new EventNewBasalProfile());
+                if (result.enacted)
+                    MainApp.bus().post(new EventNewBasalProfile());
             }
         });
     }
@@ -129,12 +131,12 @@ public class ProfileFunctions {
             }
         }
         if (activeTreatments.getProfileSwitchesFromHistory().size() > 0) {
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("CatchedError")
-                    .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION)
-                    .putCustomAttribute("version", BuildConfig.VERSION)
-                    .putCustomAttribute("time", time)
-                    .putCustomAttribute("getProfileSwitchesFromHistory", activeTreatments.getProfileSwitchesFromHistory().toString())
-            );
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "CatchedError");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, BuildConfig.BUILDVERSION);
+            bundle.putString(FirebaseAnalytics.Param.START_DATE, String.valueOf(time));
+            bundle.putString(FirebaseAnalytics.Param.VALUE, activeTreatments.getProfileSwitchesFromHistory().toString());
+            FabricPrivacy.getInstance().logCustom(bundle);
         }
         log.error("getProfile at the end: returning null");
         return null;
@@ -157,7 +159,6 @@ public class ProfileFunctions {
     public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
         ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, System.currentTimeMillis());
         TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
-        FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
@@ -174,7 +175,6 @@ public class ProfileFunctions {
             profileSwitch.timeshift = timeshift;
             profileSwitch.percentage = percentage;
             TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
         } else {
             log.error("No profile switch existing");
         }

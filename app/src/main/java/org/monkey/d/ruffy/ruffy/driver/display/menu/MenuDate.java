@@ -1,5 +1,7 @@
 package org.monkey.d.ruffy.ruffy.driver.display.menu;
 
+import java.util.Locale;
+
 /**
  * Created by fishermen21 on 24.05.17.
  */
@@ -30,6 +32,6 @@ public class MenuDate {
 
     @Override
     public String toString() {
-        return day+"."+String.format("%02d",month)+".";
+        return day+"."+String.format(Locale.ENGLISH, "%02d",month)+".";
     }
 }

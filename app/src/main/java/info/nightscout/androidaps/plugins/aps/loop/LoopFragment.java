@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import butterknife.BindView;
@@ -19,9 +18,9 @@ import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
+import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class LoopFragment extends SubscriberFragment {
@@ -62,7 +61,6 @@ public class LoopFragment extends SubscriberFragment {
     void onRunClick() {
         lastRunView.setText(MainApp.gs(R.string.executing));
         new Thread(() -> LoopPlugin.getPlugin().invoke("Loop button", true)).start();
-        FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run"));
     }
 
     @Subscribe
@@ -75,7 +73,11 @@ public class LoopFragment extends SubscriberFragment {
         clearGUI();
         final Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> { synchronized (LoopFragment.this) { if (lastRunView != null) lastRunView.setText(ev.text); } });
+            activity.runOnUiThread(() -> {
+                synchronized (LoopFragment.this) {
+                    if (lastRunView != null) lastRunView.setText(ev.text);
+                }
+            });
     }
 
 

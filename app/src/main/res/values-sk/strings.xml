@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Vymaž databázu</string>
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
     <string name="nav_exit">Ukončiť</string>
-    <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%</string>
+    <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%%</string>
     <string name="danar_bt_name_title">DanaR Bluetooth zariadenie</string>
     <string name="ns_sync_use_absolute_title">Vždy používaj absolútne hodnoty bazálov</string>
     <string name="alert_dialog_storage_permission_text">Prosím reštartuj svoj telefón, alebo reštartuj AndroidAPS zo systémových nastavení, v opačnom prípade AndroidAPS nebude mocť zapisovať údaje (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
@@ -43,17 +43,18 @@
     <string name="description_sensitivity_oref0">Citlivosť je počítaná za posledných 24h a sacharidy (ak sú ešte nevstrebané), sú orezané po čase definovanom v nastaveniach.</string>
     <string name="description_sensitivity_oref1">Citlivosť je počítaná za posledných 8h a sacharidy (pokiaľ nie sú vstrebané), sú orezané po čase definovanom v nastaveniach. Modul tiež počíta s UAM (neoznámené jedlo).</string>
     <string name="description_sensitivity_weighted_average">Citlivosť je počítaná ako vážený priemer z odchýlok. Novšie majú vyššiu prioritu. Minimálna vstrebateľnosť sacharidov je počítaná dynamicky z maximálnej doby vstrebateľnosti definovanej v nastaveniach. Tento algoritmus je najrýchlejší v sledovaní zmien citlivosti.</string>
-    <string name="description_source_dexcom_g5">Príjmi hodnoty glykémií z upravenej Dexcom G5 aplikácie.</string>
-    <string name="description_source_dexcom_g6">Prijímam glykémie z upravenej Dexcom G6 aplikácie.</string>
-    <string name="description_source_eversense">Prijímam glykémie z upravenej Eversense aplikácie.</string>
-    <string name="description_source_glimp">Príjmi hodnoty glykémií z aplikácie Glimp.</string>
-    <string name="description_source_mm640g">Príjmi hodnoty glykémií z 600SeriesAndroidUploader.</string>
-    <string name="description_source_ns_client">Stiahne hodnoty glykémií z Nightscoutu</string>
-    <string name="description_source_xdrip">Príjmi hodnoty glykémií z xDripu.</string>
+    <string name="description_source_dexcom_g5">Získavať hodnoty glykémií z upravenej Dexcom G5 aplikácie.</string>
+    <string name="description_source_dexcom_g6">Získavať glykémie z upravenej Dexcom G6 aplikácie.</string>
+    <string name="description_source_eversense">Získavať glykémie z upravenej Eversense aplikácie.</string>
+    <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
+    <string name="description_source_mm640g">Získavať hodnoty glykémií z 600SeriesAndroidUploader.</string>
+    <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
+    <string name="description_source_xdrip">Získavať hodnoty glykémií z xDripu.</string>
     <string name="description_treatments">Ukladá všetky ošetrenia do databázy</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
     <string name="description_sms_communicator">Ovládaj na diaľku AndroidAPS použitím SMS príkazov.</string>
+    <string name="objectives_button_back">Naspäť</string>
     <string name="objectives_button_start">Začiatok</string>
     <string name="objectives_button_verify">Overenie</string>
     <string name="nsprofileview_units_label">Jednotky</string>
@@ -265,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">Pre podanie bolusu %1$.2fU odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Pre odoslanie kalibrácie %1$.2f odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_bolusfailed">Chyba pri aplikovaní bolusu</string>
+    <string name="bolusdelivered">Bolus %1$.2fU podaný úspešne</string>
+    <string name="bolusrequested">Podávanie %1$.2fU inzulínu</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU podaný úspešne</string>
+    <string name="bolusdelivering">Podávanie %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Povoliť príkazy na diaľku cez SMS</string>
     <string name="glucosetype_finger">Prst</string>
     <string name="glucosetype_sensor">Senzor</string>
@@ -309,7 +314,7 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STLAČENÝ STOP</string>
     <string name="waitingforpump">Čakanie na pumpu</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU inzulínu bude podaných</string>
+    <string name="overview_bolusprogress_goingtodeliver">Podávanie %1$.2fU inzulínu</string>
     <string name="objectives_0_objective">Nastavenie vizualizácie a monitoringu (Nightscout), analyzovať bazály a prevody</string>
     <string name="objectives_0_gate">Skontrolovať, či sú glykémie a údaje z pumpy viditeľné v Nightscoute</string>
     <string name="objectives_1_objective">Začať s otvoreným okruhom</string>
@@ -332,13 +337,26 @@
     <string name="smscommunicator_loopisdisabled">Uzavretý okruh je deaktivovaný</string>
     <string name="smscommunicator_loopisenabled">Uzavretý okruh je aktivovaný</string>
     <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Hodnota %s je mimo prednastavený rozsah</string>
+    <string name="valueoutofrange">Hodnota %1$s je mimo prednastavený rozsah</string>
     <string name="smscommunicator_remotecommandnotallowed">Príkazy na diaľku nie sú povolené</string>
+    <string name="smscommunicator_remotebolusnotallowed">Diaľkovo ovládaný bolus nie je momentálne povolený. Skúste to neskôr.</string>
+    <string name="smscommunicator_basalreplywithcode">Pre spustenie bazálu %1$.2fU/h na %2$d min odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Pre prepnutie profilu na %1$s %2$d%% odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Pre spustenie predĺženého bolusu %1$.2fU na %2$d min odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Pre spustenie bazálu %1$d%% na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fU/h spustený na %2$d minút</string>
+    <string name="smscommunicator_extendedset">Predĺžený bolus %1$.2fU na %2$d min úspešne spustený</string>
+    <string name="smscommunicator_tempbasalset_percent">Dočasný bazál %1$d%% na %2$d minút úspešne spustený</string>
     <string name="smscommunicator_tempbasalfailed">Spustenie dočasného bazálu zlyhalo</string>
+    <string name="smscommunicator_extendedfailed">Spustenie predĺženého bolusu zlyhalo</string>
+    <string name="smscommunicator_basalstopreplywithcode">Na zastavenie dočasného bazálu odpovedzte SMS s kódom %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Na zastavenie predĺženého bolusu odpovedzte SMS s kódom %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočasný bazál zrušený</string>
+    <string name="smscommunicator_extendedcanceled">Predĺžený bolus zastavený</string>
     <string name="smscommunicator_tempbasalcancelfailed">Zrušenie dočasného bazálu zlyhalo</string>
+    <string name="smscommunicator_extendedcancelfailed">Zastavenie predĺženého bolusu zlyhalo</string>
+    <string name="smscommunicator_unknowncommand">Neznámy príkaz alebo chybná odpoveď</string>
     <string name="quickwizard">Rýchly bolus</string>
     <string name="quickwizardsettings">Nastavenie rýchleho bolusu</string>
     <string name="overview_editquickwizard_buttontext">Text na tlačidle:</string>
@@ -446,7 +464,7 @@
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčová hodnota zabezpečenia. Hovorí, že maximálny nastaviteľný bazál je trojnásobkom maximálneho denného bazálu. Spravidla to zrejme nebudete musieť meniť, prípadne si prečítate o téme \"3x max denný; 4x aktuálny\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4 Toto je druhá kľúčová hodnota. Hovorí, že maximálna hodnota dočasného bazálu nikdy nebude väčšia, ako štvornásobok aktuálneho bazálu. Je to preto, aby se ľudia nedostali do nebezpečných hodnôt skôr, ako pochopia ako OpenAPS pracuje. Znovu, štandardná hodnota je 4 a väčšina ľudí ju nikdy nebude musieť meniť. Pokiaľ nestačí, obvykle je problém niekde inde.</string>
-    <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti (a onedlho Autotune) môže zvýšiť bazály, znížiť ISF a znížiť cieľovú hodnotu glykémie o 20%.</string>
+    <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre detekciu citlivosti (a čoskoro autotune). Hovorí, že autosens môže zvýšiť bazály, znížiť ISF a znížiť cieľovú hodnotu glykémie o 20%%.</string>
     <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF a zvýšiť cieľovú hodnotu glykémie na 70%.</string>
     <string name="openapsama_autosens_adjusttargets">Úprava cieľovej glykémie pomocou automatickej detekcie citlivosti</string>
     <string name="openapsama_autosens_adjusttargets_summary">Štandardná hodnota: zapnuté\nToto nastavenie hovorí, že automatická detekcia citlivosti môže meniť tiež cieľové hodnoty glykémií.</string>
@@ -459,7 +477,7 @@
     <string name="error_phone_not_valid">Neplatné telefónne čislo</string>
     <string name="smscommunicator_invalidphonennumber">Chybné telefónne číslo</string>
     <string name="overview_calibration">Kalibrácia</string>
-    <string name="send_calibration" formatted="false">Poslať kalibráciu %.1f do xDripu?</string>
+    <string name="send_calibration">Poslať kalibráciu %1$.1f do xDripu?</string>
     <string name="xdripnotinstalled">xDrip+ nie je nainštalovaný</string>
     <string name="calibrationsent">Kalibrácia odoslaná do xDripu</string>
     <string name="smscommunicator_calibrationsent">Kalibrácia odoslaná. Príjem kalibrácií musí byť v xDripe povolený.</string>
@@ -543,7 +561,7 @@
     <string name="enablesuperbolus">Povoliť superbolus</string>
     <string name="enablesuperbolus_summary">Povolenie superbolusu v kalkulátore. Nepovoľujte, pokiaľ se nenaučíte, čo to v skutočnosti robí. MÔŽE SPÔSOBIŤ PREDÁVKOVANIE INZULÍNOM PRI NESPRÁVNOM POUŽITÍ!</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
-    <string name="show_statuslights_summary">Povoliť indikátory stavu pre CAGE, IAGE, SAGE, RESERVOIR a BATTERY LEVEL na domovskej obrazovke.</string>
+    <string name="show_statuslights_summary">Povoliť indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [U]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [U]</string>
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
@@ -600,7 +618,7 @@
     <string name="absorptionsettings_title">Nastavenie vstrebávania sacharidov</string>
     <string name="absorption_maxtime_title">Max. doba vstrebávania sacharidov [h]</string>
     <string name="absorption_maxtime_summary">Čas v hodinách, počas ktorého predpokladáme, že všetky sacharidy budú vstrebané</string>
-    <string name="danar_visualizeextendedaspercentage_title">Zobrazovať predĺžený bolus v %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Zobrazovať predĺžený bolus v %%</string>
     <string name="careportal_sensorage_label_short">SENZ</string>
     <string name="careportal_insulinage_label_short">INZ</string>
     <string name="careportal_canulaage_label_short">KAN</string>
@@ -713,8 +731,8 @@
     <string name="dexcomg5_xdripupload_title">Odosielať glykémie do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
-    <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou</string>
-    <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %s</string>
+    <string name="minimalbasalvaluereplaced">Hodnota bazálu nahradená minimálnou možnou: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Hodnota bazálu nahradená maximálnou možnou: %1$s</string>
     <string name="overview_editquickwizard_usebg">Výpočet glykémie</string>
     <string name="overview_editquickwizard_usebolusiob">Výpočet bolusového IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Výpočet bazálneho IOB</string>
@@ -732,8 +750,8 @@
     <string name="closedmodeenabled">Uzavretý okruh povolený</string>
     <string name="maxiobset">Maximálne IOB nastavené správne</string>
     <string name="hasbgdata">Glykémie dostupné z vybraného zdroja</string>
-    <string name="basalprofilenotaligned" formatted="false">Bazálne hodnoty nie sú zarovnané na celé hodiny: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Chybný profil: %s</string>
+    <string name="basalprofilenotaligned">Bazálne hodnoty nie sú zarovnané na celé hodiny: %1$s</string>
+    <string name="zerovalueinprofile">Chybný profil: %1$s</string>
     <string name="combo_programming_bolus">Programovanie pumpy pre bolus</string>
     <string name="combo_refresh">Obnoviť</string>
     <string name="combo_pump_state_label">Stav</string>
@@ -1069,12 +1087,13 @@
     <string name="mute_alert">Stlmiť</string>
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="log_site_changes">Zaznamenať výmenu kanyly</string>
+    <string name="log_reservoir_changes">Zaznamenať výmenu zásobníka</string>
     <string name="log_tube_changes">Zaznamenať výmenu hadičky</string>
     <string name="log_battery_changes">Zaznamenať výmenu batérie</string>
     <string name="log_operating_mode_changes">Zaznamenať zmenu režimu prevádzky</string>
     <string name="log_alerts">Zaznamenať výstrahy</string>
     <string name="enable_tbr_emulation">Povoliť emuláciu dočasných bazálov</string>
-    <string name="enable_tbr_emulation_summary">Používať predĺžené bolusy namiesto dočasných bázalov, aby sme sa vyhli 250% limitu</string>
+    <string name="enable_tbr_emulation_summary">Používať predĺžené bolusy namiesto dočasných bázalov, aby sme sa vyhli 250%% limitu</string>
     <string name="disconnect_delay">Oneskorenie odpojenia [s]</string>
     <string name="serial_number">Sériové číslo</string>
     <string name="release_software_version">Verzia softwaru</string>
@@ -1129,6 +1148,14 @@
     <string name="dexcom_lognssensorchange_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
+    <string name="dst_loop_disabled_warning">Zmena letného času za menej ako 3 hodiny - Uzavretý okruh pozastavený</string>
+    <string name="storage">obmedzenie interného úložiska</string>
+    <string name="diskfull">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
+    <string name="wrongformat">Chybný formát</string>
+    <string name="sms_wrongcode">Nesprávný kód. Príkaz zrušený.</string>
+    <string name="notconfigured">Nie je nakonfigurované</string>
+    <string name="profileswitchcreated">Prepnutie profilu vytvorené</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

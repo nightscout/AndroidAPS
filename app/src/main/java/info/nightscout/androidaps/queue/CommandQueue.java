@@ -23,8 +23,8 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.BolusProgressHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -381,7 +381,7 @@ public class CommandQueue {
             Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.gs(R.string.not_eng_mode_or_release), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             if (callback != null)
-                callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
+                callback.result(new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
             return false;
         }
 
@@ -394,7 +394,7 @@ public class CommandQueue {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));
                 if (callback != null)
-                    callback.result(new PumpEnactResult().success(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
+                    callback.result(new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
                 return false;
             }
         }

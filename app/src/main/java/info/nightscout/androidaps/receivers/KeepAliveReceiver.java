@@ -7,15 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
-import com.crashlytics.android.answers.CustomEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -46,13 +44,12 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:KeepAliveReciever");
         wl.acquire();
 
         LocalAlertUtils.shortenSnoozeInterval();
         LocalAlertUtils.checkStaleBGAlert();
         checkPump();
-        FabricPrivacy.uploadDailyStats();
 
         if (L.isEnabled(L.CORE))
             log.debug("KeepAlive received");
@@ -76,7 +73,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             }
 
             if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
-                MainApp.bus().post(new EventProfileSwitchChange());
+                MainApp.bus().post(new EventProfileNeedsUpdate());
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis();
                 ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("KeepAlive. Status outdated.", null);
@@ -87,7 +84,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         }
         if (lastRun != 0 && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
             log.error("KeepAlive fail");
-            FabricPrivacy.getInstance().logCustom(new CustomEvent("KeepAliveFail"));
+            FabricPrivacy.getInstance().logCustom("KeepAliveFail");
         }
         lastRun = System.currentTimeMillis();
     }

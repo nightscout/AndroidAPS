@@ -18,7 +18,7 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.QuickWizard;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.EditQuickWizardDialog;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange;
 import info.nightscout.androidaps.utils.DateUtil;

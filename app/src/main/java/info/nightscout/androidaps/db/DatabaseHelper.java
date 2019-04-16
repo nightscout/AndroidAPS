@@ -35,7 +35,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
@@ -726,7 +726,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             String units = JsonHelper.safeGetString(trJson, "units", Constants.MGDL);
             TempTarget tempTarget = new TempTarget()
                     .date(trJson.getLong("mills"))
-                    .duration(trJson.getInt("duration"))
+                    .duration(JsonHelper.safeGetInt(trJson, "duration"))
                     .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
                     .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
                     .reason(JsonHelper.safeGetString(trJson, "reason", ""))
@@ -1574,9 +1574,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("Firing EventProfileSwitchChange");
+                    log.debug("Firing EventProfileNeedsUpdate");
                 MainApp.bus().post(new EventReloadProfileSwitchData());
-                MainApp.bus().post(new EventProfileSwitchChange());
+                MainApp.bus().post(new EventProfileNeedsUpdate());
                 scheduledProfileSwitchEventPost = null;
             }
         }

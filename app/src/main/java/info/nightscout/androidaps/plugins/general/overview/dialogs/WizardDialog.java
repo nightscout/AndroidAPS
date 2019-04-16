@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.Dialogs;
+package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -66,7 +65,6 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.NumberPicker;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -398,7 +396,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                     } else {
                                         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
                                     }
-                                    FabricPrivacy.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }
                             }
                         }

@@ -625,10 +625,12 @@ public class ActionStringHandler {
             }
             generateTempTarget(duration, low, high);
         } else if ("wizard2".equals(act[0])) {
-            //use last calculation as confirmed string matches
+            if (lastBolusWizard != null) {
+                //use last calculation as confirmed string matches
 
-            doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
-            lastBolusWizard = null;
+                doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
+                lastBolusWizard = null;
+            }
         } else if ("bolus".equals(act[0])) {
             double insulin = SafeParse.stringToDouble(act[1]);
             int carbs = SafeParse.stringToInt(act[2]);

@@ -1,9 +1,10 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.crashlytics.android.answers.CustomEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -37,20 +38,21 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.general.overview.Dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
@@ -184,7 +186,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
-            return  total;
+            return total;
+
+        PumpInterface pumpInterface = ConfigBuilderPlugin.getPlugin().getActivePump();
+        if (pumpInterface == null)
+            return total;
 
         double dia = profile.getDia();
 
@@ -209,7 +215,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
         }
 
-        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
+        if (!pumpInterface.isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
@@ -259,7 +265,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 if (t > absorptionTime_ago && t <= now) {
                     if (treatment.carbs >= 1) {
                         result.carbs += treatment.carbs;
-                        if(t > result.lastCarbTime)
+                        if (t > result.lastCarbTime)
                             result.lastCarbTime = t;
                     }
                 }
@@ -312,7 +318,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
         }
         if (L.isEnabled(L.DATATREATMENTS))
-        log.debug("Last bolus time: " + new Date(last).toLocaleString());
+            log.debug("Last bolus time: " + new Date(last).toLocaleString());
         return last;
     }
 
@@ -341,7 +347,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Subscribe
     public void onStatusEvent(final EventReloadTreatmentData ev) {
         if (L.isEnabled(L.DATATREATMENTS))
-        log.debug("EventReloadTreatmentData");
+            log.debug("EventReloadTreatmentData");
         initializeTreatmentData();
         initializeExtendedBolusData();
         updateTotalIOBTreatments();
@@ -352,7 +358,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @SuppressWarnings("unused")
     public void onStatusEvent(final EventReloadTempBasalData ev) {
         if (L.isEnabled(L.DATATREATMENTS))
-        log.debug("EventReloadTempBasalData");
+            log.debug("EventReloadTempBasalData");
         initializeTempBasalData();
         updateTotalIOBTempBasals();
     }
@@ -372,14 +378,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         if (insulinInterface == null)
-            return  total;
+            return total;
 
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
                 TemporaryBasal t = tempBasals.get(pos);
                 if (t.date > time) continue;
                 IobTotal calc;
-                if(truncate && t.end() > truncateTime){
+                if (truncate && t.end() > truncateTime) {
                     TemporaryBasal dummyTemp = new TemporaryBasal();
                     dummyTemp.copyFrom(t);
                     dummyTemp.cutEndTo(truncateTime);
@@ -398,7 +404,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
                     IobTotal calc;
-                    if(truncate && e.end() > truncateTime){
+                    if (truncate && e.end() > truncateTime) {
                         ExtendedBolus dummyExt = new ExtendedBolus();
                         dummyExt.copyFrom(e);
                         dummyExt.cutEndTo(truncateTime);
@@ -535,9 +541,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             MainApp.instance().startActivity(i);
 
-            CustomEvent customEvent = new CustomEvent("TreatmentClash");
-            customEvent.putCustomAttribute("status", status);
-            FabricPrivacy.getInstance().logCustom(customEvent);
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TreatmentClash");
+            bundle.putString(FirebaseAnalytics.Param.VALUE, status);
+            FabricPrivacy.getInstance().logCustom(bundle);
         }
 
         return newRecordCreated;
