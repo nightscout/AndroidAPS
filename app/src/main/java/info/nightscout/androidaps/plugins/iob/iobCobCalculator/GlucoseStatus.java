@@ -59,7 +59,7 @@ public class GlucoseStatus {
         //long fromtime = DateUtil.now() - 60 * 1000L * 45;
         //List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
-        synchronized (IobCobCalculatorPlugin.getPlugin().dataLock) {
+        synchronized (IobCobCalculatorPlugin.getPlugin().getDataLock()) {
 
             List<BgReading> data = IobCobCalculatorPlugin.getPlugin().getBgReadings();
 

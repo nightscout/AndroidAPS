@@ -65,7 +65,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private volatile List<BgReading> bgReadings = null; // newest at index 0
     private volatile List<BgReading> bucketed_data = null;
 
-    final Object dataLock = new Object();
+    private final Object dataLock = new Object();
 
     boolean stopCalculationTrigger = false;
     private Thread thread = null;
@@ -106,6 +106,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     public List<BgReading> getBucketedData() {
         return bucketed_data;
+    }
+
+    public Object getDataLock() {
+        return dataLock;
     }
 
     // roundup to whole minute

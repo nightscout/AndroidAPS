@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data;
+package info.nightscout.androidaps.plugins.iob.iobCobCalculatorPlugin;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -134,10 +134,7 @@ public class GlucoseStatusTest {
     public void initMocking() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockStrings();
-
-        PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
-        iobCobCalculatorPlugin = mock(IobCobCalculatorPlugin.class);
-        when(IobCobCalculatorPlugin.getPlugin()).thenReturn(iobCobCalculatorPlugin);
+        iobCobCalculatorPlugin = AAPSMocker.mockIobCobCalculatorPlugin();
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());
