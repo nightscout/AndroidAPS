@@ -67,6 +67,26 @@ def generateDate = { ->
     return stringBuilder.toString()
 }
 
+def isMaster = { ->
+    return !version.contains('-')
+}
+
+def allCommited = { ->
+    StringBuilder stringBuilder = new StringBuilder();
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'status'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        return false; // NoGitSystemAvailable
+    }
+    return stringBuilder.toString().contains("nothing to commit")
+}
+
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "skipped", "started"]
     testLogging.exceptionFormat = "full"
@@ -83,7 +103,7 @@ android {
         version "2.2.3-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
-        buildConfigField "String", "REMOTE", '"' + generateGitRemote()+ '"'
+        buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
@@ -120,7 +140,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_launcher",
+                    appIcon     : "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
         }
@@ -130,7 +150,7 @@ android {
             resValue "string", "app_name", "Pumpcontrol"
             versionName version + "-pumpcontrol"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_pumpcontrol",
+                    appIcon     : "@mipmap/ic_pumpcontrol",
                     appIconRound: "@null"
             ]
         }
@@ -140,7 +160,7 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_yellowowl",
+                    appIcon     : "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -150,7 +170,7 @@ android {
             resValue "string", "app_name", "NSClient2"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_yellowowl",
+                    appIcon     : "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -165,7 +185,7 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    useLibrary  "org.apache.http.legacy"
+    useLibrary "org.apache.http.legacy"
 }
 
 allprojects {
@@ -274,3 +294,12 @@ task full_clean(type: Delete) {
 
 clean.dependsOn full_clean
 preBuild.dependsOn copyLibs
+
+printf('--------------\n')
+printf('isMaster: %s\n', isMaster().toString())
+printf('allCommited: %s\n', allCommited().toString())
+printf('--------------\n')
+if (isMaster() && !allCommited()) {
+    throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
+}
+
