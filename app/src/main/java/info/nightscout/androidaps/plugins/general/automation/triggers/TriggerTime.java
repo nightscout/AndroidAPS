@@ -90,7 +90,7 @@ public class TriggerTime extends Trigger {
     }
 
     @Override
-    void notifyAboutRun(long time) {
+    public void executed(long time) {
         lastRun = time;
     }
 
@@ -104,7 +104,7 @@ public class TriggerTime extends Trigger {
         return new TriggerTime(this);
     }
 
-    public long getRunAt() {
+    long getRunAt() {
         return runAt;
     }
 

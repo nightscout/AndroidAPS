@@ -201,6 +201,7 @@ public class AutomationPlugin extends PluginBase {
                         }
                     });
                 }
+                event.getTrigger().executed(DateUtil.now());
             }
         }
 

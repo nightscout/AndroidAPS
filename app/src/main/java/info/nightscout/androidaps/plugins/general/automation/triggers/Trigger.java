@@ -89,6 +89,7 @@ public abstract class Trigger {
 
     public abstract boolean shouldRun();
 
+
     public abstract String toJSON();
 
     /*package*/ abstract Trigger fromJSON(String data);
@@ -99,8 +100,7 @@ public abstract class Trigger {
 
     public abstract Optional<Integer> icon();
 
-    void notifyAboutRun(long time) {
-    }
+    public abstract void executed(long time);
 
     public abstract Trigger duplicate();
 

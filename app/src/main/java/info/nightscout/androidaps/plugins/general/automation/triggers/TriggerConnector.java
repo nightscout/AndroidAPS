@@ -193,6 +193,13 @@ public class TriggerConnector extends Trigger {
     }
 
     @Override
+    public void executed(long time) {
+        for (int i = 0; i < list.size(); ++i) {
+            list.get(i).executed(time);
+        }
+    }
+
+    @Override
     public Trigger duplicate() {
         return null;
     }

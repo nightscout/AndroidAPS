@@ -214,7 +214,7 @@ public class TriggerRecurringTime extends Trigger {
     }
 
     @Override
-    void notifyAboutRun(long time) {
+    public void executed(long time) {
         lastRun = time;
     }
 

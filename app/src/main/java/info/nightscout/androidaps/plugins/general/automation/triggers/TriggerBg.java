@@ -132,6 +132,10 @@ public class TriggerBg extends Trigger {
     }
 
     @Override
+    public void executed(long time) {
+    }
+
+    @Override
     public Trigger duplicate() {
         return new TriggerBg(this);
     }
