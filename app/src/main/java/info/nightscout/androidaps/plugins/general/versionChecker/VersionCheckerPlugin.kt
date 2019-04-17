@@ -1,7 +1,12 @@
 package info.nightscout.androidaps.plugins.general.versionChecker
 
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.utils.SP
+import java.util.concurrent.TimeUnit
 
 /**
  * Usually we would have a class here.
@@ -17,25 +22,43 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
         .pluginName(R.string.versionChecker)), ConstraintsInterface {
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        return if (isVeryOldVersion())
-            Constraint(false)
+        checkWarning()
+        return if (isOldVersion(GRACE_PERIOD_VERY_OLD))
+            value.set(false, MainApp.gs(R.string.very_old_version), this)
         else
             value
     }
 
-    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        return if (isOldVersion())
-            Constraint(0.toDouble())
-        else
-            maxIob
+    private fun checkWarning() {
+        val now = System.currentTimeMillis()
+        if (isOldVersion(GRACE_PERIOD_WARNING) && shouldWarnAgain(now)) {
+            // store last notification time
+            SP.putLong(R.string.key_last_versionchecker_waring, now)
+
+            //notify
+            val message = MainApp.gs(R.string.new_version_warning, Math.round(now / TimeUnit.DAYS.toMillis(1).toDouble()))
+            val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
+            MainApp.bus().post(EventNewNotification(notification))
+        }
     }
 
-    private fun isOldVersion(): Boolean {
-        return true
+    private fun shouldWarnAgain(now: Long) =
+            now > SP.getLong(R.string.key_last_versionchecker_waring, 0) + WARN_EVERY
+
+    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
+            if (isOldVersion(GRACE_PERIOD_OLD))
+                maxIob.set(0.toDouble(), MainApp.gs(R.string.old_version), this)
+            else
+                maxIob
+
+    private fun isOldVersion(gracePeriod: Long): Boolean {
+        val now = System.currentTimeMillis()
+        return now > SP.getLong(R.string.key_new_version_available_since, 0) + gracePeriod
     }
 
-    private fun isVeryOldVersion(): Boolean {
-        return true
-    }
+    val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
+    val GRACE_PERIOD_WARNING = TimeUnit.DAYS.toMillis(30)
+    val GRACE_PERIOD_OLD = TimeUnit.DAYS.toMillis(60)
+    val GRACE_PERIOD_VERY_OLD = TimeUnit.DAYS.toMillis(90)
 
 }
