@@ -95,7 +95,7 @@ public class IobCobThread extends Thread {
 
             long oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable);
 
-            synchronized (iobCobCalculatorPlugin.dataLock) {
+            synchronized (iobCobCalculatorPlugin.getDataLock()) {
                 if (bgDataReload) {
                     iobCobCalculatorPlugin.loadBgData(end);
                     iobCobCalculatorPlugin.createBucketedData();

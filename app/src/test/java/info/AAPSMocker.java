@@ -282,10 +282,13 @@ public class AAPSMocker {
         PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
     }
 
-    public static void mockIobCobCalculatorPlugin() {
+    public static IobCobCalculatorPlugin mockIobCobCalculatorPlugin() {
         PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
         IobCobCalculatorPlugin iobCobCalculatorPlugin = PowerMockito.mock(IobCobCalculatorPlugin.class);
         PowerMockito.when(IobCobCalculatorPlugin.getPlugin()).thenReturn(iobCobCalculatorPlugin);
+        Object dataLock = new Object();
+        PowerMockito.when(iobCobCalculatorPlugin.getDataLock()).thenReturn(dataLock);
+        return iobCobCalculatorPlugin;
     }
 
     private static MockedBus bus = new MockedBus();
