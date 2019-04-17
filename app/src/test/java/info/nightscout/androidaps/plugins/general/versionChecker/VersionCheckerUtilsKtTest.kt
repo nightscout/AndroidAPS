@@ -63,24 +63,43 @@ class VersionCheckerUtilsKtTest {
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update1`() {
         val bus = prepareBus()
+
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
+
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
+
     }
 
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update2`() {
         val bus = prepareBus()
+
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
+
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update3`() {
         val bus = prepareBus()
+
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
+
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
     @Test
@@ -91,6 +110,10 @@ class VersionCheckerUtilsKtTest {
         compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
 
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
     @Test
@@ -98,16 +121,25 @@ class VersionCheckerUtilsKtTest {
     fun `should find update5`() {
         val bus = prepareBus()
         compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
+
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update6`() {
         val bus = prepareBus()
-        val sp = prepareSP()
         compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
+
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
     @Test
@@ -122,8 +154,12 @@ class VersionCheckerUtilsKtTest {
         """.trimMargin()
         val bus = prepareBus()
         compareWithCurrentVersion(buildGradle.byteInputStream().findVersion(), currentVersion = "2.2.2")
+
         verify(bus, times(0)).post(any())
-        verify(SP, times(1)).remove(R.string.key_new_version_available_since)
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.remove(eq(R.string.key_new_version_available_since))
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
     @Test
@@ -138,7 +174,12 @@ class VersionCheckerUtilsKtTest {
         """.trimMargin()
         val bus = prepareBus()
         compareWithCurrentVersion(buildGradle.byteInputStream().findVersion(), currentVersion = "2.2.2")
+
         verify(bus, times(1)).post(any())
+
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
 
