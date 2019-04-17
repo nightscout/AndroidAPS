@@ -48,7 +48,9 @@ import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt;
@@ -115,7 +117,11 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-        VersionCheckerUtilsKt.checkVersion();
+
+        //Check here if loop plugin is disabled. Else check via constraints
+        if (!LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+            VersionCheckerUtilsKt.checkVersion();
+
         FabricPrivacy.setUserStats();
     }
 
