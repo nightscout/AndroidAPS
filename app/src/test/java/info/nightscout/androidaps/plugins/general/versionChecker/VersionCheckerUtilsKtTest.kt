@@ -14,6 +14,7 @@ import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
+
 @RunWith(PowerMockRunner::class)
 class VersionCheckerUtilsKtTest {
     @Test
@@ -183,6 +184,15 @@ class VersionCheckerUtilsKtTest {
     }
 
 
+    @Test
+    @PrepareForTest(System::class)
+    fun `set time`() {
+        PowerMockito.spy(System::class.java)
+        PowerMockito.`when`(System.currentTimeMillis()).thenReturn(100L)
+
+        assertEquals(100L, System.currentTimeMillis())
+    }
+
     private fun prepareBus(): Bus {
         PowerMockito.mockStatic(MainApp::class.java)
         val mainApp = mock<MainApp>(MainApp::class.java)
@@ -199,8 +209,8 @@ class VersionCheckerUtilsKtTest {
     }
 
     private fun prepareLogging() {
-            PowerMockito.mockStatic(L::class.java)
-            `when`(L.isEnabled(any())).thenReturn(true)
+        PowerMockito.mockStatic(L::class.java)
+        `when`(L.isEnabled(any())).thenReturn(true)
     }
 
 }
