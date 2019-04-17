@@ -17,6 +17,25 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
         .pluginName(R.string.versionChecker)), ConstraintsInterface {
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        return value
+        return if (isVeryOldVersion())
+            Constraint(false)
+        else
+            value
     }
+
+    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+        return if (isOldVersion())
+            Constraint(0.toDouble())
+        else
+            maxIob
+    }
+
+    private fun isOldVersion(): Boolean {
+        return true
+    }
+
+    private fun isVeryOldVersion(): Boolean {
+        return true
+    }
+
 }

@@ -119,7 +119,7 @@ public class MainApp extends Application {
         log.debug("onCreate");
         sInstance = this;
         sResources = getResources();
-        sConstraintsChecker = new ConstraintChecker(this);
+        sConstraintsChecker = new ConstraintChecker();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
         try {
