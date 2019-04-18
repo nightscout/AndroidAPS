@@ -14,22 +14,27 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 
 public class TriggerTime extends Trigger {
+    private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     private long runAt;
     private long lastRun;
 
     public TriggerTime() {
+        runAt = DateUtil.now();
     }
 
     private TriggerTime(TriggerTime triggerTime) {
@@ -42,7 +47,11 @@ public class TriggerTime extends Trigger {
     public boolean shouldRun() {
         long now = DateUtil.now();
         if (now >= runAt && now - runAt < T.mins(5).msecs())
-            return true;
+            if (lastRun < runAt) {
+                if (L.isEnabled(L.AUTOMATION))
+                    log.debug("Ready for execution: " + friendlyDescription());
+                return true;
+            }
         return false;
     }
 
@@ -96,6 +105,11 @@ public class TriggerTime extends Trigger {
 
     TriggerTime runAt(long runAt) {
         this.runAt = runAt;
+        return this;
+    }
+
+    TriggerTime lastRun(long lastRun) {
+        this.lastRun = lastRun;
         return this;
     }
 

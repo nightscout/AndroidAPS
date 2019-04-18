@@ -3,13 +3,19 @@ package info.nightscout.androidaps.plugins.general.automation.triggers;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.AAPSMocker;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.utils.SP;
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({})
+@PrepareForTest({MainApp.class, L.class, SP.class})
 public class TriggerConnectorTest {
 
     @Test
@@ -86,6 +92,7 @@ public class TriggerConnectorTest {
         t.add(new TriggerConnector());
         Assert.assertEquals(oneItem, t.toJSON());
     }
+
     @Test
     public void fromJSONTest() throws JSONException {
         TriggerConnector t = new TriggerConnector();
@@ -94,5 +101,12 @@ public class TriggerConnectorTest {
         TriggerConnector t2 = (TriggerConnector) Trigger.instantiate(new JSONObject(t.toJSON()));
         Assert.assertEquals(1, t2.size());
         Assert.assertTrue(t2.get(0) instanceof TriggerConnector);
+    }
+
+    @Before
+    public void prepareMock() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockSP();
+        AAPSMocker.mockL();
     }
 }

@@ -207,7 +207,7 @@ public class AutomationFragment extends SubscriberFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final Action action = mActionList.get(position);
-            holder.actionTitle.setText(action.friendlyName());
+            holder.actionTitle.setText(action.shortDescription());
             holder.layoutText.setOnClickListener(v -> {
                 if (action.hasDialog()) {
                     EditActionDialog dialog = EditActionDialog.newInstance(action);

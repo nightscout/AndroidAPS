@@ -18,21 +18,19 @@ import java.util.List;
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.T;
 
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, IobCobCalculatorPlugin.class})
 public class TriggerBgTest {
+
+    long now = 1514766900000L;
 
     @Test
     public void shouldRunTest() {
@@ -62,9 +60,13 @@ public class TriggerBgTest {
         Assert.assertFalse(t.shouldRun());
         t = new TriggerBg().comparator(Trigger.Comparator.IS_NOT_AVAILABLE);
         Assert.assertTrue(t.shouldRun());
+
+        t = new TriggerBg().units(Constants.MGDL).threshold(214).comparator(Trigger.Comparator.IS_EQUAL).lastRun(now - 1);
+        Assert.assertFalse(t.shouldRun());
+
     }
 
-    String bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"threshold\":4.1,\"units\":\"mmol\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}";
+    String bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"threshold\":4.1,\"units\":\"mmol\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}";
 
     @Test
     public void toJSONTest() {
@@ -90,14 +92,14 @@ public class TriggerBgTest {
         AAPSMocker.mockProfileFunctions();
 
         PowerMockito.mockStatic(DateUtil.class);
-        when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());
+        when(DateUtil.now()).thenReturn(now);
 
     }
 
     List<BgReading> generateOneCurrentRecordBgData() {
         List<BgReading> list = new ArrayList<>();
         try {
-            list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))));
+            list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":214,\"mills\":" + (now - 1) + ",\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
             e.printStackTrace();
         }

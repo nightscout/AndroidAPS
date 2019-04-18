@@ -32,7 +32,7 @@ public class Label extends Element {
         textViewPre.setText(textPre);
         textViewPre.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        textViewPre.setWidth(MainApp.dpToPx(120));
+        //textViewPre.setWidth(MainApp.dpToPx(120));
         textViewPre.setPadding(px, px, px, px);
         textViewPre.setTypeface(textViewPre.getTypeface(), Typeface.BOLD);
         layout.addView(textViewPre);
@@ -47,7 +47,7 @@ public class Label extends Element {
             textViewPost.setText(textPost);
             textViewPost.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
-            textViewPost.setWidth(MainApp.dpToPx(45));
+            //textViewPost.setWidth(MainApp.dpToPx(45));
             textViewPost.setPadding(px, px, px, px);
             textViewPost.setTypeface(textViewPost.getTypeface(), Typeface.BOLD);
             layout.addView(textViewPost);

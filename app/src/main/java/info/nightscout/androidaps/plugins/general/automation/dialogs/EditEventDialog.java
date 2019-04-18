@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,6 +24,7 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 public class EditEventDialog extends DialogFragment {
@@ -118,14 +121,21 @@ public class EditEventDialog extends DialogFragment {
             dialog.show(getFragmentManager(), "ChooseActionDialog");
         });
 
+        MainApp.bus().register(this);
 
         return view;
     }
 
     @Override
     public void onDestroyView() {
+        MainApp.bus().unregister(this);
         mUnbinder.unbind();
         super.onDestroyView();
+    }
+
+    @Subscribe
+    public void onEventAutomationUpdateGui(EventAutomationUpdateGui ignored) {
+        mActionListAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.ok)

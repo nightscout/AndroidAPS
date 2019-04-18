@@ -13,11 +13,12 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.automation.elements.Label;
+import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -29,7 +30,7 @@ public class ActionStartTempTarget extends Action {
     TempTarget tempTarget;
 
     public ActionStartTempTarget() {
-        value = new InputBg(Constants.MGDL);
+        value = new InputBg(ProfileFunctions.getInstance().getProfileUnits());
     }
 
     @Override
@@ -39,12 +40,13 @@ public class ActionStartTempTarget extends Action {
 
     @Override
     public String shortDescription() {
-        return MainApp.gs(R.string.starttemptarget) + ": " + (tempTarget == null ? "null" : tempTarget.toString());
+        tempTarget = new TempTarget().date(DateUtil.now()).duration((int) duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
+        return MainApp.gs(R.string.starttemptarget) + ": " + (tempTarget == null ? "null" : tempTarget.friendlyDescription(value.getUnits()));
     }
 
     @Override
     public void doAction(Callback callback) {
-        tempTarget = new TempTarget().date(DateUtil.now()).duration((int)duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
+        tempTarget = new TempTarget().date(DateUtil.now()).duration((int) duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
@@ -55,9 +57,9 @@ public class ActionStartTempTarget extends Action {
         int unitResId = value.getUnits().equals(Constants.MGDL) ? R.string.mgdl : R.string.mmol;
 
         new LayoutBuilder()
-            .add(new Label(MainApp.gs(R.string.careportal_temporarytarget), MainApp.gs(unitResId), value))
-            .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", duration))
-            .build(root);
+                .add(new Label(MainApp.gs(R.string.careportal_temporarytarget), MainApp.gs(unitResId), value))
+                .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", duration))
+                .build(root);
     }
 
     @Override

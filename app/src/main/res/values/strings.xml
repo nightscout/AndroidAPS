@@ -1339,7 +1339,8 @@
     <string name="isnotavailable">is not available</string>
     <string name="unknown">unknown</string>
     <string name="glucoseisnotavailable">Glucose is not available</string>
-    <string name="glucosecompared">Glucose %1$s %2$.2f %3$s</string>
+    <string name="glucosecomparedmgdl">Glucose %1$s %2$.0f %3$s</string>
+    <string name="glucosecomparedmmol">Glucose %1$s %2$.1f %3$s</string>
     <string name="and">And</string>
     <string name="or">Or</string>
     <string name="xor">Exclusive or</string>
@@ -1373,6 +1374,9 @@
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
     <string name="recurringTime">Recurring time</string>
+    <string name="every">Every</string>
+    <string name="never">Never</string>
+    <string name="mins">%1$dmins</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

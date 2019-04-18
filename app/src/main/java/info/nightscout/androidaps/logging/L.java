@@ -77,6 +77,7 @@ public class L {
 
     public static final String CORE = "CORE";
     public static final String AUTOSENS = "AUTOSENS";
+    public static final String AUTOMATION = "AUTOMATION";
     public static final String EVENTS = "EVENTS";
     public static final String GLUCOSE = "GLUCOSE";
     public static final String BGSOURCE = "BGSOURCE";
@@ -102,6 +103,7 @@ public class L {
     private static void initialize() {
         logElements = new ArrayList<>();
         logElements.add(new LogElement(APS, true));
+        logElements.add(new LogElement(AUTOMATION, true));
         logElements.add(new LogElement(AUTOSENS, false));
         logElements.add(new LogElement(BGSOURCE, true));
         logElements.add(new LogElement(GLUCOSE, false));

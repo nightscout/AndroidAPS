@@ -16,18 +16,23 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 
 public class TriggerRecurringTime extends Trigger {
+    private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     public enum DayOfWeek {
         MONDAY,
@@ -152,8 +157,11 @@ public class TriggerRecurringTime extends Trigger {
 
         if (isSet(DayOfWeek.fromCalendarInt(scheduledDayOfWeek))) {
             if (DateUtil.now() >= scheduled && DateUtil.now() - scheduled < T.mins(5).msecs()) {
-                if (lastRun < scheduled)
+                if (lastRun < scheduled) {
+                    if (L.isEnabled(L.AUTOMATION))
+                        log.debug("Ready for execution: " + friendlyDescription());
                     return true;
+                }
             }
         }
         return false;
@@ -205,7 +213,29 @@ public class TriggerRecurringTime extends Trigger {
     @Override
     public String friendlyDescription() {
         // TODO
-        return "Every ";
+        int counter = 0;
+        StringBuilder sb = new StringBuilder();
+        sb.append(MainApp.gs(R.string.every));
+        sb.append(" ");
+        for (Integer i : getSelectedDays()) {
+            if (counter > 0)
+                sb.append(",");
+            sb.append(MainApp.gs(DayOfWeek.fromCalendarInt(i).getShortName()));
+            counter++;
+        }
+        sb.append(" ");
+
+        Calendar scheduledCal = DateUtil.gregorianCalendar();
+        scheduledCal.set(Calendar.HOUR_OF_DAY, hour);
+        scheduledCal.set(Calendar.MINUTE, minute);
+        scheduledCal.set(Calendar.SECOND, 0);
+        long scheduled = scheduledCal.getTimeInMillis();
+
+        sb.append(DateUtil.timeString(scheduled));
+
+        if (counter == 0)
+            return MainApp.gs(R.string.never);
+        return sb.toString();
     }
 
     @Override

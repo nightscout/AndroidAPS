@@ -16,9 +16,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 
 public class EditActionDialog extends DialogFragment {
     private static Action resultAction;
@@ -80,6 +81,7 @@ public class EditActionDialog extends DialogFragment {
     public void onButtonOk(View view) {
         resultAction.apply(mAction);
         dismiss();
+        MainApp.bus().post(new EventAutomationUpdateGui());
     }
 
     @OnClick(R.id.cancel)

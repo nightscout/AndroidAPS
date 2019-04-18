@@ -14,25 +14,20 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.ArgumentMatchers.anyInt;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, SP.class, TreatmentsPlugin.class})
+@PrepareForTest({MainApp.class, SP.class, TreatmentsPlugin.class, ProfileFunctions.class})
 public class ActionStartTempTargetTest {
-    ActionStartTempTarget actionStartTempTarget = new ActionStartTempTarget();
+    ActionStartTempTarget actionStartTempTarget;
     TreatmentsPlugin treatmentsPlugin;
     TempTarget tempTargetAdded;
 
@@ -43,7 +38,7 @@ public class ActionStartTempTargetTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals("Start temp target: null", actionStartTempTarget.shortDescription());
+        Assert.assertEquals("Start temp target: 100mg/dl@null", actionStartTempTarget.shortDescription());
     }
 
     @Test
@@ -86,16 +81,21 @@ public class ActionStartTempTargetTest {
         Assert.assertEquals(30, actionStartTempTarget.duration.getMinutes(), 0.001);
         Assert.assertEquals("Test", actionStartTempTarget.reason);
     }
+
     @Before
     public void prepareTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
+        AAPSMocker.mockBus();
+        AAPSMocker.mockProfileFunctions();
         treatmentsPlugin = AAPSMocker.mockTreatmentPlugin();
 
         Mockito.doAnswer(invocation -> {
             tempTargetAdded = invocation.getArgument(0);
             return null;
         }).when(treatmentsPlugin).addToHistoryTempTarget(any(TempTarget.class));
+
+        actionStartTempTarget = new ActionStartTempTarget();
     }
 }

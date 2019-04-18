@@ -38,6 +38,10 @@ public class TriggerTimeTest {
         t = new TriggerTime().runAt(now + T.mins(1).msecs());
         Assert.assertFalse(t.shouldRun());
 
+        // already run
+        t = new TriggerTime().runAt(now - T.mins(1).msecs()).lastRun(now - 1);
+        Assert.assertFalse(t.shouldRun());
+
     }
 
     String timeJson = "{\"data\":{\"runAt\":1514766840000,\"lastRun\":0},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime\"}";

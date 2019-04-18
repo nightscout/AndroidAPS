@@ -36,7 +36,7 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
 public class AutomationPlugin extends PluginBase {
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     private final String key_AUTOMATION_EVENTS = "AUTOMATION_EVENTS";
     static AutomationPlugin plugin = null;
@@ -177,7 +177,8 @@ public class AutomationPlugin extends PluginBase {
     }
 
     synchronized void processActions() {
-        log.debug("processActions");
+        if (L.isEnabled(L.AUTOMATION))
+            log.debug("processActions");
         for (AutomationEvent event : getAutomationEvents()) {
             if (event.getTrigger().shouldRun()) {
                 List<Action> actions = event.getActions();
@@ -196,7 +197,8 @@ public class AutomationPlugin extends PluginBase {
                             sb.append(": ");
                             sb.append(result.comment);
                             executionLog.add(sb.toString());
-                            log.debug(sb.toString());
+                            if (L.isEnabled(L.AUTOMATION))
+                                log.debug("Executed: " + sb.toString());
                             MainApp.bus().post(new EventAutomationUpdateGui());
                         }
                     });
@@ -204,6 +206,6 @@ public class AutomationPlugin extends PluginBase {
                 event.getTrigger().executed(DateUtil.now());
             }
         }
-
+        storeToSP(); // save last run time
     }
 }

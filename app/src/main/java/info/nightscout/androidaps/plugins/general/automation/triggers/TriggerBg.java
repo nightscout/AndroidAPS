@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -17,27 +17,41 @@ import com.google.common.base.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.T;
 
 public class TriggerBg extends Trigger {
+    private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
-    private double threshold = 100.0; // FIXME
+    private double threshold;
     private Comparator comparator = Comparator.IS_EQUAL;
     private String units = ProfileFunctions.getInstance().getProfileUnits();
+    private long lastRun;
 
     final private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            // TODO: validate inputs
+            if (units.equals(Constants.MMOL)) {
+                threshold = Math.max(threshold, 4d);
+                threshold = Math.min(threshold, 15d);
+            } else {
+                threshold = Math.max(threshold, 72d);
+                threshold = Math.min(threshold, 270d);
+            }
         }
 
         @Override
@@ -51,11 +65,13 @@ public class TriggerBg extends Trigger {
 
     public TriggerBg() {
         super();
+        threshold = units.equals(Constants.MGDL) ? 100d : 5.5d;
     }
 
     private TriggerBg(TriggerBg triggerBg) {
         super();
         comparator = triggerBg.comparator;
+        lastRun = triggerBg.lastRun;
         units = triggerBg.units;
         threshold = triggerBg.threshold;
     }
@@ -77,7 +93,11 @@ public class TriggerBg extends Trigger {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if (glucoseStatus == null && comparator.equals(Comparator.IS_NOT_AVAILABLE))
-            return true;
+            if (lastRun < DateUtil.now() - T.mins(5).msecs()) {
+                if (L.isEnabled(L.AUTOMATION))
+                    log.debug("Ready for execution: " + friendlyDescription());
+                return true;
+            }
         if (glucoseStatus == null)
             return false;
 
@@ -91,6 +111,7 @@ public class TriggerBg extends Trigger {
             o.put("type", TriggerBg.class.getName());
             JSONObject data = new JSONObject();
             data.put("threshold", threshold);
+            data.put("lastRun", lastRun);
             data.put("comparator", comparator.toString());
             data.put("units", units);
             o.put("data", data);
@@ -105,6 +126,7 @@ public class TriggerBg extends Trigger {
         try {
             JSONObject d = new JSONObject(data);
             threshold = JsonHelper.safeGetDouble(d, "threshold");
+            lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator = Comparator.valueOf(JsonHelper.safeGetString(d, "comparator"));
             units = JsonHelper.safeGetString(d, "units");
         } catch (JSONException e) {
@@ -122,8 +144,9 @@ public class TriggerBg extends Trigger {
     public String friendlyDescription() {
         if (comparator.equals(Comparator.IS_NOT_AVAILABLE))
             return MainApp.gs(R.string.glucoseisnotavailable);
-        else
-            return MainApp.gs(R.string.glucosecompared, MainApp.gs(comparator.getStringRes()), threshold, units);
+        else {
+            return MainApp.gs(units.equals(Constants.MGDL) ? R.string.glucosecomparedmgdl : R.string.glucosecomparedmmol, MainApp.gs(comparator.getStringRes()), threshold, units);
+        }
     }
 
     @Override
@@ -142,6 +165,11 @@ public class TriggerBg extends Trigger {
 
     TriggerBg threshold(double threshold) {
         this.threshold = threshold;
+        return this;
+    }
+
+    TriggerBg lastRun(long lastRun) {
+        this.lastRun = lastRun;
         return this;
     }
 
@@ -177,7 +205,8 @@ public class TriggerBg extends Trigger {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
         spinner.setSelection(comparator.ordinal());
         root.addView(spinner);
@@ -190,7 +219,11 @@ public class TriggerBg extends Trigger {
 
         // input field for threshold
         NumberPicker numberPicker = new NumberPicker(context, null);
-        numberPicker.setParams(0d, 0d, (double) 500, 1d, new DecimalFormat("0"), false, textWatcher);
+        double min = units.equals(Constants.MGDL) ? 3 * Constants.MMOLL_TO_MGDL : 3;
+        double max = units.equals(Constants.MGDL) ? 20 * Constants.MMOLL_TO_MGDL : 20;
+        double step = units.equals(Constants.MGDL) ? 1 : 0.1d;
+        DecimalFormat pattern = units.equals(Constants.MGDL) ? new DecimalFormat("0") : new DecimalFormat("0.0");
+        numberPicker.setParams(0d, min, max, step, pattern, false, textWatcher);
         numberPicker.setValue(threshold);
         numberPicker.setOnValueChangedListener(value -> threshold = value);
         layout.addView(numberPicker);

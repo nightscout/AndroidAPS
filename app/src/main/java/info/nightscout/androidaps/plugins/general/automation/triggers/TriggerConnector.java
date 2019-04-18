@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,6 +12,8 @@ import com.google.common.base.Optional;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,10 +21,13 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 public class TriggerConnector extends Trigger {
+    private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
+
     public enum Type {
         AND,
         OR,
@@ -40,7 +45,8 @@ public class TriggerConnector extends Trigger {
             return false;
         }
 
-        public @StringRes int getStringRes() {
+        public @StringRes
+        int getStringRes() {
             switch (this) {
                 case OR:
                     return R.string.or;
@@ -55,7 +61,7 @@ public class TriggerConnector extends Trigger {
 
         public static List<String> labels() {
             List<String> list = new ArrayList<>();
-            for(Type t : values()) {
+            for (Type t : values()) {
                 list.add(MainApp.gs(t.getStringRes()));
             }
             return list;
@@ -63,7 +69,7 @@ public class TriggerConnector extends Trigger {
     }
 
     public static void fillIconSet(TriggerConnector connector, HashSet<Integer> set) {
-        for(Trigger t : connector.list) {
+        for (Trigger t : connector.list) {
             if (t instanceof TriggerConnector) {
                 fillIconSet((TriggerConnector) t, set);
             } else {
@@ -86,9 +92,13 @@ public class TriggerConnector extends Trigger {
         this.connectorType = connectorType;
     }
 
-    public void changeConnectorType(Type type) { this.connectorType = type; }
+    public void changeConnectorType(Type type) {
+        this.connectorType = type;
+    }
 
-    public Type getConnectorType() { return connectorType; }
+    public Type getConnectorType() {
+        return connectorType;
+    }
 
     public synchronized void add(Trigger t) {
         list.add(t);
@@ -113,7 +123,7 @@ public class TriggerConnector extends Trigger {
     }
 
     public int pos(Trigger trigger) {
-        for(int i = 0; i < list.size(); ++i) {
+        for (int i = 0; i < list.size(); ++i) {
             if (list.get(i) == trigger) return i;
         }
         return -1;
@@ -131,6 +141,9 @@ public class TriggerConnector extends Trigger {
         for (int i = 1; i < list.size(); ++i) {
             result = connectorType.apply(result, list.get(i).shouldRun());
         }
+        if (result)
+            if (L.isEnabled(L.AUTOMATION))
+                log.debug("Ready for execution: " + friendlyDescription().replace("\n", " "));
 
         return result;
     }
@@ -181,7 +194,7 @@ public class TriggerConnector extends Trigger {
         int counter = 0;
         StringBuilder result = new StringBuilder();
         for (Trigger t : list) {
-            if (counter++ > 0) result.append(" " + MainApp.gs(friendlyName()) + " ");
+            if (counter++ > 0) result.append("\n" + MainApp.gs(friendlyName()) + "\n");
             result.append(t.friendlyDescription());
         }
         return result.toString();
@@ -218,7 +231,7 @@ public class TriggerConnector extends Trigger {
         LinearLayout root = new LinearLayout(context);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        root.setPadding(padding,padding,padding,padding);
+        root.setPadding(padding, padding, padding, padding);
         root.setBackgroundResource(R.drawable.border_automation_unit);
 
         LinearLayout triggerListLayout = new LinearLayout(context);
@@ -233,7 +246,7 @@ public class TriggerConnector extends Trigger {
 
     public TriggerConnector simplify() {
         // simplify children
-        for(int i = 0; i < size(); ++i) {
+        for (int i = 0; i < size(); ++i) {
             if (get(i) instanceof TriggerConnector) {
                 TriggerConnector t = (TriggerConnector) get(i);
                 t.simplify();
@@ -257,7 +270,7 @@ public class TriggerConnector extends Trigger {
             final int pos = connector.pos(this);
             connector.remove(this);
             // move triggers of child connector into parent connector
-            for (int i = size()-1; i >= 0; --i) {
+            for (int i = size() - 1; i >= 0; --i) {
                 connector.add(pos, get(i));
             }
             list.clear();
