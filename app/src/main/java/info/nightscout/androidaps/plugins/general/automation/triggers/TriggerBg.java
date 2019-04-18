@@ -42,7 +42,7 @@ public class TriggerBg extends Trigger {
     private String units = ProfileFunctions.getInstance().getProfileUnits();
     private long lastRun;
 
-    final private TextWatcher textWatcher = new TextWatcher() {
+    final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             if (units.equals(Constants.MMOL)) {
@@ -68,7 +68,7 @@ public class TriggerBg extends Trigger {
         threshold = units.equals(Constants.MGDL) ? 100d : 5.5d;
     }
 
-    private TriggerBg(TriggerBg triggerBg) {
+    TriggerBg(TriggerBg triggerBg) {
         super();
         comparator = triggerBg.comparator;
         lastRun = triggerBg.lastRun;
@@ -86,6 +86,10 @@ public class TriggerBg extends Trigger {
 
     public String getUnits() {
         return units;
+    }
+
+    public long getLastRun() {
+        return lastRun;
     }
 
     @Override
@@ -156,6 +160,7 @@ public class TriggerBg extends Trigger {
 
     @Override
     public void executed(long time) {
+        lastRun = time;
     }
 
     @Override

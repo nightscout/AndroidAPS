@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import com.google.common.base.Optional;
 import com.squareup.otto.Bus;
 
 import org.json.JSONException;
@@ -18,6 +19,7 @@ import java.util.List;
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
@@ -66,6 +68,35 @@ public class TriggerBgTest {
 
     }
 
+    @Test
+    public void textWatcherTest() {
+        TriggerBg t = new TriggerBg().threshold(1d).units(Constants.MMOL);
+        t.textWatcher.beforeTextChanged(null, 0,0,0);
+        t.textWatcher.onTextChanged(null, 0,0,0);
+        t.textWatcher.afterTextChanged(null);
+        Assert.assertEquals(4d, t.getThreshold(), 0.01d);
+
+        t = new TriggerBg().threshold(300d).units(Constants.MGDL);
+        t.textWatcher.afterTextChanged(null);
+        Assert.assertEquals(270d, t.getThreshold(), 0.01d);
+    }
+
+    @Test
+    public void copyConstructorTest() {
+        TriggerBg t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.Comparator.IS_EQUAL_OR_LESSER);
+        TriggerBg t1 = (TriggerBg) t.duplicate();
+        Assert.assertEquals(213d, t.getThreshold(), 0.01d);
+        Assert.assertEquals(Constants.MGDL, t.getUnits());
+        Assert.assertEquals(Trigger.Comparator.IS_EQUAL_OR_LESSER, t.getComparator());
+    }
+
+    @Test
+    public void executeTest() {
+        TriggerBg t = new TriggerBg().units(Constants.MGDL).threshold(213).comparator(Trigger.Comparator.IS_EQUAL_OR_LESSER);
+        t.executed(1);
+        Assert.assertEquals(1l, t.getLastRun());
+    }
+
     String bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"threshold\":4.1,\"units\":\"mmol\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}";
 
     @Test
@@ -83,6 +114,12 @@ public class TriggerBgTest {
         Assert.assertEquals(4.1d, t2.getThreshold(), 0.01d);
         Assert.assertEquals(Constants.MMOL, t2.getUnits());
     }
+
+    @Test
+    public void iconTest() {
+        Assert.assertEquals(Optional.of(R.drawable.icon_cp_bgcheck), new TriggerBg().icon());
+    }
+
 
     @Before
     public void mock() {
