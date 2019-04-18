@@ -212,7 +212,6 @@ public class TriggerRecurringTime extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        // TODO
         int counter = 0;
         StringBuilder sb = new StringBuilder();
         sb.append(MainApp.gs(R.string.every));
