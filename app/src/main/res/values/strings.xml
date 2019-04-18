@@ -1326,6 +1326,15 @@
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
+    <string name="versionChecker">Version Checker</string>
+    <string name="key_new_version_available_since" translatable="false">new_version_available_since</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
+    <string name="key_last_versioncheck" translatable="false">key_last_versioncheck</string>
+
+    <string name="old_version">old version</string>
+    <string name="very_old_version">very old version</string>
+    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
+
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
