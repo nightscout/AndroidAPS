@@ -19,6 +19,7 @@ import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerIob;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
 
@@ -29,9 +30,10 @@ public class ChooseTriggerDialog extends DialogFragment {
     }
 
     private static final List<Trigger> triggerDummyObjects = new ArrayList<Trigger>() {{
-        add(new TriggerBg());
         add(new TriggerTime());
         add(new TriggerRecurringTime());
+        add(new TriggerBg());
+        add(new TriggerIob());
     }};
 
     private Unbinder mUnbinder;

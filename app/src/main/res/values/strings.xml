@@ -591,6 +591,7 @@
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
     <string name="suspendloopfor10h">Suspend loop for 10 h</string>
+    <string name="suspendloopforXmin">Suspend loop for %1$d min</string>
     <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
     <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
     <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
@@ -1341,6 +1342,7 @@
     <string name="glucoseisnotavailable">Glucose is not available</string>
     <string name="glucosecomparedmgdl">Glucose %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glucose %1$s %2$.1f %3$s</string>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">And</string>
     <string name="or">Or</string>
     <string name="xor">Exclusive or</string>
@@ -1377,6 +1379,8 @@
     <string name="every">Every</string>
     <string name="never">Never</string>
     <string name="mins">%1$dmins</string>
+    <string name="condition">Condition:</string>
+    <string name="action">Action:</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

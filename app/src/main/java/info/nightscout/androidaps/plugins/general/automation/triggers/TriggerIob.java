@@ -4,14 +4,12 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.common.base.Optional;
 
@@ -22,36 +20,30 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.NumberPicker;
 import info.nightscout.androidaps.utils.T;
 
-public class TriggerBg extends Trigger {
+public class TriggerIob extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     private double threshold;
     private Comparator comparator = Comparator.IS_EQUAL;
-    private String units = ProfileFunctions.getInstance().getProfileUnits();
     private long lastRun;
 
     final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            if (units.equals(Constants.MMOL)) {
-                threshold = Math.max(threshold, 4d);
-                threshold = Math.min(threshold, 15d);
-            } else {
-                threshold = Math.max(threshold, 72d);
-                threshold = Math.min(threshold, 270d);
-            }
+            threshold = Math.max(threshold, -20d);
+            threshold = Math.min(threshold, 20d);
         }
 
         @Override
@@ -63,17 +55,15 @@ public class TriggerBg extends Trigger {
         }
     };
 
-    public TriggerBg() {
+    public TriggerIob() {
         super();
-        threshold = units.equals(Constants.MGDL) ? 100d : 5.5d;
     }
 
-    TriggerBg(TriggerBg triggerBg) {
+    TriggerIob(TriggerIob triggerIob) {
         super();
-        comparator = triggerBg.comparator;
-        lastRun = triggerBg.lastRun;
-        units = triggerBg.units;
-        threshold = triggerBg.threshold;
+        comparator = triggerIob.comparator;
+        lastRun = triggerIob.lastRun;
+        threshold = triggerIob.threshold;
     }
 
     public double getThreshold() {
@@ -84,30 +74,21 @@ public class TriggerBg extends Trigger {
         return comparator;
     }
 
-    public String getUnits() {
-        return units;
-    }
-
     public long getLastRun() {
         return lastRun;
     }
 
     @Override
     public synchronized boolean shouldRun() {
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+        if (profile == null)
+            return false;
+        IobTotal iob = IobCobCalculatorPlugin.getPlugin().calculateFromTreatmentsAndTempsSynchronized(DateUtil.now(), profile);
 
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
 
-        if (glucoseStatus == null && comparator.equals(Comparator.IS_NOT_AVAILABLE)) {
-            if (L.isEnabled(L.AUTOMATION))
-                log.debug("Ready for execution: " + friendlyDescription());
-            return true;
-        }
-        if (glucoseStatus == null)
-            return false;
-
-        boolean doRun = comparator.check(glucoseStatus.glucose, Profile.toMgdl(threshold, units));
+        boolean doRun = comparator.check(iob.iob, threshold);
         if (doRun) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
@@ -120,12 +101,11 @@ public class TriggerBg extends Trigger {
     public synchronized String toJSON() {
         JSONObject o = new JSONObject();
         try {
-            o.put("type", TriggerBg.class.getName());
+            o.put("type", TriggerIob.class.getName());
             JSONObject data = new JSONObject();
             data.put("threshold", threshold);
             data.put("lastRun", lastRun);
             data.put("comparator", comparator.toString());
-            data.put("units", units);
             o.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -140,7 +120,6 @@ public class TriggerBg extends Trigger {
             threshold = JsonHelper.safeGetDouble(d, "threshold");
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator = Comparator.valueOf(JsonHelper.safeGetString(d, "comparator"));
-            units = JsonHelper.safeGetString(d, "units");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -149,21 +128,17 @@ public class TriggerBg extends Trigger {
 
     @Override
     public int friendlyName() {
-        return R.string.glucose;
+        return R.string.iob;
     }
 
     @Override
     public String friendlyDescription() {
-        if (comparator.equals(Comparator.IS_NOT_AVAILABLE))
-            return MainApp.gs(R.string.glucoseisnotavailable);
-        else {
-            return MainApp.gs(units.equals(Constants.MGDL) ? R.string.glucosecomparedmgdl : R.string.glucosecomparedmmol, MainApp.gs(comparator.getStringRes()), threshold, units);
-        }
+        return MainApp.gs(R.string.iobcompared, MainApp.gs(comparator.getStringRes()), threshold);
     }
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.icon_cp_bgcheck);
+        return Optional.of(R.drawable.remove); // TODO icon
     }
 
     @Override
@@ -173,26 +148,21 @@ public class TriggerBg extends Trigger {
 
     @Override
     public Trigger duplicate() {
-        return new TriggerBg(this);
+        return new TriggerIob(this);
     }
 
-    TriggerBg threshold(double threshold) {
+    TriggerIob threshold(double threshold) {
         this.threshold = threshold;
         return this;
     }
 
-    TriggerBg lastRun(long lastRun) {
+    TriggerIob lastRun(long lastRun) {
         this.lastRun = lastRun;
         return this;
     }
 
-    TriggerBg comparator(Comparator comparator) {
+    TriggerIob comparator(Comparator comparator) {
         this.comparator = comparator;
-        return this;
-    }
-
-    TriggerBg units(String units) {
-        this.units = units;
         return this;
     }
 
@@ -232,26 +202,10 @@ public class TriggerBg extends Trigger {
 
         // input field for threshold
         NumberPicker numberPicker = new NumberPicker(context, null);
-        double min = units.equals(Constants.MGDL) ? 3 * Constants.MMOLL_TO_MGDL : 3;
-        double max = units.equals(Constants.MGDL) ? 20 * Constants.MMOLL_TO_MGDL : 20;
-        double step = units.equals(Constants.MGDL) ? 1 : 0.1d;
-        DecimalFormat pattern = units.equals(Constants.MGDL) ? new DecimalFormat("0") : new DecimalFormat("0.0");
-        numberPicker.setParams(0d, min, max, step, pattern, false, textWatcher);
+        numberPicker.setParams(0d, -20d, 20d, 0.1d, new DecimalFormat("0.0"), true, textWatcher);
         numberPicker.setValue(threshold);
         numberPicker.setOnValueChangedListener(value -> threshold = value);
         layout.addView(numberPicker);
-
-        // text view for unit
-        TextView tvUnits = new TextView(context);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        params.setMargins(MainApp.dpToPx(6), 0, 0, 0);
-        tvUnits.setLayoutParams(params);
-        tvUnits.setText(units);
-        tvUnits.setGravity(Gravity.CENTER_VERTICAL);
-        layout.addView(tvUnits);
 
         return root;
     }

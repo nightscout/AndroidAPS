@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.dialogs;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -135,7 +136,9 @@ public class EditEventDialog extends DialogFragment {
 
     @Subscribe
     public void onEventAutomationUpdateGui(EventAutomationUpdateGui ignored) {
-        mActionListAdapter.notifyDataSetChanged();
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(() -> mActionListAdapter.notifyDataSetChanged());
     }
 
     @OnClick(R.id.ok)

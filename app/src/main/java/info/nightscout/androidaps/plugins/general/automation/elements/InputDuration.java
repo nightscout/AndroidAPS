@@ -13,9 +13,9 @@ public class InputDuration extends Element {
     }
 
     private TimeUnit unit;
-    private double value;
+    private int value;
 
-    public InputDuration(double value, TimeUnit unit) {
+    public InputDuration(int value, TimeUnit unit) {
         this.unit = unit;
         this.value = value;
     }
@@ -30,8 +30,8 @@ public class InputDuration extends Element {
             // Hours
             numberPicker.setParams(0d, 0d, 24d, 1d, new DecimalFormat("0"), false);
         }
-        numberPicker.setValue(value);
-        numberPicker.setOnValueChangedListener(value -> this.value = value);
+        numberPicker.setValue((double) value);
+        numberPicker.setOnValueChangedListener(value -> this.value = (int) value);
         root.addView(numberPicker);
     }
 
@@ -43,19 +43,19 @@ public class InputDuration extends Element {
         return value;
     }
 
-    public void setMinutes(double value) {
+    public void setMinutes(int value) {
         if (unit.equals(TimeUnit.MINUTES)) {
             this.value = value;
         } else {
-            this.value = value / 60d;
+            this.value = value / 60;
         }
     }
 
-    public double getMinutes() {
+    public int getMinutes() {
         if (unit.equals(TimeUnit.MINUTES)) {
             return value;
         } else {
-            return value * 60d;
+            return value * 60;
         }
     }
 }

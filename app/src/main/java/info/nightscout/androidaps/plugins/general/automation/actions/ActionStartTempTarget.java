@@ -91,7 +91,7 @@ public class ActionStartTempTarget extends Action {
             reason = JsonHelper.safeGetString(d, "reason");
             value.setUnits(JsonHelper.safeGetString(d, "units"));
             value.setMgdl(JsonHelper.safeGetInt(d, "valueInMg"));
-            duration.setMinutes(JsonHelper.safeGetDouble(d, "durationInMinutes"));
+            duration.setMinutes(JsonHelper.safeGetInt(d, "durationInMinutes"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

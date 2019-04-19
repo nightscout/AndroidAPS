@@ -12,17 +12,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.SP;
-
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, NSUpload.class})
@@ -36,7 +31,8 @@ public class ActionLoopSuspendTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals("Suspend loop", actionLoopSuspend.shortDescription());
+        actionLoopSuspend.minutes = new InputDuration(30, InputDuration.TimeUnit.MINUTES);
+        Assert.assertEquals(null, actionLoopSuspend.shortDescription()); // string not in AAPSMocker
     }
 
     @Test
@@ -46,7 +42,7 @@ public class ActionLoopSuspendTest {
 
     @Test
     public void doActionTest() {
-        actionLoopSuspend.minutes = 30;
+        actionLoopSuspend.minutes = new InputDuration(30, InputDuration.TimeUnit.MINUTES);
 
         LoopPlugin.getPlugin().suspendTo(0);
         actionLoopSuspend.doAction(new Callback() {
@@ -67,10 +63,10 @@ public class ActionLoopSuspendTest {
     @Test
     public void applyTest() {
         ActionLoopSuspend a = new ActionLoopSuspend();
-        a.minutes = 20;
+        a.minutes = new InputDuration(20, InputDuration.TimeUnit.MINUTES);
         ActionLoopSuspend b = new ActionLoopSuspend();
         b.apply(a);
-        Assert.assertEquals(20, b.minutes);
+        Assert.assertEquals(20, b.minutes.getMinutes());
     }
 
     @Before
