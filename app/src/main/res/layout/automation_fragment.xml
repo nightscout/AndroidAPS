@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -23,8 +24,8 @@
         android:layout_gravity="bottom"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/defaulttext"
-        android:src="@drawable/ic_add_black_24dp" />
+        android:src="@drawable/ic_add_black_24dp"
+        app:backgroundTint="@color/defaulttext" />
 
     <TextView
         android:id="@+id/logView"

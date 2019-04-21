@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopD
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopResume;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopSuspend;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionNotification;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionStopTempTarget;
 
@@ -40,6 +41,7 @@ public class ChooseActionDialog extends DialogFragment {
         add(new ActionLoopSuspend());
         add(new ActionStartTempTarget());
         add(new ActionStopTempTarget());
+        add(new ActionNotification());
     }};
 
     private Unbinder mUnbinder;
