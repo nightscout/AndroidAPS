@@ -80,6 +80,9 @@ public class InputBg extends Element {
             decimalFormat = new DecimalFormat("0");
         }
 
+        // make sure that value is in range
+        textWatcher.afterTextChanged(null);
+
         this.units = units;
         return this;
     }

@@ -18,7 +18,7 @@ public class InputBgTest {
 
     @Test
     public void textWatcherTest() {
-        InputBg t = new InputBg().setValue(1d).setUnits(Constants.MMOL);
+        InputBg t = new InputBg().setUnits(Constants.MMOL).setValue(1d);
         t.textWatcher.beforeTextChanged(null, 0, 0, 0);
         t.textWatcher.onTextChanged(null, 0, 0, 0);
         t.textWatcher.afterTextChanged(null);
@@ -31,7 +31,7 @@ public class InputBgTest {
 
     @Test
     public void getSetValueTest() {
-        InputBg i = new InputBg().setValue(5d).setUnits(Constants.MMOL);
+        InputBg i = new InputBg().setUnits(Constants.MMOL).setValue(5d);
         Assert.assertEquals(5d, i.getValue(), 0.01d);
         Assert.assertEquals(2, i.minValue, 0.01d);
         i = new InputBg().setValue(100d).setUnits(Constants.MGDL);

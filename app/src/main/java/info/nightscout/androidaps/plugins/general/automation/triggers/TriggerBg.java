@@ -102,10 +102,10 @@ public class TriggerBg extends Trigger {
     Trigger fromJSON(String data) {
         try {
             JSONObject d = new JSONObject(data);
+            bg.setUnits(JsonHelper.safeGetString(d, "units"));
             bg.setValue(JsonHelper.safeGetDouble(d, "bg"));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
-            bg.setUnits(JsonHelper.safeGetString(d, "units"));
         } catch (Exception e) {
             e.printStackTrace();
         }
