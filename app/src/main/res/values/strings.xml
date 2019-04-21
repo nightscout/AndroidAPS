@@ -1395,6 +1395,7 @@
     <string name="message_short">Msg:</string>
     <string name="profilepercentage">Profile percentage</string>
     <string name="percent_u">Percent [%]:</string>
+    <string name="startprofile">Start profile %1$d%% for %2$d min</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

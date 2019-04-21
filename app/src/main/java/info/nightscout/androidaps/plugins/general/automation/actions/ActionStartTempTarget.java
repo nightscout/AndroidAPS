@@ -66,7 +66,7 @@ public class ActionStartTempTarget extends Action {
 
         new LayoutBuilder()
                 .add(new Label(MainApp.gs(R.string.careportal_temporarytarget), MainApp.gs(unitResId), value))
-                .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "min", duration))
+                .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
                 .build(root);
     }
 

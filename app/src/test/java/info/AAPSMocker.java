@@ -57,6 +57,7 @@ public class AAPSMocker {
 
     public static CommandQueue queue;
     public static ConfigBuilderPlugin configBuilderPlugin;
+    public static ProfileFunctions profileFunctions;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -278,7 +279,7 @@ public class AAPSMocker {
 
     public static void mockProfileFunctions() {
         PowerMockito.mockStatic(ProfileFunctions.class);
-        ProfileFunctions profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        profileFunctions = PowerMockito.mock(ProfileFunctions.class);
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
