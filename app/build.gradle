@@ -10,6 +10,8 @@ buildscript {
     }
 }
 apply plugin: "com.android.application"
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: "io.fabric"
 apply plugin: "jacoco-android"
@@ -27,6 +29,7 @@ ext {
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     jcenter { url "https://jcenter.bintray.com/" }
+    mavenCentral()
 }
 
 def generateGitBuild = { ->
@@ -91,6 +94,9 @@ android {
         ndk {
             moduleName "BleCommandUtil"
         }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
     lintOptions {
         // TODO remove once wear dependency com.google.android.gms:play-services-wearable:7.3.0
@@ -253,6 +259,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:2.8.47"
     androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 task unzip(type: Copy) {

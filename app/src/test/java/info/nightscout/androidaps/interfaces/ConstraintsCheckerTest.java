@@ -289,7 +289,7 @@ public class ConstraintsCheckerTest {
         //SafetyPlugin
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
-        constraintChecker = new ConstraintChecker(mainApp);
+        constraintChecker = new ConstraintChecker();
 
         safetyPlugin = SafetyPlugin.getPlugin();
         objectivesPlugin = ObjectivesPlugin.getPlugin();
