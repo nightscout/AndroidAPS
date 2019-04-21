@@ -50,7 +50,9 @@ public class EditTriggerDialog extends DialogFragment {
         }
 
         // display root trigger
-        mLayoutTrigger.addView(mTrigger.createView(getContext(), getFragmentManager()));
+        if (mTrigger != null) {
+            mTrigger.generateDialog(mLayoutTrigger, getFragmentManager());
+        }
 
         return view;
     }
@@ -66,6 +68,7 @@ public class EditTriggerDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
+    @SuppressWarnings("unused")
     public void onButtonOk(View view) {
         if (mClickListener != null)
             mClickListener.onClick(mTrigger);
@@ -74,6 +77,7 @@ public class EditTriggerDialog extends DialogFragment {
     }
 
     @OnClick(R.id.cancel)
+    @SuppressWarnings("unused")
     public void onButtonCancel(View view) {
         dismiss();
     }

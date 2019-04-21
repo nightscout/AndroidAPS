@@ -35,7 +35,7 @@ public class InputDuration extends Element {
         root.addView(numberPicker);
     }
 
-    public TimeUnit getUnit() {
+    TimeUnit getUnit() {
         return unit;
     }
 

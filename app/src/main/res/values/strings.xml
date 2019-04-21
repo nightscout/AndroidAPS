@@ -1314,13 +1314,6 @@
     <string name="weekday_wednesday_short">Wed</string>
     <string name="weekday_tuesday_short">Tue</string>
     <string name="weekday_monday_short">Mon</string>
-    <string name="weekday_sunday">Sunday</string>
-    <string name="weekday_saturday">Saturday</string>
-    <string name="weekday_friday">Friday</string>
-    <string name="weekday_thursday">Thursday</string>
-    <string name="weekday_wednesday">Wednesday</string>
-    <string name="weekday_tuesday">Tuesday</string>
-    <string name="weekday_monday">Monday</string>
     <string name="automation_description">User defined automation tasks</string>
     <string name="automation_missing_task_name">Please enter a task name.</string>
     <string name="automation_missing_trigger">Please specify at least one trigger.</string>
@@ -1381,6 +1374,12 @@
     <string name="mins">%1$dmins</string>
     <string name="condition">Condition:</string>
     <string name="action">Action:</string>
+    <string name="iob_u">IOB [U]:</string>
+    <string name="glucose_u">Glucose [%1$s]:</string>
+    <string name="delete_short">DEL</string>
+    <string name="add_short">ADD</string>
+    <string name="copy_short">COPY</string>
+    <string name="addnew">Add new</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

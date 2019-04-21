@@ -117,6 +117,7 @@ public class ChooseTriggerDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
+    @SuppressWarnings("unused")
     public void onButtonOk(View view) {
         if (mClickListener != null)
             mClickListener.onClick(instantiateTrigger());
@@ -125,6 +126,7 @@ public class ChooseTriggerDialog extends DialogFragment {
     }
 
     @OnClick(R.id.cancel)
+    @SuppressWarnings("unused")
     public void onButtonCancel(View view) {
         dismiss();
     }

@@ -67,7 +67,7 @@ public class ActionLoopSuspend extends Action {
     public Action fromJSON(String data) {
         try {
             JSONObject o = new JSONObject(data);
-            minutes.setMinutes(JsonHelper.safeGetInt(o,"minutes"));
+            minutes.setMinutes(JsonHelper.safeGetInt(o, "minutes"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

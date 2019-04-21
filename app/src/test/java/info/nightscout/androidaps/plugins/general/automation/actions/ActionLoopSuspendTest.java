@@ -69,6 +69,12 @@ public class ActionLoopSuspendTest {
         Assert.assertEquals(20, b.minutes.getMinutes());
     }
 
+    @Test
+    public void hasDialogTest() {
+        ActionLoopSuspend a = new ActionLoopSuspend();
+        Assert.assertTrue(a.hasDialog());
+    }
+
     @Before
     public void prepareTest() {
         AAPSMocker.mockMainApp();

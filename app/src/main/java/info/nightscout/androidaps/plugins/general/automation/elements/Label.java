@@ -8,9 +8,9 @@ import android.widget.TextView;
 import info.nightscout.androidaps.MainApp;
 
 public class Label extends Element {
-    private final Element element;
-    private final String textPre;
-    private final String textPost;
+    final Element element;
+    final String textPre;
+    final String textPost;
 
     public Label(String textPre, String textPost, Element element) {
         this.element = element;

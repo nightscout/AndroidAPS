@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.text.format.DateFormat;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,8 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -53,16 +54,6 @@ public class TriggerRecurringTime extends Trigger {
                 Calendar.SUNDAY
         };
 
-        private static final int[] fullNames = new int[]{
-                R.string.weekday_monday,
-                R.string.weekday_tuesday,
-                R.string.weekday_wednesday,
-                R.string.weekday_thursday,
-                R.string.weekday_friday,
-                R.string.weekday_saturday,
-                R.string.weekday_sunday
-        };
-
         private static final int[] shortNames = new int[]{
                 R.string.weekday_monday_short,
                 R.string.weekday_tuesday_short,
@@ -77,6 +68,7 @@ public class TriggerRecurringTime extends Trigger {
             return calendarInts[ordinal()];
         }
 
+        @Nullable
         public static DayOfWeek fromCalendarInt(int day) {
             for (int i = 0; i < calendarInts.length; ++i) {
                 if (calendarInts[i] == day)
@@ -86,19 +78,12 @@ public class TriggerRecurringTime extends Trigger {
         }
 
         public @StringRes
-        int getFullName() {
-            return fullNames[ordinal()];
-        }
-
-        public @StringRes
         int getShortName() {
             return shortNames[ordinal()];
         }
     }
 
     private final boolean[] weekdays = new boolean[DayOfWeek.values().length];
-
-    private long lastRun;
 
     // Recurring
     private int hour;
@@ -118,9 +103,8 @@ public class TriggerRecurringTime extends Trigger {
         minute = triggerTime.minute;
         validTo = triggerTime.validTo;
 
-        for (int i = 0; i < weekdays.length; ++i) {
-            weekdays[i] = triggerTime.weekdays[i];
-        }
+        if (weekdays.length >= 0)
+            System.arraycopy(triggerTime.weekdays, 0, weekdays, 0, weekdays.length);
     }
 
     public void setAll(boolean value) {
@@ -134,12 +118,8 @@ public class TriggerRecurringTime extends Trigger {
         return this;
     }
 
-    public boolean isSet(DayOfWeek day) {
+    private boolean isSet(DayOfWeek day) {
         return weekdays[day.ordinal()];
-    }
-
-    public long getLastRun() {
-        return lastRun;
     }
 
     @Override
@@ -155,7 +135,7 @@ public class TriggerRecurringTime extends Trigger {
         scheduledCal.set(Calendar.SECOND, 0);
         long scheduled = scheduledCal.getTimeInMillis();
 
-        if (isSet(DayOfWeek.fromCalendarInt(scheduledDayOfWeek))) {
+        if (isSet(Objects.requireNonNull(DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
             if (DateUtil.now() >= scheduled && DateUtil.now() - scheduled < T.mins(5).msecs()) {
                 if (lastRun < scheduled) {
                     if (L.isEnabled(L.AUTOMATION))
@@ -219,7 +199,7 @@ public class TriggerRecurringTime extends Trigger {
         for (Integer i : getSelectedDays()) {
             if (counter > 0)
                 sb.append(",");
-            sb.append(MainApp.gs(DayOfWeek.fromCalendarInt(i).getShortName()));
+            sb.append(MainApp.gs(Objects.requireNonNull(DayOfWeek.fromCalendarInt(i)).getShortName()));
             counter++;
         }
         sb.append(" ");
@@ -243,11 +223,6 @@ public class TriggerRecurringTime extends Trigger {
     }
 
     @Override
-    public void executed(long time) {
-        lastRun = time;
-    }
-
-    @Override
     public Trigger duplicate() {
         return new TriggerRecurringTime(this);
     }
@@ -257,6 +232,7 @@ public class TriggerRecurringTime extends Trigger {
         return this;
     }
 
+    @SuppressWarnings("SameParameterValue")
     TriggerRecurringTime validTo(long validTo) {
         this.validTo = validTo;
         return this;
@@ -283,11 +259,11 @@ public class TriggerRecurringTime extends Trigger {
     }
 
     @Override
-    public View createView(final Context context, FragmentManager fragmentManager) {
-        LinearLayout root = (LinearLayout) super.createView(context, fragmentManager);
+    public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
+        TextView label = new TextView(root.getContext());
 
         // TODO: Replace external tool WeekdaysPicker with a self-made GUI element
-        WeekdaysPicker weekdaysPicker = new WeekdaysPicker(context);
+        WeekdaysPicker weekdaysPicker = new WeekdaysPicker(root.getContext());
         weekdaysPicker.setEditable(true);
         weekdaysPicker.setSelectedDays(getSelectedDays());
         weekdaysPicker.setOnWeekdaysChangeListener((view, i, list) -> set(DayOfWeek.fromCalendarInt(i), list.contains(i)));
@@ -295,36 +271,46 @@ public class TriggerRecurringTime extends Trigger {
 
         root.addView(weekdaysPicker);
 
-        TextView dateButton = new TextView(context);
-        TextView timeButton = new TextView(context);
+        TextView timeButton = new TextView(root.getContext());
 
-        Date runAt = new Date();
-        runAt.setHours(hour);
-        runAt.setMinutes(minute);
-        timeButton.setText(DateUtil.timeString(runAt));
+        GregorianCalendar runAt = new GregorianCalendar();
+        //Date runAt = new Date();
+        runAt.set(Calendar.HOUR_OF_DAY, hour);
+        runAt.set(Calendar.MINUTE, minute);
+        timeButton.setText(DateUtil.timeString(runAt.getTimeInMillis()));
         timeButton.setOnClickListener(view -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(runAt);
             TimePickerDialog tpd = TimePickerDialog.newInstance(
                     (view12, hourOfDay, minute, second) -> {
-                        this.hour = hourOfDay;
-                        this.minute = minute;
-                        runAt.setHours(this.hour);
-                        runAt.setMinutes(this.minute);
-                        timeButton.setText(DateUtil.timeString(runAt));
+                        hour(hourOfDay);
+                        minute(minute);
+                        runAt.set(Calendar.HOUR_OF_DAY, hour);
+                        runAt.set(Calendar.MINUTE, minute);
+                        timeButton.setText(DateUtil.timeString(runAt.getTimeInMillis()));
                     },
-                    calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(context)
+                    runAt.get(Calendar.HOUR_OF_DAY),
+                    runAt.get(Calendar.MINUTE),
+                    DateFormat.is24HourFormat(root.getContext())
             );
             tpd.setThemeDark(true);
             tpd.dismissOnPause(true);
-            android.app.FragmentManager fm = ((Activity) context).getFragmentManager();
-            tpd.show(fm, "Timepickerdialog");
+            Activity a = scanForActivity(root.getContext());
+            if (a != null)
+                tpd.show(a.getFragmentManager(), "TimePickerDialog");
         });
 
-        root.addView(dateButton);
-        root.addView(timeButton);
-        return root;
+        int px = MainApp.dpToPx(10);
+        label.setText(MainApp.gs(R.string.atspecifiedtime, ""));
+        label.setTypeface(label.getTypeface(), Typeface.BOLD);
+        label.setPadding(px, px, px, px);
+        timeButton.setPadding(px, px, px, px);
+
+        LinearLayout l = new LinearLayout(root.getContext());
+        l.setOrientation(LinearLayout.HORIZONTAL);
+        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        l.addView(label);
+        l.addView(timeButton);
+        root.addView(l);
     }
+
 }

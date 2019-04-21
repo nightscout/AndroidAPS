@@ -17,7 +17,7 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionStopTempTarget extends Action {
     String reason = "";
-    TempTarget tempTarget;
+    private TempTarget tempTarget;
 
     public ActionStopTempTarget() {
     }

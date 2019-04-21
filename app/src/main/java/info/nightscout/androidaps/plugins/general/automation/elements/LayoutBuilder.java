@@ -5,7 +5,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 
 public class LayoutBuilder {
-    private ArrayList<Element> mElements = new ArrayList<>();
+    ArrayList<Element> mElements = new ArrayList<>();
 
     public LayoutBuilder add(Element element) {
         mElements.add(element);
@@ -13,8 +13,7 @@ public class LayoutBuilder {
     }
 
     public void build(LinearLayout layout) {
-        layout.removeAllViews();
-        for(Element e : mElements) {
+        for (Element e : mElements) {
             e.addToLayout(layout);
         }
     }

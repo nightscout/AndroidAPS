@@ -7,14 +7,21 @@ import android.widget.LinearLayout;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.utils.NumberPicker;
 
 public class InputBg extends Element {
-    final private TextWatcher textWatcher = new TextWatcher() {
+
+    final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            // TODO: validate inputs
+            if (units.equals(Constants.MMOL)) {
+                value = Math.max(value, 4d);
+                value = Math.min(value, 15d);
+            } else {
+                value = Math.max(value, 72d);
+                value = Math.min(value, 270d);
+            }
         }
 
         @Override
@@ -26,37 +33,29 @@ public class InputBg extends Element {
         }
     };
 
-    private String units;
+    private String units = Constants.MGDL;
     private double value;
-    private final double minValue, maxValue, step;
-    private final DecimalFormat decimalFormat;
+    double minValue;
+    private double maxValue;
+    private double step;
+    private DecimalFormat decimalFormat;
 
-    public InputBg(String units) {
-        this.units = units;
-
-        // set default initial value
-        if (units.equals(Constants.MMOL)) {
-            // mmol
-            value = 5.5;
-            minValue = 2;
-            maxValue = 30;
-            step = 0.1;
-            decimalFormat = new DecimalFormat("0.0");
-        } else {
-            // mg/dL
-            value = 100;
-            minValue = 36;
-            maxValue = 540;
-            step = 1;
-            decimalFormat = new DecimalFormat("0");
-        }
+    public InputBg() {
+        super();
+        setUnits(ProfileFunctions.getInstance().getProfileUnits());
     }
+
+    public InputBg(InputBg another) {
+        super();
+        value = another.getValue();
+        setUnits(another.getUnits());
+    }
+
 
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(0d, minValue, maxValue, step, decimalFormat, false, textWatcher);
-        numberPicker.setValue(value);
+        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, textWatcher);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);
     }
@@ -65,23 +64,33 @@ public class InputBg extends Element {
         return units;
     }
 
-    public void setUnits(String units) {
-        if (!this.units.equals(units)) {
-            String previousUnits = this.units;
-            this.units = units;
-            value = Profile.toUnits(Profile.toMgdl(value, previousUnits), Profile.toMmol(value, previousUnits), units);
+    public InputBg setUnits(String units) {
+        // set default initial value
+        if (units.equals(Constants.MMOL)) {
+            // mmol
+            minValue = 2;
+            maxValue = 30;
+            step = 0.1;
+            decimalFormat = new DecimalFormat("0.0");
+        } else {
+            // mg/dL
+            minValue = 40;
+            maxValue = 540;
+            step = 1;
+            decimalFormat = new DecimalFormat("0");
         }
+
+        this.units = units;
+        return this;
+    }
+
+    public InputBg setValue(double value) {
+        this.value = value;
+        return this;
     }
 
     public double getValue() {
         return value;
     }
 
-    public int getMgdl() {
-        return (int)Profile.toMgdl(value, units);
-    }
-
-    public void setMgdl(int value) {
-        this.value = Profile.fromMgdlToUnits(value, units);
-    }
 }

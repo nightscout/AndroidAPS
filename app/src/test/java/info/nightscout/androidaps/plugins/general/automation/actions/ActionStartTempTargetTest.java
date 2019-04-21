@@ -27,9 +27,9 @@ import static org.mockito.ArgumentMatchers.any;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, SP.class, TreatmentsPlugin.class, ProfileFunctions.class})
 public class ActionStartTempTargetTest {
-    ActionStartTempTarget actionStartTempTarget;
-    TreatmentsPlugin treatmentsPlugin;
-    TempTarget tempTargetAdded;
+    private ActionStartTempTarget actionStartTempTarget;
+    private TreatmentsPlugin treatmentsPlugin;
+    private TempTarget tempTargetAdded;
 
     @Test
     public void friendlyNameTest() {
@@ -38,7 +38,11 @@ public class ActionStartTempTargetTest {
 
     @Test
     public void shortDescriptionTest() {
-        Assert.assertEquals("Start temp target: 100mg/dl@null", actionStartTempTarget.shortDescription());
+        actionStartTempTarget = new ActionStartTempTarget();
+        actionStartTempTarget.reason = "Test";
+        actionStartTempTarget.value = new InputBg().setValue(100).setUnits(Constants.MGDL);
+        actionStartTempTarget.duration = new InputDuration(30, InputDuration.TimeUnit.MINUTES);
+        Assert.assertEquals("Start temp target: 100mg/dl@null(Test)", actionStartTempTarget.shortDescription());
     }
 
     @Test
@@ -66,16 +70,15 @@ public class ActionStartTempTargetTest {
     public void toJSONTest() {
         actionStartTempTarget = new ActionStartTempTarget();
         actionStartTempTarget.reason = "Test";
-        actionStartTempTarget.value = new InputBg(Constants.MGDL);
-        actionStartTempTarget.value.setMgdl(100);
+        actionStartTempTarget.value = new InputBg().setValue(100).setUnits(Constants.MGDL);
         actionStartTempTarget.duration = new InputDuration(30, InputDuration.TimeUnit.MINUTES);
-        Assert.assertEquals("{\"data\":{\"reason\":\"Test\",\"valueInMg\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget\"}", actionStartTempTarget.toJSON());
+        Assert.assertEquals("{\"data\":{\"reason\":\"Test\",\"durationInMinutes\":30,\"units\":\"mg/dl\",\"value\":100},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget\"}", actionStartTempTarget.toJSON());
     }
 
     @Test
     public void fromJSONTest() {
         actionStartTempTarget = new ActionStartTempTarget();
-        actionStartTempTarget.fromJSON("{\"reason\":\"Test\",\"valueInMg\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"}");
+        actionStartTempTarget.fromJSON("{\"reason\":\"Test\",\"value\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"}");
         Assert.assertEquals(Constants.MGDL, actionStartTempTarget.value.getUnits());
         Assert.assertEquals(100, actionStartTempTarget.value.getValue(), 0.001d);
         Assert.assertEquals(30, actionStartTempTarget.duration.getMinutes(), 0.001);

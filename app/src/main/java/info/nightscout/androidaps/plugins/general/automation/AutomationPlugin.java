@@ -39,7 +39,7 @@ public class AutomationPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     private final String key_AUTOMATION_EVENTS = "AUTOMATION_EVENTS";
-    static AutomationPlugin plugin = null;
+    private static AutomationPlugin plugin = null;
 
     public static AutomationPlugin getPlugin() {
         if (plugin == null)
@@ -176,7 +176,7 @@ public class AutomationPlugin extends PluginBase {
         processActions();
     }
 
-    synchronized void processActions() {
+    private synchronized void processActions() {
         if (L.isEnabled(L.AUTOMATION))
             log.debug("processActions");
         for (AutomationEvent event : getAutomationEvents()) {

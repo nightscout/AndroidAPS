@@ -7,6 +7,8 @@ import com.google.common.base.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nullable;
+
 import info.nightscout.androidaps.queue.Callback;
 
 /*
@@ -43,13 +45,17 @@ import info.nightscout.androidaps.queue.Callback;
 public abstract class Action {
 
     public abstract int friendlyName();
+
     public abstract String shortDescription();
 
     public abstract void doAction(Callback callback);
 
-    public void generateDialog(LinearLayout root) { }
+    public void generateDialog(LinearLayout root) {
+    }
 
-    public boolean hasDialog() { return false; }
+    public boolean hasDialog() {
+        return false;
+    }
 
     public String toJSON() {
         JSONObject o = new JSONObject();
@@ -67,6 +73,7 @@ public abstract class Action {
         return this;
     }
 
+    @Nullable
     public static Action instantiate(JSONObject object) {
         try {
             String type = object.getString("type");

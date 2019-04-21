@@ -61,7 +61,7 @@ public class ChooseActionDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_choose_action, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        for(Action a : actionDummyObjects) {
+        for (Action a : actionDummyObjects) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(a.friendlyName());
             radioButton.setTag(a);
@@ -74,14 +74,14 @@ public class ChooseActionDialog extends DialogFragment {
             checkedIndex = savedInstanceState.getInt("checkedIndex");
         }
 
-        ((RadioButton)mRadioGroup.getChildAt(checkedIndex)).setChecked(true);
+        ((RadioButton) mRadioGroup.getChildAt(checkedIndex)).setChecked(true);
 
         return view;
     }
 
     private int getCheckedIndex() {
-        for(int i = 0; i < mRadioGroup.getChildCount(); ++i) {
-            if (((RadioButton)mRadioGroup.getChildAt(i)).isChecked())
+        for (int i = 0; i < mRadioGroup.getChildCount(); ++i) {
+            if (((RadioButton) mRadioGroup.getChildAt(i)).isChecked())
                 return i;
         }
         return -1;
@@ -122,6 +122,7 @@ public class ChooseActionDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
+    @SuppressWarnings("unused")
     public void onButtonOk(View view) {
         if (mClickListener != null)
             mClickListener.onClick(instantiateAction());
@@ -130,6 +131,7 @@ public class ChooseActionDialog extends DialogFragment {
     }
 
     @OnClick(R.id.cancel)
+    @SuppressWarnings("unused")
     public void onButtonCancel(View view) {
         dismiss();
     }

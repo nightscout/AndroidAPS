@@ -48,12 +48,16 @@ public class AutomationFragment extends SubscriberFragment {
 
     private EventListAdapter mEventListAdapter;
 
+    FragmentManager mFragmentManager;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.automation_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        mFragmentManager = getFragmentManager();
 
         final AutomationPlugin plugin = AutomationPlugin.getPlugin();
         mEventListAdapter = new EventListAdapter(plugin.getAutomationEvents(), getFragmentManager());
@@ -88,9 +92,34 @@ public class AutomationFragment extends SubscriberFragment {
     }
 
     @OnClick(R.id.fabAddEvent)
+    @SuppressWarnings("unused")
     void onClickAddEvent(View v) {
         EditEventDialog dialog = EditEventDialog.newInstance(new AutomationEvent(), true);
-        dialog.show(getFragmentManager(), "EditEventDialog");
+        if (getFragmentManager() != null) {
+            dialog.show(getFragmentManager(), "EditEventDialog");
+        }
+    }
+
+    public static void changeConnector(final FragmentManager fragmentManager, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
+        if (connector.size() > 2) {
+            // split connector
+            int pos = connector.pos(trigger) - 1;
+
+            TriggerConnector newConnector = new TriggerConnector(newConnectorType);
+
+            // move trigger from pos and pos+1 into new connector
+            for (int i = 0; i < 2; ++i) {
+                Trigger t = connector.get(pos);
+                newConnector.add(t);
+                connector.remove(t);
+            }
+
+            connector.add(pos, newConnector);
+        } else {
+            connector.changeConnectorType(newConnectorType);
+        }
+
+        connector.simplify().rebuildView(fragmentManager);
     }
 
     /**
@@ -100,7 +129,7 @@ public class AutomationFragment extends SubscriberFragment {
         private final List<AutomationEvent> mEventList;
         private final FragmentManager mFragmentManager;
 
-        public EventListAdapter(List<AutomationEvent> events, FragmentManager fragmentManager) {
+        EventListAdapter(List<AutomationEvent> events, FragmentManager fragmentManager) {
             this.mEventList = events;
             this.mFragmentManager = fragmentManager;
         }
@@ -174,7 +203,7 @@ public class AutomationFragment extends SubscriberFragment {
             final Context context;
             final ImageView iconTrash;
 
-            public ViewHolder(View view, Context context) {
+            ViewHolder(View view, Context context) {
                 super(view);
                 this.context = context;
                 eventTitle = view.findViewById(R.id.viewEventTitle);
@@ -231,7 +260,7 @@ public class AutomationFragment extends SubscriberFragment {
             LinearLayout layoutText;
             ImageView iconTrash;
 
-            public ViewHolder(View view) {
+            ViewHolder(View view) {
                 super(view);
                 layoutText = view.findViewById(R.id.layoutText);
                 actionTitle = view.findViewById(R.id.viewActionTitle);
@@ -244,37 +273,33 @@ public class AutomationFragment extends SubscriberFragment {
     /**
      * Custom Adapter to display triggers dynamically with nested linear layouts.
      */
-    public static class TriggerListAdapter {
+    public class TriggerListAdapter {
         private final LinearLayout mRootLayout;
+        private final FragmentManager mFragmentManager;
         private final Context mContext;
         private final TriggerConnector mRootConnector;
-        private final FragmentManager mFragmentManager;
 
-        public TriggerListAdapter(Context context, FragmentManager fragmentManager, LinearLayout rootLayout, TriggerConnector rootTrigger) {
+        public TriggerListAdapter(FragmentManager fragmentManager, Context context, LinearLayout rootLayout, TriggerConnector rootTrigger) {
             mRootLayout = rootLayout;
-            mContext = context;
             mFragmentManager = fragmentManager;
+            mContext = context;
             mRootConnector = rootTrigger;
-            build();
+            build(fragmentManager);
         }
 
         public Context getContext() {
             return mContext;
         }
 
-        public LinearLayout getRootLayout() {
-            return mRootLayout;
-        }
-
-        public FragmentManager getFragmentManager() {
+        FragmentManager getFM() {
             return mFragmentManager;
         }
 
-        public void destroy() {
+        void destroy() {
             mRootLayout.removeAllViews();
         }
 
-        private void build() {
+        private void build(FragmentManager fragmentManager) {
             for (int i = 0; i < mRootConnector.size(); ++i) {
                 final Trigger trigger = mRootConnector.get(i);
 
@@ -284,22 +309,22 @@ public class AutomationFragment extends SubscriberFragment {
                 }
 
                 // trigger layout
-                mRootLayout.addView(trigger.createView(mContext, mFragmentManager));
+                trigger.generateDialog(mRootLayout, fragmentManager);
 
                 // buttons
-                createButtons(trigger);
+                createButtons(fragmentManager, trigger);
             }
 
             if (mRootConnector.size() == 0) {
                 Button buttonAdd = new Button(mContext);
-                buttonAdd.setText("Add New");
+                buttonAdd.setText(MainApp.gs(R.string.addnew));
                 buttonAdd.setOnClickListener(v -> {
                     ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
                     dialog.setOnClickListener(newTriggerObject -> {
                         mRootConnector.add(newTriggerObject);
-                        rebuild();
+                        rebuild(fragmentManager);
                     });
-                    dialog.show(mFragmentManager, "ChooseTriggerDialog");
+                    dialog.show(fragmentManager, "ChooseTriggerDialog");
                 });
                 mRootLayout.addView(buttonAdd);
             }
@@ -329,8 +354,8 @@ public class AutomationFragment extends SubscriberFragment {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (position != initialPosition) {
-                        // conector type changed
-                        changeConnector(trigger, connector, TriggerConnector.Type.values()[position]);
+                        // connector type changed
+                        changeConnector(getFM(), trigger, connector, TriggerConnector.Type.values()[position]);
                     }
                 }
 
@@ -341,7 +366,7 @@ public class AutomationFragment extends SubscriberFragment {
             mRootLayout.addView(spinner);
         }
 
-        private void createButtons(Trigger trigger) {
+        private void createButtons(FragmentManager fragmentManager, Trigger trigger) {
             // do not create buttons for TriggerConnector
             if (trigger instanceof TriggerConnector) {
                 return;
@@ -355,64 +380,42 @@ public class AutomationFragment extends SubscriberFragment {
 
             // Button [-]
             Button buttonRemove = new Button(mContext);
-            buttonRemove.setText("del");
+            buttonRemove.setText(MainApp.gs(R.string.delete_short));
             buttonRemove.setOnClickListener(v -> {
                 final TriggerConnector connector = trigger.getConnector();
                 connector.remove(trigger);
-                connector.simplify().rebuildView();
+                connector.simplify().rebuildView(getFM());
             });
             buttonLayout.addView(buttonRemove);
 
             // Button [+]
             Button buttonAdd = new Button(mContext);
-            buttonAdd.setText("add");
+            buttonAdd.setText(MainApp.gs(R.string.add_short));
             buttonAdd.setOnClickListener(v -> {
                 ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
-                dialog.show(mFragmentManager, "ChooseTriggerDialog");
+                dialog.show(fragmentManager, "ChooseTriggerDialog");
                 dialog.setOnClickListener(newTriggerObject -> {
                     TriggerConnector connector = trigger.getConnector();
                     connector.add(connector.pos(trigger) + 1, newTriggerObject);
-                    connector.simplify().rebuildView();
+                    connector.simplify().rebuildView(getFM());
                 });
             });
             buttonLayout.addView(buttonAdd);
 
             // Button [*]
             Button buttonCopy = new Button(mContext);
-            buttonCopy.setText("copy");
+            buttonCopy.setText(MainApp.gs(R.string.copy_short));
             buttonCopy.setOnClickListener(v -> {
                 TriggerConnector connector = trigger.getConnector();
                 connector.add(connector.pos(trigger) + 1, trigger.duplicate());
-                connector.simplify().rebuildView();
+                connector.simplify().rebuildView(getFM());
             });
             buttonLayout.addView(buttonCopy);
         }
 
-        public static void changeConnector(final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
-            if (connector.size() > 2) {
-                // split connector
-                int pos = connector.pos(trigger) - 1;
-
-                TriggerConnector newConnector = new TriggerConnector(newConnectorType);
-
-                // move trigger from pos and pos+1 into new connector
-                for (int i = 0; i < 2; ++i) {
-                    Trigger t = connector.get(pos);
-                    newConnector.add(t);
-                    connector.remove(t);
-                }
-
-                connector.add(pos, newConnector);
-            } else {
-                connector.changeConnectorType(newConnectorType);
-            }
-
-            connector.simplify().rebuildView();
-        }
-
-        public void rebuild() {
+        public void rebuild(FragmentManager fragmentManager) {
             destroy();
-            build();
+            build(fragmentManager);
         }
     }
 

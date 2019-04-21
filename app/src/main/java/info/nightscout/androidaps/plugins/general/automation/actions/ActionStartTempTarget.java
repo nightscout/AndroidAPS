@@ -10,10 +10,10 @@ import org.json.JSONObject;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.automation.elements.Label;
@@ -25,13 +25,9 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionStartTempTarget extends Action {
     String reason = "";
-    InputBg value;
+    InputBg value = new InputBg();
     InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
-    TempTarget tempTarget;
-
-    public ActionStartTempTarget() {
-        value = new InputBg(ProfileFunctions.getInstance().getProfileUnits());
-    }
+    private TempTarget tempTarget;
 
     @Override
     public int friendlyName() {
@@ -40,13 +36,25 @@ public class ActionStartTempTarget extends Action {
 
     @Override
     public String shortDescription() {
-        tempTarget = new TempTarget().date(DateUtil.now()).duration((int) duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
+        tempTarget = new TempTarget()
+                .date(DateUtil.now())
+                .duration(duration.getMinutes())
+                .reason(reason)
+                .source(Source.USER)
+                .low(Profile.toMgdl(value.getValue(), value.getUnits()))
+                .high(Profile.toMgdl(value.getValue(), value.getUnits()));
         return MainApp.gs(R.string.starttemptarget) + ": " + (tempTarget == null ? "null" : tempTarget.friendlyDescription(value.getUnits()));
     }
 
     @Override
     public void doAction(Callback callback) {
-        tempTarget = new TempTarget().date(DateUtil.now()).duration((int) duration.getMinutes()).reason(reason).source(Source.USER).low(value.getMgdl()).high(value.getMgdl());
+        tempTarget = new TempTarget()
+                .date(DateUtil.now())
+                .duration(duration.getMinutes())
+                .reason(reason)
+                .source(Source.USER)
+                .low(Profile.toMgdl(value.getValue(), value.getUnits()))
+                .high(Profile.toMgdl(value.getValue(), value.getUnits()));
         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
@@ -74,7 +82,7 @@ public class ActionStartTempTarget extends Action {
             o.put("type", ActionStartTempTarget.class.getName());
             JSONObject data = new JSONObject();
             data.put("reason", reason);
-            data.put("valueInMg", value.getMgdl());
+            data.put("value", value.getValue());
             data.put("units", value.getUnits());
             data.put("durationInMinutes", duration.getMinutes());
             o.put("data", data);
@@ -90,7 +98,7 @@ public class ActionStartTempTarget extends Action {
             JSONObject d = new JSONObject(data);
             reason = JsonHelper.safeGetString(d, "reason");
             value.setUnits(JsonHelper.safeGetString(d, "units"));
-            value.setMgdl(JsonHelper.safeGetInt(d, "valueInMg"));
+            value.setValue(JsonHelper.safeGetInt(d, "value"));
             duration.setMinutes(JsonHelper.safeGetInt(d, "durationInMinutes"));
         } catch (JSONException e) {
             e.printStackTrace();

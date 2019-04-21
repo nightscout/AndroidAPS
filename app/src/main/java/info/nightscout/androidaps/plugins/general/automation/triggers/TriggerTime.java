@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.text.format.DateFormat;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -31,7 +31,6 @@ public class TriggerTime extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     private long runAt;
-    private long lastRun;
 
     public TriggerTime() {
         runAt = DateUtil.now();
@@ -98,11 +97,6 @@ public class TriggerTime extends Trigger {
         return Optional.of(R.drawable.ic_access_alarm_24dp);
     }
 
-    @Override
-    public void executed(long time) {
-        lastRun = time;
-    }
-
     TriggerTime runAt(long runAt) {
         this.runAt = runAt;
         return this;
@@ -123,25 +117,22 @@ public class TriggerTime extends Trigger {
     }
 
     @Override
-    public View createView(final Context context, FragmentManager fragmentManager) {
-        LinearLayout root = (LinearLayout) super.createView(context, fragmentManager);
-        //root.setOrientation(LinearLayout.HORIZONTAL);
-
-        TextView dateButton = new TextView(context);
-        TextView timeButton = new TextView(context);
+    public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
+        TextView label = new TextView(root.getContext());
+        TextView dateButton = new TextView(root.getContext());
+        TextView timeButton = new TextView(root.getContext());
 
         dateButton.setText(DateUtil.dateString(runAt));
         timeButton.setText(DateUtil.timeString(runAt));
         dateButton.setOnClickListener(view -> {
-            Calendar calendar = Calendar.getInstance();
+            GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTimeInMillis(runAt);
             DatePickerDialog dpd = DatePickerDialog.newInstance(
                     (view1, year, monthOfYear, dayOfMonth) -> {
-                        Date eventTime = new Date(runAt);
-                        eventTime.setYear(year - 1900);
-                        eventTime.setMonth(monthOfYear);
-                        eventTime.setDate(dayOfMonth);
-                        runAt = eventTime.getTime();
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        runAt = calendar.getTimeInMillis();
                         dateButton.setText(DateUtil.dateString(runAt));
                     },
                     calendar.get(Calendar.YEAR),
@@ -150,32 +141,45 @@ public class TriggerTime extends Trigger {
             );
             dpd.setThemeDark(true);
             dpd.dismissOnPause(true);
-            android.app.FragmentManager fm = ((Activity) context).getFragmentManager();
-            dpd.show(fm, "Datepickerdialog");
+            Activity a = scanForActivity(root.getContext());
+            if (a != null)
+                dpd.show(a.getFragmentManager(), "DatePickerDialog");
         });
         timeButton.setOnClickListener(view -> {
-            Calendar calendar = Calendar.getInstance();
+            GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTimeInMillis(runAt);
             TimePickerDialog tpd = TimePickerDialog.newInstance(
                     (view12, hourOfDay, minute, second) -> {
-                        Date eventTime = new Date(runAt);
-                        eventTime.setHours(hourOfDay);
-                        eventTime.setMinutes(minute);
-                        runAt = eventTime.getTime();
-                        timeButton.setText(DateUtil.timeString(eventTime));
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        runAt = calendar.getTimeInMillis();
+                        timeButton.setText(DateUtil.timeString(runAt));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
-                    DateFormat.is24HourFormat(context)
+                    DateFormat.is24HourFormat(root.getContext())
             );
             tpd.setThemeDark(true);
             tpd.dismissOnPause(true);
-            android.app.FragmentManager fm = ((Activity) context).getFragmentManager();
-            tpd.show(fm, "Timepickerdialog");
+            Activity a = scanForActivity(root.getContext());
+            if (a != null)
+                tpd.show(a.getFragmentManager(), "TimePickerDialog");
         });
 
-        root.addView(dateButton);
-        root.addView(timeButton);
-        return root;
+        int px = MainApp.dpToPx(10);
+        label.setText(MainApp.gs(R.string.atspecifiedtime, ""));
+        label.setTypeface(label.getTypeface(), Typeface.BOLD);
+        label.setPadding(px, px, px, px);
+        dateButton.setPadding(px, px, px, px);
+        timeButton.setPadding(px, px, px, px);
+
+        LinearLayout l = new LinearLayout(root.getContext());
+        l.setOrientation(LinearLayout.HORIZONTAL);
+        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        l.addView(label);
+        l.addView(dateButton);
+        l.addView(timeButton);
+        root.addView(l);
     }
 }

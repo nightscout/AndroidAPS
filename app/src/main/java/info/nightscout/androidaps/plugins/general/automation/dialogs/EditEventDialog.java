@@ -104,7 +104,8 @@ public class EditEventDialog extends DialogFragment {
         });
         mEditTrigger.setOnClickListener(v -> {
             EditTriggerDialog dialog = EditTriggerDialog.newInstance(mEvent.getTrigger());
-            dialog.show(getFragmentManager(), "EditTriggerDialog");
+            if (getFragmentManager() != null)
+                dialog.show(getFragmentManager(), "EditTriggerDialog");
         });
 
         // setup action list view
@@ -119,7 +120,8 @@ public class EditEventDialog extends DialogFragment {
         });
         mEditAction.setOnClickListener(v -> {
             ChooseActionDialog dialog = ChooseActionDialog.newInstance();
-            dialog.show(getFragmentManager(), "ChooseActionDialog");
+            if (getFragmentManager() != null)
+                dialog.show(getFragmentManager(), "ChooseActionDialog");
         });
 
         MainApp.bus().register(this);
@@ -142,6 +144,7 @@ public class EditEventDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
+    @SuppressWarnings("unused")
     public void onButtonOk(View view) {
         // check for title
         String title = mEditEventTitle.getText().toString();
@@ -179,6 +182,7 @@ public class EditEventDialog extends DialogFragment {
     }
 
     @OnClick(R.id.cancel)
+    @SuppressWarnings("unused")
     public void onButtonCancel(View view) {
         dismiss();
     }

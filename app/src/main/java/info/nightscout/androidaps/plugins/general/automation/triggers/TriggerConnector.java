@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -194,7 +192,7 @@ public class TriggerConnector extends Trigger {
         int counter = 0;
         StringBuilder result = new StringBuilder();
         for (Trigger t : list) {
-            if (counter++ > 0) result.append("\n" + MainApp.gs(friendlyName()) + "\n");
+            if (counter++ > 0) result.append("\n").append(MainApp.gs(friendlyName())).append("\n");
             result.append(t.friendlyDescription());
         }
         return result.toString();
@@ -219,29 +217,24 @@ public class TriggerConnector extends Trigger {
 
     private AutomationFragment.TriggerListAdapter adapter;
 
-    public void rebuildView() {
+    public void rebuildView(FragmentManager fragmentManager) {
         if (adapter != null)
-            adapter.rebuild();
+            adapter.rebuild(fragmentManager);
     }
 
     @Override
-    public View createView(Context context, FragmentManager fragmentManager) {
+    public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         final int padding = MainApp.dpToPx(5);
 
-        LinearLayout root = new LinearLayout(context);
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         root.setPadding(padding, padding, padding, padding);
         root.setBackgroundResource(R.drawable.border_automation_unit);
 
-        LinearLayout triggerListLayout = new LinearLayout(context);
+        LinearLayout triggerListLayout = new LinearLayout(root.getContext());
         triggerListLayout.setOrientation(LinearLayout.VERTICAL);
         triggerListLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(triggerListLayout);
 
-        adapter = new AutomationFragment.TriggerListAdapter(context, fragmentManager, triggerListLayout, this);
-
-        return root;
+        adapter = new AutomationFragment().new TriggerListAdapter(fragmentManager, root.getContext(), triggerListLayout, this);
     }
 
     public TriggerConnector simplify() {

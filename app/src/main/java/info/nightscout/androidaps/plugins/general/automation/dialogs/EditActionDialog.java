@@ -63,10 +63,11 @@ public class EditActionDialog extends DialogFragment {
             e.printStackTrace();
         }
 
-
-        mViewActionTitle.setText(mAction.friendlyName());
-        mRootLayout.removeAllViews();
-        mAction.generateDialog(mRootLayout);
+        if (mAction != null) {
+            mViewActionTitle.setText(mAction.friendlyName());
+            mRootLayout.removeAllViews();
+            mAction.generateDialog(mRootLayout);
+        }
 
         return view;
     }
@@ -78,6 +79,7 @@ public class EditActionDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
+    @SuppressWarnings("unused")
     public void onButtonOk(View view) {
         resultAction.apply(mAction);
         dismiss();
@@ -85,6 +87,7 @@ public class EditActionDialog extends DialogFragment {
     }
 
     @OnClick(R.id.cancel)
+    @SuppressWarnings("unused")
     public void onButtonCancel(View view) {
         dismiss();
     }
