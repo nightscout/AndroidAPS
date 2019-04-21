@@ -75,8 +75,11 @@ public class AlarmSoundService extends Service {
 
     @Override
     public void onDestroy() {
-        player.stop();
-        player.release();
+        if (player != null) {
+            player.stop();
+            player.release();
+        }
+
         if (L.isEnabled(L.CORE))
             log.debug("onDestroy");
     }
