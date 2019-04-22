@@ -1396,6 +1396,9 @@
     <string name="profilepercentage">Profile percentage</string>
     <string name="percent_u">Percent [%]:</string>
     <string name="startprofile">Start profile %1$d%% for %2$d min</string>
+    <string name="exists">exists</string>
+    <string name="notexists">not exists</string>
+    <string name="temptargetcompared">Temp target %1$s</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
