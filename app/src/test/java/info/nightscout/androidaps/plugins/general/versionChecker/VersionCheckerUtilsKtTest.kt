@@ -70,7 +70,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
 
     }
@@ -85,7 +87,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
@@ -99,7 +103,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
@@ -113,7 +119,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
@@ -126,7 +134,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
@@ -139,7 +149,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
@@ -159,7 +171,7 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(0)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.remove(eq(R.string.key_new_version_available_since))
+        SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
@@ -179,7 +191,9 @@ class VersionCheckerUtilsKtTest {
         verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
-        SP.putLong(eq(R.string.key_new_version_available_since), ArgumentMatchers.anyLong())
+        SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
+        PowerMockito.verifyStatic(SP::class.java, times(1))
+        SP.putLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
         PowerMockito.verifyNoMoreInteractions(SP::class.java)
     }
 
