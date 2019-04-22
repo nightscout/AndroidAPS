@@ -7,12 +7,12 @@ import android.widget.TextView;
 
 import info.nightscout.androidaps.MainApp;
 
-public class Label extends Element {
+public class LabelWithElement extends Element {
     final Element element;
     final String textPre;
     final String textPost;
 
-    public Label(String textPre, String textPost, Element element) {
+    public LabelWithElement(String textPre, String textPost, Element element) {
         this.element = element;
         this.textPre = textPre;
         this.textPost = textPost;

@@ -13,7 +13,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
-import info.nightscout.androidaps.plugins.general.automation.elements.Label;
+import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -83,7 +83,7 @@ public class ActionLoopSuspend extends Action {
     public void generateDialog(LinearLayout root) {
 
         new LayoutBuilder()
-                .add(new Label(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "", minutes))
+                .add(new LabelWithElement(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "", minutes))
                 .build(root);
     }
 

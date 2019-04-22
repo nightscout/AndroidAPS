@@ -14,11 +14,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists;
-import info.nightscout.androidaps.plugins.general.automation.elements.InputInsulin;
-import info.nightscout.androidaps.plugins.general.automation.elements.Label;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
+import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -125,6 +123,7 @@ public class TriggerTempTarget extends Trigger {
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         new LayoutBuilder()
+                .add(new StaticLabel(R.string.temptarget))
                 .add(comparator)
                 .build(root);
     }

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerPro
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerWifiSsid;
 
 public class ChooseTriggerDialog extends DialogFragment {
 
@@ -38,6 +39,7 @@ public class ChooseTriggerDialog extends DialogFragment {
         add(new TriggerIob());
         add(new TriggerProfilePercent());
         add(new TriggerTempTarget());
+        add(new TriggerWifiSsid());
     }};
 
     private Unbinder mUnbinder;

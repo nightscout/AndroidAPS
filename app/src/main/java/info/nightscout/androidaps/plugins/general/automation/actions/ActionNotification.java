@@ -12,7 +12,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
-import info.nightscout.androidaps.plugins.general.automation.elements.Label;
+import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -83,7 +83,7 @@ public class ActionNotification extends Action {
     public void generateDialog(LinearLayout root) {
 
         new LayoutBuilder()
-                .add(new Label(MainApp.gs(R.string.message_short), "", text))
+                .add(new LabelWithElement(MainApp.gs(R.string.message_short), "", text))
                 .build(root);
     }
 
