@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Check here if loop plugin is disabled. Else check via constraints
         if (!LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
-            VersionCheckerUtilsKt.checkVersion();
+            VersionCheckerUtilsKt.triggerCheckVersion();
 
         FabricPrivacy.setUserStats();
     }
