@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
@@ -74,7 +75,8 @@ public class BgReading implements DataPointWithLabelInterface {
     public String directionToSymbol() {
         String symbol = "";
         if (direction == null) {
-            symbol = "??";
+            direction = calculateDirection();
+            this.directionToSymbol(); // possible endless loop ?!?
         } else if (direction.compareTo("DoubleDown") == 0) {
             symbol = "\u21ca";
         } else if (direction.compareTo("SingleDown") == 0) {
@@ -244,6 +246,39 @@ public class BgReading implements DataPointWithLabelInterface {
 
     private boolean isPrediction() {
         return isaCOBPrediction || isCOBPrediction || isIOBPrediction || isUAMPrediction || isZTPrediction;
+    }
+
+
+    // Copied from xDrip+
+    public String calculateDirection(){
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        if (glucoseStatus == null || glucoseStatus.prev_glucose != 0)
+            return "??";
+
+//        double slope = glucoseStatus.delta / (glucoseStatus.previous_date - glucoseStatus.date);
+        double slope = (glucoseStatus.glucose - glucoseStatus.prev_glucose) / (glucoseStatus.previous_date - glucoseStatus.date);
+        log.debug("Slope is :"+slope+" delta "+glucoseStatus.delta+" date difference "+(glucoseStatus.date - glucoseStatus.previous_date));
+        double slope_by_minute = slope * 60000;
+        String arrow = "NONE";
+
+        if (slope_by_minute <= (-3.5)) {
+            arrow = "DoubleDown";
+        } else if (slope_by_minute <= (-2)) {
+            arrow = "SingleDown";
+        } else if (slope_by_minute <= (-1)) {
+            arrow = "FortyFiveDown";
+        } else if (slope_by_minute <= (1)) {
+            arrow = "Flat";
+        } else if (slope_by_minute <= (2)) {
+            arrow = "FortyFiveUp";
+        } else if (slope_by_minute <= (3.5)) {
+            arrow = "SingleUp";
+        } else if (slope_by_minute <= (40)) {
+            arrow = "DoubleUp";
+        }
+        log.debug("Direction set to: "+arrow);
+        return arrow;
+
     }
 
 }
