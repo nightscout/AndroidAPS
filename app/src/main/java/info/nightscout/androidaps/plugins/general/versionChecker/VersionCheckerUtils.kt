@@ -38,6 +38,12 @@ private val log = LoggerFactory.getLogger(L.CORE)
 
 
 fun triggerCheckVersion() {
+
+    if(!SP.contains(R.string.key_last_time_this_version_detected)) {
+        // On a new installation, set it as 30 days old in order to warn that there is a new version.
+        SP.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30))
+    }
+
     // If we are good, only check once every day.
     if(System.currentTimeMillis() > SP.getLong(R.string.key_last_time_this_version_detected, 0) + CHECK_EVERY){
         checkVersion()
