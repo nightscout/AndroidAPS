@@ -37,7 +37,7 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
             SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            val message = MainApp.gs(R.string.new_version_warning, Math.round(now / TimeUnit.DAYS.toMillis(1).toDouble()))
+            val message = MainApp.gs(R.string.new_version_warning, Math.round((now - SP.getLong(R.string.key_last_time_this_version_detected, now)) / TimeUnit.DAYS.toMillis(1).toDouble()))
             val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
             MainApp.bus().post(EventNewNotification(notification))
         }
