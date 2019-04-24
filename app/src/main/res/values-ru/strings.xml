@@ -147,8 +147,8 @@
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="treatmentdeliveryerror">Ошибка подачи болюса</string>
     <string name="tempbasaldeliveryerror">Ошибка подачи врем базала</string>
-    <string name="overview_newtempbasal_basalpercent">величина базала (%)</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = текущий)</string>
+    <string name="overview_newtempbasal_basalpercent">Величина базала [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = текущее)</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="overview_treatment_label">болюс</string>
     <string name="overview_calculator_label">калькулятор</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">активный инсулин на помпе</string>
     <string name="danar_dailyunits">суточные единицы</string>
     <string name="pump_lastbolus_label">предыдущий болюс</string>
-    <string name="hoursago">%.1fч назад</string>
+    <string name="hoursago">%1$.1fч назад</string>
     <string name="danar_invalidinput">введенные данные неверны</string>
     <string name="danar_valuenotsetproperly">величина не задана должным образом</string>
     <string name="reloadprofile">обновить профиль</string>
@@ -528,7 +528,7 @@
     <string name="resistantadult">Инсулинорезистентный взрослый</string>
     <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s необходимо включить в белый список для корректной работы</string>
+    <string name="needwhitelisting">%1$s необходимо включить в белый список оптимизации батареи для корректной работы</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
     <string name="loopsuspendedfor">Остановлен на(%1$d m)</string>
     <string name="loopsuperbolusfor">Суперболюс(%1$d m)</string>
@@ -564,8 +564,8 @@
     <string name="show_statuslights_summary">Включить на главном экране индикаторы отработанного времени для канюли помпы, инсулина, сенсора, резервуара, а также показать уровень аккумулятора.</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
     <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
-    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
-    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
+    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%%]</string>
+    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%%]</string>
     <string name="iob">IOB акт инс</string>
     <string name="cob">акт углев</string>
     <string name="virtualpump_firmware_label">прошивка</string>
@@ -764,7 +764,7 @@
     <string name="combo_pump_state_running">Выполняется</string>
     <string name="combo_pump_action_cancelling_tbr">Отмена врем базала TBR</string>
     <string name="combo_pump_action_setting_tbr">Установка врем базала TBR на (%1$d%% / %2$d мин)</string>
-    <string name="combo_pump_action_bolusing">Введение болюса (%.1f ед)</string>
+    <string name="combo_pump_action_bolusing">Введение болюса (%1$.1f ед)</string>
     <string name="combo_pump_action_refreshing">Обновление</string>
     <string name="combo_pump_unsupported_operation">Запрашиваемая операция не поддерживается помпой</string>
     <string name="combo_low_suspend_forced_notification">Небезопасное использование: Удлиненный или многоволновой болюс активны. Режим цикла Loop установлен на приостановку при низкой гликемии только на 6 часов. В режиме loop поддерживаются только обычные болюсы</string>
@@ -1158,4 +1158,8 @@ Context | Edit Context</string>
     <string name="sms_wrongcode">Неверный код. Команда отменена.</string>
     <string name="notconfigured">Не сконфигурировано</string>
     <string name="profileswitchcreated">Переключатель профиля создан</string>
+    <string name="versionChecker">Проверка версии</string>
+    <string name="old_version">старая версия</string>
+    <string name="very_old_version">очень старая версия</string>
+    <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
 </resources>

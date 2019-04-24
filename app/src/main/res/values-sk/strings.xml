@@ -147,8 +147,8 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="treatmentdeliveryerror">Chyba podania bolusu</string>
     <string name="tempbasaldeliveryerror">Chyba podávania dočasného bazálu</string>
-    <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = aktuálny)</string>
+    <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = aktuálny)</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">IOB z pumpy</string>
     <string name="danar_dailyunits">Jednotiek za deň</string>
     <string name="pump_lastbolus_label">Posledný bolus</string>
-    <string name="hoursago">pred %.1fh</string>
+    <string name="hoursago">pred %1$.1fh</string>
     <string name="danar_invalidinput">Chybné vstupné dáta</string>
     <string name="danar_valuenotsetproperly">Hodnota nenastavená správne</string>
     <string name="reloadprofile">Obnoviť profil</string>
@@ -528,7 +528,7 @@
     <string name="resistantadult">Dospelý z nízkou citlivosťou</string>
     <string name="patientage_summary">Vyberte vek pacienta pre nastavenie bezpečnostných limitov</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s potrebuje vypnúť optimalizáciu baterie pre optimálny výkon</string>
+    <string name="needwhitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
     <string name="loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="loopsuspendedfor">Pozastavený (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -564,8 +564,8 @@
     <string name="show_statuslights_summary">Povoliť indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [U]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [U]</string>
-    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
-    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%]</string>
+    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%%]</string>
+    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -764,7 +764,7 @@
     <string name="combo_pump_state_running">V prevádzke</string>
     <string name="combo_pump_action_cancelling_tbr">Rušenie dočasného bazálu</string>
     <string name="combo_pump_action_setting_tbr">Nastavovanie doč. bazálu (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Podávanie bolusu (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Podávanie bolusu (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Aktualizuje sa stav</string>
     <string name="combo_pump_unsupported_operation">Požadovaná operácia nie je pumpou podporovaná</string>
     <string name="combo_low_suspend_forced_notification">Nebezpečné použitie: predĺžený alebo multiwave bolus je aktívny. Pumpa bola vypnutá len na 6 hodín. Povolené sú iba normálne bolusy.</string>
@@ -1156,6 +1156,10 @@
     <string name="sms_wrongcode">Nesprávný kód. Príkaz zrušený.</string>
     <string name="notconfigured">Nie je nakonfigurované</string>
     <string name="profileswitchcreated">Prepnutie profilu vytvorené</string>
+    <string name="versionChecker">Kontrola verzie</string>
+    <string name="old_version">stará verzia</string>
+    <string name="very_old_version">veľmi stará verzia</string>
+    <string name="new_version_warning">Nová verzia dostupná najmenej %1$d dní! Návrat k liečbe inzulínovou pumpou s podporou senzora po 60 dňoch, okruh bude deaktivovaný po 90 dňoch.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

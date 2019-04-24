@@ -147,8 +147,8 @@
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
     <string name="treatmentdeliveryerror">Bolus-Abgabefehler</string>
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
-    <string name="overview_newtempbasal_basalpercent">Basal-Wert [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = aktuell)</string>
+    <string name="overview_newtempbasal_basalpercent">Basal-Wert [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = aktuell)</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">Pumpen-IOB</string>
     <string name="danar_dailyunits">Tägliche Einheiten</string>
     <string name="pump_lastbolus_label">Letzter Bolus:</string>
-    <string name="hoursago">vor %.1f h</string>
+    <string name="hoursago">vor %1$.1f Stunde</string>
     <string name="danar_invalidinput">Ungültige Eingabedaten</string>
     <string name="danar_valuenotsetproperly">Wert nicht korrekt gesetzt</string>
     <string name="reloadprofile">Profil neuladen</string>
@@ -529,7 +529,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="resistantadult">Insulinresistenter Erwachsener</string>
     <string name="patientage_summary">Bitte wähle das Patientenalter, um die Sicherheits-Limits festzulegen</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
+    <string name="needwhitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="loopsuspendedfor">Pausiert (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -565,8 +565,8 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="show_statuslights_summary">Statusanzeige für CAGE, IAGE, SAGE, Reservoir- und Batteriestand auf dem Homescreen.</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
-    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
-    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1158,6 +1158,10 @@ Unerwartetes Verhalten.</string>
     <string name="sms_wrongcode">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="notconfigured">Nicht konfiguriert</string>
     <string name="profileswitchcreated">Profilwechsel wurde erstellt</string>
+    <string name="versionChecker">Versionsprüfer</string>
+    <string name="old_version">Vorherige Version</string>
+    <string name="very_old_version">sehr alte Version</string>
+    <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

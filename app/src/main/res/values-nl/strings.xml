@@ -145,8 +145,6 @@
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="treatmentdeliveryerror">Bolus toedien storing</string>
     <string name="tempbasaldeliveryerror">Tijdelijk basaal toedien storing</string>
-    <string name="overview_newtempbasal_basalpercent">Basale waarde [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = actueel)</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
@@ -246,7 +244,6 @@
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="danar_dailyunits">Dag totaal</string>
     <string name="pump_lastbolus_label">Laatste bolus</string>
-    <string name="hoursago">%.1fu geleden</string>
     <string name="danar_invalidinput">Verkeerde ingave</string>
     <string name="danar_valuenotsetproperly">Waarde niet correct ingesteld</string>
     <string name="reloadprofile">Herlaad profiel</string>
@@ -506,7 +503,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="resistantadult">insuline resistente volwassene</string>
     <string name="patientage_summary">Kies leeftijd van de patient voor veiligheids limieten</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s benodigd batterij optimalistaie vrijwaring voor goede werking</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor">Gepauzeerd (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -542,8 +538,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="show_statuslights_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het beginscherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
-    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
-    <string name="statuslights_bat_critical">Drempel alarm batterij niveau [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -737,7 +731,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="combo_pump_state_running">Actief</string>
     <string name="combo_pump_action_cancelling_tbr">Annuleren van TB</string>
     <string name="combo_pump_action_setting_tbr">Instellen TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
     <string name="combo_pump_action_refreshing">Vernieuwen</string>
     <string name="combo_pump_unsupported_operation">Gevraagde is niet mogelijk met de pomp</string>
     <string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wave bolussen zijn actief. Loop is overgeschakeld naar low-suspend modus gedurende 6 uur. Alleen gewone bolussen worden ondersteund in loop modus</string>
