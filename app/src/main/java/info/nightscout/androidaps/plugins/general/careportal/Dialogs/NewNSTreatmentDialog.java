@@ -39,7 +39,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;

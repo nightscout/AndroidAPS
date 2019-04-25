@@ -12,6 +12,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;

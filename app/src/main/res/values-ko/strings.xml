@@ -143,8 +143,6 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">Bolus 주입 에러</string>
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
-    <string name="overview_newtempbasal_basalpercent">Basal값[%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
@@ -244,7 +242,6 @@
     <string name="danar_iob_label">펌프 IOB</string>
     <string name="danar_dailyunits">일 인슐린 총량</string>
     <string name="pump_lastbolus_label">최근 Bolus:</string>
-    <string name="hoursago">%.1f시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
     <string name="reloadprofile">프로파일 새로고침</string>
@@ -502,7 +499,6 @@
     <string name="resistantadult">인슐린 저항성 높은 성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">최적의 성능을 위해 %s에서 배터리 최적화를 해제해야합니다.</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor">일시중지중 (%d분)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d 분)</string>
@@ -722,7 +718,6 @@
     <string name="combo_pump_state_running">실행중</string>
     <string name="combo_pump_action_cancelling_tbr">임시기초주입 취소중</string>
     <string name="combo_pump_action_setting_tbr">임시기초주입 설정중 (%1$d%% / %2$d분)</string>
-    <string name="combo_pump_action_bolusing">Bolus 주입중(%.1f U)</string>
     <string name="combo_pump_action_refreshing">새로고침중</string>
     <string name="combo_pump_unsupported_operation">요청하신 동작은 펌프에서 지원하지 않습니다.</string>
     <string name="combo_low_suspend_forced_notification">위험한 사용: 확장Bolus 혹은 멀티웨이브Bolus가 활성화 됩니다. Loop 모드가 저혈당 방지로 오직 6시간만 설정됩니다. Loop 모드에선 일반 Bolus만 지원합니다.</string>

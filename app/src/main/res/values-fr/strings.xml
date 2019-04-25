@@ -147,8 +147,8 @@
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="treatmentdeliveryerror">Erreur injection bolus</string>
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
-    <string name="overview_newtempbasal_basalpercent">Valeur Basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = actuel)</string>
+    <string name="overview_newtempbasal_basalpercent">Valeur de Basal [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = actuel)</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Calculatrice</string>
@@ -249,7 +249,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="danar_iob_label">Insuline Active pompe</string>
     <string name="danar_dailyunits">Unités journalières</string>
     <string name="pump_lastbolus_label">Dernier bolus</string>
-    <string name="hoursago">%.1fh passées</string>
+    <string name="hoursago">il y a %1$.1fh</string>
     <string name="danar_invalidinput">Données saisies invalides</string>
     <string name="danar_valuenotsetproperly">Valeur pas correctement définie</string>
     <string name="reloadprofile">Actualiser le profil</string>
@@ -529,7 +529,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
     <string name="patientage_summary">Veuillez svp sélectionner l’âge du patient pour définir les limites de sécurité</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s a besoin de la liste blanche de l’optimisation batterie pour une bonne performance</string>
+    <string name="needwhitelisting">%1$s a besoin d\'optimisation de la batterie (whitelisting) pour une performance correcte</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="loopsuspendedfor">Suspendu (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -565,8 +565,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_statuslights_summary">Activer les lumières d\'état pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
     <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%]</string>
+    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%%]</string>
+    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%%]</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -765,7 +765,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_pump_state_running">En cours d\'exécution</string>
     <string name="combo_pump_action_cancelling_tbr">Annulation en cours du TBR</string>
     <string name="combo_pump_action_setting_tbr">Paramétrer TBR (%1$d%% / %2$d min) </string>
-    <string name="combo_pump_action_bolusing">Injection du bolus en cours (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Injection du Bolus en cours (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualisation en cours</string>
     <string name="combo_pump_unsupported_operation">L\'opération demandée n\'est pas prise en charge par la pompe</string>
     <string name="combo_low_suspend_forced_notification">Utilisation dangereuse : les bolus étendus ou carrés sont actifs. Le mode Boucle a été programmé pour des suspensions seulement pour 6 heures. Uniquement les bolus normaux sont pris en charge par le mode Boucle</string>
@@ -1157,6 +1157,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sms_wrongcode">Code incorrect. Commande annulée.</string>
     <string name="notconfigured">Non configuré</string>
     <string name="profileswitchcreated">Changement de profil effectué</string>
+    <string name="versionChecker">Vérificateur de version</string>
+    <string name="old_version">ancienne version</string>
+    <string name="very_old_version">très ancienne version</string>
+    <string name="new_version_warning">Une nouvelle version est disponible depuis au moins %1$d jours ! Retour au traitement par pompe assistée par capteur (Arrêt par Glycémie Basse (AGB), Low Glucose Suspend (LGS) ) après 60 jours et la Boucle sera désactivée après 90 jours</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

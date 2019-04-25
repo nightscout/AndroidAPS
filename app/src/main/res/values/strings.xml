@@ -152,8 +152,8 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -276,7 +276,7 @@
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
     <string name="pump_lastbolus_label">Last bolus</string>
-    <string name="hoursago">%.1fh ago</string>
+    <string name="hoursago">%1$.1fh ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
     <string name="reloadprofile">Reload profile</string>
@@ -582,7 +582,7 @@
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
+    <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -624,9 +624,9 @@
     <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
     <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
-    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
+    <string name="statuslights_bat_warning">Threshold warning battery level [%%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
-    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
+    <string name="statuslights_bat_critical">Threshold critical battery level [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -869,7 +869,7 @@
     <string name="combo_pump_state_running">Running</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
     <string name="combo_pump_action_setting_tbr">Setting TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Bolusing (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Refreshing</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
@@ -1326,6 +1326,15 @@
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
+    <string name="versionChecker">Version Checker</string>
+    <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
+    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+
+    <string name="old_version">old version</string>
+    <string name="very_old_version">very old version</string>
+    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
+
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

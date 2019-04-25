@@ -145,8 +145,6 @@
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="treatmentdeliveryerror">Eroare la livrarea bolusului</string>
     <string name="tempbasaldeliveryerror">Eroare la setare bazală temporară</string>
-    <string name="overview_newtempbasal_basalpercent">Valoare bazală [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = curent)</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -246,7 +244,6 @@
     <string name="danar_iob_label">IOB din pompă</string>
     <string name="danar_dailyunits">Unități zilnic</string>
     <string name="pump_lastbolus_label">Ultimul bolus</string>
-    <string name="hoursago">%.1f o în urmă</string>
     <string name="danar_invalidinput">Date de intrare incorecte</string>
     <string name="danar_valuenotsetproperly">Valoare setată incorect</string>
     <string name="reloadprofile">Reîncarcă profilul</string>
@@ -505,7 +502,6 @@
     <string name="resistantadult">Adult rezistent la insulină</string>
     <string name="patientage_summary">Vă rog să selectați vârsta pacientului în vederea stabilirii valorilor maxime admise de siguranță</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s necesită excluderea din lista de optimizare a bateriei pentru funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="loopsuspendedfor">Suspendat (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d min)</string>
@@ -541,8 +537,6 @@
     <string name="show_statuslights_summary">Activați indicatori pentru CAGE, IAGE, SAGE, nivel baterie și rezervor pe ecranul principal.</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
-    <string name="statuslights_bat_warning">Pragul de avertizare nivel baterie [%]</string>
-    <string name="statuslights_bat_critical">Pragul critic al nivelului baterie [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -736,7 +730,6 @@
     <string name="combo_pump_state_running">Rulează</string>
     <string name="combo_pump_action_cancelling_tbr">Se oprește TBR</string>
     <string name="combo_pump_action_setting_tbr">Se setează TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusare (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Reîncărcare</string>
     <string name="combo_pump_unsupported_operation">Operațiunea nu este suportată de pompă</string>
     <string name="combo_low_suspend_forced_notification">Folosire nesigură: un bolus extins sau multiwave este activ. Modul buclă este setat să funcționeze în low-suspend pentru 6 ore. Doar bolusurile normale sunt posibile.</string>

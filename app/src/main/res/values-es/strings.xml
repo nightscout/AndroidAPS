@@ -143,8 +143,6 @@
     <string name="constraints_violation">Violación restricciones</string>
     <string name="treatmentdeliveryerror">Error de administración del bolo</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
-    <string name="overview_newtempbasal_basalpercent">Valor basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = actual)</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="overview_calculator_label">Calculadora</string>
@@ -244,7 +242,6 @@
     <string name="danar_iob_label">Bomba IOB</string>
     <string name="danar_dailyunits">Unidades diarias</string>
     <string name="pump_lastbolus_label">Último bolo</string>
-    <string name="hoursago">Hace %.1fh</string>
     <string name="danar_invalidinput">Datos inválidos</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="reloadprofile">Recargar Perfil</string>
@@ -503,7 +500,6 @@
     <string name="resistantadult">Adulto resistente a la insulina</string>
     <string name="patientage_summary">Por favor elige la edad del paciente para ajustar los límites de seguridad</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s necesita optimización de batería lista blanca para funcionar bien</string>
     <string name="loopsuspended">Loop desactivado</string>
     <string name="loopsuspendedfor">Desactivado (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolo (%1$d m)</string>
@@ -539,8 +535,6 @@
     <string name="show_statuslights_summary">Habilitar las luces de estado para tiempo de la canula, tiempo de la insulina, tiempo del sensor y nivel de bateria en la pantalla de inicio.</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -734,7 +728,6 @@
     <string name="combo_pump_state_running">Funcionando</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelando TBR</string>
     <string name="combo_pump_action_setting_tbr">Poniendo TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Emitiendo bolo (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualizando</string>
     <string name="combo_pump_unsupported_operation">Acción requerida no disponible por la bomba</string>
     <string name="combo_low_suspend_forced_notification">Uso inseguro: bolo extendido o multionda activo. El modo del lazo ha sido fijado a sólo suspensión en baja glucosa durante 6 horas. En modo lazo sólo se soportan los bolo estándar.</string>
