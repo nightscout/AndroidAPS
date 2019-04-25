@@ -87,7 +87,8 @@ def allCommited = { ->
     } catch (ignored) {
         return false; // NoGitSystemAvailable
     }
-    return stringBuilder.toString().contains("nothing to commit")
+    return stringBuilder.toString().contains("nothing to commit") || stringBuilder.toString().contains("nichts zu committen")
+
 }
 
 tasks.matching { it instanceof Test }.all {
