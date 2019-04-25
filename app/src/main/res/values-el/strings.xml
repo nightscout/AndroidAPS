@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="nav_exit">Έξοδος</string>
-    <string name="danar_useextended_title">Χρήση Εκτεταμένου Bolus για &gt;200%</string>
+    <string name="danar_useextended_title">Χρησιμοποιήστε Εκτεταμένο bolus για &gt;200%%</string>
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
     <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
     <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nαλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
@@ -147,8 +147,8 @@
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="treatmentdeliveryerror">Σφάλμα παράδοσης Bolus</string>
     <string name="tempbasaldeliveryerror">Σφάλμα παράδοσης Προσ Ρυθμού</string>
-    <string name="overview_newtempbasal_basalpercent">Τιμή Βασικού [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = τρέχων)</string>
+    <string name="overview_newtempbasal_basalpercent">Τιμή Βασικού [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = τρέχων)</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="danar_dailyunits">Μονάδες ανά ημέρα </string>
     <string name="pump_lastbolus_label">Τελευταίο Bolus:</string>
-    <string name="hoursago">πριν από %.1fh</string>
+    <string name="hoursago">%1$.1fώρες πριν</string>
     <string name="danar_invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
@@ -314,7 +314,7 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">Πιέστε STOP</string>
     <string name="waitingforpump">Αναμονή για αντλία</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Προς έγχυση %.2fU</string>
+    <string name="overview_bolusprogress_goingtodeliver">Προς έγχυση %1$.2fU</string>
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της αντλίας φορτώθηκαν</string>
     <string name="objectives_1_objective">Ξεκινήστε σε ανοιχτό κύκλωμα</string>
@@ -337,7 +337,7 @@
     <string name="smscommunicator_loopisdisabled">Κύκλωμα απενεργοποιημένο</string>
     <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
     <string name="valuelimitedto">Το %1$.2f περιορίζεται σε %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Η τιμή %s είναι έξω από τα όρια</string>
+    <string name="valueoutofrange">Η τιμή %1$s είναι έξω από τα όρια</string>
     <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_remotebolusnotallowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
     <string name="smscommunicator_basalreplywithcode">Για έναρξη βασικού %1$.2fU/h για %2$d λεπτά στείλτε κωδικό %3$s</string>
@@ -464,7 +464,7 @@
     <string name="profile">Προφίλ</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα κλειδί ασφαλείας του OpenAPS. Αυτό περιορίζει την αύξηση του βασικού x3 (σε αυτούς τους ανθρώους) από την μεγαλύτερη τιμή του. Συνήθως δεν χρειάζεται να το αλλάξετε, αλλά πρέπει να ξέρετε τι σημαίνει “3x μέγιστο ημερήσιο; 4x τρέχων” για λόγους ασφαλείας.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Προεπιλεγμένη τιμή: 4 Αυτό είναι το μισό του θέματος ασφαλείας του OpenAPS, και το άλλο μισό του «3 x μέγιστο ημέρας: 4 x τρέχων» των θεμάτων ασφαλείας. Αυτό σημαίνει ότι ο βασικός ρυθμός, ανεξάρτητα από την μέγιστη τιμή βασικού ρυθμού στην αντλία σας, δεν μπορεί να είναι υψηλότερος από το πολλαπλάσιο αυτού του αριθμού. Αυτό γίνεται για να αποτρέψει τους ανθρώπους από το να μπουν σε επικίνδυνες καταστάσεις θέτωντας υψηλό βασικό πριν κατανοήσουν πλήρως πώς λειτουργεί ο αλγόριθμος. Και πάλι, η προεπιλεγμένη τιμή είναι 4x: οι περισσότεροι άνθρωποι ποτέ δεν θα χρειαστεί να το προσαρμόσουν και αντίθετα είναι πιο πιθανό να χρειαστεί να προσαρμόσουν άλλες ρυθμίσεις αν αισθάνονται ότι κινούνται με ασφάλεια.</string>
-    <string name="openapsama_autosens_max_summary">Προεπιλεγμένη τιμή: 1.2\nΑυτός είναι ένας πολλαπλασιαστής για το autosens (και σύντομα autotune) για να ορίσετε ένα 20% ανώτατο όριο στο πόσο ψηλά μπορεί να είναι ο λόγος autosens, που με τη σειρά του καθορίζει πόσο ψηλά το autosens μπορεί να ρυθμίσει τον βασικό ρυθμό, πόσο χαμηλά μπορεί να ρυθμίσει την ISF, και πόσο χαμηλά μπορεί να ορίσει το στόχο της BG.</string>
+    <string name="openapsama_autosens_max_summary">Προεπιλεγμένη τιμή: 1.2\nΑυτός είναι ένας πολλαπλασιαστής για το autosens (και σύντομα autotune) για να ορίσετε ένα 20%% ανώτατο όριο στο πόσο ψηλά μπορεί να είναι ο λόγος autosens, που με τη σειρά του καθορίζει πόσο ψηλά το autosens μπορεί να ρυθμίσει τον βασικό ρυθμό, πόσο χαμηλά μπορεί να ρυθμίσει την ISF, και πόσο χαμηλά μπορεί να ορίσει το στόχο της BG.</string>
     <string name="openapsama_autosens_min_summary">Προεπιλεγμένη τιμή: 0.7\n H άλλη πλευρά από τα όρια ασφαλείας του autosens, θέτοντας ένα ανώτατο όριο στο πόσο χαμηλά to autosens μπορεί να προσαρμόσει τον βασικό ρυθμό και πόσο ψηλά μπορεί να ρυθμίσει τη ISF και τον στόχο του BG.</string>
     <string name="openapsama_autosens_adjusttargets">Το autosens ρυθμίζει στόχους</string>
     <string name="openapsama_autosens_adjusttargets_summary">Προεπιλεγμένη τιμή: true\nΑυτό χρησιμοποιείται για να επιτρέψει στο autosens να προσαρμόσει τον στόχο BG, επιπρόσθετα από το ISF και βασικό ρυθμό.</string>
@@ -477,7 +477,7 @@
     <string name="error_phone_not_valid">Μη έγκυρος αριθμός τηλεφώνου</string>
     <string name="smscommunicator_invalidphonennumber">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
     <string name="overview_calibration">Καλιμπράρισμα</string>
-    <string name="send_calibration" formatted="false">Να στείλω το καλιμπράρισμα %.1f στο xDrip;</string>
+    <string name="send_calibration">Να σταλεί η βαθμονόμηση %1$.1f στο xDrip;</string>
     <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
     <string name="calibrationsent">Το καλιμπράρισμα εστάλει στο xDrip</string>
     <string name="smscommunicator_calibrationsent">Το καλιμπράρισμα στάλθηκε. Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip.</string>
@@ -528,7 +528,7 @@
     <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
     <string name="patientage_summary">Παρακαλώ επιλέξτε ηλικία χρήστη για να ορισθούν όρια ασφαλείας</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">Το %s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
+    <string name="needwhitelisting">%1$s χρειάζεται λίστα βελτιστοποίησης μπαταρίας για σωστή απόδοση</string>
     <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
     <string name="loopsuspendedfor">Αναστολή (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -564,8 +564,8 @@
     <string name="show_statuslights_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπεταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
+    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%%]</string>
+    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Έκδοση</string>
@@ -618,7 +618,7 @@
     <string name="absorptionsettings_title">Ρύθμιση απορρόφησης</string>
     <string name="absorption_maxtime_title">Μέγιστος χρόνος απορρόφησης γεύματος [h]</string>
     <string name="absorption_maxtime_summary">Χρόνος σε ώρες που περιμένουμε να απορροφηθούν όλοι οι υδατάνθρακες ενός γεύματος</string>
-    <string name="danar_visualizeextendedaspercentage_title">Εμφάνιση εκτεταμένου bolus σε %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Εμφάνιση εκτεταμένου bolus σε %%</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -731,8 +731,8 @@
     <string name="dexcomg5_xdripupload_title">Αποστολή δεδομένων BG στο xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Στο xDrip+, επιλέξτε την πηγή δεδομένων 640g / Eversense</string>
     <string name="nsclientbg">NSClient BG</string>
-    <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %s</string>
-    <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %s</string>
+    <string name="minimalbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την ελάχιστη υποστηριζόμενη τιμή: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Η τιμή του βασικού αντικαταστάθηκε από την μέγιστη υποστηριζόμενη τιμή: %1$s</string>
     <string name="overview_editquickwizard_usebg">Υπολογισμός BG</string>
     <string name="overview_editquickwizard_usebolusiob">Υπολογισμός του IOB bolus</string>
     <string name="overview_editquickwizard_usebasaliob">Υπολογισμός βασικού IOB</string>
@@ -750,8 +750,8 @@
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
     <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
     <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
-    <string name="basalprofilenotaligned" formatted="false">Οι τιμές του βασικού ρυθμού δεν αντιστοιχούν σε ώρες: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Μη έγκυρο προφίλ: %s</string>
+    <string name="basalprofilenotaligned">Οι τιμές του βασικού ρυθμού δεν αντιστοιχούν σε ώρες: %1$s</string>
+    <string name="zerovalueinprofile">Μη έγκυρο προφίλ: %1$s</string>
     <string name="combo_programming_bolus">Προγραμματισμός της αντλίας για bolus</string>
     <string name="combo_refresh">Ανανέωση</string>
     <string name="combo_pump_state_label">Κατάσταση</string>
@@ -764,7 +764,7 @@
     <string name="combo_pump_state_running">Εκτελείτε</string>
     <string name="combo_pump_action_cancelling_tbr">Ακυρώνεται TBR</string>
     <string name="combo_pump_action_setting_tbr">Ρύθμιση TBR (%1$d%% / %2$d λεπτά)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Bolus (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Ανανέωση</string>
     <string name="combo_pump_unsupported_operation">Η λειτουργία που ζητήθηκε δεν υποστηρίζεται από την αντλία</string>
     <string name="combo_low_suspend_forced_notification">Επικίνδυνη χρήση: Εκτεταμένο ή πολλαπλά bolus είναι ενεργό. Το κύκλωμα απενεργοποιήθηκε λόγω low-suspend μόνο για 6 ώρες. Επιτρέπονται μόνο κανονικά bolus</string>
@@ -1093,7 +1093,7 @@
     <string name="log_operating_mode_changes">Αλλαγές αρχείου κατάστασης λειτουργίας</string>
     <string name="log_alerts">Τοπικές Ειδοποιήσεις</string>
     <string name="enable_tbr_emulation">Ενεργοποίηση εξομοίωσης TBR</string>
-    <string name="enable_tbr_emulation_summary">Χρησιμοποιείστε εκτεταμένα bolus αντί για TBR για παράκαμψη του ορίου 250%</string>
+    <string name="enable_tbr_emulation_summary">Χρησιμοποιείστε εκτεταμένα bolus αντί για TBR για παράκαμψη του ορίου 250%%</string>
     <string name="disconnect_delay">Αποσυνδέστε καθυστέρηση [s]</string>
     <string name="serial_number">Serial number</string>
     <string name="release_software_version">Απελευθέρωση έκδοση λογισμικού</string>
@@ -1156,6 +1156,10 @@
     <string name="sms_wrongcode">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
     <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
     <string name="profileswitchcreated">Δημιουργήθηκε αλλαγή προφίλ</string>
+    <string name="versionChecker">Έλεγχος Έκδοσης</string>
+    <string name="old_version">παλιά έκδοση</string>
+    <string name="very_old_version">πολύ παλιά έκδοση</string>
+    <string name="new_version_warning">Νέα έκδοση για τουλάχιστον %1$d ημέρες διαθέσιμη! Επιστροφή σε LGS μετά από 60 ημέρες, το κύκλωμα θα απενεργοποιηθεί μετά από 90 ημέρες</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d ημέρα</item>
         <item quantity="other">%1$d ημέρες</item>

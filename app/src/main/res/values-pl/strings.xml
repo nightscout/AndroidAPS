@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Zresetuj bazy danych</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="nav_exit">Wyjście</string>
-    <string name="danar_useextended_title">Używaj przedłużonych bolusów &gt;200%</string>
+    <string name="danar_useextended_title">Używaj przedłużonych bolusów dla &gt;200%%</string>
     <string name="danar_bt_name_title">Urządzenie Bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Zawsze używaj wartości bezwzględnych bazy</string>
     <string name="alert_dialog_storage_permission_text">Proszę uruchomić ponownie telefon lub zrestartować AndroidAPS w ustawieniach systemu telefonu \ninaczej AndroidAPS nie będzie otrzymywał logowań (ważne ze względu na śledzenie i sprawdzanie poprawności działania algorytmów)!</string>
@@ -147,8 +147,8 @@
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="treatmentdeliveryerror">Błąd podania bolusa</string>
     <string name="tempbasaldeliveryerror">Błąd podania bazy tymczasowej</string>
-    <string name="overview_newtempbasal_basalpercent">Wartość bazy [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = aktualny)</string>
+    <string name="overview_newtempbasal_basalpercent">Wartość bazy [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = aktualny)</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
     <string name="overview_treatment_label">Leczenie</string>
     <string name="overview_calculator_label">Kalkulator</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">IOB w pompie</string>
     <string name="danar_dailyunits">Jednostki dzienne</string>
     <string name="pump_lastbolus_label">Ostatni bolus</string>
-    <string name="hoursago">%.1fh temu</string>
+    <string name="hoursago">%1$.1fh temu</string>
     <string name="danar_invalidinput">Błędne dane wejściowe</string>
     <string name="danar_valuenotsetproperly">Wartość ustawiona nieprawidłowo</string>
     <string name="reloadprofile">Załaduj profil ponownie</string>
@@ -314,7 +314,7 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">NACIŚNIĘTY STOP</string>
     <string name="waitingforpump">Czekam na pompę</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Zamierzam podać %.2fU</string>
+    <string name="overview_bolusprogress_goingtodeliver">Zamierzam dostarczyć %1$.2fU</string>
     <string name="objectives_0_objective">Konfiguracja wizualizacji i monitorowania, analiza dawek i wartości bazowych</string>
     <string name="objectives_0_gate">Sprawdź czy BG (pomiary cukru) są dostępne w Nightscout, i dane pompy insulinowej są ładowane</string>
     <string name="objectives_1_objective">Uruchamiam otwartą pętle (OpenLoop)</string>
@@ -337,13 +337,26 @@
     <string name="smscommunicator_loopisdisabled">Pętla (Loop) jest wyłączona</string>
     <string name="smscommunicator_loopisenabled">Pętla (Loop) jest włączona</string>
     <string name="valuelimitedto">%1$.2f ograniczone do %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Wartość %s jest poza dopuszczalną granicą</string>
+    <string name="valueoutofrange">Wartość %1$s jest poza dopuszczalną granicą</string>
     <string name="smscommunicator_remotecommandnotallowed">Zdalne komendy nie są dozwolone</string>
+    <string name="smscommunicator_remotebolusnotallowed">Bolus zdalny niedostępny. Spróbuj ponownie później.</string>
+    <string name="smscommunicator_basalreplywithcode">Aby rozpocząć bazę %1$.2fU/h przez %2$d min. odpowiedz kodem %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Aby przełączyć profil na %1$s %2$d%% odpowiedz kodem %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Aby rozpocząć bolus przedłużony %1$.2fU przez %2$d min. odpowiedz kodem %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Aby rozpocząć bolus przedłużony %1$d%% przez %2$d min. odpowiedz kodem %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Aby wstrzymać pętle na %1$d minut odpowiedz kodem %2$s</string>
     <string name="smscommunicator_tempbasalset">Tymczasowa baza %1$.2fU/h przez %2$d min rozpoczęta</string>
+    <string name="smscommunicator_extendedset">Bolus przedłużony %1$.2fU na %2$d min. rozpoczęty pomyślnie</string>
+    <string name="smscommunicator_tempbasalset_percent">Tymczasowa baza %1$d%% przez %2$d min. pomyślnie rozpoczęta</string>
     <string name="smscommunicator_tempbasalfailed">Rozpoczęcie tymczasowej bazy nie powiodło się</string>
+    <string name="smscommunicator_extendedfailed">Nie powiodło się podanie bolusa przedłużonego</string>
+    <string name="smscommunicator_basalstopreplywithcode">Aby zatrzymać bazę tymczasową wprowadź kod %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Aby zatrzymać bolus przedłużony wprowadź kod %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Baza tymczasowa anulowana</string>
+    <string name="smscommunicator_extendedcanceled">Przedłużony bolus anulowano</string>
     <string name="smscommunicator_tempbasalcancelfailed">Anulowanie tymczasowej bazy nie powiodło się</string>
+    <string name="smscommunicator_extendedcancelfailed">Anulowanie bolusa przedłużonego nie powiodło się</string>
+    <string name="smscommunicator_unknowncommand">Nieznane polecenie lub błędna odpowiedź</string>
     <string name="quickwizard">Bolus zdefiniowany</string>
     <string name="quickwizardsettings">Ustaw szybkie bolusy</string>
     <string name="overview_editquickwizard_buttontext">Tekst przycisku:</string>
@@ -451,7 +464,7 @@
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Wartość domyślna: 3 To jest kluczowy współczynnik bezpieczeństwa OpenAPS. Ogranicza dawki bazowe do 3x twojej największej dawki bazowej. Prawdopodobnie nie będziesz musiał tego zmieniać, ale powinieneś być świadomy tego, co się rozumie przez “3x max dzienna; 4x aktualna” dla współczynników bezpieczeństwa.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Wartość domyślna: 4 To jest drugi kluczowy współczynnik bezpieczeństwa OpenAPS, i druga wartość z “3x max dzienna; 4x aktualna”. To oznacza, że Twoja dawka bazowa niezależnie od maksymalnej bazy ustawionej na pompie nie może być większa niż ta ustawiona wartość razy twoja aktualna dawka bazowa. To ma na celu przestrzec ludzi przed ustawieniem zbyt wysokiej dawki maksymalnej przed zrozumieniem jak działa algorytm. Ponownie, wartość domyślna to 4x; większość ludzi nie będzie potrzebowała tego zmienić i raczej będą potrzebować dostosować inne ustawienia, jeśli czują, że zbliżają się do współczynnika bezpieczeństwa.</string>
-    <string name="openapsama_autosens_max_summary">Wartość domyślna: 1.2\nTo jest mnożnik dla autosens (wkrótce autotune), ustawia 20% maks. limit dla najwyższej wartości jaką autosens może przyjąć, co z kolei określa jak wysoko autosens może zwiększyć bazę, jak nisko może ustawić współczynnik wrażliwości insuliny ISF, i jak nisko może ustawić docelową wartość glikemii.</string>
+    <string name="openapsama_autosens_max_summary">Wartość domyślna: 1.2\nTo jest mnożnik dla autosens (wkrótce autotune), ustawia 20%% maks. limit dla najwyższej wartości jaką autosens może przyjąć, co z kolei określa jak wysoko autosens może zwiększyć bazę, jak nisko może ustawić współczynnik wrażliwości insuliny ISF, i jak nisko może ustawić docelową wartość glikemii.</string>
     <string name="openapsama_autosens_min_summary">Wartość domyślna: 0.7\nDruga strona limitu bezpieczeństwa dla autosens, ustawia mnożnik minimalny dla wartości, do jakiej autosens może obniżyć bazę, i jak wysoko może ustawić ISF i wartość docelową BG.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens wpływa na wartości docelowe</string>
     <string name="openapsama_autosens_adjusttargets_summary">Domyślnie włączone\nTa funkcja pozwala wpływać na zmianę wartości docelowe BG, wartości bazy i oraz współczynnika wrażliwości na insulinę ISF.</string>
@@ -464,7 +477,7 @@
     <string name="error_phone_not_valid">Nieprawidłowy numer telefonu</string>
     <string name="smscommunicator_invalidphonennumber">Nieprawidłowy numer telefonu SMS</string>
     <string name="overview_calibration">Kalibracja</string>
-    <string name="send_calibration" formatted="false">Wysłać kalibrację %.1f do xDrip?</string>
+    <string name="send_calibration">Wysłać kalibrację %1$.1f do xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ nie zainstalowany</string>
     <string name="calibrationsent">Kalibracja przesłana do xDrip</string>
     <string name="smscommunicator_calibrationsent">Kalibracja wysłana. Odbiór musi być dozwolony w xDrip.</string>
@@ -515,7 +528,7 @@
     <string name="resistantadult">Osoba dorosła insulino odporna</string>
     <string name="patientage_summary">Proszę wybierz wiek pacjenta w celu ustawienia wartości limitów bezpieczeństwa</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s Potrzebuję wpisu na białą listę optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
+    <string name="needwhitelisting">%1$s potrzebuję wyłączenia z optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="loopsuspendedfor">Wstrzymana (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -551,8 +564,8 @@
     <string name="show_statuslights_summary">Włącz diody stanu dla cage, iage, sage, rezerwuar i poziom baterii na ekranie głównym.</string>
     <string name="statuslights_res_warning">Próg ostrzeżenia o poziomie zbiornika [U]</string>
     <string name="statuslights_res_critical">Próg ostrzeżenia o krytycznym poziomie zbiornika [U]</string>
-    <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii [%]</string>
-    <string name="statuslights_bat_critical">Próg ostrzeżenia o krytycznym poziomie baterii [%]</string>
+    <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii [%%]</string>
+    <string name="statuslights_bat_critical">Próg ostrzeżenia o krytycznym poziomie baterii [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -606,7 +619,7 @@
     <string name="absorptionsettings_title">Ustawienia wchłaniania</string>
     <string name="absorption_maxtime_title">Maks. czas wchłaniania posiłku [h]</string>
     <string name="absorption_maxtime_summary">Oczekiwany czas w godzinach, w którym wszystkie węglowodany zostają wchłonięte</string>
-    <string name="danar_visualizeextendedaspercentage_title">Pokazuj bolus przedłużony w %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Wizualizacja bolusa przedłużonego jako %%</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -719,8 +732,8 @@
     <string name="dexcomg5_xdripupload_title">Prześlij dane BG do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
     <string name="nsclientbg">NSClient BG</string>
-    <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %s</string>
-    <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %s</string>
+    <string name="minimalbasalvaluereplaced">Wartość bazy zastąpiona minimalną obsługiwaną wartością: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Wartość bazy zastąpiona maksymalną obsługiwaną wartością: %1$s</string>
     <string name="overview_editquickwizard_usebg">Obliczenia BG</string>
     <string name="overview_editquickwizard_usebolusiob">Obliczenia Bolus IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Obliczenia IOB</string>
@@ -738,8 +751,8 @@
     <string name="closedmodeenabled">Tryb zamknięty włączony</string>
     <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
     <string name="hasbgdata">BG dostępne z wybranego źródła</string>
-    <string name="basalprofilenotaligned" formatted="false">Wartości bazy nie są ustawione w pełnych godzinach: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Nieprawidłowy profil: %s</string>
+    <string name="basalprofilenotaligned">Wartości bazy nie są ustawione w pełnych godzinach: %1$s</string>
+    <string name="zerovalueinprofile">Nieprawidłowy profil: %1$s</string>
     <string name="combo_programming_bolus">Programowanie pompy do podawania bolusa</string>
     <string name="combo_refresh">Odśwież</string>
     <string name="combo_pump_state_label">Stan</string>
@@ -752,7 +765,7 @@
     <string name="combo_pump_state_running">W działaniu</string>
     <string name="combo_pump_action_cancelling_tbr">Anulowanie TBR</string>
     <string name="combo_pump_action_setting_tbr">Ustawianie TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Podawanie bolusa (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Podawanie bolusa (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Odświeżanie</string>
     <string name="combo_pump_unsupported_operation">Żądana operacja nie jest obsługiwana przez pompę</string>
     <string name="combo_low_suspend_forced_notification">Niebezpieczne użycie: aktywne są bolusy przedłużone lub wielofalowe. Tryb pętli został ustawiony tylko na 6 godzinne zawieszenie z uwagi na niski poziom (BG). W trybie pętli obsługiwane są tylko normalne bolusy</string>
@@ -1075,12 +1088,13 @@
     <string name="mute_alert">Wycisz</string>
     <string name="pump_alert">Alarm pompy</string>
     <string name="log_site_changes">Melduj zmianę miejsca wkłucia</string>
+    <string name="log_reservoir_changes">Zapisz zmianę zbiornika</string>
     <string name="log_tube_changes">Melduj zmianę drenu</string>
     <string name="log_battery_changes">Melduj zmiany baterii</string>
     <string name="log_operating_mode_changes">Melduj zmiany trybu pracy</string>
     <string name="log_alerts">Melduj ostrzeżenia</string>
     <string name="enable_tbr_emulation">Włącz emulację TBR</string>
-    <string name="enable_tbr_emulation_summary">Użyj rozszerzonych bolusów zamiast TBR by ominąć limit 250% bazy</string>
+    <string name="enable_tbr_emulation_summary">Użyj rozszerzonych bolusów zamiast TBR by ominąć limit 250%% bazy</string>
     <string name="disconnect_delay">Opóźnienie rozłączenie [s]</string>
     <string name="serial_number">Numer seryjny</string>
     <string name="release_software_version">Wersja oprogramowania</string>
@@ -1135,6 +1149,18 @@
     <string name="dexcom_lognssensorchange_summary">Podaj \"Zmiana Sensora\" do NS do NS automatycznie przy uruchomieniu sensora</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="dst_in_24h_warning">Zmiana na czas letni w ciągu 24 godzin lub krócej</string>
+    <string name="dst_loop_disabled_warning">Zmiana czasu nastąpiła mniej niż 3 godziny temu - Zamknięta pętla wyłączona</string>
+    <string name="storage">limit wielkości pamięci wewnętrznej</string>
+    <string name="diskfull">Zwolnij co najmniej %1$d MB z pamięci wewnętrznej! Pętla zatrzymana!</string>
+    <string name="wrongformat">Błędny format</string>
+    <string name="sms_wrongcode">Zły kod. Polecenie anulowano.</string>
+    <string name="notconfigured">Nie skonfigurowano</string>
+    <string name="profileswitchcreated">Zmiana profilu wykonana</string>
+    <string name="versionChecker">Kontroler wersji</string>
+    <string name="old_version">stara wersja</string>
+    <string name="very_old_version">bardzo stara wersja</string>
+    <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po 60 dniach, pętla zostanie wyłączona po 90 dniach</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

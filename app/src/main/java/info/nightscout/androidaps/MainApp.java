@@ -9,7 +9,7 @@ import android.support.annotation.PluralsRes;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.LoggingBus;
@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessRec
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
@@ -88,6 +89,8 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.fabric.sdk.android.Fabric;
 
+import static info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
+
 
 public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
@@ -96,6 +99,8 @@ public class MainApp extends Application {
     private static Bus sBus;
     private static MainApp sInstance;
     public static Resources sResources;
+
+    private static FirebaseAnalytics mFirebaseAnalytics;
 
     private static DatabaseHelper sDatabaseHelper = null;
     private static ConstraintChecker sConstraintsChecker = null;
@@ -117,23 +122,24 @@ public class MainApp extends Application {
         log.debug("onCreate");
         sInstance = this;
         sResources = getResources();
-        sConstraintsChecker = new ConstraintChecker(this);
+        sConstraintsChecker = new ConstraintChecker();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
         try {
             if (FabricPrivacy.fabricEnabled()) {
                 Fabric.with(this, new Crashlytics());
-                Fabric.with(this, new Answers());
-                Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
             }
         } catch (Exception e) {
             log.error("Error with Fabric init! " + e);
         }
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         JodaTimeAndroid.init(this);
 
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
+        log.info("Remote: " + BuildConfig.REMOTE);
 
         String extFilesDir = LoggerUtils.getLogDirectory();
         File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
@@ -144,6 +150,9 @@ public class MainApp extends Application {
         sBus = L.isEnabled(L.EVENTS) && devBranch ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         registerLocalBroadcastReceiver();
+
+        //trigger here to see the new version on app start after an update
+        triggerCheckVersion();
 
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
@@ -176,6 +185,7 @@ public class MainApp extends Application {
             if (Config.OTHERPROFILES) pluginsList.add(LocalProfilePlugin.getPlugin());
             pluginsList.add(TreatmentsPlugin.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
+            if (Config.SAFETY) pluginsList.add(VersionCheckerPlugin.INSTANCE);
             if (Config.SAFETY) pluginsList.add(StorageConstraintPlugin.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
             pluginsList.add(SourceXdripPlugin.getPlugin());
@@ -305,6 +315,10 @@ public class MainApp extends Application {
             sDatabaseHelper.close();
             sDatabaseHelper = null;
         }
+    }
+
+    public static FirebaseAnalytics getFirebaseAnalytics() {
+        return mFirebaseAnalytics;
     }
 
     public static ConstraintChecker getConstraintChecker() {

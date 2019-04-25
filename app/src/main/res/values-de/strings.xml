@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="nav_exit">Schließen</string>
-    <string name="danar_useextended_title">Benutze verzögerten Bolus für hohe TBR (&gt;200%).</string>
+    <string name="danar_useextended_title">Benutze verzögerten Bolus für hohe TBR &gt;200%%</string>
     <string name="danar_bt_name_title">DanaR Blueetooth--Gerät</string>
     <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuale Basalwerte beim Upload zu NightScout.</string>
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
@@ -147,8 +147,8 @@
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
     <string name="treatmentdeliveryerror">Bolus-Abgabefehler</string>
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
-    <string name="overview_newtempbasal_basalpercent">Basal-Wert [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = aktuell)</string>
+    <string name="overview_newtempbasal_basalpercent">Basal-Wert [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = aktuell)</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">Pumpen-IOB</string>
     <string name="danar_dailyunits">Tägliche Einheiten</string>
     <string name="pump_lastbolus_label">Letzter Bolus:</string>
-    <string name="hoursago">vor %.1f h</string>
+    <string name="hoursago">vor %1$.1f Stunde</string>
     <string name="danar_invalidinput">Ungültige Eingabedaten</string>
     <string name="danar_valuenotsetproperly">Wert nicht korrekt gesetzt</string>
     <string name="reloadprofile">Profil neuladen</string>
@@ -314,7 +314,7 @@
     <string name="overview_bolusprogress_stop">Stopp</string>
     <string name="overview_bolusprogress_stoppressed">STOPP GEDRÜCKT</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">%1$.2f IE werden abgegeben.</string>
+    <string name="overview_bolusprogress_goingtodeliver">Werde %1$.2fU abgeben</string>
     <string name="objectives_0_objective">Konfiguriere die Anzeige und das Monitoring (Nightscout) und analysiere Basal-Raten und Faktoren</string>
     <string name="objectives_0_gate">Verifiziere, dass BZ- und Pumpen-Insulin-Daten erfolgreich zu Nightscout hochgeladen werden.</string>
     <string name="objectives_1_objective">Starte den Open Loop Modus</string>
@@ -338,7 +338,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="smscommunicator_loopisdisabled">Loop ist deaktiviert.</string>
     <string name="smscommunicator_loopisenabled">Loop ist aktiviert.</string>
     <string name="valuelimitedto">%1$.2f limitiert auf %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Wert %1$s ist außerhalb des festen Limits.</string>
+    <string name="valueoutofrange">Wert %1$s ist außerhalb des festen Limits.</string>
     <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolusabgabe aus der Ferne nicht verfügbar. Versuche es später erneut.</string>
     <string name="smscommunicator_basalreplywithcode">Um eine Basalrate von %1$.2fU/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
@@ -465,7 +465,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt das maximale Basal-IOB auf die dreifache Menge (im Standardfall) deiner größten Basalrate. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt das Basal-IOB auf die (im Standardfall) vierfache Menge der aktuellen Basalrate. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
-    <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie hoch Autosens Basalraten anpassen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%.</string>
+    <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie hoch Autosens Basalraten anpassen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
     <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens passt Zielwerte ebenfalls an</string>
     <string name="openapsama_autosens_adjusttargets_summary">Vorgabe: erlaubt.\nErlaubt Autosens den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
@@ -478,7 +478,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="error_phone_not_valid">Telefonnummer ist nicht gültig</string>
     <string name="smscommunicator_invalidphonennumber">Falsche/ungültige Telefonnummer</string>
     <string name="overview_calibration">Kalibrierung</string>
-    <string name="send_calibration" formatted="false">Kalibrierung %1$.1f an xDrip+ senden?</string>
+    <string name="send_calibration">Kalibrierung %1$.1f an xDrip+ senden?</string>
     <string name="xdripnotinstalled">xDrip+ nicht installiert</string>
     <string name="calibrationsent">Kalibrierung an xDrip+ gesendet</string>
     <string name="smscommunicator_calibrationsent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein.</string>
@@ -529,7 +529,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="resistantadult">Insulinresistenter Erwachsener</string>
     <string name="patientage_summary">Bitte wähle das Patientenalter, um die Sicherheits-Limits festzulegen</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
+    <string name="needwhitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="loopsuspendedfor">Pausiert (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -565,8 +565,8 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="show_statuslights_summary">Statusanzeige für CAGE, IAGE, SAGE, Reservoir- und Batteriestand auf dem Homescreen.</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
-    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
-    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -619,7 +619,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="absorptionsettings_title">Resorptions-Einstellungen</string>
     <string name="absorption_maxtime_title">Maximale Essens-Resorptionszeit [h]</string>
     <string name="absorption_maxtime_summary">Zeit in Stunden, in der zu erwarten ist, dass alle Kohlenhydrate resorbiert sein werden.</string>
-    <string name="danar_visualizeextendedaspercentage_title">Zeige verzögerten Bolus als % an.</string>
+    <string name="danar_visualizeextendedaspercentage_title">Zeige verzögerten Bolus als %% an.</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -732,8 +732,8 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
-    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %s</string>
-    <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %s</string>
+    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
     <string name="overview_editquickwizard_usebg">BZ Berechnung</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus-IOB Berechnung</string>
     <string name="overview_editquickwizard_usebasaliob">Basal-IOB Berechnung</string>
@@ -751,8 +751,8 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="closedmodeenabled">Closed mode aktiviert</string>
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
     <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
-    <string name="basalprofilenotaligned" formatted="false">Basalraten beginnen nicht zur vollen Stunde: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Ungültiges Profil: %s</string>
+    <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
+    <string name="zerovalueinprofile">Ungültiges Profil: %1$s</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
     <string name="combo_refresh">Aktualisieren</string>
     <string name="combo_pump_state_label">Status</string>
@@ -1095,7 +1095,7 @@ Unerwartetes Verhalten.</string>
     <string name="log_operating_mode_changes">Wechsel des Betriebsmodus protokollieren</string>
     <string name="log_alerts">Alarme protokollieren</string>
     <string name="enable_tbr_emulation">TBR-Emulation aktivieren</string>
-    <string name="enable_tbr_emulation_summary">Verzögerte Boli an Stelle von TBRs verwenden, um die Beschränkung auf 250% zu umgehen</string>
+    <string name="enable_tbr_emulation_summary">Verzögerte Boli an Stelle von TBRs verwenden, um die Beschränkung auf 250%% zu umgehen</string>
     <string name="disconnect_delay">Verbindungsabbau-Verzögerung [s]</string>
     <string name="serial_number">Seriennummer</string>
     <string name="release_software_version">Release-Softwareversion</string>
@@ -1158,6 +1158,10 @@ Unerwartetes Verhalten.</string>
     <string name="sms_wrongcode">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="notconfigured">Nicht konfiguriert</string>
     <string name="profileswitchcreated">Profilwechsel wurde erstellt</string>
+    <string name="versionChecker">Versionsprüfer</string>
+    <string name="old_version">Vorherige Version</string>
+    <string name="very_old_version">sehr alte Version</string>
+    <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

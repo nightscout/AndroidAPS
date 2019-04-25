@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Reinicializar base de dados</string>
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="danar_useextended_title">Usar bolus prolongado de &gt;200%</string>
+    <string name="danar_useextended_title">Usar bólus prolongado de &gt;200%%</string>
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Usar sempre valores absolutos de basal</string>
     <string name="alert_dialog_storage_permission_text">Por favor, reinicie o seu telefone ou reinicie o AndroidAPS a partir das Configurações do Sistema \ncaso contrário, o AndroidAPS não terá registro (importante para controlar e verificar se os algoritmos estão a funcionar corretamente)!</string>
@@ -147,8 +147,8 @@
     <string name="constraints_violation">Violação das restrições</string>
     <string name="treatmentdeliveryerror">Erro na entrega do bolus</string>
     <string name="tempbasaldeliveryerror">Erro na entrega da basal temporária</string>
-    <string name="overview_newtempbasal_basalpercent">Valor da Basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = atual)</string>
+    <string name="overview_newtempbasal_basalpercent">Valor da Basal [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = actual)</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">IOB Bomba</string>
     <string name="danar_dailyunits">Unidades diárias</string>
     <string name="pump_lastbolus_label">Último bólus</string>
-    <string name="hoursago">%.1fh atrás</string>
+    <string name="hoursago">%1$.1fh atrás</string>
     <string name="danar_invalidinput">Entrada Inválida</string>
     <string name="danar_valuenotsetproperly">Valor não definido corretamente</string>
     <string name="reloadprofile">Recarregar perfil</string>
@@ -314,7 +314,7 @@
     <string name="overview_bolusprogress_stop">Parar</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSIONADO</string>
     <string name="waitingforpump">À espera da bomba</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Vai ser enviado %.2fU</string>
+    <string name="overview_bolusprogress_goingtodeliver">Vão ser administradas %1$.2fU</string>
     <string name="objectives_0_objective">Configuração da visualização e monitoramento, e análise de rácios e basals</string>
     <string name="objectives_0_gate">Verificar se a BG está disponível no Nightscout, e se os dados de insulina da bomba estão a ser carregados</string>
     <string name="objectives_1_objective">A iniciar um open loop</string>
@@ -337,12 +337,23 @@
     <string name="smscommunicator_loopisdisabled">Loop desactivado</string>
     <string name="smscommunicator_loopisenabled">Loop activado</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">O valor %s está fora dos limites permitidos</string>
+    <string name="valueoutofrange">O valor %1$s está fora dos limites permitidos</string>
     <string name="smscommunicator_remotecommandnotallowed">O comando remoto não é permitido</string>
+    <string name="smscommunicator_remotebolusnotallowed">O bólus remoto não está disponível. Tente novamente mais tarde.</string>
+    <string name="smscommunicator_basalreplywithcode">Para começar a basal %1$.2fU/h durante%2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Para mudar o perfil para %1$s %2$d%% responda com o código %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Para começar o bólus estendido %1$.2fU/h para %2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Para começar a basal %1$d% U/h durante %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
+    <string name="smscommunicator_extendedset">Bólus estendido %1$.2fU/h para %2$d min iniciado com êxito</string>
+    <string name="smscommunicator_tempbasalset_percent">Basal temporária %1$d% U/h durante%2$d min iniciada com êxito</string>
     <string name="smscommunicator_tempbasalfailed">Início basal temp falhou </string>
+    <string name="smscommunicator_extendedfailed">Falha ao iniciar o bólus estendido</string>
+    <string name="smscommunicator_basalstopreplywithcode">Para parar a basal temporária responda com o código %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Para parar o bólus temporário responda com o código %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Basal temp cancelada</string>
+    <string name="smscommunicator_extendedcanceled">Bólus estendido cancelado</string>
     <string name="smscommunicator_tempbasalcancelfailed">Não foi possivel cancelar a basal temp</string>
     <string name="smscommunicator_extendedcancelfailed">Falhou o cancelamento do bolus extendido</string>
     <string name="smscommunicator_unknowncommand">Comando desconhecido ou resposta errada</string>
@@ -453,7 +464,7 @@
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor actual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
-    <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (ISF) e baixar o valor alvo de glucose no sangue (BG).</string>
+    <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
     <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de ISF e valor alvo de glucose no sangue (BG).</string>
     <string name="openapsama_autosens_adjusttargets">Autosens também ajusta os alvos</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de ISF e basais.</string>
@@ -466,7 +477,7 @@
     <string name="error_phone_not_valid">Número de telefone não é válido</string>
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
-    <string name="send_calibration" formatted="false">Enviar calibração %.1f para o xDrip?</string>
+    <string name="send_calibration">Enviar calibração %1$.1f para o xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
     <string name="calibrationsent">Calibração enviada para o xDrip</string>
     <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada no xDrip.</string>
@@ -517,7 +528,7 @@
     <string name="resistantadult">Adulto resistente insulina</string>
     <string name="patientage_summary">Por favor seleccione a idade do diabético para definir os limites de segurança</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
+    <string name="needwhitelisting">%1$s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
     <string name="loopsuspended">Loop suspenso</string>
     <string name="loopsuspendedfor">Suspendido (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbólus (%1$d m)</string>
@@ -553,8 +564,8 @@
     <string name="show_statuslights_summary">Ativar as luzes de status para idade da cânula, idade da insulina, idade do sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
-    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%]</string>
+    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
+    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -607,7 +618,7 @@
     <string name="absorptionsettings_title">Configurações de absorção</string>
     <string name="absorption_maxtime_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_maxtime_summary">Tempo em horas, espectável para que todos os hidratos de carbono da refeição sejam absorvidos</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualizar bólus estendido com %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Visualizar bólus prolongado como %%</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -720,8 +731,8 @@
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glic NSCliente</string>
-    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %s</string>
-    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %s</string>
+    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
     <string name="overview_editquickwizard_usebg">Cálculos Glic</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo de Bólus IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IOB</string>
@@ -739,8 +750,8 @@
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
-    <string name="basalprofilenotaligned" formatted="false">Valores das basais não definidos por horas: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Perfil inválido: %s</string>
+    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
+    <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <string name="combo_programming_bolus">A programar a bomba para injectar o bolus</string>
     <string name="combo_refresh">Actualizar</string>
     <string name="combo_pump_state_label">Estado</string>
@@ -753,7 +764,7 @@
     <string name="combo_pump_state_running">A correr</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelar TBR</string>
     <string name="combo_pump_action_setting_tbr">A definir TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Injectando (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Injectando (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">A actualizar</string>
     <string name="combo_pump_unsupported_operation">Operação solicitada não suportada pela bomba</string>
     <string name="combo_low_suspend_forced_notification">Ultilização nao segura: bolus estendudos ou multionda estão activos. Modo do loop foi alterado para apenas suspender em limite inferior por 6h. Apenas são suportados bolus normais em modo loop</string>
@@ -1082,7 +1093,7 @@
     <string name="log_operating_mode_changes">Alterações do modo de funcionamento de registo</string>
     <string name="log_alerts">Alertas de registo</string>
     <string name="enable_tbr_emulation">Ativar a emulação TBR</string>
-    <string name="enable_tbr_emulation_summary">Usar bolus estendidos em vez de TBRs para contornar o limite de 250%</string>
+    <string name="enable_tbr_emulation_summary">Usar bólus prolongados em vez de basais temporárias para contornar o limite de 250%%</string>
     <string name="disconnect_delay">Atraso de desconexão [s]</string>
     <string name="serial_number">Número de série</string>
     <string name="release_software_version">Lançar versão de software</string>
@@ -1118,15 +1129,17 @@
     <string name="refresh">Actualizar</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
-    <string name="short_status_last_connected">Última conexão:%1$d minutos atrás</string>
+    <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
     <string name="short_status_tbr">Basal temporária: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser:%1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="recovery_duration">Duração da recuperação</string>
+    <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
@@ -1135,12 +1148,18 @@
     <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
+    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Closed Loop desligado</string>
     <string name="storage">restrição de armazenamento interno</string>
     <string name="diskfull">Liberte pelo menos %1$d MB do armazenamento interno! Loop desativado!</string>
     <string name="wrongformat">Formato incorrecto</string>
     <string name="sms_wrongcode">Código errado. Comando cancelado.</string>
     <string name="notconfigured">Não configurado</string>
     <string name="profileswitchcreated">Troca de perfil criada</string>
+    <string name="versionChecker">Verificador de Versão</string>
+    <string name="old_version">versão antiga</string>
+    <string name="very_old_version">versão muito antiga</string>
+    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

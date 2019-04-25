@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Herstel databasis</string>
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
-    <string name="danar_useextended_title">Gebruik verlengde boluses vir &gt;200%</string>
+    <string name="danar_useextended_title">Gebruik verlengde boluses vir &gt;200%%</string>
     <string name="danar_bt_name_title">DanaR Bluetooth-toestel</string>
     <string name="ns_sync_use_absolute_title">Gebruik altyd absolute basale aardes</string>
     <string name="alert_dialog_storage_permission_text">Herlaai jou foon of herlaai AndroidAPS met die stelsel instellings \nanders sal AndroidAPS nie geskiedenis hê nie! (Belangrik om te spoor en te verifieer dat die algoritmes korrek werk)!</string>
@@ -147,8 +147,6 @@
     <string name="constraints_violation">Beperkings skending</string>
     <string name="treatmentdeliveryerror">Bolus aflewering fout</string>
     <string name="tempbasaldeliveryerror">Tempbasal aflewering fout</string>
-    <string name="overview_newtempbasal_basalpercent">Basale waarde [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% =huidig)</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
@@ -248,7 +246,6 @@
     <string name="danar_iob_label">Pomp IAB</string>
     <string name="danar_dailyunits">Daaglikse eenhede</string>
     <string name="pump_lastbolus_label">Laaste bolus</string>
-    <string name="hoursago">%.1fh gelede</string>
     <string name="danar_invalidinput">Ongeldige invoer</string>
     <string name="danar_valuenotsetproperly">Waarde nie behoorlik gestel</string>
     <string name="reloadprofile">Herlaai profiel</string>
@@ -314,7 +311,7 @@
     <string name="overview_bolusprogress_stop">Staak</string>
     <string name="overview_bolusprogress_stoppressed">STAAK GEDRUK</string>
     <string name="waitingforpump">Wag vir pomp</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Gaan %.2fU lewer</string>
+    <string name="overview_bolusprogress_goingtodeliver">Gaan %1$.2fU lewer</string>
     <string name="objectives_0_objective">Opstel van visualisering en monitering, en ontleed basale en verhoudings</string>
     <string name="objectives_0_gate">Verifieer dat BG beskikbaar is in Nightscout, en dat pomp insulien data opgelaai word</string>
     <string name="objectives_1_objective">Begin op \'n oop lus</string>
@@ -337,7 +334,7 @@
     <string name="smscommunicator_loopisdisabled">Loop is gedeaktiveer</string>
     <string name="smscommunicator_loopisenabled">Lus geaktiveer</string>
     <string name="valuelimitedto">%1$.2f beperk tot %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Waarde %s is uit harde perke</string>
+    <string name="valueoutofrange">Waarde %1$s is uit harde perke</string>
     <string name="smscommunicator_remotecommandnotallowed">Afstandbeheerde bevel word nie toegelaat nie</string>
     <string name="smscommunicator_remotebolusnotallowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
     <string name="smscommunicator_basalreplywithcode">Om %1$.2fU basale vir %2$d min te aktiveer antwoord met kode %3$s</string>
@@ -464,7 +461,7 @@
     <string name="profile">Profiel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Verstek waarde: 3 dit is \'n sleutel OpenAPS veiligheidsdrumpels. Wat dit doen is om jou basale te berk tot 3 x (in hierdie mense) jou grootste basale koers. Jy sal waarskynlik nooit dit hoef te verander, maar jy moet bewus wees wat bespreek is oor \"3 x max daaglikse; 4 x huidige\"vir veiligheidsdrumpels.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Verstek waarde: 4 dit is die helfte van die sleutel OpenAPS veiligheid limiete, en die ander helfte van \"3 x maks daaglikse; 4 x huidige\"van die veiligheid limiet. Dit beteken jou basale, ongeag max basale stel op jou pomp, kan enige hoër wees as hierdie nommer tye die huidige vlak van jou basale. Dit is om te verhoed dat mense in gevaarlike gebied deur instelling buitensporig hoë max basals voor om te verstaan hoe die algoritme werk. Weer, die verstek is 4 x; die meeste mense sal nooit moet dit aanpas en is eerder meer geneig om te moet aanpas ander instellings as hulle voel hulle \"loop in\" hierdie veiligheid limiet.</string>
-    <string name="openapsama_autosens_max_summary">Verstek waarde: 1.2\nThis is \'n vermenigvuldiger cap vir autosens (en gou autotune) stel \'n 20% max limiet op hoe hoog die autosens verhouding kan wees, wat op sy beurt bepaal hoe hoog autosens basale kan aanpas, hoe laag dit ISF kan aanpas, en hoe laag dit die BG teiken kan stel.</string>
+    <string name="openapsama_autosens_max_summary">Verstek waarde: 1.2\nThis is \'n vermenigvuldiger plafon vir autosens (en gou autotune) stel \'n 20%% max limiet op hoe hoog die autosens verhouding kan wees, wat op sy beurt bepaal hoe hoog autosens basale kan aanpas, hoe laag dit ISF kan aanpas, en hoe laag dit die BG teiken kan stel.</string>
     <string name="openapsama_autosens_min_summary">Verstek waarde: 0.7\nDie ander kant van die autosens veiligheidsperke, sit \'n limiet op hoe laag autosens basals kan aanpas, en hoe hoog dit ISF en BG teikens kan verstel.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens Verstel doelwitte ook</string>
     <string name="openapsama_autosens_adjusttargets_summary">Verstek waarde: waar\nDit word gebruik om autosens toe te laat om BG teikens aan te pas, benewens ISF en basale.</string>
@@ -477,7 +474,7 @@
     <string name="error_phone_not_valid">Telefoonnommer ongeldig</string>
     <string name="smscommunicator_invalidphonennumber">Ongeldige SMS selfoon nommer</string>
     <string name="overview_calibration">Kalibrasie</string>
-    <string name="send_calibration" formatted="false">Stuur kalibrasie %.1f to xDrip?</string>
+    <string name="send_calibration">Stuur kalibrasie %1$.1f na xDrip?</string>
     <string name="xdripnotinstalled">xDrip + nie geïnstalleerd nie</string>
     <string name="calibrationsent">Kalibrasie gestuur na xDrip</string>
     <string name="smscommunicator_calibrationsent">Kalibrasie gestuur. Ontvang moet geaktiveer word in xDrip.</string>
@@ -528,7 +525,6 @@
     <string name="resistantadult">Insulien weerstandige volwasse</string>
     <string name="patientage_summary">Kies asseblief pasiënt ouderdom om veiligheids limiete te stel</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s benodig battery optimisering whitelisting vir behoorlike prestasie</string>
     <string name="loopsuspended">Lus opgeskort</string>
     <string name="loopsuspendedfor">Opgeskort (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -564,8 +560,6 @@
     <string name="show_statuslights_summary">Wys status vlae vir cage, iage, sage, stoor en battery vlak op tuisskerm.</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
-    <string name="statuslights_bat_warning">Drempel waarskuwing battery vlak [%]</string>
-    <string name="statuslights_bat_critical">Drempel kritieke battery vlak [%]</string>
     <string name="iob">IAB</string>
     <string name="cob">KOB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -618,7 +612,7 @@
     <string name="absorptionsettings_title">Absorpsie instellings</string>
     <string name="absorption_maxtime_title">Maaltyd max\ks absorpsie tyd [h]</string>
     <string name="absorption_maxtime_summary">Tyd in ure waarna verwag word dat alle koolhidrate uit maaltyd geabsorbeer sal wees</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualiseer verlengde bolus as %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Visualiseer verlengde bolus as %%</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -731,8 +725,8 @@
     <string name="dexcomg5_xdripupload_title">Stuur BG data na xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Xdrip+ kies 640g/Eversense data bron</string>
     <string name="nsclientbg">NSClient BG</string>
-    <string name="minimalbasalvaluereplaced">Basale waarde vervang deur minimum ondersteunde waarde: %s</string>
-    <string name="maximumbasalvaluereplaced">Basale waarde vervang deur maksimum ondersteunde waarde: %s</string>
+    <string name="minimalbasalvaluereplaced">Basale waarde vervang deur minimum ondersteunde waarde: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basale waarde vervang deur maksimum ondersteunde waarde: %1$s</string>
     <string name="overview_editquickwizard_usebg">BG berekening</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IAB berekening</string>
     <string name="overview_editquickwizard_usebasaliob">Basale IAB berekening</string>
@@ -750,8 +744,8 @@
     <string name="closedmodeenabled">Geslote modus geaktiveer</string>
     <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
     <string name="hasbgdata">BG beskikbaar vanaf geselekteerde bron</string>
-    <string name="basalprofilenotaligned" formatted="false">Basale waardes nie in lyn met ure: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Ongeldige profiel: %s</string>
+    <string name="basalprofilenotaligned">Basale waardes nie in lyn met ure: %1$s</string>
+    <string name="zerovalueinprofile">Ongeldige profiel: %1$s</string>
     <string name="combo_programming_bolus">Programmeer pomp vir bolusing</string>
     <string name="combo_refresh">Verfris</string>
     <string name="combo_pump_state_label">Staat</string>
@@ -764,7 +758,6 @@
     <string name="combo_pump_state_running">Loop tans</string>
     <string name="combo_pump_action_cancelling_tbr">Kanselleer TBR</string>
     <string name="combo_pump_action_setting_tbr">Stel TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Verfris</string>
     <string name="combo_pump_unsupported_operation">Versoekte bewerking nie ondersteun deur pomp</string>
     <string name="combo_low_suspend_forced_notification">Onveilige gebruik: uitgebreide of multigolf boluses is aktief. Lus modus is gestel om laag te opskort net 6 ure. Net gewone boluses is ondersteun in lus modus</string>
@@ -1093,7 +1086,7 @@
     <string name="log_operating_mode_changes">Log bedryf modus veranderinge</string>
     <string name="log_alerts">Log alarms</string>
     <string name="enable_tbr_emulation">Skakel TBR emulasie aan</string>
-    <string name="enable_tbr_emulation_summary">Gebruik uitgebreide boluses in plaas van TBRs om die 250% perk te omseil</string>
+    <string name="enable_tbr_emulation_summary">Gebruik  verlengde boluses in plaas van TBRs om die 250%% perk te omseil</string>
     <string name="disconnect_delay">Ontkoppel vertraging [s]</string>
     <string name="serial_number">Reeksnommer</string>
     <string name="release_software_version">Vrygestelde sagteware weergawe</string>

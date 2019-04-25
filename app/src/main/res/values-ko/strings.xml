@@ -9,7 +9,6 @@
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
-    <string name="danar_useextended_title">&gt;200% 주입위한 확장Bolus 사용</string>
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="ns_sync_use_absolute_title">Basal 절대값 사용하기</string>
     <string name="alert_dialog_storage_permission_text">폰을 재부팅하거나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그 기록이 되지 않습니다.(알고리즘이 정상적인 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
@@ -144,8 +143,6 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">Bolus 주입 에러</string>
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
-    <string name="overview_newtempbasal_basalpercent">Basal값[%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
@@ -245,7 +242,6 @@
     <string name="danar_iob_label">펌프 IOB</string>
     <string name="danar_dailyunits">일 인슐린 총량</string>
     <string name="pump_lastbolus_label">최근 Bolus:</string>
-    <string name="hoursago">%.1f시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
     <string name="reloadprofile">프로파일 새로고침</string>
@@ -307,7 +303,6 @@
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU을 주입합니다</string>
     <string name="objectives_0_objective">표시설정과 모니터설정을 완료하고, Basal과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
     <string name="objectives_1_objective">Open Loop를 시작한다.</string>
@@ -330,7 +325,6 @@
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
     <string name="valuelimitedto">%1$.2f, %2$.2f으로 제한됨</string>
-    <string name="valueoutofrange" formatted="false">%s값이 하드한계(Hard Limit)를 벗어났습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d분동안 Loop 일시중지하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalset">Temp Basal %1$.2fU/h for %2$d min started successfully</string>
@@ -443,7 +437,6 @@
     <string name="profile">프로파일</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
-    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 값은 autosens가 autosens 비율을 얼마나 높게 할 수 있는지에 대한 최대 한계를 20%로 설정하는 승수장치입니다. 이는 autosens가 얼마나 높게 Basal을 조절할수 있는지, ISF를 얼마나 낮게 조절할수 있는지, 혈당 목표범위를 얼마나 낮게 설정할수 있는지를 결정합니다.</string>
     <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens가 목표도 조절합니다.</string>
     <string name="openapsama_autosens_adjusttargets_summary">기본값: 활성\n이것은 autosens가 ISF와 Basal뿐만 아니라, 혈당 목표범위를 조절할 수 있게 합니다.</string>
@@ -456,7 +449,6 @@
     <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
     <string name="overview_calibration">보정</string>
-    <string name="send_calibration" formatted="false">보정값 %.1f을 xDrip에 전송하시겠습니까?</string>
     <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
     <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
     <string name="smscommunicator_calibrationsent">보정 전송됨. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
@@ -507,7 +499,6 @@
     <string name="resistantadult">인슐린 저항성 높은 성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">최적의 성능을 위해 %s에서 배터리 최적화를 해제해야합니다.</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor">일시중지중 (%d분)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d 분)</string>
@@ -589,7 +580,6 @@
     <string name="absorptionsettings_title">흡수 설정</string>
     <string name="absorption_maxtime_title">식사 최대 흡수 시간 [h]</string>
     <string name="absorption_maxtime_summary">식사로 섭취한 탄수화물이 모두 흡수될기까지 예상되는 시간</string>
-    <string name="danar_visualizeextendedaspercentage_title">확장Bolus를 %로 표시하기</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -699,8 +689,6 @@
     <string name="dexcomg5_xdripupload_title">혈당 데이터를 xDrip+에 전송하기</string>
     <string name="dexcomg5_xdripupload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
     <string name="nsclientbg">NSClient 혈당</string>
-    <string name="minimalbasalvaluereplaced">지원되는 최소값으로 Basal값이 대체되었습니다:%s</string>
-    <string name="maximumbasalvaluereplaced">지원되는 최대값으로 Basal값이 대체되었습니다:%s</string>
     <string name="overview_editquickwizard_usebg">혈당 계산</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB 계산</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB 계산</string>
@@ -718,8 +706,6 @@
     <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
     <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
     <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
-    <string name="basalprofilenotaligned" formatted="false">Basal값이 시간단위로 설정되지 않았습니다: %s</string>
-    <string name="zerovalueinprofile" formatted="false">유효하지 않은 프로파일: %s</string>
     <string name="combo_programming_bolus">Bolus 주입을 위한 펌프 프로그래밍</string>
     <string name="combo_refresh">새로고침</string>
     <string name="combo_pump_state_label">상태</string>
@@ -732,7 +718,6 @@
     <string name="combo_pump_state_running">실행중</string>
     <string name="combo_pump_action_cancelling_tbr">임시기초주입 취소중</string>
     <string name="combo_pump_action_setting_tbr">임시기초주입 설정중 (%1$d%% / %2$d분)</string>
-    <string name="combo_pump_action_bolusing">Bolus 주입중(%.1f U)</string>
     <string name="combo_pump_action_refreshing">새로고침중</string>
     <string name="combo_pump_unsupported_operation">요청하신 동작은 펌프에서 지원하지 않습니다.</string>
     <string name="combo_low_suspend_forced_notification">위험한 사용: 확장Bolus 혹은 멀티웨이브Bolus가 활성화 됩니다. Loop 모드가 저혈당 방지로 오직 6시간만 설정됩니다. Loop 모드에선 일반 Bolus만 지원합니다.</string>

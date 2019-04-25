@@ -1,5 +1,7 @@
 package org.monkey.d.ruffy.ruffy.driver.display.menu;
 
+import java.util.Locale;
+
 /**
  * Created by fishermen21 on 22.05.17.
  */
@@ -31,6 +33,6 @@ public class MenuTime {
 
     @Override
     public String toString() {
-        return hour+":"+String.format("%02d",minute);
+        return hour+":"+String.format(Locale.ENGLISH, "%02d",minute);
     }
 }

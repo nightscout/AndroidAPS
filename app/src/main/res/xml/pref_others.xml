@@ -9,49 +9,49 @@
                 android:defaultValue="0"
                 android:inputType="number"
                 android:key="@string/key_eatingsoon_duration"
-                android:title="@string/eatingsoon_duration"></EditTextPreference>
+                android:title="@string/eatingsoon_duration" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_eatingsoon_target"
-                android:title="@string/eatingsoon_target"></EditTextPreference>
+                android:title="@string/eatingsoon_target" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="number"
                 android:key="@string/key_activity_duration"
-                android:title="@string/activity_duration"></EditTextPreference>
+                android:title="@string/activity_duration" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_activity_target"
-                android:title="@string/activity_target"></EditTextPreference>
+                android:title="@string/activity_target" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="number"
                 android:key="@string/key_hypo_duration"
-                android:title="@string/hypo_duration"></EditTextPreference>
+                android:title="@string/hypo_duration" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_hypo_target"
-                android:title="@string/hypo_target"></EditTextPreference>
+                android:title="@string/hypo_target" />
         </PreferenceScreen>
         <PreferenceScreen android:title="@string/fillbolus_title">
             <EditTextPreference
                 android:defaultValue="0.3"
                 android:inputType="numberDecimal"
                 android:key="fill_button1"
-                android:title="@string/button1"></EditTextPreference>
+                android:title="@string/button1" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="fill_button2"
-                android:title="@string/button2"></EditTextPreference>
+                android:title="@string/button2" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="fill_button3"
-                android:title="@string/button3"></EditTextPreference>
+                android:title="@string/button3" />
         </PreferenceScreen>
         <PreferenceScreen
             android:summary="@string/prefs_range_summary"
@@ -60,12 +60,12 @@
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="low_mark"
-                android:title="@string/low_mark"></EditTextPreference>
+                android:title="@string/low_mark" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="high_mark"
-                android:title="@string/high_mark"></EditTextPreference>
+                android:title="@string/high_mark" />
         </PreferenceScreen>
         <SwitchPreference
             android:defaultValue="false"
@@ -82,7 +82,7 @@
             android:dependency="@string/key_enable_missed_bg_readings_alert"
             android:inputType="number"
             android:key="@string/key_missed_bg_readings_threshold"
-            android:title="@string/nsalarm_staledatavalue_label"></EditTextPreference>
+            android:title="@string/nsalarm_staledatavalue_label" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_enable_pump_unreachable_alert"

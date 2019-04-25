@@ -20,7 +20,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -118,7 +118,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
     }
 
     boolean isCommand(String command, String number) {
-        switch(command.toUpperCase()) {
+        switch (command.toUpperCase()) {
             case "BG":
             case "LOOP":
             case "TREATMENTS":
@@ -760,11 +760,18 @@ public class SmsCommunicatorPlugin extends PluginBase {
     void sendSMS(Sms sms) {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
-        if (sms.text.length() > 140) sms.text = sms.text.substring(0, 139);
+
         try {
             if (L.isEnabled(L.SMS))
                 log.debug("Sending SMS to " + sms.phoneNumber + ": " + sms.text);
-            smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
+            if (sms.text.getBytes().length <= 140)
+                smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
+            else {
+                ArrayList<String> parts = smsManager.divideMessage(sms.text);
+                smsManager.sendMultipartTextMessage(sms.phoneNumber, null, parts,
+                        null, null);
+            }
+
             messages.add(sms);
         } catch (IllegalArgumentException e) {
             Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.gs(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);

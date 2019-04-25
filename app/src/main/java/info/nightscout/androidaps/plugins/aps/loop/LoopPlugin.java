@@ -13,7 +13,6 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -44,18 +44,17 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
-import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -179,9 +178,7 @@ public class LoopPlugin extends PluginBase {
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
         new Thread(() -> invoke("EventTempTargetChange", true)).start();
-        FabricPrivacy.getInstance().logCustom(new CustomEvent("TT_Loop_Run"));
     }
-
 
 
     public void suspendTo(long endTime) {
@@ -376,7 +373,7 @@ public class LoopPlugin extends PluginBase {
                     if (resultAfterConstraints.bolusRequested)
                         lastRun.smbSetByPump = waiting;
                     MainApp.bus().post(new EventLoopUpdateGui());
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("APSRequest"));
+                    FabricPrivacy.getInstance().logCustom("APSRequest");
                     applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
                         public void run() {
@@ -395,7 +392,6 @@ public class LoopPlugin extends PluginBase {
                                                 SystemClock.sleep(1000);
                                                 LoopPlugin.getPlugin().invoke("tempBasalFallback", allowNotification, true);
                                             }).start();
-                                            FabricPrivacy.getInstance().logCustom(new CustomEvent("Loop_Run_TempBasalFallback"));
                                         }
                                         MainApp.bus().post(new EventLoopUpdateGui());
                                     }
@@ -482,7 +478,7 @@ public class LoopPlugin extends PluginBase {
                 MainApp.bus().post(new EventAcceptOpenLoopChange());
             }
         });
-        FabricPrivacy.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+        FabricPrivacy.getInstance().logCustom("AcceptTemp");
     }
 
     /**

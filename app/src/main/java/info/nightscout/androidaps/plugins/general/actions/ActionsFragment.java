@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -21,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.TDDStatsActivity;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -35,7 +34,6 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog;
@@ -70,7 +68,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     SingleClickButton tddStats;
     SingleClickButton history;
 
-    private Map<String,CustomAction> pumpCustomActions = new HashMap<>();
+    private Map<String, CustomAction> pumpCustomActions = new HashMap<>();
     private List<SingleClickButton> pumpCustomButtons = new ArrayList<>();
 
     public ActionsFragment() {
@@ -222,7 +220,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
     View.OnClickListener pumpCustomActionsListener = v -> {
 
-        SingleClickButton btn = (SingleClickButton)v;
+        SingleClickButton btn = (SingleClickButton) v;
 
         CustomAction customAction = this.pumpCustomActions.get(btn.getText().toString());
 
@@ -243,7 +241,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
         List<CustomAction> customActions = activePump.getCustomActions();
 
-        if (customActions != null && customActions.size()>0) {
+        if (customActions != null && customActions.size() > 0) {
 
             LinearLayout ll = actionsFragmentView.findViewById(R.id.action_buttons_layout);
 
@@ -275,7 +273,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
     private void removePumpCustomActions() {
 
-        if (pumpCustomActions.size()==0)
+        if (pumpCustomActions.size() == 0)
             return;
 
         LinearLayout ll = actionsFragmentView.findViewById(R.id.action_buttons_layout);
@@ -314,13 +312,11 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             case R.id.actions_extendedbolus_cancel:
                 if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(null);
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelExtended"));
                 }
                 break;
             case R.id.actions_canceltempbasal:
                 if (TreatmentsPlugin.getPlugin().isTempBasalInProgress()) {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
-                    FabricPrivacy.getInstance().logCustom(new CustomEvent("CancelTemp"));
                 }
                 break;
             case R.id.actions_settempbasal:

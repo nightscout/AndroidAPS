@@ -9,7 +9,6 @@
     <string name="nav_resetdb">Reset database</string>
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="nav_exit">Afsluiten</string>
-    <string name="danar_useextended_title">Gebruik vertraagde bolussen voor &gt;200%</string>
     <string name="danar_bt_name_title">DanaR Bluetooth apparaat</string>
     <string name="ns_sync_use_absolute_title">Gebruik altijd absolute basale waarden</string>
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen a. u. b. \nanders zal AndroidAPS geen logboek hebben (Belangrijk om te controleren of de algoritmes correct werken)!</string>
@@ -146,8 +145,6 @@
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="treatmentdeliveryerror">Bolus toedien storing</string>
     <string name="tempbasaldeliveryerror">Tijdelijk basaal toedien storing</string>
-    <string name="overview_newtempbasal_basalpercent">Basale waarde [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = actueel)</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
@@ -247,7 +244,6 @@
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="danar_dailyunits">Dag totaal</string>
     <string name="pump_lastbolus_label">Laatste bolus</string>
-    <string name="hoursago">%.1fu geleden</string>
     <string name="danar_invalidinput">Verkeerde ingave</string>
     <string name="danar_valuenotsetproperly">Waarde niet correct ingesteld</string>
     <string name="reloadprofile">Herlaad profiel</string>
@@ -309,7 +305,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="waitingforpump">Wacht op pomp</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Er worden %.2fE toegediend</string>
     <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyzeren van basaal en ratio\'s</string>
     <string name="objectives_0_gate">Controleren van beschikbaarheid BG en insuline pomp data op Nightscout</string>
     <string name="objectives_1_objective">Starten met de Open Loop modus</string>
@@ -333,7 +328,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="smscommunicator_loopisdisabled">Loop is uitgeschakeld</string>
     <string name="smscommunicator_loopisenabled">Loop is ingeschakeld</string>
     <string name="valuelimitedto">%1$.2f gelimiteerd tot %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Waarde %s is buiten de toegestane limieten</string>
     <string name="smscommunicator_remotecommandnotallowed">Commando\'s op afstand zijn niet toegestaan</string>
     <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
     <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
@@ -447,7 +441,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="profile">Profiel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standaard waarde: 3.0 Dit is een belangrijke veiligheid parameter van OpenAPS. Dit limiteert je basaal met een max van 3 maal je hoogste basale dosis. Normaal hoef je deze niet te veranderen. Het is echter belangrijk dat je de ingebouwde limieten kent.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft. Dit is een veiligheidsmaatregel om te voorkomen dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
-    <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit betekent dat de verhoging voor autosense ratio (en autotune ratio) is ingesteld op max 20%. Maw. een limiet in hoeverre je basaal kan worden verhoogd en hoeveel je ISF en BG doel verlaagd kan worden.</string>
     <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens past de streefwaardes ook aan</string>
     <string name="openapsama_autosens_adjusttargets_summary">Standaardwaarde: waar Dit wordt gebruikt om autosens de bevoegdheid te geven BG doelen aan te passen alsook ISF en basalen</string>
@@ -460,7 +453,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="error_phone_not_valid">Telefoon nummer niet conform</string>
     <string name="smscommunicator_invalidphonennumber">Foutief SMS telefoon nummer</string>
     <string name="overview_calibration">Kalibratie</string>
-    <string name="send_calibration" formatted="false">Verzend calibratie %.1f naar xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ niet geïnstalleerd</string>
     <string name="calibrationsent">Kalibratie naar xDrip verzonden</string>
     <string name="smscommunicator_calibrationsent">Kalibratie verzonden. Het ontvangen van kalibraties moet actief zijn in xDrip.</string>
@@ -511,7 +503,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="resistantadult">insuline resistente volwassene</string>
     <string name="patientage_summary">Kies leeftijd van de patient voor veiligheids limieten</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s benodigd batterij optimalistaie vrijwaring voor goede werking</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor">Gepauzeerd (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -547,8 +538,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="show_statuslights_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het beginscherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
-    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
-    <string name="statuslights_bat_critical">Drempel alarm batterij niveau [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -601,7 +590,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="absorptionsettings_title">Opname instellingen</string>
     <string name="absorption_maxtime_title">Max absorptietijd maaltijd [uur]</string>
     <string name="absorption_maxtime_summary">Verwachte tijd in uren totdat alle koolhydraten opgenomen zijn</string>
-    <string name="danar_visualizeextendedaspercentage_title">Toon vertraagde bolussen in % aan</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -714,8 +702,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="dexcomg5_xdripupload_title">Stuur BG data naar xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ kies 640g/Eversense data bron</string>
     <string name="nsclientbg">NSClient BG</string>
-    <string name="minimalbasalvaluereplaced">Basale waarde vervangen door minimaal ondersteunde waarde; %s</string>
-    <string name="maximumbasalvaluereplaced">Basale waarde vervangen door maximale ondersteunde waarde: %s</string>
     <string name="overview_editquickwizard_usebg">BG berekening</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB berekening</string>
     <string name="overview_editquickwizard_usebasaliob">Basaal IOB berekening</string>
@@ -733,8 +719,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="closedmodeenabled">Closed modus actief</string>
     <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
-    <string name="basalprofilenotaligned" formatted="false">Basale patroon niet geschikt op complete uren: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Ongeldig profiel: %s</string>
     <string name="combo_programming_bolus">Bolus in pomp programmeren </string>
     <string name="combo_refresh">Vernieuw</string>
     <string name="combo_pump_state_label">Status</string>
@@ -747,7 +731,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="combo_pump_state_running">Actief</string>
     <string name="combo_pump_action_cancelling_tbr">Annuleren van TB</string>
     <string name="combo_pump_action_setting_tbr">Instellen TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f E)</string>
     <string name="combo_pump_action_refreshing">Vernieuwen</string>
     <string name="combo_pump_unsupported_operation">Gevraagde is niet mogelijk met de pomp</string>
     <string name="combo_low_suspend_forced_notification">Opgelet: verlengde en multi wave bolussen zijn actief. Loop is overgeschakeld naar low-suspend modus gedurende 6 uur. Alleen gewone bolussen worden ondersteund in loop modus</string>
@@ -1075,7 +1058,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="log_operating_mode_changes">Werkingsmodus-wissel noteren</string>
     <string name="log_alerts">Alarm noteren</string>
     <string name="enable_tbr_emulation">TBR-emulatie inschakelen</string>
-    <string name="enable_tbr_emulation_summary">Gebruik Vertraagde Bolus ipv TBRs om de limiet van 250% te omzeilen</string>
     <string name="disconnect_delay">Verbindingsvertraging [s]</string>
     <string name="serial_number">Serienummer</string>
     <string name="release_software_version">Release softwareversie</string>

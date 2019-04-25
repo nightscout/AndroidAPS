@@ -1,16 +1,17 @@
 package info.nightscout.androidaps.utils;
 
+import android.os.Bundle;
+
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.PluginBase;
-
-import java.util.Date;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by jamorham on 21/02/2018.
@@ -21,8 +22,8 @@ import java.util.Date;
  */
 
 public class FabricPrivacy {
+    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
-    private static final String TAG = "FabricPrivacy";
     private static volatile FabricPrivacy instance;
 
 
@@ -45,7 +46,8 @@ public class FabricPrivacy {
             final Crashlytics crashlytics = Crashlytics.getInstance();
             crashlytics.core.logException(throwable);
         } catch (NullPointerException | IllegalStateException e) {
-            android.util.Log.d(TAG, "Ignoring opted out non-initialized log: " + throwable);
+            if (L.isEnabled(L.CORE))
+                log.debug("Ignoring opted out non-initialized log: " + throwable);
         }
     }
 
@@ -55,7 +57,8 @@ public class FabricPrivacy {
             final Crashlytics crashlytics = Crashlytics.getInstance();
             crashlytics.core.log(msg);
         } catch (NullPointerException | IllegalStateException e) {
-            android.util.Log.d(TAG, "Ignoring opted out non-initialized log: " + msg);
+            if (L.isEnabled(L.CORE))
+                log.debug("Ignoring opted out non-initialized log: " + msg);
         }
     }
 
@@ -65,7 +68,8 @@ public class FabricPrivacy {
             final Crashlytics crashlytics = Crashlytics.getInstance();
             crashlytics.core.log(priority, tag, msg);
         } catch (NullPointerException | IllegalStateException e) {
-            android.util.Log.d(TAG, "Ignoring opted out non-initialized log: " + msg);
+            if (L.isEnabled(L.CORE))
+                log.debug("Ignoring opted out non-initialized log: " + msg);
         }
     }
 
@@ -73,68 +77,67 @@ public class FabricPrivacy {
         return SP.getBoolean("enable_fabric", true);
     }
 
-    // Answers logCustom
-    public void logCustom(CustomEvent event) {
+    // Analytics logCustom
+    public void logCustom(Bundle event) {
         try {
-            final Answers answers = Answers.getInstance();
             if (fabricEnabled()) {
-                answers.logCustom(event);
+                MainApp.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, event);
             } else {
-                android.util.Log.d(TAG, "Ignoring recently opted-out event: " + event.toString());
+                if (L.isEnabled(L.CORE))
+                    log.debug("Ignoring recently opted-out event: " + event.toString());
             }
         } catch (NullPointerException | IllegalStateException e) {
-            android.util.Log.d(TAG, "Ignoring opted-out non-initialized event: " + event.toString());
+            if (L.isEnabled(L.CORE))
+                log.debug("Ignoring opted-out non-initialized event: " + event.toString());
         }
     }
 
-    public static void uploadDailyStats() {
+    // Analytics logCustom
+    public void logCustom(String event) {
+        try {
+            if (fabricEnabled()) {
+                MainApp.getFirebaseAnalytics().logEvent(event, new Bundle());
+            } else {
+                if (L.isEnabled(L.CORE))
+                    log.debug("Ignoring recently opted-out event: " + event);
+            }
+        } catch (NullPointerException | IllegalStateException e) {
+            if (L.isEnabled(L.CORE))
+                log.debug("Ignoring opted-out non-initialized event: " + event);
+        }
+    }
+
+    public static void setUserStats() {
         if (!fabricEnabled()) return;
 
-        long lastUploadDay = SP.getLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), 0L);
+        String closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed().value() ? "CLOSED_LOOP_ENABLED" : "CLOSED_LOOP_DISABLED";
+        // Size is limited to 36 chars
+        String remote = BuildConfig.REMOTE
+                .replace("https://","")
+                .replace("http://","")
+                .replace(".git", "")
+                .replace(".com/", ":")
+                .replace(".org/", ":")
+                .replace(".net/", ":");
 
-        Date date = new Date();
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        long today = date.getTime() - date.getTime() % 1000;
+        MainApp.getFirebaseAnalytics().setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled);
+        MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.getLanguage(MainApp.instance()));
+        MainApp.getFirebaseAnalytics().setUserProperty("Version", BuildConfig.VERSION);
+        MainApp.getFirebaseAnalytics().setUserProperty("HEAD", BuildConfig.HEAD);
+        MainApp.getFirebaseAnalytics().setUserProperty("Remote", remote);
+        if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
+            MainApp.getFirebaseAnalytics().setUserProperty("Pump", ConfigBuilderPlugin.getPlugin().getActivePump().getClass().getSimpleName());
+        if (ConfigBuilderPlugin.getPlugin().getActiveAPS() != null)
+            MainApp.getFirebaseAnalytics().setUserProperty("Aps", ConfigBuilderPlugin.getPlugin().getActiveAPS().getClass().getSimpleName());
+        if (ConfigBuilderPlugin.getPlugin().getActiveBgSource() != null)
+            MainApp.getFirebaseAnalytics().setUserProperty("BgSource", ConfigBuilderPlugin.getPlugin().getActiveBgSource().getClass().getSimpleName());
+        if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null)
+            MainApp.getFirebaseAnalytics().setUserProperty("Profile", ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getSimpleName());
+        if (ConfigBuilderPlugin.getPlugin().getActiveSensitivity() != null)
+            MainApp.getFirebaseAnalytics().setUserProperty("Sensitivity", ConfigBuilderPlugin.getPlugin().getActiveSensitivity().getClass().getSimpleName());
+        if (ConfigBuilderPlugin.getPlugin().getActiveInsulin() != null)
+            MainApp.getFirebaseAnalytics().setUserProperty("Insulin", ConfigBuilderPlugin.getPlugin().getActiveInsulin().getClass().getSimpleName());
 
-        if (today > lastUploadDay) {
-            uploadAppUsageType();
-            uploadPluginStats();
-
-            SP.putLong(MainApp.gs(R.string.key_plugin_stats_report_timestamp), today);
-        }
-    }
-
-    private static void uploadPluginStats() {
-        CustomEvent pluginStats = new CustomEvent("PluginStats");
-        pluginStats.putCustomAttribute("version", BuildConfig.VERSION);
-        pluginStats.putCustomAttribute("HEAD", BuildConfig.HEAD);
-        pluginStats.putCustomAttribute("language", SP.getString(R.string.key_language,"default"));
-        for (PluginBase plugin : MainApp.getPluginsList()) {
-            if (plugin.isEnabled(plugin.getType()) && !plugin.pluginDescription.alwaysEnabled) {
-                // Fabric allows no more than 20 attributes attached to an event. By reporting disabled plugins as
-                // well, we would exceed that threshold, so only report what is enabled
-                // TODO >2.0: consider reworking this to upload an event per enabled plugin instead.
-                pluginStats.putCustomAttribute(plugin.getClass().getSimpleName(), "enabled");
-            }
-        }
-
-        getInstance().logCustom(pluginStats);
-    }
-
-    private static void uploadAppUsageType() {
-        CustomEvent type = new CustomEvent("AppUsageType");
-        if (Config.NSCLIENT)
-            type.putCustomAttribute("type", "NSClient");
-        else if (Config.PUMPCONTROL)
-            type.putCustomAttribute("type", "PumpControl");
-        else if (MainApp.getConstraintChecker().isClosedLoopAllowed().value())
-            type.putCustomAttribute("type", "ClosedLoop");
-        else
-            type.putCustomAttribute("type", "OpenLoop");
-
-        getInstance().logCustom(type);
     }
 
 }

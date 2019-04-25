@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.danaRKorean.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
+
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
@@ -55,15 +57,15 @@ public class MsgSettingBasalProfileAll_k extends MessageBase {
             if (pump.basal48Enable) {
                 for (int profile = 0; profile < 4; profile++) {
                     for (int index = 0; index < 24; index++) {
-                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
+                        log.debug("Basal profile " + profile + ": " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
                     }
                 }
             } else {
                 for (int profile = 0; profile < 4; profile++) {
                     for (int index = 0; index < 48; index++) {
                         log.debug("Basal profile " + profile + ": " +
-                                String.format("%02d", (index / 2)) +
-                                ":" + String.format("%02d", (index % 2) * 30) + " : " +
+                                String.format(Locale.ENGLISH, "%02d", (index / 2)) +
+                                ":" + String.format(Locale.ENGLISH, "%02d", (index % 2) * 30) + " : " +
                                 pump.pumpProfiles[profile][index]);
                     }
                 }

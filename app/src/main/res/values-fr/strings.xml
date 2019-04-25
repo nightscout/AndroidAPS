@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
-    <string name="danar_useextended_title">Utiliser les bolus étendus pour &gt; 200%</string>
+    <string name="danar_useextended_title">Utiliser les bolus étendus pour &gt; 200%%</string>
     <string name="danar_bt_name_title">Dispositif Bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Utiliser toujours les valeurs absolues du basal</string>
     <string name="alert_dialog_storage_permission_text">Redémarrez votre smartphone ou redémarrez AndroidAPS depuis les paramètres système \nsinon AndroidAPS ne sera pas connecté aux journaux (il est important de suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
@@ -147,8 +147,8 @@
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="treatmentdeliveryerror">Erreur injection bolus</string>
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
-    <string name="overview_newtempbasal_basalpercent">Valeur Basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = actuel)</string>
+    <string name="overview_newtempbasal_basalpercent">Valeur de Basal [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = actuel)</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Calculatrice</string>
@@ -249,7 +249,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="danar_iob_label">Insuline Active pompe</string>
     <string name="danar_dailyunits">Unités journalières</string>
     <string name="pump_lastbolus_label">Dernier bolus</string>
-    <string name="hoursago">%.1fh passées</string>
+    <string name="hoursago">il y a %1$.1fh</string>
     <string name="danar_invalidinput">Données saisies invalides</string>
     <string name="danar_valuenotsetproperly">Valeur pas correctement définie</string>
     <string name="reloadprofile">Actualiser le profil</string>
@@ -315,7 +315,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_bolusprogress_stop">Arrêt</string>
     <string name="overview_bolusprogress_stoppressed">BOUTON ARRÊT ACTIVÉ</string>
     <string name="waitingforpump">Attente connection pompe</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU va être injecté</string>
+    <string name="overview_bolusprogress_goingtodeliver">%1$.2fU vont être injectées</string>
     <string name="objectives_0_objective">Paramétrer la visualisation et la surveillance des données, analyser les débits de basal et les ratios</string>
     <string name="objectives_0_gate">Vérifiez que la Glycémie est disponible sur Nightscout et que les données d’insuline ont été téléchargées de la pompe</string>
     <string name="objectives_1_objective">Commencez par la configuration Boucle Ouverte</string>
@@ -338,7 +338,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_loopisdisabled">La Boucle est désactivée</string>
     <string name="smscommunicator_loopisenabled">La Boucle est activée</string>
     <string name="valuelimitedto">%1$.2f limité à %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">La valeur %s est hors des limites strictes</string>
+    <string name="valueoutofrange">La valeur %1$s est en dehors des limites</string>
     <string name="smscommunicator_remotecommandnotallowed">La commande à distance n\'est pas autorisée</string>
     <string name="smscommunicator_remotebolusnotallowed">Bolus à distance non disponible. Réessayez plus tard.</string>
     <string name="smscommunicator_basalreplywithcode">Pour démarrer Basal %1$.2fU/h pendant %2$d min, renvoyer le code %3$s</string>
@@ -465,7 +465,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
-    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (ensuite Autotune) pour definir +20% en limite maximale du ratio Autosens. En consequence, ceci dit va définir pour Autosens, la valeur limite maximale du Basal, la valeur limite minimale de la Sensibilité à l\'insuline (SI, ISF), et la valeur limite minimale de la cible glycémique.</string>
+    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20%% en limite maximale du ratio Autosens. En consequence, ceci dit va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI, ISF), et la valeur minimale de la cible glycémique.</string>
     <string name="openapsama_autosens_min_summary">Valeur par défaut: 0.7\nL’autre aspect pour les limites de sécurité pour Autosens. Cette valeur va créer une limite qui définit jusqu\'à quelle valeur minimale Autosens va pouvoir ajuster le basal , et jusqu\'à quelles valeurs maximales Autosens pourra ajuster la Sensibilité à l\'Insuline (SI, ISF) et les cibles glycémiques.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens ajuste aussi les cibles</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valeur par défaut : true\nCeci est utilisé pour autoriser Autosens à ajuster les cibles de glycémie en plus de SI et les basals.</string>
@@ -478,7 +478,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="error_phone_not_valid">Le numéro de tél est invalide</string>
     <string name="smscommunicator_invalidphonennumber">Num tél du SMS est invalide</string>
     <string name="overview_calibration">Étalonnage</string>
-    <string name="send_calibration" formatted="false">Transmettre l\'étalonnage %.1f à xDrip ?</string>
+    <string name="send_calibration">Envoyer la calibration %1$.1f à xDrip ?</string>
     <string name="xdripnotinstalled">xDrip+ n\'est pas installé</string>
     <string name="calibrationsent">Étalonnage envoyé à xDrip</string>
     <string name="smscommunicator_calibrationsent">Étalonnage envoyé. La réception doit être activée dans xDrip.</string>
@@ -529,7 +529,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
     <string name="patientage_summary">Veuillez svp sélectionner l’âge du patient pour définir les limites de sécurité</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s a besoin de la liste blanche de l’optimisation batterie pour une bonne performance</string>
+    <string name="needwhitelisting">%1$s a besoin d\'optimisation de la batterie (whitelisting) pour une performance correcte</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="loopsuspendedfor">Suspendu (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -565,8 +565,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_statuslights_summary">Activer les lumières d\'état pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
     <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
-    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%]</string>
+    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%%]</string>
+    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%%]</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -619,7 +619,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="absorptionsettings_title">Paramètres d’absorption</string>
     <string name="absorption_maxtime_title">Durée maximale d’absorption pour un repas</string>
     <string name="absorption_maxtime_summary">Le temps estimé en heures pour une absorbption totale des glucides d’un repas</string>
-    <string name="danar_visualizeextendedaspercentage_title">Afficher le bolus étendu en %</string>
+    <string name="danar_visualizeextendedaspercentage_title">Afficher le bolus étendu en %%</string>
     <string name="careportal_sensorage_label_short">AgeC</string>
     <string name="careportal_insulinage_label_short">AgeI</string>
     <string name="careportal_canulaage_label_short">AgeC</string>
@@ -732,8 +732,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="dexcomg5_xdripupload_title">Transmettre les données G vers xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
     <string name="nsclientbg">Glycémie NSClient</string>
-    <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %s</string>
-    <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %s</string>
+    <string name="minimalbasalvaluereplaced">Valeur de basal remplacée par la valeur minimale autorisée : %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valeur de basal remplacée par la valeur maximale autorisée : %1$s</string>
     <string name="overview_editquickwizard_usebg">Calcul de Glycémie</string>
     <string name="overview_editquickwizard_usebolusiob">Calcul IA du Bolus</string>
     <string name="overview_editquickwizard_usebasaliob">Calcul IA du Basal</string>
@@ -751,8 +751,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="closedmodeenabled">Mode boucle fermée activé</string>
     <string name="maxiobset">Maximum IA réglé correctement</string>
     <string name="hasbgdata">Glycémie disponible depuis la source sélectionnée</string>
-    <string name="basalprofilenotaligned" formatted="false">Les changements de Basal doivent être aux heures entières : %s</string>
-    <string name="zerovalueinprofile" formatted="false">Profile incorrect: %s</string>
+    <string name="basalprofilenotaligned">Les changements de Basal doivent être aux heures entières : %1$s</string>
+    <string name="zerovalueinprofile">Profile incorrect : %1$s</string>
     <string name="combo_programming_bolus">Programmer la pompe pour injecter un bolus</string>
     <string name="combo_refresh">Actualiser</string>
     <string name="combo_pump_state_label">État</string>
@@ -765,7 +765,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_pump_state_running">En cours d\'exécution</string>
     <string name="combo_pump_action_cancelling_tbr">Annulation en cours du TBR</string>
     <string name="combo_pump_action_setting_tbr">Paramétrer TBR (%1$d%% / %2$d min) </string>
-    <string name="combo_pump_action_bolusing">Injection du bolus en cours (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Injection du Bolus en cours (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualisation en cours</string>
     <string name="combo_pump_unsupported_operation">L\'opération demandée n\'est pas prise en charge par la pompe</string>
     <string name="combo_low_suspend_forced_notification">Utilisation dangereuse : les bolus étendus ou carrés sont actifs. Le mode Boucle a été programmé pour des suspensions seulement pour 6 heures. Uniquement les bolus normaux sont pris en charge par le mode Boucle</string>
@@ -1094,7 +1094,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="log_operating_mode_changes">Enreg. changement mode de fonctionnement</string>
     <string name="log_alerts">Enreg. alertes</string>
     <string name="enable_tbr_emulation">Activer l’émulation de DBT</string>
-    <string name="enable_tbr_emulation_summary">Utilisez des Bolus étendus au lieu de DBTs pour contourner la limite de 250%</string>
+    <string name="enable_tbr_emulation_summary">Utilisez des Bolus étendus au lieu de DBTs pour contourner la limite de 250%%</string>
     <string name="disconnect_delay">Délai de déconnexion [s]</string>
     <string name="serial_number">Numéro de série</string>
     <string name="release_software_version">Version du logiciel</string>
@@ -1157,6 +1157,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sms_wrongcode">Code incorrect. Commande annulée.</string>
     <string name="notconfigured">Non configuré</string>
     <string name="profileswitchcreated">Changement de profil effectué</string>
+    <string name="versionChecker">Vérificateur de version</string>
+    <string name="old_version">ancienne version</string>
+    <string name="very_old_version">très ancienne version</string>
+    <string name="new_version_warning">Une nouvelle version est disponible depuis au moins %1$d jours ! Retour au traitement par pompe assistée par capteur (Arrêt par Glycémie Basse (AGB), Low Glucose Suspend (LGS) ) après 60 jours et la Boucle sera désactivée après 90 jours</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

@@ -38,6 +38,7 @@
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,10 +47,10 @@
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
         <activity
-            android:name=".plugins.general.overview.Dialogs.BolusProgressHelperActivity"
+            android:name=".plugins.general.overview.dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".plugins.general.overview.Dialogs.ErrorHelperActivity"
+            android:name=".plugins.general.overview.dialogs.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
@@ -72,30 +73,40 @@
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".activities.HistoryBrowseActivity" />
 
+        <!-- Receive new BG readings from other local apps -->
         <receiver
-            android:name=".receivers.DataReceiver"
-            android:enabled="true"
-            android:exported="true">
+                android:name=".receivers.DataReceiver"
+                android:enabled="true"
+                android:exported="true">
             <intent-filter>
-
-                <!-- Receive new SMS messages -->
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
-                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
                 <!-- Receiver from 640g uploader -->
-                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
                 <!-- Receiver from glimp -->
-                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
                 <!-- Receiver from DexcomG5 -->
-                <action android:name="com.dexcom.cgm.DATA" />
-                <action android:name="com.dexcom.cgm.AndroidAPSEVGCallback.BROADCAST" />
-                <action android:name="com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST" />
+                <action android:name="com.dexcom.cgm.DATA"/>
+                <action android:name="com.dexcom.cgm.AndroidAPSEVGCallback.BROADCAST"/>
+                <action android:name="com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST"/>
                 <!-- Receiver from Poctech -->
-                <action android:name="com.china.poctech.data" />
+                <action android:name="com.china.poctech.data"/>
                 <!-- Receiver from Tomato -->
-                <action android:name="com.fanqies.tomatofn.BgEstimate" />
+                <action android:name="com.fanqies.tomatofn.BgEstimate"/>
             </intent-filter>
         </receiver>
+
+        <!-- Receive new SMS messages -->
+        <receiver
+                android:name=".receivers.SmsReceiver"
+                android:enabled="true"
+                android:exported="true"
+                android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
@@ -175,57 +186,57 @@
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
 
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data" />
+                    android:pathPrefix="/nightscout_watch_data"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_data_resend" />
+                    android:pathPrefix="/nightscout_watch_data_resend"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancel_bolus" />
+                    android:pathPrefix="/nightscout_watch_cancel_bolus"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_confirmactionstring" />
+                    android:pathPrefix="/nightscout_watch_confirmactionstring"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_initiateactionstring" />
+                    android:pathPrefix="/nightscout_watch_initiateactionstring"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/openwearsettings" />
+                    android:pathPrefix="/openwearsettings"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/sendstatustowear" />
+                    android:pathPrefix="/sendstatustowear"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/sendpreferencestowear" />
+                    android:pathPrefix="/sendpreferencestowear"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_basal" />
+                    android:pathPrefix="/nightscout_watch_basal"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_bolusprogress" />
+                    android:pathPrefix="/nightscout_watch_bolusprogress"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest" />
+                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest" />
+                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest"
+                    android:scheme="wear" />
                 <data
-                    android:scheme="wear"
                     android:host="*"
-                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest" />
+                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
         <service
@@ -257,19 +268,19 @@
         <activity
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity"></activity>
+        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingActivity"
-            android:theme="@style/AppTheme"
-            android:label="@string/insight_pairing" />
+            android:label="@string/insight_pairing"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightAlertActivity"
             android:label="@string/pump_alert"
             android:theme="@style/InsightAlertDialog" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
-            android:theme="@style/AppTheme"
-            android:label="@string/pairing_information" />
+            android:label="@string/pairing_information"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

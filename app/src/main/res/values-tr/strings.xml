@@ -9,7 +9,6 @@
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
-    <string name="danar_useextended_title">Yayım bolus &gt;200% için kullanın</string>
     <string name="danar_bt_name_title">DanaR Bluetooth aygıtı</string>
     <string name="ns_sync_use_absolute_title">Her zaman bazal mutlak değerleri kullan</string>
     <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada Android APS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
@@ -144,8 +143,6 @@
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
     <string name="treatmentdeliveryerror">Bolus teslimat hatası</string>
     <string name="tempbasaldeliveryerror">Geçici Bazal teslimat hatası</string>
-    <string name="overview_newtempbasal_basalpercent">Bazal değeri [%]</string>
-    <string name="overview_newtempbasal_percent_label">% ( 100% = aktuel)</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_treatment_label">Tedavi</string>
     <string name="overview_calculator_label">Hesap makinesi</string>
@@ -245,7 +242,6 @@
     <string name="danar_iob_label">IOB(Aktif insülin) pompa</string>
     <string name="danar_dailyunits">Günlük birimleri</string>
     <string name="pump_lastbolus_label">Son bolus</string>
-    <string name="hoursago">%.1fs önce</string>
     <string name="danar_invalidinput">Geçersiz bilgi girişi</string>
     <string name="danar_valuenotsetproperly">Değer düzgün ayarlanmamış</string>
     <string name="reloadprofile">Dosyayı yeniden yükle</string>
@@ -307,7 +303,6 @@
     <string name="overview_bolusprogress_stop">Dur</string>
     <string name="overview_bolusprogress_stoppressed">DURDUR\'A BASTIĞINIZ</string>
     <string name="waitingforpump">Pompa bekleniyor</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU Gönderilecek</string>
     <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın ve bazal oranlarını ve faktörleri düzenleyin</string>
     <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
     <string name="objectives_1_objective">Açık Döngü modu başlatılıyor</string>
@@ -330,7 +325,6 @@
     <string name="smscommunicator_loopisdisabled">Döngü devre dışı</string>
     <string name="smscommunicator_loopisenabled">Döngü etkin</string>
     <string name="valuelimitedto">%1$.2f dan %2$.2f olarak sınırlı</string>
-    <string name="valueoutofrange" formatted="false">Değer %s sabit sınırları dışında olduğunu</string>
     <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d dakika için Döngü\'yü askıya almak için %2$s kodunu yanıtla</string>
     <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
@@ -443,7 +437,6 @@
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3 Bu OpenAPS için önemli bir güvenlik ayarıdır. Maksimum bazal Iob\'u, en büyük bazal oranınızın üç katı (varsayılan olarak) ile sınırlar. Genel olarak, bu değeri değiştirmemelisiniz. Ama \"3x max günlük, 4x şuan\" ın bir güvenlik ayarı olarak ne anlama geldiğini bilmelisiniz.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
-    <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nBu autosens oranının ne kadar yüksek olabileceği üzerine %20\'lik bir max limit belirlemek için autosens (ve yakında autotune) için bir çarpan faktörüdür. Bu sayede autosens İnsülin Duyarlılık Faktörünün ne kadar düşük tutulacağını ve KŞ hedefini ne kadar düşük tutulabileceğine karar verir.</string>
     <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu autosens için diğer güvenlik önlemidir. Bazal oranların ne kadar düştüğünü ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens hedefleri de ayarlar</string>
     <string name="openapsama_autosens_adjusttargets_summary">Varsayılan değer: true\nBu autosens in İnsülin Duyarlılık Faktörü ve bazallara ek olarak KŞ hedeflerinin ayarlanmasında kullanılır.</string>
@@ -457,7 +450,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="error_phone_not_valid">Telefon numarası geçerli değil</string>
     <string name="smscommunicator_invalidphonennumber">Geçersiz SMS telefon numarası</string>
     <string name="overview_calibration">Kalibrasyon</string>
-    <string name="send_calibration" formatted="false">Kalibrasyon %.1f xDrip\'e gönderilsin mi?</string>
     <string name="xdripnotinstalled">xDrip+ uygulaması yüklenmemiş</string>
     <string name="calibrationsent">Kalibrasyon xDrip+ a gönderildi</string>
     <string name="smscommunicator_calibrationsent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
@@ -508,7 +500,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resistantadult">Yetişkin İnsülin direnci</string>
     <string name="patientage_summary">Güvenlik sınırlarını ayarlamak için lütfen hasta yaşını seçiniz</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s, düzgün bir şekilde çalışması için devre dışı bırakılmış pil performans ayarlaması gerektirir</string>
     <string name="loopsuspended">Döngü durduldu</string>
     <string name="loopsuspendedfor">Askıya alındı (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -592,7 +583,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="absorptionsettings_title">Emilim ayarları</string>
     <string name="absorption_maxtime_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_maxtime_summary">Tüm karbonhidratların emileceği beklenen saat cinsinden süre</string>
-    <string name="danar_visualizeextendedaspercentage_title">Yayım bolusu% olarak görselleştir</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -702,8 +692,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="dexcomg5_xdripupload_title">XDrip+\'a KŞ verilerini gönder</string>
     <string name="dexcomg5_xdripupload_summary">Xdrip+ içerisinde 640g/Eversense veri kaynağı seç</string>
     <string name="nsclientbg">Nightscout Client KŞ</string>
-    <string name="minimalbasalvaluereplaced">Bazal değeri minimum desteklenen değerle değiştirilir: %s</string>
-    <string name="maximumbasalvaluereplaced">Bazal değeri maksimum desteklenen değerle değiştirilir: %s</string>
     <string name="overview_editquickwizard_usebg">KŞ Hesaplaması</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB (Aktif İnsülin) hesaplaması</string>
     <string name="overview_editquickwizard_usebasaliob">Bazal IOB hesaplaması</string>
@@ -721,8 +709,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="closedmodeenabled">Kapalı Döngü etkinleştirildi</string>
     <string name="maxiobset">Maksimal IOB doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
-    <string name="basalprofilenotaligned" formatted="false">Bazal değerler saatlerle uyumlu değil: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Geçersiz profil: %s</string>
     <string name="combo_programming_bolus">Pompa bolus vermek için hazırlanıyor</string>
     <string name="combo_refresh">Yenile</string>
     <string name="combo_pump_state_label">Durum</string>
@@ -735,7 +721,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="combo_pump_state_running">Çalışıyor</string>
     <string name="combo_pump_action_cancelling_tbr">TBR (Geçici Bazal Oranı) İptal ediliyor</string>
     <string name="combo_pump_action_setting_tbr">TBR(Geçici Bazal Oranı) ayarı (%1$d%% / %2$d dak)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f U) teslim ediliyor</string>
     <string name="combo_pump_action_refreshing">Yenileniyor...</string>
     <string name="combo_pump_unsupported_operation">İstenen işlem pompası tarafından desteklenmiyor</string>
     <string name="combo_low_suspend_forced_notification">Güvensiz kullanım: yayım veya çoklu dalgalı (kare dalgalı) boluslar aktiftir. Döngü modu 6 saat içinde ekstra insülin vermeyecektir. Döngü modunda sadece normal boluslar desteklenir</string>

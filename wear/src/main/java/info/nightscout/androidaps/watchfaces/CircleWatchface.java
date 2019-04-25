@@ -92,7 +92,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         super.onCreate();
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CreateWakelock");
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface");
         wakeLock.acquire(30000);
 
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
@@ -199,7 +199,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             } else {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             }
-            if(sharedPrefs.getBoolean("showAvgDelta", true)){
+            if (sharedPrefs.getBoolean("showAvgDelta", true)) {
                 textView.append("  " + getAvgDelta());
             }
 
@@ -322,11 +322,11 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
         if (oldTime.hasMinuteChanged(newTime)) {
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TimeChangedWakelock");
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface_onTimeChanged");
             wakeLock.acquire(30000);
             /*Preparing the layout just on every minute tick:
-            *  - hopefully better battery life
-            *  - drawback: might update the minutes since last reading up endTime one minute late*/
+             *  - hopefully better battery life
+             *  - drawback: might update the minutes since last reading up endTime one minute late*/
             prepareLayout();
             prepareDrawTime();
             invalidate();  //redraw the time
@@ -472,6 +472,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     private String getAvgDelta() {
         return avgDelta;
     }
+
     private void setAvgDelta(String avgDelta) {
         this.avgDelta = avgDelta;
     }
@@ -518,11 +519,10 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         @Override
         public void onReceive(Context context, Intent intent) {
             PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "MyWakelockTag");
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:MessageReceiver");
             wakeLock.acquire(30000);
             Bundle bundle = intent.getBundleExtra("data");
-            if (bundle!= null) {
+            if (bundle != null) {
                 DataMap dataMap = DataMap.fromBundle(bundle);
                 setSgvLevel((int) dataMap.getLong("sgvLevel"));
                 Log.d("CircleWatchface", "sgv level : " + getSgvLevel());
@@ -561,7 +561,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     public synchronized void addToWatchSet(DataMap dataMap) {
 
-        if(!sharedPrefs.getBoolean("showRingHistory", false)){
+        if (!sharedPrefs.getBoolean("showRingHistory", false)) {
             bgDataList.clear();
             return;
         }
@@ -706,14 +706,14 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
 
-        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+        int extra = mSgv != null ? (mSgv.getRight() - mSgv.getLeft()) / 2 : 0;
 
-        if (tapType == TAP_TYPE_TAP&&
-                x + extra >=mSgv.getLeft() &&
-                x - extra <= mSgv.getRight()&&
+        if (tapType == TAP_TYPE_TAP &&
+                x + extra >= mSgv.getLeft() &&
+                x - extra <= mSgv.getRight() &&
                 y >= mSgv.getTop() &&
-                y <= mSgv.getBottom()){
-            if (eventTime - sgvTapTime < 800){
+                y <= mSgv.getBottom()) {
+            if (eventTime - sgvTapTime < 800) {
                 Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -723,7 +723,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     @Override
-    protected WatchFaceStyle getWatchFaceStyle(){
+    protected WatchFaceStyle getWatchFaceStyle() {
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
     }
 

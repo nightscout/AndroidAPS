@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -66,7 +67,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
         @Override
         public String toString() {
-            return String.format("CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", new Date(time).toLocaleString(), carbs, min5minCarbImpact, remaining);
+            return String.format(Locale.ENGLISH, "CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", new Date(time).toLocaleString(), carbs, min5minCarbImpact, remaining);
         }
     }
 
@@ -101,7 +102,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public String toString() {
-        return String.format("AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
+        return String.format(Locale.ENGLISH, "AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
                 new Date(time).toLocaleString(), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
     }
 

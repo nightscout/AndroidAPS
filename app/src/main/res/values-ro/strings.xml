@@ -9,7 +9,6 @@
     <string name="nav_resetdb">Resetează bazele de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
-    <string name="danar_useextended_title">Folosiți bolusuri extinse pentru &gt;200%</string>
     <string name="danar_bt_name_title">Dispozitive bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
     <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din System Settings \naltfel AndroidAPS nu va putea face loguri (importante pentru verificarea corectitudinii funcționării algoritmilor)!</string>
@@ -146,8 +145,6 @@
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="treatmentdeliveryerror">Eroare la livrarea bolusului</string>
     <string name="tempbasaldeliveryerror">Eroare la setare bazală temporară</string>
-    <string name="overview_newtempbasal_basalpercent">Valoare bazală [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = curent)</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -247,7 +244,6 @@
     <string name="danar_iob_label">IOB din pompă</string>
     <string name="danar_dailyunits">Unități zilnic</string>
     <string name="pump_lastbolus_label">Ultimul bolus</string>
-    <string name="hoursago">%.1f o în urmă</string>
     <string name="danar_invalidinput">Date de intrare incorecte</string>
     <string name="danar_valuenotsetproperly">Valoare setată incorect</string>
     <string name="reloadprofile">Reîncarcă profilul</string>
@@ -309,7 +305,6 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP APĂSAT</string>
     <string name="waitingforpump">Se așteaptă pompa</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Se vor livra %.2fU</string>
     <string name="objectives_0_objective">Se stabilesc vizualizările și monitorizarea și se analizează bazalele și valorile ratelor</string>
     <string name="objectives_0_gate">Verificați că vedeți glicemia în Nightscout și că datele despre insulină date de pompă sunt înregistrate în site</string>
     <string name="objectives_1_objective">Pornire în mod buclă deschisă</string>
@@ -332,7 +327,6 @@
     <string name="smscommunicator_loopisdisabled">Bucla este dezactivată</string>
     <string name="smscommunicator_loopisenabled">Bucla este activată</string>
     <string name="valuelimitedto">%1$.2f este limitată la %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Valoarea %s este mai mare decât limita fizică</string>
     <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
     <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
     <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
@@ -446,7 +440,6 @@
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3\nAceasta este o setare de critică de securitate a OpenAPS. Asta înseamnă că se limitează bazala lade 3x valoarea maximă a bazalelor tale.Cel mai probabil nu veți schimba această valoare, dar trebuie să țineți cont de ce se discută despre “3x max zilnic; 4x curent” ca valori de siguranță.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a \"3x max zilnic; 4x curent\" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
-    <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
     <string name="openapsama_autosens_min_summary">Valoare implicită: 0.7\nCealaltă parte a limitelor autosens, care limitează cât de jos poate ajusta bazalele și cât de mult poate mări ISF și țintele de glicemie.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens ajustează țintele la</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valoare implicită: adevărat\nAceasta se folosește pentru a permite autosens să ajusteze țintele de glicemie, pe lângă modificările asupra ISF și bazalelor.</string>
@@ -459,7 +452,6 @@
     <string name="error_phone_not_valid">Numărul de telefon este invalid</string>
     <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
     <string name="overview_calibration">Calibrare</string>
-    <string name="send_calibration" formatted="false">Trimite calibrarea %.1f către xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ nu este instalat.</string>
     <string name="calibrationsent">Calibrare trimisă către xDrip</string>
     <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip.</string>
@@ -510,7 +502,6 @@
     <string name="resistantadult">Adult rezistent la insulină</string>
     <string name="patientage_summary">Vă rog să selectați vârsta pacientului în vederea stabilirii valorilor maxime admise de siguranță</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s necesită excluderea din lista de optimizare a bateriei pentru funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="loopsuspendedfor">Suspendat (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d min)</string>
@@ -546,8 +537,6 @@
     <string name="show_statuslights_summary">Activați indicatori pentru CAGE, IAGE, SAGE, nivel baterie și rezervor pe ecranul principal.</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
-    <string name="statuslights_bat_warning">Pragul de avertizare nivel baterie [%]</string>
-    <string name="statuslights_bat_critical">Pragul critic al nivelului baterie [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -600,7 +589,6 @@
     <string name="absorptionsettings_title">Setări absorbție</string>
     <string name="absorption_maxtime_title">Timp maxim absorbție masă [o]</string>
     <string name="absorption_maxtime_summary">Timp în ore la care se presupune că toți carbohidrații sunt absorbiți</string>
-    <string name="danar_visualizeextendedaspercentage_title">Afișati bolusul extins ca %</string>
     <string name="careportal_sensorage_label_short">VS</string>
     <string name="careportal_insulinage_label_short">VI</string>
     <string name="careportal_canulaage_label_short">VC</string>
@@ -713,8 +701,6 @@
     <string name="dexcomg5_xdripupload_title">Trimite date glicemie la xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Selectați 640g/Eversense ca sursă de date în xDrip+</string>
     <string name="nsclientbg">Glicemie NSClient</string>
-    <string name="minimalbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea minimă posibilă: %s</string>
-    <string name="maximumbasalvaluereplaced">Valoarea bazalei a fost înlocuită cu valoarea maximă posibilă: %s</string>
     <string name="overview_editquickwizard_usebg">Calcul glicemie</string>
     <string name="overview_editquickwizard_usebolusiob">Calcul IOB bolus</string>
     <string name="overview_editquickwizard_usebasaliob">Calcul IOB bazală</string>
@@ -732,8 +718,6 @@
     <string name="closedmodeenabled">Mod buclă închisă activat</string>
     <string name="maxiobset">IOB maxim configurat corect</string>
     <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
-    <string name="basalprofilenotaligned" formatted="false">Valori bazale nealiniate la ore: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Profil invalid: %s</string>
     <string name="combo_programming_bolus">Se programează pompa pentru livrare bolus</string>
     <string name="combo_refresh">Reîncarcă</string>
     <string name="combo_pump_state_label">Stare</string>
@@ -746,7 +730,6 @@
     <string name="combo_pump_state_running">Rulează</string>
     <string name="combo_pump_action_cancelling_tbr">Se oprește TBR</string>
     <string name="combo_pump_action_setting_tbr">Se setează TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusare (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Reîncărcare</string>
     <string name="combo_pump_unsupported_operation">Operațiunea nu este suportată de pompă</string>
     <string name="combo_low_suspend_forced_notification">Folosire nesigură: un bolus extins sau multiwave este activ. Modul buclă este setat să funcționeze în low-suspend pentru 6 ore. Doar bolusurile normale sunt posibile.</string>
@@ -1074,7 +1057,6 @@
     <string name="log_operating_mode_changes">Înregistrează schimbările modului de operare</string>
     <string name="log_alerts">Înregistrează alertele</string>
     <string name="enable_tbr_emulation">Activează emularea RBT</string>
-    <string name="enable_tbr_emulation_summary">Folosește bolus extins în locul RBT pentru a trece de limita de 250%</string>
     <string name="disconnect_delay">Întârziere a deconectării [s]</string>
     <string name="serial_number">Număr de serie</string>
     <string name="release_software_version">Versiunea de software</string>

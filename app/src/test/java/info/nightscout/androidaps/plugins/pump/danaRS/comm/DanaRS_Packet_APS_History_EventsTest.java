@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm;
 
 import android.content.Context;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -20,34 +21,26 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by Rumen on 31.07.2018.
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({SP.class, MainApp.class, ConfigBuilderPlugin.class, Context.class, NSUpload.class, TreatmentsPlugin.class, TreatmentService.class, DatabaseHelper.class})
+@PrepareForTest({SP.class, MainApp.class, ConfigBuilderPlugin.class, Context.class, NSUpload.class, TreatmentsPlugin.class, TreatmentService.class, DatabaseHelper.class, DateUtil.class})
 public class DanaRS_Packet_APS_History_EventsTest extends DanaRS_Packet_APS_History_Events {
 
     @Test
     public void runTest() {
-        AAPSMocker.mockMainApp();
-        AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockSP();
-        AAPSMocker.mockBus();
-        SPMocker.prepareMock();
-        SP.putString("profile", AAPSMocker.getValidProfileStore().getData().toString());
-        AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockStrings();
-        PowerMockito.mockStatic(NSUpload.class);
-        AAPSMocker.mockDatabaseHelper();
-        DanaRS_Packet_APS_History_Events testPacket = new DanaRS_Packet_APS_History_Events(System.currentTimeMillis());
+        DanaRS_Packet_APS_History_Events testPacket = new DanaRS_Packet_APS_History_Events(DateUtil.now());
         // test getRequestedParams
         byte[] returnedValues = testPacket.getRequestParams();
-        byte[] expectedValues = getCalender(System.currentTimeMillis());
+        byte[] expectedValues = getCalender(DateUtil.now());
         //year
         assertEquals(expectedValues[0], returnedValues[0]);
         //month
@@ -70,15 +63,15 @@ public class DanaRS_Packet_APS_History_EventsTest extends DanaRS_Packet_APS_Hist
         assertEquals("APS_HISTORY_EVENTS", getFriendlyName());
     }
 
-    byte[] createArray(int length, byte fillWith){
+    byte[] createArray(int length, byte fillWith) {
         byte[] ret = new byte[length];
-        for(int i = 0; i<length; i++){
+        for (int i = 0; i < length; i++) {
             ret[i] = fillWith;
         }
         return ret;
     }
 
-    public byte[] getCalender(long from){
+    public byte[] getCalender(long from) {
         GregorianCalendar cal = new GregorianCalendar();
         if (from != 0)
             cal.setTimeInMillis(from);
@@ -95,4 +88,20 @@ public class DanaRS_Packet_APS_History_EventsTest extends DanaRS_Packet_APS_Hist
         return ret;
     }
 
+    @Before
+    public void prepareTest() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+        AAPSMocker.mockBus();
+        SPMocker.prepareMock();
+        SP.putString("profile", AAPSMocker.getValidProfileStore().getData().toString());
+        AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockStrings();
+        PowerMockito.mockStatic(NSUpload.class);
+        AAPSMocker.mockDatabaseHelper();
+
+        PowerMockito.mockStatic(DateUtil.class);
+        when(DateUtil.now()).thenReturn(5456465445L);
+    }
 }

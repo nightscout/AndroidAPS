@@ -7,7 +7,6 @@
     <string name="nav_resetdb">Restablecer las bases de datos</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
     <string name="nav_exit">Salir</string>
-    <string name="danar_useextended_title">Usar bolos extendidos para &gt;200%</string>
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Usar siempre valores basales absolutos</string>
     <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importante para trazar y verificar que el algoritmo funcione correctamente)</string>
@@ -144,8 +143,6 @@
     <string name="constraints_violation">Violación restricciones</string>
     <string name="treatmentdeliveryerror">Error de administración del bolo</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
-    <string name="overview_newtempbasal_basalpercent">Valor basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = actual)</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="overview_calculator_label">Calculadora</string>
@@ -245,7 +242,6 @@
     <string name="danar_iob_label">Bomba IOB</string>
     <string name="danar_dailyunits">Unidades diarias</string>
     <string name="pump_lastbolus_label">Último bolo</string>
-    <string name="hoursago">Hace %.1fh</string>
     <string name="danar_invalidinput">Datos inválidos</string>
     <string name="danar_valuenotsetproperly">Valor no establecido correctamente</string>
     <string name="reloadprofile">Recargar Perfil</string>
@@ -307,7 +303,6 @@
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">DETENER PULSADO</string>
     <string name="waitingforpump">Esperando bomba</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Se entregará %.2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitorización, y análisis de basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
     <string name="objectives_1_objective">Empezar con lazo abierto</string>
@@ -330,7 +325,6 @@
     <string name="smscommunicator_loopisdisabled">Lazo inactivo</string>
     <string name="smscommunicator_loopisenabled">Lazo activo</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
-    <string name="valueoutofrange" formatted="false">Valor %s fuera de limites</string>
     <string name="smscommunicator_remotecommandnotallowed">Comando remoto no permitido</string>
     <string name="smscommunicator_suspendreplywithcode">Para cancelar lazo por %1$d minutos responde con código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
@@ -444,7 +438,6 @@
     <string name="profile">Perfiles</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3 Esta es una protección de seguridad en OpenAPS. Lo que esto hace es limitar tus basales a 3x (en este caso) tu mayor índice basal. Probablemente no necesites cambiar esto, pero debes tener en cuenta las discusiones sobre \"3x max diaria; 4x actual\" para protecciones de seguridad.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Ajuste pro defecto: 4 Esto es la otra mitad de los ajustes de seguridad de OpenAPS y la otra mitad de la protección de seguridad de \"3x max diaria, 4x actual\". Esto significa, que tu basal, independientemente de tu máxima basal ajustada en la bomba, no puede ser mas alta que este número de veces el actual nivel de basal. Esto es para evitar que las personas se encuentren en situaciones peligrosas por aumentar mucho la basal sin entender como trabaja el algoritmo. El ajuste por defecto es 4x; la mayoría de las personas nunca tendrá que cambiar estos ajustes, sino que debe modificar otros ajustes en la terapia si se encuentran cerca de este límite de seguridad.</string>
-    <string name="openapsama_autosens_max_summary">Ajuste por defecto: 1.2\nEste es un límite multiplicador para autosens (y pronto autotune) para establecer un límite máximo del 20% sobre lo alto que puede ser el ratio autosens, que a su vez determina como de altos puede ajustar autosens los ratios basales, como de bajos puede ajustar el ISF y como de bajo establecer el objetivo de glusosa en sangre (BG).</string>
     <string name="openapsama_autosens_min_summary">Ajuste por defecto: 0.7\nEl otro lado de los límites de seguridad de autosens, limitando a cuanto puede autosens bajar la basal y a cuanto puede subir ISF y objetivo de glucosa en sangre (BG).</string>
     <string name="openapsama_autosens_adjusttargets">Autosens también ajusta los objetivos</string>
     <string name="openapsama_autosens_adjusttargets_summary">Ajuste por defecto: true\nEsto se usa para permitir a autosens el ajuste de objetivos BG además de ISF y bases.</string>
@@ -457,7 +450,6 @@
     <string name="error_phone_not_valid">Número de teléfono inválido</string>
     <string name="smscommunicator_invalidphonennumber">Número de teléfono incorrecto para SMS</string>
     <string name="overview_calibration">Calibración</string>
-    <string name="send_calibration" formatted="false">¿Mandar calibración %.1f a xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ no instalado</string>
     <string name="calibrationsent">Calibración mandada a xDrip</string>
     <string name="smscommunicator_calibrationsent">Calibración enviada. La recepción debe estar habilitada en xDrip.</string>
@@ -508,7 +500,6 @@
     <string name="resistantadult">Adulto resistente a la insulina</string>
     <string name="patientage_summary">Por favor elige la edad del paciente para ajustar los límites de seguridad</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s necesita optimización de batería lista blanca para funcionar bien</string>
     <string name="loopsuspended">Loop desactivado</string>
     <string name="loopsuspendedfor">Desactivado (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolo (%1$d m)</string>
@@ -544,8 +535,6 @@
     <string name="show_statuslights_summary">Habilitar las luces de estado para tiempo de la canula, tiempo de la insulina, tiempo del sensor y nivel de bateria en la pantalla de inicio.</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -598,7 +587,6 @@
     <string name="absorptionsettings_title">Ajustes absorción</string>
     <string name="absorption_maxtime_title">Tiempo max absorción comida [h]</string>
     <string name="absorption_maxtime_summary">Tiempo en horas en el que se espera que todos los carbohidratos hayan sido absorbidos</string>
-    <string name="danar_visualizeextendedaspercentage_title">Mostrar bolo extendido en %</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -711,8 +699,6 @@
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
     <string name="nsclientbg">NSClient BG</string>
-    <string name="minimalbasalvaluereplaced">Valor basal reemplazado por el valor mínimo soportado: %s</string>
-    <string name="maximumbasalvaluereplaced">Valor basal reemplazado por valor máximo soportado: %s</string>
     <string name="overview_editquickwizard_usebg">Cálculo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo bolo IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo basal IOB</string>
@@ -730,8 +716,6 @@
     <string name="closedmodeenabled">Lazo cerrado activado</string>
     <string name="maxiobset">Máximo IOB ajustado correctamente</string>
     <string name="hasbgdata">BG disponible desde la fuente seleccionada</string>
-    <string name="basalprofilenotaligned" formatted="false">Valores basales no alineados a las horas: %s</string>
-    <string name="zerovalueinprofile" formatted="false">Perfil inválido: %s</string>
     <string name="combo_programming_bolus">Programando bomba para emitir bolo</string>
     <string name="combo_refresh">Actualizar</string>
     <string name="combo_pump_state_label">Estado</string>
@@ -744,7 +728,6 @@
     <string name="combo_pump_state_running">Funcionando</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelando TBR</string>
     <string name="combo_pump_action_setting_tbr">Poniendo TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Emitiendo bolo (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Actualizando</string>
     <string name="combo_pump_unsupported_operation">Acción requerida no disponible por la bomba</string>
     <string name="combo_low_suspend_forced_notification">Uso inseguro: bolo extendido o multionda activo. El modo del lazo ha sido fijado a sólo suspensión en baja glucosa durante 6 horas. En modo lazo sólo se soportan los bolo estándar.</string>
@@ -1072,7 +1055,6 @@
     <string name="log_operating_mode_changes">Registro de cambio de modo de funcionamiento</string>
     <string name="log_alerts">Registro de alarmas</string>
     <string name="enable_tbr_emulation">Activar emulación de dosis basal temporal</string>
-    <string name="enable_tbr_emulation_summary">Usar bolos extendidos en lugar de tasas basales temporales para eludir el limite de 250%</string>
     <string name="disconnect_delay">Desconectar el retraso [s]</string>
     <string name="serial_number">Número de serie</string>
     <string name="release_software_version">Versión de software</string>
