@@ -32,6 +32,13 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
 
     private fun checkWarning() {
         val now = System.currentTimeMillis()
+        
+        if (!SP.contains(R.string.key_last_versionchecker_plugin_warning)) {
+            SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+            return
+        }
+
+
         if (isOldVersion(GRACE_PERIOD_WARNING) && shouldWarnAgain(now)) {
             // store last notification time
             SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
