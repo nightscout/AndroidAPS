@@ -434,7 +434,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             return null;
 
         for (int i = 0; i < bgList.size(); i++)
-            if (bgList.get(i).value > 39)
+            if (bgList.get(i).value >= 39)
                 return bgList.get(i);
         return null;
     }
