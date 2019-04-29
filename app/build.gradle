@@ -79,7 +79,7 @@ def allCommited = { ->
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'status'
+            commandLine 'git', 'status', '-s'
             standardOutput = stdout
         }
         String commitObject = stdout.toString().trim()
@@ -87,7 +87,8 @@ def allCommited = { ->
     } catch (ignored) {
         return false; // NoGitSystemAvailable
     }
-    return stringBuilder.toString().contains("nothing to commit")
+    return stringBuilder.toString().isEmpty()
+
 }
 
 tasks.matching { it instanceof Test }.all {
