@@ -190,8 +190,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
         // prepare task for execution in 1 sec
         // cancel waiting task to prevent sending multiple posts
-        if (callback.getPost() != null)
-            callback.getPost().cancel(false);
+        ScheduledFuture<?> scheduledFuture =  callback.getPost();
+        if (scheduledFuture != null)
+            scheduledFuture.cancel(false);
         Runnable task = new PostRunnable();
         final int sec = 1;
         callback.setPost(eventWorker.schedule(task, sec, TimeUnit.SECONDS));

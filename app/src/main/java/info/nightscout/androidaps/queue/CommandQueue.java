@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 
+import javax.annotation.Nullable;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -126,6 +128,7 @@ public class CommandQueue {
         queue.add(command);
     }
 
+    @Nullable
     synchronized void pickup() {
         performing = queue.poll();
     }
@@ -143,11 +146,11 @@ public class CommandQueue {
         return queue.size();
     }
 
-    public Command performing() {
+    Command performing() {
         return performing;
     }
 
-    public void resetPerforming() {
+    void resetPerforming() {
         performing = null;
     }
 
