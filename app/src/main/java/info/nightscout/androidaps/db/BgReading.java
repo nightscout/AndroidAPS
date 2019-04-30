@@ -251,12 +251,16 @@ public class BgReading implements DataPointWithLabelInterface {
 
     // Copied from xDrip+
     public String calculateDirection(){
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        if (glucoseStatus == null || glucoseStatus.prev_glucose != 0)
+        GlucoseStatus glucoseStatus = getGlucoseStatus();
+        double slope = 0;
+        if (glucoseStatus == null || glucoseStatus.prev_glucose == 0)
             return "??";
 
-//        double slope = glucoseStatus.delta / (glucoseStatus.previous_date - glucoseStatus.date);
-        double slope = (glucoseStatus.glucose - glucoseStatus.prev_glucose) / (glucoseStatus.previous_date - glucoseStatus.date);
+        // Avoid division by 0
+        if (glucoseStatus.date == glucoseStatus.previous_date)
+            slope = 0;
+        else
+            slope = (glucoseStatus.prev_glucose - glucoseStatus.glucose) / (glucoseStatus.previous_date - glucoseStatus.date);
         log.debug("Slope is :"+slope+" delta "+glucoseStatus.delta+" date difference "+(glucoseStatus.date - glucoseStatus.previous_date));
         double slope_by_minute = slope * 60000;
         String arrow = "NONE";
@@ -279,6 +283,11 @@ public class BgReading implements DataPointWithLabelInterface {
         log.debug("Direction set to: "+arrow);
         return arrow;
 
+    }
+
+    // Used for testing purpose
+    protected GlucoseStatus getGlucoseStatus() {
+        return GlucoseStatus.getGlucoseStatusData();
     }
 
 }
