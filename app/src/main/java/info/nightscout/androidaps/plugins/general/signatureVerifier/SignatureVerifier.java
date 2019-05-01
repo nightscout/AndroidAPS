@@ -36,7 +36,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.SP;
 
 /**
- * AndroidAPS is meant to build by the user.
+ * AndroidAPS is meant to be build by the user.
  * In case someone decides to leak a ready-to-use APK nonetheless, we can still disable it.
  * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */
