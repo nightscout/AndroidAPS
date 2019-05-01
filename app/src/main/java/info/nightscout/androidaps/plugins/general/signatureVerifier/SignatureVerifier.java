@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -43,7 +44,7 @@ import info.nightscout.androidaps.utils.SP;
 public class SignatureVerifier extends PluginBase implements ConstraintsInterface {
 
     private static final String REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt";
-    private static final long UPDATE_INTERVAL = 24 * 60 * 60 * 1000;
+    private static final long UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1);
 
     private static SignatureVerifier plugin = new SignatureVerifier();
 
