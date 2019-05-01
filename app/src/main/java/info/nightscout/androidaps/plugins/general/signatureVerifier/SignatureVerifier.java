@@ -194,7 +194,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
         List<byte[]> revokedCerts = new ArrayList<>();
         for (String line : file.split("\n")) {
             if (line.startsWith("#")) continue;
-            revokedCerts.add(Hex.decode(line.replace(" ", "")));
+            revokedCerts.add(Hex.decode(line.replace(" ", "").replace(":", "")));
         }
         return revokedCerts;
     }
