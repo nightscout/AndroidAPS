@@ -2,33 +2,23 @@ package info.nightscout.androidaps.plugins.general.signatureVerifier;
 
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.provider.Settings;
 
-import com.j256.ormlite.stmt.query.In;
-
-import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +36,9 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.SP;
 
 /**
- * For legal versions, AndroidAPS is meant to build by the user. In case someone decides to publish a ready-to-use APK nonetheless, we can still disable it.
+ * AndroidAPS is meant to build by the user.
+ * In case someone decides to leak a ready-to-use APK nonetheless, we can still disable it.
+ * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */
 public class SignatureVerifier extends PluginBase implements ConstraintsInterface {
 
