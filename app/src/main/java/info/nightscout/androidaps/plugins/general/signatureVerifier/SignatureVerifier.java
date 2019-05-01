@@ -165,15 +165,18 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
     }
 
     private String readInputStream(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = inputStream.read(buffer)) != -1) {
-            baos.write(buffer, 0, read);
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                baos.write(buffer, 0, read);
+            }
+            baos.flush();
+            return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+        } finally {
+            inputStream.close();
         }
-        baos.flush();
-        inputStream.close();
-        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
     private String readRevokedCertsInAssets() throws IOException {
