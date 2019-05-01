@@ -75,6 +75,7 @@ public class Notification {
     public static final int DST_IN_24H = 50;
     public static final int DISKFULL = 51;
     public static final int OLDVERSION = 52;
+    public static final int INVALID_VERSION = 53;
 
 
     public int id;
