@@ -13,7 +13,7 @@ Signature algorithm name: SHA256withRSA
 Subject Public Key Algorithm: 2048-bit RSA key
 Version: 3
 ```
-Now revoke the certificate by attaching the SHA-256 checksum to ``app/src/main/assets/revoked_certs.txt`` and prepending a comment (starting with ``#``). Finally, push the changes to ``master`` branch to populate the changes.
+Now revoke the certificate by attaching the SHA-256 checksum to ``app/src/main/assets/revoked_certs.txt`` and prepending a comment (starting with ``#``). Finally, push the changes to ``master`` branch to populate them.
 
 ### Demo keystore
 You can verify this works by signing an APK with the demo keystore. The  password for both the keystore and the key is ``androidaps``.
