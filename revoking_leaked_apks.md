@@ -14,6 +14,9 @@ Subject Public Key Algorithm: 2048-bit RSA key
 Version: 3
 ```
 Now revoke the certificate by attaching the SHA-256 checksum to ``app/src/main/assets/revoked_certs.txt`` and prepending a comment (starting with ``#``). Finally, push the changes to ``master`` branch to populate them.
-
+```
+#Demo certificate
+51:6D:12:67:4C:27:F4:9B:9F:E5:42:9B:01:B3:98:E4:66:2B:85:B7:A8:DD:70:32:B7:6A:D7:97:9A:0D:97:10
+````
 ### Demo keystore
 You can verify this works by signing an APK with the demo keystore. The  password for both the keystore and the key is ``androidaps``.
