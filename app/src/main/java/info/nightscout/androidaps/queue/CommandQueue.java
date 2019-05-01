@@ -128,7 +128,6 @@ public class CommandQueue {
         queue.add(command);
     }
 
-    @Nullable
     synchronized void pickup() {
         performing = queue.poll();
     }
