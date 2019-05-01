@@ -1,5 +1,5 @@
 ## Revoking leaked APKs
-In order to revoke a leaked APK, you need to extract the certificate first. This can be done by extracting the file ``META-INF\CERT.RSA``. Open a terminal and run ``keytool -printcert -file CERT.RSA`` to get the SHA-256 fingerprint. The ``keytool`` utility is part of every JDK installation.
+In order to revoke a leaked APK, you need to retrieve the certificate first. This can be done by extracting the file ``META-INF\CERT.RSA`` from the APK. Open a terminal and run ``keytool -printcert -file CERT.RSA`` to get the SHA-256 fingerprint. The ``keytool`` utility is part of every JDK installation.
 ```
 > keytool -printcert -file CERT.RSA
 Owner: O=AndroidAPS
