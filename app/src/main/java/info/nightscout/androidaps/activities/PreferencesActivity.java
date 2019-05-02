@@ -93,7 +93,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             } else if (editTextPref.getText() != null) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {
+            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
                 pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }

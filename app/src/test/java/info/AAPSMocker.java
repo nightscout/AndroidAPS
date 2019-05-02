@@ -150,6 +150,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
         when(MainApp.gs(R.string.cob)).thenReturn("COB");
         when(MainApp.gs(R.string.value_unavailable_short)).thenReturn("n/a");
+        when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
     }
 
     public static MainApp mockMainApp() {
