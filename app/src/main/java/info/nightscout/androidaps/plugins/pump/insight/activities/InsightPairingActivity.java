@@ -167,8 +167,8 @@ public class InsightPairingActivity extends AppCompatActivity implements Insight
                 intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
                 registerReceiver(broadcastReceiver, intentFilter);
                 bluetoothAdapter.startDiscovery();
+                scanning = true;
             }
-            scanning = true;
         }
     }
 
