@@ -12,7 +12,7 @@
     <string name="danar_useextended_title">Naudoti ištęstinį bolusą &gt;200%%</string>
     <string name="danar_bt_name_title">DanaR Bluetooth įrenginys</string>
     <string name="ns_sync_use_absolute_title">Visada naudoti bazės absoliučias vertes</string>
-    <string name="alert_dialog_storage_permission_text">Prašome iš naujo paleisti telefoną arba sistemos nustatymuose iš naujo paleisti AndroidAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebint ir tikrinant, ar algoritmai veikia tinkamai)!</string>
+    <string name="alert_dialog_storage_permission_text">Prašome iš naujo paleisti telefoną arba sistemos nustatymuose iš naujo paleisti AndroidAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti ar algoritmai veikia tinkamai)!</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
     <string name="description_careportal">Papildomų įrašų žurnalas.</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
@@ -147,8 +147,8 @@
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="treatmentdeliveryerror">Boluso suleidimo klaida</string>
     <string name="tempbasaldeliveryerror">Laikinos bazės suleidimo klaida</string>
-    <string name="overview_newtempbasal_basalpercent">Valandinė bazė [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100 % = dabartinis)</string>
+    <string name="overview_newtempbasal_basalpercent">Valandinė bazė [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%%(100%% - pasirinkta)</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="overview_calculator_label">Skaičiuotuvas</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">Pompos AIO</string>
     <string name="danar_dailyunits">Paros insulinas</string>
     <string name="pump_lastbolus_label">Paskutinis bolusas</string>
-    <string name="hoursago">prieš %.1fval</string>
+    <string name="hoursago">Prieš %1$.1f valandų</string>
     <string name="danar_invalidinput">Neteisingai įvesti duomenys</string>
     <string name="danar_valuenotsetproperly">Vertė nėra tinkamai nustatyta</string>
     <string name="reloadprofile">Atnaujinti profilį</string>
@@ -528,7 +528,7 @@
     <string name="resistantadult">Insulinui rezistentiškas suaugęs</string>
     <string name="patientage_summary">Pasirinkite paciento amžių saugumo riboms nustatyti</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s įtraukite baterijos optimizavimą į baltąjį sąrašą, tinkamam veikimui užtikrinti</string>
+    <string name="needwhitelisting">%1$s įtraukite į baterijos optimizavimo baltąjį sąrašą tinkamam veikimui užtikrinti</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="loopsuspendedfor">Sustabdyta (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolusas (%1$d m)</string>
@@ -564,8 +564,8 @@
     <string name="show_statuslights_summary">Pradžios ekrane rodyti spalvotus indikatorius adatos, insulino, sensoriaus naudojimo trukmei bei baterijos įkrovimo lygiui.</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
-    <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%]</string>
-    <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%]</string>
+    <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%%]</string>
+    <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%%]</string>
     <string name="iob">AIO</string>
     <string name="cob">AAO</string>
     <string name="virtualpump_firmware_label">Programinė įranga</string>
@@ -764,7 +764,7 @@
     <string name="combo_pump_state_running">Vykdoma</string>
     <string name="combo_pump_action_cancelling_tbr">Laikina bazė atšaukiama</string>
     <string name="combo_pump_action_setting_tbr">Nustatyti laikiną bazę (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusas (%.1f vv)</string>
+    <string name="combo_pump_action_bolusing">Leidžiamas bolusas (%1$.1f vv)</string>
     <string name="combo_pump_action_refreshing">Atnaujinama</string>
     <string name="combo_pump_unsupported_operation">Pompa negali įvykdyti prašomos operacijos</string>
     <string name="combo_low_suspend_forced_notification">Nesaugu: aktyvus ištęstinis arba dvibangis bolusas. Ciklas nustatytas stabdymui prie žemo tik 6 valandoms. Aktyvūs tik paprasti bolusai.</string>
@@ -1156,6 +1156,10 @@
     <string name="sms_wrongcode">Neteisingas kodas. Komanda atšaukta.</string>
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="profileswitchcreated">Profilio perjungimas sukurtas</string>
+    <string name="versionChecker">Versijos tikrintuvas</string>
+    <string name="old_version">sena versija</string>
+    <string name="very_old_version">labai sena versija</string>
+    <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d dienų! Po 60 d. grįšite prie stabdymo prie žemo, po 90 d. ciklas bus išjungtas.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d diena</item>
         <item quantity="few">%1$d diena</item>

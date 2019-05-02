@@ -147,8 +147,8 @@
     <string name="constraints_violation">Violação das restrições</string>
     <string name="treatmentdeliveryerror">Erro na entrega do bolus</string>
     <string name="tempbasaldeliveryerror">Erro na entrega da basal temporária</string>
-    <string name="overview_newtempbasal_basalpercent">Valor da Basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = atual)</string>
+    <string name="overview_newtempbasal_basalpercent">Valor da Basal [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = actual)</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">IOB Bomba</string>
     <string name="danar_dailyunits">Unidades diárias</string>
     <string name="pump_lastbolus_label">Último bólus</string>
-    <string name="hoursago">%.1fh atrás</string>
+    <string name="hoursago">%1$.1fh atrás</string>
     <string name="danar_invalidinput">Entrada Inválida</string>
     <string name="danar_valuenotsetproperly">Valor não definido corretamente</string>
     <string name="reloadprofile">Recarregar perfil</string>
@@ -528,7 +528,7 @@
     <string name="resistantadult">Adulto resistente insulina</string>
     <string name="patientage_summary">Por favor seleccione a idade do diabético para definir os limites de segurança</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
+    <string name="needwhitelisting">%1$s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
     <string name="loopsuspended">Loop suspenso</string>
     <string name="loopsuspendedfor">Suspendido (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbólus (%1$d m)</string>
@@ -564,8 +564,8 @@
     <string name="show_statuslights_summary">Ativar as luzes de status para idade da cânula, idade da insulina, idade do sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
-    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%]</string>
+    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
+    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -764,7 +764,7 @@
     <string name="combo_pump_state_running">A correr</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelar TBR</string>
     <string name="combo_pump_action_setting_tbr">A definir TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Injectando (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Injectando (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">A actualizar</string>
     <string name="combo_pump_unsupported_operation">Operação solicitada não suportada pela bomba</string>
     <string name="combo_low_suspend_forced_notification">Ultilização nao segura: bolus estendudos ou multionda estão activos. Modo do loop foi alterado para apenas suspender em limite inferior por 6h. Apenas são suportados bolus normais em modo loop</string>
@@ -1129,7 +1129,7 @@
     <string name="refresh">Actualizar</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
-    <string name="short_status_last_connected">Última conexão:%1$d minutos atrás</string>
+    <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
     <string name="short_status_tbr">Basal temporária: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
@@ -1139,7 +1139,7 @@
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="recovery_duration">Duração da recuperação</string>
-    <string name="timeout_during_handshake">Tempo de operação excedido - reset bluetooth</string>
+    <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
@@ -1156,6 +1156,10 @@
     <string name="sms_wrongcode">Código errado. Comando cancelado.</string>
     <string name="notconfigured">Não configurado</string>
     <string name="profileswitchcreated">Troca de perfil criada</string>
+    <string name="versionChecker">Verificador de Versão</string>
+    <string name="old_version">versão antiga</string>
+    <string name="very_old_version">versão muito antiga</string>
+    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

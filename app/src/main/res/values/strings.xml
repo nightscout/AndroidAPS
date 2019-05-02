@@ -1382,9 +1382,9 @@
     <string name="copy_short">COPY</string>
     <string name="addnew">Add new</string>
     <string name="versionChecker">Version Checker</string>
-    <string name="key_new_version_available_since" translatable="false">new_version_available_since</string>
+    <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
     <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
-    <string name="key_last_versioncheck" translatable="false">key_last_versioncheck</string>
+    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
 
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>

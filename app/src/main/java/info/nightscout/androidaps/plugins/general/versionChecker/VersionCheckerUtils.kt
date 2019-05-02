@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.io.InputStream
+import java.util.concurrent.TimeUnit
 
 // check network connection
 fun isConnected(): Boolean {
@@ -35,8 +36,22 @@ inline fun InputStream.findVersion(): String? {
 
 private val log = LoggerFactory.getLogger(L.CORE)
 
+
+fun triggerCheckVersion() {
+
+    if(!SP.contains(R.string.key_last_time_this_version_detected)) {
+        // On a new installation, set it as 30 days old in order to warn that there is a new version.
+        SP.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30))
+    }
+
+    // If we are good, only check once every day.
+    if(System.currentTimeMillis() > SP.getLong(R.string.key_last_time_this_version_detected, 0) + CHECK_EVERY){
+        checkVersion()
+    }
+}
+
 @Suppress("DEPRECATION")
-fun checkVersion() = if (isConnected()) {
+private fun checkVersion() = if (isConnected()) {
     Thread {
         try {
             val request = HttpGet("https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/build.gradle")
@@ -56,12 +71,17 @@ fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
         comparison == null -> onVersionNotDetectable()
         comparison == 0 -> onSameVersionDetected()
         comparison > 0 -> onNewVersionDetected(currentVersion = currentVersion, newVersion = newVersion)
-        else -> log.debug("Version newer than master. Are you developer?")
+        else -> onOlderVersionDetected()
     }
 }
 
+private fun onOlderVersionDetected() {
+    log.debug("Version newer than master. Are you developer?")
+    SP.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis())
+}
+
 fun onSameVersionDetected() {
-    SP.remove(R.string.key_new_version_available_since)
+    SP.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis())
 }
 
 fun onVersionNotDetectable() {
@@ -69,10 +89,13 @@ fun onVersionNotDetectable() {
 }
 
 fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
-    log.debug("Version ${currentVersion} outdated. Found $newVersion")
-    val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
-    MainApp.bus().post(EventNewNotification(notification))
-    SP.putLong(R.string.key_new_version_available_since, System.currentTimeMillis())
+    val now = System.currentTimeMillis()
+    if(now > SP.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
+        log.debug("Version ${currentVersion} outdated. Found $newVersion")
+        val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
+        MainApp.bus().post(EventNewNotification(notification))
+        SP.putLong(R.string.key_last_versionchecker_warning, now)
+    }
 }
 
 fun String.versionStrip() = this.mapNotNull {
@@ -82,3 +105,7 @@ fun String.versionStrip() = this.mapNotNull {
         else -> null
     }
 }.joinToString(separator = "")
+
+
+val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
+val WARN_EVERY = TimeUnit.DAYS.toMillis(1)

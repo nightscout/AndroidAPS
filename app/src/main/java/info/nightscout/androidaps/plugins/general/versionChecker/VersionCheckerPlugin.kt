@@ -23,7 +23,7 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         checkWarning()
-        checkUpdate()
+        triggerCheckVersion()
         return if (isOldVersion(GRACE_PERIOD_VERY_OLD))
             value.set(false, MainApp.gs(R.string.very_old_version), this)
         else
@@ -32,32 +32,26 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
 
     private fun checkWarning() {
         val now = System.currentTimeMillis()
+        
+        if (!SP.contains(R.string.key_last_versionchecker_plugin_warning)) {
+            SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+            return
+        }
+
+
         if (isOldVersion(GRACE_PERIOD_WARNING) && shouldWarnAgain(now)) {
             // store last notification time
-            SP.putLong(R.string.key_last_versionchecker_warning, now)
+            SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            val message = MainApp.gs(R.string.new_version_warning, Math.round(now / TimeUnit.DAYS.toMillis(1).toDouble()))
+            val message = MainApp.gs(R.string.new_version_warning, Math.round((now - SP.getLong(R.string.key_last_time_this_version_detected, now)) / TimeUnit.DAYS.toMillis(1).toDouble()))
             val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
             MainApp.bus().post(EventNewNotification(notification))
         }
     }
 
-    private fun checkUpdate() {
-        val now = System.currentTimeMillis()
-        if (shouldCheckVersionAgain(now)) {
-            // store last notification time
-            SP.putLong(R.string.key_last_versioncheck, now)
-
-            checkVersion()
-        }
-    }
-
-    private fun shouldCheckVersionAgain(now: Long) =
-            now > SP.getLong(R.string.key_last_versioncheck, 0) + CHECK_EVERY
-
     private fun shouldWarnAgain(now: Long) =
-            now > SP.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY
+            now > SP.getLong(R.string.key_last_versionchecker_plugin_warning, 0) + WARN_EVERY
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
             if (isOldVersion(GRACE_PERIOD_OLD))
@@ -67,10 +61,9 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
 
     private fun isOldVersion(gracePeriod: Long): Boolean {
         val now = System.currentTimeMillis()
-        return      now > SP.getLong(R.string.key_new_version_available_since, 0) + gracePeriod
+        return      now > SP.getLong(R.string.key_last_time_this_version_detected, 0) + gracePeriod
     }
 
-    val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
     val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
     val GRACE_PERIOD_WARNING = TimeUnit.DAYS.toMillis(30)
     val GRACE_PERIOD_OLD = TimeUnit.DAYS.toMillis(60)

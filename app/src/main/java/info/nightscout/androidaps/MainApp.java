@@ -90,6 +90,8 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.fabric.sdk.android.Fabric;
 
+import static info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
+
 
 public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
@@ -149,6 +151,9 @@ public class MainApp extends Application {
         sBus = L.isEnabled(L.EVENTS) && devBranch ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         registerLocalBroadcastReceiver();
+
+        //trigger here to see the new version on app start after an update
+        triggerCheckVersion();
 
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
