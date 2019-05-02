@@ -143,8 +143,6 @@
     <string name="constraints_violation">Vincolo Violato</string>
     <string name="treatmentdeliveryerror">Errore di erogazione del bolo</string>
     <string name="tempbasaldeliveryerror">Errore di somministrazione basale temporale</string>
-    <string name="overview_newtempbasal_basalpercent">Valore Basale [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = corrente)</string>
     <string name="setbasalquestion">Accettare il nuovo basale temp</string>
     <string name="overview_treatment_label">Boli</string>
     <string name="overview_calculator_label">Calcolatore</string>
@@ -244,7 +242,6 @@
     <string name="danar_iob_label">IOB Microinfusore</string>
     <string name="danar_dailyunits">Unita\' giornaliera</string>
     <string name="pump_lastbolus_label">Ultimo Bolo</string>
-    <string name="hoursago">%.1fh fa</string>
     <string name="danar_invalidinput">Data Errata</string>
     <string name="danar_valuenotsetproperly">Valore non impostato correttamente</string>
     <string name="reloadprofile">Aggiorna Profilo</string>
@@ -502,7 +499,6 @@
     <string name="resistantadult">Insulina resistente</string>
     <string name="patientage_summary">Si prega di selezionare l\'età paziente e di impostare i limiti di sicurezza</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s ha bisogno di whitelisting di ottimizzazione della batteria per un buon funzionamento</string>
     <string name="loopsuspended">Sospensione Loop</string>
     <string name="loopsuspendedfor">Sospendi (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolo (%1$d m)</string>
@@ -722,7 +718,6 @@
     <string name="combo_pump_state_running">In esecuzione</string>
     <string name="combo_pump_action_cancelling_tbr">Annullamento di TBR</string>
     <string name="combo_pump_action_setting_tbr">L\'impostazione di TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
     <string name="combo_pump_action_refreshing">Aggiornando</string>
     <string name="combo_pump_unsupported_operation">Richiesta operazione non supportata dal micro</string>
     <string name="combo_low_suspend_forced_notification">L\'utilizzo non sicuro: estesi o multiwave boli sono attivi. Modalità loop è stato impostato basso-sospendere solo 6 ore. Solo normali boli sono supportati in modalità loop</string>

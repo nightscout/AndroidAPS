@@ -19,7 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
@@ -48,7 +48,7 @@ public class ProfileFunctions {
     }
 
     @Subscribe
-    public void onProfileSwitch(EventProfileSwitchChange ignored) {
+    public void onProfileSwitch(EventProfileNeedsUpdate ignored) {
         if (L.isEnabled(L.PROFILE))
             log.debug("onProfileSwitch");
         ConfigBuilderPlugin.getPlugin().getCommandQueue().setProfile(getProfile(), new Callback() {
@@ -62,7 +62,8 @@ public class ProfileFunctions {
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     MainApp.instance().startActivity(i);
                 }
-                MainApp.bus().post(new EventNewBasalProfile());
+                if (result.enacted)
+                    MainApp.bus().post(new EventNewBasalProfile());
             }
         });
     }

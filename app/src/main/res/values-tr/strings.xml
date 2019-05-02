@@ -143,8 +143,6 @@
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
     <string name="treatmentdeliveryerror">Bolus teslimat hatası</string>
     <string name="tempbasaldeliveryerror">Geçici Bazal teslimat hatası</string>
-    <string name="overview_newtempbasal_basalpercent">Bazal değeri [%]</string>
-    <string name="overview_newtempbasal_percent_label">% ( 100% = aktuel)</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_treatment_label">Tedavi</string>
     <string name="overview_calculator_label">Hesap makinesi</string>
@@ -244,7 +242,6 @@
     <string name="danar_iob_label">IOB(Aktif insülin) pompa</string>
     <string name="danar_dailyunits">Günlük birimleri</string>
     <string name="pump_lastbolus_label">Son bolus</string>
-    <string name="hoursago">%.1fs önce</string>
     <string name="danar_invalidinput">Geçersiz bilgi girişi</string>
     <string name="danar_valuenotsetproperly">Değer düzgün ayarlanmamış</string>
     <string name="reloadprofile">Dosyayı yeniden yükle</string>
@@ -503,7 +500,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resistantadult">Yetişkin İnsülin direnci</string>
     <string name="patientage_summary">Güvenlik sınırlarını ayarlamak için lütfen hasta yaşını seçiniz</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s, düzgün bir şekilde çalışması için devre dışı bırakılmış pil performans ayarlaması gerektirir</string>
     <string name="loopsuspended">Döngü durduldu</string>
     <string name="loopsuspendedfor">Askıya alındı (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -725,7 +721,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="combo_pump_state_running">Çalışıyor</string>
     <string name="combo_pump_action_cancelling_tbr">TBR (Geçici Bazal Oranı) İptal ediliyor</string>
     <string name="combo_pump_action_setting_tbr">TBR(Geçici Bazal Oranı) ayarı (%1$d%% / %2$d dak)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f U) teslim ediliyor</string>
     <string name="combo_pump_action_refreshing">Yenileniyor...</string>
     <string name="combo_pump_unsupported_operation">İstenen işlem pompası tarafından desteklenmiyor</string>
     <string name="combo_low_suspend_forced_notification">Güvensiz kullanım: yayım veya çoklu dalgalı (kare dalgalı) boluslar aktiftir. Döngü modu 6 saat içinde ekstra insülin vermeyecektir. Döngü modunda sadece normal boluslar desteklenir</string>

@@ -147,8 +147,8 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="treatmentdeliveryerror">Chyba podání bolusu</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
-    <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = současný)</string>
+    <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = současný)</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
@@ -248,7 +248,7 @@
     <string name="danar_iob_label">IOB z pumpy</string>
     <string name="danar_dailyunits">Jednotek za den</string>
     <string name="pump_lastbolus_label">Poslední bolus</string>
-    <string name="hoursago">před %.1fh</string>
+    <string name="hoursago">před %1$.1fh</string>
     <string name="danar_invalidinput">Chybná vstupní data</string>
     <string name="danar_valuenotsetproperly">Hodnota nenastavena správně</string>
     <string name="reloadprofile">Obnovit profil</string>
@@ -528,7 +528,7 @@
     <string name="resistantadult">Dospělý s nízkou citlivostí</string>
     <string name="patientage_summary">Vyberte věk pacienta pro nastavení bezpečnostních limitů</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
+    <string name="needwhitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
     <string name="loopsuspendedfor">Pozastaveno (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -564,8 +564,8 @@
     <string name="show_statuslights_summary">Povolte stavové indikátory pro stáří kanyly, inzulínu, senzoru, zásobníku a baterie na domovské obrazovce.</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
-    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
-    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
+    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%%]</string>
+    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -764,7 +764,7 @@
     <string name="combo_pump_state_running">Běží</string>
     <string name="combo_pump_action_cancelling_tbr">Rušení dočasného bazálu</string>
     <string name="combo_pump_action_setting_tbr">Nastavování doč. bazálu (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Bolus (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Obnovování</string>
     <string name="combo_pump_unsupported_operation">Požadovaná operace není pumpou podporována</string>
     <string name="combo_low_suspend_forced_notification">Nebezpečné použití: extended nebo multiwave bolus je aktivní. Pumpa byla vypnuta jen na 6 hodin. Povolené jsou pouze normální bolusy.</string>
@@ -1156,6 +1156,10 @@
     <string name="sms_wrongcode">Nesprávný kód. Příkaz zrušen.</string>
     <string name="notconfigured">Není nakonfigurováno</string>
     <string name="profileswitchcreated">Přepnutí profilu vytvořeno</string>
+    <string name="versionChecker">Kontrola verze</string>
+    <string name="old_version">stará verze</string>
+    <string name="very_old_version">velmi stará verze</string>
+    <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po 60 dnech, vypnutí smyčky po 90 dnech</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

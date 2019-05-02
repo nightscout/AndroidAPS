@@ -146,8 +146,8 @@
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="treatmentdeliveryerror">Σφάλμα παράδοσης Bolus</string>
     <string name="tempbasaldeliveryerror">Σφάλμα παράδοσης Προσ Ρυθμού</string>
-    <string name="overview_newtempbasal_basalpercent">Τιμή Βασικού [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = τρέχων)</string>
+    <string name="overview_newtempbasal_basalpercent">Τιμή Βασικού [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = τρέχων)</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
@@ -247,7 +247,7 @@
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="danar_dailyunits">Μονάδες ανά ημέρα </string>
     <string name="pump_lastbolus_label">Τελευταίο Bolus:</string>
-    <string name="hoursago">πριν από %.1fh</string>
+    <string name="hoursago">%1$.1fώρες πριν</string>
     <string name="danar_invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
@@ -527,7 +527,7 @@
     <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
     <string name="patientage_summary">Παρακαλώ επιλέξτε ηλικία χρήστη για να ορισθούν όρια ασφαλείας</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">Το %s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
+    <string name="needwhitelisting">%1$s χρειάζεται λίστα βελτιστοποίησης μπαταρίας για σωστή απόδοση</string>
     <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
     <string name="loopsuspendedfor">Αναστολή (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -563,8 +563,8 @@
     <string name="show_statuslights_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπεταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
+    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%%]</string>
+    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Έκδοση</string>
@@ -763,7 +763,7 @@
     <string name="combo_pump_state_running">Εκτελείτε</string>
     <string name="combo_pump_action_cancelling_tbr">Ακυρώνεται TBR</string>
     <string name="combo_pump_action_setting_tbr">Ρύθμιση TBR (%1$d%% / %2$d λεπτά)</string>
-    <string name="combo_pump_action_bolusing">Bolus (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Bolus (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Ανανέωση</string>
     <string name="combo_pump_unsupported_operation">Η λειτουργία που ζητήθηκε δεν υποστηρίζεται από την αντλία</string>
     <string name="combo_low_suspend_forced_notification">Επικίνδυνη χρήση: Εκτεταμένο ή πολλαπλά bolus είναι ενεργό. Το κύκλωμα απενεργοποιήθηκε λόγω low-suspend μόνο για 6 ώρες. Επιτρέπονται μόνο κανονικά bolus</string>
@@ -1155,6 +1155,10 @@
     <string name="sms_wrongcode">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
     <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
     <string name="profileswitchcreated">Δημιουργήθηκε αλλαγή προφίλ</string>
+    <string name="versionChecker">Έλεγχος Έκδοσης</string>
+    <string name="old_version">παλιά έκδοση</string>
+    <string name="very_old_version">πολύ παλιά έκδοση</string>
+    <string name="new_version_warning">Νέα έκδοση για τουλάχιστον %1$d ημέρες διαθέσιμη! Επιστροφή σε LGS μετά από 60 ημέρες, το κύκλωμα θα απενεργοποιηθεί μετά από 90 ημέρες</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d ημέρα</item>
         <item quantity="other">%1$d ημέρες</item>

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data;
+package info.nightscout.androidaps.plugins.iob.iobCobCalculatorPlugin;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +16,7 @@ import java.util.List;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -36,7 +37,7 @@ public class GlucoseStatusTest {
     @Test
     public void toStringShouldBeOverloaded() {
         GlucoseStatus glucoseStatus = new GlucoseStatus();
-        Assert.assertEquals(true, glucoseStatus.toString().contains("Delta"));
+        Assert.assertEquals(true, glucoseStatus.log().contains("Delta"));
     }
 
     @Test
@@ -133,10 +134,7 @@ public class GlucoseStatusTest {
     public void initMocking() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockStrings();
-
-        PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
-        iobCobCalculatorPlugin = mock(IobCobCalculatorPlugin.class);
-        when(IobCobCalculatorPlugin.getPlugin()).thenReturn(iobCobCalculatorPlugin);
+        iobCobCalculatorPlugin = AAPSMocker.mockIobCobCalculatorPlugin();
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());

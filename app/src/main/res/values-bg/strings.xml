@@ -146,8 +146,8 @@
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="treatmentdeliveryerror">Грешка при подаване на болус</string>
     <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
-    <string name="overview_newtempbasal_basalpercent">Стойност на базал [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = текущ)</string>
+    <string name="overview_newtempbasal_basalpercent">Базална стойност [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = текущ)</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
@@ -247,7 +247,7 @@
     <string name="danar_iob_label">IOB на помпата</string>
     <string name="danar_dailyunits">Инсулин за деня</string>
     <string name="pump_lastbolus_label">Последен болус:</string>
-    <string name="hoursago">преди %.1fч</string>
+    <string name="hoursago">преди %1$.1fч</string>
     <string name="danar_invalidinput">Грешни входящи данни</string>
     <string name="danar_valuenotsetproperly">Неправилна стойност</string>
     <string name="reloadprofile">Презареди профил</string>
@@ -527,7 +527,7 @@
     <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
     <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s се нуждае от зключване на оптимизиране на батерията за пълна функционалност</string>
+    <string name="needwhitelisting">%1$s се нуждае от изключване от списъка за оптимизиране на батерията за пълна функционалност</string>
     <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor">Изключен (%1$d мин)</string>
     <string name="loopsuperbolusfor">Суперболус (%1$d мин)</string>
@@ -563,8 +563,8 @@
     <string name="show_statuslights_summary">Покажи статус светлини за канула, инсулин, сензор, резервоар и батерията на началния екран.</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Критично ниво на останал инсулин в резервоар [Е]</string>
-    <string name="statuslights_bat_warning">Аларма за заряд на батерия [%]</string>
-    <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
+    <string name="statuslights_bat_warning">Ниско ниво на батерията под [%%]</string>
+    <string name="statuslights_bat_critical">Критично ниво на батерията под [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">СОВ</string>
     <string name="virtualpump_firmware_label">Фърмуер</string>
@@ -763,7 +763,7 @@
     <string name="combo_pump_state_running">Изпълнява</string>
     <string name="combo_pump_action_cancelling_tbr">Отказва временен базал</string>
     <string name="combo_pump_action_setting_tbr">Задава временен базал (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Болус (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Болус (%1$.1f Е)</string>
     <string name="combo_pump_action_refreshing">Обновява</string>
     <string name="combo_pump_unsupported_operation">Исканата операция не се поддържа от помпата</string>
     <string name="combo_low_suspend_forced_notification">Опасно използване: удължени или многовълнови болуси са активни. Помпата  е изключена за само 6 часа. Само нормални болуси се поддържат.</string>
@@ -1155,6 +1155,10 @@
     <string name="sms_wrongcode">Грешен код. Командата не е изпълнена.</string>
     <string name="notconfigured">Не е конфигуриран</string>
     <string name="profileswitchcreated">Създаден запис - Промяна на профил</string>
+    <string name="versionChecker">Проверка на версията</string>
+    <string name="old_version">стара версия</string>
+    <string name="very_old_version">много стара версия</string>
+    <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Връщане към LGS след 60 дни, цикълът ще бъде изключен след 90 дни</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

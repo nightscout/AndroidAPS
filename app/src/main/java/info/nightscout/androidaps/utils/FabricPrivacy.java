@@ -112,11 +112,20 @@ public class FabricPrivacy {
         if (!fabricEnabled()) return;
 
         String closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed().value() ? "CLOSED_LOOP_ENABLED" : "CLOSED_LOOP_DISABLED";
+        // Size is limited to 36 chars
+        String remote = BuildConfig.REMOTE
+                .replace("https://","")
+                .replace("http://","")
+                .replace(".git", "")
+                .replace(".com/", ":")
+                .replace(".org/", ":")
+                .replace(".net/", ":");
 
         MainApp.getFirebaseAnalytics().setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled);
         MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.getLanguage(MainApp.instance()));
         MainApp.getFirebaseAnalytics().setUserProperty("Version", BuildConfig.VERSION);
         MainApp.getFirebaseAnalytics().setUserProperty("HEAD", BuildConfig.HEAD);
+        MainApp.getFirebaseAnalytics().setUserProperty("Remote", remote);
         if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
             MainApp.getFirebaseAnalytics().setUserProperty("Pump", ConfigBuilderPlugin.getPlugin().getActivePump().getClass().getSimpleName());
         if (ConfigBuilderPlugin.getPlugin().getActiveAPS() != null)
