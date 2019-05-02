@@ -4,11 +4,13 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
  * Created by andy on 10/25/18.
  */
 
+import android.util.Log;
+
+import org.joda.time.LocalDateTime;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import org.joda.time.LocalDateTime;
 
 /**
  * This is simple version of ATechDate, limited only to one format (yyyymmddHHMIss)
@@ -39,7 +41,13 @@ public class DateTimeUtil {
 
         int second = (int)atechDateTime;
 
-        return new LocalDateTime(year, month, dayOfMonth, hourOfDay, minute, second);
+        try {
+            return new LocalDateTime(year, month, dayOfMonth, hourOfDay, minute, second);
+        } catch (Exception ex) {
+            Log.e("DateTimeUtil", String.format("Error creating LocalDateTime from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
+            //return null;
+            throw ex;
+        }
     }
 
 

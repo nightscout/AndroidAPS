@@ -255,6 +255,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+            boolean changed = false;
 
             if (treatment.source == Source.PUMP) {
                 // check for changed from pump change in NS
@@ -262,16 +263,15 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 if (existingTreatment != null) {
                     boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
                     boolean sameSource = existingTreatment.source == treatment.source;
+
                     if (!equalRePumpHistory) {
                         // another treatment exists. Update it with the treatment coming from the pump
                         if (L.isEnabled(L.DATATREATMENTS))
                             log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
                         long oldDate = existingTreatment.date;
 
-                        //preserve carbs
-                        if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
-                            treatment.carbs = existingTreatment.carbs;
-                        }
+                        // preserve carbs & SMB
+                        changed = preserveCarbsAndSMB(treatment, existingTreatment);
 
                         getDao().delete(existingTreatment); // need to delete/create because date may change too
                         existingTreatment.copyBasics(treatment);
@@ -279,8 +279,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         DatabaseHelper.updateEarliestDataChange(oldDate);
                         DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
                         scheduleTreatmentChange(treatment);
-                        return new UpdateReturn(sameSource, false); //updating a pump treatment with another one from the pump is not counted as clash
+                        return new UpdateReturn(sameSource || changed, false); //updating a pump treatment with another one from the pump is not counted as clash
                     }
+
                     return new UpdateReturn(equalRePumpHistory, false);
                 }
                 existingTreatment = getDao().queryForId(treatment.date);
@@ -292,10 +293,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     if (L.isEnabled(L.DATATREATMENTS))
                         log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
 
-                    //preserve carbs
-                    if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
-                        treatment.carbs = existingTreatment.carbs;
-                    }
+                    // preserve carbs & SMB
+                    changed = preserveCarbsAndSMB(treatment, existingTreatment);
 
                     getDao().delete(existingTreatment); // need to delete/create because date may change too
                     existingTreatment.copyFrom(treatment);
@@ -303,7 +302,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     DatabaseHelper.updateEarliestDataChange(oldDate);
                     DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
                     scheduleTreatmentChange(treatment);
-                    return new UpdateReturn(equalRePumpHistory || sameSource, false);
+                    return new UpdateReturn(equalRePumpHistory || sameSource || changed, false);
                 }
                 getDao().create(treatment);
                 if (L.isEnabled(L.DATATREATMENTS))
@@ -379,12 +378,28 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return new UpdateReturn(false, false);
     }
 
+    private boolean preserveCarbsAndSMB(Treatment treatment, Treatment existingTreatment) {
+        if (existingTreatment.isValid) {
+            if (existingTreatment.carbs > 0 && treatment.carbs == 0) {
+                treatment.carbs = existingTreatment.carbs;
+            }
+
+            treatment.isSMB = (existingTreatment.isSMB || treatment.isSMB);
+
+            return true;
+        }
+
+        return false;
+    }
+
     private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
 
         log.debug("treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
 
         if (fromNightScout) {
             long pumpId_old = oldTreatment.pumpId;
+            boolean isSMB = (oldTreatment.isSMB || newTreatment.isSMB);
+
             oldTreatment.copyFrom(newTreatment);
 
             if (pumpId_old != 0) {
@@ -394,6 +409,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             if (oldTreatment.pumpId != 0 && oldTreatment.source != Source.PUMP) {
                 oldTreatment.source = Source.PUMP;
             }
+
+            oldTreatment.isSMB = isSMB;
 
         } else {
             oldTreatment.copyFrom(newTreatment);

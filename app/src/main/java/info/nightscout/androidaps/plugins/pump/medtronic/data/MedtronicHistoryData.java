@@ -174,26 +174,38 @@ public class MedtronicHistoryData {
 
         this.setLastHistoryRecordTime(pheLast.atechDateTime);
 
-        LocalDateTime dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime);
-        dt = dt.minusDays(1); // we keep 24 hours
+        LocalDateTime dt = null;
 
-        long dtRemove = DateTimeUtil.toATechDate(dt);
-
-        List<PumpHistoryEntry> removeList = new ArrayList<>();
-
-        for (PumpHistoryEntry pumpHistoryEntry : allHistory) {
-
-            if (!pumpHistoryEntry.isAfter(dtRemove)) {
-                removeList.add(pumpHistoryEntry);
-            }
+        try {
+            dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime);
+        } catch (Exception ex) {
+            LOG.error("Problem decoding date from last record: {}" + pheLast);
         }
 
-        this.allHistory.removeAll(removeList);
+        if (dt != null) {
 
-        this.sort(this.allHistory);
+            dt = dt.minusDays(1); // we keep 24 hours
 
-        LOG.debug("All History records [afterFilterCount={}, removedItemsCount={}, newItemsCount={}]",
-            allHistory.size(), removeList.size(), newHistory.size());
+            long dtRemove = DateTimeUtil.toATechDate(dt);
+
+            List<PumpHistoryEntry> removeList = new ArrayList<>();
+
+            for (PumpHistoryEntry pumpHistoryEntry : allHistory) {
+
+                if (!pumpHistoryEntry.isAfter(dtRemove)) {
+                    removeList.add(pumpHistoryEntry);
+                }
+            }
+
+            this.allHistory.removeAll(removeList);
+
+            this.sort(this.allHistory);
+
+            LOG.debug("All History records [afterFilterCount={}, removedItemsCount={}, newItemsCount={}]",
+                    allHistory.size(), removeList.size(), newHistory.size());
+        } else {
+            LOG.error("Since we couldn't determine date, we don't clean full history. This is just workaround.");
+        }
 
         this.newHistory.clear();
 
@@ -203,12 +215,12 @@ public class MedtronicHistoryData {
     public boolean hasRelevantConfigurationChanged() {
 
         return getStateFromFilteredList( //
-            PumpHistoryEntryType.ChangeBasalPattern, //
-            PumpHistoryEntryType.ClearSettings, //
-            PumpHistoryEntryType.SaveSettings, //
-            PumpHistoryEntryType.ChangeMaxBolus, //
-            PumpHistoryEntryType.ChangeMaxBasal, //
-            PumpHistoryEntryType.ChangeTempBasalType);
+                PumpHistoryEntryType.ChangeBasalPattern, //
+                PumpHistoryEntryType.ClearSettings, //
+                PumpHistoryEntryType.SaveSettings, //
+                PumpHistoryEntryType.ChangeMaxBolus, //
+                PumpHistoryEntryType.ChangeMaxBasal, //
+                PumpHistoryEntryType.ChangeTempBasalType);
 
     }
 
@@ -229,10 +241,10 @@ public class MedtronicHistoryData {
             PumpHistoryEntryType pumpHistoryEntryType = items.get(0).getEntryType();
 
             boolean isSuspended = !(pumpHistoryEntryType == PumpHistoryEntryType.TempBasalCombined || //
-                pumpHistoryEntryType == PumpHistoryEntryType.BasalProfileStart || //
-                pumpHistoryEntryType == PumpHistoryEntryType.Bolus || //
-                pumpHistoryEntryType == PumpHistoryEntryType.PumpResume || //
-            pumpHistoryEntryType == PumpHistoryEntryType.Prime);
+                    pumpHistoryEntryType == PumpHistoryEntryType.BasalProfileStart || //
+                    pumpHistoryEntryType == PumpHistoryEntryType.Bolus || //
+                    pumpHistoryEntryType == PumpHistoryEntryType.PumpResume || //
+                    pumpHistoryEntryType == PumpHistoryEntryType.Prime);
 
             LOG.debug("isPumpSuspended. Last entry type={}, isSuspended={}", pumpHistoryEntryType, isSuspended);
 
@@ -344,7 +356,7 @@ public class MedtronicHistoryData {
         List<PumpHistoryEntry> suspends = getSuspends();
 
         LOG.debug("ProcessHistoryData: FakeTBRs (suspend/resume) [count={}, items={}]", suspends.size(),
-            gsonPretty.toJson(suspends));
+                gsonPretty.toJson(suspends));
 
         if (suspends.size() > 0) {
             // processSuspends(treatments);
@@ -369,7 +381,7 @@ public class MedtronicHistoryData {
 
             TDD tddDbEntry = findTDD(tdd.atechDateTime, tddsDb);
 
-            DailyTotalsDTO totalsDTO = (DailyTotalsDTO)tdd.getDecodedData().get("Object");
+            DailyTotalsDTO totalsDTO = (DailyTotalsDTO) tdd.getDecodedData().get("Object");
 
             LOG.debug("DailtyTotals: {}", totalsDTO);
 
