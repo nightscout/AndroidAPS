@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
     }
 }
 apply plugin: "com.android.application"
@@ -109,6 +109,7 @@ android {
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
+        buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "DEV_VERSION", '"2.3.1-dev"'
         buildConfigField "String", "DEV_DATE", '"29.4.2019"'
         buildConfigField "String", "DEV_CHECKIN", '"ea60b6ceef30ccf32566bf7c6caa4f1f33b42f41"'
