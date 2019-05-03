@@ -141,15 +141,17 @@ public class QueueThread extends Thread {
                     // Pickup 1st command and set performing variable
                     if (queue.size() > 0) {
                         queue.pickup();
-                        if (L.isEnabled(L.PUMPQUEUE))
-                            log.debug("performing " + queue.performing().status());
-                        MainApp.bus().post(new EventQueueChanged());
-                        queue.performing().execute();
-                        queue.resetPerforming();
-                        MainApp.bus().post(new EventQueueChanged());
-                        lastCommandTime = System.currentTimeMillis();
-                        SystemClock.sleep(100);
-                        continue;
+                        if (queue.performing() != null) {
+                            if (L.isEnabled(L.PUMPQUEUE))
+                                log.debug("performing " + queue.performing().status());
+                            MainApp.bus().post(new EventQueueChanged());
+                            queue.performing().execute();
+                            queue.resetPerforming();
+                            MainApp.bus().post(new EventQueueChanged());
+                            lastCommandTime = System.currentTimeMillis();
+                            SystemClock.sleep(100);
+                            continue;
+                        }
                     }
                 }
 
@@ -173,7 +175,7 @@ public class QueueThread extends Thread {
                 }
             }
         } finally {
-            if (mWakeLock != null)
+            if (mWakeLock != null && mWakeLock.isHeld())
                 mWakeLock.release();
             if (L.isEnabled(L.PUMPQUEUE))
                 log.debug("thread end");
