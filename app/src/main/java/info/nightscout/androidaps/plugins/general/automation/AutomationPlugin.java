@@ -156,6 +156,9 @@ public class AutomationPlugin extends PluginBase {
     @Subscribe
     public void onEventLocationChange(EventLocationChange e) {
         eventLocationChange = e;
+        if (e != null)
+            log.debug(String.format("Grabbed location: %f %f Provider: %s", e.location.getLatitude(), e.location.getLongitude(), e.location.getProvider()));
+
         processActions();
     }
 
@@ -177,6 +180,9 @@ public class AutomationPlugin extends PluginBase {
     }
 
     private synchronized void processActions() {
+        if (!isEnabled(PluginType.GENERAL))
+            return;
+
         if (L.isEnabled(L.AUTOMATION))
             log.debug("processActions");
         for (AutomationEvent event : getAutomationEvents()) {

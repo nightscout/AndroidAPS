@@ -12,12 +12,24 @@ import info.nightscout.androidaps.MainApp;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class})
 public class LayoutBuilderTest {
-    LayoutBuilder layoutBuilder = new LayoutBuilder();
 
     @Test
     public void addTest() {
+        LayoutBuilder layoutBuilder = new LayoutBuilder();
+
         InputInsulin inputInsulin = new InputInsulin();
         layoutBuilder.add(inputInsulin);
+        Assert.assertEquals(1, layoutBuilder.mElements.size());
+    }
+
+    @Test
+    public void addConditionalTest() {
+        LayoutBuilder layoutBuilder = new LayoutBuilder();
+
+        InputInsulin inputInsulin = new InputInsulin();
+        layoutBuilder.add(inputInsulin, true);
+        Assert.assertEquals(1, layoutBuilder.mElements.size());
+        layoutBuilder.add(inputInsulin, false);
         Assert.assertEquals(1, layoutBuilder.mElements.size());
     }
 }

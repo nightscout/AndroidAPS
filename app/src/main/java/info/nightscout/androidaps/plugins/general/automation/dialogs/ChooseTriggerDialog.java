@@ -20,6 +20,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerIob;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerLocation;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget;
@@ -40,6 +41,7 @@ public class ChooseTriggerDialog extends DialogFragment {
         add(new TriggerProfilePercent());
         add(new TriggerTempTarget());
         add(new TriggerWifiSsid());
+        add(new TriggerLocation());
     }};
 
     private Unbinder mUnbinder;

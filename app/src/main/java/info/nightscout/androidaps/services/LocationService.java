@@ -18,12 +18,12 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 public class LocationService extends Service {
     private static Logger log = LoggerFactory.getLogger(L.LOCATION);
 
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
 
     public LocationService() {
@@ -33,7 +33,7 @@ public class LocationService extends Service {
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
 
-        public LocationListener(String provider) {
+        LocationListener(String provider) {
             if (L.isEnabled(L.LOCATION))
                 log.debug("LocationListener " + provider);
             mLastLocation = new Location(provider);
@@ -66,7 +66,7 @@ public class LocationService extends Service {
         }
     }
 
-    LocationListener mLocationListener = new LocationListener(LocationManager.PASSIVE_PROVIDER);
+    LocationListener mLocationListener;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -93,23 +93,23 @@ public class LocationService extends Service {
             if (SP.getString(R.string.key_location, "NONE").equals("NETWORK"))
                 mLocationManager.requestLocationUpdates(
                         LocationManager.NETWORK_PROVIDER,
-                        LOCATION_INTERVAL,
+                        T.mins(5).msecs(),
                         LOCATION_DISTANCE,
-                        mLocationListener
+                        mLocationListener = new LocationListener(LocationManager.NETWORK_PROVIDER)
                 );
             if (SP.getString(R.string.key_location, "NONE").equals("GPS"))
                 mLocationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
-                        LOCATION_INTERVAL,
+                        T.mins(5).msecs(),
                         LOCATION_DISTANCE,
-                        mLocationListener
+                        mLocationListener = new LocationListener(LocationManager.GPS_PROVIDER)
                 );
             if (SP.getString(R.string.key_location, "NONE").equals("PASSIVE"))
                 mLocationManager.requestLocationUpdates(
                         LocationManager.PASSIVE_PROVIDER,
-                        LOCATION_INTERVAL,
+                        T.mins(1).msecs(),
                         LOCATION_DISTANCE,
-                        mLocationListener
+                        mLocationListener = new LocationListener(LocationManager.PASSIVE_PROVIDER)
                 );
         } catch (java.lang.SecurityException ex) {
             log.error("fail to request location update, ignore", ex);
@@ -138,7 +138,7 @@ public class LocationService extends Service {
 
     private void initializeLocationManager() {
         if (L.isEnabled(L.LOCATION))
-            log.debug("initializeLocationManager - LOCATION_INTERVAL: " + LOCATION_INTERVAL + " LOCATION_DISTANCE: " + LOCATION_DISTANCE);
+            log.debug("initializeLocationManager - Provider: " + SP.getString(R.string.key_location, "NONE"));
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
