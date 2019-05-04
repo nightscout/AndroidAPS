@@ -16,6 +16,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -27,7 +28,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
-public class Treatment implements DataPointWithLabelInterface {
+public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -265,5 +266,15 @@ public class Treatment implements DataPointWithLabelInterface {
 
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         return insulinInterface.iobCalcForTreatment(this, time, dia);
+    }
+
+    @Override
+    public long getDate() {
+        return this.date;
+    }
+
+    @Override
+    public long getPumpId() {
+        return this.pumpId;
     }
 }

@@ -105,14 +105,14 @@ android {
         multiDexEnabled true
         versionCode 1500
         // dev_version: 2.3.1-dev
-        version "medtronic-0.9.4-SNAPSHOT"
+        version "medtronic-0.9.6-SNAPSHOT"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "DEV_VERSION", '"2.3.1-dev"'
-        buildConfigField "String", "DEV_DATE", '"29.4.2019"'
-        buildConfigField "String", "DEV_CHECKIN", '"ea60b6ceef30ccf32566bf7c6caa4f1f33b42f41"'
+        buildConfigField "String", "DEV_DATE", '"2.5.2019"'
+        buildConfigField "String", "DEV_CHECKIN", '"75d469a9db4bad6c619de8d36006e935c12b6ff1"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
@@ -276,6 +276,8 @@ dependencies {
     testImplementation "com.google.truth:truth:0.39"
     testImplementation 'org.robolectric:robolectric:3.8'
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
+    testImplementation "uk.org.lidalia:slf4j-test:1.2.0"
 
     androidTestImplementation "org.mockito:mockito-core:2.8.47"
     androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"

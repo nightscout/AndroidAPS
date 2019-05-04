@@ -107,7 +107,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     // V4
     // Andy58(0x58, "Unknown", 13, 5, 0), // TO DO is this one really there ???
 
-    BolusWizardChange(0x5a, "Bolus Wizard Change", PumpHistoryEntryGroup.Configuration, 2, 5, 117), // V2: 522+[B=143]
+    BolusWizardChange(0x5a, "Bolus Wizard Change", PumpHistoryEntryGroup.Configuration, 2, 5, 117), // V2: 522+[B=143] // V6 124/144
     BolusWizardBolusEstimate(0x5b, "Bolus Wizard Estimate", PumpHistoryEntryGroup.Configuration, 2, 5, 13), // 15 //
     UnabsorbedInsulin(0x5c, "Unabsorbed Insulin", PumpHistoryEntryGroup.Statistic, 5, 0, 0), // head[1] -> body
                                                                                              // length
@@ -220,7 +220,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
         EndResultTotals.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 3));
         Bolus.addSpecialRuleHead(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8));
         // BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
-        BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 143)); // V5:
+        BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137)); // V5:
         // 522
         // has
         // old

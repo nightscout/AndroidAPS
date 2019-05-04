@@ -876,6 +876,31 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         log.debug("TEMPBASAL: Already exists from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                     return false;
                 }
+
+                // search by date (in case its standard record that has become pump record)
+                QueryBuilder<TemporaryBasal, Long> queryBuilder2 = getDaoTemporaryBasal().queryBuilder();
+                Where where2 = queryBuilder2.where();
+                where2.eq("date", tempBasal.date);
+                PreparedQuery<TemporaryBasal> preparedQuery2 = queryBuilder2.prepare();
+                List<TemporaryBasal> trList2 = getDaoTemporaryBasal().query(preparedQuery2);
+
+                if (trList2.size() > 0) {
+                    old = trList2.get(0);
+
+                    old.copyFromPump(tempBasal);
+                    old.source = Source.PUMP;
+
+                    if (L.isEnabled(L.DATABASE))
+                        log.debug("TEMPBASAL: Updated record with Pump Data : " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+
+                    getDaoTemporaryBasal().update(old);
+
+                    updateEarliestDataChange(tempBasal.date);
+                    scheduleTemporaryBasalChange();
+
+                    return false;
+                }
+
                 getDaoTemporaryBasal().create(tempBasal);
                 if (L.isEnabled(L.DATABASE))
                     log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());

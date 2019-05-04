@@ -76,6 +76,7 @@ public class DailyTotalsDTO {
             case DailyTotals522:
                 decodeDailyTotals522(entry.getBody());
                 break;
+
             case DailyTotals523:
                 decodeDailyTotals523(entry.getBody());
                 break;
@@ -151,7 +152,7 @@ public class DailyTotalsDTO {
         // Delivery Stats: BOLUS: Food=0.00, Corr=0.00, Manual=4.20
         // Delivery Stats: NUM BOLUS: Food/Corr=0,Food+Corr=0, Manual=3
 
-        LOG.debug("515: {}", toString());
+        //LOG.debug("515: {}", toString());
     }
 
 
@@ -205,7 +206,7 @@ public class DailyTotalsDTO {
         // Delivery Stats: #Corr_only=0,Food+Corr=0.000, #Food+Corr=0
         // Delivery Stats: Manual = 0.95, #Manual=5
 
-        LOG.debug("523: {}", toString());
+        //LOG.debug("523: {}", toString());
 
     }
 

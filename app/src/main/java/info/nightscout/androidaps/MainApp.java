@@ -454,6 +454,14 @@ public class MainApp extends Application {
         return null;
     }
 
+
+    public static boolean isEngineeringMode() {
+        if (!Config.APS)
+            return true;
+        return engineeringMode;
+    }
+
+
     public static boolean isEngineeringModeOrRelease() {
         if (!Config.APS)
             return true;
