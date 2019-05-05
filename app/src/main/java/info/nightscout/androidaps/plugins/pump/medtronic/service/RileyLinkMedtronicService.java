@@ -123,6 +123,11 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
+    public void resetRileyLinkDevice() {
+        rfspy.resetRileyLinkDevice();
+    }
+
+
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
         return this.medtronicCommunicationManager;

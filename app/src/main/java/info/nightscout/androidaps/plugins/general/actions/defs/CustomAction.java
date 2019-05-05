@@ -24,6 +24,9 @@ public class CustomAction {
         this(nameResourceId, actionType, iconResourceId, true);
     }
 
+    public CustomAction(int nameResourceId, CustomActionType actionType, boolean enabled) {
+        this(nameResourceId, actionType, R.drawable.icon_actions_profileswitch, enabled);
+    }
 
     public CustomAction(int nameResourceId, CustomActionType actionType, int iconResourceId, boolean enabled) {
         this.name = nameResourceId;

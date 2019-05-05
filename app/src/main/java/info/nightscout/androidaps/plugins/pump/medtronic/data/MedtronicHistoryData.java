@@ -40,9 +40,11 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.DailyTotalsDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.SP;
 
 //import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 
@@ -57,12 +59,11 @@ public class MedtronicHistoryData {
     private List<PumpHistoryEntry> allHistory = null;
     private List<PumpHistoryEntry> newHistory = null;
 
-    // private LocalDateTime previousLastHistoryRecordTime;
     private Long lastHistoryRecordTime;
     private boolean isInit = false;
 
     private Gson gsonPretty;
-    private List<PumpHistoryEntry> fakeTBRs;
+    //private List<PumpHistoryEntry> fakeTBRs;
 
     DatabaseHelper databaseHelper = MainApp.getDbHelper();
 
@@ -137,10 +138,8 @@ public class MedtronicHistoryData {
                     } else {
                         newHistory2.add(pumpHistoryEntry);
                     }
-
                 }
             }
-
         }
 
         TBRs = preProcessTBRs(TBRs);
@@ -170,13 +169,17 @@ public class MedtronicHistoryData {
                 this.allHistory.add(pumpHistoryEntry);
             }
 
-            if (pumpHistoryEntry.isAfter(pheLast.atechDateTime)) {
+            if (pumpHistoryEntry.atechDateTime!=null && pumpHistoryEntry.isAfter(pheLast.atechDateTime)) {
                 pheLast = pumpHistoryEntry;
             }
 
         }
 
+        if (pheLast==null) // if we don't have any valid record we don't do the filtering and setting
+            return;
+
         this.setLastHistoryRecordTime(pheLast.atechDateTime);
+        SP.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime);
 
         LocalDateTime dt = null;
 
@@ -212,12 +215,10 @@ public class MedtronicHistoryData {
         }
 
         this.newHistory.clear();
-
     }
 
 
     public boolean hasRelevantConfigurationChanged() {
-
         return getStateFromFilteredList( //
                 PumpHistoryEntryType.ChangeBasalPattern, //
                 PumpHistoryEntryType.ClearSettings, //
@@ -301,7 +302,6 @@ public class MedtronicHistoryData {
         }
 
         return newAndAll2;
-
     }
 
 
@@ -369,16 +369,13 @@ public class MedtronicHistoryData {
     ClockDTO pumpTime;
 
 
-    public void processTDDs(List<PumpHistoryEntry> tddsIn) {
+    private void processTDDs(List<PumpHistoryEntry> tddsIn) {
 
         List<PumpHistoryEntry> tdds = filterTDDs(tddsIn);
 
-        // /pumpTime = MedtronicUtil.getPumpTime();
+        LOG.error(getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gsonPretty.toJson(tdds));
 
-        LOG.error(getLogPrefix() + "TDDs found: {}. Not processed.\n{}", tdds.size(), gsonPretty.toJson(tdds));
-
-        // FIXME tdd
-        List<TDD> tddsDb = MainApp.getDbHelper().getTDDs(); // .getTDDsForLastXDays(3);
+        List<TDD> tddsDb = databaseHelper.getTDDsForLastXDays(3);
 
         for (PumpHistoryEntry tdd : tdds) {
 
@@ -386,28 +383,27 @@ public class MedtronicHistoryData {
 
             DailyTotalsDTO totalsDTO = (DailyTotalsDTO) tdd.getDecodedData().get("Object");
 
-            LOG.debug("DailtyTotals: {}", totalsDTO);
+            //LOG.debug("DailyTotals: {}", totalsDTO);
 
             if (tddDbEntry == null) {
                 TDD tddNew = new TDD();
                 totalsDTO.setTDD(tddNew);
 
-                LOG.debug("TDD-Add: {}", tddNew);
+                LOG.debug("TDD Add: {}", tddNew);
 
-                MainApp.getDbHelper().createOrUpdateTDD(tddNew);
+                databaseHelper.createOrUpdateTDD(tddNew);
 
             } else {
 
                 if (!totalsDTO.doesEqual(tddDbEntry)) {
                     totalsDTO.setTDD(tddDbEntry);
 
-                    LOG.debug("TDD-Edit: {}", tddDbEntry);
+                    LOG.debug("TDD Edit: {}", tddDbEntry);
 
-                    MainApp.getDbHelper().createOrUpdateTDD(tddDbEntry);
+                    databaseHelper.createOrUpdateTDD(tddDbEntry);
                 }
             }
         }
-
     }
 
 
@@ -673,12 +669,7 @@ public class MedtronicHistoryData {
                         String.format("%d", temporaryBasalDb.percentRate), //
                 temporaryBasalDb.isAbsolute ? "U/h" : "%", //
                 temporaryBasalDb.durationInMinutes);
-
     }
-
-
-
-
 
 
     // TODO needs to be implemented
@@ -723,15 +714,8 @@ public class MedtronicHistoryData {
 
         LocalDateTime ldt = DateTimeUtil.toLocalDateTime(atechDateTime);
 
-        // LOG.debug("TOE. Time of Entry: " + atechDateTime);
-        // LOG.debug("TOE.   Clock Pump: " + pumpTime.pumpTime.toString("HH:mm:ss"));
-        // LOG.debug("TOE.   LocalTime: " + pumpTime.localDeviceTime.toString("HH:mm:ss"));
-        // LOG.debug("TOE.   Difference(s): " + pumpTime.timeDifference);
-
         ldt = ldt.plusSeconds(pumpTime.timeDifference);
         ldt = ldt.millisOfSecond().setCopy(000);
-
-        // LOG.debug("TOE. New Time Of Entry: " + ldt.toString("HH:mm:ss"));
 
         LOG.debug("tryToGetByLocalTime: [TimeOfEntry={}, ClockPump={}, LocalTime={}, DifferenceSec={}, "
                         + "NewTimeOfEntry={}, time={}", atechDateTime, pumpTime.pumpTime.toString("HH:mm:ss"),
@@ -747,6 +731,10 @@ public class MedtronicHistoryData {
         long dt = Long.MAX_VALUE;
         PumpHistoryEntry currentTreatment = null;
 
+        if (isCollectionEmpty(treatments)) {
+            return 10; // default return of 10 minutes
+        }
+
         for (PumpHistoryEntry treatment : treatments) {
 
             if (treatment.atechDateTime < dt) {
@@ -754,8 +742,6 @@ public class MedtronicHistoryData {
                 currentTreatment = treatment;
             }
         }
-
-        // LOG.debug("Oldest entry: {}, pumpTimeDifference={}", dt, this.pumpTime.timeDifference);
 
         LocalDateTime oldestEntryTime = null;
 
@@ -769,8 +755,8 @@ public class MedtronicHistoryData {
             }
         } catch (Exception ex) {
             LOG.error("Problem decoding date from last record: {}" + currentTreatment);
+            return 10; // default return of 10 minutes
         }
-
 
         LocalDateTime now = new LocalDateTime();
 
@@ -781,21 +767,8 @@ public class MedtronicHistoryData {
                 this.pumpTime.timeDifference, oldestEntryTime, now, minutes.getMinutes());
 
         return minutes.getMinutes();
-
     }
 
-
-    // private void processTreatments(List<PumpHistoryEntry> treatments) {
-    //
-    // // FIXME bolus and tbr
-    //
-    // LOG.error(getLogPrefix() + "Treatments found: {}. Not processed.\n", treatments.size());
-    //
-    // //MainApp.getDbHelper().getTDDsForLastXDays()
-    //
-    // MedtronicHistoryData.showLogs(null, gsonInstancePretty.toJson(treatments));
-    //
-    // }
 
     private PumpHistoryEntryType getTDDType() {
 
@@ -823,39 +796,8 @@ public class MedtronicHistoryData {
                 return PumpHistoryEntryType.EndResultTotals;
             }
         }
-
     }
 
-
-    /*
-     * entryType == PumpHistoryEntryType.Bolus || // Treatments
-     * entryType == PumpHistoryEntryType.TempBasalRate || //
-     * entryType == PumpHistoryEntryType.TempBasalDuration || //
-     *
-     * entryType == PumpHistoryEntryType.Prime || // Pump Status Change
-     * entryType == PumpHistoryEntryType.PumpSuspend || //
-     * entryType == PumpHistoryEntryType.PumpResume || //
-     * entryType == PumpHistoryEntryType.Rewind || //
-     * entryType == PumpHistoryEntryType.NoDeliveryAlarm || // no delivery
-     * entryType == PumpHistoryEntryType.BasalProfileStart || //
-     *
-     * entryType == PumpHistoryEntryType.ChangeTime || // Time Change
-     * entryType == PumpHistoryEntryType.NewTimeSet || //
-     *
-     * entryType == PumpHistoryEntryType.SelectBasalProfile || // Configuration
-     * entryType == PumpHistoryEntryType.ClearSettings || //
-     * entryType == PumpHistoryEntryType.SaveSettings || //
-     * entryType == PumpHistoryEntryType.ChangeMaxBolus || //
-     * entryType == PumpHistoryEntryType.ChangeMaxBasal || //
-     * entryType == PumpHistoryEntryType.ChangeTempBasalType || //
-     *
-     * entryType == PumpHistoryEntryType.ChangeBasalProfile_NewProfile || // Basal profile
-     *
-     * entryType == PumpHistoryEntryType.DailyTotals512 || // Daily Totals
-     * entryType == PumpHistoryEntryType.DailyTotals522 || //
-     * entryType == PumpHistoryEntryType.DailyTotals523 || //
-     * entryType == PumpHistoryEntryType.EndResultTotals
-     */
 
     public boolean hasBasalProfileChanged() {
 
@@ -864,13 +806,10 @@ public class MedtronicHistoryData {
         LOG.debug("hasBasalProfileChanged. Items: " + filteredItems);
 
         return (filteredItems.size() > 0);
-
     }
 
 
     public void processLastBasalProfileChange(MedtronicPumpStatus mdtPumpStatus) {
-
-        // FIXME
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
@@ -897,23 +836,12 @@ public class MedtronicHistoryData {
             BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
             mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
         }
-
-        // boolean profileChanged = ((filteredItems.size() - basalProfileChangedInternally) > 0);
-
-        // LOG.error("Profile changed:" + profileChanged);
-
-        // this.basalProfileChangedInternally = 0;
-
-        // return profileChanged;
-
     }
 
 
     public boolean hasPumpTimeChanged() {
-
         return getStateFromFilteredList(PumpHistoryEntryType.NewTimeSet, //
                 PumpHistoryEntryType.ChangeTime);
-
     }
 
 
@@ -957,27 +885,7 @@ public class MedtronicHistoryData {
 
 
     private List<PumpHistoryEntry> getFilteredItems(PumpHistoryEntryType... entryTypes) {
-
         return getFilteredItems(this.newHistory, entryTypes);
-
-    }
-
-
-    // private List<PumpHistoryEntry> getFilteredListByPreviousLastRecord(PumpHistoryEntryType... entryTypes) {
-    // return getFilteredListByTime(this.previousLastHistoryRecordTime, entryTypes);
-    // }
-
-    private List<PumpHistoryEntry> getFilteredListByLastRecord(PumpHistoryEntryType... entryTypes) {
-        return getFilteredListByTime(this.lastHistoryRecordTime, entryTypes);
-    }
-
-
-    private List<PumpHistoryEntry> getFilteredListByTime(Long lastRecordTime, PumpHistoryEntryType... entryTypes) {
-        if (lastRecordTime == null) {
-            return getFilteredItems(entryTypes);
-        } else {
-            return getFilteredItems(lastRecordTime, entryTypes);
-        }
     }
 
 
@@ -991,14 +899,6 @@ public class MedtronicHistoryData {
 
             return filteredItems.size() > 0;
         }
-    }
-
-
-    private List<PumpHistoryEntry> getFilteredItems(Long dateTime, PumpHistoryEntryType... entryTypes) {
-
-        PumpHistoryResult phr = new PumpHistoryResult(null, dateTime);
-        return getFilteredItems(phr.getValidEntries(), entryTypes);
-
     }
 
 
@@ -1027,7 +927,6 @@ public class MedtronicHistoryData {
         // LOG.debug("OutList: " + outList.size());
 
         return outList;
-
     }
 
 
@@ -1035,14 +934,6 @@ public class MedtronicHistoryData {
         return (entryTypes == null || (entryTypes.length == 1 && entryTypes[0] == null));
     }
 
-
-    // public List<PumpHistoryEntry> getNewHistoryEntries() {
-    // return this.newHistory;
-    // }
-
-    // public void setBasalProfileChanged() {
-    // this.basalProfileChangedInternally++;
-    // }
 
     private String getLogPrefix() {
         return "MedtronicHistoryData::";

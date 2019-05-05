@@ -48,6 +48,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
@@ -767,8 +768,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     long time = System.currentTimeMillis() + (bolusTime * 1000);
 
                     this.busyTimestamps.add(time);
-                    this.customActionClearBolusBlock.setEnabled(true);
-                    refreshCustomActionsList();
+                    setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, true);
                 }
 
                 return new PumpEnactResult().success(true) //
@@ -1315,7 +1315,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
 
         if (response) {
-            // medtronicHistoryData.setBasalProfileChanged();
             return new PumpEnactResult().success(true).enacted(true);
         } else {
             return new PumpEnactResult().success(response).enacted(response) //
@@ -1378,14 +1377,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         MedtronicCustomActionType.WakeUpAndTune);
 
     private CustomAction customActionClearBolusBlock = new CustomAction(
-        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock);
+        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, false);
+
+    private CustomAction customActionReset = new CustomAction(
+            R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLink, false);
 
 
     @Override
     public List<CustomAction> getCustomActions() {
 
         if (customActions == null) {
-            this.customActions = Arrays.asList(customActionWakeUpAndTune, customActionClearBolusBlock);
+            this.customActions = Arrays.asList(customActionWakeUpAndTune, customActionClearBolusBlock, customActionReset);
         }
 
         return this.customActions;
@@ -1410,6 +1412,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             }
                 break;
 
+            case ResetRileyLink: {
+                ServiceTaskExecutor.startTask(new ResetRileyLinkTask());
+            }  break;
+
             default:
                 break;
         }
@@ -1420,5 +1426,18 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private void refreshCustomActionsList() {
         MainApp.bus().post(new EventCustomActionsChanged());
     }
+
+
+    public void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {
+
+        if (customAction == MedtronicCustomActionType.ClearBolusBlock) {
+            this.customActionClearBolusBlock.setEnabled(isEnabled);
+        } else if (customAction == MedtronicCustomActionType.ResetRileyLink) {
+            this.customActionReset.setEnabled(isEnabled);
+        }
+
+        refreshCustomActionsList();
+    }
+
 
 }

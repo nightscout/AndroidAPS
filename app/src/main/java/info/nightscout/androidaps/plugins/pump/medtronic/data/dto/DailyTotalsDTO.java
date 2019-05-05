@@ -108,8 +108,6 @@ public class DailyTotalsDTO {
         this.insulinTotal = totals;
 
         entry.addDecodedData("Totals", totals);
-        // entry.setDisplayableValue(getFormattedValue(totals, 3));
-
     }
 
 
@@ -136,7 +134,6 @@ public class DailyTotalsDTO {
                 k, j1, k1, k / 40.0d, j1 / 40.0d, k1 / 40.0d));
 
         }
-
     }
 
 
@@ -178,8 +175,7 @@ public class DailyTotalsDTO {
         // Bolus=1.7[18,19], Fodd, Corr, Manual=1.7[27,28],
         // Num bOlus=1, food/corr, Food+corr, manual bolus=1
 
-        LOG.debug("522: {}", toString());
-
+        //LOG.debug("522: {}", toString());
     }
 
 
@@ -207,7 +203,6 @@ public class DailyTotalsDTO {
         // Delivery Stats: Manual = 0.95, #Manual=5
 
         //LOG.debug("523: {}", toString());
-
     }
 
 

@@ -116,9 +116,9 @@ public class DateTimeUtil {
 
         long atechDateTime = 0L;
 
-        atechDateTime += date.getYear() * 10000000000L;
-        atechDateTime += date.getMonth() * 100000000L;
-        atechDateTime += date.getDay() * 1000000L;
+        atechDateTime += (date.getYear() + 1900) * 10000000000L;
+        atechDateTime += (date.getMonth() +1) * 100000000L;
+        atechDateTime += date.getDate() * 1000000L;
         atechDateTime += date.getHours() * 10000L;
         atechDateTime += date.getMinutes() * 100L;
         atechDateTime += date.getSeconds();

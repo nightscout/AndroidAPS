@@ -7,7 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import android.os.SystemClock;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.Reset;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.ResetRadioConfig;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetHardwareEncoding;
@@ -23,10 +29,15 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCustomActionType;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by geoff on 5/26/16.
@@ -84,6 +95,12 @@ public class RFSpy {
         bleVersion = getVersion();
         firmwareVersion = getFirmwareVersion();
         RileyLinkUtil.setFirmwareVersion(firmwareVersion);
+
+        if (RileyLinkFirmwareVersion.isSameVersion(firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
+            if (RileyLinkUtil.getRileyLinkServiceData().targetDevice == RileyLinkTargetDevice.MedtronicPump) {
+                //MedtronicPumpPlugin.getPlugin().setEnableCustomAction(MedtronicCustomActionType.ResetRileyLink, true);
+            }
+        }
     }
 
 
@@ -278,9 +295,6 @@ public class RFSpy {
     }
 
 
-    // FIXME: to be able to work with Omnipod we need to support preamble extensions so we should create a class for the
-    // SnedAndListen RL command
-    // To avoid snedAndListen command assembly magic
     public RFSpyResponse transmitThenReceive(RadioPacket pkt, byte sendChannel, byte repeatCount, byte delay_ms,
             byte listenChannel, int timeout_ms, byte retryCount, Integer extendPreamble_ms) {
 
@@ -305,7 +319,7 @@ public class RFSpy {
         updateRegister(CC111XRegister.freq0, (byte)(value & 0xff));
         updateRegister(CC111XRegister.freq1, (byte)((value >> 8) & 0xff));
         updateRegister(CC111XRegister.freq2, (byte)((value >> 16) & 0xff));
-        LOG.warn("Set frequency to {}", freqMHz);
+        LOG.info("Set frequency to {}", freqMHz);
 
         configureRadioForRegion(RileyLinkUtil.getRileyLinkTargetFrequency());
     }
@@ -314,8 +328,6 @@ public class RFSpy {
     private void configureRadioForRegion(RileyLinkTargetFrequency frequency) {
 
         // we update registers only on first run, or if region changed
-        if (selectedTargetFrequency == frequency)
-            return;
 
         switch (frequency) {
             case Medtronic_WorldWide: {
@@ -386,11 +398,15 @@ public class RFSpy {
 
 
     private void setMedtronicEncoding() {
-        // FIXME
+        if (RileyLinkFirmwareVersion.isSameVersion(this.firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
 
-        // check settings if RileyLink_4b6b is enabled, and then check if we have version 2.2 or higher, if both
-        // are yes then we set encoding on RileyLink and set it in RileyLinkUtil.
+            if (SP.getString(MedtronicConst.Prefs.Encoding, "None").equals(MainApp.gs(R.string.medtronic_pump_encoding_4b6b_rileylink))) {
+                setSoftwareEncoding(RileyLinkEncodingType.FourByteSixByteRileyLink);
+                RileyLinkUtil.setEncoding(RileyLinkEncodingType.FourByteSixByteRileyLink);
+            }
+        }
 
+        LOG.debug("Set Encoding for Medtronic: " + RileyLinkUtil.getEncoding().name());
     }
 
 
@@ -419,4 +435,20 @@ public class RFSpy {
         updateRegister(CC111XRegister.mdmcfg4, (byte)(chanbw | drate_e));
     }
 
+    public RFSpyResponse resetRileyLinkDevice() {
+	// FIXME not working correctly yet
+        RFSpyResponse resp = null;
+        try {
+            resp = writeToData(new Reset(), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
+            if (isLogEnabled())
+                LOG.debug("Reset command send, response: {}", resp);
+        } catch (Exception e) {
+            e.toString();
+        }
+        return resp;
+    }
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
+    }
 }

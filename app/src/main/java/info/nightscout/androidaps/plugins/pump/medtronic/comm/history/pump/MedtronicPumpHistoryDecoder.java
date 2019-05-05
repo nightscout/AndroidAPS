@@ -357,11 +357,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case UnknownBasePacket:
                 return RecordDecodeStatus.Error;
 
-            // case Andy0d:
-
-            // case Andy58:
-
-            // case Andy90:
 
             default: {
                 LOG.debug("Not supported: " + entry.getEntryType());
@@ -379,49 +374,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         entry.addDecodedData("Raw Data", ByteUtil.getHex(entry.getRawData()));
 
-        LOG.debug("{} - {}", entry.getEntryType().name(), ByteUtil.getHex(entry.getRawData()));
-        LOG.debug("{}", entry);
-
-        // byte[] data = new byte[] {
-        // 0x6D, (byte)0xA2, (byte)0x92, 0x05, 0x0C, 0x00, (byte)0xE8, 0x00, 0x00, 0x00, 0x00, 0x03, 0x18, 0x02,
-        // (byte)0xD4, 0x5B, 0x00, 0x44, 0x09, 0x00, 0x00, 0x00, 0x44, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        // 0x44, 0x64, 0x01, 0x00, 0x00, 0x00, 0x01, 0x0C, 0x00, (byte)0xE8, 0x00, 0x00, 0x00 };
-
-        // basal 18.1, bolus 1.7 manual = 1.7
-
-        // bg avg, bg low hi, number Bgs,
-        // Sen Avg, Sen Lo/Hi, Sens Cal/Data = 0/0,
-        // Insulin=19.8, Basal, Bolus, Carbs,
-        // Bolus=1.7, Fodd, Corr, Manual=1.7,
-        // Num bOlus=1, food/corr, Food+corr, manual bolus=1
+        //LOG.debug("{} - {}", entry.getEntryType().name(), ByteUtil.getHex(entry.getRawData()));
+        //LOG.debug("{}", entry);
 
         DailyTotalsDTO totals = new DailyTotalsDTO(entry);
 
-        // System.out.println("Totals:" + totals);
-
-        // if (entry.getEntryType() == PumpHistoryEntryType.DailyTotals522) {
-        //
-        // // Daily
-        //
-        // byte body[] = entry.getBody();
-        // System.out.println("Totoals 522");
-        //
-        // for (int i = 0; i < body.length - 1; i++) {
-        //
-        // int j = ByteUtil.toInt(body[i], body[i + 1]);
-        //
-        // System.out.println(String.format(
-        // "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0d,
-        // j / 10.0d, body[i], ByteUtil.getHex(body[i])));
-        //
-        // }
-        //
-        // }
         entry.addDecodedData("Object", totals);
-
-        System.out.println("" + totals.toString());
-
-        // FIXME displayable
 
         return RecordDecodeStatus.OK;
     }
@@ -444,28 +402,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    // private void decodeCalBGForPH(PumpHistoryEntry entry) {
-    // int high = (entry.getDatetime()[4] & 0x80) >> 7;
-    // int bg = bitUtils.toInt(high, getUnsignedInt(entry.getHead()[0]));
-    //
-    // writeData(PumpBaseType.AdditionalData, PumpAdditionalDataType.BloodGlucose, "" + bg, entry.getATechDate());
-    // }
-
-    // masks = [ ( 0x80, 7), (0x40, 6), (0x20, 5), (0x10, 4) ]
-    // nibbles = [ ]
-    // for mask, shift in masks:
-    // nibbles.append( ( (year & mask) >> shift ) )
-    // return nibbles
-
-    // FIXME
     private void decodeChangeTime(PumpHistoryEntry entry) {
         if (changeTimeRecord == null)
             return;
-
-        // String timeChange = String.format(PumpEventType.DateTimeChanged.getValueTemplate(),
-        // this.changeTimeRecord.getATechDate().getDateTimeString(), entry.getATechDate().getDateTimeString());
-
-        // writeData(PumpBaseType.Event, PumpEventType.DateTimeChanged, timeChange, entry.getATechDate());
 
         entry.setDisplayableValue(entry.getDateTimeString());
 
@@ -481,25 +420,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    // FIXME 554 ?
-    private void decodeEndResultTotals(PumpHistoryEntry entry) {
-        float totals = bitUtils.toInt((int) entry.getHead()[0], (int) entry.getHead()[1], (int) entry.getHead()[2],
-                (int) entry.getHead()[3], ByteUtil.BitConversion.BIG_ENDIAN) * 0.025f;
-
-        entry.addDecodedData("Totals", totals);
-        entry.setDisplayableValue(getFormattedValue(totals, 3));
-
-        // this.writeData(PumpBaseType.Report, PumpReport.InsulinTotalDay, getFormattedFloat(totals, 2),
-        // entry.getATechDate());
-    }
-
-
     public static String getFormattedValue(float value, int decimals) {
         return String.format(Locale.ENGLISH, "%." + decimals + "f", value);
     }
 
 
-    // FIXME
     private RecordDecodeStatus decodeBasalProfileStart(PumpHistoryEntry entry) {
         byte[] body = entry.getBody();
         // int bodyOffset = headerSize + timestampSize;
@@ -523,7 +448,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             entry.setDisplayableValue(getFormattedFloat(rate, 3));
             return RecordDecodeStatus.OK;
         }
-
     }
 
 
@@ -760,7 +684,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                         ByteUtil.getHex(entry.getRawData()), entry);
             }
 
-            if (entry.getEntryType() == PumpHistoryEntryType.EndResultTotals) {
+            if (isEndResults(entry.getEntryType())) {
                 hour = 23;
                 minutes = 59;
                 seconds = 59;
@@ -772,6 +696,15 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             LOG.warn("Unknown datetime format: " + entry.getDateTimeLength());
         }
 
+    }
+
+
+    private boolean isEndResults(PumpHistoryEntryType entryType) {
+
+        return (entryType == PumpHistoryEntryType.EndResultTotals ||
+                entryType == PumpHistoryEntryType.DailyTotals515 ||
+                entryType == PumpHistoryEntryType.DailyTotals522 ||
+                entryType == PumpHistoryEntryType.DailyTotals523);
     }
 
 

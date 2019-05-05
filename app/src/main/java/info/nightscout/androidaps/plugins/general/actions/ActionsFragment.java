@@ -273,10 +273,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
                 this.pumpCustomActions.put(MainApp.gs(customAction.getName()), customAction);
                 this.pumpCustomButtons.add(btn);
-
             }
         }
-
     }
 
 
@@ -292,7 +290,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         }
 
         pumpCustomButtons.clear();
-        pumpCustomActions.clear();
     }
 
 

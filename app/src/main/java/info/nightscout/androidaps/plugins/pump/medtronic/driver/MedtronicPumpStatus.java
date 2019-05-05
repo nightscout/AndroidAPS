@@ -198,8 +198,8 @@ public class MedtronicPumpStatus extends PumpStatus {
                     this.isFrequencyUS = pumpFrequency.equals(frequencies[0]);
 
                     RileyLinkTargetFrequency newTargetFrequency = this.isFrequencyUS ? //
-                    RileyLinkTargetFrequency.Medtronic_US
-                        : RileyLinkTargetFrequency.Medtronic_WorldWide;
+                            RileyLinkTargetFrequency.Medtronic_US
+                            : RileyLinkTargetFrequency.Medtronic_WorldWide;
 
                     if (targetFrequency != newTargetFrequency) {
                         RileyLinkUtil.setRileyLinkTargetFrequency(newTargetFrequency);
