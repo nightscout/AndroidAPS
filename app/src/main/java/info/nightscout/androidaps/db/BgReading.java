@@ -23,7 +23,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
+    private static Logger log = LoggerFactory.getLogger(L.GLUCOSE);
 
     @DatabaseField(id = true)
     public long date;
@@ -74,10 +74,10 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public String directionToSymbol() {
         String symbol = "";
-        if (direction == null) {
+        if (direction == null)
             direction = calculateDirection();
-            this.directionToSymbol(); // possible endless loop ?!?
-        } else if (direction.compareTo("DoubleDown") == 0) {
+
+        if (direction.compareTo("DoubleDown") == 0) {
             symbol = "\u21ca";
         } else if (direction.compareTo("SingleDown") == 0) {
             symbol = "\u2193";
@@ -97,18 +97,13 @@ public class BgReading implements DataPointWithLabelInterface {
         return symbol;
     }
 
-    public static boolean isSlopeNameInvalid(String direction) {
-        if (direction.compareTo("NOT_COMPUTABLE") == 0 ||
+    private static boolean isSlopeNameInvalid(String direction) {
+        return direction.compareTo("NOT_COMPUTABLE") == 0 ||
                 direction.compareTo("NOT COMPUTABLE") == 0 ||
                 direction.compareTo("OUT_OF_RANGE") == 0 ||
                 direction.compareTo("OUT OF RANGE") == 0 ||
                 direction.compareTo("NONE") == 0 ||
-                direction.compareTo("NotComputable") == 0
-                ) {
-            return true;
-        } else {
-            return false;
-        }
+                direction.compareTo("NotComputable") == 0;
     }
 
 
@@ -125,7 +120,8 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public boolean isDataChanging(BgReading other) {
         if (date != other.date) {
-            log.error("Comparing different");
+            if (L.isEnabled(L.GLUCOSE))
+                log.error("Comparing different");
             return false;
         }
         if (value != other.value)
@@ -135,7 +131,8 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public boolean isEqual(BgReading other) {
         if (date != other.date) {
-            log.error("Comparing different");
+            if (L.isEnabled(L.GLUCOSE))
+                log.error("Comparing different");
             return false;
         }
         if (value != other.value)
@@ -151,7 +148,8 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public void copyFrom(BgReading other) {
         if (date != other.date) {
-            log.error("Copying different");
+            if (L.isEnabled(L.GLUCOSE))
+                log.error("Copying different");
             return;
         }
         value = other.value;
@@ -250,18 +248,21 @@ public class BgReading implements DataPointWithLabelInterface {
 
 
     // Copied from xDrip+
-    public String calculateDirection(){
-        GlucoseStatus glucoseStatus = getGlucoseStatus();
-        double slope = 0;
+    String calculateDirection() {
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        double slope;
         if (glucoseStatus == null || glucoseStatus.prev_glucose == 0)
-            return "??";
+            return "NONE";
 
         // Avoid division by 0
         if (glucoseStatus.date == glucoseStatus.previous_date)
             slope = 0;
         else
             slope = (glucoseStatus.prev_glucose - glucoseStatus.glucose) / (glucoseStatus.previous_date - glucoseStatus.date);
-        log.debug("Slope is :"+slope+" delta "+glucoseStatus.delta+" date difference "+(glucoseStatus.date - glucoseStatus.previous_date));
+
+        if (L.isEnabled(L.GLUCOSE))
+            log.debug("Slope is :" + slope + " delta " + glucoseStatus.delta + " date difference " + (glucoseStatus.date - glucoseStatus.previous_date));
+
         double slope_by_minute = slope * 60000;
         String arrow = "NONE";
 
@@ -280,14 +281,8 @@ public class BgReading implements DataPointWithLabelInterface {
         } else if (slope_by_minute <= (40)) {
             arrow = "DoubleUp";
         }
-        log.debug("Direction set to: "+arrow);
+        if (L.isEnabled(L.GLUCOSE))
+            log.debug("Direction set to: " + arrow);
         return arrow;
-
     }
-
-    // Used for testing purpose
-    protected GlucoseStatus getGlucoseStatus() {
-        return GlucoseStatus.getGlucoseStatusData();
-    }
-
 }

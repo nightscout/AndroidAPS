@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -18,21 +19,23 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.utils.SP;
 
-import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Logger.class, L.class, SP.class})
+@PrepareForTest({MainApp.class, Logger.class, L.class, SP.class, GlucoseStatus.class})
 public class BgReadingTest {
     private BgReading bgReading = new BgReading();
-    @Mock
+
     GlucoseStatus glucoseStatus;
 
     @Test
     public void valueToUnits() {
         bgReading.value = 18;
-        assertEquals(18, bgReading.valueToUnits(Constants.MGDL)*1, 0.01d);
-        assertEquals(1, bgReading.valueToUnits(Constants.MMOL)*1, 0.01d);
+        assertEquals(18, bgReading.valueToUnits(Constants.MGDL) * 1, 0.01d);
+        assertEquals(1, bgReading.valueToUnits(Constants.MMOL) * 1, 0.01d);
     }
 
     @Test
@@ -58,7 +61,7 @@ public class BgReadingTest {
     }
 
     @Test
-    public void dateTest(){
+    public void dateTest() {
         bgReading = new BgReading();
         long now = System.currentTimeMillis();
         bgReading.date = now;
@@ -68,14 +71,14 @@ public class BgReadingTest {
     }
 
     @Test
-    public void valueTest(){
+    public void valueTest() {
         bgReading = new BgReading();
         double valueToSet = 81; // 4.5 mmol
         assertEquals(81d, bgReading.value(valueToSet).value, 0.01d);
     }
 
     @Test
-    public void copyFromTest(){
+    public void copyFromTest() {
         bgReading = new BgReading();
         BgReading copy = new BgReading();
         bgReading.value = 81;
@@ -91,7 +94,7 @@ public class BgReadingTest {
     }
 
     @Test
-    public void isEqualTest(){
+    public void isEqualTest() {
         bgReading = new BgReading();
         BgReading copy = new BgReading();
         bgReading.value = 81;
@@ -101,23 +104,26 @@ public class BgReadingTest {
 
         copy.copyFrom(bgReading);
 
-        assertEquals(true, copy.isEqual(bgReading));
-        assertEquals(false, copy.isEqual(new BgReading()));
+        assertTrue(copy.isEqual(bgReading));
+        assertFalse(copy.isEqual(new BgReading()));
     }
 
     @Test
-    public void calculateDirection() throws Exception {
-        assertEquals("??", bgReading.calculateDirection());
+    public void calculateDirection() {
+        assertEquals("NONE", bgReading.calculateDirection());
 
-        bgReading = new BgReading();
         glucoseStatus = new GlucoseStatus();
         glucoseStatus.glucose = 0;
         glucoseStatus.prev_glucose = 0;
-        glucoseStatus.date = 1000L * 60 * 12;;
+        glucoseStatus.date = 1000L * 60 * 12;
         glucoseStatus.previous_date = 1000L * 60 * 6;
-        BgReading newReading = Mockito.spy(new BgReading());
-        doReturn(glucoseStatus).when(newReading).getGlucoseStatus();
-        assertEquals("??", newReading.calculateDirection());
+
+        BgReading newReading = new BgReading();
+
+        PowerMockito.mockStatic(GlucoseStatus.class);
+        when(GlucoseStatus.getGlucoseStatusData()).thenReturn(glucoseStatus);
+
+        assertEquals("NONE", newReading.calculateDirection());
         glucoseStatus.glucose = 72;
         glucoseStatus.prev_glucose = 10;
         assertEquals("DoubleUp", newReading.calculateDirection());
@@ -139,7 +145,6 @@ public class BgReadingTest {
         glucoseStatus.glucose = 65;
         glucoseStatus.prev_glucose = 72;
         assertEquals("FortyFiveDown", newReading.calculateDirection());
-
 
 
     }

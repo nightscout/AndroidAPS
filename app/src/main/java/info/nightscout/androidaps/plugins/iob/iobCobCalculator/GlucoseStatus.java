@@ -98,8 +98,8 @@ public class GlucoseStatus {
                 status.long_avgdelta = 0d;
                 status.avgdelta = 0d; // for OpenAPS MA
                 status.date = now_date;
-                status.previous_date = prevDate; // setting the previous value date for slope calculation
-                status.prev_glucose = prevValue;
+                status.previous_date = 0; // setting the previous value date for slope calculation
+                status.prev_glucose = 0;
 
                 if (L.isEnabled(L.GLUCOSE))
                     log.debug("sizeRecords==1");
@@ -171,6 +171,8 @@ public class GlucoseStatus {
 
             status.long_avgdelta = average(long_deltas);
             status.avgdelta = status.short_avgdelta; // for OpenAPS MA
+            status.previous_date = prevDate; // setting the previous value date for slope calculation
+            status.prev_glucose = prevValue;
 
             if (L.isEnabled(L.GLUCOSE))
                 log.debug(status.log());
