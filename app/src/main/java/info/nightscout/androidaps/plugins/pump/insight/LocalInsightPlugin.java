@@ -168,7 +168,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 .mainType(PluginType.PUMP)
                 .description(R.string.description_pump_insight_local)
                 .fragmentClass(LocalInsightFragment.class.getName())
-                .preferencesId(R.xml.pref_insight_local));
+                .preferencesId(MainApp.instance().getPackageName().equals("info.nightscout.androidaps")
+                        ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol));
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
