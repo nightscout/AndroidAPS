@@ -12,6 +12,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
@@ -97,7 +98,7 @@ public class NotificationStore {
         return false;
     }
 
-    public synchronized void removeExpired() {
+    private synchronized void removeExpired() {
         for (int i = 0; i < store.size(); i++) {
             Notification n = store.get(i);
             if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
@@ -107,13 +108,13 @@ public class NotificationStore {
         }
     }
 
-    public void snoozeTo(long timeToSnooze) {
+    void snoozeTo(long timeToSnooze) {
         if (L.isEnabled(L.NOTIFICATION))
             log.debug("Snoozing alarm until: " + timeToSnooze);
         SP.putLong("snoozedTo", timeToSnooze);
     }
 
-    public void unSnooze() {
+    private void unSnooze() {
         if (Notification.isAlarmForStaleData()) {
             Notification notification = new Notification(Notification.NSALARM, MainApp.gs(R.string.nsalarm_staledata), Notification.URGENT);
             SP.putLong("snoozedTo", System.currentTimeMillis());
@@ -157,6 +158,18 @@ public class NotificationStore {
                     CHANNEL_ID,
                     NotificationManager.IMPORTANCE_HIGH);
             mNotificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public synchronized void updateNotifications(RecyclerView notificationsView) {
+        removeExpired();
+        unSnooze();
+        if (store.size() > 0) {
+            NotificationRecyclerViewAdapter adapter = new NotificationRecyclerViewAdapter(store);
+            notificationsView.setAdapter(adapter);
+            notificationsView.setVisibility(View.VISIBLE);
+        } else {
+            notificationsView.setVisibility(View.GONE);
         }
     }
 
