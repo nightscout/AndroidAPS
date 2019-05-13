@@ -26,8 +26,6 @@ public class GlucoseStatus {
     public double short_avgdelta = 0d;
     public double long_avgdelta = 0d;
     public long date = 0L;
-    public long previous_date = 0L;
-    public double prev_glucose = 0d;
 
 
     public String log() {
@@ -60,8 +58,6 @@ public class GlucoseStatus {
         // load 45min
         //long fromtime = DateUtil.now() - 60 * 1000L * 45;
         //List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
-        long prevDate = 0;
-        double prevValue = 0;
 
         synchronized (IobCobCalculatorPlugin.getPlugin().getDataLock()) {
 
@@ -98,9 +94,6 @@ public class GlucoseStatus {
                 status.long_avgdelta = 0d;
                 status.avgdelta = 0d; // for OpenAPS MA
                 status.date = now_date;
-                status.previous_date = 0; // setting the previous value date for slope calculation
-                status.prev_glucose = 0;
-
                 if (L.isEnabled(L.GLUCOSE))
                     log.debug("sizeRecords==1");
                 return status.round();
@@ -125,11 +118,6 @@ public class GlucoseStatus {
                     // multiply by 5 to get the same units as delta, i.e. mg/dL/5m
                     change = now.value - then.value;
                     avgdelta = change / minutesago * 5;
-                    // save the value of date if it was 5 min ago or less than 10 min
-                    if( minutesago >= 5 && minutesago < 10 ) {
-                        prevDate = then_date;
-                        prevValue = then.value;
-                    }
 
                     if (L.isEnabled(L.GLUCOSE))
                         log.debug(then.toString() + " minutesago=" + minutesago + " avgdelta=" + avgdelta);
@@ -171,8 +159,6 @@ public class GlucoseStatus {
 
             status.long_avgdelta = average(long_deltas);
             status.avgdelta = status.short_avgdelta; // for OpenAPS MA
-            status.previous_date = prevDate; // setting the previous value date for slope calculation
-            status.prev_glucose = prevValue;
 
             if (L.isEnabled(L.GLUCOSE))
                 log.debug(status.log());

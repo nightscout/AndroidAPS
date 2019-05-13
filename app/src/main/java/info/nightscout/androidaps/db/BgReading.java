@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -18,8 +19,8 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.T;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
@@ -249,19 +250,29 @@ public class BgReading implements DataPointWithLabelInterface {
 
     // Copied from xDrip+
     String calculateDirection() {
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        double slope;
-        if (glucoseStatus == null || glucoseStatus.prev_glucose == 0)
+        // Rework to get bgreaings from internal DB and calculate on that base
+
+        List<BgReading> bgReadingsList = MainApp.getDbHelper().getAllBgreadingsDataFromTime(this.date - T.mins(10).msecs(), false);
+        if (bgReadingsList == null || bgReadingsList.size() < 2)
             return "NONE";
+        BgReading current = bgReadingsList.get(1);
+        BgReading previous = bgReadingsList.get(0);
+
+        if (bgReadingsList.get(1).date < bgReadingsList.get(0).date) {
+            current = bgReadingsList.get(0);
+            previous = bgReadingsList.get(1);
+        }
+
+        double slope;
 
         // Avoid division by 0
-        if (glucoseStatus.date == glucoseStatus.previous_date)
+        if (current.date == previous.date)
             slope = 0;
         else
-            slope = (glucoseStatus.prev_glucose - glucoseStatus.glucose) / (glucoseStatus.previous_date - glucoseStatus.date);
+            slope = (previous.value - current.value) / (previous.date - current.date);
 
         if (L.isEnabled(L.GLUCOSE))
-            log.debug("Slope is :" + slope + " delta " + glucoseStatus.delta + " date difference " + (glucoseStatus.date - glucoseStatus.previous_date));
+            log.debug("Slope is :" + slope + " delta " + (previous.value - current.value) + " date difference " + (current.date - previous.date));
 
         double slope_by_minute = slope * 60000;
         String arrow = "NONE";

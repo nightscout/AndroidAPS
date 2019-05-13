@@ -3,15 +3,16 @@ package info.nightscout.androidaps.db;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -22,6 +23,8 @@ import info.nightscout.androidaps.utils.SP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -110,41 +113,32 @@ public class BgReadingTest {
 
     @Test
     public void calculateDirection() {
+        List<BgReading> bgReadingsList = null;
+        AAPSMocker.mockDatabaseHelper();
+
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
         assertEquals("NONE", bgReading.calculateDirection());
-
-        glucoseStatus = new GlucoseStatus();
-        glucoseStatus.glucose = 0;
-        glucoseStatus.prev_glucose = 0;
-        glucoseStatus.date = 1000L * 60 * 12;
-        glucoseStatus.previous_date = 1000L * 60 * 6;
-
-        BgReading newReading = new BgReading();
-
-        PowerMockito.mockStatic(GlucoseStatus.class);
-        when(GlucoseStatus.getGlucoseStatusData()).thenReturn(glucoseStatus);
-
-        assertEquals("NONE", newReading.calculateDirection());
-        glucoseStatus.glucose = 72;
-        glucoseStatus.prev_glucose = 10;
-        assertEquals("DoubleUp", newReading.calculateDirection());
-        glucoseStatus.glucose = 72;
-        glucoseStatus.prev_glucose = 55;
-        assertEquals("SingleUp", newReading.calculateDirection());
-        glucoseStatus.glucose = 72;
-        glucoseStatus.prev_glucose = 65;
-        assertEquals("FortyFiveUp", newReading.calculateDirection());
-        glucoseStatus.glucose = 72;
-        glucoseStatus.prev_glucose = 70;
-        assertEquals("Flat", newReading.calculateDirection());
-        glucoseStatus.glucose = 10;
-        glucoseStatus.prev_glucose = 72;
-        assertEquals("DoubleDown", newReading.calculateDirection());
-        glucoseStatus.glucose = 55;
-        glucoseStatus.prev_glucose = 72;
-        assertEquals("SingleDown", newReading.calculateDirection());
-        glucoseStatus.glucose = 65;
-        glucoseStatus.prev_glucose = 72;
-        assertEquals("FortyFiveDown", newReading.calculateDirection());
+        bgReadingsList = setReadings(72,0);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("DoubleUp", bgReading.calculateDirection());
+        bgReadingsList = setReadings(76,60);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("SingleUp", bgReading.calculateDirection());
+        bgReadingsList = setReadings(74,65);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("FortyFiveUp", bgReading.calculateDirection());
+        bgReadingsList = setReadings(72,72);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("Flat", bgReading.calculateDirection());
+        bgReadingsList = setReadings(0,72);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("DoubleDown", bgReading.calculateDirection());
+        bgReadingsList = setReadings(60,76);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("SingleDown", bgReading.calculateDirection());
+        bgReadingsList = setReadings(65,74);
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        assertEquals("FortyFiveDown", bgReading.calculateDirection());
 
 
     }
@@ -155,5 +149,20 @@ public class BgReadingTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
+        AAPSMocker.mockDatabaseHelper();
+    }
+
+    public List<BgReading> setReadings(int current_value, int previous_value){
+        BgReading now = new BgReading();
+        now.value = current_value;
+        now.date = System.currentTimeMillis();
+        BgReading previous = new BgReading();
+        previous.value = previous_value;
+        previous.date = System.currentTimeMillis() - ( 6 * 60 * 1000L);
+        List<BgReading> bgReadings = new ArrayList() {{
+            add(now);
+            add(previous);
+        }};
+        return  bgReadings;
     }
 }
