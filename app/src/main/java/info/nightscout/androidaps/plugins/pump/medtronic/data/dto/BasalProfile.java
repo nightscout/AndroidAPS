@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.Expose;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.FabricUtil;
@@ -31,7 +32,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class BasalProfile {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BasalProfile.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public static final int MAX_RAW_DATA_SIZE = (48 * 3) + 1;
     private static final boolean DEBUG_BASALPROFILE = false;
@@ -357,4 +358,10 @@ public class BasalProfile {
     public String toString() {
         return basalProfileToString();
     }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
+    }
+
 }

@@ -31,6 +31,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -55,7 +56,7 @@ import info.nightscout.androidaps.utils.SetWarnColor;
 
 public class MedtronicFragment extends SubscriberFragment {
 
-    private static Logger LOG = LoggerFactory.getLogger(MedtronicFragment.class);
+    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     @BindView(R.id.medtronic_lastconnection)
     TextView lastConnectionView;
@@ -205,7 +206,8 @@ public class MedtronicFragment extends SubscriberFragment {
 
     @Subscribe
     public void onStatusEvent(final EventMedtronicDeviceStatusChange eventStatusChange) {
-        LOG.info("onStatusEvent(EventMedtronicDeviceStatusChange): {}", eventStatusChange);
+        if (isLogEnabled())
+            LOG.info("onStatusEvent(EventMedtronicDeviceStatusChange): {}", eventStatusChange);
         Activity activity = getActivity();
 
         if (activity != null) {
@@ -266,7 +268,6 @@ public class MedtronicFragment extends SubscriberFragment {
         if (pumpStatusIconView != null) {
 
             if (pumpStatus.pumpDeviceState != null) {
-                // TODO Pump State
 
                 switch (pumpStatus.pumpDeviceState) {
                     case Sleeping:
@@ -282,7 +283,6 @@ public class MedtronicFragment extends SubscriberFragment {
                         pumpStatusIconView.setText(" " + getTranslation(pumpStatus.pumpDeviceState.getResourceId()));
                         break;
 
-                    // FIXME
                     case Active: {
                         MedtronicCommandType cmd = MedtronicUtil.getCurrentCommand();
 
@@ -305,7 +305,7 @@ public class MedtronicFragment extends SubscriberFragment {
 
                             } else {
                                 if (resourceId == null) {
-                                    pumpStatusIconView.setText(" " + cmd.name());
+                                    pumpStatusIconView.setText(" " + cmd.getCommandDescription());
                                 } else {
                                     pumpStatusIconView.setText(" " + getTranslation(resourceId));
                                 }
@@ -316,16 +316,7 @@ public class MedtronicFragment extends SubscriberFragment {
                     }
                         break;
 
-                    // // FIXME
-                    //
-                    // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                    // break;
-                    //
-                    // // FIXME
-                    //
-                    // pumpStatusIconView.setText("   " + pumpStatus.pumpDeviceState.name());
-                    // break;
-                    default:
+                     default:
                         LOG.warn("Unknown pump state: " + pumpStatus.pumpDeviceState);
                 }
             } else {
@@ -376,7 +367,8 @@ public class MedtronicFragment extends SubscriberFragment {
 
     @Subscribe
     public void onStatusEvent(final EventMedtronicPumpConfigurationChanged s) {
-        LOG.error("EventMedtronicPumpConfigurationChanged triggered");
+        if (isLogEnabled())
+            LOG.debug("EventMedtronicPumpConfigurationChanged triggered");
         MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
         pumpStatus.verifyConfiguration();
         updateGUI();
@@ -471,7 +463,6 @@ public class MedtronicFragment extends SubscriberFragment {
                 basaBasalRateView.setText("(" + (pumpStatus.activeProfileName) + ")  "
                     + MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
 
-                // FIXME temp basal - check - maybe set as combo ??
                 if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
                     if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress()) {
                         tempBasalView.setText(TreatmentsPlugin.getPlugin()
@@ -502,5 +493,11 @@ public class MedtronicFragment extends SubscriberFragment {
 
             });
     }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMP);
+    }
+
 
 }

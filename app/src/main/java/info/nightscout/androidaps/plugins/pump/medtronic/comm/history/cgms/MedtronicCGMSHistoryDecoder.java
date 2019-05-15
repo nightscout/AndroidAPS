@@ -8,6 +8,7 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
@@ -21,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
 
 public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHistoryEntry> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicCGMSHistoryDecoder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
 
     // CGMSValuesWriter cgmsValuesWriter = null;
@@ -120,20 +121,12 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
 
 
     public List<CGMSHistoryEntry> createRecords(List<Byte> dataClearInput) {
-        // List<MinimedHistoryEntry> listRecords = new
-        // ArrayList<MinimedHistoryEntry>();
-
-        LOG.debug("createRecords not implemented... WIP");
-        // return listRecords;
 
         List<Byte> dataClear = reverseList(dataClearInput, Byte.class);
-
-        System.out.println("Reversed:" + ByteUtil.getHex(ByteUtil.getByteArrayFromList(dataClear)));
 
         prepareStatistics();
 
         int counter = 0;
-        // int record = 0;
 
         List<CGMSHistoryEntry> outList = new ArrayList<CGMSHistoryEntry>();
 
@@ -215,7 +208,8 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
                     entry.setDateTime(dateTime, getIndex);
             }
 
-            LOG.debug("Record: {}", entry);
+            if (isLogEnabled())
+                LOG.debug("Record: {}", entry);
         }
 
         return reversedOutList;
@@ -236,35 +230,21 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
 
 
     private int parseMinutes(int one) {
-        // minute = (one & 0b111111 )
-        // return minute
-
-        // int yourInteger = Integer.parseInt("100100101", 2);
-
         return (one & Integer.parseInt("0111111", 2));
     }
 
 
     private int parseHours(int one) {
-        // def parse_hours (one):
-        // return (one & 0x1F )
-
         return (one & 0x1F);
     }
 
 
     private int parseDay(int one) {
-        // def parse_day (one):
-        // return one & 0x1F
         return one & 0x1F;
     }
 
 
     private int parseMonths(int first_byte, int second_byte) {
-        // def parse_months (first_byte, second_byte):
-        // first_two_bits = first_byte >> 6
-        // second_two_bits = second_byte >> 6
-        // return (first_two_bits << 2) + second_two_bits
 
         int first_two_bits = first_byte >> 6;
         int second_two_bits = second_byte >> 6;
@@ -274,66 +254,21 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
 
 
     private int parseYear(int year) {
-        // def parse_years_lax(year):
-        // """
-        // simple mask plus correction
-        // """
-        // y = (year & Mask.year) + 2000
-        // return y
         return (year & 0x0F) + 2000;
-
     }
 
 
     private Long parseDate(CGMSHistoryEntry entry) {
-
-        // System.out.println("parseDate [entryType=" + entry.getEntryType() + ",hasDate="
-        // + entry.getEntryType().hasDate() + "]");
 
         if (!entry.getEntryType().hasDate())
             return null;
 
         byte data[] = entry.getDatetime();
 
-        // System.out.println("parseDate: " + data);
-
-        // def parse_date (data, unmask=False, strict=False,
-        // minute_specific=False):
-        // """
-        // Some dates are formatted/stored down to the second (Sensor
-        // CalBGForPH) while
-        // others are stored down to the minute (CGM SensorTimestamp dates).
-        // """
-        // data = data[:]
-        // seconds = 0
-        // minutes = 0
-        // hours = 0
-        //
-        // year = times.parse_years(data[0])
-        // day = parse_day(data[1])
-        // minutes = parse_minutes(data[2])
-        //
-        // hours = parse_hours(data[3])2015parse
-        //
-        // month = parse_months(data[3], data[2])
-
-        // 2015-04-11T14:02:00
-
-        // date is reversed
-
         if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.MinuteSpecific) {
-            // LocalDateTime date = new LocalDateTime(parseDay(data[2]), parseMonths(data[0], data[1]),
-            // parseHours(data[0]), parseMinutes(data[1]), 0);
-
-            // ATechDate date = new ATechDate(parseDay(data[0]),
-            // parseMonths(data[2], data[1]), parseYear(data[2]),
-            // parseHours(data[2]), parseMinutes(data[1]), 0,
-            // ATechDateType.DateAndTimeSec);
 
             Long atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3]), parseMonths(data[0], data[1]),
                 parseDay(data[2]), parseHours(data[0]), parseMinutes(data[1]), 0);
-
-            // System.out.println("atechDateTime: " + atechDateTime);
 
             entry.setAtechDateTime(atechDateTime);
 

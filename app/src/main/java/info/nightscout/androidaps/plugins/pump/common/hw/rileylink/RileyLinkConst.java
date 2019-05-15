@@ -12,7 +12,6 @@ public class RileyLinkConst {
 
         public static final String RileyLinkReady = Prefix + "RileyLink_Ready";
         public static final String RileyLinkGattFailed = Prefix + "RileyLink_Gatt_Failed";
-        // public static final String RileyLinkBLEError = Prefix + "RileyLink_Ready";
 
         public static final String BluetoothConnected = Prefix + "Bluetooth_Connected";
         public static final String BluetoothReconnected = Prefix + "Bluetooth_Reconnected";

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import android.os.Bundle;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 
@@ -16,9 +17,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
  */
 public class MedtronicPumpResult extends ServiceResult {
 
-    // private static final String TAG = "ReadPumpClockResult";
-    // Map<String,Object> resultMap = new HashMap<>();
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
 
     public MedtronicPumpResult(MedtronicCommandType commandType) {
@@ -45,18 +44,6 @@ public class MedtronicPumpResult extends ServiceResult {
         map.putBoolean("Error", true);
     }
 
-
-    // public void addParameter(String parameter, String value)
-    // {
-    // map.put(parameter, value);
-    // }
-
-    // public void setTime(LocalDateTime pumpTime) {
-    // Bundle map = getMap();
-    // DateTimeFormatter fmt = DateTimeFormat.forStyle("FF");
-    // map.putString("PumpTime", fmt.print(pumpTime));
-    // setMap(map);
-    // }
 
     public void addParameter(String key, LocalDateTime time) {
         DateTimeFormatter fmt = DateTimeFormat.forStyle("FF");

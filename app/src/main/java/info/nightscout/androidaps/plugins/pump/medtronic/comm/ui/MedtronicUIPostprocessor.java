@@ -10,6 +10,7 @@ import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
@@ -26,7 +27,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 public class MedtronicUIPostprocessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicUIPostprocessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     MedtronicPumpStatus pumpStatus;
 
@@ -108,7 +109,8 @@ public class MedtronicUIPostprocessor {
 
             case PumpModel: {
                 if (pumpStatus.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
-                    LOG.warn("Configured pump is different then pump detected !");
+                    if (isLogEnabled())
+                        LOG.warn("Configured pump is different then pump detected !");
                     sendNotification(MedtronicNotificationType.PumpTypeNotSame);
                 }
             }
@@ -123,7 +125,8 @@ public class MedtronicUIPostprocessor {
             // no postprocessing
 
             default:
-                LOG.trace("Post-processing not implemented for {}.", uiTask.commandType.name());
+                if (isLogEnabled())
+                    LOG.trace("Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
 
@@ -141,16 +144,19 @@ public class MedtronicUIPostprocessor {
 
         MedtronicUtil.setPumpTime(clockDTO);
 
-        LOG.debug("Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime + //
-            ", diff: " + dur.getStandardSeconds() + " s");
+        if (isLogEnabled())
+            LOG.debug("Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime + //
+                ", diff: " + dur.getStandardSeconds() + " s");
 
         if (dur.getStandardMinutes() >= 10) {
-            LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-                + dur.getStandardSeconds() + " s)");
+            if (isLogEnabled())
+                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
+                    + dur.getStandardSeconds() + " s)");
             sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
         } else if (dur.getStandardMinutes() >= 4) {
-            LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-                + dur.getStandardSeconds() + " s)");
+            if (isLogEnabled())
+                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
+                    + dur.getStandardSeconds() + " s)");
             sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
         }
 
@@ -166,23 +172,27 @@ public class MedtronicUIPostprocessor {
         PumpSettingDTO checkValue = null;
 
         if (pumpStatus == null) {
-            LOG.debug("Pump Status: was null");
+            if (isLogEnabled())
+                LOG.debug("Pump Status: was null");
             pumpStatus = MedtronicUtil.getPumpStatus();
-            LOG.debug("Pump Status: " + this.pumpStatus);
+            if (isLogEnabled())
+                LOG.debug("Pump Status: " + this.pumpStatus);
         }
 
         this.pumpStatus.verifyConfiguration();
 
         // check profile
         if (!"Yes".equals(settings.get("PCFG_BASAL_PROFILES_ENABLED").value)) {
-            LOG.error("Basal profiles are not enabled on pump.");
+            if (isLogEnabled())
+                LOG.error("Basal profiles are not enabled on pump.");
             sendNotification(MedtronicNotificationType.PumpBasalProfilesNotEnabled);
 
         } else {
             checkValue = settings.get("PCFG_ACTIVE_BASAL_PROFILE");
 
             if (!"STD".equals(checkValue.value)) {
-                LOG.error("Basal profile set on pump is incorrect (must be STD).");
+                if (isLogEnabled())
+                    LOG.error("Basal profile set on pump is incorrect (must be STD).");
                 sendNotification(MedtronicNotificationType.PumpIncorrectBasalProfileSelected);
             }
         }
@@ -192,7 +202,8 @@ public class MedtronicUIPostprocessor {
         checkValue = settings.get("PCFG_TEMP_BASAL_TYPE");
 
         if (!"Units".equals(checkValue.value)) {
-            LOG.error("Wrong TBR type set on pump (must be Absolute).");
+            if (isLogEnabled())
+                LOG.error("Wrong TBR type set on pump (must be Absolute).");
             sendNotification(MedtronicNotificationType.PumpWrongTBRTypeSet);
         }
 
@@ -208,10 +219,15 @@ public class MedtronicUIPostprocessor {
         checkValue = settings.get("PCFG_MAX_BASAL");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBasal)) {
-            LOG.error("Wrong Max Basal set on Pump (current={}, required={}).", checkValue.value, pumpStatus.maxBasal);
+            if (isLogEnabled())
+                LOG.error("Wrong Max Basal set on Pump (current={}, required={}).", checkValue.value, pumpStatus.maxBasal);
             sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, pumpStatus.maxBasal);
         }
 
+    }
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMP);
     }
 
 }

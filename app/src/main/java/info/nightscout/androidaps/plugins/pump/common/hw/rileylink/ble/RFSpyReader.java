@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
@@ -23,13 +24,14 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
  */
 public class RFSpyReader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RFSpyReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
     private static AsyncTask<Void, Void, Void> readerTask;
     private RileyLinkBLE rileyLinkBle;
     private Semaphore waitForRadioData = new Semaphore(0, true);
     private LinkedBlockingQueue<byte[]> mDataQueue = new LinkedBlockingQueue<>();
     private int acquireCount = 0;
     private int releaseCount = 0;
+    private boolean stopAtNull = true;
 
 
     public RFSpyReader(RileyLinkBLE rileyLinkBle) {
@@ -49,21 +51,30 @@ public class RFSpyReader {
         this.rileyLinkBle = rileyLinkBle;
     }
 
+    public void setRileyLinkEncodingType(RileyLinkEncodingType encodingType) {
+        stopAtNull = !(encodingType == RileyLinkEncodingType.Manchester || //
+                encodingType == RileyLinkEncodingType.FourByteSixByteRileyLink);
+    }
+
 
     // This timeout must be coordinated with the length of the RFSpy radio operation or Bad Things Happen.
     public byte[] poll(int timeout_ms) {
-        LOG.trace(ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms
-            + " mDataQueue size is " + mDataQueue.size());
+        if (isLogEnabled())
+            LOG.trace(ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms
+                + " mDataQueue size is " + mDataQueue.size());
+
         if (mDataQueue.isEmpty())
             try {
                 // block until timeout or data available.
                 // returns null if timeout.
                 byte[] dataFromQueue = mDataQueue.poll(timeout_ms, TimeUnit.MILLISECONDS);
                 if (dataFromQueue != null) {
-                    LOG.debug("Got data [" + ByteUtil.shortHexString(dataFromQueue) + "] at t=="
-                        + SystemClock.uptimeMillis());
+                    if (isLogEnabled())
+                        LOG.debug("Got data [" + ByteUtil.shortHexString(dataFromQueue) + "] at t=="
+                            + SystemClock.uptimeMillis());
                 } else {
-                    LOG.debug("Got data [null] at t==" + SystemClock.uptimeMillis());
+                    if (isLogEnabled())
+                        LOG.debug("Got data [null] at t==" + SystemClock.uptimeMillis());
                 }
                 return dataFromQueue;
             } catch (InterruptedException e) {
@@ -77,8 +88,9 @@ public class RFSpyReader {
     public void newDataIsAvailable() {
         releaseCount++;
 
-        LOG.trace(ThreadUtil.sig() + "waitForRadioData released(count=" + releaseCount + ") at t="
-            + SystemClock.uptimeMillis());
+        if (isLogEnabled())
+            LOG.trace(ThreadUtil.sig() + "waitForRadioData released(count=" + releaseCount + ") at t="
+                + SystemClock.uptimeMillis());
         waitForRadioData.release();
     }
 
@@ -91,15 +103,13 @@ public class RFSpyReader {
                 UUID serviceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
                 UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
                 BLECommOperationResult result;
-                boolean stopAtNull = true;
-                if (RileyLinkUtil.getEncoding() == RileyLinkEncodingType.Manchester)
-                    stopAtNull = false;
                 while (true) {
                     try {
                         acquireCount++;
                         waitForRadioData.acquire();
-                        LOG.trace(ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t="
-                            + SystemClock.uptimeMillis());
+                        if (isLogEnabled())
+                            LOG.trace(ThreadUtil.sig() + "waitForRadioData acquired (count=" + acquireCount + ") at t="
+                                + SystemClock.uptimeMillis());
                         SystemClock.sleep(100);
                         SystemClock.sleep(1);
                         result = rileyLinkBle.readCharacteristic_blocking(serviceUUID, radioDataUUID);
@@ -131,6 +141,10 @@ public class RFSpyReader {
                 }
             }
         }.execute();
+    }
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPBTCOMM);
     }
 
 }

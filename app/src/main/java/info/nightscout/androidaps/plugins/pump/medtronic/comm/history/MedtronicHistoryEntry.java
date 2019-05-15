@@ -148,6 +148,16 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     }
 
 
+    public Object getDecodedDataEntry(String key) {
+        return this.decodedData.get(key);
+    }
+
+
+    public boolean hasDecodedDataEntry(String key) {
+        return this.decodedData.containsKey(key);
+    }
+
+
     public boolean showRaw() {
         return getEntryTypeName().equals("EndResultTotals");
     }
@@ -283,16 +293,6 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     }
 
 
-    // public LocalDateTime getLocalDateTime() {
-    // return this.dateTime;
-    // }
-    //
-    //
-    // public void setLocalDateTime(LocalDateTime atdate) {
-    // this.dateTime = atdate;
-    // // this.DT = atdate.toString(dateTimeFormatter);
-    // }
-
     public void setAtechDateTime(long dt) {
         this.atechDateTime = dt;
         this.DT = DateTimeUtil.toString(this.atechDateTime);
@@ -313,6 +313,13 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
         } else {
             return "HistoryRecord: head=[" + HexDump.toHexStringDisplayable(this.head) + "]";
         }
+    }
+
+    public boolean containsDecodedData(String key) {
+        if (decodedData == null)
+            return false;
+
+        return decodedData.containsKey(key);
     }
 
     // if we extend to CGMS this need to be changed back

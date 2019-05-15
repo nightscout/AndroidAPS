@@ -9,6 +9,7 @@ import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -27,7 +28,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 public class MedtronicConverter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     MedtronicDeviceType pumpModel;
 
@@ -35,12 +36,13 @@ public class MedtronicConverter {
     public Object convertResponse(MedtronicCommandType commandType, byte[] rawContent) {
 
         if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
-            LOG.warn("Content is empty or too shor, no data to convert (type={},isNull={},length={})",
+            LOG.warn("Content is empty or too short, no data to convert (type={},isNull={},length={})",
                 commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
             return null;
         }
 
-        LOG.debug("Raw response before convert: " + HexDump.toHexStringDisplayable(rawContent));
+        if (isLogEnabled())
+            LOG.debug("Raw response before convert: " + HexDump.toHexStringDisplayable(rawContent));
 
         this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
 
@@ -102,7 +104,8 @@ public class MedtronicConverter {
 
         String rawModel = StringUtil.fromBytes(ByteUtil.substring(rawContent, 1, 3));
         MedtronicDeviceType pumpModel = MedtronicDeviceType.getByDescription(rawModel);
-        LOG.debug("PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
+        if (isLogEnabled())
+            LOG.debug("PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
 
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
             if (!MedtronicUtil.isModelSet()) {
@@ -192,7 +195,9 @@ public class MedtronicConverter {
     protected Float decodeRemainingInsulin(byte[] rawData) {
         int startIdx = 0;
 
-        int strokes = pumpModel.getBolusStrokes();
+        this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
+
+        int strokes = pumpModel==null ? 10 : pumpModel.getBolusStrokes();
 
         if (strokes == 40) {
             startIdx = 2;
@@ -200,7 +205,8 @@ public class MedtronicConverter {
 
         float value = ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0f * strokes);
 
-        LOG.debug("Remaining insulin: " + value);
+        if (isLogEnabled())
+            LOG.debug("Remaining insulin: " + value);
         return value;
     }
 
@@ -229,7 +235,6 @@ public class MedtronicConverter {
     public Map<String, PumpSettingDTO> decodeSettings512(byte[] rd) {
 
         Map<String, PumpSettingDTO> map = new HashMap<>();
-        // List<PumpSettingDTO> outList = new ArrayList<>();
 
         addSettingToMap("PCFG_AUTOOFF_TIMEOUT", "" + rd[0], PumpConfigurationGroup.General, map);
 
@@ -260,11 +265,11 @@ public class MedtronicConverter {
         if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] == 0 ? 50 : 100), PumpConfigurationGroup.Insulin,
                 map);
-            LOG.debug("Insulin concentration: " + rd[9]);
+//            LOG.debug("Insulin concentration: " + rd[9]);
         } else {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] != 0 ? 50 : 100), PumpConfigurationGroup.Insulin,
                 map);
-            LOG.debug("Insulin concentration: " + rd[9]);
+//            LOG.debug("Insulin concentration: " + rd[9]);
         }
         addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10]), PumpConfigurationGroup.Basal, map);
 
@@ -407,6 +412,11 @@ public class MedtronicConverter {
 
     private boolean is523orHigher() {
         return (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher));
+    }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
     }
 
 }

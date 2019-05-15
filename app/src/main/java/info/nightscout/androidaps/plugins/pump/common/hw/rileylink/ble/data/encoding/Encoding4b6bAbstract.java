@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.FabricUtil;
+
 
 /**
  * Created by andy on 11/24/18.
@@ -53,13 +53,14 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
 
     public void writeError(Logger LOG, byte[] raw, String errorData) {
 
-        LOG.error("=============================================================================");
-        LOG.error(" Decoded payload length is zero.");
-        LOG.error(" encodedPayload: {}", ByteUtil.getHex(raw));
-        LOG.error(" errors: {}", errorData);
-        LOG.error("=============================================================================");
+        LOG.error("\n=============================================================================\n" + //
+                  " Decoded payload length is zero.\n" +
+                  " encodedPayload: {}\n" +
+                  " errors: {}\n" +
+                  "=============================================================================", //
+                ByteUtil.getHex(raw), errorData);
 
-        FabricUtil.createEvent("MedtronicDecode4b6bError", null);
+        //FabricUtil.createEvent("MedtronicDecode4b6bError", null);
 
         return;
 

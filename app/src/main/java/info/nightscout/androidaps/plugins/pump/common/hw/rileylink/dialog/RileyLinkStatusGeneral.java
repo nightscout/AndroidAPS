@@ -74,12 +74,12 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
         if (!first) {
 
             // 7-12
-            int[] ids = { R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
-            R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13 };
+            int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
+                    R.id.rls_t1_tv08, R.id.rls_t1_tv09, R.id.rls_t1_tv10, R.id.rls_t1_tv11, R.id.rls_t1_tv12, R.id.rls_t1_tv13};
 
             for (int id : ids) {
 
-                TextView tv = (TextView)getActivity().findViewById(id);
+                TextView tv = (TextView) getActivity().findViewById(id);
                 tv.setText(tv.getText() + ":");
             }
 
@@ -118,19 +118,21 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
             this.deviceModel.setText(medtronicPumpStatus.pumpType.getDescription());
             this.serialNumber.setText(medtronicPumpStatus.serialNumber);
             this.pumpFrequency.setText(medtronicPumpStatus.pumpFrequency);
-            if (MedtronicUtil.getMedtronicPumpModel() != null) // FIXME change this when we have omnipod
+
+            // TODO extend when Omnipod used
+
+            if (MedtronicUtil.getMedtronicPumpModel() != null)
                 this.connectedDevice.setText("Medtronic " + MedtronicUtil.getMedtronicPumpModel().getPumpModel());
             else
                 this.connectedDevice.setText("???");
 
             if (rileyLinkServiceData.lastGoodFrequency != null)
                 this.lastUsedFrequency.setText(String.format(Locale.ENGLISH, "%.2f MHz",
-                    rileyLinkServiceData.lastGoodFrequency));
+                        rileyLinkServiceData.lastGoodFrequency));
 
-            // FIXME
             if (medtronicPumpStatus.lastConnection != 0)
                 this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
-                    medtronicPumpStatus.lastDataTime)));
+                        medtronicPumpStatus.lastDataTime)));
             else
                 this.lastDeviceContact.setText("Never");
         }

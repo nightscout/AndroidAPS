@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -20,10 +21,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * Created by andy on 6/14/18.
  */
 
-// FIXME we could refactor this and create sperate class for each command, perhaps
 public class MedtronicUITask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicUITask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     public MedtronicCommandType commandType;
     public Object returnData;
@@ -47,7 +47,8 @@ public class MedtronicUITask {
 
     public void execute(MedtronicCommunicationManager communicationManager) {
 
-        LOG.warn("@@@ In execute. {}", commandType);
+        if (isLogEnabled())
+            LOG.warn("@@@ In execute. {}", commandType);
 
         switch (commandType) {
             case PumpModel: {
@@ -134,7 +135,8 @@ public class MedtronicUITask {
                 break;
 
             default: {
-                LOG.warn("This commandType is not supported (yet) - {}.", commandType);
+                if (isLogEnabled())
+                    LOG.warn("This commandType is not supported (yet) - {}.", commandType);
                 // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid;
             }
@@ -190,7 +192,8 @@ public class MedtronicUITask {
     public void postProcess(MedtronicUIPostprocessor postprocessor) {
 
         EventMedtronicDeviceStatusChange statusChange;
-        LOG.warn("@@@ In execute. {}", commandType);
+        if (isLogEnabled())
+            LOG.warn("@@@ In execute. {}", commandType);
 
         if (responseType == MedtronicUIResponseType.Data) {
             postprocessor.postProcessData(this);
@@ -222,4 +225,10 @@ public class MedtronicUITask {
     public Object getParameter(int index) {
         return parameters[index];
     }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMP);
+    }
+
 }

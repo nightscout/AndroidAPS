@@ -2,6 +2,10 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.task
 
 import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
@@ -20,7 +24,7 @@ public class InitializePumpManagerTask extends ServiceTask {
 
     private static final String TAG = "InitPumpManagerTask";
     private RileyLinkTargetDevice targetDevice;
-
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public InitializePumpManagerTask(RileyLinkTargetDevice targetDevice) {
         super();
@@ -51,22 +55,21 @@ public class InitializePumpManagerTask extends ServiceTask {
 
             RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkReady);
 
-            Log.i(TAG, String.format("Setting radio frequency to %.2fMHz", lastGoodFrequency));
+            if (L.isEnabled(L.PUMPCOMM))
+                LOG.info("Setting radio frequency to {} MHz", lastGoodFrequency);
+
             RileyLinkUtil.getRileyLinkCommunicationManager().setRadioFrequencyForPump(lastGoodFrequency);
 
             boolean foundThePump = RileyLinkUtil.getRileyLinkCommunicationManager().tryToConnectToDevice();
 
             if (foundThePump) {
                 RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
-                // RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_PUMP_pumpFound), null);
             } else {
                 RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError,
                     RileyLinkError.NoContactWithDevice);
                 RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
-                // RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_PUMP_pumpLost), null);
             }
 
-            // RileyLinkUtil.sendNotification(new ServiceNotification(RT2Const.IPC.MSG_note_Idle), null);
         } else {
             RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
         }

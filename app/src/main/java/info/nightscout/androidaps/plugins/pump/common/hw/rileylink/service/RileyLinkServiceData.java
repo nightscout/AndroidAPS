@@ -39,4 +39,5 @@ public class RileyLinkServiceData {
         this.pumpID = pumpId;
         this.pumpIDBytes = pumpIdBytes;
     }
+
 }

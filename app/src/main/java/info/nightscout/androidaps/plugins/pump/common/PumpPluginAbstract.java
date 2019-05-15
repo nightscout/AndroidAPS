@@ -45,7 +45,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PumpPluginAbstract.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
         .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));

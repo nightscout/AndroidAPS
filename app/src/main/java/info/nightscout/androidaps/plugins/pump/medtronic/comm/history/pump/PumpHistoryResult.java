@@ -7,8 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 
 /**
  * Created by andy on 9/23/18.
@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
  */
 public class PumpHistoryResult {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PumpHistoryResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private boolean searchFinished = false;
     private PumpHistoryEntry searchEntry = null;
@@ -41,11 +41,13 @@ public class PumpHistoryResult {
              */
             this.searchDate = searchEntry.atechDateTime;
             this.searchType = SearchType.Date;
-            LOG.debug("PumpHistoryResult. Search parameters: Date(with searchEntry): " + targetDate);
+            if (isLogEnabled())
+                LOG.debug("PumpHistoryResult. Search parameters: Date(with searchEntry): " + targetDate);
         } else if (targetDate != null) {
             this.searchDate = targetDate;
             this.searchType = SearchType.Date;
-            LOG.debug("PumpHistoryResult. Search parameters: Date: " + targetDate);
+            if (isLogEnabled())
+                LOG.debug("PumpHistoryResult. Search parameters: Date: " + targetDate);
         }
 
         // this.unprocessedEntries = new ArrayList<>();
@@ -55,7 +57,7 @@ public class PumpHistoryResult {
 
     public void addHistoryEntries(List<PumpHistoryEntry> entries) {
         this.unprocessedEntries = entries;
-        LOG.debug("PumpHistoryResult. Unprocessed entries: {}", MedtronicPumpPlugin.gsonInstance.toJson(entries));
+        //LOG.debug("PumpHistoryResult. Unprocessed entries: {}", MedtronicUtil.getGsonInstance().toJson(entries));
         processEntries();
     }
 
@@ -65,41 +67,34 @@ public class PumpHistoryResult {
 
         switch (searchType) {
             case None:
-                LOG.debug("PE. None search");
-                // clearOrPrepareList();
+                //LOG.debug("PE. None search");
                 this.validEntries.addAll(this.unprocessedEntries);
-                // this.unprocessedEntries
-                // = null;
                 break;
 
             case LastEntry: {
-                LOG.debug("PE. Last entry search");
-
-                // clearOrPrepareList();
+                //LOG.debug("PE. Last entry search");
 
                 Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
 
-                LOG.debug("PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
+                //LOG.debug("PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
 
                 Long date = searchEntry.atechDateTime;
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
                     if (unprocessedEntry.equals(searchEntry)) {
-                        LOG.debug("PE. Item found {}.", unprocessedEntry);
+                        //LOG.debug("PE. Item found {}.", unprocessedEntry);
                         searchFinished = true;
                         break;
                     }
 
-                    LOG.debug("PE. Entry {} added.", unprocessedEntry);
+                    //LOG.debug("PE. Entry {} added.", unprocessedEntry);
                     this.validEntries.add(unprocessedEntry);
                 }
             }
                 break;
             case Date: {
-                LOG.debug("PE. Date search");
-
-                // clearOrPrepareList();
+                //LOG.debug("PE. Date search");
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
@@ -125,7 +120,7 @@ public class PumpHistoryResult {
 
         } // switch
 
-        LOG.debug("PE. Valid Entries: {}", validEntries);
+        //LOG.debug("PE. Valid Entries: {}", validEntries);
     }
 
 
@@ -188,5 +183,11 @@ public class PumpHistoryResult {
         LastEntry, //
         Date
     }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
+    }
+
 
 }

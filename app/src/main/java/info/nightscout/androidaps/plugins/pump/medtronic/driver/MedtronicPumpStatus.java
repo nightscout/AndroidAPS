@@ -13,10 +13,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
@@ -33,11 +35,10 @@ import info.nightscout.androidaps.utils.SP;
 
 public class MedtronicPumpStatus extends PumpStatus {
 
-    private static Logger LOG = LoggerFactory.getLogger(MedtronicPumpStatus.class);
+    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     public String errorDescription = null;
     public String serialNumber;
-    // public PumpType pumpType = null;
     public String pumpFrequency = null;
     public String rileyLinkAddress = null;
     public Double maxBolus;
@@ -62,13 +63,14 @@ public class MedtronicPumpStatus extends PumpStatus {
     String regexSN = "[0-9]{6}";
     boolean serialChanged = false;
     boolean rileyLinkAddressChanged = false;
+    boolean encodingChanged = false;
+    RileyLinkEncodingType encodingType;
     private String[] frequencies;
     private boolean isFrequencyUS = false;
     private Map<String, PumpType> medtronicPumpMap = null;
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
     private RileyLinkTargetFrequency targetFrequency;
     private boolean targetFrequencyChanged = false;
-    // public boolean isBasalInitalized = false;
     public BasalProfileStatus basalProfileStatus;
 
 
@@ -213,13 +215,15 @@ public class MedtronicPumpStatus extends PumpStatus {
             String rileyLinkAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
 
             if (rileyLinkAddress == null) {
-                LOG.debug("RileyLink address invalid: null");
+                if (isLogEnabled())
+                    LOG.debug("RileyLink address invalid: null");
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
                 return;
             } else {
                 if (!rileyLinkAddress.matches(regexMac)) {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
-                    LOG.debug("RileyLink address invalid: {}", rileyLinkAddress);
+                    if (isLogEnabled())
+                        LOG.debug("RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
                     if (!rileyLinkAddress.equals(this.rileyLinkAddress)) {
                         this.rileyLinkAddress = rileyLinkAddress;
@@ -233,7 +237,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             if (maxBolus == null || !maxBolus.equals(maxBolusLcl)) {
                 maxBolus = maxBolusLcl;
 
-                LOG.debug("Max Bolus from AAPS settings is " + maxBolus);
+                //LOG.debug("Max Bolus from AAPS settings is " + maxBolus);
             }
 
             double maxBasalLcl = checkParameterValue(MedtronicConst.Prefs.MaxBasal, "35.0", 35.0d);
@@ -241,8 +245,12 @@ public class MedtronicPumpStatus extends PumpStatus {
             if (maxBasal == null || !maxBasal.equals(maxBasalLcl)) {
                 maxBasal = maxBasalLcl;
 
-                LOG.debug("Max Basal from AAPS settings is " + maxBasal);
+                //LOG.debug("Max Basal from AAPS settings is " + maxBasal);
             }
+
+            //RileyLinkEncodingType encodingType = RileyLinkEncodingType.getValueByDescription()
+
+
 
             startService();
 
@@ -329,6 +337,10 @@ public class MedtronicPumpStatus extends PumpStatus {
         }
 
         return 0;
+    }
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMP);
     }
 
 }

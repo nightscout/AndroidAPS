@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.annotations.Expose;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class TempBasalPair {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TempBasalPair.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     @Expose
     private double insulinRate = 0.0d;
@@ -61,7 +62,8 @@ public class TempBasalPair {
 
     public TempBasalPair(byte[] response) {
 
-        LOG.debug("Received response: " + response);
+        if (L.isEnabled(L.PUMPCOMM))
+            LOG.debug("Received response: " + response);
 
         isPercent = response[0] == 1;
 

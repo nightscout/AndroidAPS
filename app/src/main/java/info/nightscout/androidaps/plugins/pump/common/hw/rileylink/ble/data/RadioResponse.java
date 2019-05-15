@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
@@ -18,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
  */
 public class RadioResponse {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RadioResponse.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
     public boolean decodedOK = false;
     public int rssi;

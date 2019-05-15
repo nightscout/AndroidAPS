@@ -60,7 +60,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeMaxBasal(0x2c, "Change Max Basal", PumpHistoryEntryGroup.Configuration), //
     BolusWizardEnabled(0x2d, "Bolus Wizard Enabled", PumpHistoryEntryGroup.Configuration), // V3 ?
     /**/EventUnknown_MM512_0x2e(0x2e, "Unknown Event 0x2e", PumpHistoryEntryGroup.Unknown), //
-    /**/BolusWizard512(0x2f, "Bolus Wizard (512)", PumpHistoryEntryGroup.Configuration), //
+    /**/BolusWizardEstimate512(0x2f, "Bolus Wizard Estimate (512)", PumpHistoryEntryGroup.Configuration), //
     UnabsorbedInsulin512(0x30, "Unabsorbed Insulin (512)", PumpHistoryEntryGroup.Statistic), //
     ChangeBGReminderOffset(0x31, "Change BG Reminder Offset", PumpHistoryEntryGroup.Configuration), //
     ChangeAlarmClockTime(0x32, "Change Alarm Clock Time", PumpHistoryEntryGroup.Configuration), //
@@ -108,7 +108,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     // Andy58(0x58, "Unknown", 13, 5, 0), // TO DO is this one really there ???
 
     BolusWizardChange(0x5a, "Bolus Wizard Change", PumpHistoryEntryGroup.Configuration, 2, 5, 117), // V2: 522+[B=143] // V6 124/144
-    BolusWizardBolusEstimate(0x5b, "Bolus Wizard Estimate", PumpHistoryEntryGroup.Configuration, 2, 5, 13), // 15 //
+    BolusWizardEstimate(0x5b, "Bolus Wizard Estimate", PumpHistoryEntryGroup.Configuration, 2, 5, 13), // 15 //
     UnabsorbedInsulin(0x5c, "Unabsorbed Insulin", PumpHistoryEntryGroup.Statistic, 5, 0, 0), // head[1] -> body
                                                                                              // length
     SaveSettings(0x5d, "Save Settings", PumpHistoryEntryGroup.Configuration), //
@@ -225,7 +225,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
         // has
         // old
         // form
-        BolusWizardBolusEstimate.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15));
+        BolusWizardEstimate.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15));
         BolusReminder.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 2));
     }
 

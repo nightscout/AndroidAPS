@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -20,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.MessageType;
+
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
@@ -37,7 +41,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 
 public class MedtronicUtil extends RileyLinkUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
     static int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
     static int CRC_SIZE = 1;
     private static boolean lowLevelDebug = true;
@@ -50,6 +54,18 @@ public class MedtronicUtil extends RileyLinkUtil {
     private static int BIG_FRAME_LENGTH = 65;
     private static int doneBit = 1 << 7;
     private static ClockDTO pumpTime;
+    public static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    public static Gson gsonInstancePretty = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
+            .setPrettyPrinting().create();
+
+
+    public static Gson getGsonInstance() {
+        return gsonInstance;
+    }
+
+    public static Gson getGsonInstancePretty() {
+        return gsonInstancePretty;
+    }
 
 
     public static LocalTime getTimeFrom30MinInterval(int interval) {
@@ -221,9 +237,9 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    public static byte[] buildCommandPayload(MessageType commandType, byte[] parameters) {
-        return buildCommandPayload(commandType.getValue(), parameters);
-    }
+//    public static byte[] buildCommandPayload(MessageType commandType, byte[] parameters) {
+//        return buildCommandPayload(commandType.getValue(), parameters);
+//    }
 
 
     public static byte[] buildCommandPayload(MedtronicCommandType commandType, byte[] parameters) {
@@ -260,7 +276,8 @@ public class MedtronicUtil extends RileyLinkUtil {
 
         byte[] payload = sendPayloadBuffer.array();
 
-        LOG.info(HexDump.toHexStringDisplayable(payload));
+        if (L.isEnabled(L.PUMPCOMM))
+            LOG.info(HexDump.toHexStringDisplayable(payload));
 
         // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 
@@ -406,9 +423,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static void setMedtronicPumpModel(MedtronicDeviceType medtronicPumpModel) {
-        // if (medtronicPumpModel != null && medtronicPumpModel != MedtronicDeviceType.Unknown_Device) {
         MedtronicUtil.medtronicPumpModel = medtronicPumpModel;
-        // }
     }
 
 

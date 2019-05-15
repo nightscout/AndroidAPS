@@ -2,6 +2,10 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.message;
 
 import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
@@ -10,8 +14,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 /**
  * Created by geoff on 5/29/16.
  */
-// FIXME: Andy Message body problem, see comment in MessageBody
 public class PumpMessage implements RLMessage {
+
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public PacketType packetType = PacketType.Carelink;
     public byte[] address = new byte[] { 0, 0, 0 };
@@ -69,7 +74,8 @@ public class PumpMessage implements RLMessage {
         if (rxData.length > 4) {
             this.commandType = MedtronicCommandType.getByCode(rxData[4]);
             if (this.commandType == MedtronicCommandType.InvalidCommand) {
-                Log.e("PumpMessage", "Unknown commandType " + rxData[4]);
+                if (isLogEnabled())
+                    LOG.error("PumpMessage - Unknown commandType " + rxData[4]);
             }
         }
         if (rxData.length > 5) {
@@ -126,7 +132,8 @@ public class PumpMessage implements RLMessage {
 
         System.arraycopy(messageBody.getTxData(), 1, arrayOut, 0, length);
 
-        Log.d("PumpMessage", "Length: " + length + ", Original Length: " + originalLength + ", CommandType: "
+        if (isLogEnabled())
+            LOG.debug("PumpMessage - Length: " + length + ", Original Length: " + originalLength + ", CommandType: "
             + commandType);
 
         return arrayOut;
@@ -204,6 +211,11 @@ public class PumpMessage implements RLMessage {
         sb.append(")]");
 
         return sb.toString();
+    }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
     }
 
 }

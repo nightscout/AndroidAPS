@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -32,7 +33,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 public abstract class RileyLinkService extends Service {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RileyLinkService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public RileyLinkBLE rileyLinkBLE; // android-bluetooth management
     protected BluetoothAdapter bluetoothAdapter;
@@ -41,23 +42,11 @@ public abstract class RileyLinkService extends Service {
     protected RileyLinkBroadcastReceiver mBroadcastReceiver;
     protected RileyLinkServiceData rileyLinkServiceData;
 
-
-    // protected RileyLinkTargetFrequency rileyLinkTargetFrequency;
-
-    // protected static final String WAKELOCKNAME = "com.gxwtech.roundtrip2.RoundtripServiceWakeLock";
-    // protected static volatile PowerManager.WakeLock lockStatic = null;
-    // Our hardware/software connection
-    // protected boolean needBluetoothPermission = true;
-    // protected RileyLinkIPCConnection rileyLinkIPCConnection;
-    // public RileyLinkCommunicationManager pumpCommunicationManager;
-
     public RileyLinkService(Context context) {
         super();
         this.context = context;
         RileyLinkUtil.setContext(this.context);
-        determineRileyLinkTargetFrequency();
         RileyLinkUtil.setRileyLinkService(this);
-        // RileyLinkUtil.setRileyLinkTargetFrequency(rileyLinkTargetFrequency);
         RileyLinkUtil.setEncoding(getEncoding());
         initRileyLinkServiceData();
     }
@@ -70,12 +59,6 @@ public abstract class RileyLinkService extends Service {
 
 
     /**
-     * You need to determine which frequencies RileyLink will use, and set rileyLinkTargetFrequency
-     */
-    protected abstract void determineRileyLinkTargetFrequency();
-
-
-    /**
      * If you have customized RileyLinkServiceData you need to override this
      */
     public abstract void initRileyLinkServiceData();
@@ -83,14 +66,14 @@ public abstract class RileyLinkService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        LOG.warn("onUnbind");
+        //LOG.warn("onUnbind");
         return super.onUnbind(intent);
     }
 
 
     @Override
     public void onRebind(Intent intent) {
-        LOG.warn("onRebind");
+        //LOG.warn("onRebind");
         super.onRebind(intent);
     }
 
@@ -98,7 +81,7 @@ public abstract class RileyLinkService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LOG.error("I die! I die!");
+        //LOG.error("I die! I die!");
 
         if (rileyLinkBLE != null) {
             rileyLinkBLE.disconnect(); // dispose of Gatt (disconnect and close)
@@ -110,12 +93,12 @@ public abstract class RileyLinkService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        LOG.debug("onCreate");
+        //LOG.debug("onCreate");
 
         mBroadcastReceiver = new RileyLinkBroadcastReceiver(this, this.context);
         mBroadcastReceiver.registerBroadcasts();
 
-        LOG.debug("onCreate(): It's ALIVE!");
+        //LOG.debug("onCreate(): It's ALIVE!");
     }
 
 
@@ -144,14 +127,14 @@ public abstract class RileyLinkService extends Service {
     // We've received a service startCommand, we grab the lock.
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LOG.debug("onStartCommand");
         RileyLinkUtil.setContext(getApplicationContext());
         return (START_STICKY);
     }
 
 
     public boolean bluetoothInit() {
-        LOG.debug("bluetoothInit: attempting to get an adapter");
+        if (isLogEnabled())
+            LOG.debug("bluetoothInit: attempting to get an adapter");
         RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -162,9 +145,6 @@ public abstract class RileyLinkService extends Service {
         } else {
 
             if (!bluetoothAdapter.isEnabled()) {
-
-                // sendBLERequestForAccess();
-
                 LOG.error("Bluetooth is not enabled.");
                 RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
             } else {
@@ -189,11 +169,14 @@ public abstract class RileyLinkService extends Service {
 
         if (rileyLinkBLE.isConnected()) {
             if (deviceAddress.equals(rileyLinkServiceData.rileylinkAddress)) {
-                LOG.info("No change to RL address.  Not reconnecting.");
+                if (isLogEnabled())
+                    LOG.info("No change to RL address.  Not reconnecting.");
                 return false;
             } else {
-                LOG.warn("Disconnecting from old RL (" + rileyLinkServiceData.rileylinkAddress
-                    + "), reconnecting to new: " + deviceAddress);
+                if (isLogEnabled())
+                    LOG.warn("Disconnecting from old RL (" + rileyLinkServiceData.rileylinkAddress
+                        + "), reconnecting to new: " + deviceAddress);
+
                 rileyLinkBLE.disconnect();
                 // prolly need to shut down listening thread too?
                 // SP.putString(MedtronicConst.Prefs.RileyLinkAddress, deviceAddress);
@@ -203,8 +186,8 @@ public abstract class RileyLinkService extends Service {
                 return true;
             }
         } else {
-            // Toast.makeText(context, "Using RL " + deviceAddress, Toast.LENGTH_SHORT).show();
-            LOG.debug("handleIPCMessage: Using RL " + deviceAddress);
+            if (isLogEnabled())
+                LOG.debug("Using RL " + deviceAddress);
 
             if (RileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
@@ -222,16 +205,6 @@ public abstract class RileyLinkService extends Service {
 
 
     public void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
-        // get the key (hashcode) of the client who requested this
-        /*
-         * Integer clientHashcode = transport.getSenderHashcode();
-         * // make a new bundle to send as the message data
-         * transport.setServiceResult(serviceResult);
-         * // FIXME
-         * transport.setTransportType(RT2Const.IPC.MSG_ServiceResult);
-         */
-        // rileyLinkIPCConnection.sendTransport(transport, clientHashcode);
-        LOG.error("sendServiceTransportResponse not implemented.");
     }
 
 
@@ -250,25 +223,12 @@ public abstract class RileyLinkService extends Service {
         }
 
         double newFrequency;
-        // if ((lastGoodFrequency > 0.0d) && getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
-        // LOG.info("Checking for pump near last saved frequency of {}MHz", lastGoodFrequency);
-        // // we have an old frequency, so let's start there.
-        // newFrequency = getDeviceCommunicationManager().quickTuneForPump(lastGoodFrequency);
-        // if (newFrequency == 0.0) {
-        // // quick scan failed to find pump. Try full scan
-        // LOG.warn("Failed to find pump near last saved frequency, doing full scan");
-        // newFrequency = getDeviceCommunicationManager().tuneForDevice();
-        // }
-        // } else {
-        // LOG.warn("No saved frequency for pump, doing full scan.");
-        // // we don't have a saved frequency, so do the full scan.
-        // newFrequency = getDeviceCommunicationManager().tuneForDevice();
-        // }
 
         newFrequency = getDeviceCommunicationManager().tuneForDevice();
 
         if ((newFrequency != 0.0) && (newFrequency != lastGoodFrequency)) {
-            LOG.info("Saving new pump frequency of {}MHz", newFrequency);
+            if (isLogEnabled())
+                LOG.info("Saving new pump frequency of {} MHz", newFrequency);
             SP.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, newFrequency);
             rileyLinkServiceData.lastGoodFrequency = newFrequency;
             rileyLinkServiceData.tuneUpDone = true;
@@ -302,5 +262,10 @@ public abstract class RileyLinkService extends Service {
      */
     public RileyLinkTargetDevice getRileyLinkTargetDevice() {
         return this.rileyLinkServiceData.targetDevice;
+    }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
     }
 }

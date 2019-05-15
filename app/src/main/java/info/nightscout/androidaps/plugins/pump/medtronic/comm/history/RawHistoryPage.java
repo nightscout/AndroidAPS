@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -14,7 +15,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class RawHistoryPage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RawHistoryPage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
     private byte[] data = new byte[0];
 

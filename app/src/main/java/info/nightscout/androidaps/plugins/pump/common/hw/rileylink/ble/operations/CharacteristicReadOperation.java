@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.SystemClock;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 
@@ -18,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Gatt
  */
 public class CharacteristicReadOperation extends BLECommOperation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CharacteristicReadOperation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
     private BluetoothGattCharacteristic characteristic;
 
@@ -44,7 +45,8 @@ public class CharacteristicReadOperation extends BLECommOperation {
                 timedOut = true;
             }
         } catch (InterruptedException e) {
-            LOG.error("Interrupted while waiting for gatt write operation to complete");
+            if (isLogEnabled())
+                LOG.error("Interrupted while waiting for gatt write operation to complete");
             interrupted = true;
         }
         value = characteristic.getValue();
@@ -60,6 +62,10 @@ public class CharacteristicReadOperation extends BLECommOperation {
                 GattAttributes.lookup(characteristic.getUuid()), GattAttributes.lookup(uuid)));
         }
         operationComplete.release();
+    }
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPBTCOMM);
     }
 
 }

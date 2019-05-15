@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
@@ -41,23 +42,16 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDe
 
 public class RileyLinkUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RileyLinkUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
     protected static List<RLHistoryItem> historyRileyLink = new ArrayList<>();
     protected static RileyLinkCommunicationManager rileyLinkCommunicationManager;
     static ServiceTask currentTask;
     private static Context context;
     private static RileyLinkBLE rileyLinkBLE;
     private static RileyLinkServiceData rileyLinkServiceData;
-    // private static PumpType pumpType;
-    // private static MedtronicPumpStatus medtronicPumpStatus;
     private static RileyLinkService rileyLinkService;
-    // private static RileyLinkIPCConnection rileyLinkIPCConnection;
-    // private static MedtronicDeviceType medtronicPumpModel;
-    // BAD dependencies in Classes: RileyLinkService
     private static RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
-    // Broadcasts: RileyLinkBLE, RileyLinkService,
-    // private static RileyLinkIPCConnection rileyLinkIPCConnection;
     private static RileyLinkTargetDevice targetDevice;
     private static RileyLinkEncodingType encoding;
     private static RileyLinkSelectPreference rileyLinkSelectPreference;
@@ -72,7 +66,6 @@ public class RileyLinkUtil {
 
     public static RileyLinkEncodingType getEncoding() {
         return encoding;
-
     }
 
 
@@ -121,8 +114,9 @@ public class RileyLinkUtil {
             RileyLinkUtil.rileyLinkServiceData.serviceState = newState;
             RileyLinkUtil.rileyLinkServiceData.errorCode = errorCode;
 
-            LOG.warn("RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
-                + errorCode.name());
+            if (L.isEnabled(L.PUMP))
+                LOG.info("RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
+                    + errorCode.name());
 
             RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
                 RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
@@ -184,7 +178,6 @@ public class RileyLinkUtil {
 
 
     public static boolean sendNotification(ServiceNotification notification, Integer clientHashcode) {
-        // return RileyLinkUtil.rileyLinkIPCConnection.sendNotification(notification, clientHashcode);
         return false;
     }
 
@@ -194,14 +187,14 @@ public class RileyLinkUtil {
         if (currentTask == null) {
             currentTask = task;
         } else {
-            LOG.error("setCurrentTask: Cannot replace current task");
+            //LOG.error("setCurrentTask: Cannot replace current task");
         }
     }
 
 
     public static void finishCurrentTask(ServiceTask task) {
         if (task != currentTask) {
-            LOG.error("finishCurrentTask: task does not match");
+            //LOG.error("finishCurrentTask: task does not match");
         }
         // hack to force deep copy of transport contents
         ServiceTransport transport = task.getServiceTransport().clone();
@@ -223,14 +216,6 @@ public class RileyLinkUtil {
         // rileyLinkIPCConnection.sendTransport(transport, clientHashcode);
     }
 
-
-    // public static void setRileyLinkIPCConnection(RileyLinkIPCConnection rileyLinkIPCConnection) {
-    // RileyLinkUtil.rileyLinkIPCConnection = rileyLinkIPCConnection;
-    // }
-
-    // public static RileyLinkIPCConnection getRileyLinkIPCConnection() {
-    // return RileyLinkUtil.rileyLinkIPCConnection;
-    // }
 
     public static RileyLinkTargetFrequency getRileyLinkTargetFrequency() {
         return RileyLinkUtil.rileyLinkTargetFrequency;

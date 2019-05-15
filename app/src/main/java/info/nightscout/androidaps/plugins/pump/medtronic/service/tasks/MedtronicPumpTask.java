@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.service.tasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.PumpTask;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
@@ -17,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.data.MedtronicP
  */
 public class MedtronicPumpTask extends PumpTask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicPumpTask.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     MedtronicCommandType commandType;
     Object[] parameters;

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
@@ -15,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 public class MedtronicUIComm {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicUIComm.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     MedtronicCommunicationManager mcmInstance = null;
     MedtronicUIPostprocessor uiPostprocessor = new MedtronicUIPostprocessor();
@@ -32,7 +33,8 @@ public class MedtronicUIComm {
 
     public synchronized MedtronicUITask executeCommand(MedtronicCommandType commandType, Object... parameters) {
 
-        LOG.warn("Execute Command: " + commandType.name());
+        if (isLogEnabled())
+            LOG.warn("Execute Command: " + commandType.name());
 
         MedtronicUITask task = new MedtronicUITask(commandType, parameters);
 
@@ -67,7 +69,8 @@ public class MedtronicUIComm {
         // }
 
         if (!task.isReceived()) {
-            LOG.warn("Reply not received for " + commandType);
+            if (isLogEnabled())
+                LOG.warn("Reply not received for " + commandType);
 
         }
 
@@ -101,4 +104,9 @@ public class MedtronicUIComm {
     public void startTunning() {
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
     }
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMP);
+    }
+
 }

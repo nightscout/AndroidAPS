@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
@@ -36,7 +37,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> implements MedtronicHistoryDecoderInterface<T> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MedtronicHistoryDecoder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     protected ByteUtil bitUtils;
 
@@ -58,35 +59,6 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
     public abstract void postProcess();
 
 
-    // public abstract void refreshOutputWriter();
-
-    // public List<? extends MedtronicHistoryEntry> decodePage(RawHistoryPage dataPage) throws Exception {
-    // // refreshOutputWriter();
-    //
-    // List<? extends MedtronicHistoryEntry> minimedHistoryRecords = processPageAndCreateRecords(dataPage);
-    //
-    // for (MedtronicHistoryEntry record : minimedHistoryRecords) {
-    // decodeRecord(record);
-    // }
-    //
-    // runPostDecodeTasks();
-    //
-    // return minimedHistoryRecords;
-    // }
-
-    // public List<? extends MedtronicHistoryEntry> decodePartialPage(RawHistoryPage dataPage) throws Exception {
-    // // refreshOutputWriter();
-    //
-    // List<? extends MedtronicHistoryEntry> minimedHistoryRecords = processPageAndCreateRecords(dataPage, true);
-    //
-    // for (MedtronicHistoryEntry record : minimedHistoryRecords) {
-    // decodeRecord(record);
-    // }
-    //
-    // runPostDecodeTasks();
-    //
-    // return minimedHistoryRecords;
-    // }
 
     protected abstract void runPostDecodeTasks();
 
@@ -117,9 +89,6 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         }
     }
 
-
-    // public abstract List<? extends MedtronicHistoryEntry> processPageAndCreateRecords(RawHistoryPage page,
-    // boolean partial) throws Exception;
 
     public List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage) {
         return processPageAndCreateRecords(rawHistoryPage, false);
@@ -164,10 +133,11 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
             StringUtil.appendToStringBuilder(sb, "" + unknownEntry.getKey(), ", ");
         }
 
-        LOG.debug("STATISTICS OF PUMP DECODE");
+        if (isLogEnabled())
+            LOG.debug("STATISTICS OF PUMP DECODE");
 
         if (unknownOpCodes.size() > 0) {
-            LOG.debug("Unknown Op Codes: {}", sb.toString());
+            LOG.warn("Unknown Op Codes: {}", sb.toString());
         }
 
         for (Map.Entry<RecordDecodeStatus, Map<String, String>> entry : mapStatistics.entrySet()) {
@@ -183,10 +153,12 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                LOG.debug("    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(),
-                    sb.toString());
+                if (isLogEnabled())
+                    LOG.debug("    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(),
+                        sb.toString());
             } else {
-                LOG.debug("    {}             - {}", entry.getKey().name(), entry.getValue().size());
+                if (isLogEnabled())
+                    LOG.debug("    {}             - {}", entry.getKey().name(), entry.getValue().size());
             }
         }
     }
@@ -213,14 +185,6 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
     }
 
 
-    // public List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage) {
-    // return processPageAndCreateRecords(rawHistoryPage, false, getHistoryEntryClass());
-    // }
-
-    // public List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage, boolean partial) {
-    // return processPageAndCreateRecords(rawHistoryPage, partial, getHistoryEntryClass());
-    // }
-
     private List<T> processPageAndCreateRecords(RawHistoryPage rawHistoryPage, boolean partial) {
         List<Byte> dataClear = checkPage(rawHistoryPage, partial);
         List<T> records = createRecords(dataClear);
@@ -234,6 +198,8 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         return records;
     }
 
-    // public abstract List<T> createRecords(List<Byte> dataClear);
+    protected boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
+    }
 
 }

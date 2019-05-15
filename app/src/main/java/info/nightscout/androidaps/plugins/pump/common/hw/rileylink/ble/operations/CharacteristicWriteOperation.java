@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.SystemClock;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 
@@ -18,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Gatt
  */
 public class CharacteristicWriteOperation extends BLECommOperation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CharacteristicWriteOperation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
 
     private BluetoothGattCharacteristic characteristic;
 
@@ -63,6 +64,11 @@ public class CharacteristicWriteOperation extends BLECommOperation {
                 GattAttributes.lookup(characteristic.getUuid()), GattAttributes.lookup(uuid)));
         }
         operationComplete.release();
+    }
+
+
+    private boolean isLogEnabled() {
+        return L.isEnabled(L.PUMPBTCOMM);
     }
 
 }

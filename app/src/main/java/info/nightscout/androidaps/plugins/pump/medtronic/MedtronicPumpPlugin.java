@@ -106,6 +106,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     public static boolean isBusy = false;
     private List<Long> busyTimestamps = new ArrayList<>();
+    private boolean sendIdToFirebase = false;
 
 
     private MedtronicPumpPlugin() {
@@ -564,6 +565,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (!isRefresh) {
             pumpState = PumpDriverState.Initialized;
         }
+
+        if (!sendIdToFirebase) {
+
+
+
+            sendIdToFirebase = true;
+        }
+
 
         // FIXME andy!!!
         // MainApp.getFirebaseAnalytics().logCustomEvent(FirebaseAnalytics.Event.SELECT_CONTENT, event);
@@ -1388,15 +1397,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private CustomAction customActionClearBolusBlock = new CustomAction(
         R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, false);
 
-    private CustomAction customActionReset = new CustomAction(
-            R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLink, false);
+//    private CustomAction customActionReset = new CustomAction(
+//            R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLink, false);
 
 
     @Override
     public List<CustomAction> getCustomActions() {
 
         if (customActions == null) {
-            this.customActions = Arrays.asList(customActionWakeUpAndTune, customActionClearBolusBlock, customActionReset);
+            this.customActions = Arrays.asList(customActionWakeUpAndTune, customActionClearBolusBlock);
         }
 
         return this.customActions;
@@ -1442,7 +1451,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (customAction == MedtronicCustomActionType.ClearBolusBlock) {
             this.customActionClearBolusBlock.setEnabled(isEnabled);
         } else if (customAction == MedtronicCustomActionType.ResetRileyLink) {
-            this.customActionReset.setEnabled(isEnabled);
+            //this.customActionReset.setEnabled(isEnabled);
         }
 
         refreshCustomActionsList();

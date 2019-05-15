@@ -7,15 +7,21 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
 import android.util.Log;
 
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import info.nightscout.androidaps.logging.L;
+
 /**
  * This is simple version of ATechDate, limited only to one format (yyyymmddHHMIss)
  */
 public class DateTimeUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     /**
      * DateTime is packed as long: yyyymmddHHMMss
@@ -44,7 +50,8 @@ public class DateTimeUtil {
         try {
             return new LocalDateTime(year, month, dayOfMonth, hourOfDay, minute, second);
         } catch (Exception ex) {
-            Log.e("DateTimeUtil", String.format("Error creating LocalDateTime from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
+            if (L.isEnabled(L.PUMPCOMM))
+                LOG.error("DateTimeUtil", String.format("Error creating LocalDateTime from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
             //return null;
             throw ex;
         }
@@ -82,8 +89,8 @@ public class DateTimeUtil {
     public static boolean isSameDay(LocalDateTime ldt1, LocalDateTime ldt2) {
 
         return (ldt1.getYear() == ldt2.getYear() && //
-            ldt1.getMonthOfYear() == ldt2.getMonthOfYear() && //
-        ldt1.getDayOfMonth() == ldt2.getDayOfMonth());
+                ldt1.getMonthOfYear() == ldt2.getMonthOfYear() && //
+                ldt1.getDayOfMonth() == ldt2.getDayOfMonth());
 
     }
 
@@ -128,25 +135,25 @@ public class DateTimeUtil {
 
 
     public static String toString(long atechDateTime) {
-        int year = (int)(atechDateTime / 10000000000L);
+        int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
 
-        int month = (int)(atechDateTime / 100000000L);
+        int month = (int) (atechDateTime / 100000000L);
         atechDateTime -= month * 100000000L;
 
-        int dayOfMonth = (int)(atechDateTime / 1000000L);
+        int dayOfMonth = (int) (atechDateTime / 1000000L);
         atechDateTime -= dayOfMonth * 1000000L;
 
-        int hourOfDay = (int)(atechDateTime / 10000L);
+        int hourOfDay = (int) (atechDateTime / 10000L);
         atechDateTime -= hourOfDay * 10000L;
 
-        int minute = (int)(atechDateTime / 100L);
+        int minute = (int) (atechDateTime / 100L);
         atechDateTime -= minute * 100L;
 
-        int second = (int)atechDateTime;
+        int second = (int) atechDateTime;
 
         return getZeroPrefixed(dayOfMonth) + "." + getZeroPrefixed(month) + "." + year + " " + //
-            getZeroPrefixed(hourOfDay) + ":" + getZeroPrefixed(minute) + ":" + getZeroPrefixed(second);
+                getZeroPrefixed(hourOfDay) + ":" + getZeroPrefixed(minute) + ":" + getZeroPrefixed(second);
     }
 
 
@@ -157,11 +164,11 @@ public class DateTimeUtil {
 
     public static int getYear(Long atechDateTime) {
 
-        if (atechDateTime==null || atechDateTime==0) {
+        if (atechDateTime == null || atechDateTime == 0) {
             return 2000;
         }
 
-        int year = (int)(atechDateTime / 10000000000L);
+        int year = (int) (atechDateTime / 10000000000L);
         return year;
     }
 
@@ -177,22 +184,22 @@ public class DateTimeUtil {
 
     public static long toMillisFromATD(long atechDateTime) {
 
-        int year = (int)(atechDateTime / 10000000000L);
+        int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
 
-        int month = (int)(atechDateTime / 100000000L);
+        int month = (int) (atechDateTime / 100000000L);
         atechDateTime -= month * 100000000L;
 
-        int dayOfMonth = (int)(atechDateTime / 1000000L);
+        int dayOfMonth = (int) (atechDateTime / 1000000L);
         atechDateTime -= dayOfMonth * 1000000L;
 
-        int hourOfDay = (int)(atechDateTime / 10000L);
+        int hourOfDay = (int) (atechDateTime / 10000L);
         atechDateTime -= hourOfDay * 10000L;
 
-        int minute = (int)(atechDateTime / 100L);
+        int minute = (int) (atechDateTime / 100L);
         atechDateTime -= minute * 100L;
 
-        int second = (int)atechDateTime;
+        int second = (int) atechDateTime;
 
         Date d = new Date();
         d.setDate(dayOfMonth);

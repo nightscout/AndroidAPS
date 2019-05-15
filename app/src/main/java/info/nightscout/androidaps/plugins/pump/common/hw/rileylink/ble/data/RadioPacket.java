@@ -46,7 +46,7 @@ public class RadioPacket {
             }
 
             case FourByteSixByteRileyLink: {
-                return pkt;
+                return getWithCRC();
             }
 
             default:
