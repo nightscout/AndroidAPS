@@ -56,7 +56,6 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.QuickWizardEntry;
@@ -94,19 +93,18 @@ import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
+import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.WizardDialog;
-import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationRecyclerViewAdapter;
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
@@ -1064,7 +1062,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             timeView.setText(DateUtil.timeString(new Date()));
         }
 
-        updateNotifications();
+        OverviewPlugin.getPlugin().notificationStore.updateNotifications(notificationsView);
 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.GONE);
@@ -1601,21 +1599,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         if (L.isEnabled(L.OVERVIEW))
             Profiler.log(log, from, updateGUIStart);
-    }
-
-    //Notifications
-
-    void updateNotifications() {
-        NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
-        nstore.removeExpired();
-        nstore.unSnooze();
-        if (nstore.store.size() > 0) {
-            NotificationRecyclerViewAdapter adapter = new NotificationRecyclerViewAdapter(nstore.store);
-            notificationsView.setAdapter(adapter);
-            notificationsView.setVisibility(View.VISIBLE);
-        } else {
-            notificationsView.setVisibility(View.GONE);
-        }
     }
 
     public static void applyStatuslight(TextView view, String text, double value, double warnThreshold, double urgentThreshold, double invalid, boolean checkAscending) {
