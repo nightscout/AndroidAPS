@@ -41,7 +41,7 @@ public class TriggerAutosensValue extends Trigger {
         lastRun = triggerAutosensValue.lastRun;
     }
 
-    public double getValue() {
+    public int getValue() {
         return value.getValue();
     }
 
@@ -64,7 +64,7 @@ public class TriggerAutosensValue extends Trigger {
             return true;
         }
 
-        boolean doRun = comparator.getValue().check((autosensData.autosensResult.ratio), getValue());
+        boolean doRun = comparator.getValue().check((autosensData.autosensResult.ratio), (double) (getValue() / 100d));
         if (doRun) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
@@ -93,7 +93,7 @@ public class TriggerAutosensValue extends Trigger {
     Trigger fromJSON(String data) {
         try {
             JSONObject d = new JSONObject(data);
-            value.setValue(JsonHelper.safeGetDouble(d, "value"));
+            value.setValue(JsonHelper.safeGetInt(d, "value"));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
         } catch (Exception e) {
@@ -122,7 +122,7 @@ public class TriggerAutosensValue extends Trigger {
         return new TriggerAutosensValue(this);
     }
 
-    TriggerAutosensValue setValue(double requestedValue) {
+    TriggerAutosensValue setValue(int requestedValue) {
         this.value.setValue(requestedValue);
         return this;
     }

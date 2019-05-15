@@ -10,19 +10,18 @@ import info.nightscout.androidaps.utils.NumberPicker;
 import info.nightscout.androidaps.utils.SP;
 
 public class InputAutosens extends Element {
-
-    private double value;
-    double minValue = SP.getDouble("key_openapsama_autosens_min", 0.7d);
-    double maxValue = SP.getDouble("key_openapsama_autosens_max", 1.2d);
-    private double step = 0.01d;
-    private DecimalFormat decimalFormat = new DecimalFormat("0.00");;
+    private int value;
+    int minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
+    int maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
+    private double step = 1;
+    private DecimalFormat decimalFormat = new DecimalFormat("1");;
 
     NumberPicker numberPicker;
     final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-                value = Math.max(value, 0.7d);
-                value = Math.min(value, 2d);
+                value = Math.max(value, 70);
+                value = Math.min(value, 200);
         }
 
         @Override
@@ -43,9 +42,9 @@ public class InputAutosens extends Element {
 
     public InputAutosens(double value, double minValue, double maxValue, double step, DecimalFormat decimalFormat) {
         super();
-        this.value = value;
-        this.minValue = minValue;
-        this.maxValue = maxValue;
+        this.value = (int) value;
+        this.minValue = (int) ( minValue * 100 );
+        this.maxValue = (int) (maxValue * 100 );
         this.step = step;
         this.decimalFormat = decimalFormat;
     }
@@ -62,26 +61,32 @@ public class InputAutosens extends Element {
 
     @Override
     public void addToLayout(LinearLayout root) {
+        minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
+        maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
+        if (value > maxValue)
+            value = Math.max(value, this.maxValue);
+        if (value < minValue)
+            value = minValue;
         numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, textWatcher);
-        numberPicker.setOnValueChangedListener(value -> this.value = value);
+        numberPicker.setParams((double) value, (double) minValue, (double) maxValue, step, decimalFormat, true, textWatcher);
+        numberPicker.setOnValueChangedListener(value -> this.value = (int) value);
         root.addView(numberPicker);
     }
 
-    public InputAutosens setValue(double value) {
-        minValue = SP.getDouble("key_openapsama_autosens_min", 0.7d);
-        maxValue = SP.getDouble("key_openapsama_autosens_max", 1.2d);
+    public InputAutosens setValue(int value) {
+        minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
+        maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
         if (value > maxValue)
             value = Math.max(value, this.maxValue);
         if (value < minValue)
             value = minValue;
         this.value = value;
         if (numberPicker != null)
-            numberPicker.setValue(value);
+            numberPicker.setValue((double) value);
         return this;
     }
 
-    public double getValue() {
+    public int getValue() {
         return value;
     }
 
