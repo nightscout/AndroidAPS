@@ -20,7 +20,6 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -37,6 +36,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -111,7 +111,10 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     private void triggerNotificationUpdate() {
-        MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
+        else
+            MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
     }
 
     Notification updateNotification() {

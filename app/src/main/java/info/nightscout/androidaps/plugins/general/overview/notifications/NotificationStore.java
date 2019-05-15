@@ -69,14 +69,20 @@ public class NotificationStore {
             if (usesChannels && n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
                 alarm.putExtra("soundid", n.soundId);
-                MainApp.instance().startService(alarm);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    MainApp.instance().startForegroundService(alarm);
+                else
+                    MainApp.instance().startService(alarm);
             }
 
         } else {
             if (n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
                 alarm.putExtra("soundid", n.soundId);
-                MainApp.instance().startService(alarm);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    MainApp.instance().startForegroundService(alarm);
+                else
+                    MainApp.instance().startService(alarm);
             }
         }
 
