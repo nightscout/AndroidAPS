@@ -26,21 +26,21 @@ public class InputAutosensTest {
         t.textWatcher.beforeTextChanged(null, 0, 0, 0);
         t.textWatcher.onTextChanged(null, 0, 0, 0);
         t.textWatcher.afterTextChanged(null);
-        Assert.assertEquals(1d, t.getValue(), 0.01d);
+        Assert.assertEquals(100, t.getValue(), 0.01d);
 
         t = new InputAutosens().setValue(200);
         t.textWatcher.afterTextChanged(null);
-        Assert.assertEquals(2d, t.getValue(), 0.01d);
+        Assert.assertEquals(200, t.getValue(), 0.01d);
     }
 
     @Test
     public void getSetValueTest() {
         when(SP.getDouble(anyInt(), anyDouble())).thenReturn(0.7d);
         InputAutosens i = new InputAutosens().setValue(500);
-        Assert.assertEquals(5d, i.getValue(), 0.01d);
+        Assert.assertEquals(500, i.getValue(), 0.01d);
         Assert.assertEquals(0, i.minValue, 0.01d);
         i = new InputAutosens().setValue(110);
-        Assert.assertEquals(1.1d, i.getValue(), 0.01d);
+        Assert.assertEquals(110, i.getValue(), 0.01d);
         Assert.assertEquals(0, i.minValue, 0.01d);
     }
 
