@@ -213,7 +213,7 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.9@aar") {
         transitive = true;
     }
@@ -250,7 +250,7 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }
-    implementation "com.google.code.gson:gson:2.8.2"
+    implementation "com.google.code.gson:gson:2.8.5"
     implementation "com.google.guava:guava:24.1-jre"
 
     implementation "net.danlew:android.joda:2.9.9.1"
