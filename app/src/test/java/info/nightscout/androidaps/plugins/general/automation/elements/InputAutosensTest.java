@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -22,6 +23,8 @@ public class InputAutosensTest {
 
     @Test
     public void textWatcherTest() {
+        when(SP.getDouble(Mockito.eq("openapsama_autosens_max"), anyDouble())).thenReturn(1.2d);
+        when(SP.getDouble(Mockito.eq("openapsama_autosens_min"), anyDouble())).thenReturn(0.7d);
         InputAutosens t = new InputAutosens().setValue(100);
         t.textWatcher.beforeTextChanged(null, 0, 0, 0);
         t.textWatcher.onTextChanged(null, 0, 0, 0);
@@ -30,14 +33,15 @@ public class InputAutosensTest {
 
         t = new InputAutosens().setValue(200);
         t.textWatcher.afterTextChanged(null);
-        Assert.assertEquals(200, t.getValue(), 0.01d);
+        Assert.assertEquals(120, t.getValue(), 0.01d);
     }
 
     @Test
     public void getSetValueTest() {
+        when(SP.getDouble(Mockito.eq("openapsama_autosens_max"), anyDouble())).thenReturn(1.2d);
         when(SP.getDouble(anyInt(), anyDouble())).thenReturn(0.7d);
         InputAutosens i = new InputAutosens().setValue(500);
-        Assert.assertEquals(500, i.getValue(), 0.01d);
+        Assert.assertEquals(120, i.getValue(), 0.01d);
         Assert.assertEquals(0, i.minValue, 0.01d);
         i = new InputAutosens().setValue(110);
         Assert.assertEquals(110, i.getValue(), 0.01d);

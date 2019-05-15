@@ -11,8 +11,8 @@ import info.nightscout.androidaps.utils.SP;
 
 public class InputAutosens extends Element {
     private int value;
-    int minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
-    int maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
+    public int minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
+    public int maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
     private double step = 1;
     private DecimalFormat decimalFormat = new DecimalFormat("1");;
 
@@ -44,7 +44,7 @@ public class InputAutosens extends Element {
         super();
         this.value = (int) value;
         this.minValue = (int) ( minValue * 100 );
-        this.maxValue = (int) (maxValue * 100 );
+        this.maxValue = (int) ( maxValue * 100 );
         this.step = step;
         this.decimalFormat = decimalFormat;
     }
@@ -63,10 +63,7 @@ public class InputAutosens extends Element {
     public void addToLayout(LinearLayout root) {
         minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
         maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
-        if (value > maxValue)
-            value = Math.max(value, this.maxValue);
-        if (value < minValue)
-            value = minValue;
+        value = minValue & maxValue;
         numberPicker = new NumberPicker(root.getContext(), null);
         numberPicker.setParams((double) value, (double) minValue, (double) maxValue, step, decimalFormat, true, textWatcher);
         numberPicker.setOnValueChangedListener(value -> this.value = (int) value);
@@ -77,7 +74,7 @@ public class InputAutosens extends Element {
         minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
         maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
         if (value > maxValue)
-            value = Math.max(value, this.maxValue);
+            value = maxValue;
         if (value < minValue)
             value = minValue;
         this.value = value;
