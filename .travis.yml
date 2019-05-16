@@ -2,7 +2,7 @@ language: android
 jdk: oraclejdk8
 env:
   matrix:
-    - ANDROID_TARGET=android-28 ANDROID_ABI=x86 org.gradle.jvmargs=-XX:-OmitStackTraceInFastThrow
+    - ANDROID_TARGET=android-28 ANDROID_ABI=x86 org.gradle.jvmargs=-Xmx2g -XX:-OmitStackTraceInFastThrow
 android:
   components:
   - platform-tools
