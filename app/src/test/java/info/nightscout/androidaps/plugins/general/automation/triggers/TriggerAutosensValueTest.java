@@ -105,7 +105,7 @@ public class TriggerAutosensValueTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerAutosensValue().icon());
+        Assert.assertEquals(Optional.of(R.drawable.as), new TriggerAutosensValue().icon());
     }
 
 

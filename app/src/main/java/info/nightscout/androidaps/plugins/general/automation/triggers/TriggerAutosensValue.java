@@ -120,7 +120,7 @@ public class TriggerAutosensValue extends Trigger {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.remove); // TODO icon
+        return Optional.of(R.drawable.as); 
     }
 
     @Override
