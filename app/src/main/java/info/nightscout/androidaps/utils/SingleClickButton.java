@@ -3,7 +3,7 @@ package info.nightscout.androidaps.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * Created by mike on 22.12.2017.
  */
 
-public class SingleClickButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener {
+public class SingleClickButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(SingleClickButton.class);
 
     Context context;

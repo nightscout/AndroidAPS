@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
     }
 }
 apply plugin: 'com.android.application'
@@ -17,12 +17,16 @@ apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.jakewharton.butterknife'
 
+jacoco {
+    toolVersion = "0.8.3"
+}
+
 ext {
     supportLibraryVersion = "28.0.0"
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
-    butterknifeVersion = "8.8.1"
+    butterknifeVersion = "10.1.0"
 }
 
 
@@ -109,7 +113,7 @@ android {
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
         ndk {
@@ -219,14 +223,14 @@ dependencies {
     }
     libs "MilosKozak:danars-support-lib:master@zip"
 
-    implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
-    implementation "com.android.support:support-v13:${supportLibraryVersion}"
-    implementation "com.android.support:support-v4:${supportLibraryVersion}"
-    implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
-    implementation "com.android.support:recyclerview-v7:${supportLibraryVersion}"
-    implementation "com.android.support:gridlayout-v7:${supportLibraryVersion}"
-    implementation "com.android.support:design:${supportLibraryVersion}"
-    implementation "com.android.support:percent:${supportLibraryVersion}"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "com.wdullaer:materialdatetimepicker:2.3.0"
     implementation "com.squareup:otto:1.3.7"
     implementation "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
@@ -239,7 +243,7 @@ dependencies {
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
 
@@ -279,29 +283,29 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-task unzip(type: Copy) {
-    def zipPath = configurations.libs.find { it.name.startsWith("danars") }
-    def zipFile = file(zipPath)
-    def outputDir = file("${buildDir}/unpacked/dist")
+//task unzip(type: Copy) {
+//    def zipPath = configurations.libs.find { it.name.startsWith("danars") }
+//    def zipFile = file(zipPath)
+//    def outputDir = file("${buildDir}/unpacked/dist")
 
-    from zipTree(zipFile)
-    into outputDir
-}
+//    from zipTree(zipFile)
+//    into outputDir
+//}
 
-task copyLibs(dependsOn: unzip, type: Copy) {
-    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
-    def target = file("src/main/jniLibs/")
+//task copyLibs(dependsOn: unzip, type: Copy) {
+//    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
+//    def target = file("src/main/jniLibs/")
 
-    from src
-    into target
-}
+//    from src
+//    into target
+//}
 
-task full_clean(type: Delete) {
-    delete file("src/main/jniLibs")
-}
+//task full_clean(type: Delete) {
+//    delete file("src/main/jniLibs")
+//}
 
-clean.dependsOn full_clean
-preBuild.dependsOn copyLibs
+//clean.dependsOn full_clean
+//preBuild.dependsOn copyLibs
 
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())

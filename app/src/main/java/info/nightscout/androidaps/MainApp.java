@@ -4,9 +4,9 @@ import android.app.Application;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;

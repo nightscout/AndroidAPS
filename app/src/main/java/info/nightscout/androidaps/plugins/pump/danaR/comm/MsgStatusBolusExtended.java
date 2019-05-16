@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
