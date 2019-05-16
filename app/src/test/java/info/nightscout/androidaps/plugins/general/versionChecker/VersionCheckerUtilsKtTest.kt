@@ -26,7 +26,7 @@ class VersionCheckerUtilsKtTest {
             |   version = "2.2.2"
             |   appName = "Aaoeu"
         """.trimMargin()
-        val detectedVersion: String? = buildGradle.byteInputStream().findVersion()
+        val detectedVersion: String? = findVersion(buildGradle)
         assertEquals("2.2.2", detectedVersion)
     }
 
@@ -41,14 +41,14 @@ class VersionCheckerUtilsKtTest {
             |   version = "2.2.2-nefarious-underground-mod"
             |   appName = "Aaoeu"
         """.trimMargin()
-        val detectedVersion: String? = buildGradle.byteInputStream().findVersion()
+        val detectedVersion: String? = findVersion(buildGradle)
         assertEquals(null, detectedVersion)
     }
 
     @Test
     fun findVersionMatchesDoesNotMatchErrorResponse() {
         val buildGradle = """<html><body>Balls! No build.gradle here. Move along</body><html>"""
-        val detectedVersion: String? = buildGradle.byteInputStream().findVersion()
+        val detectedVersion: String? = findVersion(buildGradle)
         assertEquals(null, detectedVersion)
     }
 
@@ -166,7 +166,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         val bus = prepareBus()
-        compareWithCurrentVersion(buildGradle.byteInputStream().findVersion(), currentVersion = "2.2.2")
+        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
 
         verify(bus, times(0)).post(any())
 
@@ -186,7 +186,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         val bus = prepareBus()
-        compareWithCurrentVersion(buildGradle.byteInputStream().findVersion(), currentVersion = "2.2.2")
+        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
 
         verify(bus, times(1)).post(any())
 
