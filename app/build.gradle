@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'de.undercouch:gradle-download-task:3.4.3'
     }
 }
 apply plugin: 'com.android.application'
@@ -16,6 +17,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'de.undercouch.download'
+
 
 jacoco {
     toolVersion = "0.8.3"
@@ -208,10 +211,6 @@ allprojects {
     }
 }
 
-configurations {
-    libs
-}
-
 dependencies {
     wearApp project(':wear')
 
@@ -221,7 +220,6 @@ dependencies {
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.9@aar") {
         transitive = true;
     }
-    libs "MilosKozak:danars-support-lib:master@zip"
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -283,29 +281,33 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-//task unzip(type: Copy) {
-//    def zipPath = configurations.libs.find { it.name.startsWith("danars") }
-//    def zipFile = file(zipPath)
-//    def outputDir = file("${buildDir}/unpacked/dist")
 
-//    from zipTree(zipFile)
-//    into outputDir
-//}
+task downloadZipFile(type: Download) {
+    src 'https://github.com/MilosKozak/danars-support-lib/archive/master.zip'
+    dest new File(buildDir, 'danars.zip')
+}
 
-//task copyLibs(dependsOn: unzip, type: Copy) {
-//    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
-//    def target = file("src/main/jniLibs/")
+task downloadAndUnzipFile(dependsOn: downloadZipFile, type: Copy) {
+    from zipTree(downloadZipFile.dest)
+    def outputDir = file("${buildDir}/unpacked/dist")
+    into outputDir
+}
 
-//    from src
-//    into target
-//}
 
-//task full_clean(type: Delete) {
-//    delete file("src/main/jniLibs")
-//}
+task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
+    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
+    def target = file("src/main/jniLibs/")
 
-//clean.dependsOn full_clean
-//preBuild.dependsOn copyLibs
+    from src
+    into target
+}
+
+task full_clean(type: Delete) {
+    delete file("src/main/jniLibs")
+}
+
+clean.dependsOn full_clean
+preBuild.dependsOn copyLibs
 
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())
