@@ -11,11 +11,13 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
-import info.nightscout.androidaps.plugins.general.automation.elements.InputAutosens;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputDouble;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel;
@@ -23,12 +25,16 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
 public class TriggerAutosensValue extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-
-    private InputAutosens value = new InputAutosens();
+    public int minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
+    public int maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
+    private double step = 1;
+    private DecimalFormat decimalFormat = new DecimalFormat("1");;
+    private InputDouble value = new InputDouble( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat);
     private Comparator comparator = new Comparator();
 
     public TriggerAutosensValue() {
@@ -41,7 +47,7 @@ public class TriggerAutosensValue extends Trigger {
         lastRun = triggerAutosensValue.lastRun;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value.getValue();
     }
 

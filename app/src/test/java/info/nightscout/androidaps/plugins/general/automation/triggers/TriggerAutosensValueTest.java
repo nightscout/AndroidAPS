@@ -73,11 +73,9 @@ public class TriggerAutosensValueTest {
 
     @Test
     public void copyConstructorTest() {
-        Mockito.when(SP.getDouble(Mockito.eq("openapsama_autosens_max"), anyDouble())).thenReturn(1.2d);
-        Mockito.when(SP.getDouble(Mockito.eq("openapsama_autosens_min"), anyDouble())).thenReturn(0.7d);
         TriggerAutosensValue t = new TriggerAutosensValue().setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         TriggerAutosensValue t1 = (TriggerAutosensValue) t.duplicate();
-        Assert.assertEquals(120, t1.getValue(), 0.01d);
+        Assert.assertEquals(213, t1.getValue(), 0.01d);
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.getComparator().getValue());
     }
 
@@ -88,25 +86,21 @@ public class TriggerAutosensValueTest {
         Assert.assertEquals(1l, t.getLastRun());
     }
 
-    String ASJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"value\":120},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue\"}";
+    String ASJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"value\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue\"}";
 
     @Test
     public void toJSONTest() {
-        Mockito.when(SP.getDouble(Mockito.eq("openapsama_autosens_max"), anyDouble())).thenReturn(1.2d);
-        Mockito.when(SP.getDouble(Mockito.eq("openapsama_autosens_min"), anyDouble())).thenReturn(0.7d);
         TriggerAutosensValue t = new TriggerAutosensValue().setValue(410).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertEquals(ASJson, t.toJSON());
     }
 
     @Test
     public void fromJSONTest() throws JSONException {
-        Mockito.when(SP.getDouble(Mockito.eq("openapsama_autosens_max"), anyDouble())).thenReturn(1.2d);
-        Mockito.when(SP.getDouble(Mockito.eq("openapsama_autosens_min"), anyDouble())).thenReturn(0.7d);
         TriggerAutosensValue t = new TriggerAutosensValue().setValue(410).comparator(Comparator.Compare.IS_EQUAL);
 
         TriggerAutosensValue t2 = (TriggerAutosensValue) Trigger.instantiate(new JSONObject(t.toJSON()));
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t2.getComparator().getValue());
-        Assert.assertEquals(120, t2.getValue(), 0.01d);
+        Assert.assertEquals(410, t2.getValue(), 0.01d);
     }
 
     @Test
