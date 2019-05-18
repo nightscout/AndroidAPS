@@ -393,7 +393,7 @@ public class RFSpy {
     }
 
 
-    private RFSpyResponse setRileyLinkEncoding(RileyLinkEncodingType encoding) {
+    public RFSpyResponse setRileyLinkEncoding(RileyLinkEncodingType encoding) {
         RFSpyResponse resp = writeToData(new SetHardwareEncoding(encoding), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
 
         if (resp.isOK()) {

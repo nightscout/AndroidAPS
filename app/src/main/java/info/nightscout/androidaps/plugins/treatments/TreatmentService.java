@@ -15,6 +15,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 
@@ -251,8 +253,53 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
     }
 
-    // return true if new record is created
+
     public UpdateReturn createOrUpdate(Treatment treatment, boolean fromNightScout) {
+        try {
+            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+
+            Treatment existingTreatment = getRecord(treatment.pumpId, treatment.date);
+
+            if (existingTreatment==null) {
+                getDao().create(treatment);
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                DatabaseHelper.updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange(treatment);
+                return new UpdateReturn(true, true);
+            } else {
+
+                if (existingTreatment.date==treatment.date) {
+                    // we will do update only, if entry changed
+                    if (!optionalTreatmentCopy(existingTreatment, treatment, fromNightScout)) {
+                        return new UpdateReturn(true, false);
+                    }
+                    getDao().update(existingTreatment);
+                    DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                    scheduleTreatmentChange(treatment);
+                    return new UpdateReturn(true, false);
+                } else {
+                    // date is different, we need to remove entry
+                    getDao().delete(existingTreatment);
+                    optionalTreatmentCopy(existingTreatment, treatment, fromNightScout);
+                    getDao().create(existingTreatment);
+                    DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                    scheduleTreatmentChange(treatment);
+                    return new UpdateReturn(true, false); //updating a pump treatment with another one from the pump is not counted as clash
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new UpdateReturn(false, false);
+    }
+
+
+
+    // return true if new record is created
+    @Deprecated
+    public UpdateReturn createOrUpdateOld(Treatment treatment, boolean fromNightScout) {
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
@@ -379,6 +426,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return new UpdateReturn(false, false);
     }
 
+    @Deprecated
     private boolean preserveCarbsAndSMB(Treatment treatment, Treatment existingTreatment) {
         if (existingTreatment.isValid) {
             if (existingTreatment.carbs > 0 && treatment.carbs == 0) {
@@ -393,9 +441,92 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return false;
     }
 
+
+    private boolean optionalTreatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
+
+        log.debug("optionalTreatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
+
+        boolean changed = false;
+
+        if (oldTreatment.date != newTreatment.date) {
+            oldTreatment.date = newTreatment.date;
+            changed = true;
+        }
+
+        if (oldTreatment.isSMB != newTreatment.isSMB) {
+            if (!oldTreatment.isSMB) {
+                oldTreatment.isSMB = newTreatment.isSMB;
+                changed = true;
+            }
+        }
+
+        if (!isSame(oldTreatment.carbs, newTreatment.carbs)) {
+            if (isSame(oldTreatment.carbs, 0.0d)) {
+                oldTreatment.carbs = newTreatment.carbs;
+                changed = true;
+            }
+        }
+
+        if (oldTreatment.mealBolus != (oldTreatment.carbs > 0)) {
+            oldTreatment.mealBolus = (oldTreatment.carbs > 0);
+            changed = true;
+        }
+
+        if (!isSame(oldTreatment.insulin, newTreatment.insulin)) {
+            if (!fromNightScout) {
+                oldTreatment.insulin = newTreatment.insulin;
+                changed = true;
+            }
+        }
+
+        if (!oldTreatment._id.equals(newTreatment._id)) {
+            if (StringUtils.isBlank(oldTreatment._id)) {
+                oldTreatment._id = newTreatment._id;
+                changed = true;
+            }
+        }
+
+        int source = Source.NONE;
+
+        if (oldTreatment.pumpId==0) {
+            if (newTreatment.pumpId > 0) {
+                oldTreatment.pumpId=newTreatment.pumpId;
+                source = Source.PUMP;
+                changed = true;
+            }
+        }
+
+        if (source==Source.NONE) {
+
+            if (oldTreatment.source == newTreatment.source) {
+                source = oldTreatment.source;
+            } else {
+                source = (oldTreatment.source == Source.NIGHTSCOUT || newTreatment.source == Source.NIGHTSCOUT) ? Source.NIGHTSCOUT : Source.USER;
+            }
+        }
+
+        if (oldTreatment.source != source) {
+            oldTreatment.source = source;
+            changed = true;
+        }
+
+        log.debug("optionalTreatmentCopy [changed={}, newAfterChange={}]", changed, oldTreatment.toString());
+        return changed;
+    }
+
+
+    public static boolean isSame(Double d1, Double d2) {
+        double diff = d1 - d2;
+
+        return (Math.abs(diff) <= 0.00001);
+    }
+
+    @Deprecated
     private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
 
         log.debug("treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
+
+
 
         if (fromNightScout) {
             long pumpId_old = oldTreatment.pumpId;
@@ -420,6 +551,32 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         log.debug("treatmentCopy [newAfterChange={}]", oldTreatment.toString());
 
     }
+
+
+    public Treatment getRecord(long pumpId, long date) {
+
+        Treatment record = null;
+
+        if (pumpId>0) {
+
+            record = getPumpRecordById(pumpId);
+
+            if (record != null) {
+                return record;
+            }
+        }
+
+        try {
+            record = getDao().queryForId(date);
+        } catch (SQLException ex) {
+            log.error("Error getting entry by id ({}", date);
+        }
+
+        return record;
+
+    }
+
+
 
     /**
      * Returns the record for the given id, null if none, throws RuntimeException

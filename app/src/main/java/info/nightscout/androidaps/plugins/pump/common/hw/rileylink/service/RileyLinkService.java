@@ -268,4 +268,11 @@ public abstract class RileyLinkService extends Service {
     private boolean isLogEnabled() {
         return L.isEnabled(L.PUMPCOMM);
     }
+
+
+    public void changeRileyLinkEncoding(RileyLinkEncodingType encodingType) {
+        if (rfspy!=null) {
+            rfspy.setRileyLinkEncoding(encodingType);
+        }
+    }
 }

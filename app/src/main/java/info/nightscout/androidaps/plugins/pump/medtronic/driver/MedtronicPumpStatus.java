@@ -59,18 +59,21 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     // fixme
     public Integer tempBasalLength = 0;
-    String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
-    String regexSN = "[0-9]{6}";
-    boolean serialChanged = false;
-    boolean rileyLinkAddressChanged = false;
-    boolean encodingChanged = false;
-    RileyLinkEncodingType encodingType;
+
+    private String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
+    private String regexSN = "[0-9]{6}";
+
+    private boolean serialChanged = false;
+    private boolean rileyLinkAddressChanged = false;
+    private boolean encodingChanged = false;
+    private boolean targetFrequencyChanged = false;
+
+    private RileyLinkEncodingType encodingType;
     private String[] frequencies;
     private boolean isFrequencyUS = false;
     private Map<String, PumpType> medtronicPumpMap = null;
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
     private RileyLinkTargetFrequency targetFrequency;
-    private boolean targetFrequencyChanged = false;
     public BasalProfileStatus basalProfileStatus;
 
 
@@ -195,7 +198,6 @@ public class MedtronicPumpStatus extends PumpStatus {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_frequency_invalid);
                     return;
                 } else {
-                    // if (this.pumpFrequency == null || !this.pumpFrequency.equals(pumpFrequency))
                     this.pumpFrequency = pumpFrequency;
                     this.isFrequencyUS = pumpFrequency.equals(frequencies[0]);
 
@@ -206,7 +208,7 @@ public class MedtronicPumpStatus extends PumpStatus {
                     if (targetFrequency != newTargetFrequency) {
                         RileyLinkUtil.setRileyLinkTargetFrequency(newTargetFrequency);
                         targetFrequency = newTargetFrequency;
-                        // targetFrequencyChanged = true;
+                        targetFrequencyChanged = true;
                     }
 
                 }
@@ -248,11 +250,19 @@ public class MedtronicPumpStatus extends PumpStatus {
                 //LOG.debug("Max Basal from AAPS settings is " + maxBasal);
             }
 
-            //RileyLinkEncodingType encodingType = RileyLinkEncodingType.getValueByDescription()
 
+            String encodingTypeStr = SP.getString(MedtronicConst.Prefs.Encoding, null);
 
+            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.valueOf(encodingTypeStr);
 
-            startService();
+            if (this.encodingType == null) {
+                this.encodingType = newEncodingType;
+            } else if (this.encodingType != newEncodingType) {
+                this.encodingType = newEncodingType;
+                this.encodingChanged = true;
+            }
+
+            reconfigureService();
 
         } catch (Exception ex) {
             this.errorDescription = ex.getMessage();
@@ -261,21 +271,26 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    private boolean startService() {
+    private boolean reconfigureService() {
 
-        // LOG.debug("MedtronicPumpStatus::startService");
+        if (!inPreInit && MedtronicUtil.getMedtronicService() != null) {
 
-        boolean ready = (!inPreInit && MedtronicUtil.getMedtronicService() != null);
+            if (serialChanged) {
+                MedtronicUtil.getMedtronicService().setPumpIDString(this.serialNumber); // short operation
+                serialChanged = false;
+            }
 
-        if (serialChanged && ready) {
-            MedtronicUtil.getMedtronicService().setPumpIDString(this.serialNumber); // short operation
-            serialChanged = false;
+            if (rileyLinkAddressChanged) {
+                MedtronicUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+                rileyLinkAddressChanged = false;
+            }
+
+            if (encodingChanged) {
+                RileyLinkUtil.getRileyLinkService().changeRileyLinkEncoding(encodingType);
+                encodingChanged = false;
+            }
         }
 
-        if (rileyLinkAddressChanged && !inPreInit && MedtronicUtil.getMedtronicService() != null) {
-            MedtronicUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
-            rileyLinkAddressChanged = false;
-        }
 
         // if (targetFrequencyChanged && !inPreInit && MedtronicUtil.getMedtronicService() != null) {
         // RileyLinkUtil.setRileyLinkTargetFrequency(targetFrequency);
@@ -283,7 +298,7 @@ public class MedtronicPumpStatus extends PumpStatus {
         // targetFrequencyChanged = false;
         // }
 
-        return (!rileyLinkAddressChanged && !serialChanged); // && !targetFrequencyChanged);
+        return (!rileyLinkAddressChanged && !serialChanged && !encodingChanged); // && !targetFrequencyChanged);
     }
 
 
@@ -324,7 +339,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     public boolean setNotInPreInit() {
         this.inPreInit = false;
 
-        return startService();
+        return reconfigureService();
     }
 
 
