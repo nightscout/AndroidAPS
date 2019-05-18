@@ -253,7 +253,7 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             String encodingTypeStr = SP.getString(MedtronicConst.Prefs.Encoding, null);
 
-            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.valueOf(encodingTypeStr);
+            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr);
 
             if (this.encodingType == null) {
                 this.encodingType = newEncodingType;
