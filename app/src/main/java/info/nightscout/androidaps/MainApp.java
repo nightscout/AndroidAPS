@@ -187,10 +187,10 @@ public class MainApp extends Application {
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
+            pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.PUMPDRIVERS && engineeringMode) {
                 pluginsList.add(MedtronicPumpPlugin.getPlugin());
             }
-            pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
             if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
             if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());

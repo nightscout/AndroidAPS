@@ -479,7 +479,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             }
         }
 
-        if (!oldTreatment._id.equals(newTreatment._id)) {
+        if (!StringUtils.equals(oldTreatment._id, newTreatment._id)) {
             if (StringUtils.isBlank(oldTreatment._id)) {
                 oldTreatment._id = newTreatment._id;
                 changed = true;
