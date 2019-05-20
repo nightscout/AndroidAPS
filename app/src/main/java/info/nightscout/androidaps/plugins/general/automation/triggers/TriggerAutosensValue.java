@@ -59,7 +59,10 @@ public class TriggerAutosensValue extends Trigger {
     public synchronized boolean shouldRun() {
         AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Automation trigger");
         if (autosensData == null)
-            return false;
+            if (comparator.getValue() == Comparator.Compare.IS_NOT_AVAILABLE)
+                return true;
+            else
+                return false;
 
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
@@ -120,7 +123,7 @@ public class TriggerAutosensValue extends Trigger {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.as); 
+        return Optional.of(R.drawable.as);
     }
 
     @Override
