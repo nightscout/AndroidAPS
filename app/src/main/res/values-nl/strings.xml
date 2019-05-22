@@ -318,8 +318,8 @@
     <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyzeren van basaal en ratio\'s</string>
     <string name="objectives_0_gate">Controleren van beschikbaarheid BG en insuline pomp data op Nightscout</string>
     <string name="objectives_1_objective">Starten met de Open Loop modus</string>
-    <string name="objectives_1_gate">In Open Loop modus werken voor enkele dagen en handmatig meermaals tijdelijke basaal instellen.
-Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sporten of koolhydraten inname bij hypo)</string>
+    <string name="objectives_1_gate">"In Open Loop modus werken voor enkele dagen en handmatig meermaals tijdelijke basaal instellen.
+Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sporten of koolhydraten inname bij hypo)"</string>
     <string name="objectives_2_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basaalstanden</string>
     <string name="objectives_2_gate">Gebaseerd op deze ervaringen beslissen wat het maximale basaal mag zijn en dit in de pomp instellen</string>
     <string name="objectives_3_objective">Starten met closed Loop met bescherming tegen lage BG</string>
