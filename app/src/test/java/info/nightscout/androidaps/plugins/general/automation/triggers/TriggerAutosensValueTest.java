@@ -63,8 +63,6 @@ public class TriggerAutosensValueTest {
         when(IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Automation trigger")).thenReturn(new AutosensData());
         t = new TriggerAutosensValue().setValue(80).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerAutosensValue().comparator(Comparator.Compare.IS_NOT_AVAILABLE);
-        Assert.assertTrue(t.shouldRun());
 
         // Test autosensData == null and Comparator == IS_NOT_AVAILABLE
         when(IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Automation trigger")).thenReturn(null);
