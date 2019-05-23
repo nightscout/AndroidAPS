@@ -43,8 +43,9 @@ public class TriggerAutosensValue extends Trigger {
 
     private TriggerAutosensValue(TriggerAutosensValue triggerAutosensValue) {
         super();
-        value = triggerAutosensValue.value;
+        value = new InputDouble(triggerAutosensValue.value);
         lastRun = triggerAutosensValue.lastRun;
+        comparator = new Comparator(triggerAutosensValue.comparator);
     }
 
     public double getValue() {
@@ -66,12 +67,6 @@ public class TriggerAutosensValue extends Trigger {
 
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
-
-        if (autosensData.autosensResult.ratio != 0 && comparator.getValue() == Comparator.Compare.IS_NOT_AVAILABLE) {
-            if (L.isEnabled(L.AUTOMATION))
-                log.debug("Ready for execution: " + friendlyDescription());
-            return true;
-        }
 
         boolean doRun = comparator.getValue().check((autosensData.autosensResult.ratio), (double) (getValue() / 100d));
         if (doRun) {
@@ -102,7 +97,7 @@ public class TriggerAutosensValue extends Trigger {
     Trigger fromJSON(String data) {
         try {
             JSONObject d = new JSONObject(data);
-            value.setValue(JsonHelper.safeGetInt(d, "value"));
+            value.setValue(JsonHelper.safeGetDouble(d, "value"));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
         } catch (Exception e) {
