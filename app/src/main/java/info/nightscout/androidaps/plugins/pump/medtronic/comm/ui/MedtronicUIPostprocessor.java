@@ -100,10 +100,14 @@ public class MedtronicUIPostprocessor {
             case GetBatteryStatus: {
                 BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO)uiTask.returnData;
 
-                if (batteryStatusDTO.batteryStatusType == BatteryStatusDTO.BatteryStatusType.Low)
-                    pumpStatus.batteryRemaining = 18;
-                else
-                    pumpStatus.batteryRemaining = 70;
+                pumpStatus.batteryRemaining = (batteryStatusDTO.getCalculatedPercent(pumpStatus.batteryType));
+
+                LOG.info("BatteryStatus: {}", batteryStatusDTO.toString());
+
+//                if (batteryStatusDTO.batteryStatusType == BatteryStatusDTO.BatteryStatusType.Low)
+//                    pumpStatus.batteryRemaining = 18;
+//                else
+//                    pumpStatus.batteryRemaining = 70;
             }
                 break;
 

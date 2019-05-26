@@ -60,6 +60,14 @@
             android:selectable="true"
             android:title="@string/medtronic_pump_encoding" />
 
+        <ListPreference
+            android:defaultValue="@string/medtronic_pump_battery_no"
+            android:entries="@array/medtronicBatteryType"
+            android:entryValues="@array/medtronicBatteryType"
+            android:key="pref_medtronic_battery_type"
+            android:selectable="true"
+            android:title="@string/medtronic_pump_battery_select" />
+
         <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
             android:id="@+id/rileylink_mac_address_mdt"
             android:enabled="true"
@@ -67,22 +75,7 @@
             android:title="RileyLink Configuration"
             android:key="pref_rileylink_mac_address">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
-
         </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
-
-        <!-- android:key="rileylink_scanner" -->
-
-        <!--
-                <EditTextPreference
-                    android:id="@+id/rileylink_mac_address_mdt"
-                    android:defaultValue="xx:xx:xx:xx:xx:xx"
-                    android:editable="false"
-                    android:inputType="textFilter"
-                    android:key="pref_rileylink_mac_address"
-                    android:selectAllOnFocus="true"
-                    android:singleLine="true"
-                    android:title="@string/rileylink_mac_address" />
-        -->
 
     </PreferenceCategory>
 </PreferenceScreen>

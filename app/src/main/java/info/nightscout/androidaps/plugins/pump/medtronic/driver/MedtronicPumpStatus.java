@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
@@ -75,6 +76,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
     private RileyLinkTargetFrequency targetFrequency;
     public BasalProfileStatus basalProfileStatus;
+    public BatteryType batteryType = BatteryType.None;
 
 
     public MedtronicPumpStatus(PumpDescription pumpDescription) {
@@ -260,6 +262,14 @@ public class MedtronicPumpStatus extends PumpStatus {
             } else if (this.encodingType != newEncodingType) {
                 this.encodingType = newEncodingType;
                 this.encodingChanged = true;
+            }
+
+            String batteryTypeStr = SP.getString(MedtronicConst.Prefs.BatteryType, null);
+
+            BatteryType batteryType = BatteryType.getByDescription(batteryTypeStr);
+
+            if (this.batteryType != batteryType) {
+                this.batteryType = batteryType;
             }
 
             reconfigureService();

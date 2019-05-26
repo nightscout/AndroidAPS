@@ -144,8 +144,15 @@ public class TempBasalPair {
         return MedtronicUtil.createByteArray(list);
     }
 
+    public boolean isCancelTBR() {
+        return (MedtronicUtil.isSame(insulinRate, 0.0d) && durationMinutes==0);
+    }
+
 
     public String getDescription() {
+        if (isCancelTBR()) {
+            return "Cancel TBR";
+        }
 
         if (isPercent) {
             return String.format(Locale.ENGLISH, "Rate: %.0f%%, Duration: %d min", insulinRate, durationMinutes);

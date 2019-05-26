@@ -172,7 +172,7 @@ public class MedtronicConverter {
             // if response in 3 bytes then we add additional information
             // double d = MedtronicUtil.makeUnsignedShort(rawData[2], rawData[1]) / 100.0d;
 
-            double d = ByteUtil.toInt(rawData[1], rawData[2]) / 100.0d;
+            double d = (ByteUtil.toInt(rawData[1], rawData[2])*1.0d) / 100.0d;
 
             batteryStatus.voltage = d;
 

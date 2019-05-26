@@ -481,7 +481,7 @@ public class MedtronicFragment extends SubscriberFragment {
                 }
 
                 // battery
-                batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}");
+                batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}  " + pumpStatus.batteryRemaining + "%");
                 SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 51d, 26d);
 
                 // reservoir

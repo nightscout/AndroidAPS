@@ -135,7 +135,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 medtronicService = null;
             }
 
-
             public void onServiceConnected(ComponentName name, IBinder service) {
                 if (isLoggingEnabled())
                     LOG.debug("RileyLinkMedtronicService is connected");
@@ -285,7 +284,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isInitialized() {
-        // TODO remove
         if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug("MedtronicPumpPlugin::isInitialized");
         return isServiceSet() && isInitialized;
@@ -531,8 +529,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 30);
 
         readPumpHistory();
-
-        // TODO rewrite reading of data to be done in background or different thread perhaps ??
 
         // remaining insulin (>50 = 4h; 50-20 = 1h; 15m)
         medtronicUIComm.executeCommand(MedtronicCommandType.GetRemainingInsulin);

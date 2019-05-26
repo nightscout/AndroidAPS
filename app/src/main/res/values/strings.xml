@@ -1360,6 +1360,10 @@
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Clear Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
+    <string name="medtronic_pump_battery_select">Battery Type (Power View)</string>
+    <string name="medtronic_pump_battery_no">Not selected (Simple view)</string>
+    <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
+    <string name="medtronic_pump_battery_lithium">Lithium (Extended view)</string>
 
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>

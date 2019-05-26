@@ -11,7 +11,7 @@ public enum MedtronicStatusRefreshType {
     PumpHistory(5, null), //
     Configuration(0, null), //
     RemainingInsulin(-1, MedtronicCommandType.GetRemainingInsulin), //
-    BatteryStatus(60, MedtronicCommandType.GetBatteryStatus), //
+    BatteryStatus(55, MedtronicCommandType.GetBatteryStatus), //
     PumpTime(60, MedtronicCommandType.RealTimeClock) //
     ;
 
