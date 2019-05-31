@@ -30,11 +30,11 @@ import info.nightscout.androidaps.utils.T;
 
 public class TriggerAutosensValue extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-    public int minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
-    public int maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
-    private double step = 1;
-    private DecimalFormat decimalFormat = new DecimalFormat("1");;
-    private InputDouble value = new InputDouble( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat);
+    private final int minValue = (int) (SP.getDouble("openapsama_autosens_min", 0.7d) * 100);
+    private final int maxValue = (int) (SP.getDouble("openapsama_autosens_max", 1.2d) * 100);
+    private final double step = 1;
+    private DecimalFormat decimalFormat = new DecimalFormat("1");
+    private InputDouble value = new InputDouble(100, (double) minValue, (double) maxValue, step, decimalFormat);
     private Comparator comparator = new Comparator();
 
     public TriggerAutosensValue() {
@@ -68,7 +68,7 @@ public class TriggerAutosensValue extends Trigger {
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
 
-        boolean doRun = comparator.getValue().check((autosensData.autosensResult.ratio), (double) (getValue() / 100d));
+        boolean doRun = comparator.getValue().check((autosensData.autosensResult.ratio), getValue() / 100d);
         if (doRun) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
