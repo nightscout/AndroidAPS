@@ -250,7 +250,7 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }
-    implementation "com.google.code.gson:gson:2.8.2"
+    implementation "com.google.code.gson:gson:2.4"
     implementation "com.google.guava:guava:24.1-jre"
 
     implementation "net.danlew:android.joda:2.9.9.1"
@@ -277,6 +277,14 @@ dependencies {
     androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // xDrip-plus port
+    implementation 'com.activeandroid:thread-safe-active-android:3.1.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
 }
 
 task unzip(type: Copy) {
