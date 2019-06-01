@@ -329,8 +329,8 @@
     <string name="objectives_5_gate">Loope eine Woche erfolgreich am Tag mit regelmäßiger Kohlenhydrat-Eingabe.</string>
     <string name="objectives_6_objective">Aktiviere zusätzliche Funktionen wie z. B. den Mahlzeitenassistenten</string>
     <string name="objectives_7_objective">Aktiviere zusätzliche Funktionen wie z. B. SMB</string>
-    <string name="objectives_7_gate">Lies das Wiki und hebe maxIOB an, damit SMB funktioniert. Ein guter Startwert ist
-maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
+    <string name="objectives_7_gate">"Lies das Wiki und hebe maxIOB an, damit SMB funktioniert. Ein guter Startwert ist
+maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate"</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="noprofileselected">Kein Profil ausgewählt</string>
     <string name="smscommunicator_loophasbeendisabled">Loop wurde deaktiviert.</string>
@@ -1066,8 +1066,8 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
     <string name="handshaking">Handshaking</string>
-    <string name="sendlogfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
-Unerwartetes Verhalten.</string>
+    <string name="sendlogfiles">"Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
+Unerwartetes Verhalten."</string>
     <string name="maxbolusviolation">Max. Bolus überschritten</string>
     <string name="commanderror">Fehler bei Befehl</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>

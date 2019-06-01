@@ -580,8 +580,8 @@
     <string name="wear_showbgi_title">Pokaż BGI</string>
     <string name="wear_showbgi_summary">Dodaj BGI do Linii Statusu</string>
     <string name="ns_noupload">Brak przesyłania do NS</string>
-    <string name="ns_noupload_summary">Wszystkie dane wysyłane do NS są odrzucane. AAPS jest podłączony do NS, ale nie dokonuje 
- żadnych zmian w NS</string>
+    <string name="ns_noupload_summary">"Wszystkie dane wysyłane do NS są odrzucane. AAPS jest podłączony do NS, ale nie dokonuje 
+ żadnych zmian w NS"</string>
     <string name="basal_step">Krok bazy</string>
     <string name="bolus_step">Krok bolusa</string>
     <string name="extendedbolus">BolusPrzedłużony</string>

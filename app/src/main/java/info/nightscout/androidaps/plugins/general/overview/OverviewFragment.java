@@ -1064,7 +1064,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             timeView.setText(DateUtil.timeString(new Date()));
         }
 
-        updateNotifications();
+        OverviewPlugin.getPlugin().notificationStore.updateNotifications(notificationsView);
 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.GONE);
@@ -1608,20 +1608,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             Profiler.log(log, from, updateGUIStart);
     }
 
-    //Notifications
-
-    void updateNotifications() {
-        NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
-        nstore.removeExpired();
-        nstore.unSnooze();
-        if (nstore.store.size() > 0) {
-            NotificationRecyclerViewAdapter adapter = new NotificationRecyclerViewAdapter(nstore.store);
-            notificationsView.setAdapter(adapter);
-            notificationsView.setVisibility(View.VISIBLE);
-        } else {
-            notificationsView.setVisibility(View.GONE);
-        }
-    }
 
     boolean useNewRibbonColors = true;
 

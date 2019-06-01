@@ -441,8 +441,8 @@
     <string name="openapsama_autosens_adjusttargets">Autosens hedefleri de ayarlar</string>
     <string name="openapsama_autosens_adjusttargets_summary">Varsayılan değer: true\nBu autosens in İnsülin Duyarlılık Faktörü ve bazallara ek olarak KŞ hedeflerinin ayarlanmasında kullanılır.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Varsayılan değer: 2\nEğer sadece öğününüzü yerseniz, öğün bolusu alındıktan sonra bolus ertelemesi devreye girer, bu şekilde Döngü karşı bir tetbir olarak geçici bazal oranını azaltmasın diye. Buaradaki örnekte olduğu gibi varsayılan 2; 3 saat DIA olacak şekilde bolus ertelemesi kademeli olarak 1,5 saat üzeri (3DIA/2=1,5).</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
-Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">"Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
+Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür."</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
     <string name="error_only_numeric_digits_allowed">Yalnızca sayısal rakam girebilirsiniz.</string>
     <string name="error_only_numeric_digits_range_allowed">%1$s - %2$s aralığında yalnızca sayısal rakamlar kullanılabilir.</string>
@@ -701,7 +701,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="no">Hayır</string>
     <string name="positiveonly">Sadece pozitif</string>
     <string name="negativeonly">Sadece negatif</string>
-    <string name="overview_editquickwizard_usecob">COB (Aktif Karbonhidrat) hesaplaması</string>
+    <string name="overview_editquickwizard_usecob">"COB (Aktif Karbonhidrat) hesaplaması
+"</string>
     <string name="overview_editquickwizard_usetemptarget">Geçici hedef hesaplaması</string>
     <string name="loopenabled">Döngü etkin</string>
     <string name="apsselected">Seçili APS</string>

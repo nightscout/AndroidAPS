@@ -45,8 +45,8 @@
     <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
     <string name="description_source_dexcom_g5">Ta emot BG-data från den modifierade Dexcom G5-appen</string>
     <string name="description_source_dexcom_g6">Ta emot BG-data från den modifierade Dexcom G6-appen.</string>
-    <string name="description_source_eversense">Ta emot BG-data från den modifierade
-Eversense-appen.</string>
+    <string name="description_source_eversense">"Ta emot BG-data från den modifierade
+Eversense-appen."</string>
     <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
     <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
