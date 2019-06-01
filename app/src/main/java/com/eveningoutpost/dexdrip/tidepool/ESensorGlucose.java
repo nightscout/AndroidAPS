@@ -4,6 +4,11 @@ package com.eveningoutpost.dexdrip.tidepool;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import info.nightscout.androidaps.db.BgReading;
+
 public class ESensorGlucose extends BaseElement {
 
 
@@ -17,11 +22,11 @@ public class ESensorGlucose extends BaseElement {
         this.units = "mg/dL";
     }
 
-/*
+
     static ESensorGlucose fromBgReading(final BgReading bgReading) {
         final ESensorGlucose sensorGlucose = new ESensorGlucose();
-        sensorGlucose.populate(bgReading.timestamp, bgReading.uuid);
-        sensorGlucose.value = (int) bgReading.calculated_value; // TODO best glucose?
+        sensorGlucose.populate(bgReading.date, "uuid-AAPS");
+        sensorGlucose.value = (int) bgReading.value; // TODO best glucose?
         return sensorGlucose;
     }
 
@@ -33,5 +38,5 @@ public class ESensorGlucose extends BaseElement {
         }
         return results;
     }
-*/
+
 }

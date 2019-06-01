@@ -2,6 +2,8 @@ package com.eveningoutpost.dexdrip.tidepool;
 
 import com.google.gson.annotations.Expose;
 
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+
 // jamorham
 
 public class EBolus extends BaseElement {
@@ -21,6 +23,10 @@ public class EBolus extends BaseElement {
         this.normal = insulinDelivered;
         this.expectedNormal = insulinExpected;
         populate(timestamp, uuid);
+    }
+
+    public static EBolus fromTreatment(Treatment treatment) {
+        return new EBolus(treatment.insulin, treatment.insulin, treatment.date, "uuid-AAPS");
     }
 
 }

@@ -4,24 +4,25 @@ package com.eveningoutpost.dexdrip.tidepool;
 
 // lightweight class entry point
 
-import com.eveningoutpost.dexdrip.Models.JoH;
-import com.eveningoutpost.dexdrip.UtilityModels.Pref;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.receivers.ChargingStateReceiver;
+import info.nightscout.androidaps.utils.SP;
 
 import static com.eveningoutpost.dexdrip.Models.JoH.isLANConnected;
-import static com.eveningoutpost.dexdrip.utils.PowerStateReceiver.is_power_connected;
 
 public class TidepoolEntry {
 
 
     public static boolean enabled() {
-        return Pref.getBooleanDefaultFalse("cloud_storage_tidepool_enable");
+        return SP.getBoolean(R.string.key_cloud_storage_tidepool_enable, false);
     }
 
     public static void newData() {
         if (enabled()
-                && (!Pref.getBooleanDefaultFalse("tidepool_only_while_charging") || is_power_connected())
-                && (!Pref.getBooleanDefaultFalse("tidepool_only_while_unmetered") || isLANConnected())
-                && JoH.pratelimit("tidepool-new-data-upload", 1200)) {
+                && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
+                && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || isLANConnected())
+            //        && JoH.pratelimit("tidepool-new-data-upload", 1200)
+        ) {
             TidepoolUploader.doLogin(false);
         }
     }

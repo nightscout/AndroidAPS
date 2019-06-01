@@ -1,15 +1,23 @@
 package com.eveningoutpost.dexdrip.Models;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.PowerManager;
+import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.utils.DateUtil;
 
 public class JoH {
 
@@ -17,6 +25,14 @@ public class JoH {
 
     public static String dateTimeText(long timestamp) {
         return android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss", timestamp).toString();
+    }
+
+    public static long msSince(long when) {
+        return (DateUtil.now() - when);
+    }
+
+    public static long msTill(long when) {
+        return (when - DateUtil.now());
     }
 
     public static String niceTimeScalar(long t) {
@@ -120,6 +136,47 @@ public class JoH {
         wl.acquire(millis);
         Log.d(TAG, "fullWakeLock: " + name + " " + wl.toString());
         return wl;
+    }
+
+    public static boolean isLANConnected() {
+        final ConnectivityManager cm =
+                (ConnectivityManager) MainApp.instance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        final boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnected();
+        return isConnected && ((activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+                || (activeNetwork.getType() == ConnectivityManager.TYPE_ETHERNET)
+                || (activeNetwork.getType() == ConnectivityManager.TYPE_BLUETOOTH));
+    }
+
+    private static Gson gson_instance;
+    public static Gson defaultGsonInstance() {
+        if (gson_instance == null) {
+            gson_instance = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    //.registerTypeAdapter(Date.class, new DateTypeAdapter())
+                    // .serializeSpecialFloatingPointValues()
+                    .create();
+        }
+        return gson_instance;
+    }
+
+    public static String base64encodeBytes(byte[] input) {
+        try {
+            return new String(Base64.encode(input, Base64.NO_WRAP), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, "Got unsupported encoding: " + e);
+            return "encode-error";
+        }
+    }
+
+    public static byte[] base64decodeBytes(String input) {
+        try {
+            return Base64.decode(input.getBytes("UTF-8"), Base64.NO_WRAP);
+        } catch (UnsupportedEncodingException | IllegalArgumentException e) {
+            Log.e(TAG, "Got unsupported encoding: " + e);
+            return new byte[0];
+        }
     }
 
 

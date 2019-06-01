@@ -1,28 +1,34 @@
 package com.eveningoutpost.dexdrip.tidepool;
 
 
-import com.eveningoutpost.dexdrip.Models.APStatus;
-import com.eveningoutpost.dexdrip.Models.BgReading;
-import com.eveningoutpost.dexdrip.Models.BloodTest;
+import android.util.Log;
+
 import com.eveningoutpost.dexdrip.Models.JoH;
-import com.eveningoutpost.dexdrip.Models.Profile;
-import com.eveningoutpost.dexdrip.Models.Treatments;
-import com.eveningoutpost.dexdrip.Models.UserError;
-import com.eveningoutpost.dexdrip.UtilityModels.Constants;
 import com.eveningoutpost.dexdrip.UtilityModels.PersistentStore;
-import com.eveningoutpost.dexdrip.UtilityModels.Pref;
 import com.eveningoutpost.dexdrip.utils.LogSlider;
 import com.eveningoutpost.dexdrip.utils.NamedSliderProcessor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 import static com.eveningoutpost.dexdrip.Models.JoH.dateTimeText;
 
 /**
  * jamorham
- *
+ * <p>
  * This class gets the next time slice of all data to upload
  */
 
@@ -31,8 +37,8 @@ public class UploadChunk implements NamedSliderProcessor {
     private static final String TAG = "TidepoolUploadChunk";
     private static final String LAST_UPLOAD_END_PREF = "tidepool-last-end";
 
-    private static final long MAX_UPLOAD_SIZE = Constants.DAY_IN_MS * 7; // don't change this
-    private static final long DEFAULT_WINDOW_OFFSET = Constants.MINUTE_IN_MS * 15;
+    private static final long MAX_UPLOAD_SIZE = T.days(7).msecs(); // don't change this
+    private static final long DEFAULT_WINDOW_OFFSET = T.mins(15).msecs();
     private static final long MAX_LATENCY_THRESHOLD_MINUTES = 1440; // minutes per day
 
 
@@ -42,7 +48,7 @@ public class UploadChunk implements NamedSliderProcessor {
 
         final String result = get(session.start, session.end);
         if (result != null && result.length() < 3) {
-            UserError.Log.d(TAG, "No records in this time period, setting start to best end time");
+            Log.d(TAG, "No records in this time period, setting start to best end time");
             setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()));
         }
         return result;
@@ -50,13 +56,13 @@ public class UploadChunk implements NamedSliderProcessor {
 
     public static String get(final long start, final long end) {
 
-        UserError.Log.uel(TAG, "Syncing data between: " + dateTimeText(start) + " -> " + dateTimeText(end));
+        Log.e(TAG, "Syncing data between: " + dateTimeText(start) + " -> " + dateTimeText(end));
         if (end <= start) {
-            UserError.Log.e(TAG, "End is <= start: " + dateTimeText(start) + " " + dateTimeText(end));
+            Log.e(TAG, "End is <= start: " + dateTimeText(start) + " " + dateTimeText(end));
             return null;
         }
         if (end - start > MAX_UPLOAD_SIZE) {
-            UserError.Log.e(TAG, "More than max range - rejecting");
+            Log.e(TAG, "More than max range - rejecting");
             return null;
         }
 
@@ -72,37 +78,37 @@ public class UploadChunk implements NamedSliderProcessor {
 
     private static long getWindowSizePreference() {
         try {
-            long value = (long) getLatencySliderValue(Pref.getInt("tidepool_window_latency", 0));
-            return Math.max(value * Constants.MINUTE_IN_MS, DEFAULT_WINDOW_OFFSET);
+            long value = (long) getLatencySliderValue(SP.getInt(R.string.key_tidepool_window_latency, 0));
+            return Math.max(T.mins(value).msecs(), DEFAULT_WINDOW_OFFSET);
         } catch (Exception e) {
-            UserError.Log.e(TAG, "Reverting to default of 15 minutes due to Window Size exception: " + e);
+            Log.e(TAG, "Reverting to default of 15 minutes due to Window Size exception: " + e);
             return DEFAULT_WINDOW_OFFSET; // default
         }
     }
 
     private static long maxWindow(final long last_end) {
-        //UserError.Log.d(TAG, "Max window is: " + getWindowSizePreference());
-        return Math.min(last_end + MAX_UPLOAD_SIZE, JoH.tsl() - getWindowSizePreference());
+        //Log.d(TAG, "Max window is: " + getWindowSizePreference());
+        return Math.min(last_end + MAX_UPLOAD_SIZE, DateUtil.now() - getWindowSizePreference());
     }
 
     public static long getLastEnd() {
         long result = PersistentStore.getLong(LAST_UPLOAD_END_PREF);
-        return Math.max(result, JoH.tsl() - Constants.MONTH_IN_MS * 2);
+        return Math.max(result, DateUtil.now() - T.months(2).msecs());
     }
 
     public static void setLastEnd(final long when) {
         if (when > getLastEnd()) {
             PersistentStore.setLong(LAST_UPLOAD_END_PREF, when);
-            UserError.Log.d(TAG, "Updating last end to: " + dateTimeText(when));
+            Log.d(TAG, "Updating last end to: " + dateTimeText(when));
         } else {
-            UserError.Log.e(TAG, "Cannot set last end to: " + dateTimeText(when) + " vs " + dateTimeText(getLastEnd()));
+            Log.e(TAG, "Cannot set last end to: " + dateTimeText(when) + " vs " + dateTimeText(getLastEnd()));
         }
     }
 
     static List<BaseElement> getTreatments(final long start, final long end) {
         List<BaseElement> result = new LinkedList<>();
-        final List<Treatments> treatments = Treatments.latestForGraph(1800, start, end);
-        for (Treatments treatment : treatments) {
+        final List<Treatment> treatments = TreatmentsPlugin.getPlugin().getService().getTreatmentDataFromTime(start, end, true);
+        for (Treatment treatment : treatments) {
             if (treatment.carbs > 0) {
                 result.add(EWizard.fromTreatment(treatment));
             } else if (treatment.insulin > 0) {
@@ -121,46 +127,47 @@ public class UploadChunk implements NamedSliderProcessor {
         // TODO we could make sure we include records older than the first bg record for completeness
 
         final long start = 0;
-        final long end = JoH.tsl();
+        final long end = DateUtil.now();
 
-        final List<BgReading> bgReadingList = BgReading.latestForGraphAsc(1, start, end);
+        final List<BgReading> bgReadingList = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, false);
         if (bgReadingList != null && bgReadingList.size() > 0) {
-            return bgReadingList.get(0).timestamp;
+            return bgReadingList.get(0).date;
         }
         return -1;
     }
 
     static List<EBloodGlucose> getBloodTests(final long start, final long end) {
-        return EBloodGlucose.fromBloodTests(BloodTest.latestForGraph(1800, start, end));
+        return new ArrayList<>();
+//        return EBloodGlucose.fromBloodTests(BloodTest.latestForGraph(1800, start, end));
     }
 
     static List<ESensorGlucose> getBgReadings(final long start, final long end) {
-        return ESensorGlucose.fromBgReadings(BgReading.latestForGraphAsc(15000, start, end));
+        return ESensorGlucose.fromBgReadings(MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true));
     }
 
     static List<EBasal> getBasals(final long start, final long end) {
         final List<EBasal> basals = new LinkedList<>();
-        final List<APStatus> aplist = APStatus.latestForGraph(15000, start, end);
+        final List<TemporaryBasal> aplist = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true);
         EBasal current = null;
-        for (APStatus apStatus : aplist) {
-            final double this_rate = Profile.getBasalRate(apStatus.timestamp) * apStatus.basal_percent / 100d;
+        for (TemporaryBasal temporaryBasal : aplist) {
+            final double this_rate = temporaryBasal.tempBasalConvertedToAbsolute(temporaryBasal.date, ProfileFunctions.getInstance().getProfile(temporaryBasal.date));
 
             if (current != null) {
                 if (this_rate != current.rate) {
-                    current.duration = apStatus.timestamp - current.timestamp;
-                    UserError.Log.d(TAG, "Adding current: " + current.toS());
+                    current.duration = temporaryBasal.date - current.timestamp;
+                    Log.d(TAG, "Adding current: " + current.toS());
                     if (current.isValid()) {
                         basals.add(current);
                     } else {
-                        UserError.Log.e(TAG, "Current basal is invalid: " + current.toS());
+                        Log.e(TAG, "Current basal is invalid: " + current.toS());
                     }
                     current = null;
                 } else {
-                    UserError.Log.d(TAG, "Same rate as previous basal record: " + current.rate + " " + apStatus.toS());
+                    Log.d(TAG, "Same rate as previous basal record: " + current.rate + " " + temporaryBasal.toStringFull());
                 }
             }
             if (current == null) {
-                current = new EBasal(this_rate, apStatus.timestamp, 0, UUID.nameUUIDFromBytes(("tidepool-basal" + apStatus.timestamp).getBytes()).toString()); // start duration is 0
+                current = new EBasal(this_rate, temporaryBasal.date, 0, UUID.nameUUIDFromBytes(("tidepool-basal" + temporaryBasal.date).getBytes()).toString()); // start duration is 0
             }
         }
         return basals;
