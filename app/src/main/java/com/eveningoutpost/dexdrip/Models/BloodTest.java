@@ -1,18 +1,12 @@
 package com.eveningoutpost.dexdrip.Models;
 
-import android.provider.BaseColumns;
-
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 
 /**
  * Created by jamorham on 11/12/2016.
  */
 
-@Table(name = "BloodTest", id = BaseColumns._ID)
-public class BloodTest extends Model {
+public class BloodTest {
 
     public static final long STATE_VALID = 1 << 0;
     public static final long STATE_CALIBRATION = 1 << 1;
@@ -27,27 +21,21 @@ public class BloodTest extends Model {
     private final static boolean d = false;
 
     @Expose
-    @Column(name = "timestamp", unique = true, onUniqueConflicts = Column.ConflictAction.IGNORE)
     public long timestamp;
 
     @Expose
-    @Column(name = "mgdl")
     public double mgdl;
 
     @Expose
-    @Column(name = "created_timestamp")
     public long created_timestamp;
 
     @Expose
-    @Column(name = "state")
     public long state; // bitfield
 
     @Expose
-    @Column(name = "source")
     public String source;
 
     @Expose
-    @Column(name = "uuid", unique = true, onUniqueConflicts = Column.ConflictAction.IGNORE)
     public String uuid;
 
 /*
