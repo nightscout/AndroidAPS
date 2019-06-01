@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,11 +35,13 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity;
@@ -148,12 +151,22 @@ public class MedtronicFragment extends SubscriberFragment {
 
     @OnClick(R.id.medtronic_history)
     void onHistoryClick() {
-        startActivity(new Intent(getContext(), MedtronicHistoryActivity.class));
+        if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
+            startActivity(new Intent(getContext(), MedtronicHistoryActivity.class));
+        } else {
+            MedtronicUtil.displayNotConfiguredDialog();
+        }
     }
 
 
     @OnClick(R.id.medtronic_refresh)
     void onRefreshClick() {
+
+        if (!MedtronicUtil.getPumpStatus().verifyConfiguration()) {
+            MedtronicUtil.displayNotConfiguredDialog();
+            return;
+        }
+
         if (refreshButtonStatic != null)
             refreshButtonStatic.setEnabled(false);
 
@@ -178,13 +191,17 @@ public class MedtronicFragment extends SubscriberFragment {
 
     @OnClick(R.id.medtronic_stats)
     void onStatsClick() {
-        startActivity(new Intent(getContext(), RileyLinkStatusActivity.class));
+        if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
+            startActivity(new Intent(getContext(), RileyLinkStatusActivity.class));
+        } else {
+            MedtronicUtil.displayNotConfiguredDialog();
+        }
     }
 
 
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged c) {
-
+        updateGUI();
     }
 
 
@@ -481,8 +498,12 @@ public class MedtronicFragment extends SubscriberFragment {
                 }
 
                 // battery
-                batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}  " + pumpStatus.batteryRemaining + "%");
-                SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 51d, 26d);
+                if (MedtronicUtil.getBatteryType()== BatteryType.None || pumpStatus.batteryVoltage==null) {
+                    batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}  ");
+                } else {
+                    batteryView.setText("{fa-battery-" + (pumpStatus.batteryRemaining / 25) + "}  " + pumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", pumpStatus.batteryVoltage));
+                }
+                SetWarnColor.setColorInverse(batteryView, pumpStatus.batteryRemaining, 25d, 10d);
 
                 // reservoir
                 reservoirView.setText(DecimalFormatter.to0Decimal(pumpStatus.reservoirRemainingUnits) + " / "

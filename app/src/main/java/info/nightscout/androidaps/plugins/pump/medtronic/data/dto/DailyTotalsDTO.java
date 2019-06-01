@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.MoreObjects;
+import com.google.gson.annotations.Expose;
 
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.logging.L;
@@ -40,8 +41,11 @@ public class DailyTotalsDTO {
     private Integer sensorCalcCount;
     private Integer sensorDataCount;
 
+    @Expose
     private Double insulinTotal = 0.0d;
+    @Expose
     private Double insulinBasal = 0.0d;
+    @Expose
     private Double insulinBolus = 0.0d;
     private Double insulinCarbs;
 

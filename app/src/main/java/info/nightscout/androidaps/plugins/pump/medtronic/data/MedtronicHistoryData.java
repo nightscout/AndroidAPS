@@ -396,7 +396,8 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> tdds = filterTDDs(tddsIn);
 
-        LOG.error(getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gsonPretty.toJson(tdds));
+        if (isLogEnabled())
+            LOG.debug(getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gsonPretty.toJson(tdds));
 
         List<TDD> tddsDb = databaseHelper.getTDDsForLastXDays(3);
 
@@ -508,6 +509,12 @@ public class MedtronicHistoryData {
         for (PumpHistoryEntry treatment : entryList) {
 
             TempBasalPair tbr = (TempBasalPair) treatment.getDecodedDataEntry("Object");
+
+            if (!tbr.isCancelTBR()) {
+
+            } else {
+
+            }
 
             boolean isPossibleCancel = false;
 

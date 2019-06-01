@@ -237,8 +237,9 @@ public abstract class RileyLinkCommunicationManager {
                         radioResponse.init(resp.getRaw());
 
                         if (radioResponse.isValid()) {
-                            sumRSSI += calculateRssi(radioResponse.rssi);
-                            trial.rssiList.add(radioResponse.rssi);
+                            int rssi = calculateRssi(radioResponse.rssi);
+                            sumRSSI += rssi;
+                            trial.rssiList.add(rssi);
                             trial.successes++;
                         } else {
                             LOG.warn("Failed to parse radio response: " + ByteUtil.shortHexString(resp.getRaw()));
@@ -272,8 +273,7 @@ public abstract class RileyLinkCommunicationManager {
             FrequencyTrial one = results.trials.get(k);
 
             stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, ""
-                + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList + ", averageRSSI_Old="
-                + one.averageRSSI2));
+                + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList));
         }
 
         LOG.info(stringBuilder.toString());

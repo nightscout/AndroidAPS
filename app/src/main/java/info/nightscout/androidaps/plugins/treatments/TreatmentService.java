@@ -290,7 +290,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             }
 
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            log.error("Unhandled SQL exception: {}", e.getMessage(), e);
         }
         return new UpdateReturn(false, false);
     }

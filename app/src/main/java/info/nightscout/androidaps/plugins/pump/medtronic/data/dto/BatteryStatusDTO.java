@@ -12,7 +12,10 @@ public class BatteryStatusDTO {
 
     @Expose
     public BatteryStatusType batteryStatusType;
+    @Expose
     public Double voltage;
+
+    public boolean extendedDataReceived = false;
 
 
     public int getCalculatedPercent(BatteryType batteryType) {

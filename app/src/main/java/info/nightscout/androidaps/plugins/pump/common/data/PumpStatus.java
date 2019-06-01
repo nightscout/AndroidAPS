@@ -30,6 +30,8 @@ public abstract class PumpStatus {
     public double reservoirRemainingUnits = 0d;
     public String reservoirFullUnits = "???";
     public int batteryRemaining = 0; // percent, so 0-100
+    public Double batteryVoltage = null; 
+
 
     // iob
     public String iob = null;
@@ -42,15 +44,7 @@ public abstract class PumpStatus {
     public ProfileStore profileStore;
     public String units; // Constants.MGDL or Constants.MMOL
     public PumpStatusType pumpStatusType = PumpStatusType.Running;
-    // TODO maybe not needed anymore in 2.0
-    public Double constraintBasalRateAbsolute;
-    public Integer constraintBasalRatePercent;
-    public Double constraintBolus;
-    public Integer constraintCarbs;
-    public Double constraintMaxIob;
     public Double[] basalsByHour;
-    // public double remainUnits = 0;
-    public int remainBattery = 0;
     public double currentBasal = 0;
     public int tempBasalInProgress = 0;
     public int tempBasalRatio = 0;
@@ -65,20 +59,6 @@ public abstract class PumpStatus {
         this.initSettings();
     }
 
-
-    // FIXME cleanup this is from RT2
-
-    // public long getTimeIndex() {
-    // return (long) Math.ceil(time.getTime() / 60000d);
-    // }
-    //
-    // public void setTimeIndex(long timeIndex) {
-    // this.timeIndex = timeIndex;
-    // }
-    //
-    // public long timeIndex;
-    //
-    // public Date time;
 
     public abstract void initSettings();
 

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util;
 
+import android.content.Intent;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -27,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunica
 
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
@@ -57,6 +62,7 @@ public class MedtronicUtil extends RileyLinkUtil {
     public static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     public static Gson gsonInstancePretty = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
             .setPrettyPrinting().create();
+    private static BatteryType batteryType = BatteryType.None;
 
 
     public static Gson getGsonInstance() {
@@ -506,4 +512,27 @@ public class MedtronicUtil extends RileyLinkUtil {
     public static ClockDTO getPumpTime() {
         return MedtronicUtil.pumpTime;
     }
+
+    public static void setBatteryType(BatteryType batteryType) {
+        MedtronicUtil.batteryType = batteryType;
+    }
+
+
+    public static BatteryType getBatteryType() {
+        return MedtronicUtil.batteryType;
+    }
+
+
+    public static void displayNotConfiguredDialog() {
+        new Thread(() -> {
+
+            Intent i = new Intent(MainApp.instance(), MessageHelperActivity.class);
+            i.putExtra("status", MainApp.gs(R.string.medtronic_error_operation_not_possible_no_configuration));
+            i.putExtra("title", MainApp.gs(R.string.combo_warning));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
+
+        }).start();
+    }
+
 }

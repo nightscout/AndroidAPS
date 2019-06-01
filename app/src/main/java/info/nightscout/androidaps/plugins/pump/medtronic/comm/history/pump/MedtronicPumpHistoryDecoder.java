@@ -186,10 +186,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         switch (entry.getEntryType()) {
 
+            // Valid entries, but not processed
             case ChangeBasalPattern:
-                return RecordDecodeStatus.OK; // Not supported at the moment
-
-            // AAPS Implementation - Ignored entries
             case CalBGForPH:
             case ChangeRemoteId:
             case ClearAlarm:

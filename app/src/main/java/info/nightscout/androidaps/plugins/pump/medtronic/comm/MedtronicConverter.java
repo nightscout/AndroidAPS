@@ -175,17 +175,7 @@ public class MedtronicConverter {
             double d = (ByteUtil.toInt(rawData[1], rawData[2])*1.0d) / 100.0d;
 
             batteryStatus.voltage = d;
-
-            // double perc = (d - BatteryType.Alkaline.lowVoltage) / (BatteryType.Alkaline.highVoltage -
-            // BatteryType.Alkaline.lowVoltage);
-            //
-            // LOG.warn("Percent status: " + perc);
-            // LOG.warn("Unknown status: " + rawData[0]);
-            // LOG.warn("Full result: " + d);
-            //
-            // int percent = (int) (perc * 100.0d);
-
-            // return percent;
+            batteryStatus.extendedDataReceived = true;
         }
 
         return batteryStatus;

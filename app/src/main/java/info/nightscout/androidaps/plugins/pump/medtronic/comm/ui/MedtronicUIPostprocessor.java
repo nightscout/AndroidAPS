@@ -102,12 +102,13 @@ public class MedtronicUIPostprocessor {
 
                 pumpStatus.batteryRemaining = (batteryStatusDTO.getCalculatedPercent(pumpStatus.batteryType));
 
-                LOG.info("BatteryStatus: {}", batteryStatusDTO.toString());
+                if (batteryStatusDTO.voltage!=null) {
+                    pumpStatus.batteryVoltage = batteryStatusDTO.voltage;
+                }
 
-//                if (batteryStatusDTO.batteryStatusType == BatteryStatusDTO.BatteryStatusType.Low)
-//                    pumpStatus.batteryRemaining = 18;
-//                else
-//                    pumpStatus.batteryRemaining = 70;
+                if (isLogEnabled())
+                    LOG.info("BatteryStatus: {}", batteryStatusDTO.toString());
+
             }
                 break;
 

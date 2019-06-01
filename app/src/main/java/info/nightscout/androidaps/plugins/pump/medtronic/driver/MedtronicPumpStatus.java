@@ -139,7 +139,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    public void verifyConfiguration() {
+    public boolean verifyConfiguration() {
         try {
 
             // FIXME don't reload information several times
@@ -155,11 +155,11 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             if (serialNr == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_serial_not_set);
-                return;
+                return false;
             } else {
                 if (!serialNr.matches(regexSN)) {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_serial_invalid);
-                    return;
+                    return false;
                 } else {
                     if (!serialNr.equals(this.serialNumber)) {
                         this.serialNumber = serialNr;
@@ -172,13 +172,13 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             if (pumpType == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_type_not_set);
-                return;
+                return false;
             } else {
                 String pumpTypePart = pumpType.substring(0, 3);
 
                 if (!pumpTypePart.matches("[0-9]{3}")) {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_type_invalid);
-                    return;
+                    return false;
                 } else {
                     this.pumpType = medtronicPumpMap.get(pumpTypePart);
                     this.medtronicDeviceType = medtronicDeviceTypeMap.get(pumpTypePart);
@@ -194,11 +194,11 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             if (pumpFrequency == null) {
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_frequency_not_set);
-                return;
+                return false;
             } else {
                 if (!pumpFrequency.equals(frequencies[0]) && !pumpFrequency.equals(frequencies[1])) {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_pump_frequency_invalid);
-                    return;
+                    return false;
                 } else {
                     this.pumpFrequency = pumpFrequency;
                     this.isFrequencyUS = pumpFrequency.equals(frequencies[0]);
@@ -222,7 +222,7 @@ public class MedtronicPumpStatus extends PumpStatus {
                 if (isLogEnabled())
                     LOG.debug("RileyLink address invalid: null");
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
-                return;
+                return false;
             } else {
                 if (!rileyLinkAddress.matches(regexMac)) {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
@@ -255,6 +255,10 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             String encodingTypeStr = SP.getString(MedtronicConst.Prefs.Encoding, null);
 
+            if (encodingTypeStr==null) {
+                return false;
+            }
+
             RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr);
 
             if (this.encodingType == null) {
@@ -266,17 +270,24 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             String batteryTypeStr = SP.getString(MedtronicConst.Prefs.BatteryType, null);
 
+            if (batteryTypeStr==null)
+                return false;
+
             BatteryType batteryType = BatteryType.getByDescription(batteryTypeStr);
 
             if (this.batteryType != batteryType) {
                 this.batteryType = batteryType;
+                MedtronicUtil.setBatteryType(this.batteryType);
             }
 
             reconfigureService();
 
+            return true;
+
         } catch (Exception ex) {
             this.errorDescription = ex.getMessage();
             LOG.error("Error on Verification: " + ex.getMessage(), ex);
+            return false;
         }
     }
 

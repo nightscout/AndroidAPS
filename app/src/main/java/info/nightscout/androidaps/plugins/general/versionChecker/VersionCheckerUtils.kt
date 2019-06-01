@@ -57,7 +57,7 @@ private fun checkVersion() = if (isConnected()) {
             val request = HttpGet("https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/build.gradle")
             val response: HttpResponse = DefaultHttpClient().execute(request)
             val version: String? = response.entity.content?.findVersion()
-            compareWithCurrentVersion(version, BuildConfig.VERSION_NAME)
+            compareWithCurrentVersion(version, BuildConfig.DEV_VERSION)
         } catch (e: IOException) {
             log.debug("Github master version check error: $e")
         }

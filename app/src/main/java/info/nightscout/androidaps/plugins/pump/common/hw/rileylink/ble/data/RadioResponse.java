@@ -72,15 +72,17 @@ public class RadioResponse {
             // This does not look like something valid heard from a RileyLink device
             return;
         }
-        rssi = rxData[0];
-        responseNumber = rxData[1];
         byte[] encodedPayload;
 
         if (RileyLinkFirmwareVersion.isSameVersion(RileyLinkUtil.getRileyLinkServiceData().versionCC110,
             RileyLinkFirmwareVersion.Version2)) {
             encodedPayload = ByteUtil.substring(rxData, 3, rxData.length - 3);
+            rssi = rxData[1];
+            responseNumber = rxData[2];
         } else {
             encodedPayload = ByteUtil.substring(rxData, 2, rxData.length - 2);
+            rssi = rxData[0];
+            responseNumber = rxData[1];
         }
 
         try {

@@ -66,6 +66,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCustomActionType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicStatusRefreshType;
+import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
@@ -1415,9 +1416,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         switch (mcat) {
 
-            case WakeUpAndTune:
-                ServiceTaskExecutor.startTask(new WakeAndTuneTask());
-                break;
+            case WakeUpAndTune: {
+                if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
+                    ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                } else {
+                    MedtronicUtil.displayNotConfiguredDialog();
+                }
+            } break;
 
             case ClearBolusBlock: {
                 this.busyTimestamps.clear();
