@@ -27,8 +27,7 @@ public class TidepoolPlugin extends PluginBase {
 
     private TidepoolPlugin() {
         super(new PluginDescription()
-                .mainType(PluginType.BGSOURCE)
-                .fragmentClass(BGSourceFragment.class.getName())
+                .mainType(PluginType.GENERAL)
                 .pluginName(R.string.tidepool)
                 .shortName(R.string.tidepool_shortname)
                 .preferencesId(R.xml.pref_tidepool)

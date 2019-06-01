@@ -250,7 +250,7 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }
-    implementation "com.google.code.gson:gson:2.4"
+    implementation "com.google.code.gson:gson:2.8.5"
     implementation "com.google.guava:guava:24.1-jre"
 
     implementation "net.danlew:android.joda:2.9.9.1"
@@ -283,7 +283,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
     // you will want to install the android studio lombok plugin
