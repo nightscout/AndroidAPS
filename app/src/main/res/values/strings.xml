@@ -1446,6 +1446,8 @@
     <string name="medtronic_error_pump_wrong_tbr_type_set">Wrong TBR type set on pump (must be Absolute).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set" formatted="false">Wrong Max Bolus set on Pump (must be %.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set" formatted="false">Wrong Max Basal set on Pump (must be %.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Medtronic Pump first, before you can use this operation.</string>
+
     <string name="xxx">xxx</string>
 
     <!-- MDT History -->
