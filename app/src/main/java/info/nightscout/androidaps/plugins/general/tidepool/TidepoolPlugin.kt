@@ -9,7 +9,10 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.general.tidepool.comm.Session
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.utils.SP
@@ -19,11 +22,14 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(R.string.tidepool)
         .shortName(R.string.tidepool_shortname)
+        .fragmentClass(TidepoolJavaFragment::class.java.name)
         .preferencesId(R.xml.pref_tidepool)
         .description(R.string.description_tidepool)
 ) {
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
     private var wifiConnected = false
+
+    var session: Session? = null
 
     override fun onStart() {
         MainApp.bus().register(this)
@@ -35,6 +41,12 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         super.onStop()
     }
 
+    fun doUpload() {
+        if (session == null)
+            session = TidepoolUploader.doLogin()
+        else TidepoolUploader.doUpload(session!!)
+    }
+
     @Suppress("UNUSED_PARAMETER")
     @Subscribe
     fun onStatusEvent(ev: EventNewBG) {
@@ -42,7 +54,24 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || wifiConnected)
                 && RateLimit.ratelimit("tidepool-new-data-upload", 1200))
-            TidepoolUploader.doLogin()
+            doUpload()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe
+    fun onEventTidepoolDoUpload(ev: EventTidepoolDoUpload) {
+        doUpload()
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    @Subscribe
+    fun onEventTidepoolResetData(ev: EventTidepoolResetData) {
+        if (session == null)
+            session = TidepoolUploader.doLogin()
+        if (session != null) {
+            TidepoolUploader.deleteDataSet(session!!)
+            TidepoolUploader.startSession(session!!)
+        }
     }
 
     @Subscribe

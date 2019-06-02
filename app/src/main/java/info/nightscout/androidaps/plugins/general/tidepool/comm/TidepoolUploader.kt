@@ -59,10 +59,10 @@ object TidepoolUploader {
     }
 
     @Synchronized
-    fun doLogin() {
+    fun doLogin(): Session? {
         if (!SP.getBoolean(R.string.key_cloud_storage_tidepool_enable, false)) {
             log.debug("Cannot login as disabled by preference")
-            return
+            return null
         }
         // TODO failure backoff
         extendWakeLock(30000)
@@ -72,10 +72,12 @@ object TidepoolUploader {
             status("Connecting")
 
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(session, "Login", { startSession(session) }, { loginFailed() }))
+            return session
         } else {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot do login as user credentials have not been set correctly")
             status("Invalid credentials")
             releaseWakeLock()
+            return null
         }
     }
 
@@ -103,7 +105,7 @@ object TidepoolUploader {
         releaseWakeLock()
     }
 
-    private fun startSession(session: Session) {
+    fun startSession(session: Session) {
         extendWakeLock(30000)
         if (session.authReply?.userid != null) {
             // See if we already have an open data set to write to
@@ -130,7 +132,7 @@ object TidepoolUploader {
         }
     }
 
-    private fun doUpload(session: Session) {
+    fun doUpload(session: Session) {
         if (!TidepoolPlugin.enabled()) {
             if (L.isEnabled(L.TIDEPOOL))
                 log.debug("Cannot upload - preference disabled")
@@ -164,6 +166,7 @@ object TidepoolUploader {
     }
 
     private fun status(status: String) {
+        log.debug("New status: $status")
         MainApp.bus().post(EventTidepoolStatus(status))
     }
 
@@ -186,23 +189,18 @@ object TidepoolUploader {
         releaseWakeLock()
     }
 
-    private fun deleteData(session: Session) {
-        if (session.authReply!!.userid != null) {
-            val call = session.service!!.deleteAllData(session.token!!, session.authReply!!.userid!!)
-            call.enqueue(TidepoolCallback(session, "Delete Data", {}, {}))
-        } else {
-            log.error("Got login response but cannot determine userid - cannot proceed")
-        }
-    }
-
     private fun getDataSet(session: Session) {
         val call = session.service!!.getDataSet(session.token!!, "bogus")
         call.enqueue(TidepoolCallback(session, "Get Data", {}, {}))
     }
 
-    private fun deleteDataSet(session: Session) {
-        val call = session.service!!.deleteDataSet(session.token!!, "bogus")
-        call.enqueue(TidepoolCallback(session, "Delete Data", {}, {}))
+    fun deleteDataSet(session: Session) {
+        if (session.datasetReply?.id != null) {
+            val call = session.service?.deleteDataSet(session.token!!, session.datasetReply!!.id!!)
+            call?.enqueue(TidepoolCallback(session, "Delete Dataset", {}, {}))
+        } else {
+            log.error("Got login response but cannot determine dataseId - cannot proceed")
+        }
     }
 
     @Synchronized

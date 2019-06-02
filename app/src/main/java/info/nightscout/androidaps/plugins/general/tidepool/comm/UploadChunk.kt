@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
-import android.util.Log
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
+import org.slf4j.LoggerFactory
 import java.util.*
 
 object UploadChunk {
@@ -21,6 +22,7 @@ object UploadChunk {
     private val DEFAULT_WINDOW_OFFSET = T.mins(15).msecs()
     private val MAX_LATENCY_THRESHOLD_MINUTES: Long = 1440 // minutes per day
 
+    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
     fun getNext(session: Session): String? {
         session.start = getLastEnd()
@@ -28,7 +30,7 @@ object UploadChunk {
 
         val result = get(session.start, session.end)
         if (result != null && result.length < 3) {
-            Log.d(TAG, "No records in this time period, setting start to best end time")
+           if (L.isEnabled(L.TIDEPOOL)) log.debug("No records in this time period, setting start to best end time")
             setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
         }
         return result
@@ -36,13 +38,13 @@ object UploadChunk {
 
     operator fun get(start: Long, end: Long): String? {
 
-        Log.e(TAG, "Syncing data between: " + DateUtil.dateAndTimeFullString(start) + " -> " + DateUtil.dateAndTimeFullString(end))
+       if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeFullString(start) + " -> " + DateUtil.dateAndTimeFullString(end))
         if (end <= start) {
-            Log.e(TAG, "End is <= start: " + DateUtil.dateAndTimeFullString(start) + " " + DateUtil.dateAndTimeFullString(end))
+           if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeFullString(start) + " " + DateUtil.dateAndTimeFullString(end))
             return null
         }
         if (end - start > MAX_UPLOAD_SIZE) {
-            Log.e(TAG, "More than max range - rejecting")
+           if (L.isEnabled(L.TIDEPOOL)) log.debug("More than max range - rejecting")
             return null
         }
 
@@ -61,7 +63,7 @@ object UploadChunk {
             val value = getLatencySliderValue(SP.getInt(R.string.key_tidepool_window_latency, 0)).toLong()
             return Math.max(T.mins(value).msecs(), DEFAULT_WINDOW_OFFSET)
         } catch (e: Exception) {
-            Log.e(TAG, "Reverting to default of 15 minutes due to Window Size exception: $e")
+           if (L.isEnabled(L.TIDEPOOL)) log.debug("Reverting to default of 15 minutes due to Window Size exception: $e")
             return DEFAULT_WINDOW_OFFSET // default
         }
 
@@ -79,10 +81,11 @@ object UploadChunk {
 
     fun setLastEnd(time: Long) {
         if (time > getLastEnd()) {
-            SP.putLong(R.string.key_tidepool_last_end, time)
-            Log.d(TAG, "Updating last end to: " + DateUtil.dateAndTimeFullString(time))
+            //TODO SP.putLong(R.string.key_tidepool_last_end, time)
+            SP.putLong(R.string.key_tidepool_last_end, 0)
+           if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeFullString(time))
         } else {
-            Log.e(TAG, "Cannot set last end to: " + DateUtil.dateAndTimeFullString(time) + " vs " + DateUtil.dateAndTimeFullString(getLastEnd()))
+           if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeFullString(time) + " vs " + DateUtil.dateAndTimeFullString(getLastEnd()))
         }
     }
 
@@ -123,7 +126,10 @@ object UploadChunk {
     }
 
     internal fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
-        return SensorGlucoseElement.fromBgReadings(MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true))
+        val readings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
+        if (L.isEnabled(L.TIDEPOOL))
+            log.debug("${readings.size} selected for upload")
+        return SensorGlucoseElement.fromBgReadings(readings)
     }
 
     internal fun getBasals(start: Long, end: Long): List<BasalElement> {
@@ -136,15 +142,15 @@ object UploadChunk {
             if (current != null) {
                 if (this_rate != current.rate) {
                     current.duration = temporaryBasal.date - current.timestamp
-                    Log.d(TAG, "Adding current: " + current.toS())
+                   if (L.isEnabled(L.TIDEPOOL)) log.debug("Adding current: " + current.toS())
                     if (current.isValid()) {
                         basals.add(current)
                     } else {
-                        Log.e(TAG, "Current basal is invalid: " + current.toS())
+                       if (L.isEnabled(L.TIDEPOOL)) log.debug("Current basal is invalid: " + current.toS())
                     }
                     current = null
                 } else {
-                    Log.d(TAG, "Same rate as previous basal record: " + current.rate + " " + temporaryBasal.toStringFull())
+                   if (L.isEnabled(L.TIDEPOOL)) log.debug("Same rate as previous basal record: " + current.rate + " " + temporaryBasal.toStringFull())
                 }
             }
             if (current == null) {
