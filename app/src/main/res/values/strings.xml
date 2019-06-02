@@ -1344,6 +1344,10 @@
     <string name="title_tidepool_window_latency">Data Age Mins</string>
     <string name="summary_tidepool_dev_servers">If enabled, uploads will go to https://int-app.tidepool.org instead of the regular https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploads data to Tidepool</string>
+    <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
@@ -1363,9 +1367,6 @@
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Uploads data to Tidepool</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

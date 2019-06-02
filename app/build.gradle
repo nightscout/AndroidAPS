@@ -278,16 +278,22 @@ dependencies {
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+
     // xDrip-plus port
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
     // you will want to install the android studio lombok plugin
     compileOnly 'org.projectlombok:lombok:1.16.20'
     //  compileOnly 'javax.annotation:javax.annotation-api:1.3.2'
     annotationProcessor "org.projectlombok:lombok:1.16.20"
+
+    // new for tidepool
+    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
 }
 
 task unzip(type: Copy) {
