@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.source.SourceNSClientPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import java.util.*
@@ -26,9 +27,9 @@ class OpenDatasetRequestMessage : BaseMessage() {
     @Expose
     var dataSetType = UPLOAD_TYPE  // omit for "normal"
     @Expose
-    var deviceManufacturers = arrayOf((ConfigBuilderPlugin.getPlugin().activeBgSource as PluginBase).name)
+    var deviceManufacturers = arrayOf(((ConfigBuilderPlugin.getPlugin().activeBgSource ?: SourceNSClientPlugin.getPlugin()) as PluginBase).name)
     @Expose
-    var deviceModel = (ConfigBuilderPlugin.getPlugin().activeBgSource as PluginBase).name
+    var deviceModel = arrayOf(((ConfigBuilderPlugin.getPlugin().activeBgSource ?: SourceNSClientPlugin.getPlugin()) as PluginBase).name)
     @Expose
     var deviceTags = arrayOf("bgm", "cgm", "insulin-pump")
     @Expose
