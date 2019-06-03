@@ -70,7 +70,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
             session = TidepoolUploader.doLogin()
         if (session != null) {
             TidepoolUploader.deleteDataSet(session!!)
-            TidepoolUploader.startSession(session!!)
+            TidepoolUploader.doLogin()
         }
     }
 
