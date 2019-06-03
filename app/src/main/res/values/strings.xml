@@ -1400,6 +1400,8 @@
     <string name="notexists">not exists</string>
     <string name="temptargetcompared">Temp target %1$s</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">BG %3$s %1$s %2$s</string>
     <string name="deltalabel">BG difference</string>
     <string name="currentlocation">Current Location</string>
