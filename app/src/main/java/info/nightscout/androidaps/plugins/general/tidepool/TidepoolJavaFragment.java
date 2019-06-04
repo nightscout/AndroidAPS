@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload;
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData;
+import info.nightscout.androidaps.utils.SP;
 
 public class TidepoolJavaFragment extends SubscriberFragment {
     @Override
@@ -20,16 +21,18 @@ public class TidepoolJavaFragment extends SubscriberFragment {
         View view = inflater.inflate(R.layout.tidepool_fragment, container, false);
 
         Button login = view.findViewById(R.id.tidepool_login);
-        login.setOnClickListener(v -> {
+        login.setOnClickListener(v1 -> {
             TidepoolUploader.INSTANCE.doLogin();
         });
         Button uploadnow = view.findViewById(R.id.tidepool_uploadnow);
-        uploadnow.setOnClickListener(v -> {
-            MainApp.bus().post(new EventTidepoolDoUpload());
-        });
+        uploadnow.setOnClickListener(v2 -> MainApp.bus().post(new EventTidepoolDoUpload()));
         Button removeall = view.findViewById(R.id.tidepool_removeall);
-        removeall.setOnClickListener(v -> {
+        removeall.setOnClickListener(v3 -> {
             MainApp.bus().post(new EventTidepoolResetData());
+        });
+        Button resetStart = view.findViewById(R.id.tidepool_resertstart);
+        resetStart.setOnClickListener(v4 -> {
+            SP.putLong(R.string.key_tidepool_last_end, 0);
         });
         return view;
     }

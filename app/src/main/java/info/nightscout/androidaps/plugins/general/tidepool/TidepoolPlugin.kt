@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
+import android.text.Html
 import com.squareup.otto.Subscribe
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -11,13 +12,14 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.comm.Session
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
-import info.nightscout.androidaps.plugins.general.tidepool.comm.UploadChunk
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.utils.SP
 import org.slf4j.LoggerFactory
+import java.util.*
 
 object TidepoolPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -32,6 +34,13 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     var session: Session? = null
 
+    private val listLog = ArrayList<EventTidepoolStatus>()
+    internal var textLog = Html.fromHtml("")
+
+    var paused: Boolean = false
+    internal var autoscroll: Boolean = false
+
+    var status = ""
     override fun onStart() {
         MainApp.bus().register(this)
         super.onStart()

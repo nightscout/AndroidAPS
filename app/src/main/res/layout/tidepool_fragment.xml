@@ -18,7 +18,6 @@
         android:id="@+id/tidepool_uploadnow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
         android:text="Upload now"
         app:layout_constraintStart_toEndOf="@+id/tidepool_login"
         tools:layout_editor_absoluteY="66dp" />
@@ -27,7 +26,6 @@
         android:id="@+id/tidepool_removeall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:text="Remove all"
         app:layout_constraintStart_toEndOf="@+id/tidepool_uploadnow"
         tools:layout_editor_absoluteY="66dp" />
@@ -46,6 +44,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:text="Login"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="66dp" />
+
+    <Button
+        android:id="@+id/tidepool_resertstart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="308dp"
+        android:text="Reset start"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="66dp" />
 </android.support.constraint.ConstraintLayout>

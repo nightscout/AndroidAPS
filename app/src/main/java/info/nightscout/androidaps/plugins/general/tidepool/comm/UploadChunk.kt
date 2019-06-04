@@ -30,7 +30,7 @@ object UploadChunk {
 
         val result = get(session.start, session.end)
         if (result != null && result.length < 3) {
-           if (L.isEnabled(L.TIDEPOOL)) log.debug("No records in this time period, setting start to best end time")
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("No records in this time period, setting start to best end time")
             setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
         }
         return result
@@ -38,13 +38,13 @@ object UploadChunk {
 
     operator fun get(start: Long, end: Long): String? {
 
-       if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeFullString(start) + " -> " + DateUtil.dateAndTimeFullString(end))
+        if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeFullString(start) + " -> " + DateUtil.dateAndTimeFullString(end))
         if (end <= start) {
-           if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeFullString(start) + " " + DateUtil.dateAndTimeFullString(end))
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeFullString(start) + " " + DateUtil.dateAndTimeFullString(end))
             return null
         }
         if (end - start > MAX_UPLOAD_SIZE) {
-           if (L.isEnabled(L.TIDEPOOL)) log.debug("More than max range - rejecting")
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("More than max range - rejecting")
             return null
         }
 
@@ -63,7 +63,7 @@ object UploadChunk {
             val value = getLatencySliderValue(SP.getInt(R.string.key_tidepool_window_latency, 0)).toLong()
             return Math.max(T.mins(value).msecs(), DEFAULT_WINDOW_OFFSET)
         } catch (e: Exception) {
-           if (L.isEnabled(L.TIDEPOOL)) log.debug("Reverting to default of 15 minutes due to Window Size exception: $e")
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("Reverting to default of 15 minutes due to Window Size exception: $e")
             return DEFAULT_WINDOW_OFFSET // default
         }
 
@@ -82,9 +82,9 @@ object UploadChunk {
     fun setLastEnd(time: Long) {
         if (time > getLastEnd()) {
             SP.putLong(R.string.key_tidepool_last_end, time)
-           if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeFullString(time))
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeFullString(time))
         } else {
-           if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeFullString(time) + " vs " + DateUtil.dateAndTimeFullString(getLastEnd()))
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeFullString(time) + " vs " + DateUtil.dateAndTimeFullString(getLastEnd()))
         }
     }
 
@@ -113,9 +113,9 @@ object UploadChunk {
         val end = DateUtil.now()
 
         val bgReadingList = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, false)
-        return if (bgReadingList != null && bgReadingList.size > 0) {
+        return if (bgReadingList.size > 0)
             bgReadingList[0].date
-        } else -1
+        else -1
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -141,15 +141,15 @@ object UploadChunk {
             if (current != null) {
                 if (this_rate != current.rate) {
                     current.duration = temporaryBasal.date - current.timestamp
-                   if (L.isEnabled(L.TIDEPOOL)) log.debug("Adding current: " + current.toS())
+                    if (L.isEnabled(L.TIDEPOOL)) log.debug("Adding current: " + current.toS())
                     if (current.isValid()) {
                         basals.add(current)
                     } else {
-                       if (L.isEnabled(L.TIDEPOOL)) log.debug("Current basal is invalid: " + current.toS())
+                        if (L.isEnabled(L.TIDEPOOL)) log.debug("Current basal is invalid: " + current.toS())
                     }
                     current = null
                 } else {
-                   if (L.isEnabled(L.TIDEPOOL)) log.debug("Same rate as previous basal record: " + current.rate + " " + temporaryBasal.toStringFull())
+                    if (L.isEnabled(L.TIDEPOOL)) log.debug("Same rate as previous basal record: " + current.rate + " " + temporaryBasal.toStringFull())
                 }
             }
             if (current == null) {
