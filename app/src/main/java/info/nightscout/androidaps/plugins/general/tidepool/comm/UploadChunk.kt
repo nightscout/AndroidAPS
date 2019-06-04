@@ -81,8 +81,7 @@ object UploadChunk {
 
     fun setLastEnd(time: Long) {
         if (time > getLastEnd()) {
-            //TODO SP.putLong(R.string.key_tidepool_last_end, time)
-            SP.putLong(R.string.key_tidepool_last_end, 0)
+            SP.putLong(R.string.key_tidepool_last_end, time)
            if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeFullString(time))
         } else {
            if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeFullString(time) + " vs " + DateUtil.dateAndTimeFullString(getLastEnd()))

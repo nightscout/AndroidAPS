@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.comm.Session
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
+import info.nightscout.androidaps.plugins.general.tidepool.comm.UploadChunk
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
@@ -70,6 +71,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
             session = TidepoolUploader.doLogin()
         if (session != null) {
             TidepoolUploader.deleteDataSet(session!!)
+            SP.putLong(R.string.key_tidepool_last_end, 0)
             TidepoolUploader.doLogin()
         }
     }

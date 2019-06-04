@@ -10,6 +10,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload;
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData;
 
 public class TidepoolJavaFragment extends SubscriberFragment {
@@ -21,6 +22,10 @@ public class TidepoolJavaFragment extends SubscriberFragment {
         Button login = view.findViewById(R.id.tidepool_login);
         login.setOnClickListener(v -> {
             TidepoolUploader.INSTANCE.doLogin();
+        });
+        Button uploadnow = view.findViewById(R.id.tidepool_uploadnow);
+        uploadnow.setOnClickListener(v -> {
+            MainApp.bus().post(new EventTidepoolDoUpload());
         });
         Button removeall = view.findViewById(R.id.tidepool_removeall);
         removeall.setOnClickListener(v -> {
