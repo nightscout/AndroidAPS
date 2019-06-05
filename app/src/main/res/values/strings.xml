@@ -1329,7 +1329,6 @@
     <string name="key_tidepool_username" translatable="false">tidepool_username</string>
     <string name="key_tidepool_password" translatable="false">tidepool_password</string>
     <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
-    <string name="key_tidepool_window_latency" translatable="false">tidepool_window_latency</string>
     <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
     <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
     <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
@@ -1341,7 +1340,6 @@
     <string name="summary_tidepool_password">Your Tidepool login password</string>
     <string name="title_tidepool_password">Login Password</string>
     <string name="title_tidepool_test_login">Test Tidepool Login</string>
-    <string name="title_tidepool_window_latency">Data Age Mins</string>
     <string name="summary_tidepool_dev_servers">If enabled, uploads will go to https://int-app.tidepool.org instead of the regular https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
     <string name="tidepool">Tidepool</string>

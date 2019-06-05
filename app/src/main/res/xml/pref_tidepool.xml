@@ -21,14 +21,6 @@
     <Preference
         android:key="@string/key_tidepool_test_login"
         android:title="@string/title_tidepool_test_login" />
-    <SeekBarPreference
-        android:defaultValue="0"
-        android:dependency="cloud_storage_tidepool_enable"
-        android:key="@string/key_tidepool_window_latency"
-        android:max="300"
-        android:min="0"
-        android:summary=""
-        android:title="@string/title_tidepool_window_latency" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:enabled="false"

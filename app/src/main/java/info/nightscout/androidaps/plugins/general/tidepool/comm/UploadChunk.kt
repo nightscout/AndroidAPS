@@ -19,7 +19,6 @@ object UploadChunk {
     private val TAG = "TidepoolUploadChunk"
 
     private val MAX_UPLOAD_SIZE = T.days(7).msecs() // don't change this
-    private val DEFAULT_WINDOW_OFFSET = T.mins(15).msecs()
     private val MAX_LATENCY_THRESHOLD_MINUTES: Long = 1440 // minutes per day
 
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
@@ -58,20 +57,8 @@ object UploadChunk {
         return GsonInstance.defaultGsonInstance().toJson(records)
     }
 
-    private fun getWindowSizePreference(): Long {
-        try {
-            val value = getLatencySliderValue(SP.getInt(R.string.key_tidepool_window_latency, 0)).toLong()
-            return Math.max(T.mins(value).msecs(), DEFAULT_WINDOW_OFFSET)
-        } catch (e: Exception) {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Reverting to default of 15 minutes due to Window Size exception: $e")
-            return DEFAULT_WINDOW_OFFSET // default
-        }
-
-    }
-
     private fun maxWindow(last_end: Long): Long {
-        //Log.d(TAG, "Max window is: " + getWindowSizePreference());
-        return Math.min(last_end + MAX_UPLOAD_SIZE, DateUtil.now() - getWindowSizePreference())
+        return Math.min(last_end + MAX_UPLOAD_SIZE, DateUtil.now())
     }
 
     fun getLastEnd(): Long {
@@ -158,13 +145,6 @@ object UploadChunk {
         }
         return basals
 
-    }
-
-    fun interpolate(name: String, position: Int): Int {
-        when (name) {
-            "latency" -> return getLatencySliderValue(position)
-        }
-        throw RuntimeException("name not matched in interpolate")
     }
 
     private fun getLatencySliderValue(position: Int): Int {
