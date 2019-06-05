@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolS
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -63,7 +64,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         if (enabled()
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || wifiConnected)
-                && RateLimit.ratelimit("tidepool-new-data-upload", 1200))
+                && RateLimit.ratelimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
             doUpload()
     }
 

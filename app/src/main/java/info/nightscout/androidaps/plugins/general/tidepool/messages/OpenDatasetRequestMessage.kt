@@ -55,10 +55,6 @@ class OpenDatasetRequestMessage : BaseMessage() {
 
     companion object {
         internal val UPLOAD_TYPE = "continuous"
-
-        fun isNormal(): Boolean {
-            return UPLOAD_TYPE == "normal"
-        }
     }
 
 }

@@ -3,10 +3,8 @@ package info.nightscout.androidaps.plugins.general.tidepool.comm
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
-import info.nightscout.androidaps.plugins.general.tidepool.utils.LogSlider
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SP
@@ -16,35 +14,32 @@ import java.util.*
 
 object UploadChunk {
 
-    private val TAG = "TidepoolUploadChunk"
-
     private val MAX_UPLOAD_SIZE = T.days(7).msecs() // don't change this
-    private val MAX_LATENCY_THRESHOLD_MINUTES: Long = 1440 // minutes per day
 
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
     fun getNext(session: Session): String? {
         session.start = getLastEnd()
-        session.end = maxWindow(session.start)
+        session.end = Math.min(session.start + MAX_UPLOAD_SIZE, DateUtil.now())
 
         val result = get(session.start, session.end)
-        if (result != null && result.length < 3) {
+        if (result.length < 3) {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("No records in this time period, setting start to best end time")
             setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
         }
         return result
     }
 
-    operator fun get(start: Long, end: Long): String? {
+    operator fun get(start: Long, end: Long): String {
 
         if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeFullString(start) + " -> " + DateUtil.dateAndTimeFullString(end))
         if (end <= start) {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeFullString(start) + " " + DateUtil.dateAndTimeFullString(end))
-            return null
+            return ""
         }
         if (end - start > MAX_UPLOAD_SIZE) {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("More than max range - rejecting")
-            return null
+            return ""
         }
 
         val records = LinkedList<BaseElement>()
@@ -55,10 +50,6 @@ object UploadChunk {
         records.addAll(getBgReadings(start, end))
 
         return GsonInstance.defaultGsonInstance().toJson(records)
-    }
-
-    private fun maxWindow(last_end: Long): Long {
-        return Math.min(last_end + MAX_UPLOAD_SIZE, DateUtil.now())
     }
 
     fun getLastEnd(): Long {
@@ -75,80 +66,54 @@ object UploadChunk {
         }
     }
 
+    // numeric limits must match max time windows
+
+    private fun getOldestRecordTimeStamp(): Long {
+        // TODO we could make sure we include records older than the first bg record for completeness
+
+        val start: Long = 0
+        val end = DateUtil.now()
+
+        val bgReadingList = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
+        return if (bgReadingList.size > 0)
+            bgReadingList[0].date
+        else -1
+    }
+
     internal fun getTreatments(start: Long, end: Long): List<BaseElement> {
         val result = LinkedList<BaseElement>()
         val treatments = TreatmentsPlugin.getPlugin().service.getTreatmentDataFromTime(start, end, true)
         for (treatment in treatments) {
             if (treatment.carbs > 0) {
-                result.add(WizardElement.fromTreatment(treatment))
+                result.add(WizardElement(treatment))
             } else if (treatment.insulin > 0) {
-                result.add(BolusElement.fromTreatment(treatment))
-            } else {
-                // note only TODO
+                result.add(BolusElement(treatment))
             }
         }
         return result
     }
 
 
-    // numeric limits must match max time windows
-
-    internal fun getOldestRecordTimeStamp(): Long {
-        // TODO we could make sure we include records older than the first bg record for completeness
-
-        val start: Long = 0
-        val end = DateUtil.now()
-
-        val bgReadingList = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, false)
-        return if (bgReadingList.size > 0)
-            bgReadingList[0].date
-        else -1
-    }
-
-    @Suppress("UNUSED_PARAMETER")
     internal fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
-        return ArrayList()
-        //        return BloodGlucoseElement.fromBloodTests(BloodTest.latestForGraph(1800, start, end));
+        val readings = MainApp.getDbHelper().getCareportalEvents(start, end, true)
+        if (L.isEnabled(L.TIDEPOOL))
+            log.debug("${readings.size} CPs selected for upload")
+        return BloodGlucoseElement.fromCareportalEvents(readings)
+
     }
 
     internal fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
         val readings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
         if (L.isEnabled(L.TIDEPOOL))
-            log.debug("${readings.size} selected for upload")
+            log.debug("${readings.size} BGs selected for upload")
         return SensorGlucoseElement.fromBgReadings(readings)
     }
 
     internal fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val basals = LinkedList<BasalElement>()
-        val aplist = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true)
-        var current: BasalElement? = null
-        for (temporaryBasal in aplist) {
-            val this_rate = temporaryBasal.tempBasalConvertedToAbsolute(temporaryBasal.date, ProfileFunctions.getInstance().getProfile(temporaryBasal.date))
-
-            if (current != null) {
-                if (this_rate != current.rate) {
-                    current.duration = temporaryBasal.date - current.timestamp
-                    if (L.isEnabled(L.TIDEPOOL)) log.debug("Adding current: " + current.toS())
-                    if (current.isValid()) {
-                        basals.add(current)
-                    } else {
-                        if (L.isEnabled(L.TIDEPOOL)) log.debug("Current basal is invalid: " + current.toS())
-                    }
-                    current = null
-                } else {
-                    if (L.isEnabled(L.TIDEPOOL)) log.debug("Same rate as previous basal record: " + current.rate + " " + temporaryBasal.toStringFull())
-                }
-            }
-            if (current == null) {
-                current = BasalElement().create(this_rate, temporaryBasal.date, 0, UUID.nameUUIDFromBytes(("tidepool-basal" + temporaryBasal.date).toByteArray()).toString()) // start duration is 0
-            }
-        }
-        return basals
-
-    }
-
-    private fun getLatencySliderValue(position: Int): Int {
-        return LogSlider.calc(0, 300, 15.0, MAX_LATENCY_THRESHOLD_MINUTES.toDouble(), position).toInt()
+        val tbrs = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true)
+        if (L.isEnabled(L.TIDEPOOL))
+            log.debug("${tbrs.size} TBRs selected for upload")
+        return BasalElement.fromTemporaryBasals(tbrs)
     }
 
 }

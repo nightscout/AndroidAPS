@@ -1,8 +1,15 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
+import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.utils.JsonHelper
+import org.json.JSONObject
+import java.util.*
 
-class BloodGlucoseElement : BaseElement() {
+class BloodGlucoseElement(careportalEvent: CareportalEvent)
+    : BaseElement(careportalEvent.date, UUID.nameUUIDFromBytes(("AAPS-bg" + careportalEvent.date).toByteArray()).toString()) {
 
     @Expose
     var subType: String = "manual"
@@ -11,23 +18,24 @@ class BloodGlucoseElement : BaseElement() {
     @Expose
     var value: Int = 0
 
-/* TODO: from careportal ????
-    fun fromBloodTest(bloodtest: BloodTest): BloodGlucoseElement {
-        val bg = BloodGlucoseElement()
-        bg.populate(bloodtest.timestamp, bloodtest.uuid)
-
-        bg.subType = "manual" // TODO
-        bg.value = bloodtest.mgdl.toInt()
-        return bg
+    init {
+        subType = "manual" // TODO
+        var json = if (careportalEvent.json != null) JSONObject(careportalEvent.json) else JSONObject()
+        value = Profile.toMgdl(JsonHelper.safeGetDouble(json, "glucose"), JsonHelper.safeGetString(json, "units", Constants.MGDL)).toInt()
     }
 
-    fun fromBloodTests(bloodTestList: List<BloodTest>?): List<BloodGlucoseElement>? {
-        if (bloodTestList == null) return null
-        val results = LinkedList<BloodGlucoseElement>()
-        for (bt in bloodTestList) {
-            results.add(fromBloodTest(bt))
+    companion object {
+
+        fun fromCareportalEvents(careportalList: List<CareportalEvent>): List<BloodGlucoseElement> {
+            val results = LinkedList<BloodGlucoseElement>()
+            for (bt in careportalList) {
+                if (bt.eventType == CareportalEvent.MBG || bt.eventType == CareportalEvent.BGCHECK) {
+                    val bge = BloodGlucoseElement(bt)
+                    if (bge.value > 0)
+                        results.add(BloodGlucoseElement(bt))
+                }
+            }
+            return results
         }
-        return results
     }
-   */
 }

@@ -141,57 +141,36 @@ object TidepoolUploader {
         extendWakeLock(60000)
         session.iterations++
         val chunk = UploadChunk.getNext(session)
-        if (chunk != null) {
-            if (chunk.length == 2) {
-                if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty data set - marking as succeeded")
-                doCompleted()
-            } else {
-                val body = RequestBody.create(MediaType.parse("application/json"), chunk)
-
-                val call = session.service!!.doUpload(session.token!!, session.datasetReply!!.getUploadId()!!, body)
-                status("Uploading")
-                call.enqueue(TidepoolCallback<UploadReplyMessage>(session, "Data Upload", {
-                    UploadChunk.setLastEnd(session.end)
-                    if (OpenDatasetRequestMessage.isNormal()) {
-                        doClose(session)
-                    } else {
-                        doCompleted()
-                    }
-                }, { releaseWakeLock() }))
-            }
-        } else {
+        if (chunk == null) {
             log.error("Upload chunk is null, cannot proceed")
             releaseWakeLock()
+        } else if (chunk.length == 2) {
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty data set - marking as succeeded")
+            doCompletedAndReleaseWakelock()
+        } else {
+            val body = RequestBody.create(MediaType.parse("application/json"), chunk)
+
+            val call = session.service!!.doUpload(session.token!!, session.datasetReply!!.getUploadId()!!, body)
+            status("Uploading")
+            call.enqueue(TidepoolCallback<UploadReplyMessage>(session, "Data Upload", {
+                UploadChunk.setLastEnd(session.end)
+                doCompletedAndReleaseWakelock()
+            }, {
+                releaseWakeLock()
+            }))
         }
+
     }
 
     private fun status(status: String) {
-        log.debug("New status: $status")
+        if (L.isEnabled(L.TIDEPOOL))
+            log.debug("New status: $status")
         MainApp.bus().post(EventTidepoolStatus(status))
     }
 
-    private fun doCompleted() {
+    private fun doCompletedAndReleaseWakelock() {
         status("Completed OK")
-        if (L.isEnabled(L.TIDEPOOL)) log.debug("ALL COMPLETED OK!")
         releaseWakeLock()
-    }
-
-    private fun doClose(session: Session) {
-        status("Closing")
-        extendWakeLock(20000)
-        val call = session.service!!.closeDataSet(session.token!!, session.datasetReply!!.getUploadId()!!, CloseDatasetRequestMessage().getBody())
-        call.enqueue(TidepoolCallback(session, "Session Stop", { closeSuccess() }, {}))
-    }
-
-    private fun closeSuccess() {
-        status("Closed")
-        if (L.isEnabled(L.TIDEPOOL)) log.debug("Close success")
-        releaseWakeLock()
-    }
-
-    private fun getDataSet(session: Session) {
-        val call = session.service!!.getDataSet(session.token!!, "bogus")
-        call.enqueue(TidepoolCallback(session, "Get Data", {}, {}))
     }
 
     fun deleteDataSet(session: Session) {

@@ -2,8 +2,11 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.treatments.Treatment
+import java.util.*
 
-class BolusElement : BaseElement() {
+class BolusElement(treatment: Treatment)
+    : BaseElement(treatment.date, UUID.nameUUIDFromBytes(("AAPS-bolus" + treatment.date).toByteArray()).toString()) {
+
     @Expose
     var subType = "normal"
     @Expose
@@ -13,18 +16,7 @@ class BolusElement : BaseElement() {
 
     init {
         type = "bolus";
-    }
-
-    fun create(insulinDelivered: Double, timestamp: Long, uuid: String): BolusElement {
-        this.normal = insulinDelivered
-        this.expectedNormal = insulinDelivered
-        populate(timestamp, uuid)
-        return this
-    }
-
-    companion object {
-        fun fromTreatment(treatment: Treatment): BolusElement {
-            return BolusElement().create(treatment.insulin, treatment.date, "uuid-AAPS")
-        }
+        normal = treatment.insulin
+        expectedNormal = treatment.insulin
     }
 }

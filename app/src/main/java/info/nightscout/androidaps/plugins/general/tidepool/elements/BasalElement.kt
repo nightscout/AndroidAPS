@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.db.TemporaryBasal
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import java.util.*
 
-class BasalElement : BaseElement() {
+class BasalElement(tbr: TemporaryBasal)
+    : BaseElement(tbr.date, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.date).toByteArray()).toString()) {
 
     internal var timestamp: Long = 0 // not exposed
 
@@ -22,21 +25,18 @@ class BasalElement : BaseElement() {
 
     init {
         type = "basal";
+        timestamp = tbr.date
+        rate = tbr.tempBasalConvertedToAbsolute(tbr.date, ProfileFunctions.getInstance().getProfile(tbr.date))
+        duration = duration
     }
 
-    fun create(rate: Double, timeStart: Long, duration: Long, uuid: String) : BasalElement {
-        this.timestamp = timeStart
-        this.rate = rate
-        this.duration = duration
-        populate(timeStart, uuid)
-        return this
-    }
-
-    internal fun isValid(): Boolean {
-        return rate > -1 && duration > 0
-    }
-
-    internal fun toS(): String {
-        return rate.toString() + " Start: " + DateUtil.dateAndTimeFullString(timestamp) + " for: " + DateUtil.niceTimeScalar(duration)
+    companion object {
+        internal fun fromTemporaryBasals(tbrList: List<TemporaryBasal>): List<BasalElement> {
+            val results = LinkedList<BasalElement>()
+            for (tbr in tbrList) {
+                results.add(BasalElement(tbr))
+            }
+            return results
+        }
     }
 }
