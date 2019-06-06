@@ -21,6 +21,7 @@ import info.nightscout.androidaps.utils.SP;
 
 public class TidepoolJavaFragment extends SubscriberFragment {
     private TextView logTextView;
+    private TextView statusTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +44,7 @@ public class TidepoolJavaFragment extends SubscriberFragment {
         });
 
         logTextView = view.findViewById(R.id.tidepool_log);
+        statusTextView = view.findViewById(R.id.tidepool_status);
 
         return view;
     }
@@ -58,6 +60,7 @@ public class TidepoolJavaFragment extends SubscriberFragment {
         if (activity != null)
             activity.runOnUiThread(() -> {
                 TidepoolPlugin.INSTANCE.updateLog();
+                statusTextView.setText(TidepoolUploader.INSTANCE.getConnectionStatus().name());
                 logTextView.setText(TidepoolPlugin.INSTANCE.getTextLog());
             });
     }

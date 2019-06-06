@@ -205,7 +205,7 @@ object TidepoolUploader {
 
     }
 
-    private fun status(status: String) {
+    fun status(status: String) {
         if (L.isEnabled(L.TIDEPOOL))
             log.debug("New status: $status")
         MainApp.bus().post(EventTidepoolStatus(status))

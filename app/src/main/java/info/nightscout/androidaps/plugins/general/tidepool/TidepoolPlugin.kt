@@ -37,7 +37,6 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     private val listLog = ArrayList<EventTidepoolStatus>()
     var textLog = Html.fromHtml("")
-    var status = ""
 
     var paused: Boolean = false
 

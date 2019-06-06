@@ -35,9 +35,9 @@ object UploadChunk {
 
     operator fun get(start: Long, end: Long): String {
 
-        if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeFullString(start) + " -> " + DateUtil.dateAndTimeFullString(end))
+        if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeString(start) + " -> " + DateUtil.dateAndTimeString(end))
         if (end <= start) {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeFullString(start) + " " + DateUtil.dateAndTimeFullString(end))
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeString(start) + " " + DateUtil.dateAndTimeString(end))
             return ""
         }
         if (end - start > MAX_UPLOAD_SIZE) {
@@ -64,9 +64,11 @@ object UploadChunk {
     fun setLastEnd(time: Long) {
         if (time > getLastEnd()) {
             SP.putLong(R.string.key_tidepool_last_end, time)
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeFullString(time))
+            val friendlyEnd = DateUtil.dateAndTimeString(time)
+            TidepoolUploader.status("Marking uploaded data up to $friendlyEnd")
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeString(time))
         } else {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeFullString(time) + " vs " + DateUtil.dateAndTimeFullString(getLastEnd()))
+            if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeString(time) + " vs " + DateUtil.dateAndTimeString(getLastEnd()))
         }
     }
 
