@@ -29,7 +29,7 @@ class OpenDatasetRequestMessage : BaseMessage() {
     @Expose
     var deviceManufacturers = arrayOf(((ConfigBuilderPlugin.getPlugin().activeBgSource ?: SourceNSClientPlugin.getPlugin()) as PluginBase).name)
     @Expose
-    var deviceModel = arrayOf(((ConfigBuilderPlugin.getPlugin().activeBgSource ?: SourceNSClientPlugin.getPlugin()) as PluginBase).name)
+    var deviceModel = ((ConfigBuilderPlugin.getPlugin().activeBgSource ?: SourceNSClientPlugin.getPlugin()) as PluginBase).name
     @Expose
     var deviceTags = arrayOf("bgm", "cgm", "insulin-pump")
     @Expose
@@ -45,7 +45,7 @@ class OpenDatasetRequestMessage : BaseMessage() {
         @Expose
         val name = BuildConfig.APPLICATION_ID
         @Expose
-        val version = "0.1.0" // TODO: const it
+        val version = BuildConfig.VERSION_NAME
     }
 
     inner class Deduplicator {

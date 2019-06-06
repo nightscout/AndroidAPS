@@ -417,8 +417,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
-            Profile.BasalValue basalValue = profile.getBasalValues()[i];
-            Profile.BasalValue nextValue = null;
+            Profile.ProfileValue basalValue = profile.getBasalValues()[i];
+            Profile.ProfileValue nextValue = null;
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             BasalProfileBlock profileBlock = new BasalProfileBlock();
@@ -471,8 +471,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         if (activeBasalProfile != BasalProfile.PROFILE_1) return false;
         for (int i = 0; i < profileBlocks.size(); i++) {
             BasalProfileBlock profileBlock = profileBlocks.get(i);
-            Profile.BasalValue basalValue = profile.getBasalValues()[i];
-            Profile.BasalValue nextValue = null;
+            Profile.ProfileValue basalValue = profile.getBasalValues()[i];
+            Profile.ProfileValue nextValue = null;
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)

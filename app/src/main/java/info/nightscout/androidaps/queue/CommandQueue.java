@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 
-import javax.annotation.Nullable;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -388,10 +386,10 @@ public class CommandQueue {
         }
 
         // Compare with pump limits
-        Profile.BasalValue[] basalValues = profile.getBasalValues();
+        Profile.ProfileValue[] basalValues = profile.getBasalValues();
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-        for (Profile.BasalValue basalValue : basalValues) {
+        for (Profile.ProfileValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notification));

@@ -18,7 +18,10 @@ object UploadChunk {
 
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
-    fun getNext(session: Session): String? {
+    fun getNext(session: Session?): String? {
+        if (session == null)
+            return null
+
         session.start = getLastEnd()
         session.end = Math.min(session.start + MAX_UPLOAD_SIZE, DateUtil.now())
 
@@ -48,6 +51,7 @@ object UploadChunk {
         records.addAll(getBloodTests(start, end))
         records.addAll(getBasals(start, end))
         records.addAll(getBgReadings(start, end))
+        records.addAll(getProfiles(start, end))
 
         return GsonInstance.defaultGsonInstance().toJson(records)
     }
@@ -114,6 +118,18 @@ object UploadChunk {
         if (L.isEnabled(L.TIDEPOOL))
             log.debug("${tbrs.size} TBRs selected for upload")
         return BasalElement.fromTemporaryBasals(tbrs)
+    }
+
+    internal fun getProfiles(start: Long, end: Long): List<ProfileElement> {
+        val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
+        if (L.isEnabled(L.TIDEPOOL))
+            log.debug("${pss.size} ProfileSwitches selected for upload")
+        val results = LinkedList<ProfileElement>()
+        for (ps in pss) {
+            val pe = ProfileElement(ps)
+            results.add(pe)
+        }
+        return results
     }
 
 }

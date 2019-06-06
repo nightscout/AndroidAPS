@@ -1557,6 +1557,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
+    public List<ProfileSwitch> getProfileSwitchEventsFromTime(long from, long to, boolean ascending) {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            queryBuilder.limit(100L);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            return profileSwitches;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
     public boolean createOrUpdate(ProfileSwitch profileSwitch) {
         try {
             ProfileSwitch old;
