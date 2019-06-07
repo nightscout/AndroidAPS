@@ -5,6 +5,7 @@ import android.os.PowerManager
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.RxBus
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.*
@@ -80,7 +81,7 @@ object TidepoolUploader {
         session = Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER)
         if (session?.authHeader != null) {
             connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTING
-            MainApp.bus().post(EventTidepoolStatus(("Connecting")))
+            RxBus.send(EventTidepoolStatus(("Connecting")))
             val call = session!!.service?.getLogin(session?.authHeader!!)
 
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(session!!, "Login", {
@@ -93,7 +94,7 @@ object TidepoolUploader {
         } else {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot do login as user credentials have not been set correctly")
             connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
-            MainApp.bus().post(EventTidepoolStatus(("Invalid credentials")))
+            RxBus.send(EventTidepoolStatus(("Invalid credentials")))
             releaseWakeLock()
             return
         }
@@ -130,15 +131,15 @@ object TidepoolUploader {
 
             datasetCall.enqueue(TidepoolCallback<List<DatasetReplyMessage>>(session, "Get Open Datasets", {
                 if (session.datasetReply == null) {
-                    MainApp.bus().post(EventTidepoolStatus(("Creating new dataset")))
+                    RxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!, OpenDatasetRequestMessage().getBody())
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(session, "Open New Dataset", {
                         connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED;
-                        MainApp.bus().post(EventTidepoolStatus(("New dataset OK")))
+                        RxBus.send(EventTidepoolStatus(("New dataset OK")))
                         if (doUpload) doUpload()
                         releaseWakeLock()
                     }, {
-                        MainApp.bus().post(EventTidepoolStatus(("New dataset FAILED")))
+                        RxBus.send(EventTidepoolStatus(("New dataset FAILED")))
                         connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
                         releaseWakeLock()
                     }))
@@ -148,19 +149,19 @@ object TidepoolUploader {
                     // TODO: Wouldn't need to do this if we could block on the above `call.enqueue`.
                     // ie, do the openDataSet conditionally, and then do `doUpload` either way.
                     connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED;
-                    MainApp.bus().post(EventTidepoolStatus(("Appending to existing dataset")))
+                    RxBus.send(EventTidepoolStatus(("Appending to existing dataset")))
                     if (doUpload) doUpload()
                     releaseWakeLock()
                 }
             }, {
                 connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
-                MainApp.bus().post(EventTidepoolStatus(("Open dataset FAILED")))
+                RxBus.send(EventTidepoolStatus(("Open dataset FAILED")))
                 releaseWakeLock()
             }))
         } else {
             log.error("Got login response but cannot determine userid - cannot proceed")
             connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
-            MainApp.bus().post(EventTidepoolStatus(("Error userid")))
+            RxBus.send(EventTidepoolStatus(("Error userid")))
             releaseWakeLock()
         }
     }
@@ -179,19 +180,19 @@ object TidepoolUploader {
             releaseWakeLock()
         } else if (chunk.length == 2) {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty dataset - marking as succeeded")
-            MainApp.bus().post(EventTidepoolStatus(("No data to upload")))
+            RxBus.send(EventTidepoolStatus(("No data to upload")))
             releaseWakeLock()
         } else {
             val body = RequestBody.create(MediaType.parse("application/json"), chunk)
 
-            MainApp.bus().post(EventTidepoolStatus(("Uploading")))
+            RxBus.send(EventTidepoolStatus(("Uploading")))
             val call = session!!.service!!.doUpload(session!!.token!!, session!!.datasetReply!!.getUploadId()!!, body)
             call.enqueue(TidepoolCallback<UploadReplyMessage>(session!!, "Data Upload", {
                 setLastEnd(session!!.end)
-                MainApp.bus().post(EventTidepoolStatus(("Upload completed OK")))
+                RxBus.send(EventTidepoolStatus(("Upload completed OK")))
                 releaseWakeLock()
             }, {
-                MainApp.bus().post(EventTidepoolStatus(("Upload FAILED")))
+                RxBus.send(EventTidepoolStatus(("Upload FAILED")))
                 releaseWakeLock()
             }))
         }
@@ -204,11 +205,11 @@ object TidepoolUploader {
             val call = session!!.service?.deleteDataSet(session!!.token!!, session!!.datasetReply!!.id!!)
             call?.enqueue(TidepoolCallback(session!!, "Delete Dataset", {
                 connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
-                MainApp.bus().post(EventTidepoolStatus(("Dataset removed OK")))
+                RxBus.send(EventTidepoolStatus(("Dataset removed OK")))
                 releaseWakeLock()
             }, {
                 connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
-                MainApp.bus().post(EventTidepoolStatus(("Dataset remove FAILED")))
+                RxBus.send(EventTidepoolStatus(("Dataset remove FAILED")))
                 releaseWakeLock()
             }))
         } else {
@@ -225,7 +226,7 @@ object TidepoolUploader {
         if (time > getLastEnd()) {
             SP.putLong(R.string.key_tidepool_last_end, time)
             val friendlyEnd = DateUtil.dateAndTimeString(time)
-            MainApp.bus().post(EventTidepoolStatus(("Marking uploaded data up to $friendlyEnd")))
+            RxBus.send(EventTidepoolStatus(("Marking uploaded data up to $friendlyEnd")))
             if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeString(time))
         } else {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeString(time) + " vs " + DateUtil.dateAndTimeString(getLastEnd()))

@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
 import android.text.Html
-import com.squareup.otto.Subscribe
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.RxBus
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -23,6 +23,7 @@ import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
+import io.reactivex.disposables.Disposable
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -35,18 +36,21 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         .description(R.string.description_tidepool)
 ) {
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
+    private var disposable: Disposable? = null
 
     private val listLog = ArrayList<EventTidepoolStatus>()
     @Suppress("DEPRECATION") // API level 24 to replace call
     var textLog = Html.fromHtml("")
 
     override fun onStart() {
-        MainApp.bus().register(this)
+        disposable = RxBus
+                .toObservable()
+                .subscribe { event: Any -> onEvent(event) }
         super.onStart()
     }
 
     override fun onStop() {
-        MainApp.bus().unregister(this)
+        disposable?.dispose()
         super.onStop()
     }
 
@@ -57,53 +61,38 @@ object TidepoolPlugin : PluginBase(PluginDescription()
             TidepoolUploader.doUpload()
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe
-    fun onStatusEvent(ev: EventNewBG) {
-        if (ev.bgReading!!.date!! < TidepoolUploader.getLastEnd())
-            TidepoolUploader.setLastEnd(ev.bgReading!!.date!!)
-        if (isEnabled(PluginType.GENERAL)
-                && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
-                && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
-                && RateLimit.ratelimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
-            doUpload()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe
-    fun onEventTidepoolDoUpload(ev: EventTidepoolDoUpload) {
-        doUpload()
-    }
-
-    @Subscribe
-    fun onEventPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(R.string.key_tidepool_dev_servers)
-                || ev.isChanged(R.string.key_tidepool_username)
-                || ev.isChanged(R.string.key_tidepool_password)
-        )
-            TidepoolUploader.resetInstance()
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    @Subscribe
-    fun onEventTidepoolResetData(ev: EventTidepoolResetData) {
-        if (TidepoolUploader.connectionStatus != TidepoolUploader.ConnectionStatus.CONNECTED) {
-            log.debug("Not connected for deleteDataset")
-            return
+    private fun onEvent(event: Any) {
+        when (event) {
+            is EventTidepoolDoUpload -> doUpload()
+            is EventTidepoolResetData -> {
+                if (TidepoolUploader.connectionStatus != TidepoolUploader.ConnectionStatus.CONNECTED) {
+                    log.debug("Not connected for deleteDataset")
+                    return
+                }
+                TidepoolUploader.deleteDataSet()
+                SP.putLong(R.string.key_tidepool_last_end, 0)
+                TidepoolUploader.doLogin()
+            }
+            is EventTidepoolStatus -> addToLog(event)
+            is EventNewBG -> {
+                if (event.bgReading!!.date!! < TidepoolUploader.getLastEnd())
+                    TidepoolUploader.setLastEnd(event.bgReading!!.date!!)
+                if (isEnabled(PluginType.GENERAL)
+                        && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
+                        && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
+                        && RateLimit.ratelimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
+                    doUpload()
+            }
+            is EventPreferenceChange -> {
+                if (event.isChanged(R.string.key_tidepool_dev_servers)
+                        || event.isChanged(R.string.key_tidepool_username)
+                        || event.isChanged(R.string.key_tidepool_password)
+                )
+                    TidepoolUploader.resetInstance()
+            }
+            is EventNetworkChange -> {
+            } // TODO start upload on wifi connect
         }
-        TidepoolUploader.deleteDataSet()
-        SP.putLong(R.string.key_tidepool_last_end, 0)
-        TidepoolUploader.doLogin()
-    }
-
-    @Subscribe
-    fun onEventNetworkChange(ev: EventNetworkChange) {
-        // TODO start upload on wifi connect
-    }
-
-    @Subscribe
-    fun onStatusEvent(ev: EventTidepoolStatus) {
-        addToLog(ev)
     }
 
     @Synchronized

@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.RxBus;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -410,6 +411,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventNewBg");
                 MainApp.bus().post(new EventNewBG(bgReading));
+                RxBus.INSTANCE.send(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }

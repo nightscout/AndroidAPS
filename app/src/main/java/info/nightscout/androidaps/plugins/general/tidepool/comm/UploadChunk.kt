@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.RxBus
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
@@ -86,7 +87,7 @@ object UploadChunk {
         val readings = MainApp.getDbHelper().getCareportalEvents(start, end, true)
         val selection = BloodGlucoseElement.fromCareportalEvents(readings)
         if (selection.isNotEmpty())
-            MainApp.bus().post(EventTidepoolStatus("${selection.size} BGs selected for upload"))
+            RxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
         return selection
 
     }
@@ -95,7 +96,7 @@ object UploadChunk {
         val readings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
         val selection = SensorGlucoseElement.fromBgReadings(readings)
         if (selection.isNotEmpty())
-            MainApp.bus().post(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
+            RxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
         return selection
     }
 
@@ -103,7 +104,7 @@ object UploadChunk {
         val tbrs = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true)
         val selection = BasalElement.fromTemporaryBasals(tbrs)
         if (selection.isNotEmpty())
-            MainApp.bus().post(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
+            RxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
         return selection
     }
 
@@ -115,7 +116,7 @@ object UploadChunk {
             selection.add(pe)
         }
         if (selection.size > 0)
-            MainApp.bus().post(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
+            RxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
         return selection
     }
 

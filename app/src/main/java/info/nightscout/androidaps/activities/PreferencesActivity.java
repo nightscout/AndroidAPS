@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -65,6 +66,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         MainApp.bus().post(new EventPreferenceChange(key));
+        RxBus.INSTANCE.send(new EventPreferenceChange(key));
         if (key.equals("language")) {
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
