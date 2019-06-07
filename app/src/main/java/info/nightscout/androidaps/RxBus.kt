@@ -12,8 +12,6 @@ object RxBus {
         publisher.onNext(event)
     }
 
-    fun toObservable(): Observable<Any> = publisher
-
     // Listen should return an Observable and not the publisher
     // Using ofType we filter only events that match that class type
     fun <T> toObservable(eventType: Class<T>): Observable<T> = publisher.ofType(eventType)
