@@ -5,7 +5,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 
 open class BaseMessage {
-    fun toS(): String {
+    private fun toS(): String {
         return GsonInstance.defaultGsonInstance().toJson(this) ?: "null"
     }
 

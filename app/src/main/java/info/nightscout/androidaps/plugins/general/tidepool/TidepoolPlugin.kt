@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
 import android.text.Html
+import android.text.Spanned
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -42,7 +43,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     private val listLog = ArrayList<EventTidepoolStatus>()
     @Suppress("DEPRECATION") // API level 24 to replace call
-    var textLog = Html.fromHtml("")
+    var textLog: Spanned = Html.fromHtml("")
 
     operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
         add(disposable)
@@ -52,12 +53,12 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         super.onStart()
         disposable += RxBus
                 .toObservable(EventTidepoolDoUpload::class.java)
-                .subscribe({ event -> doUpload() }, {})
+                .subscribe({ doUpload() }, {})
         disposable += RxBus
                 .toObservable(EventTidepoolResetData::class.java)
                 .subscribe({
                     if (TidepoolUploader.connectionStatus != TidepoolUploader.ConnectionStatus.CONNECTED) {
-                        log.debug("Not connected for deleteDataset")
+                        log.debug("Not connected for delete Dataset")
                     } else {
                         TidepoolUploader.deleteDataSet()
                         SP.putLong(R.string.key_tidepool_last_end, 0)
@@ -70,12 +71,12 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         disposable += RxBus
                 .toObservable(EventNewBG::class.java)
                 .subscribe({ event ->
-                    if (event.bgReading!!.date!! < TidepoolUploader.getLastEnd())
-                        TidepoolUploader.setLastEnd(event.bgReading!!.date!!)
+                    if (event.bgReading!!.date < TidepoolUploader.getLastEnd())
+                        TidepoolUploader.setLastEnd(event.bgReading.date)
                     if (isEnabled(PluginType.GENERAL)
                             && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
                             && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
-                            && RateLimit.ratelimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
+                            && RateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                         doUpload()
                 }, {})
         disposable += RxBus
@@ -98,7 +99,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         super.onStop()
     }
 
-    fun doUpload() {
+    private fun doUpload() {
         if (TidepoolUploader.connectionStatus == TidepoolUploader.ConnectionStatus.DISCONNECTED)
             TidepoolUploader.doLogin(true)
         else

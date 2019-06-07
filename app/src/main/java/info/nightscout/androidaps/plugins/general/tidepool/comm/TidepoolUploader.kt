@@ -33,7 +33,7 @@ object TidepoolUploader {
 
     private var retrofit: Retrofit? = null
 
-    var session: Session? = null
+    private var session: Session? = null
 
     enum class ConnectionStatus {
         DISCONNECTED, CONNECTING, CONNECTED, FAILED
@@ -87,13 +87,13 @@ object TidepoolUploader {
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(session!!, "Login", {
                 startSession(session!!, doUpload)
             }, {
-                connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
+                connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
                 loginFailed()
             }))
             return
         } else {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot do login as user credentials have not been set correctly")
-            connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
+            connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
             RxBus.send(EventTidepoolStatus(("Invalid credentials")))
             releaseWakeLock()
             return
@@ -106,13 +106,13 @@ object TidepoolUploader {
             val call = session.service!!.getLogin(session.authHeader!!)
 
             call.enqueue(TidepoolCallback<AuthReplyMessage>(session, "Login", {
-                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Successfully logged into Tidepool.", null);
+                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Successfully logged into Tidepool.", null)
             }, {
-                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.", null);
+                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.", null)
             }))
 
         } else {
-            OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null);
+            OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null)
         }
 
     }
@@ -122,7 +122,7 @@ object TidepoolUploader {
         releaseWakeLock()
     }
 
-    fun startSession(session: Session, doUpload: Boolean = false) {
+    private fun startSession(session: Session, doUpload: Boolean = false) {
         extendWakeLock(30000)
         if (session.authReply?.userid != null) {
             // See if we already have an open data set to write to
@@ -134,13 +134,13 @@ object TidepoolUploader {
                     RxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!, OpenDatasetRequestMessage().getBody())
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(session, "Open New Dataset", {
-                        connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED;
+                        connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED
                         RxBus.send(EventTidepoolStatus(("New dataset OK")))
                         if (doUpload) doUpload()
                         releaseWakeLock()
                     }, {
                         RxBus.send(EventTidepoolStatus(("New dataset FAILED")))
-                        connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
+                        connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
                         releaseWakeLock()
                     }))
                 } else {
@@ -148,20 +148,20 @@ object TidepoolUploader {
                         log.debug("Existing Dataset: " + session.datasetReply!!.getUploadId())
                     // TODO: Wouldn't need to do this if we could block on the above `call.enqueue`.
                     // ie, do the openDataSet conditionally, and then do `doUpload` either way.
-                    connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED;
+                    connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED
                     RxBus.send(EventTidepoolStatus(("Appending to existing dataset")))
                     if (doUpload) doUpload()
                     releaseWakeLock()
                 }
             }, {
-                connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
+                connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
                 RxBus.send(EventTidepoolStatus(("Open dataset FAILED")))
                 releaseWakeLock()
             }))
         } else {
-            log.error("Got login response but cannot determine userid - cannot proceed")
-            connectionStatus = TidepoolUploader.ConnectionStatus.FAILED;
-            RxBus.send(EventTidepoolStatus(("Error userid")))
+            log.error("Got login response but cannot determine userId - cannot proceed")
+            connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
+            RxBus.send(EventTidepoolStatus(("Error userId")))
             releaseWakeLock()
         }
     }
@@ -175,26 +175,30 @@ object TidepoolUploader {
         extendWakeLock(60000)
         session!!.iterations++
         val chunk = UploadChunk.getNext(session)
-        if (chunk == null) {
-            log.error("Upload chunk is null, cannot proceed")
-            releaseWakeLock()
-        } else if (chunk.length == 2) {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty dataset - marking as succeeded")
-            RxBus.send(EventTidepoolStatus(("No data to upload")))
-            releaseWakeLock()
-        } else {
-            val body = RequestBody.create(MediaType.parse("application/json"), chunk)
+        when {
+            chunk == null -> {
+                log.error("Upload chunk is null, cannot proceed")
+                releaseWakeLock()
+            }
+            chunk.length == 2 -> {
+                if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty dataset - marking as succeeded")
+                RxBus.send(EventTidepoolStatus(("No data to upload")))
+                releaseWakeLock()
+            }
+            else -> {
+                val body = RequestBody.create(MediaType.parse("application/json"), chunk)
 
-            RxBus.send(EventTidepoolStatus(("Uploading")))
-            val call = session!!.service!!.doUpload(session!!.token!!, session!!.datasetReply!!.getUploadId()!!, body)
-            call.enqueue(TidepoolCallback<UploadReplyMessage>(session!!, "Data Upload", {
-                setLastEnd(session!!.end)
-                RxBus.send(EventTidepoolStatus(("Upload completed OK")))
-                releaseWakeLock()
-            }, {
-                RxBus.send(EventTidepoolStatus(("Upload FAILED")))
-                releaseWakeLock()
-            }))
+                RxBus.send(EventTidepoolStatus(("Uploading")))
+                val call = session!!.service!!.doUpload(session!!.token!!, session!!.datasetReply!!.getUploadId()!!, body)
+                call.enqueue(TidepoolCallback<UploadReplyMessage>(session!!, "Data Upload", {
+                    setLastEnd(session!!.end)
+                    RxBus.send(EventTidepoolStatus(("Upload completed OK")))
+                    releaseWakeLock()
+                }, {
+                    RxBus.send(EventTidepoolStatus(("Upload FAILED")))
+                    releaseWakeLock()
+                }))
+            }
         }
 
     }
@@ -213,7 +217,7 @@ object TidepoolUploader {
                 releaseWakeLock()
             }))
         } else {
-            log.error("Got login response but cannot determine dataseId - cannot proceed")
+            log.error("Got login response but cannot determine datasetId - cannot proceed")
         }
     }
 
@@ -249,7 +253,7 @@ object TidepoolUploader {
     @Synchronized
     private fun releaseWakeLock() {
         if (wl == null) return
-        if (wl!!.isHeld()) {
+        if (wl!!.isHeld) {
             try {
                 wl!!.release()
             } catch (e: Exception) {

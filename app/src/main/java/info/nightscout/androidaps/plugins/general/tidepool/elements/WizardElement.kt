@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.R2.string.result
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.treatments.Treatment
-import org.json.JSONObject
 import java.util.*
 
 class WizardElement(treatment: Treatment)
@@ -22,17 +19,17 @@ class WizardElement(treatment: Treatment)
     init {
         type = "wizard"
         carbInput = treatment.carbs
-        insulinCarbRatio = treatment.ic;
+        insulinCarbRatio = treatment.ic
         if (treatment.insulin > 0) {
             bolus = BolusElement(treatment)
         } else {
-            var fake = Treatment()
+            val fake = Treatment()
             fake.insulin = 0.0001
-            fake.date = treatment.date;
+            fake.date = treatment.date
             bolus = BolusElement(fake) // fake insulin record
         }
     }
- }
+}
 
 /* TODO fill the rest
 {

@@ -15,7 +15,7 @@ class BolusElement(treatment: Treatment)
     var expectedNormal: Double = 0.0
 
     init {
-        type = "bolus";
+        type = "bolus"
         normal = treatment.insulin
         expectedNormal = treatment.insulin
     }

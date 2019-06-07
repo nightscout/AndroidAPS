@@ -21,7 +21,7 @@ class BloodGlucoseElement(careportalEvent: CareportalEvent)
     init {
         type = "cbg"
         subType = "manual" // TODO
-        var json = if (careportalEvent.json != null) JSONObject(careportalEvent.json) else JSONObject()
+        val json = if (careportalEvent.json != null) JSONObject(careportalEvent.json) else JSONObject()
         value = Profile.toMgdl(JsonHelper.safeGetDouble(json, "glucose"), JsonHelper.safeGetString(json, "units", Constants.MGDL)).toInt()
     }
 

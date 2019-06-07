@@ -19,30 +19,30 @@ interface TidepoolApiService {
     )
 
     @POST("/auth/login")
-    abstract fun getLogin(@Header("Authorization") secret: String): Call<AuthReplyMessage>
+    fun getLogin(@Header("Authorization") secret: String): Call<AuthReplyMessage>
 
     @DELETE("/v1/users/{userId}/data")
-    abstract fun deleteAllData(@Header(SESSION_TOKEN_HEADER) token: String, @Path("userId") id: String): Call<DatasetReplyMessage>
+    fun deleteAllData(@Header(SESSION_TOKEN_HEADER) token: String, @Path("userId") id: String): Call<DatasetReplyMessage>
 
     @DELETE("/v1/datasets/{dataSetId}")
-    abstract fun deleteDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
+    fun deleteDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
 
     @GET("/v1/users/{userId}/data_sets")
-    abstract fun getOpenDataSets(@Header(SESSION_TOKEN_HEADER) token: String,
-                                 @Path("userId") id: String,
-                                 @Query("client.name") clientName: String,
-                                 @Query("size") size: Int): Call<List<DatasetReplyMessage>>
+    fun getOpenDataSets(@Header(SESSION_TOKEN_HEADER) token: String,
+                        @Path("userId") id: String,
+                        @Query("client.name") clientName: String,
+                        @Query("size") size: Int): Call<List<DatasetReplyMessage>>
 
     @GET("/v1/datasets/{dataSetId}")
-    abstract fun getDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
+    fun getDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("dataSetId") id: String): Call<DatasetReplyMessage>
 
     @POST("/v1/users/{userId}/data_sets")
-    abstract fun openDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("userId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
+    fun openDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("userId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
 
     @POST("/v1/datasets/{sessionId}/data")
-    abstract fun doUpload(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<UploadReplyMessage>
+    fun doUpload(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<UploadReplyMessage>
 
     @PUT("/v1/datasets/{sessionId}")
-    abstract fun closeDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
+    fun closeDataSet(@Header(SESSION_TOKEN_HEADER) token: String, @Path("sessionId") id: String, @Body body: RequestBody): Call<DatasetReplyMessage>
 
 }

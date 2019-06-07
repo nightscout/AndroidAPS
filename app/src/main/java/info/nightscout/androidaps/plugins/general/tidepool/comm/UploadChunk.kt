@@ -70,7 +70,7 @@ object UploadChunk {
         else -1
     }
 
-    internal fun getTreatments(start: Long, end: Long): List<BaseElement> {
+    private fun getTreatments(start: Long, end: Long): List<BaseElement> {
         val result = LinkedList<BaseElement>()
         val treatments = TreatmentsPlugin.getPlugin().service.getTreatmentDataFromTime(start, end, true)
         for (treatment in treatments) {
@@ -83,7 +83,7 @@ object UploadChunk {
         return result
     }
 
-    internal fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
+    private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
         val readings = MainApp.getDbHelper().getCareportalEvents(start, end, true)
         val selection = BloodGlucoseElement.fromCareportalEvents(readings)
         if (selection.isNotEmpty())
@@ -100,7 +100,7 @@ object UploadChunk {
         return selection
     }
 
-    internal fun getBasals(start: Long, end: Long): List<BasalElement> {
+    private fun getBasals(start: Long, end: Long): List<BasalElement> {
         val tbrs = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true)
         val selection = BasalElement.fromTemporaryBasals(tbrs)
         if (selection.isNotEmpty())
@@ -108,7 +108,7 @@ object UploadChunk {
         return selection
     }
 
-    internal fun getProfiles(start: Long, end: Long): List<ProfileElement> {
+    private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
         val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {

@@ -24,10 +24,10 @@ class BasalElement(tbr: TemporaryBasal)
     internal var conversionOffset: Long = 0
 
     init {
-        type = "basal";
+        type = "basal"
         timestamp = tbr.date
         rate = tbr.tempBasalConvertedToAbsolute(tbr.date, ProfileFunctions.getInstance().getProfile(tbr.date))
-        duration = duration
+        duration = tbr.durationInMsec()
     }
 
     companion object {

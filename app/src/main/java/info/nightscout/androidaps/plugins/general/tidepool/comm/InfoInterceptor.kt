@@ -19,7 +19,7 @@ class InfoInterceptor(tag: String) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        if (request != null && request.body() != null) {
+        if (request?.body() != null) {
             if (L.isEnabled(L.TIDEPOOL)) {
                 log.debug("Interceptor Body size: " + request.body()!!.contentLength())
                 val requestBuffer = Buffer()

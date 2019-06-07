@@ -23,7 +23,7 @@ class ProfileElement(ps: ProfileSwitch)
     internal var insulinSensitivities: IsfProfile = IsfProfile()
 
     init {
-        type = "pumpSettings";
+        type = "pumpSettings"
         val profile: Profile = ps.getProfileObject()!!
         for (br in profile.basalValues)
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))

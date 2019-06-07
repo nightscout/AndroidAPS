@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-internal class TidepoolCallback<T>(val session: Session, val name: String, val onSucc: () -> Unit, val onFail: () -> Unit) : Callback<T> {
+internal class TidepoolCallback<T>(private val session: Session, val name: String, val onSuccess: () -> Unit, val onFail: () -> Unit) : Callback<T> {
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
@@ -15,7 +15,7 @@ internal class TidepoolCallback<T>(val session: Session, val name: String, val o
             if (L.isEnabled(L.TIDEPOOL)) log.debug("$name success")
             session.populateBody(response.body())
             session.populateHeaders(response.headers())
-            onSucc()
+            onSuccess()
         } else {
             val msg = name + " was not successful: " + response.code() + " " + response.message()
             if (L.isEnabled(L.TIDEPOOL)) log.debug(msg)
