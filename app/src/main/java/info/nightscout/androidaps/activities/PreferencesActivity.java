@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
@@ -194,7 +195,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
 
             if (Config.NSCLIENT) {
-                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen)findPreference(getString(R.string.key_advancedsettings));
+                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) findPreference(getString(R.string.key_advancedsettings));
                 if (scrnAdvancedSettings != null) {
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
@@ -205,6 +206,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
 
             initSummary(getPreferenceScreen());
+
+            final Preference tidepoolTestLogin = findPreference("tidepool_test_login");
+            tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
+                TidepoolUploader.INSTANCE.testLogin(getActivity());
+                return false;
+            });
         }
 
         @Override

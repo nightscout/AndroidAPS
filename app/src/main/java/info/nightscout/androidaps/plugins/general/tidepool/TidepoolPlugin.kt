@@ -6,7 +6,6 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNetworkChange
-import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolR
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
@@ -59,8 +59,8 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe
-    fun onStatusEvent(ev: EventNewBG) {
-        if (enabled()
+    fun onStatusEvent(ev: EventAutosensCalculationFinished) {
+        if (isEnabled(PluginType.GENERAL)
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || wifiConnected)
                 && RateLimit.ratelimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
@@ -88,10 +88,6 @@ object TidepoolPlugin : PluginBase(PluginDescription()
     @Subscribe
     fun onEventNetworkChange(ev: EventNetworkChange) {
         wifiConnected = ev.wifiConnected
-    }
-
-    fun enabled(): Boolean {
-        return isEnabled(PluginType.GENERAL) && SP.getBoolean(R.string.key_cloud_storage_tidepool_enable, false)
     }
 
     @Subscribe

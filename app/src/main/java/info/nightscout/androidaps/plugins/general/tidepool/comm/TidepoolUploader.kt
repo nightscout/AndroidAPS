@@ -68,11 +68,6 @@ object TidepoolUploader {
 
     @Synchronized
     fun doLogin() {
-        if (!SP.getBoolean(R.string.key_cloud_storage_tidepool_enable, false)) {
-            if (L.isEnabled(L.TIDEPOOL))
-                log.debug("Cannot login as disabled by preference")
-            return
-        }
         if (connectionStatus == TidepoolUploader.ConnectionStatus.CONNECTED || connectionStatus == TidepoolUploader.ConnectionStatus.CONNECTING) {
             if (L.isEnabled(L.TIDEPOOL))
                 log.debug("Already connected")
@@ -103,22 +98,20 @@ object TidepoolUploader {
     }
 
     fun testLogin(rootContext: Context) {
-
-        var message = "Failed to log into Tidepool.\n" + "Check that your user name and password are correct."
-
         val session = Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER)
         if (session.authHeader != null) {
             val call = session.service!!.getLogin(session.authHeader!!)
 
-            val response = call.execute()
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Header: " + response.code())
-            message = "Successfully logged into Tidepool."
+            call.enqueue(TidepoolCallback<AuthReplyMessage>(session, "Login", {
+                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Successfully logged into Tidepool.", null);
+            }, {
+                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.", null);
+            }))
 
         } else {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot do login as user credentials have not been set correctly")
+            OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null);
         }
 
-        OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), message, null);
     }
 
 
@@ -168,12 +161,8 @@ object TidepoolUploader {
         }
     }
 
+    @Synchronized
     fun doUpload() {
-        if (!TidepoolPlugin.enabled()) {
-            if (L.isEnabled(L.TIDEPOOL))
-                log.debug("Cannot upload - preference disabled")
-            return
-        }
         if (session == null) {
             log.error("Session is null, cannot proceed")
             return
