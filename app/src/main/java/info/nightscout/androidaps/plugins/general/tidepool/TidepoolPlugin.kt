@@ -6,6 +6,8 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNetworkChange
+import info.nightscout.androidaps.events.EventNewBG
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -16,8 +18,8 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolR
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
@@ -33,12 +35,10 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         .description(R.string.description_tidepool)
 ) {
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
-    private var wifiConnected = false
 
     private val listLog = ArrayList<EventTidepoolStatus>()
+    @Suppress("DEPRECATION") // API level 24 to replace call
     var textLog = Html.fromHtml("")
-
-    var paused: Boolean = false
 
     override fun onStart() {
         MainApp.bus().register(this)
@@ -52,17 +52,19 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     fun doUpload() {
         if (TidepoolUploader.connectionStatus == TidepoolUploader.ConnectionStatus.DISCONNECTED)
-            TidepoolUploader.doLogin()
+            TidepoolUploader.doLogin(true)
         else
             TidepoolUploader.doUpload()
     }
 
     @Suppress("UNUSED_PARAMETER")
     @Subscribe
-    fun onStatusEvent(ev: EventAutosensCalculationFinished) {
+    fun onStatusEvent(ev: EventNewBG) {
+        if (ev.bgReading!!.date!! < TidepoolUploader.getLastEnd())
+            TidepoolUploader.setLastEnd(ev.bgReading!!.date!!)
         if (isEnabled(PluginType.GENERAL)
                 && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
-                && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || wifiConnected)
+                && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
                 && RateLimit.ratelimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
             doUpload()
     }
@@ -71,6 +73,15 @@ object TidepoolPlugin : PluginBase(PluginDescription()
     @Subscribe
     fun onEventTidepoolDoUpload(ev: EventTidepoolDoUpload) {
         doUpload()
+    }
+
+    @Subscribe
+    fun onEventPreferenceChange(ev: EventPreferenceChange) {
+        if (ev.isChanged(R.string.key_tidepool_dev_servers)
+                || ev.isChanged(R.string.key_tidepool_username)
+                || ev.isChanged(R.string.key_tidepool_password)
+        )
+            TidepoolUploader.resetInstance()
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -87,7 +98,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     @Subscribe
     fun onEventNetworkChange(ev: EventNetworkChange) {
-        wifiConnected = ev.wifiConnected
+        // TODO start upload on wifi connect
     }
 
     @Subscribe
@@ -116,6 +127,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                     newTextLog.append(log.toPreparedHtml())
                 }
             }
+            @Suppress("DEPRECATION") // API level 24 to replace call
             textLog = Html.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
             ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, "Out of memory!\nStop using this phone !!!", R.raw.error)

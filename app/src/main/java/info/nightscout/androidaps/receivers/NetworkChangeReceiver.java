@@ -21,6 +21,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private static Logger log = LoggerFactory.getLogger(L.CORE);
 
+    private static EventNetworkChange lastEvent = null;
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         EventNetworkChange event = grabNetworkStatus(context);
@@ -61,6 +63,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 log.debug("NETCHANGE: Disconnected.");
         }
 
+        lastEvent = event;
         return event;
+    }
+
+    public static boolean isWifiConnected() {
+        return lastEvent != null && lastEvent.wifiConnected;
     }
 }

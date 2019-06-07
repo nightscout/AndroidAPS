@@ -1,13 +1,23 @@
 package info.nightscout.androidaps.plugins.general.tidepool.events
 
 import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.LocaleHelper
+import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 
-class EventTidepoolStatus (val status: String) : Event() {
-    var date : Long = DateUtil.now()
+class EventTidepoolStatus(val status: String) : Event() {
+    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
-    internal var timeFormat = SimpleDateFormat("HH:mm:ss")
+    var date: Long = DateUtil.now()
+
+    init {
+        if (L.isEnabled(L.TIDEPOOL))
+            log.debug("New status: $status")
+    }
+
+    internal var timeFormat = SimpleDateFormat("HH:mm:ss", LocaleHelper.getLocale())
 
     fun toPreparedHtml(): StringBuilder {
         val stringBuilder = StringBuilder()

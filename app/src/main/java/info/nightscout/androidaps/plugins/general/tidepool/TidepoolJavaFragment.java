@@ -30,7 +30,7 @@ public class TidepoolJavaFragment extends SubscriberFragment {
 
         Button login = view.findViewById(R.id.tidepool_login);
         login.setOnClickListener(v1 -> {
-            TidepoolUploader.INSTANCE.doLogin();
+            TidepoolUploader.INSTANCE.doLogin(false);
         });
         Button uploadnow = view.findViewById(R.id.tidepool_uploadnow);
         uploadnow.setOnClickListener(v2 -> MainApp.bus().post(new EventTidepoolDoUpload()));

@@ -1,13 +1,12 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -22,13 +21,13 @@ object UploadChunk {
         if (session == null)
             return null
 
-        session.start = getLastEnd()
+        session.start = TidepoolUploader.getLastEnd()
         session.end = Math.min(session.start + MAX_UPLOAD_SIZE, DateUtil.now())
 
         val result = get(session.start, session.end)
         if (result.length < 3) {
             if (L.isEnabled(L.TIDEPOOL)) log.debug("No records in this time period, setting start to best end time")
-            setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
+            TidepoolUploader.setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
         }
         return result
     }
@@ -54,22 +53,6 @@ object UploadChunk {
         records.addAll(getProfiles(start, end))
 
         return GsonInstance.defaultGsonInstance().toJson(records)
-    }
-
-    fun getLastEnd(): Long {
-        val result = SP.getLong(R.string.key_tidepool_last_end, 0)
-        return Math.max(result, DateUtil.now() - T.months(2).msecs())
-    }
-
-    fun setLastEnd(time: Long) {
-        if (time > getLastEnd()) {
-            SP.putLong(R.string.key_tidepool_last_end, time)
-            val friendlyEnd = DateUtil.dateAndTimeString(time)
-            TidepoolUploader.status("Marking uploaded data up to $friendlyEnd")
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Updating last end to: " + DateUtil.dateAndTimeString(time))
-        } else {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("Cannot set last end to: " + DateUtil.dateAndTimeString(time) + " vs " + DateUtil.dateAndTimeString(getLastEnd()))
-        }
     }
 
     // numeric limits must match max time windows
@@ -99,39 +82,41 @@ object UploadChunk {
         return result
     }
 
-
     internal fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
         val readings = MainApp.getDbHelper().getCareportalEvents(start, end, true)
-        if (L.isEnabled(L.TIDEPOOL))
-            log.debug("${readings.size} CPs selected for upload")
-        return BloodGlucoseElement.fromCareportalEvents(readings)
+        val selection = BloodGlucoseElement.fromCareportalEvents(readings)
+        if (selection.isNotEmpty())
+            MainApp.bus().post(EventTidepoolStatus("${selection.size} BGs selected for upload"))
+        return selection
 
     }
 
     internal fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
         val readings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
-        if (L.isEnabled(L.TIDEPOOL))
-            log.debug("${readings.size} BGs selected for upload")
-        return SensorGlucoseElement.fromBgReadings(readings)
+        val selection = SensorGlucoseElement.fromBgReadings(readings)
+        if (selection.isNotEmpty())
+            MainApp.bus().post(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
+        return selection
     }
 
     internal fun getBasals(start: Long, end: Long): List<BasalElement> {
         val tbrs = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true)
-        if (L.isEnabled(L.TIDEPOOL))
-            log.debug("${tbrs.size} TBRs selected for upload")
-        return BasalElement.fromTemporaryBasals(tbrs)
+        val selection = BasalElement.fromTemporaryBasals(tbrs)
+        if (selection.isNotEmpty())
+            MainApp.bus().post(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
+        return selection
     }
 
     internal fun getProfiles(start: Long, end: Long): List<ProfileElement> {
         val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
-        if (L.isEnabled(L.TIDEPOOL))
-            log.debug("${pss.size} ProfileSwitches selected for upload")
-        val results = LinkedList<ProfileElement>()
+        val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
             val pe = ProfileElement(ps)
-            results.add(pe)
+            selection.add(pe)
         }
-        return results
+        if (selection.size > 0)
+            MainApp.bus().post(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
+        return selection
     }
 
 }
