@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -21,6 +22,7 @@ import info.nightscout.androidaps.utils.SP;
 public class TidepoolJavaFragment extends SubscriberFragment {
     private TextView logTextView;
     private TextView statusTextView;
+    private ScrollView scrollView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +36,7 @@ public class TidepoolJavaFragment extends SubscriberFragment {
 
         logTextView = view.findViewById(R.id.tidepool_log);
         statusTextView = view.findViewById(R.id.tidepool_status);
+        scrollView = view.findViewById(R.id.tidepool_logscrollview);
 
         return view;
     }
@@ -51,6 +54,7 @@ public class TidepoolJavaFragment extends SubscriberFragment {
                 TidepoolPlugin.INSTANCE.updateLog();
                 statusTextView.setText(TidepoolUploader.INSTANCE.getConnectionStatus().name());
                 logTextView.setText(TidepoolPlugin.INSTANCE.getTextLog());
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             });
     }
 }

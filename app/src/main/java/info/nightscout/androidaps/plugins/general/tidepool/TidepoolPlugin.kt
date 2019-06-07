@@ -49,6 +49,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
     }
 
     override fun onStart() {
+        super.onStart()
         disposable += RxBus
                 .toObservable(EventTidepoolDoUpload::class.java)
                 .subscribe({ event -> doUpload() }, {})
@@ -90,7 +91,6 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                 .toObservable(EventNetworkChange::class.java)
                 .subscribe({}, {}) // TODO start upload on wifi connect
 
-        super.onStart()
     }
 
     override fun onStop() {
