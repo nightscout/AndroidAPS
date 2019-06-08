@@ -360,6 +360,11 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         return result;
     }
 
+    @Override
+    public String model() {
+        return "DanaR";
+    }
+
     private PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
         TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());

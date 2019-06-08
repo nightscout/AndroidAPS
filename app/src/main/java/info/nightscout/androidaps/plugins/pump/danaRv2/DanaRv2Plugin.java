@@ -403,6 +403,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @Override
+    public String model() {
+        return "DanaRv2";
+    }
+
+    @Override
     public PumpEnactResult loadEvents() {
         return sExecutionService.loadEvents();
     }

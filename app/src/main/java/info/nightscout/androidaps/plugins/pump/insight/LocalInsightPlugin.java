@@ -945,9 +945,19 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public String deviceID() {
-        if (connectionService == null || alertService == null) return null;
-        return connectionService.getPumpSystemIdentification().getSerialNumber();
+    public String manufacter() {
+        return "Roche";
+    }
+
+    @Override
+    public String model() {
+        return "Insight";
+    }
+
+    @Override
+    public String serialNumber() {
+        if (connectionService == null || alertService == null) return "Unknown";
+        return  connectionService.getPumpSystemIdentification().getSerialNumber();
     }
 
     public PumpEnactResult stopPump() {

@@ -437,8 +437,18 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "AndroidAPS";
+    }
+
+    @Override
+    public String model() {
         return "VirtualPump";
+    }
+
+    @Override
+    public String serialNumber() {
+        return "Unknown";
     }
 
     @Override

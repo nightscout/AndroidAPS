@@ -236,8 +236,18 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "AndroidAPS";
+    }
+
+    @Override
+    public String model() {
         return "MDI";
+    }
+
+    @Override
+    public String serialNumber() {
+        return "Unknown";
     }
 
     @Override
@@ -247,7 +257,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return deviceID();
+        return model();
     }
 
     @Override

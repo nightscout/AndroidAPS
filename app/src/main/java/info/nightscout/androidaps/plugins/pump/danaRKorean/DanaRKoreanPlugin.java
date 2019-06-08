@@ -364,6 +364,11 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         return result;
     }
 
+    @Override
+    public String model() {
+        return "DanaRKorean";
+    }
+
     private PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
         TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());

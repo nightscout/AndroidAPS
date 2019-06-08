@@ -1312,8 +1312,18 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "Roche";
+    }
+
+    @Override
+    public String model() {
         return "Combo";
+    }
+
+    @Override
+    public String serialNumber() {
+        return "Unknown";
     }
 
     @Override
