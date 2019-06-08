@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.RxBus
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
@@ -8,6 +9,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolS
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -47,11 +49,16 @@ object UploadChunk {
 
         val records = LinkedList<BaseElement>()
 
-        records.addAll(getTreatments(start, end))
-        records.addAll(getBloodTests(start, end))
-        records.addAll(getBasals(start, end))
-        records.addAll(getBgReadings(start, end))
-        records.addAll(getProfiles(start, end))
+        if (SP.getBoolean(R.string.key_tidepool_upload_bolus, true))
+            records.addAll(getTreatments(start, end))
+        if (SP.getBoolean(R.string.key_tidepool_upload_bg, true))
+            records.addAll(getBloodTests(start, end))
+        if (SP.getBoolean(R.string.key_tidepool_upload_tbr, true))
+            records.addAll(getBasals(start, end))
+        if (SP.getBoolean(R.string.key_tidepool_upload_cgm, true))
+            records.addAll(getBgReadings(start, end))
+        if (SP.getBoolean(R.string.key_tidepool_upload_profile, true))
+            records.addAll(getProfiles(start, end))
 
         return GsonInstance.defaultGsonInstance().toJson(records)
     }

@@ -18,6 +18,26 @@
         android:title="@string/title_tidepool_test_login" />
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="@string/key_tidepool_upload_cgm"
+        android:title="@string/tidepool_upload_cgm" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_tidepool_upload_bolus"
+        android:title="@string/tidepool_upload_bolus" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_tidepool_upload_bg"
+        android:title="@string/tidepool_upload_bg" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_tidepool_upload_tbr"
+        android:title="@string/tidepool_upload_tbr" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_tidepool_upload_profile"
+        android:title="@string/tidepool_upload_profile" />
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:enabled="false"
         android:key="@string/key_tidepool_dev_servers"
         android:summary="@string/summary_tidepool_dev_servers"

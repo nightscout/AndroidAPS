@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -21,14 +22,16 @@ class ProfileElement(ps: ProfileSwitch)
     internal var carbRatios: IcProfile = IcProfile()
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
+    @Expose
+    internal var deviceId: String = (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Unknown") + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Unknown")
 
     init {
         type = "pumpSettings"
         val profile: Profile = ps.getProfileObject()!!
         for (br in profile.basalValues)
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
-        for (target in profile.targets)
-            bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, Profile.toMgdl(target.low, profile.units), Profile.toMgdl(target.high, profile.units)))
+        for (target in profile.singleTargets)
+            bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, Profile.toMgdl(target.value, profile.units)))
         for (ic in profile.ics)
             carbRatios.Normal.add(Ratio(ic.timeAsSeconds * 1000, ic.value))
         for (isf in profile.isfs)
@@ -63,9 +66,7 @@ class ProfileElement(ps: ProfileSwitch)
             @field:Expose
             internal var start: Int,
             @field:Expose
-            internal var low: Double,
-            @field:Expose
-            internal var high: Double
+            internal var target: Double
     )
 
     inner class IcProfile internal constructor(

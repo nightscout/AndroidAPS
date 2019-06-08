@@ -221,6 +221,24 @@ object TidepoolUploader {
         }
     }
 
+    fun deleteAllData() {
+        if (session!!.authReply!!.userid != null) {
+            extendWakeLock(60000)
+            val call = session!!.service?.deleteAllData(session!!.token!!, session!!.authReply!!.userid!!)
+            call?.enqueue(TidepoolCallback(session!!, "Delete all data", {
+                connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+                RxBus.send(EventTidepoolStatus(("All data removed OK")))
+                releaseWakeLock()
+            }, {
+                connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+                RxBus.send(EventTidepoolStatus(("All data remove FAILED")))
+                releaseWakeLock()
+            }))
+        } else {
+            log.error("Got login response but cannot determine userId - cannot proceed")
+        }
+    }
+
     fun getLastEnd(): Long {
         val result = SP.getLong(R.string.key_tidepool_last_end, 0)
         return Math.max(result, DateUtil.now() - T.months(2).msecs())

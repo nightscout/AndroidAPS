@@ -554,6 +554,21 @@ public class Profile {
         return ret;
     }
 
+    public ProfileValue[] getSingleTargets() {
+        if (targetLow_v == null)
+            targetLow_v = convertToSparseArray(targetLow);
+        if (targetHigh_v == null)
+            targetHigh_v = convertToSparseArray(targetHigh);
+        ProfileValue[] ret = new ProfileValue[targetLow_v.size()];
+
+        for (Integer index = 0; index < targetLow_v.size(); index++) {
+            Integer tas = (int) targetLow_v.keyAt(index);
+            double target = (targetLow_v.valueAt(index) + targetHigh_v.valueAt(index)) / 2;
+            ret[index] = new ProfileValue(tas, target);
+        }
+        return ret;
+    }
+
     public String getTargetList() {
         if (targetLow_v == null)
             targetLow_v = convertToSparseArray(targetLow);
