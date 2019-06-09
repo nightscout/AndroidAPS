@@ -105,7 +105,7 @@ public class PumpHistoryResult {
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {
-                        if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) < 2015)
+                        if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) > 2015)
                             olderEntries++;
                     }
                 }

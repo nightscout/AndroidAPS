@@ -1064,7 +1064,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         } else {
             if (isLoggingEnabled())
                 LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - {}",
-                        gsonInstancePretty.toJson(lastPumpHistoryEntry));
+                        MedtronicUtil.gsonInstance.toJson(lastPumpHistoryEntry));
             medtronicHistoryData.setIsInInit(false);
             // medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntry.atechDateTime);
 

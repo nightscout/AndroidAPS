@@ -133,7 +133,7 @@ public class MedtronicHistoryData {
         List<PumpHistoryEntry> bolusEstimates = new ArrayList<>();
         long atechDate = DateTimeUtil.toATechDate(new GregorianCalendar());
 
-        LOG.debug("Filter new entries: Before {}", newHistory);
+        //LOG.debug("Filter new entries: Before {}", newHistory);
 
         if (!isCollectionEmpty(newHistory)) {
 
@@ -276,7 +276,7 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> items = getDataForSuspends(false);
 
-        showLogs("isPumpSuspended: ", MedtronicPumpPlugin.gsonInstancePretty.toJson(items));
+        showLogs("isPumpSuspended: ", MedtronicUtil.gsonInstance.toJson(items));
 
         if (!isCollectionEmpty(items)) {
 
