@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload;

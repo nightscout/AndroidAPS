@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.InstanceId;
 
 
 /**
@@ -247,7 +248,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public String serialNumber() {
-        return "Unknown";
+        return InstanceId.INSTANCE.instanceId();
     }
 
     @Override

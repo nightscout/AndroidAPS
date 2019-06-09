@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -209,11 +209,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
             initSummary(getPreferenceScreen());
 
-            final Preference tidepoolTestLogin = findPreference("tidepool_test_login");
-            tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
-                TidepoolUploader.INSTANCE.testLogin(getActivity());
-                return false;
-            });
+            final Preference tidepoolTestLogin = findPreference(MainApp.gs(R.string.key_tidepool_test_login));
+            if (tidepoolTestLogin != null)
+                tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
+                    TidepoolUploader.INSTANCE.testLogin(getActivity());
+                    return false;
+                });
         }
 
         @Override

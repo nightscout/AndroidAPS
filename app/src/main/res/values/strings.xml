@@ -1373,6 +1373,7 @@
     <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
     <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
     <string name="tidepool_upload_bg">Upload BG tests</string>
+    <string name="key_instanceid" translatable="false">instanceid</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package info.nightscout.androidaps.plugins.bus
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject

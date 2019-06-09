@@ -2,10 +2,11 @@ package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import android.content.Context
 import android.os.PowerManager
+import android.os.SystemClock
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.*
@@ -137,7 +138,8 @@ object TidepoolUploader {
                         connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED
                         RxBus.send(EventTidepoolStatus(("New dataset OK")))
                         if (doUpload) doUpload()
-                        releaseWakeLock()
+                        else
+                            releaseWakeLock()
                     }, {
                         RxBus.send(EventTidepoolStatus(("New dataset FAILED")))
                         connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
@@ -151,7 +153,8 @@ object TidepoolUploader {
                     connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTED
                     RxBus.send(EventTidepoolStatus(("Appending to existing dataset")))
                     if (doUpload) doUpload()
-                    releaseWakeLock()
+                    else
+                        releaseWakeLock()
                 }
             }, {
                 connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
@@ -170,6 +173,7 @@ object TidepoolUploader {
     fun doUpload() {
         if (session == null) {
             log.error("Session is null, cannot proceed")
+            releaseWakeLock()
             return
         }
         extendWakeLock(60000)
@@ -184,6 +188,7 @@ object TidepoolUploader {
                 if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty dataset - marking as succeeded")
                 RxBus.send(EventTidepoolStatus(("No data to upload")))
                 releaseWakeLock()
+                unploadNext()
             }
             else -> {
                 val body = RequestBody.create(MediaType.parse("application/json"), chunk)
@@ -194,13 +199,22 @@ object TidepoolUploader {
                     setLastEnd(session!!.end)
                     RxBus.send(EventTidepoolStatus(("Upload completed OK")))
                     releaseWakeLock()
+                    unploadNext()
                 }, {
                     RxBus.send(EventTidepoolStatus(("Upload FAILED")))
                     releaseWakeLock()
                 }))
             }
         }
+    }
 
+    private fun unploadNext() {
+        if (getLastEnd() < DateUtil.now() - T.mins(1).msecs()) {
+            SystemClock.sleep(3000)
+            if (L.isEnabled(L.TIDEPOOL))
+                log.debug("Restarting doUpload. Last: " + DateUtil.dateAndTimeString(getLastEnd()))
+            doUpload()
+        }
     }
 
     fun deleteDataSet() {

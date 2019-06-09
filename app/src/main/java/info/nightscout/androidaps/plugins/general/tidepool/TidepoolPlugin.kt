@@ -5,7 +5,7 @@ import android.text.Spanned
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange

@@ -2,17 +2,18 @@ package info.nightscout.androidaps.plugins.general.tidepool.messages
 
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import java.util.*
 
 class OpenDatasetRequestMessage : BaseMessage() {
 
     @Expose
-    var deviceId: String = (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Unknown") + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Unknown")
+    var deviceId: String = (ConfigBuilderPlugin.getPlugin().activePump?.model()
+            ?: "Medtronic") + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
+            ?: InstanceId.instanceId())
     @Expose
     var time = DateUtil.toISOAsUTC(DateUtil.now())
     @Expose
@@ -27,9 +28,9 @@ class OpenDatasetRequestMessage : BaseMessage() {
     @Expose
     var dataSetType = "continuous"
     @Expose
-    var deviceManufacturers = arrayOf("Dexcom", "Medtronic")
+    var deviceManufacturers = arrayOf("Medtronic")
     @Expose
-    var deviceModel = (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Unknown")
+    var deviceModel = (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Medtronic")
     @Expose
     var deviceTags = arrayOf("bgm", "cgm", "insulin-pump")
     @Expose
