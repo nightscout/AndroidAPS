@@ -135,7 +135,7 @@ public class MedtronicHistoryData {
 
         LOG.debug("Filter new entries: Before {}", newHistory);
 
-        if (isCollectionEmpty(newHistory)) {
+        if (!isCollectionEmpty(newHistory)) {
 
             for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
 
