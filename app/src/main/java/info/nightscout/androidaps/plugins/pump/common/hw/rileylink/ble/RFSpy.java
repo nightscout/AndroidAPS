@@ -1,19 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
-import java.util.UUID;
+import android.os.SystemClock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.os.SystemClock;
+import java.util.UUID;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.Reset;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.ResetRadioConfig;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetHardwareEncoding;
@@ -29,13 +27,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCustomActionType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.utils.SP;
 
@@ -57,6 +52,7 @@ public class RFSpy {
     private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
+    double currentFrequencyMHz;
 
 
     public RFSpy(RileyLinkBLE rileyLinkBle) {
@@ -141,7 +137,7 @@ public class RFSpy {
                 String versionString = StringUtil.fromBytes(response);
 
                 RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(StringUtil
-                    .fromBytes(response));
+                        .fromBytes(response));
 
                 if (isLogEnabled())
                     LOG.trace("Firmware Version string: {}, resolved to {}.", versionString, version);
@@ -170,17 +166,17 @@ public class RFSpy {
 
         while (junkInBuffer != null) {
             LOG.warn(ThreadUtil.sig() + "writeToData: draining read queue, found this: "
-                + ByteUtil.shortHexString(junkInBuffer));
+                    + ByteUtil.shortHexString(junkInBuffer));
             junkInBuffer = reader.poll(0);
         }
 
         // prepend length, and send it.
-        byte[] prepended = ByteUtil.concat(new byte[] { (byte)(bytes.length) }, bytes);
+        byte[] prepended = ByteUtil.concat(new byte[]{(byte) (bytes.length)}, bytes);
 
         LOG.debug("writeToData (raw={})", HexDump.toHexStringDisplayable(prepended));
 
         BLECommOperationResult writeCheck = rileyLinkBle.writeCharacteristic_blocking(radioServiceUUID, radioDataUUID,
-            prepended);
+                prepended);
         if (writeCheck.resultCode != BLECommOperationResult.RESULT_SUCCESS) {
             LOG.error("BLE Write operation failed, code=" + writeCheck.resultCode);
             return null; // will be a null (invalid) response
@@ -255,41 +251,43 @@ public class RFSpy {
 
 
     public RFSpyResponse transmitThenReceive(RadioPacket pkt, byte sendChannel, byte repeatCount, byte delay_ms,
-            byte listenChannel, int timeout_ms, byte retryCount) {
+                                             byte listenChannel, int timeout_ms, byte retryCount) {
         return transmitThenReceive(pkt, sendChannel, repeatCount, delay_ms, listenChannel, timeout_ms, retryCount, null);
     }
 
 
     public RFSpyResponse transmitThenReceive(RadioPacket pkt, int timeout_ms) {
-        return transmitThenReceive(pkt, (byte)0, (byte)0, (byte)0, (byte)0, timeout_ms, (byte)0);
+        return transmitThenReceive(pkt, (byte) 0, (byte) 0, (byte) 0, (byte) 0, timeout_ms, (byte) 0);
     }
 
 
     public RFSpyResponse transmitThenReceive(RadioPacket pkt, byte sendChannel, byte repeatCount, byte delay_ms,
-            byte listenChannel, int timeout_ms, byte retryCount, Integer extendPreamble_ms) {
+                                             byte listenChannel, int timeout_ms, byte retryCount, Integer extendPreamble_ms) {
 
         int sendDelay = repeatCount * delay_ms;
         int receiveDelay = timeout_ms * (retryCount + 1);
 
         SendAndListen command = new SendAndListen(sendChannel, repeatCount, delay_ms, listenChannel, timeout_ms,
-            retryCount, extendPreamble_ms, pkt);
+                retryCount, extendPreamble_ms, pkt);
 
         return writeToData(command, sendDelay + receiveDelay + EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
     }
 
 
     public RFSpyResponse updateRegister(CC111XRegister reg, int val) {
-        RFSpyResponse resp = writeToData(new UpdateRegister(reg, (byte)val), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
+        RFSpyResponse resp = writeToData(new UpdateRegister(reg, (byte) val), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
         return resp;
     }
 
 
     public void setBaseFrequency(double freqMHz) {
-        int value = (int)(freqMHz * 1000000 / ((double)(RILEYLINK_FREQ_XTAL) / Math.pow(2.0, 16.0)));
-        updateRegister(CC111XRegister.freq0, (byte)(value & 0xff));
-        updateRegister(CC111XRegister.freq1, (byte)((value >> 8) & 0xff));
-        updateRegister(CC111XRegister.freq2, (byte)((value >> 16) & 0xff));
+        int value = (int) (freqMHz * 1000000 / ((double) (RILEYLINK_FREQ_XTAL) / Math.pow(2.0, 16.0)));
+        updateRegister(CC111XRegister.freq0, (byte) (value & 0xff));
+        updateRegister(CC111XRegister.freq1, (byte) ((value >> 8) & 0xff));
+        updateRegister(CC111XRegister.freq2, (byte) ((value >> 16) & 0xff));
         LOG.info("Set frequency to {} MHz", freqMHz);
+
+        this.currentFrequencyMHz = freqMHz;
 
         configureRadioForRegion(RileyLinkUtil.getRileyLinkTargetFrequency());
     }
@@ -310,7 +308,7 @@ public class RFSpy {
                 updateRegister(CC111XRegister.deviatn, 0x13);
                 setMedtronicEncoding();
             }
-                break;
+            break;
 
             case Medtronic_US: {
                 // updateRegister(CC111X_MDMCFG4, (byte) 0x99);
@@ -322,7 +320,7 @@ public class RFSpy {
                 updateRegister(CC111XRegister.deviatn, 0x15);
                 setMedtronicEncoding();
             }
-                break;
+            break;
 
             case Omnipod: {
                 RFSpyResponse r = null;
@@ -355,7 +353,7 @@ public class RFSpy {
                 r = setPreamble(0x6665);
 
             }
-                break;
+            break;
             default:
                 LOG.warn("No region configuration for RfSpy and {}", frequency.name());
                 break;
@@ -407,18 +405,21 @@ public class RFSpy {
 
     private void setRXFilterMode(RXFilterMode mode) {
 
-        byte drate_e = (byte)0x9; // exponent of symbol rate (16kbps)
+        byte drate_e = (byte) 0x9; // exponent of symbol rate (16kbps)
         byte chanbw = mode.value;
 
-        updateRegister(CC111XRegister.mdmcfg4, (byte)(chanbw | drate_e));
+        updateRegister(CC111XRegister.mdmcfg4, (byte) (chanbw | drate_e));
     }
 
     /**
-     * This command while implemented doesn't work correctly, and is of dubious action.
-     * @return
+     * Reset RileyLink Configuration (set all updateRegisters)
      */
-    public RFSpyResponse resetRileyLinkDevice() {
-	    // FIXME not working correctly yet
+    public void resetRileyLinkConfiguration() {
+        this.setBaseFrequency(this.currentFrequencyMHz);
+    }
+
+
+    public RFSpyResponse resetRileyLink() {
         RFSpyResponse resp = null;
         try {
             resp = writeToData(new Reset(), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
@@ -429,6 +430,7 @@ public class RFSpy {
         }
         return resp;
     }
+
 
     private boolean isLogEnabled() {
         return L.isEnabled(L.PUMPBTCOMM);

@@ -1349,8 +1349,8 @@
     <string name="medtronic_pump_type">Pump Type</string>
     <string name="medtronic_pump_frequency">Pump Frequency</string>
     <string name="medtronic_pump_bolus_delay">Delay before Bolus is started (s)</string>
-    <string name="medtronic_pump_max_bolus">Max Bolus on Pump</string>
-    <string name="medtronic_pump_max_basal">Max Basal on Pump</string>
+    <string name="medtronic_pump_max_bolus">Max Bolus on Pump (U)</string>
+    <string name="medtronic_pump_max_basal">Max Basal on Pump (U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic Encoding</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
@@ -1359,7 +1359,7 @@
     <string name="rileylink_mac_address">RileyLink MAC Address</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Clear Bolus Block</string>
-    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink</string>
+    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Config</string>
     <string name="medtronic_pump_battery_select">Battery Type (Power View)</string>
     <string name="medtronic_pump_battery_no">Not selected (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
@@ -1444,8 +1444,8 @@
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal profiles are not enabled on pump.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basal profile set on pump is incorrect (must be STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Wrong TBR type set on pump (must be Absolute).</string>
-    <string name="medtronic_error_pump_wrong_max_bolus_set" formatted="false">Wrong Max Bolus set on Pump (must be %.2f).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set" formatted="false">Wrong Max Basal set on Pump (must be %.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Wrong Max Bolus set on Pump (must be %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Wrong Max Basal set on Pump (must be %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Medtronic Pump first, before you can use this operation.</string>
 
     <string name="xxx">xxx</string>

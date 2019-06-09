@@ -10,7 +10,7 @@ public enum MedtronicCustomActionType implements CustomActionType {
 
     WakeUpAndTune(), //
     ClearBolusBlock(), //
-    ResetRileyLink(), //
+    ResetRileyLinkConfiguration(), //
 
     ;
 

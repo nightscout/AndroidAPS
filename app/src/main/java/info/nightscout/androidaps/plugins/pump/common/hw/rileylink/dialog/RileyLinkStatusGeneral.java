@@ -105,9 +105,13 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
 
-            this.firmwareVersion.setText("BLE113: " + //
-                    rileyLinkServiceData.versionBLE113 == null ? "-" : rileyLinkServiceData.versionBLE113 + //
-                    "\nCC110: " + firmwareVersion == null ? "-" : firmwareVersion.toString());
+            if (firmwareVersion==null) {
+                this.firmwareVersion.setText("BLE113: -\nCC110: -");
+            } else {
+                this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + //
+                        "\nCC110: " + firmwareVersion.toString());
+            }
+
         }
 
         // TODO add handling for Omnipod pump status

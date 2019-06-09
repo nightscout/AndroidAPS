@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
@@ -92,20 +92,20 @@ public class PumpHistoryResult {
                     this.validEntries.add(unprocessedEntry);
                 }
             }
-                break;
+            break;
             case Date: {
                 //LOG.debug("PE. Date search");
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
-                    if (unprocessedEntry.atechDateTime==null || unprocessedEntry.atechDateTime==0) {
+                    if (unprocessedEntry.atechDateTime == null || unprocessedEntry.atechDateTime == 0) {
                         continue;
                     }
 
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {
-                        if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) != 2000)
+                        if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) < 2015)
                             olderEntries++;
                     }
                 }
@@ -116,7 +116,7 @@ public class PumpHistoryResult {
                     searchFinished = true;
                 }
             }
-                break;
+            break;
 
         } // switch
 
@@ -134,19 +134,19 @@ public class PumpHistoryResult {
 
     public String toString() {
         return "PumpHistoryResult [unprocessed=" + (unprocessedEntries != null ? "" + unprocessedEntries.size() : "0") + //
-            ", valid=" + (validEntries != null ? "" + validEntries.size() : "0") + //
-            ", searchEntry=" + searchEntry + //
-            ", searchDate=" + searchDate + //
-            ", searchType=" + searchType + //
-            ", searchFinished=" + searchFinished + //
-            "]";
+                ", valid=" + (validEntries != null ? "" + validEntries.size() : "0") + //
+                ", searchEntry=" + searchEntry + //
+                ", searchDate=" + searchDate + //
+                ", searchType=" + searchType + //
+                ", searchFinished=" + searchFinished + //
+                "]";
 
     }
 
 
     /**
      * Return latest entry (entry with highest date time)
-     * 
+     *
      * @return
      */
     public PumpHistoryEntry getLatestEntry() {

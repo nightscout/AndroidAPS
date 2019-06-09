@@ -192,7 +192,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case ChangeRemoteId:
             case ClearAlarm:
             case ChangeAlarmNotifyMode: // ChangeUtility:
-            case ToggleRemote:
+            case EnableDisableRemote:
             case BGReceived: // Ian3F: CGMS
             case SensorAlert: // Ian08 CGMS
             case ChangeTimeFormat:
@@ -212,12 +212,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case SelfTest:
             case JournalEntryInsulinMarker:
             case JournalEntryOtherMarker:
-            case ChangeBolusWizardSetup:
+            case ChangeBolusWizardSetup512:
             case ChangeSensorSetup2:
             case ChangeSensorAlarmSilenceConfig:
             case ChangeSensorRateOfChangeAlertSetup:
             case ChangeBolusScrollStepSize:
-            case BolusWizardChange:
+            case ChangeBolusWizardSetup:
             case ChangeVariableBolus:
             case ChangeAudioBolus:
             case ChangeBGReminderEnable:
@@ -236,10 +236,10 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case ReadOtherDevicesStatus:
                 return RecordDecodeStatus.OK;
 
-            case Sensor54:
-            case Sensor55:
-            case Sensor51:
-            case Sensor52:
+            case Sensor_0x54:
+            case Sensor_0x55:
+            case Sensor_0x51:
+            case Sensor_0x52:
             case EventUnknown_MM522_0x45:
             case EventUnknown_MM522_0x46:
             case EventUnknown_MM522_0x47:
@@ -264,7 +264,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 return RecordDecodeStatus.Ignored;
 
             case UnabsorbedInsulin:
-		        return RecordDecodeStatus.Ignored;
+                return RecordDecodeStatus.Ignored;
 
             // **** Implemented records ****
 
@@ -310,8 +310,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 return RecordDecodeStatus.OK;
 
             case LowBattery:
-            case PumpSuspend:
-            case PumpResume:
+            case Suspend:
+            case Resume:
             case Rewind:
             case NoDeliveryAlarm:
             case ChangeTempBasalType:
@@ -411,6 +411,9 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             rate = body[1] * 0.025f;
         }
 
+        LOG.info("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
+                body);
+
         if (rate == null) {
             LOG.warn("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
                     body);
@@ -422,6 +425,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             entry.setDisplayableValue(getFormattedFloat(rate, 3));
             return RecordDecodeStatus.OK;
         }
+
+//        profileIndex = asUINT8(data[1]);
+//        offset = asUINT8(data[7]) * 30 * 1000 * 60;
+//        rate = (double)(asUINT8(data[8])) / 40.0;
+
     }
 
 
@@ -479,16 +487,41 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    // FIXME
     private void decodePrime(PumpHistoryEntry entry) {
         float amount = bitUtils.toInt(entry.getHead()[2], entry.getHead()[3]) / 10.0f;
         float fixed = bitUtils.toInt(entry.getHead()[0], entry.getHead()[1]) / 10.0f;
+
+//        amount = (double)(asUINT8(data[4]) << 2) / 40.0;
+//        programmedAmount = (double)(asUINT8(data[2]) << 2) / 40.0;
+//        primeType = programmedAmount == 0 ? "manual" : "fixed";
 
         entry.addDecodedData("Amount", amount);
         entry.addDecodedData("FixedAmount", fixed);
 
         entry.setDisplayableValue("Amount=" + getFormattedValue(amount, 2) + ", Fixed Amount="
                 + getFormattedValue(fixed, 2));
+    }
+
+
+    private void decodeChangeTempBasalType(PumpHistoryEntry entry) {
+        entry.addDecodedData("isPercent", ByteUtil.asUINT8(entry.getRawDataByIndex(0)) == 1); // index moved from 1 -> 0
+    }
+
+
+    private void decodeBgReceived(PumpHistoryEntry entry) {
+        entry.addDecodedData("amount", (ByteUtil.asUINT8(entry.getRawDataByIndex(0)) << 3) + (ByteUtil.asUINT8(entry.getRawDataByIndex(3)) >> 5));
+        entry.addDecodedData("meter", ByteUtil.substring(entry.getRawData(), 6, 3)); // index moved from 1 -> 0
+    }
+
+
+    private void decodeCalBGForPH(PumpHistoryEntry entry) {
+        entry.addDecodedData("amount", ((ByteUtil.asUINT8(entry.getRawDataByIndex(5)) & 0x80) << 1) + ByteUtil.asUINT8(entry.getRawDataByIndex(0))); // index moved from 1 -> 0
+    }
+
+
+    private void decodeNoDeliveryAlarm(PumpHistoryEntry entry) {
+        //rawtype = asUINT8(data[1]);
+        // not sure if this is actually NoDelivery Alarm?
     }
 
 
@@ -530,7 +563,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    // FIXME new pumps have single record (I think)
     private void decodeTempBasal(PumpHistoryEntry entry) {
 
         if (this.tbrPreviousRecord == null) {

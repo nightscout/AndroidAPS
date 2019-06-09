@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.IBinder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
@@ -53,7 +53,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         if (isLogEnabled())
             LOG.debug("RileyLinkMedtronicService newly constructed");
         MedtronicUtil.setMedtronicService(this);
-        pumpStatus = (MedtronicPumpStatus)MedtronicPumpPlugin.getPlugin().getPumpStatusData();
+        pumpStatus = (MedtronicPumpStatus) MedtronicPumpPlugin.getPlugin().getPumpStatusData();
     }
 
 
@@ -113,8 +113,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    public void resetRileyLinkDevice() {
-        rfspy.resetRileyLinkDevice();
+    public void resetRileyLinkConfiguration() {
+        rfspy.resetRileyLinkConfiguration();
     }
 
 
@@ -135,17 +135,17 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         if (pumpIDBytes == null) {
             LOG.error("Invalid pump ID? - PumpID is null.");
 
-            rileyLinkServiceData.setPumpID("000000", new byte[] { 0, 0, 0 });
+            rileyLinkServiceData.setPumpID("000000", new byte[]{0, 0, 0});
 
         } else if (pumpIDBytes.length != 3) {
             LOG.error("Invalid pump ID? " + ByteUtil.shortHexString(pumpIDBytes));
 
-            rileyLinkServiceData.setPumpID("000000", new byte[] { 0, 0, 0 });
+            rileyLinkServiceData.setPumpID("000000", new byte[]{0, 0, 0});
 
         } else if (pumpID.equals("000000")) {
             LOG.error("Using pump ID " + pumpID);
 
-            rileyLinkServiceData.setPumpID(pumpID, new byte[] { 0, 0, 0 });
+            rileyLinkServiceData.setPumpID(pumpID, new byte[]{0, 0, 0});
 
         } else {
             LOG.info("Using pump ID " + pumpID);
@@ -190,7 +190,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
 
     public boolean handleDeviceSpecificBroadcasts(Intent intent) {
-         return false;
+        return false;
     }
 
 

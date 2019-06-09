@@ -9,18 +9,18 @@ import java.util.List;
 public class ByteUtil {
 
     private final static char[] HEX_DIGITS = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     private final static String HEX_DIGITS_STR = "0123456789ABCDEF";
 
 
     public static byte highByte(short s) {
-        return (byte)(s / 256);
+        return (byte) (s / 256);
     }
 
 
     public static byte lowByte(short s) {
-        return (byte)(s % 256);
+        return (byte) (s % 256);
     }
 
 
@@ -71,6 +71,15 @@ public class ByteUtil {
         return rval;
     }
 
+    public static byte[] substring(List<Byte> a, int start, int len) {
+        byte[] rval = new byte[len];
+
+        for (int i = start, j = 0; i < start + len; i++, j++) {
+            rval[j] = a.get(i);
+        }
+        return rval;
+    }
+
 
     public static byte[] substring(byte[] a, int start) {
         int len = a.length - start;
@@ -102,7 +111,7 @@ public class ByteUtil {
     public static String showPrintable(byte[] ra) {
         String s = new String();
         for (int i = 0; i < ra.length; i++) {
-            char c = (char)ra[i];
+            char c = (char) ra[i];
             if (((c >= '0') && (c <= '9')) || ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z'))) {
                 s = s + c;
             } else {
@@ -115,7 +124,7 @@ public class ByteUtil {
 
     public static byte[] fromHexString(String src) {
         String s = src.toUpperCase();
-        byte[] rval = new byte[] {};
+        byte[] rval = new byte[]{};
         if ((s.length() % 2) != 0) {
             // invalid hex string!
             return null;
@@ -131,7 +140,7 @@ public class ByteUtil {
                 // Not a hex digit
                 return null;
             }
-            rval = concat(rval, (byte)(highNibbleOrd * 16 + lowNibbleOrd));
+            rval = concat(rval, (byte) (highNibbleOrd * 16 + lowNibbleOrd));
         }
         return rval;
     }
@@ -201,10 +210,10 @@ public class ByteUtil {
     /**
      * Converts 4 (or less) ints into int. (Shorts are objects, so you can send null if you have less parameters)
      *
-     * @param b1 short 1
-     * @param b2 short 2
-     * @param b3 short 3
-     * @param b4 short 4
+     * @param b1   short 1
+     * @param b2   short 2
+     * @param b3   short 3
+     * @param b4   short 4
      * @param flag Conversion Flag (Big Endian, Little endian)
      * @return int value
      */
@@ -266,7 +275,7 @@ public class ByteUtil {
      * @return the correct hex value
      */
     public static String getCorrectHexValue(int inp) {
-        String hx = Integer.toHexString((char)inp);
+        String hx = Integer.toHexString((char) inp);
 
         if (hx.length() == 0)
             return "00";
@@ -332,7 +341,7 @@ public class ByteUtil {
 
 
     public static String getHexCompact(byte byte0) {
-        int i = byte0 != -1 ? convertUnsignedByteToInt(byte0) : (int)byte0;
+        int i = byte0 != -1 ? convertUnsignedByteToInt(byte0) : (int) byte0;
         return getHexCompact(i);
     }
 
@@ -418,8 +427,8 @@ public class ByteUtil {
         int len = data.length();
         byte[] outArray = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            outArray[i / 2] = (byte)((Character.digit(data.charAt(i), 16) << 4) + Character.digit(data.charAt(i + 1),
-                16));
+            outArray[i / 2] = (byte) ((Character.digit(data.charAt(i), 16) << 4) + Character.digit(data.charAt(i + 1),
+                    16));
         }
 
         return outArray;

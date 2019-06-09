@@ -10,25 +10,22 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
  * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
 public enum PumpHistoryEntryType // implements CodeEnum
 {
 
-    None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0), // Bolus(0x01, "Bolus", 4, 5, 4), // 4,5,0 -> 4,5,4
-                                                             // Bolus(0x01, "Bolus", 2, 5, 4),
+    None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0),
 
-    Bolus(0x01, "Bolus", PumpHistoryEntryGroup.Bolus, 4, 5, 0), // 523+[H=8]
+    Bolus(0x01, "Bolus", PumpHistoryEntryGroup.Bolus, 4, 5, 0), // 523+[H=8] 9/13
 
     Prime(0x03, "Prime", PumpHistoryEntryGroup.Prime, 5, 5, 0), //
 
-    /**/EventUnknown_MM522_0x05((byte)0x05, "Unknown Event 0x05", PumpHistoryEntryGroup.Unknown, 2, 5, 28), //
+    /**/EventUnknown_MM522_0x05((byte) 0x05, "Unknown Event 0x05", PumpHistoryEntryGroup.Unknown, 2, 5, 28), //
     NoDeliveryAlarm(0x06, "No Delivery", PumpHistoryEntryGroup.Alarm, 4, 5, 0), //
-    EndResultTotals(0x07, "End Result Totals", PumpHistoryEntryGroup.Statistic, 5, 2, 0), // V1: 5/5/41 V2: 5,2,3 V3,
-                                                                                          // 5,2,0
-    // V1: 2,5,42; V2:2,5,145; V5: 7/10(523)
+    EndResultTotals(0x07, "End Result Totals", PumpHistoryEntryGroup.Statistic, 5, 2, 0),
     ChangeBasalProfile_OldProfile(0x08, "Change Basal Profile (Old)", PumpHistoryEntryGroup.Basal, 2, 5, 145),
     ChangeBasalProfile_NewProfile(0x09, "Change Basal Profile (New)", PumpHistoryEntryGroup.Basal, 2, 5, 145), //
     /**/EventUnknown_MM512_0x10(0x10, "Unknown Event 0x10", PumpHistoryEntryGroup.Unknown), // 29, 5, 0
@@ -45,23 +42,22 @@ public enum PumpHistoryEntryType // implements CodeEnum
     LowBattery(0x19, "LowBattery", PumpHistoryEntryGroup.Notification), //
     BatteryChange(0x1a, "Battery Change", PumpHistoryEntryGroup.Notification), //
     SetAutoOff(0x1b, "Set Auto Off", PumpHistoryEntryGroup.Configuration), //
-    PumpSuspend(0x1e, "Pump Suspend", PumpHistoryEntryGroup.Basal), //
-    PumpResume(0x1f, "Pump Resume", PumpHistoryEntryGroup.Basal), //
-
+    Suspend(0x1e, "Suspend", PumpHistoryEntryGroup.Basal), //
+    Resume(0x1f, "Resume", PumpHistoryEntryGroup.Basal), //
     SelfTest(0x20, "Self Test", PumpHistoryEntryGroup.Statistic), //
     Rewind(0x21, "Rewind", PumpHistoryEntryGroup.Prime), //
-    ClearSettings(0x22, "Clear Settings", PumpHistoryEntryGroup.Configuration), // 8?
-    ChangeChildBlockEnable(0x23, "Change Child Block Enable", PumpHistoryEntryGroup.Configuration), // 8?
-    ChangeMaxBolus(0x24, "Change Max Bolus", PumpHistoryEntryGroup.Configuration), // 8?
+    ClearSettings(0x22, "Clear Settings", PumpHistoryEntryGroup.Configuration), //
+    ChangeChildBlockEnable(0x23, "Change Child Block Enable", PumpHistoryEntryGroup.Configuration), //
+    ChangeMaxBolus(0x24, "Change Max Bolus", PumpHistoryEntryGroup.Configuration), //
     /**/EventUnknown_MM522_0x25(0x25, "Unknown Event 0x25", PumpHistoryEntryGroup.Unknown), // 8?
-    ToggleRemote(0x26, "Enable/Disable Remote", PumpHistoryEntryGroup.Configuration, 2, 5, 14), // 2, 5, 14 V6:2,5,14
+    EnableDisableRemote(0x26, "Enable/Disable Remote", PumpHistoryEntryGroup.Configuration, 2, 5, 14), // 2, 5, 14 V6:2,5,14
     ChangeRemoteId(0x27, "Change Remote ID", PumpHistoryEntryGroup.Configuration), // ??
 
     ChangeMaxBasal(0x2c, "Change Max Basal", PumpHistoryEntryGroup.Configuration), //
     BolusWizardEnabled(0x2d, "Bolus Wizard Enabled", PumpHistoryEntryGroup.Configuration), // V3 ?
     /**/EventUnknown_MM512_0x2e(0x2e, "Unknown Event 0x2e", PumpHistoryEntryGroup.Unknown), //
     /**/BolusWizardEstimate512(0x2f, "Bolus Wizard Estimate (512)", PumpHistoryEntryGroup.Configuration), //
-    UnabsorbedInsulin512(0x30, "Unabsorbed Insulin (512)", PumpHistoryEntryGroup.Statistic), //
+    UnabsorbedInsulin512(0x30, "Unabsorbed Insulin (512)", PumpHistoryEntryGroup.Statistic), // FIXME
     ChangeBGReminderOffset(0x31, "Change BG Reminder Offset", PumpHistoryEntryGroup.Configuration), //
     ChangeAlarmClockTime(0x32, "Change Alarm Clock Time", PumpHistoryEntryGroup.Configuration), //
     TempBasalRate(0x33, "TBR Rate", PumpHistoryEntryGroup.Basal, 2, 5, 1), //
@@ -71,15 +67,16 @@ public enum PumpHistoryEntryType // implements CodeEnum
     /**/EventUnknown_MM512_0x37(0x37, "Unknown Event 0x37", PumpHistoryEntryGroup.Unknown), // V:MM512
     /**/EventUnknown_MM512_0x38(0x38, "Unknown Event 0x38", PumpHistoryEntryGroup.Unknown), //
     BGReceived512(0x39, "BG Received (512)", PumpHistoryEntryGroup.Glucose), //
+    /**/EventUnknown_MM512_0x3a(0x3a, "Unknown Event 0x3a", PumpHistoryEntryGroup.Unknown), //
     SensorStatus(0x3b, "Sensor Status", PumpHistoryEntryGroup.Glucose), //
-    ChangeParadigmID(0x3c, "Change Paradigm ID", PumpHistoryEntryGroup.Configuration, 2, 5, 14), // V3 ? V6: 2,5,14
-
+    ChangeParadigmID(0x3c, "Change Paradigm ID", PumpHistoryEntryGroup.Configuration, 2, 5, 14), // V3 ? V6: 2,5,14 ?? is it this length or just 7
+    EventUnknown_MM512_0x3D(0x3d, "Unknown Event 0x3D", PumpHistoryEntryGroup.Unknown), //
+    EventUnknown_MM512_0x3E(0x3e, "Unknown Event 0x3E", PumpHistoryEntryGroup.Unknown), //
     BGReceived(0x3f, "BG Received", PumpHistoryEntryGroup.Glucose, 2, 5, 3), // Ian3F
-    JournalEntryMealMarker(0x40, "Meal Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 2), //
+    JournalEntryMealMarker(0x40, "Meal Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 2), // is size just 7??? V6
     JournalEntryExerciseMarker(0x41, "Exercise Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1), // ??
-                                                                                               // JournalEntryExerciseMarkerPumpEvent
-    JournalEntryInsulinMarker(0x42, "Insulin Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1), // ?? InsulinMarkerEvent
-    JournalEntryOtherMarker(0x43, "Other Marker", PumpHistoryEntryGroup.Bolus), //
+    JournalEntryInsulinMarker(0x42, "Insulin Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 0), // V6 = body(0)/was=1
+    JournalEntryOtherMarker(0x43, "Other Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1), // V6 = body(1)/was=0
     EnableSensorAutoCal(0x44, "Enable Sensor AutoCal", PumpHistoryEntryGroup.Glucose), //
     /**/EventUnknown_MM522_0x45(0x45, "Unknown Event 0x45", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     /**/EventUnknown_MM522_0x46(0x46, "Unknown Event 0x46", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
@@ -91,50 +88,47 @@ public enum PumpHistoryEntryType // implements CodeEnum
     /**/EventUnknown_MM522_0x4c(0x4c, "Unknown Event 0x4c", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     /**/EventUnknown_0x4d(0x4d, "Unknown Event 0x4d", PumpHistoryEntryGroup.Unknown), // V5: 512: 7, 522: 8 ????NS
     /**/EventUnknown_MM512_0x4e(0x4e, "Unknown Event 0x4e", PumpHistoryEntryGroup.Unknown), // /**/
-    ChangeBolusWizardSetup(0x4f, "Bolus Wizard Setup", PumpHistoryEntryGroup.Configuration, 2, 5, 32), //
+    ChangeBolusWizardSetup512(0x4f, "Bolus Wizard Setup (512)", PumpHistoryEntryGroup.Configuration, 2, 5, 32), //
     ChangeSensorSetup2(0x50, "Sensor Setup2", PumpHistoryEntryGroup.Configuration, 2, 5, 30), // Ian50
-    /**/Sensor51(0x51, "Unknown Event 0x51", PumpHistoryEntryGroup.Unknown), //
-    /**/Sensor52(0x52, "Unknown Event 0x52", PumpHistoryEntryGroup.Unknown), //
+    /**/Sensor_0x51(0x51, "Unknown Event 0x51", PumpHistoryEntryGroup.Unknown), //
+    /**/Sensor_0x52(0x52, "Unknown Event 0x52", PumpHistoryEntryGroup.Unknown), //
     ChangeSensorAlarmSilenceConfig(0x53, "Sensor Alarm Silence Config", PumpHistoryEntryGroup.Configuration, 2, 5, 1), // 8
-                                                                                                                       // -
-    // ChangeSensorAlarmSilenceConfig
-    /**/Sensor54(0x54, "Unknown Event 0x54", PumpHistoryEntryGroup.Unknown), // Ian54
-    /**/Sensor55(0x55, "Unknown Event 0x55", PumpHistoryEntryGroup.Unknown), //
+
+    /**/Sensor_0x54(0x54, "Unknown Event 0x54", PumpHistoryEntryGroup.Unknown), // Ian54
+    /**/Sensor_0x55(0x55, "Unknown Event 0x55", PumpHistoryEntryGroup.Unknown), //
     ChangeSensorRateOfChangeAlertSetup(0x56, "Sensor Rate Of Change Alert Setup", PumpHistoryEntryGroup.Configuration, 2, 5, 5), // 12
-    // ChangeSensorRateOfChangeAlertSetup
     ChangeBolusScrollStepSize(0x57, "Change Bolus Scroll Step Size", PumpHistoryEntryGroup.Configuration), //
 
     // V4
     // Andy58(0x58, "Unknown", 13, 5, 0), // TO DO is this one really there ???
 
-    BolusWizardChange(0x5a, "Bolus Wizard Change", PumpHistoryEntryGroup.Configuration, 2, 5, 117), // V2: 522+[B=143] // V6 124/144
+    ChangeBolusWizardSetup(0x5a, "Bolus Wizard Setup (512)", PumpHistoryEntryGroup.Configuration, 2, 5, 137), // V2: 522+[B=143] // V6 124 -> 144
     BolusWizardEstimate(0x5b, "Bolus Wizard Estimate", PumpHistoryEntryGroup.Configuration, 2, 5, 13), // 15 //
     UnabsorbedInsulin(0x5c, "Unabsorbed Insulin", PumpHistoryEntryGroup.Statistic, 5, 0, 0), // head[1] -> body
-                                                                                             // length
     SaveSettings(0x5d, "Save Settings", PumpHistoryEntryGroup.Configuration), //
     ChangeVariableBolus(0x5e, "Change Variable Bolus", PumpHistoryEntryGroup.Configuration), //
     ChangeAudioBolus(0x5f, "Easy Bolus Enabled", PumpHistoryEntryGroup.Configuration), // V3 ?
     ChangeBGReminderEnable(0x60, "BG Reminder Enable", PumpHistoryEntryGroup.Configuration), // questionable60
     ChangeAlarmClockEnable(0x61, "Alarm Clock Enable", PumpHistoryEntryGroup.Configuration), //
-    ChangeTempBasalType((byte)0x62, "Change Basal Type", PumpHistoryEntryGroup.Configuration), // ChangeTempBasalTypePumpEvent
+    ChangeTempBasalType((byte) 0x62, "Change Basal Type", PumpHistoryEntryGroup.Configuration), // ChangeTempBasalTypePumpEvent
     ChangeAlarmNotifyMode(0x63, "Change Alarm Notify Mode", PumpHistoryEntryGroup.Configuration), //
     ChangeTimeFormat(0x64, "Change Time Format", PumpHistoryEntryGroup.Configuration), //
-    ChangeReservoirWarningTime((byte)0x65, "Change Reservoir Warning Time", PumpHistoryEntryGroup.Configuration), //
+    ChangeReservoirWarningTime((byte) 0x65, "Change Reservoir Warning Time", PumpHistoryEntryGroup.Configuration), //
     ChangeBolusReminderEnable(0x66, "Change Bolus Reminder Enable", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
-    ChangeBolusReminderTime((byte)0x67, "Change Bolus Reminder Time", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
-    DeleteBolusReminderTime((byte)0x68, "Delete Bolus Reminder Time", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
+    ChangeBolusReminderTime((byte) 0x67, "Change Bolus Reminder Time", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
+    DeleteBolusReminderTime((byte) 0x68, "Delete Bolus Reminder Time", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
     BolusReminder(0x69, "Bolus Reminder", PumpHistoryEntryGroup.Configuration, 2, 5, 0), // Ian69
     DeleteAlarmClockTime(0x6a, "Delete Alarm Clock Time", PumpHistoryEntryGroup.Configuration, 2, 5, 7), // 14
 
     DailyTotals515(0x6c, "Daily Totals (515)", PumpHistoryEntryGroup.Statistic, 1, 2, 33), // v4: 0,0,36. v5: 1,2,33
     DailyTotals522(0x6d, "Daily Totals (522)", PumpHistoryEntryGroup.Statistic, 1, 2, 41), //
     DailyTotals523(0x6e, "Daily Totals (523)", PumpHistoryEntryGroup.Statistic, 1, 2, 49), // 1102014-03-17T00:00:00
-    ChangeCarbUnits((byte)0x6f, "Change Carb Units", PumpHistoryEntryGroup.Configuration), //
-    /**/EventUnknown_MM522_0x70((byte)0x70, "Unknown Event 0x70", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
+    ChangeCarbUnits((byte) 0x6f, "Change Carb Units", PumpHistoryEntryGroup.Configuration), //
+    /**/EventUnknown_MM522_0x70((byte) 0x70, "Unknown Event 0x70", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
 
     BasalProfileStart(0x7b, "Basal Profile Start", PumpHistoryEntryGroup.Basal, 2, 5, 3), // // 722
-    ChangeWatchdogEnable((byte)0x7c, "Change Watchdog Enable", PumpHistoryEntryGroup.Configuration), //
-    ChangeOtherDeviceID((byte)0x7d, "Change Other Device ID", PumpHistoryEntryGroup.Configuration, 2, 5, 30), //
+    ChangeWatchdogEnable((byte) 0x7c, "Change Watchdog Enable", PumpHistoryEntryGroup.Configuration), //
+    ChangeOtherDeviceID((byte) 0x7d, "Change Other Device ID", PumpHistoryEntryGroup.Configuration, 2, 5, 30), //
 
     ChangeWatchdogMarriageProfile(0x81, "Change Watchdog Marriage Profile", PumpHistoryEntryGroup.Configuration, 2, 5, 5), // 12
     DeleteOtherDeviceID(0x82, "Delete Other Device ID", PumpHistoryEntryGroup.Configuration, 2, 5, 5), //
@@ -206,7 +200,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
 
     PumpHistoryEntryType(int opCode, String name, PumpHistoryEntryGroup group, int head, int date, int body) {
-        this.opCode = (byte)opCode;
+        this.opCode = (byte) opCode;
         this.description = name;
         this.headLength = head;
         this.dateLength = date;
@@ -220,7 +214,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
         EndResultTotals.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 3));
         Bolus.addSpecialRuleHead(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8));
         // BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
-        BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137)); // V5:
+        //ChangeBolusWizardSetup.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137)); // V5:
         // 522
         // has
         // old
@@ -254,32 +248,32 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     public static boolean isAAPSRelevantEntry(PumpHistoryEntryType entryType) {
         return (entryType == PumpHistoryEntryType.Bolus || // Treatments
-            entryType == PumpHistoryEntryType.TempBasalRate || //
-            entryType == PumpHistoryEntryType.TempBasalDuration || //
+                entryType == PumpHistoryEntryType.TempBasalRate || //
+                entryType == PumpHistoryEntryType.TempBasalDuration || //
 
-            entryType == PumpHistoryEntryType.Prime || // Pump Status Change
-            entryType == PumpHistoryEntryType.PumpSuspend || //
-            entryType == PumpHistoryEntryType.PumpResume || //
-            entryType == PumpHistoryEntryType.Rewind || //
-            entryType == PumpHistoryEntryType.NoDeliveryAlarm || // no delivery
-            entryType == PumpHistoryEntryType.BasalProfileStart || //
+                entryType == PumpHistoryEntryType.Prime || // Pump Status Change
+                entryType == PumpHistoryEntryType.Suspend || //
+                entryType == PumpHistoryEntryType.Resume || //
+                entryType == PumpHistoryEntryType.Rewind || //
+                entryType == PumpHistoryEntryType.NoDeliveryAlarm || // no delivery
+                entryType == PumpHistoryEntryType.BasalProfileStart || //
 
-            entryType == PumpHistoryEntryType.ChangeTime || // Time Change
-            entryType == PumpHistoryEntryType.NewTimeSet || //
+                entryType == PumpHistoryEntryType.ChangeTime || // Time Change
+                entryType == PumpHistoryEntryType.NewTimeSet || //
 
-            entryType == PumpHistoryEntryType.ChangeBasalPattern || // Configuration
-            entryType == PumpHistoryEntryType.ClearSettings || //
-            entryType == PumpHistoryEntryType.SaveSettings || //
-            entryType == PumpHistoryEntryType.ChangeMaxBolus || //
-            entryType == PumpHistoryEntryType.ChangeMaxBasal || //
-            entryType == PumpHistoryEntryType.ChangeTempBasalType || //
+                entryType == PumpHistoryEntryType.ChangeBasalPattern || // Configuration
+                entryType == PumpHistoryEntryType.ClearSettings || //
+                entryType == PumpHistoryEntryType.SaveSettings || //
+                entryType == PumpHistoryEntryType.ChangeMaxBolus || //
+                entryType == PumpHistoryEntryType.ChangeMaxBasal || //
+                entryType == PumpHistoryEntryType.ChangeTempBasalType || //
 
-            entryType == PumpHistoryEntryType.ChangeBasalProfile_NewProfile || // Basal profile
+                entryType == PumpHistoryEntryType.ChangeBasalProfile_NewProfile || // Basal profile
 
-            entryType == PumpHistoryEntryType.DailyTotals515 || // Daily Totals
-            entryType == PumpHistoryEntryType.DailyTotals522 || //
-            entryType == PumpHistoryEntryType.DailyTotals523 || //
-        entryType == PumpHistoryEntryType.EndResultTotals);
+                entryType == PumpHistoryEntryType.DailyTotals515 || // Daily Totals
+                entryType == PumpHistoryEntryType.DailyTotals522 || //
+                entryType == PumpHistoryEntryType.DailyTotals523 || //
+                entryType == PumpHistoryEntryType.EndResultTotals);
     }
 
 
