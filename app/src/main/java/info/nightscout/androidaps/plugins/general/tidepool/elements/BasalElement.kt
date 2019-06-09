@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
+import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import java.util.*
@@ -27,14 +28,15 @@ class BasalElement(tbr: TemporaryBasal)
         type = "basal"
         timestamp = tbr.date
         rate = tbr.tempBasalConvertedToAbsolute(tbr.date, ProfileFunctions.getInstance().getProfile(tbr.date))
-        duration = tbr.durationInMsec()
+        duration = tbr.end() - tbr.start()
     }
 
     companion object {
-        internal fun fromTemporaryBasals(tbrList: List<TemporaryBasal>): List<BasalElement> {
+        internal fun fromTemporaryBasals(tbrList: Intervals<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
             val results = LinkedList<BasalElement>()
-            for (tbr in tbrList) {
-                results.add(BasalElement(tbr))
+            for (tbr in tbrList.list) {
+                if (tbr.date >= start && tbr.date <= end && tbr.durationInMinutes != 0)
+                    results.add(BasalElement(tbr))
             }
             return results
         }

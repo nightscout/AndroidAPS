@@ -477,7 +477,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
-    public Intervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
+    public NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         synchronized (tempBasals) {
             return new NonOverlappingIntervals<>(tempBasals);
         }

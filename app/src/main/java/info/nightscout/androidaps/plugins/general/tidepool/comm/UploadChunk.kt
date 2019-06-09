@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
@@ -108,8 +108,9 @@ object UploadChunk {
     }
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val tbrs = MainApp.getDbHelper().getTemporaryBasalsDataFromTime(start, end, true)
-        val selection = BasalElement.fromTemporaryBasals(tbrs)
+        val tbrs = TreatmentsPlugin.getPlugin().temporaryBasalsFromHistory
+        tbrs.merge()
+        val selection = BasalElement.fromTemporaryBasals(tbrs, start, end) // TODO do not upload running TBR
         if (selection.isNotEmpty())
             RxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
         return selection
