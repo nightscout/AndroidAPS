@@ -281,6 +281,7 @@ dependencies {
     androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
 
     // new for tidepool
