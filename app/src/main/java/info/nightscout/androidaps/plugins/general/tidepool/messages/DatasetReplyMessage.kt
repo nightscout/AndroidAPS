@@ -37,6 +37,6 @@ class DatasetReplyMessage {
     }
 
     fun getUploadId(): String? {
-        return if (data != null && data!!.uploadId != null) data!!.uploadId else uploadId
+        return data?.uploadId ?: uploadId
     }
 }

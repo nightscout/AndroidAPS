@@ -1,3 +1,5 @@
 package info.nightscout.androidaps.plugins.general.tidepool.events
 
-class EventTidepoolDoUpload
+import info.nightscout.androidaps.events.Event
+
+class EventTidepoolDoUpload : Event()

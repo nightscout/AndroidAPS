@@ -40,6 +40,8 @@ object TidepoolUploader {
         DISCONNECTED, CONNECTING, CONNECTED, FAILED
     }
 
+    val PUMPTYPE = "Tandem"
+
     var connectionStatus: ConnectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
 
     fun getRetrofitInstance(): Retrofit? {

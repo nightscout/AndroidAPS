@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.utils.InstanceId
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,7 +25,7 @@ class ProfileElement(ps: ProfileSwitch)
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
     @Expose
-    internal var deviceId: String = (ConfigBuilderPlugin.getPlugin().activePump?.model() ?: "Medtronic") + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber() ?: InstanceId.instanceId())
+    internal var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber() ?: InstanceId.instanceId())
     @Expose
     internal var deviceSerialNumber: String = ConfigBuilderPlugin.getPlugin().activePump?.serialNumber() ?: InstanceId.instanceId()
     @Expose

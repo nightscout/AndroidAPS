@@ -26,6 +26,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -53,9 +54,11 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         super.onStart()
         disposable += RxBus
                 .toObservable(EventTidepoolDoUpload::class.java)
+                .observeOn(Schedulers.io())
                 .subscribe({ doUpload() }, {})
         disposable += RxBus
                 .toObservable(EventTidepoolResetData::class.java)
+                .observeOn(Schedulers.io())
                 .subscribe({
                     if (TidepoolUploader.connectionStatus != TidepoolUploader.ConnectionStatus.CONNECTED) {
                         log.debug("Not connected for delete Dataset")
@@ -67,9 +70,11 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                 }, {})
         disposable += RxBus
                 .toObservable(EventTidepoolStatus::class.java)
+                .observeOn(Schedulers.io())
                 .subscribe({ event -> addToLog(event) }, {})
         disposable += RxBus
                 .toObservable(EventNewBG::class.java)
+                .observeOn(Schedulers.io())
                 .subscribe({ event ->
                     if (event.bgReading!!.date < TidepoolUploader.getLastEnd())
                         TidepoolUploader.setLastEnd(event.bgReading.date)
@@ -81,6 +86,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                 }, {})
         disposable += RxBus
                 .toObservable(EventPreferenceChange::class.java)
+                .observeOn(Schedulers.io())
                 .subscribe({ event ->
                     if (event.isChanged(R.string.key_tidepool_dev_servers)
                             || event.isChanged(R.string.key_tidepool_username)
@@ -90,6 +96,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                 }, {})
         disposable += RxBus
                 .toObservable(EventNetworkChange::class.java)
+                .observeOn(Schedulers.io())
                 .subscribe({}, {}) // TODO start upload on wifi connect
 
     }
