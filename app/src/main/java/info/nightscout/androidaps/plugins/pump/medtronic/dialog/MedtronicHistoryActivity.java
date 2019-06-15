@@ -67,7 +67,7 @@ public class MedtronicHistoryActivity extends Activity {
         List<PumpHistoryEntry> list = new ArrayList<>();
         list.addAll(MedtronicPumpPlugin.getPlugin().getMedtronicHistoryData().getAllHistory());
 
-        LOG.debug("Items on full list: {}", list.size());
+        //LOG.debug("Items on full list: {}", list.size());
 
         if (group == PumpHistoryEntryGroup.All) {
             this.filteredHistoryList.addAll(list);
@@ -84,7 +84,7 @@ public class MedtronicHistoryActivity extends Activity {
             this.recyclerViewAdapter.notifyDataSetChanged();
         }
 
-        LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
+        //LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
     }
 
 
@@ -124,9 +124,9 @@ public class MedtronicHistoryActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.medtronic_history_activity);
 
-        historyTypeSpinner = (Spinner)findViewById(R.id.medtronic_historytype);
-        statusView = (TextView)findViewById(R.id.medtronic_historystatus);
-        recyclerView = (RecyclerView)findViewById(R.id.medtronic_history_recyclerview);
+        historyTypeSpinner = (Spinner) findViewById(R.id.medtronic_historytype);
+        statusView = (TextView) findViewById(R.id.medtronic_historystatus);
+        recyclerView = (RecyclerView) findViewById(R.id.medtronic_history_recyclerview);
 
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
@@ -148,7 +148,7 @@ public class MedtronicHistoryActivity extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (manualChange)
                     return;
-                TypeList selected = (TypeList)historyTypeSpinner.getSelectedItem();
+                TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
                 showingType = selected;
                 selectedGroup = selected.entryGroup;
                 filterHistory(selectedGroup);
@@ -218,7 +218,7 @@ public class MedtronicHistoryActivity extends Activity {
         @Override
         public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.medtronic_history_item, //
-                viewGroup, false);
+                    viewGroup, false);
             return new HistoryViewHolder(v);
         }
 
@@ -256,9 +256,9 @@ public class MedtronicHistoryActivity extends Activity {
             HistoryViewHolder(View itemView) {
                 super(itemView);
                 // cv = (CardView)itemView.findViewById(R.id.rileylink_history_item);
-                timeView = (TextView)itemView.findViewById(R.id.medtronic_history_time);
-                typeView = (TextView)itemView.findViewById(R.id.medtronic_history_source);
-                valueView = (TextView)itemView.findViewById(R.id.medtronic_history_description);
+                timeView = (TextView) itemView.findViewById(R.id.medtronic_history_time);
+                typeView = (TextView) itemView.findViewById(R.id.medtronic_history_source);
+                valueView = (TextView) itemView.findViewById(R.id.medtronic_history_description);
             }
         }
     }

@@ -3,12 +3,10 @@ package info.nightscout.androidaps.plugins.pump.medtronic;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -24,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -97,13 +96,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private MedtronicCommunicationManager medtronicCommunicationManager;
     private PumpHistoryEntry lastPumpHistoryEntry;
 
-    public static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    public static Gson gsonInstancePretty = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-            .setPrettyPrinting().create();
-
     public static boolean isBusy = false;
     private List<Long> busyTimestamps = new ArrayList<>();
-    private boolean sendIdToFirebase = false;
+    private boolean sentIdToFirebase = false;
 
 
     private MedtronicPumpPlugin() {
@@ -117,12 +112,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 PumpType.Medtronic_522_722 // we default to most basic model, correct model from config is loaded later
         );
 
-        // TODO remove this later
         displayConnectionMessages = false;
 
         medtronicHistoryData = new MedtronicHistoryData();
-        // medtronicCommunicationManager = MedtronicCommunicationManager.getInstance();
-        // medtronicCommunicationManager.setDoWakeUpBeforeCommand(false);
 
         serviceConnection = new ServiceConnection() {
 
@@ -241,6 +233,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                                     .readStatus("Scheduled Status Refresh", null);
                         }
                     }
+
+                    clearBusyQueue();
                 }
 
             } while (serviceRunning);
@@ -318,7 +312,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    private void clearBusyQueue() {
+    private synchronized void clearBusyQueue() {
+
+        if (busyTimestamps.size() == 0) {
+            return;
+        }
 
         Set<Long> deleteFromQueue = new HashSet<>();
 
@@ -331,8 +329,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (deleteFromQueue.size() == busyTimestamps.size()) {
             busyTimestamps.clear();
-            this.customActionClearBolusBlock.setEnabled(false);
-            refreshCustomActionsList();
+            setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, false);
         }
 
         if (deleteFromQueue.size() > 0) {
@@ -541,7 +538,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // read profile (once, later its controlled by isThisProfileSet method)
         medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
 
-        // TODO handle if tunning was needed (more than 5 timeouts)
         int errorCount = medtronicUIComm.getInvalidResponsesCount();
 
         if (errorCount >= 5) {
@@ -559,25 +555,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             pumpState = PumpDriverState.Initialized;
         }
 
-        if (!sendIdToFirebase) {
+        if (!sentIdToFirebase) {
+            Bundle params = new Bundle();
+            params.putString("version", BuildConfig.VERSION);
+            MainApp.getFirebaseAnalytics().logEvent("MedtronicPumpInit", params);
 
-
-            sendIdToFirebase = true;
+            sentIdToFirebase = true;
         }
 
-
-        // FIXME andy!!!
-        // MainApp.getFirebaseAnalytics().logCustomEvent(FirebaseAnalytics.Event.SELECT_CONTENT, event);
-        //
-        // FabricPrivacy.getInstance().logCustom( //
-        // new CustomEvent("MedtronicInitializePump") //
-        // .putCustomAttribute("buildversion", BuildConfig.BUILDVERSION) //
-        // .putCustomAttribute("version", BuildConfig.VERSION));
-        //
-        //
-        //
-        // MainApp.getFirebaseAnalytics().logEvent();
-        //
 
         isInitialized = true;
         // this.pumpState = PumpDriverState.Initialized;
@@ -598,6 +583,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         boolean invalid = false;
         Double[] basalsByHour = getMDTPumpStatus().basalsByHour;
+        PumpType pumpType = getMDTPumpStatus().getPumpType();
 
         if (isLoggingEnabled())
             LOG.debug("Current Basals (h):   "
@@ -612,26 +598,26 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         for (Profile.BasalValue basalValue : profile.getBasalValues()) {
 
+            double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value);
+
             int hour = basalValue.timeAsSeconds / (60 * 60);
 
-            if (!MedtronicUtil.isSame(basalsByHour[hour], basalValue.value)) {
+            if (!MedtronicUtil.isSame(basalsByHour[hour], basalValueValue)) {
                 invalid = true;
             }
 
-            stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValue.value));
+            stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValueValue));
             stringBuilder.append(" ");
         }
 
-        if (isLoggingEnabled())
+        if (isLoggingEnabled()) {
             LOG.debug(stringBuilder.toString());
 
-        if (!invalid) {
-            if (isLoggingEnabled())
+            if (!invalid) {
                 LOG.debug("Basal profile is same as AAPS one.");
-            // basalProfileChanged = false;
-        } else {
-            if (isLoggingEnabled())
+            } else {
                 LOG.debug("Basal profile on Pump is different than the AAPS one.");
+            }
         }
 
         return (!invalid);
@@ -772,14 +758,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
                         : MedtronicConst.Statistics.StandardBoluses);
 
-                // if (response)
-                {
-                    int bolusTime = (int) (detailedBolusInfo.insulin * 42.0d);
-                    long time = System.currentTimeMillis() + (bolusTime * 1000);
 
-                    this.busyTimestamps.add(time);
-                    setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, true);
-                }
+                // calculate time for bolus and set driver to busy for that time
+                int bolusTime = (int) (detailedBolusInfo.insulin * 42.0d);
+                long time = System.currentTimeMillis() + (bolusTime * 1000);
+
+                this.busyTimestamps.add(time);
+                setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, true);
 
                 return new PumpEnactResult().success(true) //
                         .enacted(true) //
@@ -975,8 +960,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private void readPumpHistory() {
 
-        if (isLoggingEnabled())
-            LOG.error(getLogPrefix() + "readPumpHistory WIP.");
+//        if (isLoggingEnabled())
+//            LOG.error(getLogPrefix() + "readPumpHistory WIP.");
 
         readPumpHistoryLogic();
 
@@ -1131,7 +1116,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         switch (refreshType) {
 
             case RemainingInsulin: {
-                Double remaining = pumpStatusLocal.reservoirRemainingUnits;
+                double remaining = pumpStatusLocal.reservoirRemainingUnits;
                 int min;
                 if (remaining > 50)
                     min = 4 * 60;
@@ -1171,10 +1156,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             }
 
             case GetData: {
-                Map<MedtronicStatusRefreshType, Long> shallowCopy = new HashMap<>();
-
-                shallowCopy.putAll(statusRefreshMap);
-                return shallowCopy;
+                return new HashMap<>(statusRefreshMap);
             }
 
             default:

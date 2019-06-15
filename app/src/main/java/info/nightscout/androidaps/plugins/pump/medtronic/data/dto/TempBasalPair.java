@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import com.google.gson.annotations.Expose;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -112,20 +112,19 @@ public class TempBasalPair {
 
     public byte[] getAsRawData() {
 
-        // TODO check if this works with 523 and higher
         List<Byte> list = new ArrayList<Byte>();
 
-        list.add((byte)5);
+        list.add((byte) 5);
 
         byte[] insulinRate = MedtronicUtil.getBasalStrokes(this.insulinRate, true);
-        byte timeMin = (byte)MedtronicUtil.getIntervalFromMinutes(durationMinutes);
+        byte timeMin = (byte) MedtronicUtil.getIntervalFromMinutes(durationMinutes);
 
         // list.add((byte) 0); // ?
 
         // list.add((byte) 0); // is_absolute
 
         if (insulinRate.length == 1)
-            list.add((byte)0x00);
+            list.add((byte) 0x00);
         else
             list.add(insulinRate[0]);
 
@@ -135,7 +134,7 @@ public class TempBasalPair {
         list.add(timeMin); // 3 (time) - OK
 
         if (insulinRate.length == 1)
-            list.add((byte)0x00);
+            list.add((byte) 0x00);
         else
             list.add(insulinRate[0]);
 
@@ -145,7 +144,7 @@ public class TempBasalPair {
     }
 
     public boolean isCancelTBR() {
-        return (MedtronicUtil.isSame(insulinRate, 0.0d) && durationMinutes==0);
+        return (MedtronicUtil.isSame(insulinRate, 0.0d) && durationMinutes == 0);
     }
 
 
@@ -165,6 +164,6 @@ public class TempBasalPair {
     @Override
     public String toString() {
         return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="
-            + isPercent + "]";
+                + isPercent + "]";
     }
 }

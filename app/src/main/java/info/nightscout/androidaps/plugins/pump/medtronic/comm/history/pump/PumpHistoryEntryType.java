@@ -120,7 +120,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     BolusReminder(0x69, "Bolus Reminder", PumpHistoryEntryGroup.Configuration, 2, 5, 0), // Ian69
     DeleteAlarmClockTime(0x6a, "Delete Alarm Clock Time", PumpHistoryEntryGroup.Configuration, 2, 5, 7), // 14
 
-    DailyTotals515(0x6c, "Daily Totals (515)", PumpHistoryEntryGroup.Statistic, 1, 2, 33), // v4: 0,0,36. v5: 1,2,33
+    DailyTotals515(0x6c, "Daily Totals (515)", PumpHistoryEntryGroup.Statistic, 1, 2, 35), // v4: 0,0,36. v5: 1,2,33
     DailyTotals522(0x6d, "Daily Totals (522)", PumpHistoryEntryGroup.Statistic, 1, 2, 41), //
     DailyTotals523(0x6e, "Daily Totals (523)", PumpHistoryEntryGroup.Statistic, 1, 2, 49), // 1102014-03-17T00:00:00
     ChangeCarbUnits((byte) 0x6f, "Change Carb Units", PumpHistoryEntryGroup.Configuration), //

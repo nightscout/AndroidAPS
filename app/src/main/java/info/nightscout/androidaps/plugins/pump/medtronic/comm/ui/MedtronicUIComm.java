@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * Created by andy on 6/14/18.
  */
-
 public class MedtronicUIComm {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -68,10 +67,8 @@ public class MedtronicUIComm {
         // }
         // }
 
-        if (!task.isReceived()) {
-            if (isLogEnabled())
-                LOG.warn("Reply not received for " + commandType);
-
+        if (!task.isReceived() && isLogEnabled()) {
+            LOG.warn("Reply not received for " + commandType);
         }
 
         task.postProcess(uiPostprocessor);

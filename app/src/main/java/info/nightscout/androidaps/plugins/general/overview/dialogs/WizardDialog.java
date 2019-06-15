@@ -53,6 +53,7 @@ import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -354,19 +355,39 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                             MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                         }
-                                        ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
-                                            @Override
-                                            public void run() {
-                                                if (!result.success) {
-                                                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                                    i.putExtra("soundid", R.raw.boluserror);
-                                                    i.putExtra("status", result.comment);
-                                                    i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
-                                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    MainApp.instance().startActivity(i);
+
+                                        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+
+                                        if (pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+                                            ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(0.0d, 120, true, profile, new Callback() {
+                                                @Override
+                                                public void run() {
+                                                    if (!result.success) {
+                                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                        i.putExtra("soundid", R.raw.boluserror);
+                                                        i.putExtra("status", result.comment);
+                                                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        MainApp.instance().startActivity(i);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        } else {
+
+                                            ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
+                                                @Override
+                                                public void run() {
+                                                    if (!result.success) {
+                                                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                        i.putExtra("soundid", R.raw.boluserror);
+                                                        i.putExtra("status", result.comment);
+                                                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        MainApp.instance().startActivity(i);
+                                                    }
+                                                }
+                                            });
+                                        }
                                     }
                                     DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                                     detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;

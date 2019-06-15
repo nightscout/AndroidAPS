@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BolusWizardDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.DailyTotalsDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProcessDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -52,7 +53,7 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by andy on 10/12/18.
  */
-
+// TODO clean up this class (remove/comment logs)
 public class MedtronicHistoryData {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -66,7 +67,8 @@ public class MedtronicHistoryData {
     private Gson gsonPretty;
     //private List<PumpHistoryEntry> fakeTBRs;
 
-    DatabaseHelper databaseHelper = MainApp.getDbHelper();
+    private DatabaseHelper databaseHelper = MainApp.getDbHelper();
+    private ClockDTO pumpTime;
 
 
     public MedtronicHistoryData() {
@@ -99,7 +101,7 @@ public class MedtronicHistoryData {
 
         this.newHistory = newEntries;
 
-        showLogs("List of history (before filtering): ", gsonPretty.toJson(this.newHistory));
+        showLogs("List of history (before filtering): [" + this.newHistory.size() + "]", gsonPretty.toJson(this.newHistory));
     }
 
 
@@ -176,7 +178,7 @@ public class MedtronicHistoryData {
 
         if (isLogEnabled())
             LOG.debug("New History entries found: {}", this.newHistory.size());
-        showLogs("List of history (after filtering): ", gsonPretty.toJson(this.newHistory));
+        showLogs("List of history (after filtering): [" + this.newHistory.size() + "]", gsonPretty.toJson(this.newHistory));
 
     }
 
@@ -403,8 +405,6 @@ public class MedtronicHistoryData {
             // processSuspends(treatments);
         }
     }
-
-    ClockDTO pumpTime;
 
 
     private void processTDDs(List<PumpHistoryEntry> tddsIn) {

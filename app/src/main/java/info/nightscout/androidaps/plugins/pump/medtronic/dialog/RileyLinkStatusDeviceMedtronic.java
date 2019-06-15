@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
@@ -19,10 +19,13 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 
 /**
  * Created by andy on 5/19/18.
+ * <p>
+ * This is for 3rd tab, called Medtronic (in RileyLink stats), that should work similarly as the one in Loop.
+ * <p>
+ * Showing currently selected RL, speed of RL, ability to issue simple commands (getModel, tuneUp, gerProfile)
  */
 
-// FIXME needs to be implemented
-@Deprecated
+// TODO needs to be implemented
 public class RileyLinkStatusDeviceMedtronic extends Fragment implements RefreshableInterface {
 
     // @BindView(R.id.rileylink_history_list)
@@ -45,7 +48,7 @@ public class RileyLinkStatusDeviceMedtronic extends Fragment implements Refresha
     public void onStart() {
         super.onStart();
 
-        this.listView = (ListView)getActivity().findViewById(R.id.rileylink_history_list);
+        this.listView = (ListView) getActivity().findViewById(R.id.rileylink_history_list);
 
         listView.setAdapter(adapter);
 
@@ -136,12 +139,12 @@ public class RileyLinkStatusDeviceMedtronic extends Fragment implements Refresha
             if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_status_device_item, null);
                 viewHolder = new RileyLinkStatusDeviceMedtronic.ViewHolder();
-                viewHolder.itemTime = (TextView)view.findViewById(R.id.rileylink_history_time);
-                viewHolder.itemSource = (TextView)view.findViewById(R.id.rileylink_history_source);
-                viewHolder.itemDescription = (TextView)view.findViewById(R.id.rileylink_history_description);
+                viewHolder.itemTime = (TextView) view.findViewById(R.id.rileylink_history_time);
+                viewHolder.itemSource = (TextView) view.findViewById(R.id.rileylink_history_source);
+                viewHolder.itemDescription = (TextView) view.findViewById(R.id.rileylink_history_description);
                 view.setTag(viewHolder);
             } else {
-                viewHolder = (RileyLinkStatusDeviceMedtronic.ViewHolder)view.getTag();
+                viewHolder = (RileyLinkStatusDeviceMedtronic.ViewHolder) view.getTag();
             }
 
             RLHistoryItem item = historyItemList.get(i);

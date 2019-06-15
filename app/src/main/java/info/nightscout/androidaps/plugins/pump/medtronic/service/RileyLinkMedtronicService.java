@@ -199,11 +199,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    public boolean handleIncomingServiceTransport(Intent intent) {
-        return false;
-    }
-
-
     private boolean isLogEnabled() {
         return L.isEnabled(L.PUMPCOMM);
     }

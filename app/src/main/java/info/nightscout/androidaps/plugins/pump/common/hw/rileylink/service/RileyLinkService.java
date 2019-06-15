@@ -105,7 +105,7 @@ public abstract class RileyLinkService extends Service {
     /**
      * Prefix for Device specific broadcast identifier prefix (for example MSG_PUMP_ for pump or
      * MSG_POD_ for Omnipod)
-     * 
+     *
      * @return
      */
     public abstract String getDeviceSpecificBroadcastsIdentifierPrefix();
@@ -118,9 +118,6 @@ public abstract class RileyLinkService extends Service {
 
 
     public abstract RileyLinkCommunicationManager getDeviceCommunicationManager();
-
-
-    public abstract boolean handleIncomingServiceTransport(Intent intent);
 
 
     // Here is where the wake-lock begins:
@@ -175,7 +172,7 @@ public abstract class RileyLinkService extends Service {
             } else {
                 if (isLogEnabled())
                     LOG.warn("Disconnecting from old RL (" + rileyLinkServiceData.rileylinkAddress
-                        + "), reconnecting to new: " + deviceAddress);
+                            + "), reconnecting to new: " + deviceAddress);
 
                 rileyLinkBLE.disconnect();
                 // prolly need to shut down listening thread too?
@@ -192,7 +189,7 @@ public abstract class RileyLinkService extends Service {
             if (RileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
                     LOG.error("RileyLink can't get activated, Bluetooth is not functioning correctly. {}",
-                        RileyLinkUtil.getError().name());
+                            RileyLinkUtil.getError().name());
                     return false;
                 }
             }
@@ -238,7 +235,7 @@ public abstract class RileyLinkService extends Service {
         if (newFrequency == 0.0d) {
             // error tuning pump, pump not present ??
             RileyLinkUtil
-                .setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
+                    .setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
         } else {
             getRileyLinkCommunicationManager().clearNotConnectedCount();
             RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
@@ -271,7 +268,7 @@ public abstract class RileyLinkService extends Service {
 
 
     public void changeRileyLinkEncoding(RileyLinkEncodingType encodingType) {
-        if (rfspy!=null) {
+        if (rfspy != null) {
             rfspy.setRileyLinkEncoding(encodingType);
         }
     }

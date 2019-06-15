@@ -13,45 +13,38 @@ public enum MedtronicDeviceType {
     Unknown_Device, //
 
     // Pump
-    // Medtronic_508_508c(null, null), //
-    Medtronic_511(MedtronicConverterType.Pump511Converter, null, "511"), //
+    Medtronic_511("511"), //
 
-    Medtronic_512(MedtronicConverterType.Pump512Converter, null, "512"), //
-    Medtronic_712(MedtronicConverterType.Pump512Converter, null, "712"), //
+    Medtronic_512("512"), //
+    Medtronic_712("712"), //
     Medtronic_512_712(Medtronic_512, Medtronic_712), //
 
-    Medtronic_515(MedtronicConverterType.Pump515Converter, null, "515"), //
-    Medtronic_715(MedtronicConverterType.Pump515Converter, null, "715"), //
+    Medtronic_515("515"), //
+    Medtronic_715("715"), //
     Medtronic_515_715(Medtronic_515, Medtronic_715), //
 
-    Medtronic_522(MedtronicConverterType.Pump515Converter, MedtronicConverterType.CGMS522Converter, "522"), //
-    Medtronic_722(MedtronicConverterType.Pump515Converter, MedtronicConverterType.CGMS522Converter, "722"), //
+    Medtronic_522("522"), //
+    Medtronic_722("722"), //
     Medtronic_522_722(Medtronic_522, Medtronic_722), //
 
-    Medtronic_523_Revel(MedtronicConverterType.Pump523Converter, MedtronicConverterType.CGMS523Converter, "523"), //
-    Medtronic_723_Revel(MedtronicConverterType.Pump523Converter, MedtronicConverterType.CGMS523Converter, "723"), //
+    Medtronic_523_Revel("523"), //
+    Medtronic_723_Revel("723"), //
 
-    Medtronic_554_Veo(MedtronicConverterType.Pump523Converter, MedtronicConverterType.CGMS523Converter, "554"), //
-    Medtronic_754_Veo(MedtronicConverterType.Pump523Converter, MedtronicConverterType.CGMS523Converter, "754"), //
-    // Minimed_640G(MedtronicConverterType.Pump523Converter, MedtronicConverterType.CGMS523Converter, "640G", null),
+    Medtronic_554_Veo("554"), //
+    Medtronic_754_Veo("754"), //
 
     Medtronic_512andHigher(Medtronic_512, Medtronic_712, Medtronic_515, Medtronic_715, Medtronic_522, Medtronic_722, //
-    Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo), //
+            Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo), //
 
     Medtronic_515andHigher(Medtronic_515, Medtronic_715, Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, //
-    Medtronic_554_Veo, Medtronic_754_Veo), //
+            Medtronic_554_Veo, Medtronic_754_Veo), //
     Medtronic_522andHigher(Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, //
-    Medtronic_554_Veo, Medtronic_754_Veo), //
+            Medtronic_554_Veo, Medtronic_754_Veo), //
     Medtronic_523andHigher(Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, //
-    Medtronic_754_Veo), //
+            Medtronic_754_Veo), //
 
-    // Medtronic_553andHigher(Medtronic_553_Revel, Medtronic_753_Revel, Medtronic_554_Veo, Medtronic_754_Veo), //
     Medtronic_554andHigher(Medtronic_554_Veo, Medtronic_754_Veo), //
 
-    // CGMS
-    MedtronicCGMSGold(null, MedtronicConverterType.CGMS522Converter, null), //
-
-    MedtronicGuradianRealTime(null, MedtronicConverterType.CGMS522Converter, null), //
 
     //
     All;
@@ -71,21 +64,14 @@ public enum MedtronicDeviceType {
 
     }
 
-    MedtronicConverterType pumpConverter;
-    MedtronicConverterType cgmsConverter;
     private String pumpModel;
 
-    // String smallReservoirPump;
-    // String bigReservoirPump;
     private boolean isFamily;
     private MedtronicDeviceType[] familyMembers = null;
 
 
-    MedtronicDeviceType(MedtronicConverterType pumpConverter, MedtronicConverterType cgmsConverter, String pumpModel) {
+    MedtronicDeviceType(String pumpModel) {
         this.isFamily = false;
-        this.pumpConverter = pumpConverter;
-        this.cgmsConverter = cgmsConverter;
-
         this.pumpModel = pumpModel;
     }
 
@@ -131,16 +117,6 @@ public enum MedtronicDeviceType {
 
     public MedtronicDeviceType[] getFamilyMembers() {
         return familyMembers;
-    }
-
-
-    public MedtronicConverterType getCGMSConverterType() {
-        return cgmsConverter;
-    }
-
-
-    public MedtronicConverterType getPumpConverterType() {
-        return pumpConverter;
     }
 
 

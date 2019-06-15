@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R;
 
 /**
  * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -37,9 +37,9 @@ public enum PumpHistoryEntryGroup {
         list = new ArrayList<>();
 
         for (PumpHistoryEntryGroup pumpHistoryEntryGroup : values()) {
-            if (doNotTranslate) {
-                pumpHistoryEntryGroup.translated = MainApp.gs(pumpHistoryEntryGroup.resourceId);
-            }
+            //if (doNotTranslate) {
+            pumpHistoryEntryGroup.translated = MainApp.gs(pumpHistoryEntryGroup.resourceId);
+            //}
             list.add(pumpHistoryEntryGroup);
         }
     }

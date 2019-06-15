@@ -52,7 +52,7 @@ public class RFSpy {
     private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
-    double currentFrequencyMHz;
+    Double currentFrequencyMHz;
 
 
     public RFSpy(RileyLinkBLE rileyLinkBle) {
@@ -415,7 +415,8 @@ public class RFSpy {
      * Reset RileyLink Configuration (set all updateRegisters)
      */
     public void resetRileyLinkConfiguration() {
-        this.setBaseFrequency(this.currentFrequencyMHz);
+        if (this.currentFrequencyMHz != null)
+            this.setBaseFrequency(this.currentFrequencyMHz);
     }
 
 

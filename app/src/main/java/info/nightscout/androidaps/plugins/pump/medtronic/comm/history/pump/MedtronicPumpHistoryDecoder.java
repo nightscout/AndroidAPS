@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
+import android.util.Log;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     private PumpHistoryEntry tbrPreviousRecord;
     private PumpHistoryEntry changeTimeRecord;
     private MedtronicDeviceType deviceType;
+    private static final String TAG = "MdtPumpHistoryDecoder";
 
 
     public MedtronicPumpHistoryDecoder() {
@@ -54,7 +57,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         int elementStart = 0;
 
         if (dataClear.size() == 0) {
-            LOG.error("Empty page.");
+            Log.e(TAG, "Empty page.");
             return outList;
         }
 
@@ -72,7 +75,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 continue;
             } else {
                 if (skipped != null) {
-                    LOG.debug(" ... Skipped " + skipped);
+                    Log.w(TAG, " ... Skipped " + skipped);
                     skipped = null;
                 }
             }
@@ -142,15 +145,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
                 RecordDecodeStatus decoded = decodeRecord(pe);
 
-                if (decoded == RecordDecodeStatus.WIP) {
-                    LOG.warn("#" + record + " " + decoded.getDescription() + "  " + pe);
+                if ((decoded == RecordDecodeStatus.OK) || (decoded == RecordDecodeStatus.Ignored)) {
+                    Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
+                } else {
+                    Log.w(TAG, "#" + record + " " + decoded.getDescription() + "  " + pe);
                 }
-
-                // if ((decoded == RecordDecodeStatus.OK) || (decoded == RecordDecodeStatus.Ignored)) {
-                // LOG.info("#" + record + " " + decoded.getDescription() + " " + pe);
-                // } else {
-                // LOG.warn("#" + record + " " + decoded.getDescription() + "  " + pe);
-                // }
 
                 addToStatistics(pe, decoded, null);
 

@@ -1,13 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
  * Created by andy on 5/9/18.
+ * High level decoder for data returned through MedtroniUIComm
  */
 
 public class MedtronicConverter {
@@ -37,7 +37,7 @@ public class MedtronicConverter {
 
         if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
             LOG.warn("Content is empty or too short, no data to convert (type={},isNull={},length={})",
-                commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
+                    commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
             return null;
         }
 
@@ -117,41 +117,6 @@ public class MedtronicConverter {
     }
 
 
-    protected BasalProfile decodeProfile2(byte[] rep) {
-        // byte rep[] = minimedReply.getRawData();
-
-        // String profile = getProfileName(minimedReply);
-
-        BasalProfile basalProfile = new BasalProfile();
-
-        // 0x12 0x00 0x00 0x16 0x00 0x11 0x00
-
-        if ((rep.length >= 3) && (rep[2] == 0x3F)) {
-            // String i18value = i18nControl.getMessage("NOT_SET");
-            // writeSetting(key, i18value, i18value, PumpConfigurationGroup.Basal);
-            return null;
-        }
-
-        int time_x;
-        double vald;
-
-        for (int i = 0; i < rep.length; i += 3) {
-
-            vald = MedtronicUtil.decodeBasalInsulin(rep[i + 1], rep[i]);
-
-            time_x = rep[i + 2];
-
-            LocalTime atd = MedtronicUtil.getTimeFrom30MinInterval(time_x);
-
-            if ((i != 0) && (time_x == 0)) {
-                break;
-            }
-        }
-
-        return basalProfile;
-    }
-
-
     private BatteryStatusDTO decodeBatteryStatus(byte[] rawData) {
         // 00 7C 00 00
 
@@ -170,9 +135,7 @@ public class MedtronicConverter {
         if (rawData.length > 1) {
 
             // if response in 3 bytes then we add additional information
-            // double d = MedtronicUtil.makeUnsignedShort(rawData[2], rawData[1]) / 100.0d;
-
-            double d = (ByteUtil.toInt(rawData[1], rawData[2])*1.0d) / 100.0d;
+            double d = (ByteUtil.toInt(rawData[1], rawData[2]) * 1.0d) / 100.0d;
 
             batteryStatus.voltage = d;
             batteryStatus.extendedDataReceived = true;
@@ -187,7 +150,7 @@ public class MedtronicConverter {
 
         this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
 
-        int strokes = pumpModel==null ? 10 : pumpModel.getBolusStrokes();
+        int strokes = pumpModel == null ? 10 : pumpModel.getBolusStrokes();
 
         if (strokes == 40) {
             startIdx = 2;
@@ -214,8 +177,8 @@ public class MedtronicConverter {
             return pumpTime;
         } catch (IllegalFieldValueException e) {
             LOG.error(
-                "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
-                year, month, day, hours, minutes, seconds);
+                    "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
+                    year, month, day, hours, minutes, seconds);
             return null;
         }
 
@@ -239,26 +202,26 @@ public class MedtronicConverter {
 
         if (rd[2] == 1) {
             addSettingToMap("PCFG_AUDIO_BOLUS_STEP_SIZE", "" + decodeBolusInsulin(ByteUtil.asUINT8(rd[3])),
-                PumpConfigurationGroup.Bolus, map);
+                    PumpConfigurationGroup.Bolus, map);
         }
 
         addSettingToMap("PCFG_VARIABLE_BOLUS_ENABLED", parseResultEnable(rd[4]), PumpConfigurationGroup.Bolus, map);
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map);
         addSettingToMap(
-            "PCFG_MAX_BASAL",
-            ""
-                + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[getSettingIndexMaxBasal()],
-                    rd[getSettingIndexMaxBasal() + 1])), PumpConfigurationGroup.Basal, map);
+                "PCFG_MAX_BASAL",
+                ""
+                        + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[getSettingIndexMaxBasal()],
+                        rd[getSettingIndexMaxBasal() + 1])), PumpConfigurationGroup.Basal, map);
         addSettingToMap("CFG_BASE_CLOCK_MODE", rd[getSettingIndexTimeDisplayFormat()] == 0 ? "12h" : "24h",
-            PumpConfigurationGroup.General, map);
+                PumpConfigurationGroup.General, map);
 
         if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] == 0 ? 50 : 100), PumpConfigurationGroup.Insulin,
-                map);
+                    map);
 //            LOG.debug("Insulin concentration: " + rd[9]);
         } else {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + (rd[9] != 0 ? 50 : 100), PumpConfigurationGroup.Insulin,
-                map);
+                    map);
 //            LOG.debug("Insulin concentration: " + rd[9]);
         }
         addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10]), PumpConfigurationGroup.Basal, map);
@@ -313,10 +276,10 @@ public class MedtronicConverter {
         Map<String, PumpSettingDTO> map = decodeSettings512(rd);
 
         addSettingToMap("PCFG_MM_RESERVOIR_WARNING_TYPE_TIME", rd[18] != 0 ? "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME"
-            : "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS", PumpConfigurationGroup.Other, map);
+                : "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS", PumpConfigurationGroup.Other, map);
 
         addSettingToMap("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]),
-            PumpConfigurationGroup.Other, map);
+                PumpConfigurationGroup.Other, map);
 
         addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20]), PumpConfigurationGroup.Other, map);
 
@@ -326,7 +289,7 @@ public class MedtronicConverter {
             addSettingToMap("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22]), PumpConfigurationGroup.Other, map);
             addSettingToMap("PCFG_OTHER_DEVICE_ENABLE", parseResultEnable(rd[23]), PumpConfigurationGroup.Other, map);
             addSettingToMap("PCFG_OTHER_DEVICE_PAIRED_STATE", parseResultEnable(rd[24]), PumpConfigurationGroup.Other,
-                map);
+                    map);
         }
 
         return map;
@@ -354,7 +317,7 @@ public class MedtronicConverter {
     public void decodeInsulinActionSetting(byte[] ai, Map<String, PumpSettingDTO> map) {
         if (MedtronicDeviceType.isSameDevice(pumpModel, MedtronicDeviceType.Medtronic_512_712)) {
             addSettingToMap("PCFG_INSULIN_ACTION_TYPE", (ai[17] != 0 ? "Regular" : "Fast"),
-                PumpConfigurationGroup.Insulin, map);
+                    PumpConfigurationGroup.Insulin, map);
         } else {
             int i = ai[17];
             String s = "";
@@ -374,13 +337,13 @@ public class MedtronicConverter {
 
 
     public double decodeBasalInsulin(int i) {
-        return (double)i / (double)getStrokesPerUnit(true);
+        return (double) i / (double) getStrokesPerUnit(true);
     }
 
 
     public double decodeBolusInsulin(int i) {
 
-        return (double)i / (double)getStrokesPerUnit(false);
+        return (double) i / (double) getStrokesPerUnit(false);
     }
 
 
@@ -396,7 +359,7 @@ public class MedtronicConverter {
 
     public double decodeMaxBolus(byte ai[]) {
         return is523orHigher() ? decodeBolusInsulin(ByteUtil.toInt(ai[5], ai[6])) : decodeBolusInsulin(ByteUtil
-            .asUINT8(ai[5]));
+                .asUINT8(ai[5]));
     }
 
 

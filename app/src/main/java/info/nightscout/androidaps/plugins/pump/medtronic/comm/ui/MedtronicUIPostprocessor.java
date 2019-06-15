@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
-import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.sendNotification;
-
-import java.util.Date;
-import java.util.Map;
-
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.Map;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -20,6 +18,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificat
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+
+import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.sendNotification;
 
 /**
  * Created by andy on 6/15/18.
@@ -41,26 +41,21 @@ public class MedtronicUIPostprocessor {
     // where responses won't be directly used
     public void postProcessData(MedtronicUITask uiTask) {
 
-        // if (!uiTask.haveData()) {
-        // LOG.error("Error reading data [{}]: {}", uiTask.commandType, uiTask.errorDescription);
-        // return;
-        // }
-
         switch (uiTask.commandType) {
 
             case SetBasalProfileSTD: {
-                Boolean response = (Boolean)uiTask.returnData;
+                Boolean response = (Boolean) uiTask.returnData;
 
                 if (response) {
-                    BasalProfile basalProfile = (BasalProfile)uiTask.getParameter(0);
+                    BasalProfile basalProfile = (BasalProfile) uiTask.getParameter(0);
 
                     pumpStatus.basalsByHour = basalProfile.getProfilesByHour();
                 }
             }
-                break;
+            break;
 
             case GetBasalProfileSTD: {
-                BasalProfile basalProfile = (BasalProfile)uiTask.returnData;
+                BasalProfile basalProfile = (BasalProfile) uiTask.returnData;
 
                 Double[] profilesByHour = basalProfile.getProfilesByHour();
 
@@ -72,37 +67,37 @@ public class MedtronicUIPostprocessor {
                     uiTask.errorDescription = "No profile found.";
                 }
             }
-                break;
+            break;
 
             case SetBolus: {
                 pumpStatus.lastBolusAmount = uiTask.getDoubleFromParameters(0);
                 pumpStatus.lastBolusTime = new Date();
             }
-                break;
+            break;
 
             case GetRemainingInsulin: {
-                pumpStatus.reservoirRemainingUnits = (Float)uiTask.returnData;
+                pumpStatus.reservoirRemainingUnits = (Float) uiTask.returnData;
             }
-                break;
+            break;
 
             case CancelTBR: {
                 pumpStatus.tempBasalStart = null;
                 pumpStatus.tempBasalAmount = null;
                 pumpStatus.tempBasalLength = null;
             }
-                break;
+            break;
 
             case RealTimeClock: {
                 processTime(uiTask);
             }
-                break;
+            break;
 
             case GetBatteryStatus: {
-                BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO)uiTask.returnData;
+                BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO) uiTask.returnData;
 
                 pumpStatus.batteryRemaining = (batteryStatusDTO.getCalculatedPercent(pumpStatus.batteryType));
 
-                if (batteryStatusDTO.voltage!=null) {
+                if (batteryStatusDTO.voltage != null) {
                     pumpStatus.batteryVoltage = batteryStatusDTO.voltage;
                 }
 
@@ -110,7 +105,7 @@ public class MedtronicUIPostprocessor {
                     LOG.info("BatteryStatus: {}", batteryStatusDTO.toString());
 
             }
-                break;
+            break;
 
             case PumpModel: {
                 if (pumpStatus.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
@@ -119,13 +114,13 @@ public class MedtronicUIPostprocessor {
                     sendNotification(MedtronicNotificationType.PumpTypeNotSame);
                 }
             }
-                break;
+            break;
 
             case Settings_512:
             case Settings: {
                 postProcessSettings(uiTask);
             }
-                break;
+            break;
 
             // no postprocessing
 
@@ -140,28 +135,28 @@ public class MedtronicUIPostprocessor {
 
     private void processTime(MedtronicUITask uiTask) {
 
-        ClockDTO clockDTO = (ClockDTO)uiTask.returnData;
+        ClockDTO clockDTO = (ClockDTO) uiTask.returnData;
 
         Duration dur = new Duration(clockDTO.pumpTime.toDateTime(DateTimeZone.UTC),
-            clockDTO.localDeviceTime.toDateTime(DateTimeZone.UTC));
+                clockDTO.localDeviceTime.toDateTime(DateTimeZone.UTC));
 
-        clockDTO.timeDifference = (int)dur.getStandardSeconds();
+        clockDTO.timeDifference = (int) dur.getStandardSeconds();
 
         MedtronicUtil.setPumpTime(clockDTO);
 
         if (isLogEnabled())
             LOG.debug("Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime + //
-                ", diff: " + dur.getStandardSeconds() + " s");
+                    ", diff: " + dur.getStandardSeconds() + " s");
 
         if (dur.getStandardMinutes() >= 10) {
             if (isLogEnabled())
                 LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-                    + dur.getStandardSeconds() + " s)");
+                        + dur.getStandardSeconds() + " s)");
             sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
         } else if (dur.getStandardMinutes() >= 4) {
             if (isLogEnabled())
                 LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-                    + dur.getStandardSeconds() + " s)");
+                        + dur.getStandardSeconds() + " s)");
             sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
         }
 
@@ -170,7 +165,7 @@ public class MedtronicUIPostprocessor {
 
     private void postProcessSettings(MedtronicUITask uiTask) {
 
-        Map<String, PumpSettingDTO> settings = (Map<String, PumpSettingDTO>)uiTask.returnData;
+        Map<String, PumpSettingDTO> settings = (Map<String, PumpSettingDTO>) uiTask.returnData;
 
         MedtronicUtil.setSettings(settings);
 

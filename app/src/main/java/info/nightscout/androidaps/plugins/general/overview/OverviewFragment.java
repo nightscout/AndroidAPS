@@ -853,19 +853,38 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     loopPlugin.superBolusTo(System.currentTimeMillis() + T.hours(2).msecs());
                                     MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                 }
-                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
-                                    @Override
-                                    public void run() {
-                                        if (!result.success) {
-                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                            i.putExtra("soundid", R.raw.boluserror);
-                                            i.putExtra("status", result.comment);
-                                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            MainApp.instance().startActivity(i);
+
+                                PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+
+                                if (pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+                                    ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(0.0d, 120, true, profile, new Callback() {
+                                        @Override
+                                        public void run() {
+                                            if (!result.success) {
+                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                i.putExtra("soundid", R.raw.boluserror);
+                                                i.putExtra("status", result.comment);
+                                                i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                MainApp.instance().startActivity(i);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                } else {
+                                    ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
+                                        @Override
+                                        public void run() {
+                                            if (!result.success) {
+                                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                                i.putExtra("soundid", R.raw.boluserror);
+                                                i.putExtra("status", result.comment);
+                                                i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                MainApp.instance().startActivity(i);
+                                            }
+                                        }
+                                    });
+                                }
                             }
                             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                             detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
