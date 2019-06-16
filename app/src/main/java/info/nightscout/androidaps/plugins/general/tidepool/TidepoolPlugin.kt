@@ -35,7 +35,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(R.string.tidepool)
         .shortName(R.string.tidepool_shortname)
-        .fragmentClass(TidepoolJavaFragment::class.java.name)
+        .fragmentClass(TidepoolFragment::class.qualifiedName)
         .preferencesId(R.xml.pref_tidepool)
         .description(R.string.description_tidepool)
 ) {
