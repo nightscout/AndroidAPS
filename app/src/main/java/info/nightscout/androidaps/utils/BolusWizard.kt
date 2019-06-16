@@ -67,7 +67,7 @@ class BolusWizard(val profile: Profile,
     var insulinFromTrend = 0.0
 
     var trend = 0.0
-    var carbTime = 0;
+    var carbTime = 0
 
     var notes = ""
     var accepted = false
@@ -259,7 +259,7 @@ class BolusWizard(val profile: Profile,
             val builder = AlertDialog.Builder(context)
             builder.setTitle(MainApp.gs(R.string.confirmation))
             builder.setMessage(Html.fromHtml(confirmMessage))
-            builder.setPositiveButton(MainApp.gs(R.string.ok)) { dialog, id ->
+            builder.setPositiveButton(MainApp.gs(R.string.ok)) { _, _ ->
                 synchronized(builder) {
                     if (accepted) {
                         log.debug("guarding: already accepted")
