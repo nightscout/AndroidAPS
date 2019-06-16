@@ -7,6 +7,7 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
 import android.util.Log;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.Minutes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -210,5 +211,12 @@ public class DateTimeUtil {
         d.setSeconds(second);
 
         return d.getTime();
+    }
+
+    public static int getATechDateDiferenceAsMinutes(Long date1, Long date2) {
+
+        Minutes minutes = Minutes.minutesBetween(toLocalDateTime(date1), toLocalDateTime(date2));
+
+        return minutes.getMinutes();
     }
 }

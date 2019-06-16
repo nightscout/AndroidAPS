@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 
 public class TempBasalProcessDTO {
@@ -8,6 +9,11 @@ public class TempBasalProcessDTO {
     public PumpHistoryEntry itemTwo;
 
     public Operation processOperation = Operation.None;
+
+    public int getDuration() {
+        int difference = DateTimeUtil.getATechDateDiferenceAsMinutes(itemOne.atechDateTime, itemTwo.atechDateTime);
+        return difference;
+    }
 
 
     public static enum Operation {

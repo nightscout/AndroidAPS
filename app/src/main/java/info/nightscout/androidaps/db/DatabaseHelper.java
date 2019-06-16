@@ -1124,6 +1124,28 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
+
+    public TemporaryBasal findTempBasalByPumpId(Long pumpId) {
+        try {
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
+            queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("pumpId", pumpId);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
+
+            if (list.size() != 1) {
+                return null;
+            } else {
+                return list.get(0);
+            }
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
+    }
+
+
     // ------------ ExtendedBolus handling ---------------
 
     public boolean createOrUpdate(ExtendedBolus extendedBolus) {
