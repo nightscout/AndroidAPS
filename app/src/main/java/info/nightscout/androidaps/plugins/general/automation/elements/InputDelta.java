@@ -20,7 +20,6 @@ import info.nightscout.androidaps.utils.NumberPicker;
 
 public class InputDelta extends Element {
     private Comparator.Compare compare = Comparator.Compare.IS_EQUAL;
-
     final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
@@ -53,13 +52,22 @@ public class InputDelta extends Element {
                     return R.string.unknown;
             }
         }
+
+        public static List<String> labels() {
+            List<String> list = new ArrayList<>();
+            for (DeltaType d : DeltaType.values()) {
+                list.add(MainApp.gs(d.getStringRes()));
+            }
+            return list;
+        }
     }
+
     private double value;
     double minValue;
     double maxValue;
     private double step;
     private DecimalFormat decimalFormat;
-    private int deltaType;
+    private DeltaType deltaType;
 
     NumberPicker numberPicker;
 
@@ -67,7 +75,7 @@ public class InputDelta extends Element {
         super();
     }
 
-    public InputDelta(double value, double minValue, double maxValue, double step, DecimalFormat decimalFormat, int deltaType) {
+    public InputDelta(double value, double minValue, double maxValue, double step, DecimalFormat decimalFormat, DeltaType deltaType) {
         super();
         this.value = value;
         this.minValue = minValue;
@@ -91,7 +99,7 @@ public class InputDelta extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         Spinner spinner = new Spinner(root.getContext());
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(root.getContext(), android.R.layout.simple_spinner_item, InputDelta.labels());
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(root.getContext(), android.R.layout.simple_spinner_item, DeltaType.labels());
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
         LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(
@@ -103,14 +111,14 @@ public class InputDelta extends Element {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                deltaType = spinner.getSelectedItemPosition();
+                deltaType = DeltaType.values()[position];
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        spinner.setSelection(this.deltaType);
+        spinner.setSelection(this.deltaType.ordinal());
 //        root.addView(spinner);
         numberPicker = new NumberPicker(root.getContext(), null);
         numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, textWatcher);
@@ -118,14 +126,12 @@ public class InputDelta extends Element {
         LinearLayout l = new LinearLayout(root.getContext());
         l.setOrientation(LinearLayout.VERTICAL);
         l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
         l.addView(spinner);
         l.addView(numberPicker);
         root.addView(l);
-
     }
 
-    public InputDelta setValue(double value, int type) {
+    public InputDelta setValue(double value, DeltaType type) {
         this.value = value;
         this.deltaType = type;
         if (numberPicker != null)
@@ -137,16 +143,8 @@ public class InputDelta extends Element {
         return value;
     }
 
-    public int getDeltaType() {
+    public DeltaType getDeltaType() {
         return deltaType;
-    }
-
-    public static List<String> labels() {
-        List<String> list = new ArrayList<>();
-        list.add(MainApp.gs(R.string.delta));
-        list.add(MainApp.gs(R.string.short_avgdelta));
-        list.add(MainApp.gs(R.string.long_avgdelta));
-        return list;
     }
 
 }

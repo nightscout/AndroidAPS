@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta.DeltaType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -36,7 +37,7 @@ public class TriggerDelta extends Trigger {
     private double step = 1;
     private DecimalFormat decimalFormat = new DecimalFormat("1");
     private String units = ProfileFunctions.getInstance().getProfileUnits();
-    private int deltaType = 0; // 0 is delta, 1 is short average delta, 2 is long average delta
+    private DeltaType deltaType;
 
     private InputDelta value = new InputDelta( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat, deltaType);
     private Comparator comparator = new Comparator();
@@ -54,10 +55,13 @@ public class TriggerDelta extends Trigger {
     }
 
     public double getValue() {
+        deltaType = value.getDeltaType();
         return value.getValue();
     }
 
-    public double getType() { return value.getDeltaType(); }
+    public DeltaType getType() {
+        return value.getDeltaType();
+    }
 
     public String getUnits() {
         return this.units;
@@ -79,9 +83,9 @@ public class TriggerDelta extends Trigger {
         // Setting type of delta
         double delta;
 
-        if (deltaType == 1)
+        if (deltaType == DeltaType.SHORT_AVERAGE)
             delta = glucoseStatus.short_avgdelta;
-        else if (deltaType == 2)
+        else if (deltaType == DeltaType.LONG_AVERAGE)
             delta = glucoseStatus.long_avgdelta;
         else
             delta = glucoseStatus.delta;
@@ -127,7 +131,8 @@ public class TriggerDelta extends Trigger {
         try {
             JSONObject d = new JSONObject(data);
             units = JsonHelper.safeGetString(d, "units");
-            deltaType = JsonHelper.safeGetInt(d, "type");
+            int savedDeltaType = JsonHelper.safeGetInt(d, "type");
+            deltaType = DeltaType.valueOf(JsonHelper.safeGetString(d, "type", ""));
             value.setValue(JsonHelper.safeGetDouble(d, "value"), deltaType);
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
@@ -144,7 +149,7 @@ public class TriggerDelta extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.deltacompared, MainApp.gs(comparator.getValue().getStringRes()), getValue(), typeToString(deltaType));
+        return MainApp.gs(R.string.deltacompared, MainApp.gs(comparator.getValue().getStringRes()), getValue(), deltaType);
     }
 
     @Override
@@ -157,8 +162,8 @@ public class TriggerDelta extends Trigger {
         return new TriggerDelta(this);
     }
 
-    TriggerDelta setValue(double requestedValue) {
-        this.value.setValue(requestedValue, deltaType);
+    TriggerDelta setValue(double requestedValue, DeltaType requestedType) {
+        this.value.setValue(requestedValue, requestedType);
         return this;
     }
 
@@ -173,12 +178,12 @@ public class TriggerDelta extends Trigger {
             this.minValue = 0.1d;
             this.step = 0.1d;
             this.decimalFormat = new DecimalFormat("0.1");
-            this.deltaType = 0;
+            this.deltaType = DeltaType.DELTA;
         } else {
             this.maxValue = 72d;
             this.minValue = 2d;
             this.step = 1d;
-            this.deltaType = 0;
+            this.deltaType = DeltaType.DELTA;
         }
         value = new InputDelta( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat, deltaType);
     }
@@ -196,25 +201,11 @@ public class TriggerDelta extends Trigger {
 
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
-
         new LayoutBuilder()
                 .add(new StaticLabel(R.string.deltalabel))
                 .add(comparator)
                 .add(new LabelWithElement(MainApp.gs(R.string.deltalabel) + ": ", "", value))
                 .build(root);
-    }
-
-    public String typeToString( int type ) {
-        switch (type) {
-            case 0:
-                return MainApp.gs(R.string.delta);
-            case 1:
-                return MainApp.gs(R.string.short_avgdelta);
-            case 2:
-                return MainApp.gs(R.string.long_avgdelta);
-            default:
-                return MainApp.gs(R.string.delta);
-        }
     }
 
 }
