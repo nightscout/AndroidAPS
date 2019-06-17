@@ -93,12 +93,6 @@ public class TriggerDelta extends Trigger {
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
 
-        if (glucoseStatus == null && comparator.getValue().equals(Comparator.Compare.IS_NOT_AVAILABLE)) {
-            if (L.isEnabled(L.AUTOMATION))
-                log.debug("Ready for execution: delta is " + delta + friendlyDescription());
-            return true;
-        }
-
         boolean doRun = comparator.getValue().check(delta, Profile.toMgdl(value.getValue(), this.units));
         if (doRun) {
             if (L.isEnabled(L.AUTOMATION))
@@ -117,7 +111,7 @@ public class TriggerDelta extends Trigger {
             data.put("value", getValue());
             data.put("units", units);
             data.put("lastRun", lastRun);
-            data.put("type", getType());
+            data.put("deltaType", getType());
             data.put("comparator", comparator.getValue().toString());
             o.put("data", data);
         } catch (JSONException e) {
@@ -131,8 +125,7 @@ public class TriggerDelta extends Trigger {
         try {
             JSONObject d = new JSONObject(data);
             units = JsonHelper.safeGetString(d, "units");
-            int savedDeltaType = JsonHelper.safeGetInt(d, "type");
-            deltaType = DeltaType.valueOf(JsonHelper.safeGetString(d, "type", ""));
+            deltaType = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""));
             value.setValue(JsonHelper.safeGetDouble(d, "value"), deltaType);
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
@@ -149,7 +142,7 @@ public class TriggerDelta extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.deltacompared, MainApp.gs(comparator.getValue().getStringRes()), getValue(), deltaType);
+        return MainApp.gs(R.string.deltacompared, MainApp.gs(comparator.getValue().getStringRes()), getValue(), MainApp.gs(deltaType.getStringRes()));
     }
 
     @Override

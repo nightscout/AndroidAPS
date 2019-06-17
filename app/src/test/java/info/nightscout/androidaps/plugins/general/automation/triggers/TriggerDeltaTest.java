@@ -23,6 +23,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta.DeltaType;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -40,69 +41,70 @@ public class TriggerDeltaTest {
     public void shouldRunTest() {
         when(IobCobCalculatorPlugin.getPlugin().getBgReadings()).thenReturn(generateValidBgData());
 
-        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(73d).comparator(Comparator.Compare.IS_EQUAL);
+        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(73d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-2d).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-3d).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-3d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.3d).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.3d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.1d).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.1d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.5d).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.5d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.2d).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertFalse(t.shouldRun());
 
         when(IobCobCalculatorPlugin.getPlugin().getBgReadings()).thenReturn(new ArrayList<>());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertFalse(t.shouldRun());
         t = new TriggerDelta().comparator(Comparator.Compare.IS_NOT_AVAILABLE);
         Assert.assertTrue(t.shouldRun());
 
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(214).comparator(Comparator.Compare.IS_EQUAL).lastRun(now - 1);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(214, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL).lastRun(now - 1);
         Assert.assertFalse(t.shouldRun());
 
     }
 
     @Test
     public void copyConstructorTest() {
-        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         TriggerDelta t1 = (TriggerDelta) t.duplicate();
         Assert.assertEquals(213d, t1.getValue(), 0.01d);
         Assert.assertEquals(Constants.MGDL, t1.getUnits());
+        Assert.assertEquals(DeltaType.DELTA, t.getType());
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.getComparator().getValue());
     }
 
     @Test
     public void executeTest() {
-        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         t.executed(1);
         Assert.assertEquals(1l, t.getLastRun());
     }
 
-    String deltaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"units\":\"mmol\",\"type\":0,\"value\":4.1},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta\"}";
+    String deltaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"deltaType\":\"DELTA\",\"units\":\"mmol\",\"value\":4.1},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta\"}";
 
     @Test
     public void toJSONTest() {
-        TriggerDelta t = new TriggerDelta().setUnits(Constants.MMOL).setValue(4.1d).comparator(Comparator.Compare.IS_EQUAL);
+        TriggerDelta t = new TriggerDelta().setUnits(Constants.MMOL).setValue(4.1d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertEquals(deltaJson, t.toJSON());
     }
 
     @Test
     public void fromJSONTest() throws JSONException {
-        TriggerDelta t = new TriggerDelta().setUnits(Constants.MMOL).setValue(4.1d).comparator(Comparator.Compare.IS_EQUAL);
+        TriggerDelta t = new TriggerDelta().setUnits(Constants.MMOL).setValue(4.1d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
 
         TriggerDelta t2 = (TriggerDelta) Trigger.instantiate(new JSONObject(t.toJSON()));
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t2.getComparator().getValue());
         Assert.assertEquals(4.1d, t2.getValue(), 0.01d);
         Assert.assertEquals(Constants.MMOL, t2.getUnits());
-        Assert.assertEquals(0d, t2.getType(), 0.01d);
+        Assert.assertEquals(DeltaType.DELTA, t2.getType());
     }
 
     @Test
@@ -111,13 +113,14 @@ public class TriggerDeltaTest {
     }
 
     @Test
-    public void typeToStringTest() {
-        TriggerDelta t = new TriggerDelta();
-        Assert.assertEquals(MainApp.gs(R.string.delta), t.typeToString(0));
-        Assert.assertEquals(MainApp.gs(R.string.short_avgdelta), t.typeToString(1));
-        Assert.assertEquals(MainApp.gs(R.string.long_avgdelta), t.typeToString(2));
+    public void deltaTypeTest() {
+        TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        Assert.assertEquals(DeltaType.DELTA, t.getType());
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.SHORT_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        Assert.assertEquals(DeltaType.SHORT_AVERAGE, t.getType());
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        Assert.assertEquals(DeltaType.LONG_AVERAGE, t.getType());
     }
-
 
     @Before
     public void mock() {
