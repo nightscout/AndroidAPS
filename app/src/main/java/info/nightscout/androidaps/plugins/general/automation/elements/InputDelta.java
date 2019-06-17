@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.elements;
 
+import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -34,6 +35,25 @@ public class InputDelta extends Element {
         }
     };
 
+    public enum DeltaType {
+        DELTA,
+        SHORT_AVERAGE,
+        LONG_AVERAGE;
+
+        public @StringRes
+        int getStringRes() {
+            switch (this) {
+                case DELTA:
+                    return R.string.delta;
+                case SHORT_AVERAGE:
+                    return R.string.short_avgdelta;
+                case LONG_AVERAGE:
+                    return R.string.long_avgdelta;
+                default:
+                    return R.string.unknown;
+            }
+        }
+    }
     private double value;
     double minValue;
     double maxValue;
