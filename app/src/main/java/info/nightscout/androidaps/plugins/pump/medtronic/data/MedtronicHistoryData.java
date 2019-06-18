@@ -869,7 +869,7 @@ public class MedtronicHistoryData {
 
                     PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory();
                     if (oneMoreEntryFromHistory != null) {
-                        filteredItems.add(getOneMoreEntryFromHistory());
+                        filteredItems.add(oneMoreEntryFromHistory);
                     } else {
                         filteredItems.remove(filteredItems.size() - 1); // remove last (unpaired R)
                     }
@@ -933,6 +933,7 @@ public class MedtronicHistoryData {
                 if (filteredItem.getEntryType() == PumpHistoryEntryType.Bolus ||
                         filteredItem.getEntryType() == PumpHistoryEntryType.TempBasalCombined) {
                     finishedItems = true;
+                    break;
                 }
 
                 if (!finishedItems) {
@@ -956,6 +957,7 @@ public class MedtronicHistoryData {
                 if (filteredItem.getEntryType() == PumpHistoryEntryType.Bolus ||
                         filteredItem.getEntryType() == PumpHistoryEntryType.TempBasalCombined) {
                     finishedItems = true;
+                    break;
                 }
 
                 if (!finishedItems) {
@@ -965,8 +967,10 @@ public class MedtronicHistoryData {
         }
 
 
-        if (!finishedItems)
+        if (!finishedItems) {
+            showLogs("NoDeliveryRewindPrimeRecords: Not finished Items: ", gson.toJson(tempData));
             return outList;
+        }
 
 
         showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson.toJson(tempData));
