@@ -36,7 +36,7 @@ public class TriggerDelta extends Trigger {
     private double maxValue = 1d;
     private double step = 1;
     private DecimalFormat decimalFormat = new DecimalFormat("1");
-    private String units = ProfileFunctions.getInstance().getProfileUnits();
+    private String units;
     private DeltaType deltaType;
 
     private InputDelta value = new InputDelta( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat, deltaType);
@@ -44,11 +44,13 @@ public class TriggerDelta extends Trigger {
 
     public TriggerDelta() {
         super();
+        this.units = ProfileFunctions.getInstance().getProfileUnits();
         initializer();
     }
 
     private TriggerDelta(TriggerDelta triggerDelta) {
         super();
+        this.units = ProfileFunctions.getInstance().getProfileUnits();
         initializer();
         value = triggerDelta.value;
         lastRun = triggerDelta.lastRun;
@@ -60,7 +62,7 @@ public class TriggerDelta extends Trigger {
     }
 
     public DeltaType getType() {
-        return value.getDeltaType();
+        return deltaType;
     }
 
     public String getUnits() {
@@ -157,6 +159,7 @@ public class TriggerDelta extends Trigger {
 
     TriggerDelta setValue(double requestedValue, DeltaType requestedType) {
         this.value.setValue(requestedValue, requestedType);
+        this.deltaType = requestedType;
         return this;
     }
 
@@ -168,13 +171,13 @@ public class TriggerDelta extends Trigger {
     void initializer(){
         if (this.units.equals(Constants.MMOL)) {
             this.maxValue = 4d;
-            this.minValue = 0.1d;
+            this.minValue = -4d;
             this.step = 0.1d;
             this.decimalFormat = new DecimalFormat("0.1");
             this.deltaType = DeltaType.DELTA;
         } else {
             this.maxValue = 72d;
-            this.minValue = 2d;
+            this.minValue = -72d;
             this.step = 1d;
             this.deltaType = DeltaType.DELTA;
         }
@@ -199,18 +202,6 @@ public class TriggerDelta extends Trigger {
                 .add(comparator)
                 .add(new LabelWithElement(MainApp.gs(R.string.deltalabel) + ": ", "", value))
                 .build(root);
-    }
-
-    //Used for testing deltaType
-    public double deltaValue(){
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-
-        if (deltaType == DeltaType.SHORT_AVERAGE)
-            return glucoseStatus.short_avgdelta;
-        else if (deltaType == DeltaType.LONG_AVERAGE)
-            return glucoseStatus.long_avgdelta;
-        else
-            return glucoseStatus.delta;
     }
 
 }
