@@ -20,6 +20,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
@@ -43,21 +44,21 @@ public class TriggerDeltaTest {
 
         TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(73d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-2d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-3d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(-3d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerDelta().setUnits(Constants.MGDL).setValue(2d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.3d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.3d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.1d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(0.1d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.5d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.5d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun());
-        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.2d, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerDelta().setUnits(Constants.MMOL).setValue(-0.2d, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertFalse(t.shouldRun());
 
         when(IobCobCalculatorPlugin.getPlugin().getBgReadings()).thenReturn(new ArrayList<>());
@@ -114,12 +115,18 @@ public class TriggerDeltaTest {
 
     @Test
     public void deltaTypeTest() {
+        when(IobCobCalculatorPlugin.getPlugin().getBgReadings()).thenReturn(generateValidBgData());
         TriggerDelta t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertEquals(DeltaType.DELTA, t.getType());
+        Assert.assertEquals(-2d, t.deltaValue(), 0d);
+        Assert.assertTrue(t.shouldRun());
         t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.SHORT_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertEquals(DeltaType.SHORT_AVERAGE, t.getType());
+        Assert.assertEquals(-2d, t.deltaValue(), 0d);
         t = new TriggerDelta().setUnits(Constants.MGDL).setValue(213, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertEquals(DeltaType.LONG_AVERAGE, t.getType());
+        Assert.assertEquals(-2d, t.deltaValue(), 0d);
+
     }
 
     @Before
@@ -133,6 +140,18 @@ public class TriggerDeltaTest {
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(now);
 
+    }
+
+    public void initializerTest(){
+        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MMOL);
+        TriggerDelta t = new TriggerDelta();
+        Assert.assertTrue(t.getUnits().equals(Constants.MMOL));
+        Assert.assertTrue(t.getUnits().equals(Constants.MGDL));
+        Assert.assertNull(t.getUnits());
+        Assert.assertNotNull(t.getUnits());
+        when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
+        t = new TriggerDelta();
+        Assert.assertEquals(Constants.MGDL, t.getUnits());
     }
 
     List<BgReading> generateValidBgData() {

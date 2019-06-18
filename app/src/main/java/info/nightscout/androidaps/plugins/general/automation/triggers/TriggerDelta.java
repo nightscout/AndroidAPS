@@ -44,12 +44,12 @@ public class TriggerDelta extends Trigger {
 
     public TriggerDelta() {
         super();
-        setUnits();
+        initializer();
     }
 
     private TriggerDelta(TriggerDelta triggerDelta) {
         super();
-        setUnits();
+        initializer();
         value = triggerDelta.value;
         lastRun = triggerDelta.lastRun;
     }
@@ -165,7 +165,7 @@ public class TriggerDelta extends Trigger {
         return this;
     }
 
-    void setUnits(){
+    void initializer(){
         if (this.units.equals(Constants.MMOL)) {
             this.maxValue = 4d;
             this.minValue = 0.1d;
@@ -199,6 +199,18 @@ public class TriggerDelta extends Trigger {
                 .add(comparator)
                 .add(new LabelWithElement(MainApp.gs(R.string.deltalabel) + ": ", "", value))
                 .build(root);
+    }
+
+    //Used for testing deltaType
+    public double deltaValue(){
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+
+        if (deltaType == DeltaType.SHORT_AVERAGE)
+            return glucoseStatus.short_avgdelta;
+        else if (deltaType == DeltaType.LONG_AVERAGE)
+            return glucoseStatus.long_avgdelta;
+        else
+            return glucoseStatus.delta;
     }
 
 }
