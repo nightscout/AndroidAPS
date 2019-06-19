@@ -195,8 +195,15 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues = true
-        unitTests.includeAndroidResources = true
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+
+            all {
+                maxParallelForks = 10
+                forkEvery = 20
+            }
+        }
     }
 
     useLibrary "org.apache.http.legacy"
