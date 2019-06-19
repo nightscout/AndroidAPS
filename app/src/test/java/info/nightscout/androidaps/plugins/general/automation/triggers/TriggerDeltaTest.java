@@ -116,7 +116,7 @@ public class TriggerDeltaTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.as), new TriggerDelta().icon());
+        Assert.assertEquals(Optional.of(R.drawable.icon_auto_delta), new TriggerDelta().icon());
     }
 
     @Before

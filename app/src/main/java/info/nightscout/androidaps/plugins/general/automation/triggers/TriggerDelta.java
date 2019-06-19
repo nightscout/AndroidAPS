@@ -149,7 +149,7 @@ public class TriggerDelta extends Trigger {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.as); // TODO: Icon for delta
+        return Optional.of(R.drawable.icon_auto_delta); 
     }
 
     @Override
