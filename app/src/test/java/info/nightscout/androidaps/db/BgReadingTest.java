@@ -118,29 +118,20 @@ public class BgReadingTest {
 
         when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
         assertEquals("NONE", bgReading.calculateDirection());
-        bgReadingsList = setReadings(72,0);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(72,0);
         assertEquals("DoubleUp", bgReading.calculateDirection());
-        bgReadingsList = setReadings(76,60);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(76,60);
         assertEquals("SingleUp", bgReading.calculateDirection());
-        bgReadingsList = setReadings(74,65);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(74,65);
         assertEquals("FortyFiveUp", bgReading.calculateDirection());
-        bgReadingsList = setReadings(72,72);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(72,72);
         assertEquals("Flat", bgReading.calculateDirection());
-        bgReadingsList = setReadings(0,72);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(0,72);
         assertEquals("DoubleDown", bgReading.calculateDirection());
-        bgReadingsList = setReadings(60,76);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(60,76);
         assertEquals("SingleDown", bgReading.calculateDirection());
-        bgReadingsList = setReadings(65,74);
-        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadingsList);
+        setReadings(65,74);
         assertEquals("FortyFiveDown", bgReading.calculateDirection());
-
-
     }
 
     @Before
@@ -152,7 +143,7 @@ public class BgReadingTest {
         AAPSMocker.mockDatabaseHelper();
     }
 
-    public List<BgReading> setReadings(int current_value, int previous_value){
+    public void setReadings(int current_value, int previous_value){
         BgReading now = new BgReading();
         now.value = current_value;
         now.date = System.currentTimeMillis();
@@ -163,6 +154,6 @@ public class BgReadingTest {
             add(now);
             add(previous);
         }};
-        return  bgReadings;
+        when(MainApp.getDbHelper().getAllBgreadingsDataFromTime(anyLong(),anyBoolean())).thenReturn(bgReadings);
     }
 }
