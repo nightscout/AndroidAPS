@@ -1409,6 +1409,8 @@
     <string name="distance_short">Dist [m]:</string>
     <string name="name_short">Name:</string>
     <string name="locationis">Location is %1$s</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
