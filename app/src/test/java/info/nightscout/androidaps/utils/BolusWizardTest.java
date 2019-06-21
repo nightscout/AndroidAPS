@@ -38,9 +38,9 @@ public class BolusWizardTest {
         Profile profile = setupProfile(4d, 8d, 20d, 12d);
 
         BolusWizard bw = new BolusWizard(profile, "", null, 20, 0.0, 4.2, 0d, 100d, true, true, true, true, false, false, false);
-        Double bolusForBg42 = bw.doCalc();
+        Double bolusForBg42 = bw.getCalculatedTotalInsulin();
         bw = new BolusWizard(profile, "", null, 20, 0.0, 5.4, 0d, 100d, true, true, true, true, false, false, false);
-        Double bolusForBg54 = bw.doCalc();
+        Double bolusForBg54 = bw.getCalculatedTotalInsulin();
         Assert.assertEquals(bolusForBg42, bolusForBg54);
     }
 
@@ -49,9 +49,9 @@ public class BolusWizardTest {
         Profile profile = setupProfile(4d, 8d, 20d, 12d);
 
         BolusWizard bw = new BolusWizard(profile, "", null, 20, 0.0, 9.8, 0d, 100d, true, true, true, true, false, false, false);
-        Double bolusForHighBg = bw.doCalc();
+        Double bolusForHighBg = bw.getCalculatedTotalInsulin();
         bw = new BolusWizard(profile, "", null, 20, 0.0, 5.4, 0d, 100d, true, true, true, true, false, false, false);
-        Double bolusForBgInRange = bw.doCalc();
+        Double bolusForBgInRange = bw.getCalculatedTotalInsulin();
         Assert.assertTrue(bolusForHighBg > bolusForBgInRange);
     }
 
@@ -60,9 +60,9 @@ public class BolusWizardTest {
         Profile profile = setupProfile(4d, 8d, 20d, 12d);
 
         BolusWizard bw = new BolusWizard(profile, "", null, 20, 0.0, 3.6, 0d, 100d, true, true, true, true, false, false, false);
-        Double bolusForLowBg = bw.doCalc();
+        Double bolusForLowBg = bw.getCalculatedTotalInsulin();
         bw = new BolusWizard(profile, "", null, 20, 0.0, 5.4, 0d, 100d, true, true, true, true, false, false, false);
-        Double bolusForBgInRange = bw.doCalc();
+        Double bolusForBgInRange = bw.getCalculatedTotalInsulin();
         Assert.assertTrue(bolusForLowBg < bolusForBgInRange);
     }
 

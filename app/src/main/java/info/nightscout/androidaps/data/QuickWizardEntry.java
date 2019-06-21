@@ -124,10 +124,7 @@ public class QuickWizardEntry {
             trend = true;
         }
 
-        BolusWizard wizard = new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, 100, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend);
-        wizard.doCalc();
-        wizard.setNotes("QuickWizard");
-        return wizard;
+        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, 100, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
     }
 
     public String buttonText() {
