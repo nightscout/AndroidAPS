@@ -391,10 +391,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 c_cob = cobInfo.displayCob;
         }
 
-        wizard = new BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, 100d, bgCheckbox.isChecked(), cobCheckbox.isChecked(), bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), ttCheckbox.isChecked(), bgtrendCheckbox.isChecked());
-        wizard.doCalc();
-        wizard.setNotes(notesEdit.getText().toString());
-        wizard.setCarbTime(SafeParse.stringToInt(editCarbTime.getText()));
+        wizard = new BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, 100d, bgCheckbox.isChecked(), cobCheckbox.isChecked(), bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), ttCheckbox.isChecked(), bgtrendCheckbox.isChecked(), notesEdit.getText().toString(), SafeParse.stringToInt(editCarbTime.getText()));
 
         bg.setText(c_bg + " ISF: " + DecimalFormatter.to1Decimal(wizard.getSens()));
         bgInsulin.setText(StringUtils.formatInsulin(wizard.getInsulinFromBG()));
@@ -402,8 +399,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to1Decimal(wizard.getIc()));
         carbsInsulin.setText(StringUtils.formatInsulin(wizard.getInsulinFromCarbs()));
 
-        bolusIobInsulin.setText(StringUtils.formatInsulin(wizard.getInsulingFromBolusIOB()));
-        basalIobInsulin.setText(StringUtils.formatInsulin(wizard.getInsulingFromBasalsIOB()));
+        bolusIobInsulin.setText(StringUtils.formatInsulin(wizard.getInsulinFromBolusIOB()));
+        basalIobInsulin.setText(StringUtils.formatInsulin(wizard.getInsulinFromBasalsIOB()));
 
         correctionInsulin.setText(StringUtils.formatInsulin(wizard.getInsulinFromCorrection()));
 

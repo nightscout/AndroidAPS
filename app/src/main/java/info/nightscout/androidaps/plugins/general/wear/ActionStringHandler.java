@@ -230,18 +230,11 @@ public class ActionStringHandler {
             BolusWizard bolusWizard = new BolusWizard(profile, profileName, TreatmentsPlugin.getPlugin().getTempTargetFromHistory(),
                     carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profile.getUnits()),
                     0d, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend);
-            bolusWizard.doCalc();
 
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.getCalculatedTotalInsulin())).value();
-            if (Math.abs(insulinAfterConstraints - bolusWizard.getCalculatedTotalInsulin()) >= 0.01) {
+            if (Math.abs(bolusWizard.getInsulinAfterConstraints() - bolusWizard.getCalculatedTotalInsulin()) >= 0.01) {
                 sendError("Insulin constraint violation!" +
                         "\nCannot deliver " + format.format(bolusWizard.getCalculatedTotalInsulin()) + "!");
                 return;
-            }
-
-
-            if (bolusWizard.getCalculatedTotalInsulin() < 0) {
-                bolusWizard.setCalculatedTotalInsulin(0d);
             }
 
             if (bolusWizard.getCalculatedTotalInsulin() <= 0 && bolusWizard.getCarbs() <= 0) {
@@ -259,9 +252,9 @@ public class ActionStringHandler {
                 rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.getInsulinFromCOB()) + "U";
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.getInsulinFromBG()) + "U";
             if (useBolusIOB)
-                rMessage += "\nBolus IOB: " + format.format(bolusWizard.getInsulingFromBolusIOB()) + "U";
+                rMessage += "\nBolus IOB: " + format.format(bolusWizard.getInsulinFromBolusIOB()) + "U";
             if (useBasalIOB)
-                rMessage += "\nBasal IOB: " + format.format(bolusWizard.getInsulingFromBasalsIOB()) + "U";
+                rMessage += "\nBasal IOB: " + format.format(bolusWizard.getInsulinFromBasalsIOB()) + "U";
             if (useTrend)
                 rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.getInsulinFromTrend()) + "U";
             if (percentage != 100) {

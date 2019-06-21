@@ -29,57 +29,94 @@ import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import java.util.*
 
-class BolusWizard(val profile: Profile,
-                  val profileName: String,
-                  val tempTarget: TempTarget?,
-                  val carbs: Int,
-                  val cob: Double,
-                  val bg: Double,
-                  val correction: Double,
-                  val percentageCorrection: Double = 100.0,
-                  val useBg: Boolean,
-                  val useCob: Boolean,
-                  val includeBolusIOB: Boolean,
-                  val includeBasalIOB: Boolean,
-                  val useSuperBolus: Boolean,
-                  val useTT: Boolean,
-                  val useTrend: Boolean) {
+class BolusWizard @JvmOverloads constructor(val profile: Profile,
+                                            val profileName: String,
+                                            val tempTarget: TempTarget?,
+                                            val carbs: Int,
+                                            val cob: Double,
+                                            val bg: Double,
+                                            val correction: Double,
+                                            private val percentageCorrection: Double = 100.0,
+                                            private val useBg: Boolean,
+                                            private val useCob: Boolean,
+                                            private val includeBolusIOB: Boolean,
+                                            private val includeBasalIOB: Boolean,
+                                            private val useSuperBolus: Boolean,
+                                            private val useTT: Boolean,
+                                            private val useTrend: Boolean,
+                                            val notes: String = "",
+                                            private val carbTime: Int = 0
+) {
 
     private val log = LoggerFactory.getLogger(L.CORE)
 
     // Intermediate
     var sens = 0.0
+        private set
+
     var ic = 0.0
+        private set
 
     var glucoseStatus: GlucoseStatus? = null
+        private set
 
     var targetBGLow = 0.0
+        private set
+
     var targetBGHigh = 0.0
+        private set
+
     var bgDiff = 0.0
+        private set
 
     var insulinFromBG = 0.0
+        private set
+
     var insulinFromCarbs = 0.0
-    var insulingFromBolusIOB = 0.0
-    var insulingFromBasalsIOB = 0.0
+        private set
+
+    var insulinFromBolusIOB = 0.0
+        private set
+
+    var insulinFromBasalsIOB = 0.0
+        private set
+
     var insulinFromCorrection = 0.0
+        private set
+
     var insulinFromSuperBolus = 0.0
+        private set
+
     var insulinFromCOB = 0.0
+        private set
+
     var insulinFromTrend = 0.0
+        private set
 
     var trend = 0.0
-    var carbTime = 0
+        private set
 
-    var notes = ""
     var accepted = false
+        private set
 
     // Result
     var calculatedTotalInsulin: Double = 0.0
+        private set
+
     var totalBeforePercentageAdjustment: Double = 0.0
+        private set
+
     var carbsEquivalent: Double = 0.0
+        private set
 
     var insulinAfterConstraints: Double = 0.0
+        private set
 
-    fun doCalc(): Double {
+    init {
+        doCalc()
+    }
+
+    private fun doCalc() {
 
         // Insulin from BG
         sens = profile.isf
@@ -102,10 +139,13 @@ class BolusWizard(val profile: Profile,
 
         // Insulin from 15 min trend
         glucoseStatus = GlucoseStatus.getGlucoseStatusData()
-        if (glucoseStatus != null && useTrend) {
-            trend = glucoseStatus!!.short_avgdelta
-            insulinFromTrend = Profile.fromMgdlToUnits(trend, profile.units) * 3 / sens
+        glucoseStatus?.let {
+            if (useTrend) {
+                trend = it.short_avgdelta
+                insulinFromTrend = Profile.fromMgdlToUnits(trend, profile.units) * 3 / sens
+            }
         }
+
 
         // Insuling from carbs
         ic = profile.ic
@@ -120,8 +160,8 @@ class BolusWizard(val profile: Profile,
         treatments.updateTotalIOBTempBasals()
         val basalIob = treatments.lastCalculationTempBasals.round()
 
-        insulingFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
-        insulingFromBasalsIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
+        insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
+        insulinFromBasalsIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
 
         // Insulin from correction
         insulinFromCorrection = correction
@@ -135,7 +175,7 @@ class BolusWizard(val profile: Profile,
         }
 
         // Total
-        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
+        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromBolusIOB + insulinFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
 
         // Percentage adjustment
         totalBeforePercentageAdjustment = calculatedTotalInsulin
@@ -154,8 +194,6 @@ class BolusWizard(val profile: Profile,
         insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
 
         log.debug(this.toString())
-
-        return calculatedTotalInsulin
     }
 
     fun nsJSON(): JSONObject {
@@ -168,9 +206,9 @@ class BolusWizard(val profile: Profile,
             boluscalcJSON.put("targetBGHigh", targetBGHigh)
             boluscalcJSON.put("isf", sens)
             boluscalcJSON.put("ic", ic)
-            boluscalcJSON.put("iob", -(insulingFromBolusIOB + insulingFromBasalsIOB))
-            boluscalcJSON.put("bolusiob", insulingFromBolusIOB)
-            boluscalcJSON.put("basaliob", insulingFromBasalsIOB)
+            boluscalcJSON.put("iob", -(insulinFromBolusIOB + insulinFromBasalsIOB))
+            boluscalcJSON.put("bolusiob", insulinFromBolusIOB)
+            boluscalcJSON.put("basaliob", insulinFromBasalsIOB)
             boluscalcJSON.put("bolusiobused", includeBolusIOB)
             boluscalcJSON.put("basaliobused", includeBasalIOB)
             boluscalcJSON.put("bg", bg)
@@ -198,7 +236,7 @@ class BolusWizard(val profile: Profile,
         return boluscalcJSON
     }
 
-    fun confirmMessageAfterConstraints(pump: PumpInterface): String {
+    private fun confirmMessageAfterConstraints(pump: PumpInterface): String {
 
         var confirmMessage = MainApp.gs(R.string.entertreatmentquestion)
         if (insulinAfterConstraints > 0)
