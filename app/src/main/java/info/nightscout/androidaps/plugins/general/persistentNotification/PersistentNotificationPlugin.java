@@ -73,7 +73,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     /// End Android Auto
 
 
-    public PersistentNotificationPlugin(Context ctx) {
+    private PersistentNotificationPlugin(Context ctx) {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .neverVisible(true)
@@ -227,8 +227,10 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setContentText(line2 != null ? line2 : MainApp.gs(R.string.noprofileset));
         builder.setSubText(line3 != null ? line3 : MainApp.gs(R.string.noprofileset));
         /// Android Auto
-        if (unreadConversationBuilder != null) builder.extend(new NotificationCompat.CarExtender()
-                .setUnreadConversation(unreadConversationBuilder.build()));
+        if (unreadConversationBuilder != null) {
+            builder.extend(new NotificationCompat.CarExtender()
+                    .setUnreadConversation(unreadConversationBuilder.build()));
+        }
         /// End Android Auto
 
 
