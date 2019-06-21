@@ -157,43 +157,7 @@ class BolusWizard(val profile: Profile,
 
         return calculatedTotalInsulin
     }
-/*
-    fun log(): String {
-        val sb = StringBuilder()
 
-        sb.append("TempTarget=").append(tempTarget?.toString() ?: "null").append("; ")
-        sb.append("Carbs=").append(carbs).append("; ")
-        sb.append("Bg=").append(bg).append("; ")
-        sb.append("Cob=").append(cob).append("; ")
-        sb.append("Correction=").append(correction).append("; ")
-        sb.append("PercentageCorrection=").append(percentageCorrection).append("; ")
-        sb.append("IncludeBolusIOB=").append(includeBolusIOB).append("; ")
-        sb.append("IncludeBasalIOB=").append(includeBasalIOB).append("; ")
-        sb.append("Superbolus=").append(useSuperBolus).append("; ")
-        sb.append("Trend=").append(useTrend).append("; ")
-        sb.append("Profile=").append(profile.data?.toString()).append("; ")
-        sb.append("\n")
-
-        sb.append("targetBGLow=").append(targetBGLow).append("; ")
-        sb.append("targetBGHigh=").append(targetBGHigh).append("; ")
-        sb.append("bgDiff=").append(bgDiff).append("; ")
-        sb.append("insulinFromBG=").append(insulinFromBG).append("; ")
-        sb.append("insulinFromCarbs=").append(insulinFromCarbs).append("; ")
-        sb.append("insulingFromBolusIOB=").append(insulingFromBolusIOB).append("; ")
-        sb.append("insulingFromBasalsIOB=").append(insulingFromBasalsIOB).append("; ")
-        sb.append("insulinFromCorrection=").append(insulinFromCorrection).append("; ")
-        sb.append("insulinFromSuperBolus=").append(insulinFromSuperBolus).append("; ")
-        sb.append("insulinFromCOB=").append(insulinFromCOB).append("; ")
-        sb.append("insulinFromTrend=").append(insulinFromTrend).append("; ")
-        sb.append("\n")
-
-        sb.append("calculatedTotalInsulin=").append(calculatedTotalInsulin).append("; ")
-        sb.append("totalBeforePercentageAdjustment=").append(totalBeforePercentageAdjustment).append("; ")
-        sb.append("carbsEquivalent=").append(carbsEquivalent).append("; ")
-
-        return sb.toString()
-    }
-*/
     fun nsJSON(): JSONObject {
         val boluscalcJSON = JSONObject()
         try {
@@ -242,7 +206,7 @@ class BolusWizard(val profile: Profile,
         if (carbs > 0)
             confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbs + "g" + "</font>"
 
-        if (Math.abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints)) {
+        if (Math.abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
             confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>"
         }
 
