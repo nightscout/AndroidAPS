@@ -67,7 +67,8 @@ public class TriggerBolusAgo extends Trigger {
                 return false;
 
         double minutesAgo = (double) (DateUtil.now() - lastBolusTime) / (60 * 1000);
-        log.debug("LastBolus min ago: "+minutesAgo);
+        if (L.isEnabled(L.AUTOMATION))
+            log.debug("LastBolus min ago: "+minutesAgo);
 
         boolean doRun = comparator.getValue().check((minutesAgo), getValue());
         if (doRun) {
