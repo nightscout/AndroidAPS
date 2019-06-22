@@ -12,7 +12,7 @@ public enum MedtronicStatusRefreshType {
     Configuration(0, null), //
     RemainingInsulin(-1, MedtronicCommandType.GetRemainingInsulin), //
     BatteryStatus(55, MedtronicCommandType.GetBatteryStatus), //
-    PumpTime(60, MedtronicCommandType.RealTimeClock) //
+    PumpTime(60, MedtronicCommandType.GetRealTimeClock) //
     ;
 
     private int refreshTime;

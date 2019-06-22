@@ -542,13 +542,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.DAY_OF_YEAR, (-1) * days);
 
-        Date d = new Date((gc.get(Calendar.YEAR)-1900), gc.get(Calendar.MONTH), gc.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-
         try {
             QueryBuilder<TDD, String> queryBuilder = getDaoTDD().queryBuilder();
             queryBuilder.orderBy("date", false);
             Where<TDD, String> where = queryBuilder.where();
-            where.ge("date", d.getTime());
+            where.ge("date", gc.getTimeInMillis());
             PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
             tddList = getDaoTDD().query(preparedQuery);
         } catch (SQLException e) {

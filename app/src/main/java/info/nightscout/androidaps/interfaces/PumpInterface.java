@@ -71,4 +71,10 @@ public interface PumpInterface {
 
     void executeCustomAction(CustomActionType customActionType);
 
+    /**
+     * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for
+     * example update clock on pump).
+     */
+    void timeDateOrTimeZoneChanged();
+
 }

@@ -66,8 +66,13 @@ public class MedtronicUITask {
             }
             break;
 
-            case RealTimeClock: {
+            case GetRealTimeClock: {
                 returnData = communicationManager.getPumpTime();
+            }
+            break;
+
+            case SetRealTimeClock: {
+                returnData = communicationManager.setPumpTime();
             }
             break;
 

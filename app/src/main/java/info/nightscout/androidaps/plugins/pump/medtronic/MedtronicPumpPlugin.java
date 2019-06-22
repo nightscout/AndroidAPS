@@ -40,6 +40,8 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -57,6 +59,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfileEntry;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
@@ -99,6 +102,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public static boolean isBusy = false;
     private List<Long> busyTimestamps = new ArrayList<>();
     private boolean sentIdToFirebase = false;
+    private boolean hasTimeDateOrTimeZoneChanged = false;
 
 
     private MedtronicPumpPlugin() {
@@ -413,42 +417,61 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
 
+
+        if (hasTimeDateOrTimeZoneChanged) {
+
+            checkTimeAndOptionallySetTime();
+
+            // read time if changed, set new time
+            hasTimeDateOrTimeZoneChanged = false;
+
+            workWithStatusRefresh(StatusRefreshAction.Add, MedtronicStatusRefreshType.PumpTime, 30L);
+
+            if (statusRefresh.containsKey(MedtronicStatusRefreshType.PumpTime)) {
+                statusRefresh.remove(MedtronicStatusRefreshType.PumpTime);
+            }
+        }
+
+
         // execute
-        if (statusRefresh != null) {
+        Set<MedtronicStatusRefreshType> refreshTypesNeededToReschedule = new HashSet<>();
 
-            Set<MedtronicStatusRefreshType> refreshTypesNeededToReschedule = new HashSet<>();
+        for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefresh.entrySet()) {
 
-            for (Map.Entry<MedtronicStatusRefreshType, Long> refreshType : statusRefresh.entrySet()) {
+            if (refreshType.getValue() > 0 && System.currentTimeMillis() > refreshType.getValue()) {
 
-                if (refreshType.getValue() > 0 && System.currentTimeMillis() > refreshType.getValue()) {
-
-                    switch (refreshType.getKey()) {
-                        case PumpHistory: {
-                            readPumpHistory();
-                        }
-                        break;
-
-                        case PumpTime:
-                        case BatteryStatus:
-                        case RemainingInsulin: {
-                            medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
-                            refreshTypesNeededToReschedule.add(refreshType.getKey());
-                            resetTime = true;
-                        }
-                        break;
-
-                        case Configuration: {
-                            medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
-                            resetTime = true;
-                        }
-                        break;
+                switch (refreshType.getKey()) {
+                    case PumpHistory: {
+                        readPumpHistory();
                     }
+                    break;
+
+                    case PumpTime: {
+                        checkTimeAndOptionallySetTime();
+                        refreshTypesNeededToReschedule.add(refreshType.getKey());
+                        resetTime = true;
+                    }
+                    break;
+
+                    case BatteryStatus:
+                    case RemainingInsulin: {
+                        medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
+                        refreshTypesNeededToReschedule.add(refreshType.getKey());
+                        resetTime = true;
+                    }
+                    break;
+
+                    case Configuration: {
+                        medtronicUIComm.executeCommand(refreshType.getKey().getCommandType());
+                        resetTime = true;
+                    }
+                    break;
                 }
             }
 
             // reschedule
-            for (MedtronicStatusRefreshType refreshType : refreshTypesNeededToReschedule) {
-                scheduleNextRefresh(refreshType);
+            for (MedtronicStatusRefreshType refreshType2 : refreshTypesNeededToReschedule) {
+                scheduleNextRefresh(refreshType2);
             }
 
         }
@@ -468,7 +491,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             }
         }
 
-        return false;
+        return hasTimeDateOrTimeZoneChanged;
     }
 
 
@@ -519,7 +542,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.pumpState = PumpDriverState.Connected;
 
         // time (1h)
-        medtronicUIComm.executeCommand(MedtronicCommandType.RealTimeClock);
+        checkTimeAndOptionallySetTime();
+        //medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock);
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 30);
 
         readPumpHistory();
@@ -562,7 +586,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             sentIdToFirebase = true;
         }
-
 
         isInitialized = true;
         // this.pumpState = PumpDriverState.Initialized;
@@ -680,6 +703,47 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
+    private void checkTimeAndOptionallySetTime() {
+
+        if (isLoggingEnabled())
+            LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Start");
+
+        setRefreshButtonEnabled(false);
+
+        if (isPumpNotReachable()) {
+            LOG.debug("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Pump Unreachable.");
+            setRefreshButtonEnabled(true);
+            return;
+        }
+
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+
+        medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock);
+
+        ClockDTO clock = MedtronicUtil.getPumpTime();
+
+        int timeDiff = Math.abs(clock.timeDifference);
+
+        if (timeDiff > 20) {
+
+            if (isLoggingEnabled())
+                LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump.", timeDiff);
+
+            medtronicUIComm.executeCommand(MedtronicCommandType.SetRealTimeClock);
+
+            if (clock.timeDifference == 0) {
+                Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, MainApp.gs(R.string.pump_time_updated), Notification.INFO, 60);
+                MainApp.bus().post(new EventNewNotification(notification));
+            }
+
+        } else {
+            if (isLoggingEnabled())
+                LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Do nothing.", timeDiff);
+        }
+
+    }
+
+
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
 
@@ -779,9 +843,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             }
 
         } finally {
-            MainApp.bus().post(new EventRefreshOverview("Bolus"));
+            finishAction("Bolus");
             this.bolusDeliveryType = BolusDeliveryType.Idle;
-            triggerUIChange();
         }
     }
 
@@ -1145,8 +1208,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    private synchronized Map<MedtronicStatusRefreshType, Long> workWithStatusRefresh(StatusRefreshAction action,
-                                                                                     MedtronicStatusRefreshType statusRefreshType, Long time) {
+    private synchronized Map<MedtronicStatusRefreshType, Long> workWithStatusRefresh(StatusRefreshAction action, //
+                                                                                     MedtronicStatusRefreshType statusRefreshType, //
+                                                                                     Long time) {
 
         switch (action) {
 
@@ -1422,6 +1486,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     }
 
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+        if (isLoggingEnabled())
+            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. ");
+
+        this.hasTimeDateOrTimeZoneChanged = true;
+    }
 
     private void refreshCustomActionsList() {
         MainApp.bus().post(new EventCustomActionsChanged());

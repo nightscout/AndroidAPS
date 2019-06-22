@@ -493,7 +493,10 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return false;
     }
 
+    @Override
+    public void timeDateOrTimeZoneChanged() {
 
+    }
 
 
 }

@@ -87,10 +87,23 @@ public class MedtronicUIPostprocessor {
             }
             break;
 
-            case RealTimeClock: {
+            case GetRealTimeClock: {
                 processTime(uiTask);
             }
             break;
+
+            case SetRealTimeClock: {
+                boolean response = (Boolean) uiTask.returnData;
+
+                if (isLogEnabled())
+                    LOG.debug("New time was {} set.", response ? "" : "NOT");
+
+                if (response) {
+                    MedtronicUtil.getPumpTime().timeDifference = 0;
+                }
+            }
+            break;
+
 
             case GetBatteryStatus: {
                 BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO) uiTask.returnData;

@@ -282,25 +282,40 @@ public class MainApp extends Application {
             public void onReceive(Context context, Intent intent) {
                 final String action = intent.getAction();
 
-                if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                    switch (state) {
-                        case BluetoothAdapter.STATE_OFF:
-                        case BluetoothAdapter.STATE_TURNING_OFF:
-                        case BluetoothAdapter.STATE_TURNING_ON:
-                            break;
+                PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-                        case BluetoothAdapter.STATE_ON:
-                            Log.v("MainApp", "Bluetooth on");
-                            RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
+                if (action != null) {
+                    if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                        final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                        switch (state) {
+                            case BluetoothAdapter.STATE_OFF:
+                            case BluetoothAdapter.STATE_TURNING_OFF:
+                            case BluetoothAdapter.STATE_TURNING_ON:
+                                break;
+
+                            case BluetoothAdapter.STATE_ON: {
+                                if (activePump != null && "Medtronic".equals(activePump.deviceID())) {
+                                    Log.v("MainApp", "Bluetooth on");
+                                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
+                                }
+                            }
                             break;
+                        }
+                    } else {
+                        if (activePump != null) {
+                            activePump.timeDateOrTimeZoneChanged();
+                        }
                     }
                 }
             }
         };
 
         // Register for broadcasts on BluetoothAdapter state change
-        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_DATE_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         registerReceiver(btReceiver, filter);
 
     }

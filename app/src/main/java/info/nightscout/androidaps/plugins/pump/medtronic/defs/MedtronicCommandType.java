@@ -67,7 +67,10 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     // PumpId(113, "Pump Id", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.All,
     // MinimedCommandParameterType.NoParameters), // init
 
-    RealTimeClock(112, "Real Time Clock", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, //
+    SetRealTimeClock(0x40, "Set Pump Time", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, //
+            0), //
+
+    GetRealTimeClock(112, "Get Pump Time", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, //
             7, R.string.medtronic_cmd_desc_get_time), // 0x70
 
     GetBatteryStatus(0x72, "Get Battery Status", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters), //

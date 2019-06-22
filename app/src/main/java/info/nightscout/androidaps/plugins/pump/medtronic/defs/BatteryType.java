@@ -13,14 +13,14 @@ import info.nightscout.androidaps.R;
 public enum BatteryType {
 
     None(R.string.medtronic_pump_battery_no, 0, 0),
-    Alkaline(R.string.medtronic_pump_battery_alkaline,1.20f, 1.47f), //
-    Lithium(R.string.medtronic_pump_battery_lithium,1.32f, 1.58f);
+    Alkaline(R.string.medtronic_pump_battery_alkaline, 1.20d, 1.47d), //
+    Lithium(R.string.medtronic_pump_battery_lithium, 1.25d, 1.64d);
 
     private final String description;
-    public float lowVoltage;
-    public float highVoltage;
+    public double lowVoltage;
+    public double highVoltage;
 
-    static Map<String,BatteryType> mapByDescription;
+    static Map<String, BatteryType> mapByDescription;
 
     static {
         mapByDescription = new HashMap<>();
@@ -30,7 +30,7 @@ public enum BatteryType {
         }
     }
 
-    BatteryType(int resId, float lowVoltage, float highVoltage) {
+    BatteryType(int resId, double lowVoltage, double highVoltage) {
         this.description = MainApp.gs(resId);
         this.lowVoltage = lowVoltage;
         this.highVoltage = highVoltage;

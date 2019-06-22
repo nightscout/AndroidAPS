@@ -7,6 +7,8 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -811,7 +813,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         ClockDTO clockDTO = new ClockDTO();
         clockDTO.localDeviceTime = new LocalDateTime();
 
-        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.RealTimeClock);
+        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRealTimeClock);
 
         if (responseObject != null) {
             clockDTO.pumpTime = (LocalDateTime) responseObject;
@@ -855,6 +857,36 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             LOG.info("setTBR: " + tbr.getDescription());
 
         return setCommand(MedtronicCommandType.SetTemporaryBasal, tbr.getAsRawData());
+    }
+
+
+    public Boolean setPumpTime() {
+
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.add(Calendar.SECOND, 5);
+
+        if (isLogEnabled())
+            LOG.info("setPumpTime: " + DateTimeUtil.toString(gc));
+
+        int i = 1;
+        byte[] data = new byte[8];
+        data[0] = 7;
+        data[i] = (byte) gc.get(Calendar.HOUR_OF_DAY);
+        data[i + 1] = (byte) gc.get(Calendar.MINUTE);
+        data[i + 2] = (byte) gc.get(Calendar.SECOND);
+
+        byte[] yearByte = MedtronicUtil.getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
+
+        data[i + 3] = yearByte[0];
+        data[i + 4] = yearByte[1];
+
+        data[i + 5] = (byte) (gc.get(Calendar.MONTH) + 1);
+        data[i + 6] = (byte) gc.get(Calendar.DAY_OF_MONTH);
+
+        //LOG.info("setPumpTime: Body:  " + ByteUtil.getHex(data));
+
+        return setCommand(MedtronicCommandType.SetRealTimeClock, data);
+
     }
 
 

@@ -158,6 +158,23 @@ public class DateTimeUtil {
     }
 
 
+    public static String toString(GregorianCalendar gc) {
+
+        return getZeroPrefixed(gc.get(Calendar.DAY_OF_MONTH)) + "." + getZeroPrefixed(gc.get(Calendar.MONTH) + 1) + "."
+                + gc.get(Calendar.YEAR) + " "
+                + //
+                getZeroPrefixed(gc.get(Calendar.HOUR_OF_DAY)) + ":" + getZeroPrefixed(gc.get(Calendar.MINUTE)) + ":"
+                + getZeroPrefixed(gc.get(Calendar.SECOND));
+    }
+
+    public static String toStringFromTimeInMillis(long timeInMillis) {
+
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(timeInMillis);
+
+        return toString(gc);
+    }
+
     private static String getZeroPrefixed(int number) {
         return (number < 10) ? "0" + number : "" + number;
     }

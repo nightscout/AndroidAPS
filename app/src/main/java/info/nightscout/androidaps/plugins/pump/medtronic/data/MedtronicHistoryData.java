@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -31,7 +30,6 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType;
@@ -50,7 +48,6 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
-//import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 
 /**
  * Created by andy on 10/12/18.
@@ -67,7 +64,6 @@ public class MedtronicHistoryData {
     private boolean isInit = false;
 
     private Gson gson;
-    //private List<PumpHistoryEntry> fakeTBRs;
 
     private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
@@ -387,7 +383,7 @@ public class MedtronicHistoryData {
         LOG.debug("ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson.toJson(treatments));
 
         if (treatments.size() > 0) {
-            processEntries(treatments, ProcessHistoryRecord.Bolus);
+            processBolusEntries(treatments);
         }
 
         // TBR
@@ -396,7 +392,7 @@ public class MedtronicHistoryData {
         LOG.debug("ProcessHistoryData: TBRs NOT Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
 
         if (tbrs.size() > 0) {
-            //processEntries(tbrs, ProcessHistoryRecord.TBR);
+            processTBREntries(tbrs);
         }
 
         // 'Delivery Suspend'
@@ -470,11 +466,11 @@ public class MedtronicHistoryData {
     }
 
 
-    private void processEntries(List<PumpHistoryEntry> entryList, ProcessHistoryRecord processHistoryRecord) {
+    private void processBolusEntries(List<PumpHistoryEntry> entryList) {
 
         int dateDifference = getOldestDateDifference(entryList);
 
-        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, processHistoryRecord);
+        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, ProcessHistoryRecord.Bolus);
 
 //        LOG.debug(processHistoryRecord.getDescription() + " List (before filter): {}, FromDb={}", gsonPretty.toJson(entryList),
 //                gsonPretty.toJson(entriesFromHistory));
@@ -490,80 +486,117 @@ public class MedtronicHistoryData {
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
                 if (isLogEnabled())
-                    LOG.debug("Add " + processHistoryRecord.getDescription() + " (no db entries): " + treatment);
-                addEntry(treatment, null, processHistoryRecord);
+                    LOG.debug("Add Bolus (no db entries): " + treatment);
+
+                addBolus(treatment, null);
             }
         } else {
             for (PumpHistoryEntry treatment : entryList) {
                 DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
                 if (isLogEnabled())
-                    LOG.debug("Add " + processHistoryRecord.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
+                    LOG.debug("Add Bolus {} - (entryFromDb={}) ", treatment, treatmentDb);
 
-                addEntry(treatment, treatmentDb, processHistoryRecord);
+                addBolus(treatment, (Treatment) treatmentDb);
             }
         }
     }
 
 
-    private void processTBREntries(List<PumpHistoryEntry> entryList, ProcessHistoryRecord processHistoryRecord) {
-
-        int dateDifference = getOldestDateDifference(entryList);
-
-        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, processHistoryRecord);
-
-//        LOG.debug(processHistoryRecord.getDescription() + " List (before filter): {}, FromDb={}", gsonPretty.toJson(entryList),
-//                gsonPretty.toJson(entriesFromHistory));
+    private void processTBREntries(List<PumpHistoryEntry> entryList) {
 
         Collections.reverse(entryList);
 
-        filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
+        TempBasalPair tbr = (TempBasalPair) entryList.get(0).getDecodedDataEntry("Object");
+
+        boolean readOldItem = false;
+
+        if (tbr.isCancelTBR()) {
+            PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.TempBasalCombined);
+
+            if (oneMoreEntryFromHistory != null) {
+                entryList.add(0, oneMoreEntryFromHistory);
+                readOldItem = true;
+            } else {
+                entryList.remove(0);
+            }
+        }
+
+        int dateDifference = getOldestDateDifference(entryList);
+
+        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, ProcessHistoryRecord.TBR);
+
+        LOG.debug(ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
+                gson.toJson(entriesFromHistory));
+
+        //filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
         if (entryList.isEmpty())
             return;
 
-//        LOG.debug(processHistoryRecord.getDescription() + " List (after filter): {}, FromDb={}", gsonPretty.toJson(entryList),
-//                gsonPretty.toJson(entriesFromHistory));
-        PumpHistoryEntry startRecord = null;
+//        LOG.debug(processHistoryRecord.getDescription() + " List (after filter): {}, FromDb={}", gson.toJson(entryList),
+//                gson.toJson(entriesFromHistory));
+
+        //PumpHistoryEntry startRecord = null;
+
+        TempBasalProcessDTO processDTO = null;
+        List<TempBasalProcessDTO> processList = new ArrayList<>();
 
         for (PumpHistoryEntry treatment : entryList) {
 
-            TempBasalPair tbr = (TempBasalPair) treatment.getDecodedDataEntry("Object");
+            TempBasalPair tbr2 = (TempBasalPair) treatment.getDecodedDataEntry("Object");
 
-            if (!tbr.isCancelTBR()) {
+            if (tbr2.isCancelTBR()) {
+                processDTO.itemTwo = treatment;
 
-            } else {
-
-            }
-
-            boolean isPossibleCancel = false;
-
-            if (tbr.getInsulinRate() > 0.0d) {
-                startRecord = treatment;
-            } else {
-                isPossibleCancel = true;
-
-                if (startRecord == null) {
-
+                if (readOldItem) {
+                    processDTO.processOperation = TempBasalProcessDTO.Operation.Edit;
+                    readOldItem = false;
+                } else {
+                    processDTO.processOperation = TempBasalProcessDTO.Operation.Add;
                 }
-            }
+            } else {
+                if (processDTO != null) {
+                    processList.add(processDTO);
+                }
 
-
-            if (isLogEnabled())
-                LOG.debug("Add " + processHistoryRecord.getDescription() + " (no db entries): " + treatment);
-            addEntry(treatment, null, processHistoryRecord);
-        }
-
-
-        if (isCollectionEmpty(entriesFromHistory)) {
-        } else {
-            for (PumpHistoryEntry treatment : entryList) {
-                DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
-                if (isLogEnabled())
-                    LOG.debug("Add " + processHistoryRecord.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
-
-                addEntry(treatment, treatmentDb, processHistoryRecord);
+                processDTO = new TempBasalProcessDTO();
+                processDTO.itemOne = treatment;
             }
         }
+
+        if (!isCollectionEmpty(processList)) {
+
+            for (TempBasalProcessDTO tempBasalProcessDTO : processList) {
+
+                if (tempBasalProcessDTO.processOperation == TempBasalProcessDTO.Operation.Edit) {
+                    // edit
+                    TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(tempBasalProcessDTO.itemOne.getPumpId());
+
+                    tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
+
+                    databaseHelper.createOrUpdate(tempBasal);
+
+                    if (isLogEnabled())
+                        LOG.debug("Edit " + ProcessHistoryRecord.TBR.getDescription() + " - (entryFromDb={}) ", tempBasal);
+
+                } else {
+                    // add
+
+                    PumpHistoryEntry treatment = tempBasalProcessDTO.itemOne;
+
+                    TempBasalPair tbr2 = (TempBasalPair) treatment.getDecodedData().get("Object");
+                    tbr2.setDurationMinutes(tempBasalProcessDTO.getDuration());
+
+                    DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
+
+                    if (isLogEnabled())
+                        LOG.debug("Add " + ProcessHistoryRecord.TBR.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
+
+                    addTBR(treatment, (TemporaryBasal) treatmentDb);
+                } // if
+            } // for
+
+        } // collection
     }
 
 
@@ -576,8 +609,8 @@ public class MedtronicHistoryData {
         if (entriesFromHistory.size() == 0) {
             return null;
         } else if (entriesFromHistory.size() == 1) {
-            DbObjectBase treatment1 = entriesFromHistory.get(0);
-            LocalDateTime ldt = new LocalDateTime(treatment1.getDate());
+            //DbObjectBase treatment1 = entriesFromHistory.get(0);
+            //LocalDateTime ldt = new LocalDateTime(treatment1.getDate());
             return entriesFromHistory.get(0);
         }
 
@@ -611,18 +644,6 @@ public class MedtronicHistoryData {
         }
 
         return null;
-    }
-
-
-    private void addEntry(PumpHistoryEntry treatment, DbObjectBase treatmentDb, ProcessHistoryRecord processHistoryRecord) {
-
-        if (processHistoryRecord == ProcessHistoryRecord.Bolus) {
-            addBolus(treatment, (Treatment) treatmentDb);
-        } else if (processHistoryRecord == ProcessHistoryRecord.TBR) {
-            addTBR(treatment, (TemporaryBasal) treatmentDb);
-        } else {
-            addTBR(treatment, (TemporaryBasal) treatmentDb);
-        }
     }
 
 
@@ -794,7 +815,7 @@ public class MedtronicHistoryData {
     }
 
 
-    public void processSuspends(List<TempBasalProcessDTO> tempBasalProcessList) {
+    private void processSuspends(List<TempBasalProcessDTO> tempBasalProcessList) {
 
         for (TempBasalProcessDTO tempBasalProcess : tempBasalProcessList) {
 
@@ -816,10 +837,7 @@ public class MedtronicHistoryData {
 
                 databaseHelper.createOrUpdate(tempBasal);
 
-            } else {
-                continue;
             }
-
         }
 
     }
@@ -855,9 +873,9 @@ public class MedtronicHistoryData {
                 // not full suspends, need to retrive one more record and discard first one (R S R S) -> ([S] R S R [xS])
                 filteredItems.remove(0);
 
-                PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory();
+                PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.Suspend);
                 if (oneMoreEntryFromHistory != null) {
-                    filteredItems.add(getOneMoreEntryFromHistory());
+                    filteredItems.add(oneMoreEntryFromHistory);
                 } else {
                     filteredItems.remove(filteredItems.size() - 1); // remove last (unpaired R)
                 }
@@ -867,7 +885,7 @@ public class MedtronicHistoryData {
                 if (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.Resume) {
                     // get one more from history (R S R) -> ([S] R S R)
 
-                    PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory();
+                    PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.Suspend);
                     if (oneMoreEntryFromHistory != null) {
                         filteredItems.add(oneMoreEntryFromHistory);
                     } else {
@@ -936,9 +954,7 @@ public class MedtronicHistoryData {
                     break;
                 }
 
-                if (!finishedItems) {
-                    tempData.add(filteredItem);
-                }
+                tempData.add(filteredItem);
             }
         }
 
@@ -960,9 +976,7 @@ public class MedtronicHistoryData {
                     break;
                 }
 
-                if (!finishedItems) {
-                    tempData.add(filteredItem);
-                }
+                tempData.add(filteredItem);
             }
         }
 
@@ -971,7 +985,6 @@ public class MedtronicHistoryData {
             showLogs("NoDeliveryRewindPrimeRecords: Not finished Items: ", gson.toJson(tempData));
             return outList;
         }
-
 
         showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson.toJson(tempData));
 
@@ -993,7 +1006,8 @@ public class MedtronicHistoryData {
             processDTO.itemOne = items.get(items.size() - 1);
             processDTO.processOperation = TempBasalProcessDTO.Operation.Add;
 
-            return Arrays.asList(processDTO);
+            outList.add(processDTO);
+            return outList;
         }
 
 
@@ -1006,15 +1020,16 @@ public class MedtronicHistoryData {
             processDTO.itemOne = items.get(0);
             processDTO.processOperation = TempBasalProcessDTO.Operation.Add;
 
-            return Arrays.asList(processDTO);
+            outList.add(processDTO);
+            return outList;
         }
 
         return outList;
     }
 
 
-    private PumpHistoryEntry getOneMoreEntryFromHistory() {
-        List<PumpHistoryEntry> filteredItems = getFilteredItems(this.allHistory, PumpHistoryEntryType.Suspend);
+    private PumpHistoryEntry getOneMoreEntryFromHistory(PumpHistoryEntryType entryType) {
+        List<PumpHistoryEntry> filteredItems = getFilteredItems(this.allHistory, entryType);
 
         return filteredItems.size() == 0 ? null : filteredItems.get(0);
     }

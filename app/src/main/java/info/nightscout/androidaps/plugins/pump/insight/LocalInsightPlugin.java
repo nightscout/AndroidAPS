@@ -1583,4 +1583,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public boolean canHandleDST() {
         return true;
     }
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
 }

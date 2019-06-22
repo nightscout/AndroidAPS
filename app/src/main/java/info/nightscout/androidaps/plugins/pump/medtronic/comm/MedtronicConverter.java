@@ -52,7 +52,7 @@ public class MedtronicConverter {
                 return decodeModel(rawContent);
             }
 
-            case RealTimeClock: {
+            case GetRealTimeClock: {
                 return decodeTime(rawContent);
             }
 
