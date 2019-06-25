@@ -991,9 +991,9 @@
     <string name="apssetup">Настроить плагин APS</string>
     <string name="sensitivitysetup">Настроить плагин чувствительности Sensitivity</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
-    <string name="setupwizard_sensitivity_url">"https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB
+    <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB
  
-Context | Edit Context"</string>
+Context | Edit Context</string>
     <string name="nsclientinfotext">NSClient обрабатывает подключения к Nightscout. Вы можете пропустить этот этап сейчас, но вы не преодолеете все Цели пока не настроите его.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="bgsourcesetup">Настройте источник СК</string>
@@ -1162,4 +1162,6 @@ Context | Edit Context"</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
+    <string name="twohours">2ч</string>
+    <string name="formatinsulinunits">%1$.2f ед</string>
 </resources>
