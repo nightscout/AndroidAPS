@@ -108,8 +108,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
-import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog;
@@ -661,8 +660,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         boolean xdrip = SourceXdripPlugin.getPlugin().isEnabled(PluginType.BGSOURCE);
-        boolean g5 = SourceDexcomG5Plugin.getPlugin().isEnabled(PluginType.BGSOURCE);
-        boolean g6 = SourceDexcomG6Plugin.getPlugin().isEnabled(PluginType.BGSOURCE);
+        boolean dexcom = SourceDexcomPlugin.INSTANCE.isEnabled(PluginType.BGSOURCE);
         String units = ProfileFunctions.getInstance().getProfileUnits();
 
         FragmentManager manager = getFragmentManager();
@@ -685,10 +683,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (xdrip) {
                     CalibrationDialog calibrationDialog = new CalibrationDialog();
                     calibrationDialog.show(manager, "CalibrationDialog");
-                } else if (g5 || g6) {
+                } else if (dexcom) {
                     try {
-                        Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
-                        startActivity(i);
+                        String packageName = SourceDexcomPlugin.INSTANCE.findDexcomPackageName();
+                        if (packageName != null) {
+                            Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
+                            i.setPackage(packageName);
+                            startActivity(i);
+                        } else {
+                            ToastUtils.showToastInUiThread(getActivity(), MainApp.gs(R.string.dexcom_app_not_installed));
+                        }
                     } catch (ActivityNotFoundException e) {
                         ToastUtils.showToastInUiThread(getActivity(), MainApp.gs(R.string.g5appnotdetected));
                     }
@@ -697,14 +701,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             case R.id.overview_cgmbutton:
                 if (xdrip)
                     openCgmApp("com.eveningoutpost.dexdrip");
-                else if (g5 && units.equals(Constants.MGDL))
-                    openCgmApp("com.dexcom.cgm.region5.mgdl");
-                else if (g5 && units.equals(Constants.MMOL))
-                    openCgmApp("com.dexcom.cgm.region5.mmol");
-                else if (g6 && units.equals(Constants.MGDL))
-                    openCgmApp("com.dexcom.g6.region3.mgdl");
-                else if (g6 && units.equals(Constants.MMOL))
-                    openCgmApp("com.dexcom.g6.region3.mmol");
+                else if (dexcom) {
+                    String packageName = SourceDexcomPlugin.INSTANCE.findDexcomPackageName();
+                    if (packageName != null) {
+                        openCgmApp(packageName);
+                    } else {
+                        ToastUtils.showToastInUiThread(getActivity(), MainApp.gs(R.string.dexcom_app_not_installed));
+                    }
+                }
                 break;
             case R.id.overview_treatmentbutton:
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
@@ -1188,10 +1192,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** Calibration & CGM buttons ****
         boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
-        boolean g5IsBgSource = MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class) != null && MainApp.getSpecificPlugin(SourceDexcomG5Plugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean dexcomIsSource = SourceDexcomPlugin.INSTANCE.isEnabled(PluginType.BGSOURCE);
         boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
-            if ((xDripIsBgSource || g5IsBgSource) && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {
+            if ((xDripIsBgSource || dexcomIsSource) && bgAvailable && SP.getBoolean(R.string.key_show_calibration_button, true)) {
                 calibrationButton.setVisibility(View.VISIBLE);
             } else {
                 calibrationButton.setVisibility(View.GONE);
@@ -1200,7 +1204,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (cgmButton != null) {
             if (xDripIsBgSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
                 cgmButton.setVisibility(View.VISIBLE);
-            } else if (g5IsBgSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
+            } else if (dexcomIsSource && SP.getBoolean(R.string.key_show_cgm_button, false)) {
                 cgmButton.setVisibility(View.VISIBLE);
             } else {
                 cgmButton.setVisibility(View.GONE);
