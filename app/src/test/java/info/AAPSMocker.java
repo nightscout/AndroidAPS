@@ -10,7 +10,6 @@ import com.squareup.otto.Bus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.Locale;
@@ -27,14 +26,12 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.SP;
 
@@ -42,7 +39,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,6 +55,7 @@ public class AAPSMocker {
     public static Intent intentSent = null;
 
     public static CommandQueue queue;
+    public static ConstraintChecker constraintChecker;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -168,7 +165,7 @@ public class AAPSMocker {
     }
 
     public static ConstraintChecker mockConstraintsChecker() {
-        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
+        constraintChecker = mock(ConstraintChecker.class);
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         return constraintChecker;
     }

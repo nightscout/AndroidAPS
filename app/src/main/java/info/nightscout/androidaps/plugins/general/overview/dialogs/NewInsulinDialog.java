@@ -225,7 +225,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
                 }
             }
 
-            if (Math.abs(insulinAfterConstraints - insulin) > pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulinAfterConstraints))
+            if (Math.abs(insulinAfterConstraints - insulin) > pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
 
             int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);

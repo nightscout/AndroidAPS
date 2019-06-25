@@ -207,6 +207,7 @@ public class ActionStringHandler {
             int percentage = Integer.parseInt(act[2]);
 
             Profile profile = ProfileFunctions.getInstance().getProfile();
+            String profileName = ProfileFunctions.getInstance().getProfileName();
             if (profile == null) {
                 sendError("No profile found!");
                 return;
@@ -226,45 +227,38 @@ public class ActionStringHandler {
 
             DecimalFormat format = new DecimalFormat("0.00");
             DecimalFormat formatInt = new DecimalFormat("0");
-            BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, useTT ? TreatmentsPlugin.getPlugin().getTempTargetFromHistory() : null,
-                    carbsAfterConstraints, useCOB?cobInfo.displayCob:0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d,
-                    0d, percentage, useBolusIOB, useBasalIOB, false, useTrend);
+            BolusWizard bolusWizard = new BolusWizard(profile, profileName, TreatmentsPlugin.getPlugin().getTempTargetFromHistory(),
+                    carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profile.getUnits()),
+                    0d, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend);
 
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolusWizard.calculatedTotalInsulin)).value();
-            if (Math.abs(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
+            if (Math.abs(bolusWizard.getInsulinAfterConstraints() - bolusWizard.getCalculatedTotalInsulin()) >= 0.01) {
                 sendError("Insulin constraint violation!" +
-                        "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!");
+                        "\nCannot deliver " + format.format(bolusWizard.getCalculatedTotalInsulin()) + "!");
                 return;
             }
 
-
-            if (bolusWizard.calculatedTotalInsulin < 0) {
-                bolusWizard.calculatedTotalInsulin = 0d;
-            }
-
-            if (bolusWizard.calculatedTotalInsulin <= 0 && bolusWizard.carbs <= 0) {
+            if (bolusWizard.getCalculatedTotalInsulin() <= 0 && bolusWizard.getCarbs() <= 0) {
                 rAction = "info";
                 rTitle = "INFO";
             } else {
                 rAction = actionstring;
             }
-            rMessage += "Carbs: " + bolusWizard.carbs + "g";
-            rMessage += "\nBolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+            rMessage += "Carbs: " + bolusWizard.getCarbs() + "g";
+            rMessage += "\nBolus: " + format.format(bolusWizard.getCalculatedTotalInsulin()) + "U";
             rMessage += "\n_____________";
-            rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) + "): ";
-            rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U";
+            rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.getIc()) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.getSens()) + "): ";
+            rMessage += "\nFrom Carbs: " + format.format(bolusWizard.getInsulinFromCarbs()) + "U";
             if (useCOB)
-                rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U";
-            if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U";
+                rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.getInsulinFromCOB()) + "U";
+            if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.getInsulinFromBG()) + "U";
             if (useBolusIOB)
-                rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
+                rMessage += "\nBolus IOB: " + format.format(bolusWizard.getInsulinFromBolusIOB()) + "U";
             if (useBasalIOB)
-                rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
+                rMessage += "\nBasal IOB: " + format.format(bolusWizard.getInsulinFromBasalsIOB()) + "U";
             if (useTrend)
-                rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.insulinFromTrend) + "U";
+                rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.getInsulinFromTrend()) + "U";
             if (percentage != 100) {
-                rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+                rMessage += "\nPercentage: " + format.format(bolusWizard.getTotalBeforePercentageAdjustment()) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.getCalculatedTotalInsulin()) + "U";
             }
 
             lastBolusWizard = bolusWizard;
@@ -628,7 +622,7 @@ public class ActionStringHandler {
             if (lastBolusWizard != null) {
                 //use last calculation as confirmed string matches
 
-                doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
+                doBolus(lastBolusWizard.getCalculatedTotalInsulin(), lastBolusWizard.getCarbs());
                 lastBolusWizard = null;
             }
         } else if ("bolus".equals(act[0])) {

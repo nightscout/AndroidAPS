@@ -105,14 +105,14 @@ android {
         multiDexEnabled true
         versionCode 1500
         // dev_version: 2.3.1-dev
-        version "medtronic-0.11.3-SNAPSHOT"
+        version "medtronic-0.11.4-SNAPSHOT"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "DEV_VERSION", '"2.3.1-dev"'
-        buildConfigField "String", "DEV_DATE", '"31.5.2019"'
-        buildConfigField "String", "DEV_CHECKIN", '"e61cbecb2e9f568f6216533034e75733fecb8a36"'
+        buildConfigField "String", "DEV_DATE", '"21.6.2019"'
+        buildConfigField "String", "DEV_CHECKIN", '"8d9c18dd359dc671dfb1b9f75dd454e29df640f2"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
