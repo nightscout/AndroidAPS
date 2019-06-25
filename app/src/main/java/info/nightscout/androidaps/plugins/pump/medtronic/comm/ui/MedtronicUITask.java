@@ -48,7 +48,7 @@ public class MedtronicUITask {
     public void execute(MedtronicCommunicationManager communicationManager) {
 
         if (isLogEnabled())
-            LOG.warn("@@@ In execute. {}", commandType);
+            LOG.debug("MedtronicUITask: @@@ In execute. {}", commandType);
 
         switch (commandType) {
             case PumpModel: {
@@ -129,8 +129,7 @@ public class MedtronicUITask {
             break;
 
             default: {
-                if (isLogEnabled())
-                    LOG.warn("This commandType is not supported (yet) - {}.", commandType);
+                LOG.warn("This commandType is not supported (yet) - {}.", commandType);
                 // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid;
             }
@@ -185,7 +184,7 @@ public class MedtronicUITask {
 
         EventMedtronicDeviceStatusChange statusChange;
         if (isLogEnabled())
-            LOG.warn("@@@ In execute. {}", commandType);
+            LOG.debug("MedtronicUITask: @@@ In execute. {}", commandType);
 
         if (responseType == MedtronicUIResponseType.Data) {
             postprocessor.postProcessData(this);
@@ -201,9 +200,8 @@ public class MedtronicUITask {
             MainApp.bus().post(statusChange);
         } else {
             MainApp.bus().post(new EventMedtronicPumpValuesChanged());
+            MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
         }
-
-        MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
 
         MedtronicUtil.setCurrentCommand(null);
     }
@@ -221,6 +219,11 @@ public class MedtronicUITask {
 
     private boolean isLogEnabled() {
         return L.isEnabled(L.PUMP);
+    }
+
+
+    public MedtronicUIResponseType getResponseType() {
+        return this.responseType;
     }
 
 }

@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -15,26 +15,14 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
+
 /**
- * Application: GGC - GNU Gluco Control
- * Plug-in: GGC PlugIn Base (base class for all plugins)
- * <p>
- * See AUTHORS for copyright information.
- * <p>
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * <p>
- * Filename: DeviceIdentification Description: Class for display of Device Identification.
- * <p>
- * Author: Andy {andy@atech-software.com}
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
+
 public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> implements MedtronicHistoryDecoderInterface<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -59,12 +47,10 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
     public abstract void postProcess();
 
 
-
     protected abstract void runPostDecodeTasks();
 
 
-    // TODO_ extend this to also use bigger pages (for now we support only 1024
-    // pages)
+    // TODO_ extend this to also use bigger pages (for now we support only 1024 pages)
     private List<Byte> checkPage(RawHistoryPage page, boolean partial) throws RuntimeException {
         List<Byte> byteList = new ArrayList<Byte>();
 
@@ -109,7 +95,7 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
 
     protected void addToStatistics(MedtronicHistoryEntryInterface pumpHistoryEntry, RecordDecodeStatus status,
-            Integer opCode) {
+                                   Integer opCode) {
         if (!statisticsEnabled)
             return;
 
@@ -155,7 +141,7 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 if (isLogEnabled())
                     LOG.debug("    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(),
-                        sb.toString());
+                            sb.toString());
             } else {
                 if (isLogEnabled())
                     LOG.debug("    {}             - {}", entry.getKey().name(), entry.getValue().size());

@@ -51,9 +51,10 @@ import info.nightscout.androidaps.utils.SP;
 
 /**
  * Original file created by geoff on 5/30/16.
- * <p>
+ *
  * Split into 2 implementations, so that we can split it by target device. - Andy
- * This was mostly rewritten from Original version
+ * This was mostly rewritten from Original version, and lots of commands and
+ * functionality added.
  */
 public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
 
@@ -65,7 +66,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     static MedtronicCommunicationManager medtronicCommunicationManager;
     String errorMessage;
     private MedtronicConverter medtronicConverter;
-    private boolean debugSetCommands = isLogEnabled();
+    private boolean debugSetCommands = false;
 
     private MedtronicPumpHistoryDecoder pumpHistoryDecoder;
     private boolean doWakeUpBeforeCommand = true;
@@ -110,8 +111,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
 
     /**
-     * We do actual wakeUp and compare PumpModel with currently selected one. If returned model is not Unknown,
-     * pump is reachable.
+     * We do actual wakeUp and compare PumpModel with currently selected one. If returned model is
+     * not Unknown, pump is reachable.
      *
      * @return
      */
@@ -163,8 +164,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             LOG.info("wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
 
         if (rfSpyResponse.wasTimeout()) {
-            if (isLogEnabled())
-                LOG.error("isDeviceReachable. Failed to find pump (timeout).");
+            LOG.error("isDeviceReachable. Failed to find pump (timeout).");
         } else if (rfSpyResponse.looksLikeRadioPacket()) {
             RadioResponse radioResponse = new RadioResponse();
 
@@ -177,9 +177,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     PumpMessage pumpResponse = createResponseMessage(radioResponse.getPayload(), PumpMessage.class);
 
                     if (!pumpResponse.isValid()) {
-                        if (isLogEnabled())
-                            LOG.warn("Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
-                                    rfSpyResponse.wasTimeout());
+                        LOG.warn("Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
+                                rfSpyResponse.wasTimeout());
                     } else {
 
                         // radioResponse.rssi;
@@ -215,20 +214,17 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     }
 
                 } else {
-                    if (isLogEnabled())
-                        LOG.warn("isDeviceReachable. Failed to parse radio response: "
-                                + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+                    LOG.warn("isDeviceReachable. Failed to parse radio response: "
+                            + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
                 }
 
             } catch (RileyLinkCommunicationException e) {
-                if (isLogEnabled())
-                    LOG.warn("isDeviceReachable. Failed to decode radio response: "
-                            + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+                LOG.warn("isDeviceReachable. Failed to decode radio response: "
+                        + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
             }
 
         } else {
-            if (isLogEnabled())
-                LOG.warn("isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+            LOG.warn("isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
         }
 
         return false;
@@ -303,12 +299,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             // LOG.debug("PumpResponse: " + rval);
 
             if (rval.commandType != MedtronicCommandType.CommandACK) {
-                if (isLogEnabled())
-                    LOG.error("runCommandWithFrames: Pump did not ACK frame #{}", frameNr);
+                LOG.error("runCommandWithFrames: Pump did not ACK frame #{}", frameNr);
 
-                if (isLogEnabled())
-                    LOG.error("Run command with Frames FAILED (command={}, response={})", commandType.name(),
-                            rval.toString());
+                LOG.error("Run command with Frames FAILED (command={}, response={})", commandType.name(),
+                        rval.toString());
 
                 return new PumpMessage("No ACK after frame #" + frameNr);
             } else {
@@ -482,7 +476,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             if (isLogEnabled())
                 LOG.debug("getPumpHistory: Found {} history entries.", medtronicHistoryEntries.size());
 
-            pumpTotalResult.addHistoryEntries(medtronicHistoryEntries);
+            pumpTotalResult.addHistoryEntries(medtronicHistoryEntries, pageNumber);
 
             if (isLogEnabled())
                 LOG.debug("getPumpHistory: Search status: Search finished: {}", pumpTotalResult.isSearchFinished());
@@ -613,10 +607,15 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                     Object dataResponse = medtronicConverter.convertResponse(commandType, response.getRawContent());
 
-                    if (isLogEnabled())
-                        LOG.debug("Converted response for {} is {}.", commandType.name(), dataResponse);
+                    if (dataResponse != null) {
+                        this.errorMessage = null;
+                        if (isLogEnabled())
+                            LOG.debug("Converted response for {} is {}.", commandType.name(), dataResponse);
 
-                    return dataResponse;
+                        return dataResponse;
+                    } else {
+                        this.errorMessage = "Error decoding response.";
+                    }
                 } else {
                     this.errorMessage = check;
                     // return null;
@@ -766,13 +765,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 return basalProfile;
 
             } catch (RileyLinkCommunicationException e) {
-                if (isLogEnabled())
-                    LOG.warn("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
+                LOG.error("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
         }
 
-        if (isLogEnabled())
-            LOG.warn("Error reading profile in max retries.");
+        LOG.warn("Error reading profile in max retries.");
         MedtronicUtil.setCurrentCommand(null);
         MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
@@ -944,18 +941,20 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (int retries = 0; retries <= MAX_COMMAND_TRIES; retries++) {
 
-            // PumpMessage responseMessage = null;
+            PumpMessage responseMessage = null;
             try {
-                PumpMessage responseMessage = runCommandWithFrames(MedtronicCommandType.SetBasalProfileSTD,
+                responseMessage = runCommandWithFrames(MedtronicCommandType.SetBasalProfileSTD,
                         basalProfileFrames);
 
-                return responseMessage.commandType == MedtronicCommandType.CommandACK;
+                if (responseMessage.commandType == MedtronicCommandType.CommandACK)
+                    return true;
+
             } catch (RileyLinkCommunicationException e) {
                 if (isLogEnabled())
                     LOG.warn("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
 
-            // LOG.debug("Set Basal Profile: {}", HexDump.toHexStringDisplayable(responseMessage.getRawContent()));
+            LOG.warn("Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.getHex(responseMessage.getRawContent()));
         }
 
         return false;

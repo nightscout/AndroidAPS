@@ -1,21 +1,21 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus;
 
 /**
- * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
@@ -150,14 +150,14 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
                     pe.setEntryType(CGMSHistoryEntryType.None);
                     pe.setOpCode(opCode);
 
-                    pe.setData(Arrays.asList((byte)opCode), false);
+                    pe.setData(Arrays.asList((byte) opCode), false);
 
                     outList.add(pe);
                 } else {
                     // System.out.println("OpCode: " + opCode);
 
                     List<Byte> listRawData = new ArrayList<Byte>();
-                    listRawData.add((byte)opCode);
+                    listRawData.add((byte) opCode);
 
                     for (int j = 0; j < (entryType.getTotalLength() - 1); j++) {
                         listRawData.add(dataClear.get(counter));
@@ -178,7 +178,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
                 CGMSHistoryEntry pe = new CGMSHistoryEntry();
                 pe.setEntryType(CGMSHistoryEntryType.GlucoseSensorData);
 
-                pe.setData(Arrays.asList((byte)opCode), false);
+                pe.setData(Arrays.asList((byte) opCode), false);
 
                 outList.add(pe);
             }
@@ -268,7 +268,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
         if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.MinuteSpecific) {
 
             Long atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3]), parseMonths(data[0], data[1]),
-                parseDay(data[2]), parseHours(data[0]), parseMinutes(data[1]), 0);
+                    parseDay(data[2]), parseHours(data[0]), parseMinutes(data[1]), 0);
 
             entry.setAtechDateTime(atechDateTime);
 

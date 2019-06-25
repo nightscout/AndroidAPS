@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.annotations.Expose;
 
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
+import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -73,7 +73,7 @@ public class BasalProfile {
 
         // if we have just one entry through all day it looks like just length 1
         if (data.length == 1) {
-            data = MedtronicUtil.createByteArray(data[0], (byte)0, (byte)0);
+            data = MedtronicUtil.createByteArray(data[0], (byte) 0, (byte) 0);
         }
 
         if (data.length == MAX_RAW_DATA_SIZE) {
@@ -122,7 +122,7 @@ public class BasalProfile {
             String startString = entry.startTime.toString("HH:mm");
             // this doesn't work
             LOG.debug(String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
-                entry.rate_raw, startString, entry.startTime_raw));
+                    entry.rate_raw, startString, entry.startTime_raw));
 
         }
     }
@@ -165,7 +165,7 @@ public class BasalProfile {
         List<BasalProfileEntry> entries = getEntries();
         if (entries.size() == 0) {
             LOG.warn(String.format("getEntryForTime(%s): table is empty",
-                when.toDateTime().toLocalTime().toString("HH:mm")));
+                    when.toDateTime().toLocalTime().toString("HH:mm")));
             return rval;
         }
         // Log.w(TAG,"Assuming first entry");
@@ -182,7 +182,7 @@ public class BasalProfile {
             BasalProfileEntry entry = entries.get(i);
             if (DEBUG_BASALPROFILE) {
                 LOG.debug(String.format("Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
-                    .toString("HH:mm"), entry.startTime.toString("HH:mm")));
+                        .toString("HH:mm"), entry.startTime.toString("HH:mm")));
             }
             if (localMillis >= entry.startTime.getMillisOfDay()) {
                 rval = entry;
@@ -201,8 +201,8 @@ public class BasalProfile {
         }
         if (DEBUG_BASALPROFILE) {
             LOG.debug(String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when
-                .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, rval.rate_raw,
-                rval.startTime.toString("HH:mm"), rval.startTime_raw));
+                            .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, rval.rate_raw,
+                    rval.startTime.toString("HH:mm"), rval.startTime_raw));
         }
         return rval;
     }
@@ -317,7 +317,7 @@ public class BasalProfile {
                 BasalProfileEntry basalProfileEntry = entries.get(i + 1);
 
                 int rawTime = (basalProfileEntry.startTime_raw % 2 == 0) ? basalProfileEntry.startTime_raw
-                    : basalProfileEntry.startTime_raw - 1;
+                        : basalProfileEntry.startTime_raw - 1;
 
                 lastHour = (rawTime * 30) / 60;
             }
@@ -364,4 +364,21 @@ public class BasalProfile {
         return L.isEnabled(L.PUMPCOMM);
     }
 
+    public boolean verify() {
+
+        try {
+            getEntries();
+        } catch (Exception ex) {
+            return false;
+        }
+
+        Double[] profilesByHour = getProfilesByHour();
+
+        for (Double aDouble : profilesByHour) {
+            if (aDouble > 35.0d)
+                return false;
+        }
+
+        return true;
+    }
 }

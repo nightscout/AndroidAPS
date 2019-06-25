@@ -55,15 +55,17 @@ public class PumpHistoryResult {
     }
 
 
-    public void addHistoryEntries(List<PumpHistoryEntry> entries) {
+    public void addHistoryEntries(List<PumpHistoryEntry> entries, int page) {
         this.unprocessedEntries = entries;
         //LOG.debug("PumpHistoryResult. Unprocessed entries: {}", MedtronicUtil.getGsonInstance().toJson(entries));
         processEntries();
     }
 
-
+    // TODO Bug #145 need to check if we had timeChange that went -1, that situation needs to be evaluated separately
     public void processEntries() {
         int olderEntries = 0;
+
+        Collections.reverse(this.unprocessedEntries);
 
         switch (searchType) {
             case None:
@@ -72,11 +74,11 @@ public class PumpHistoryResult {
                 break;
 
             case LastEntry: {
-                //LOG.debug("PE. Last entry search");
+                LOG.debug("PE. Last entry search");
 
-                Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
+                //Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
 
-                //LOG.debug("PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
+                LOG.debug("PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
 
                 Long date = searchEntry.atechDateTime;
 
@@ -94,24 +96,29 @@ public class PumpHistoryResult {
             }
             break;
             case Date: {
-                //LOG.debug("PE. Date search");
+                LOG.debug("PE. Date search: Search date: {}", this.searchDate);
+
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
                     if (unprocessedEntry.atechDateTime == null || unprocessedEntry.atechDateTime == 0) {
+                        LOG.debug("PE. PumpHistoryResult. Search entry date: Entry with no date: {}", unprocessedEntry);
                         continue;
                     }
 
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {
+                        LOG.debug("PE. PumpHistoryResult. Not after.. Unprocessed Entry [year={},entry={}]",
+                                DateTimeUtil.getYear(unprocessedEntry.atechDateTime), unprocessedEntry);
+
                         if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) > 2015)
                             olderEntries++;
                     }
                 }
 
                 if (olderEntries > 0) {
-                    Collections.sort(this.validEntries, new PumpHistoryEntry.Comparator());
+                    //Collections.sort(this.validEntries, new PumpHistoryEntry.Comparator());
 
                     searchFinished = true;
                 }

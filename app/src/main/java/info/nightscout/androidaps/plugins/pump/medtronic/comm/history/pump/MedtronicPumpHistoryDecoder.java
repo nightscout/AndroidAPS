@@ -25,8 +25,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
- * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
- * <p>
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
+ *
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -403,14 +404,14 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         // int bodyOffset = headerSize + timestampSize;
         int offset = body[0] * 1000 * 30 * 60;
         Float rate = null;
-        int index = body[2];
+        int index = entry.getHead()[0];
 
         if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
                 MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f;
         }
 
-        LOG.info("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
+        LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
                 body);
 
         if (rate == null) {

@@ -102,7 +102,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     // MinimedCommandParameterType.NoParameters), //
 
     Settings_512(145, "Configuration", MedtronicDeviceType.Medtronic_512_712, MinimedCommandParameterType.NoParameters, //
-            64, 1, 0, R.string.medtronic_cmd_desc_get_settings), //
+            64, 1, 18, R.string.medtronic_cmd_desc_get_settings), //
 
     // BGAlarmClocks(142, "BG Alarm Clocks", MinimedTargetType.PumpConfiguration,
     // MedtronicDeviceType.Medtronic_512andHigher, MinimedCommandParameterType.NoParameters), //
@@ -142,7 +142,7 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     PumpStatus(206, "Pump Status", MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters), // PumpConfiguration
 
     Settings(192, "Configuration", MedtronicDeviceType.Medtronic_515andHigher, MinimedCommandParameterType.NoParameters, //
-            64, 1, 0, R.string.medtronic_cmd_desc_get_settings), //
+            64, 1, 21, R.string.medtronic_cmd_desc_get_settings), //
 
     // 522
     SensorSettings_522(153, "Sensor Configuration", MedtronicDeviceType.Medtronic_522andHigher, MinimedCommandParameterType.NoParameters), //

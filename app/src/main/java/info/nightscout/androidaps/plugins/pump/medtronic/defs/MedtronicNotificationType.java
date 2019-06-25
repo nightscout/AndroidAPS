@@ -18,7 +18,6 @@ public enum MedtronicNotificationType {
     PumpWrongMaxBasalSet(R.string.medtronic_error_pump_wrong_max_basal_set, Notification.NORMAL), //
     PumpWrongTimeUrgent(R.string.combo_notification_check_time_date, Notification.URGENT),
     PumpWrongTimeNormal(R.string.combo_notification_check_time_date, Notification.NORMAL),
-
     //
     ;
 

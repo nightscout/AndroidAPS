@@ -4,8 +4,6 @@ package info.nightscout.androidaps.plugins.pump.common.utils;
  * Created by andy on 10/25/18.
  */
 
-import android.util.Log;
-
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
 import org.slf4j.Logger;
@@ -26,33 +24,68 @@ public class DateTimeUtil {
 
     /**
      * DateTime is packed as long: yyyymmddHHMMss
-     * 
+     *
      * @param atechDateTime
      * @return
      */
     public static LocalDateTime toLocalDateTime(long atechDateTime) {
-        int year = (int)(atechDateTime / 10000000000L);
+        int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
 
-        int month = (int)(atechDateTime / 100000000L);
+        int month = (int) (atechDateTime / 100000000L);
         atechDateTime -= month * 100000000L;
 
-        int dayOfMonth = (int)(atechDateTime / 1000000L);
+        int dayOfMonth = (int) (atechDateTime / 1000000L);
         atechDateTime -= dayOfMonth * 1000000L;
 
-        int hourOfDay = (int)(atechDateTime / 10000L);
+        int hourOfDay = (int) (atechDateTime / 10000L);
         atechDateTime -= hourOfDay * 10000L;
 
-        int minute = (int)(atechDateTime / 100L);
+        int minute = (int) (atechDateTime / 100L);
         atechDateTime -= minute * 100L;
 
-        int second = (int)atechDateTime;
+        int second = (int) atechDateTime;
 
         try {
             return new LocalDateTime(year, month, dayOfMonth, hourOfDay, minute, second);
         } catch (Exception ex) {
             if (L.isEnabled(L.PUMPCOMM))
                 LOG.error("DateTimeUtil", String.format("Error creating LocalDateTime from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
+            //return null;
+            throw ex;
+        }
+    }
+
+
+    /**
+     * DateTime is packed as long: yyyymmddHHMMss
+     *
+     * @param atechDateTime
+     * @return
+     */
+    public static GregorianCalendar toGregorianCalendar(long atechDateTime) {
+        int year = (int) (atechDateTime / 10000000000L);
+        atechDateTime -= year * 10000000000L;
+
+        int month = (int) (atechDateTime / 100000000L);
+        atechDateTime -= month * 100000000L;
+
+        int dayOfMonth = (int) (atechDateTime / 1000000L);
+        atechDateTime -= dayOfMonth * 1000000L;
+
+        int hourOfDay = (int) (atechDateTime / 10000L);
+        atechDateTime -= hourOfDay * 10000L;
+
+        int minute = (int) (atechDateTime / 100L);
+        atechDateTime -= minute * 100L;
+
+        int second = (int) atechDateTime;
+
+        try {
+            return new GregorianCalendar(year, month, dayOfMonth, hourOfDay, minute, second);
+        } catch (Exception ex) {
+            if (L.isEnabled(L.PUMPCOMM))
+                LOG.error("DateTimeUtil", String.format("Error creating GregorianCalendar from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
             //return null;
             throw ex;
         }
@@ -125,7 +158,7 @@ public class DateTimeUtil {
         long atechDateTime = 0L;
 
         atechDateTime += (date.getYear() + 1900) * 10000000000L;
-        atechDateTime += (date.getMonth() +1) * 100000000L;
+        atechDateTime += (date.getMonth() + 1) * 100000000L;
         atechDateTime += date.getDate() * 1000000L;
         atechDateTime += date.getHours() * 10000L;
         atechDateTime += date.getMinutes() * 100L;

@@ -189,7 +189,7 @@ public abstract class RileyLinkService extends Service {
             if (RileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
                     LOG.error("RileyLink can't get activated, Bluetooth is not functioning correctly. {}",
-                            RileyLinkUtil.getError().name());
+                            RileyLinkUtil.getError() != null ? RileyLinkUtil.getError().name() : "Unknown error (null)");
                     return false;
                 }
             }

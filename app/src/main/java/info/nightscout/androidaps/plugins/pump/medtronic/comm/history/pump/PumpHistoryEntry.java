@@ -1,18 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
-import java.util.Objects;
+import com.google.gson.annotations.Expose;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.annotations.Expose;
+import java.util.Objects;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
 
 /**
- * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
@@ -67,8 +68,8 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     @Override
     public String getToStringStart() {
         return "PumpHistoryRecord [type=" + StringUtil.getStringInLength(entryType.name(), 20) + " ["
-            + StringUtil.getStringInLength("" + getOpCode(), 3) + ", 0x"
-            + HexDump.getCorrectHexValue((byte)getOpCode()) + "]";
+                + StringUtil.getStringInLength("" + getOpCode(), 3) + ", 0x"
+                + HexDump.getCorrectHexValue((byte) getOpCode()) + "]";
     }
 
 
@@ -102,10 +103,10 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
         if (!(o instanceof PumpHistoryEntry))
             return false;
 
-        PumpHistoryEntry that = (PumpHistoryEntry)o;
+        PumpHistoryEntry that = (PumpHistoryEntry) o;
 
         return entryType == that.entryType && //
-            this.atechDateTime == that.atechDateTime; // && //
+                this.atechDateTime == that.atechDateTime; // && //
         // Objects.equals(this.decodedData, that.decodedData);
     }
 
@@ -146,7 +147,7 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
 
         @Override
         public int compare(PumpHistoryEntry o1, PumpHistoryEntry o2) {
-            int data = (int)(o2.atechDateTime - o1.atechDateTime);
+            int data = (int) (o2.atechDateTime - o1.atechDateTime);
 
             if (data != 0)
                 return data;

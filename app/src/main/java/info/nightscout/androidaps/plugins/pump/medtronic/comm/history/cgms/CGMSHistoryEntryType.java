@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
@@ -29,8 +30,7 @@ public enum CGMSHistoryEntryType {
     SensorCalFactor(0x0f, "SensorCalFactor", 1, 4, 2, DateType.MinuteSpecific), //
     Something10(0x10, "10-Something", 1, 4, 0, DateType.MinuteSpecific), //
     Something19(0x13, "19-Something", 1, 0, 0, DateType.PreviousTimeStamp),
-    GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp);
-    ;
+    GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp);;
 
     private static Map<Integer, CGMSHistoryEntryType> opCodeMap = new HashMap<Integer, CGMSHistoryEntryType>();
 

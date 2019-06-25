@@ -9,8 +9,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
- * This file was taken from GGC - GNU Gluco Control and modified/extended for AAPS.
- * <p>
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
+ *
  * Author: Andy {andy.rozman@gmail.com}
  */
 

@@ -17,7 +17,10 @@ public class StringUtil {
 
 
     public static String fromBytes(byte[] ra) {
-        return new String(ra, Charset.forName("UTF-8"));
+        if (ra == null)
+            return "null array";
+        else
+            return new String(ra, Charset.forName("UTF-8"));
     }
 
 

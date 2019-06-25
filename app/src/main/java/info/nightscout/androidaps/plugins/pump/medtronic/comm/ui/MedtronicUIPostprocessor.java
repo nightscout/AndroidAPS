@@ -59,10 +59,17 @@ public class MedtronicUIPostprocessor {
 
                 Double[] profilesByHour = basalProfile.getProfilesByHour();
 
-                if (profilesByHour != null) {
-                    pumpStatus.basalsByHour = profilesByHour;
-                    pumpStatus.basalProfileStatus = BasalProfileStatus.ProfileOK;
-                } else {
+                try {
+
+                    if (profilesByHour != null) {
+                        pumpStatus.basalsByHour = profilesByHour;
+                        pumpStatus.basalProfileStatus = BasalProfileStatus.ProfileOK;
+                    } else {
+                        uiTask.responseType = MedtronicUIResponseType.Error;
+                        uiTask.errorDescription = "No profile found.";
+                    }
+                } catch (Exception ex) {
+                    LOG.error("Basal Profile was returned, but was invalid.");
                     uiTask.responseType = MedtronicUIResponseType.Error;
                     uiTask.errorDescription = "No profile found.";
                 }
@@ -161,17 +168,17 @@ public class MedtronicUIPostprocessor {
             LOG.debug("Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime + //
                     ", diff: " + dur.getStandardSeconds() + " s");
 
-        if (dur.getStandardMinutes() >= 10) {
-            if (isLogEnabled())
-                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-                        + dur.getStandardSeconds() + " s)");
-            sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
-        } else if (dur.getStandardMinutes() >= 4) {
-            if (isLogEnabled())
-                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-                        + dur.getStandardSeconds() + " s)");
-            sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
-        }
+//        if (dur.getStandardMinutes() >= 10) {
+//            if (isLogEnabled())
+//                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
+//                        + dur.getStandardSeconds() + " s)");
+//            sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
+//        } else if (dur.getStandardMinutes() >= 4) {
+//            if (isLogEnabled())
+//                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
+//                        + dur.getStandardSeconds() + " s)");
+//            sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
+//        }
 
     }
 

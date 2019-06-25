@@ -92,7 +92,10 @@ public class RileyLinkUtil {
 
 
     public static RileyLinkError getError() {
-        return RileyLinkUtil.rileyLinkServiceData.errorCode;
+        if (RileyLinkUtil.rileyLinkServiceData != null)
+            return RileyLinkUtil.rileyLinkServiceData.errorCode;
+        else
+            return null;
     }
 
 

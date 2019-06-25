@@ -67,7 +67,8 @@ public class MedtronicConverter {
             case GetBasalProfileSTD:
             case GetBasalProfileA:
             case GetBasalProfileB: {
-                return new BasalProfile(rawContent);
+                return decodeBasalProfile(rawContent);
+
             }
 
             case ReadTemporaryBasal: {
@@ -75,11 +76,11 @@ public class MedtronicConverter {
             }
 
             case Settings_512: {
-                return decodeSettings512(rawContent);
+                return decodeSettingsLoop(rawContent);
             }
 
             case Settings: {
-                return decodeSettings(rawContent);
+                return decodeSettingsLoop(rawContent);
             }
 
             case SetBolus: {
@@ -92,6 +93,14 @@ public class MedtronicConverter {
 
         }
 
+    }
+
+    
+    private BasalProfile decodeBasalProfile(byte[] rawContent) {
+
+        BasalProfile basalProfile = new BasalProfile(rawContent);
+
+        return basalProfile.verify() ? basalProfile : null;
     }
 
 
@@ -185,7 +194,54 @@ public class MedtronicConverter {
     }
 
 
-    public Map<String, PumpSettingDTO> decodeSettings512(byte[] rd) {
+    public Map<String, PumpSettingDTO> decodeSettingsLoop(byte[] rd) {
+
+        Map<String, PumpSettingDTO> map = new HashMap<>();
+
+        addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map);
+        addSettingToMap(
+                "PCFG_MAX_BASAL",
+                ""
+                        + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[getSettingIndexMaxBasal()],
+                        rd[getSettingIndexMaxBasal() + 1])), PumpConfigurationGroup.Basal, map);
+        addSettingToMap("CFG_BASE_CLOCK_MODE", rd[getSettingIndexTimeDisplayFormat()] == 0 ? "12h" : "24h",
+                PumpConfigurationGroup.General, map);
+
+        addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10]), PumpConfigurationGroup.Basal, map);
+
+        if (rd[10] == 1) {
+            String patt;
+            switch (rd[11]) {
+                case 0:
+                    patt = "STD";
+                    break;
+
+                case 1:
+                    patt = "A";
+                    break;
+
+                case 2:
+                    patt = "B";
+                    break;
+
+                default:
+                    patt = "???";
+                    break;
+            }
+
+            addSettingToMap("PCFG_ACTIVE_BASAL_PROFILE", patt, PumpConfigurationGroup.Basal, map);
+
+        } else {
+            addSettingToMap("PCFG_ACTIVE_BASAL_PROFILE", "STD", PumpConfigurationGroup.Basal, map);
+        }
+
+        addSettingToMap("PCFG_TEMP_BASAL_TYPE", rd[14] != 0 ? "Percent" : "Units", PumpConfigurationGroup.Basal, map);
+
+        return map;
+    }
+
+
+    private Map<String, PumpSettingDTO> decodeSettings512(byte[] rd) {
 
         Map<String, PumpSettingDTO> map = new HashMap<>();
 

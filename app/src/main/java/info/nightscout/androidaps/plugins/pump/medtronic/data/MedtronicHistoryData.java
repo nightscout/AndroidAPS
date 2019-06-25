@@ -383,26 +383,44 @@ public class MedtronicHistoryData {
         LOG.debug("ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson.toJson(treatments));
 
         if (treatments.size() > 0) {
-            processBolusEntries(treatments);
+            try {
+                processBolusEntries(treatments);
+            } catch (Exception ex) {
+                LOG.error("ProcessHistoryData: Error processing Bolus entries: " + ex.getMessage(), ex);
+            }
         }
 
         // TBR
         List<PumpHistoryEntry> tbrs = getFilteredItems(PumpHistoryEntryType.TempBasalCombined);
 
-        LOG.debug("ProcessHistoryData: TBRs NOT Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
+        LOG.debug("ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
 
         if (tbrs.size() > 0) {
-            processTBREntries(tbrs);
+            try {
+                processTBREntries(tbrs);
+            } catch (Exception ex) {
+                LOG.error("ProcessHistoryData: Error processing TBR entries: " + ex.getMessage(), ex);
+            }
         }
 
         // 'Delivery Suspend'
-        List<TempBasalProcessDTO> suspends = getSuspends();
+        List<TempBasalProcessDTO> suspends = null;
+
+        try {
+            suspends = getSuspends();
+        } catch (Exception ex) {
+            LOG.error("ProcessHistoryData: Error getting Suspend entries: " + ex.getMessage(), ex);
+        }
 
         LOG.debug("ProcessHistoryData: 'Delivery Suspend' Processed [count={}, items={}]", suspends.size(),
                 gson.toJson(suspends));
 
-        if (suspends.size() > 0) {
-            processSuspends(suspends);
+        if (suspends != null && suspends.size() > 0) {
+            try {
+                processSuspends(suspends);
+            } catch (Exception ex) {
+                LOG.error("ProcessHistoryData: Error processing Suspends entries: " + ex.getMessage(), ex);
+            }
         }
     }
 
@@ -486,7 +504,7 @@ public class MedtronicHistoryData {
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
                 if (isLogEnabled())
-                    LOG.debug("Add Bolus (no db entries): " + treatment);
+                    LOG.debug("Add Bolus (no db entry): " + treatment);
 
                 addBolus(treatment, null);
             }
@@ -528,15 +546,6 @@ public class MedtronicHistoryData {
         LOG.debug(ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
                 gson.toJson(entriesFromHistory));
 
-        //filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
-
-        if (entryList.isEmpty())
-            return;
-
-//        LOG.debug(processHistoryRecord.getDescription() + " List (after filter): {}, FromDb={}", gson.toJson(entryList),
-//                gson.toJson(entriesFromHistory));
-
-        //PumpHistoryEntry startRecord = null;
 
         TempBasalProcessDTO processDTO = null;
         List<TempBasalProcessDTO> processList = new ArrayList<>();
@@ -546,13 +555,16 @@ public class MedtronicHistoryData {
             TempBasalPair tbr2 = (TempBasalPair) treatment.getDecodedDataEntry("Object");
 
             if (tbr2.isCancelTBR()) {
-                processDTO.itemTwo = treatment;
 
-                if (readOldItem) {
-                    processDTO.processOperation = TempBasalProcessDTO.Operation.Edit;
-                    readOldItem = false;
+                if (processDTO != null) {
+                    processDTO.itemTwo = treatment;
+
+                    if (readOldItem) {
+                        processDTO.processOperation = TempBasalProcessDTO.Operation.Edit;
+                        readOldItem = false;
+                    }
                 } else {
-                    processDTO.processOperation = TempBasalProcessDTO.Operation.Add;
+                    LOG.error("processDTO was null - shouldn't happen. ItemTwo={}", treatment);
                 }
             } else {
                 if (processDTO != null) {
@@ -561,8 +573,15 @@ public class MedtronicHistoryData {
 
                 processDTO = new TempBasalProcessDTO();
                 processDTO.itemOne = treatment;
+                processDTO.processOperation = TempBasalProcessDTO.Operation.Add;
             }
         }
+
+        if (processDTO != null) {
+            processList.add(processDTO);
+            processDTO = null;
+        }
+
 
         if (!isCollectionEmpty(processList)) {
 
@@ -570,14 +589,19 @@ public class MedtronicHistoryData {
 
                 if (tempBasalProcessDTO.processOperation == TempBasalProcessDTO.Operation.Edit) {
                     // edit
-                    TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(tempBasalProcessDTO.itemOne.getPumpId());
+                    TemporaryBasal tempBasal = findTempBasalWithPumpId(tempBasalProcessDTO.itemOne.getPumpId(), entriesFromHistory);
 
-                    tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
+                    if (tempBasal != null) {
 
-                    databaseHelper.createOrUpdate(tempBasal);
+                        tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
 
-                    if (isLogEnabled())
-                        LOG.debug("Edit " + ProcessHistoryRecord.TBR.getDescription() + " - (entryFromDb={}) ", tempBasal);
+                        databaseHelper.createOrUpdate(tempBasal);
+
+                        if (isLogEnabled())
+                            LOG.debug("Edit " + ProcessHistoryRecord.TBR.getDescription() + " - (entryFromDb={}) ", tempBasal);
+                    } else {
+                        LOG.error("TempBasal not found. Item: {}", tempBasalProcessDTO.itemOne);
+                    }
 
                 } else {
                     // add
@@ -587,16 +611,42 @@ public class MedtronicHistoryData {
                     TempBasalPair tbr2 = (TempBasalPair) treatment.getDecodedData().get("Object");
                     tbr2.setDurationMinutes(tempBasalProcessDTO.getDuration());
 
-                    DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
+                    TemporaryBasal tempBasal = findTempBasalWithPumpId(tempBasalProcessDTO.itemOne.getPumpId(), entriesFromHistory);
 
-                    if (isLogEnabled())
-                        LOG.debug("Add " + ProcessHistoryRecord.TBR.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
+                    if (tempBasal == null) {
+                        DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
 
-                    addTBR(treatment, (TemporaryBasal) treatmentDb);
+                        if (isLogEnabled())
+                            LOG.debug("Add " + ProcessHistoryRecord.TBR.getDescription() + " {} - (entryFromDb={}) ", treatment, treatmentDb);
+
+                        addTBR(treatment, (TemporaryBasal) treatmentDb);
+                    } else {
+                        // this shouldn't happen
+                        if (tempBasal.durationInMinutes != tempBasalProcessDTO.getDuration()) {
+                            LOG.debug("Found entry with wrong duration (shouldn't happen)... updating");
+                            tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
+                        }
+
+                    }
                 } // if
             } // for
 
         } // collection
+    }
+
+
+    private TemporaryBasal findTempBasalWithPumpId(long pumpId, List<? extends DbObjectBase> entriesFromHistory) {
+
+        for (DbObjectBase dbObjectBase : entriesFromHistory) {
+            TemporaryBasal tbr = (TemporaryBasal) dbObjectBase;
+
+            if (tbr.pumpId == pumpId) {
+                return tbr;
+            }
+        }
+
+        TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(pumpId);
+        return tempBasal;
     }
 
 
@@ -1060,21 +1110,24 @@ public class MedtronicHistoryData {
         return null;
     }
 
-
+    // is same now
     private long tryToGetByLocalTime(long atechDateTime) {
 
-        LocalDateTime ldt = DateTimeUtil.toLocalDateTime(atechDateTime);
+        GregorianCalendar gc = DateTimeUtil.toGregorianCalendar(atechDateTime);
+        return gc.getTimeInMillis();
 
-        ldt = ldt.plusSeconds(pumpTime.timeDifference);
-        ldt = ldt.millisOfSecond().setCopy(000);
-
-        if (isLogEnabled())
-            LOG.debug("tryToGetByLocalTime: [TimeOfEntry={}, ClockPump={}, LocalTime={}, DifferenceSec={}, "
-                            + "NewTimeOfEntry={}, time={}", atechDateTime, pumpTime.pumpTime.toString("HH:mm:ss"),
-                    pumpTime.localDeviceTime.toString("HH:mm:ss"), pumpTime.timeDifference, ldt.toString("HH:mm:ss"), ldt
-                            .toDate().getTime());
-
-        return ldt.toDate().getTime();
+//        LocalDateTime ldt = DateTimeUtil.toLocalDateTime(atechDateTime);
+//
+//        ldt = ldt.plusSeconds(pumpTime.timeDifference);
+//        ldt = ldt.millisOfSecond().setCopy(000);
+//
+//        if (isLogEnabled())
+//            LOG.debug("tryToGetByLocalTime: [TimeOfEntry={}, ClockPump={}, LocalTime={}, DifferenceSec={}, "
+//                            + "NewTimeOfEntry={}, time={}", atechDateTime, pumpTime.pumpTime.toString("HH:mm:ss"),
+//                    pumpTime.localDeviceTime.toString("HH:mm:ss"), pumpTime.timeDifference, ldt.toString("HH:mm:ss"), ldt
+//                            .toDate().getTime());
+//
+//        return ldt.toDate().getTime();
     }
 
 

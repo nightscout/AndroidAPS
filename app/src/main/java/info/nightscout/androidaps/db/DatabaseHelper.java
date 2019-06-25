@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -1127,16 +1126,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
             queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            queryBuilder.orderBy("date", false);
             Where where = queryBuilder.where();
             where.eq("pumpId", pumpId);
             PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
             List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
 
-            if (list.size() != 1) {
-                return null;
-            } else {
+            if (list.size() > 0)
                 return list.get(0);
-            }
+            else
+                return null;
+
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }

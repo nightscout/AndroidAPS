@@ -10,7 +10,6 @@ public interface MedtronicHistoryDecoderInterface<T> {
 
     RecordDecodeStatus decodeRecord(T record);
 
-
     List<T> createRecords(List<Byte> dataClear);
 
 }

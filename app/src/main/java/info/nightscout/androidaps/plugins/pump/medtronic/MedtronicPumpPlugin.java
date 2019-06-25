@@ -66,6 +66,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCustomActionType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicStatusRefreshType;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
@@ -560,7 +561,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         medtronicUIComm.executeCommand(MedtronicCommandType.getSettings(MedtronicUtil.getMedtronicPumpModel()));
 
         // read profile (once, later its controlled by isThisProfileSet method)
-        medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
+        getBasalProfiles();
 
         int errorCount = medtronicUIComm.getInvalidResponsesCount();
 
@@ -591,6 +592,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // this.pumpState = PumpDriverState.Initialized;
 
         this.firstRun = false;
+    }
+
+    private void getBasalProfiles() {
+
+        MedtronicUITask medtronicUITask = medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
+
+        if (medtronicUITask.getResponseType() == MedtronicUIResponseType.Error) {
+            medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
+        }
+
+
     }
 
 

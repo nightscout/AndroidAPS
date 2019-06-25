@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gson.annotations.Expose;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.annotations.Expose;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
@@ -15,24 +15,10 @@ import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 
 /**
- * Application: GGC - GNU Gluco Control
- * Plug-in: GGC PlugIn Base (base class for all plugins)
- * <p>
- * See AUTHORS for copyright information.
- * <p>
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * <p>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
- * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * <p>
- * Filename: MinimedHistoryRecord Description: Minimed History Record.
- * <p>
- * Author: Andy {andy@atech-software.com}
+ * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
+ * management and modified/extended for AAPS.
+ *
+ * Author: Andy {andy.rozman@gmail.com}
  */
 
 public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInterface {
@@ -66,7 +52,8 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
     protected Long pumpId;
 
     /**
-     * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's are not actually
+     * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's
+     * are not actually
      * linked))
      */
     public boolean linked = false;
