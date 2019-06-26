@@ -7,14 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -69,7 +69,7 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     public String getToStringStart() {
         return "PumpHistoryRecord [type=" + StringUtil.getStringInLength(entryType.name(), 20) + " ["
                 + StringUtil.getStringInLength("" + getOpCode(), 3) + ", 0x"
-                + HexDump.getCorrectHexValue((byte) getOpCode()) + "]";
+                + ByteUtil.getHex((byte) getOpCode()) + "]";
     }
 
 

@@ -12,7 +12,6 @@ import java.util.List;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.FabricUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
@@ -286,7 +285,7 @@ public class BasalProfile {
             LOG.error("  rawBasalValues: " + ByteUtil.getHex(this.getRawData()));
             LOG.error("=============================================================================");
 
-            FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
+            //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
         }
 
         if (entries == null || entries.size() == 0) {

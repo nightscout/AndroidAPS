@@ -26,7 +26,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
@@ -51,7 +50,7 @@ import info.nightscout.androidaps.utils.SP;
 
 /**
  * Original file created by geoff on 5/30/16.
- *
+ * <p>
  * Split into 2 implementations, so that we can split it by target device. - Andy
  * This was mostly rewritten from Original version, and lots of commands and
  * functionality added.
@@ -645,7 +644,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         if (contents != null) {
             if (contents.length >= expectedLength) {
-                LOG.trace("{}: Content: {}", method, HexDump.toHexStringDisplayable(contents));
+                LOG.trace("{}: Content: {}", method, ByteUtil.getHex(contents));
                 return null;
 
             } else {
@@ -897,7 +896,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 if (debugSetCommands)
                     LOG.debug("{}: Body - {}", commandType.getCommandDescription(),
-                            HexDump.toHexStringDisplayable(body));
+                            ByteUtil.getHex(body));
 
                 PumpMessage msg = makePumpMessage(commandType, new CarelinkLongMessageBody(body));
 

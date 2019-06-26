@@ -10,7 +10,6 @@ import java.util.Map;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO;
@@ -42,7 +41,7 @@ public class MedtronicConverter {
         }
 
         if (isLogEnabled())
-            LOG.debug("Raw response before convert: " + HexDump.toHexStringDisplayable(rawContent));
+            LOG.debug("Raw response before convert: " + ByteUtil.getHex(rawContent));
 
         this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
 
@@ -95,7 +94,7 @@ public class MedtronicConverter {
 
     }
 
-    
+
     private BasalProfile decodeBasalProfile(byte[] rawContent) {
 
         BasalProfile basalProfile = new BasalProfile(rawContent);

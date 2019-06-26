@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 
 /**
@@ -170,7 +169,7 @@ public class PumpMessage implements RLMessage {
 
         if (showData) {
             sb.append(", rawResponse=");
-            sb.append(HexDump.toHexStringDisplayable(getRawContent()));
+            sb.append(ByteUtil.getHex(getRawContent()));
         }
 
         sb.append("]");
@@ -186,7 +185,7 @@ public class PumpMessage implements RLMessage {
         sb.append(packetType == null ? "null" : packetType.name());
 
         sb.append(", address=(");
-        sb.append(HexDump.toHexStringDisplayable(this.address));
+        sb.append(ByteUtil.getHex(this.address));
 
         sb.append("), commandType=");
         sb.append(commandType == null ? "null" : commandType.name());

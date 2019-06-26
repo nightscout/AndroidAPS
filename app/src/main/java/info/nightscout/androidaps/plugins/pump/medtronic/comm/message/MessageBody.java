@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.message;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 
 /**
  * Created by geoff on 5/29/16.
@@ -25,7 +25,7 @@ public class MessageBody {
         StringBuilder sb = new StringBuilder(getClass().getSimpleName());
 
         sb.append(" [txData=");
-        sb.append(HexDump.toHexStringDisplayable(getTxData()));
+        sb.append(ByteUtil.getHex(getTxData()));
         sb.append("]");
 
         return sb.toString();

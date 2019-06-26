@@ -11,13 +11,12 @@ import java.util.Map;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -198,21 +197,21 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
         if (head != null) {
             sb.append(", head=");
-            sb.append(HexDump.toHexStringDisplayable(this.head));
+            sb.append(ByteUtil.getHex(this.head));
         }
 
         if (datetime != null) {
             sb.append(", datetime=");
-            sb.append(HexDump.toHexStringDisplayable(this.datetime));
+            sb.append(ByteUtil.getHex(this.datetime));
         }
 
         if (body != null) {
             sb.append(", body=");
-            sb.append(HexDump.toHexStringDisplayable(this.body));
+            sb.append(ByteUtil.getHex(this.body));
         }
 
         sb.append(", rawData=");
-        sb.append(HexDump.toHexStringDisplayable(this.rawData));
+        sb.append(ByteUtil.getHex(this.rawData));
         sb.append("]");
 
         // sb.append(" DT: ");
@@ -298,7 +297,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
         if (head == null) {
             return "Unidentified record. ";
         } else {
-            return "HistoryRecord: head=[" + HexDump.toHexStringDisplayable(this.head) + "]";
+            return "HistoryRecord: head=[" + ByteUtil.getHex(this.head) + "]";
         }
     }
 

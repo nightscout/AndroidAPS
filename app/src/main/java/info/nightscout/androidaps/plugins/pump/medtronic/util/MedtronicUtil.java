@@ -5,15 +5,15 @@ import android.content.Intent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.joda.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.LocalTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -26,9 +26,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
-
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
@@ -95,8 +93,8 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
-        byte highByte = (byte)(shortValue >> 8 & 0xFF);
-        byte lowByte = (byte)(shortValue & 0xFF);
+        byte highByte = (byte) (shortValue >> 8 & 0xFF);
+        byte lowByte = (byte) (shortValue & 0xFF);
 
         if (highByte > 0) {
             return createByteArray(highByte, lowByte);
@@ -130,7 +128,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static double decodeBasalInsulin(int i) {
-        return (double)i / 40.0d;
+        return (double) i / 40.0d;
     }
 
 
@@ -173,7 +171,7 @@ public class MedtronicUtil extends RileyLinkUtil {
             scrollRate = 1;
         }
 
-        int strokes = (int)(amount * ((strokesPerUnit * 1.0d) / (scrollRate * 1.0d))) * scrollRate;
+        int strokes = (int) (amount * ((strokesPerUnit * 1.0d) / (scrollRate * 1.0d))) * scrollRate;
 
         byte[] body = ByteUtil.fromHexString(String.format("%02x%0" + (2 * length) + "x", length, strokes));
 
@@ -183,7 +181,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
     public static byte[] createCommandBody(byte[] input) {
 
-        return ByteUtil.concat((byte)input.length, input);
+        return ByteUtil.concat((byte) input.length, input);
     }
 
 
@@ -211,7 +209,7 @@ public class MedtronicUtil extends RileyLinkUtil {
                 scrollRate = 2;
         }
 
-        int strokes = (int)(amount * (strokesPerUnit / (scrollRate * 1.0d)));
+        int strokes = (int) (amount * (strokesPerUnit / (scrollRate * 1.0d)));
 
         strokes *= scrollRate;
 
@@ -222,18 +220,18 @@ public class MedtronicUtil extends RileyLinkUtil {
 
     public static void sendNotification(MedtronicNotificationType notificationType) {
         Notification notification = new Notification( //
-            notificationType.getNotificationType(), //
-            MainApp.gs(notificationType.getResourceId()), //
-            notificationType.getNotificationUrgency());
+                notificationType.getNotificationType(), //
+                MainApp.gs(notificationType.getResourceId()), //
+                notificationType.getNotificationUrgency());
         MainApp.bus().post(new EventNewNotification(notification));
     }
 
 
     public static void sendNotification(MedtronicNotificationType notificationType, Object... parameters) {
         Notification notification = new Notification( //
-            notificationType.getNotificationType(), //
-            MainApp.gs(notificationType.getResourceId(), parameters), //
-            notificationType.getNotificationUrgency());
+                notificationType.getNotificationType(), //
+                MainApp.gs(notificationType.getResourceId(), parameters), //
+                notificationType.getNotificationUrgency());
         MainApp.bus().post(new EventNewNotification(notification));
     }
 
@@ -249,21 +247,21 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static byte[] buildCommandPayload(MedtronicCommandType commandType, byte[] parameters) {
-        return buildCommandPayload((byte)commandType.commandCode, parameters);
+        return buildCommandPayload((byte) commandType.commandCode, parameters);
     }
 
 
     public static byte[] buildCommandPayload(byte commandType, byte[] parameters) {
         // A7 31 65 51 C0 00 52
 
-        byte commandLength = (byte)(parameters == null ? 2 : 2 + parameters.length);
+        byte commandLength = (byte) (parameters == null ? 2 : 2 + parameters.length);
 
         ByteBuffer sendPayloadBuffer = ByteBuffer.allocate(ENVELOPE_SIZE + commandLength); // + CRC_SIZE
         sendPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
 
         byte[] serialNumberBCD = RileyLinkUtil.getRileyLinkServiceData().pumpIDBytes;
 
-        sendPayloadBuffer.put((byte)0xA7);
+        sendPayloadBuffer.put((byte) 0xA7);
         sendPayloadBuffer.put(serialNumberBCD[0]);
         sendPayloadBuffer.put(serialNumberBCD[1]);
         sendPayloadBuffer.put(serialNumberBCD[2]);
@@ -271,9 +269,9 @@ public class MedtronicUtil extends RileyLinkUtil {
         sendPayloadBuffer.put(commandType);
 
         if (parameters == null) {
-            sendPayloadBuffer.put((byte)0x00);
+            sendPayloadBuffer.put((byte) 0x00);
         } else {
-            sendPayloadBuffer.put((byte)parameters.length); // size
+            sendPayloadBuffer.put((byte) parameters.length); // size
 
             for (byte val : parameters) {
                 sendPayloadBuffer.put(val);
@@ -283,7 +281,7 @@ public class MedtronicUtil extends RileyLinkUtil {
         byte[] payload = sendPayloadBuffer.array();
 
         if (L.isEnabled(L.PUMPCOMM))
-            LOG.info(HexDump.toHexStringDisplayable(payload));
+            LOG.debug("buildCommandPayload [{}]", ByteUtil.getHex(payload));
 
         // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 
@@ -323,7 +321,7 @@ public class MedtronicUtil extends RileyLinkUtil {
             List<Byte> frameData = ByteUtil.getListFromByteArray(substring);
 
             if (isEmptyFrame(frameData)) {
-                byte b = (byte)frame;
+                byte b = (byte) frame;
                 // b |= 0x80;
                 b |= 0b1000_0000;
                 // b |= doneBit;
@@ -336,7 +334,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
                 done = true;
             } else {
-                frameData.add(0, (byte)frame);
+                frameData.add(0, (byte) frame);
             }
 
             // System.out.println("Subarray: " + ByteUtil.getCompactString(substring));
@@ -355,7 +353,7 @@ public class MedtronicUtil extends RileyLinkUtil {
         if (!lastFrame) {
             List<Byte> frameData = new ArrayList<>();
 
-            byte b = (byte)frame;
+            byte b = (byte) frame;
             b |= 0b1000_0000;
             // b |= doneBit;
 
@@ -377,7 +375,7 @@ public class MedtronicUtil extends RileyLinkUtil {
         int missing = BIG_FRAME_LENGTH - frameData.size();
 
         for (int i = 0; i < missing; i++) {
-            frameData.add((byte)0x00);
+            frameData.add((byte) 0x00);
         }
     }
 
@@ -434,7 +432,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
 
     public static MedtronicCommunicationManager getMedtronicCommunicationManager() {
-        return (MedtronicCommunicationManager)RileyLinkUtil.rileyLinkCommunicationManager;
+        return (MedtronicCommunicationManager) RileyLinkUtil.rileyLinkCommunicationManager;
     }
 
 

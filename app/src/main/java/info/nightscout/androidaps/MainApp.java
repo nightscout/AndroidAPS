@@ -156,7 +156,7 @@ public class MainApp extends Application {
         File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
-        devBranch = BuildConfig.VERSION.contains("dev");
+        devBranch = BuildConfig.VERSION.contains("dev") || BuildConfig.DEV_VERSION.contains("dev");
 
         sBus = L.isEnabled(L.EVENTS) && devBranch ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
@@ -271,11 +271,10 @@ public class MainApp extends Application {
     private void setBTReceiver() {
 
         // SP.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, null);
-        SP.remove(MedtronicConst.Statistics.LastPumpHistoryEntry); // FIXME remove
+        // SP.remove(MedtronicConst.Statistics.LastPumpHistoryEntry); // FIXME remove
 
-        // SP.putString(MedtronicConst.Prefs.PumpFrequency, "US (916 MHz)");
-
-        // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device
+        // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device,
+        // also detected if timezone/time/date changed and send notification to any active pump driver.
         btReceiver = new BroadcastReceiver() {
 
             @Override
@@ -284,7 +283,7 @@ public class MainApp extends Application {
 
                 PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-                if (action != null) {
+                if (action != null && activePump != null) {
                     if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                         final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                         switch (state) {
@@ -294,7 +293,7 @@ public class MainApp extends Application {
                                 break;
 
                             case BluetoothAdapter.STATE_ON: {
-                                if (activePump != null && "Medtronic".equals(activePump.deviceID())) {
+                                if ("Medtronic".equals(activePump.deviceID())) {
                                     Log.v("MainApp", "Bluetooth on");
                                     RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
                                 }
@@ -302,9 +301,7 @@ public class MainApp extends Application {
                             break;
                         }
                     } else {
-                        if (activePump != null) {
-                            activePump.timeDateOrTimeZoneChanged();
-                        }
+                        activePump.timeDateOrTimeZoneChanged();
                     }
                 }
             }

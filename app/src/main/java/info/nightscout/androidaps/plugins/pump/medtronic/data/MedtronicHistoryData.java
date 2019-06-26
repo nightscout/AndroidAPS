@@ -52,7 +52,6 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by andy on 10/12/18.
  */
-// TODO clean up this class (remove/comment logs)
 public class MedtronicHistoryData {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -248,8 +247,9 @@ public class MedtronicHistoryData {
 
             this.sort(this.allHistory);
 
-            LOG.debug("All History records [afterFilterCount={}, removedItemsCount={}, newItemsCount={}]",
-                    allHistory.size(), removeList.size(), newHistory.size());
+            if (isLogEnabled())
+                LOG.debug("All History records [afterFilterCount={}, removedItemsCount={}, newItemsCount={}]",
+                        allHistory.size(), removeList.size(), newHistory.size());
         } else {
             LOG.error("Since we couldn't determine date, we don't clean full history. This is just workaround.");
         }
@@ -273,14 +273,18 @@ public class MedtronicHistoryData {
         return (col == null || col.isEmpty());
     }
 
+    private boolean isCollectionNotEmpty(List col) {
+        return (col != null && !col.isEmpty());
+    }
+
 
     public boolean isPumpSuspended() {
 
-        List<PumpHistoryEntry> items = getDataForSuspends(false);
+        List<PumpHistoryEntry> items = getDataForPumpSuspends();
 
         showLogs("isPumpSuspended: ", MedtronicUtil.gsonInstance.toJson(items));
 
-        if (!isCollectionEmpty(items)) {
+        if (isCollectionNotEmpty(items)) {
 
             PumpHistoryEntryType pumpHistoryEntryType = items.get(0).getEntryType();
 
@@ -290,7 +294,8 @@ public class MedtronicHistoryData {
                     pumpHistoryEntryType == PumpHistoryEntryType.Resume || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Prime);
 
-            LOG.debug("isPumpSuspended. Last entry type={}, isSuspended={}", pumpHistoryEntryType, isSuspended);
+            if (isLogEnabled())
+                LOG.debug("isPumpSuspended. Last entry type={}, isSuspended={}", pumpHistoryEntryType, isSuspended);
 
             return isSuspended;
         } else
@@ -299,20 +304,15 @@ public class MedtronicHistoryData {
     }
 
 
-    private List<PumpHistoryEntry> getDataForSuspends(boolean forHistory) {
+    private List<PumpHistoryEntry> getDataForPumpSuspends() {
 
         List<PumpHistoryEntry> newAndAll = new ArrayList<>();
 
-        if (!isCollectionEmpty(this.allHistory)) {
-
-            if (forHistory) {
-                // TODO we filter all history ang get last 2
-            } else {
-                newAndAll.addAll(this.allHistory);
-            }
+        if (isCollectionNotEmpty(this.allHistory)) {
+            newAndAll.addAll(this.allHistory);
         }
 
-        if (!isCollectionEmpty(this.newHistory)) {
+        if (isCollectionNotEmpty(this.newHistory)) {
 
             for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
                 if (!newAndAll.contains(pumpHistoryEntry)) {
@@ -336,10 +336,7 @@ public class MedtronicHistoryData {
                 PumpHistoryEntryType.NoDeliveryAlarm, //
                 PumpHistoryEntryType.BasalProfileStart);
 
-        if (!forHistory) {
-            newAndAll2 = filterPumpSuspend(newAndAll2, 10); // just last 10 (of relevant), for history we already
-            // filtered
-        }
+        newAndAll2 = filterPumpSuspend(newAndAll2, 10);
 
         return newAndAll2;
     }
@@ -369,10 +366,16 @@ public class MedtronicHistoryData {
         // TDD
         List<PumpHistoryEntry> tdds = getFilteredItems(PumpHistoryEntryType.EndResultTotals, getTDDType());
 
-        LOG.debug("ProcessHistoryData: TDD [count={}, items={}]", tdds.size(), gson.toJson(tdds));
+        if (isLogEnabled())
+            LOG.debug("ProcessHistoryData: TDD [count={}, items={}]", tdds.size(), gson.toJson(tdds));
 
-        if (!isCollectionEmpty(tdds)) {
-            processTDDs(tdds);
+        if (isCollectionNotEmpty(tdds)) {
+            try {
+                processTDDs(tdds);
+            } catch (Exception ex) {
+                LOG.error("ProcessHistoryData: Error processing TDD entries: " + ex.getMessage(), ex);
+                throw ex;
+            }
         }
 
         pumpTime = MedtronicUtil.getPumpTime();
@@ -380,26 +383,30 @@ public class MedtronicHistoryData {
         // Bolus
         List<PumpHistoryEntry> treatments = getFilteredItems(PumpHistoryEntryType.Bolus);
 
-        LOG.debug("ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson.toJson(treatments));
+        if (isLogEnabled())
+            LOG.debug("ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson.toJson(treatments));
 
         if (treatments.size() > 0) {
             try {
                 processBolusEntries(treatments);
             } catch (Exception ex) {
                 LOG.error("ProcessHistoryData: Error processing Bolus entries: " + ex.getMessage(), ex);
+                throw ex;
             }
         }
 
         // TBR
         List<PumpHistoryEntry> tbrs = getFilteredItems(PumpHistoryEntryType.TempBasalCombined);
 
-        LOG.debug("ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
+        if (isLogEnabled())
+            LOG.debug("ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
 
         if (tbrs.size() > 0) {
             try {
                 processTBREntries(tbrs);
             } catch (Exception ex) {
                 LOG.error("ProcessHistoryData: Error processing TBR entries: " + ex.getMessage(), ex);
+                throw ex;
             }
         }
 
@@ -410,16 +417,19 @@ public class MedtronicHistoryData {
             suspends = getSuspends();
         } catch (Exception ex) {
             LOG.error("ProcessHistoryData: Error getting Suspend entries: " + ex.getMessage(), ex);
+            throw ex;
         }
 
-        LOG.debug("ProcessHistoryData: 'Delivery Suspend' Processed [count={}, items={}]", suspends.size(),
-                gson.toJson(suspends));
+        if (isLogEnabled())
+            LOG.debug("ProcessHistoryData: 'Delivery Suspend' Processed [count={}, items={}]", suspends.size(),
+                    gson.toJson(suspends));
 
-        if (suspends != null && suspends.size() > 0) {
+        if (isCollectionNotEmpty(suspends)) {
             try {
                 processSuspends(suspends);
             } catch (Exception ex) {
                 LOG.error("ProcessHistoryData: Error processing Suspends entries: " + ex.getMessage(), ex);
+                throw ex;
             }
         }
     }
@@ -543,8 +553,9 @@ public class MedtronicHistoryData {
 
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, ProcessHistoryRecord.TBR);
 
-        LOG.debug(ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                gson.toJson(entriesFromHistory));
+        if (isLogEnabled())
+            LOG.debug(ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
+                    gson.toJson(entriesFromHistory));
 
 
         TempBasalProcessDTO processDTO = null;
@@ -579,11 +590,10 @@ public class MedtronicHistoryData {
 
         if (processDTO != null) {
             processList.add(processDTO);
-            processDTO = null;
         }
 
 
-        if (!isCollectionEmpty(processList)) {
+        if (isCollectionNotEmpty(processList)) {
 
             for (TempBasalProcessDTO tempBasalProcessDTO : processList) {
 

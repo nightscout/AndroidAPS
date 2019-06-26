@@ -12,7 +12,6 @@ import java.util.Locale;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.common.utils.HexDump;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -27,7 +26,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -117,8 +116,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                         listRawData.add(dataClear.get(counter));
                         counter++;
                     } catch (Exception ex) {
-                        LOG.error("OpCode: " + HexDump.getCorrectHexValue((byte) opCode) + ", Invalid package: "
-                                + HexDump.toHexStringDisplayable(listRawData));
+                        LOG.error("OpCode: " + ByteUtil.getHex((byte) opCode) + ", Invalid package: "
+                                + ByteUtil.getHex(listRawData));
                         // throw ex;
                         incompletePacket = true;
                         break;
