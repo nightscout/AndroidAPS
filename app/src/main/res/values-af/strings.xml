@@ -147,6 +147,8 @@
     <string name="constraints_violation">Beperkings skending</string>
     <string name="treatmentdeliveryerror">Bolus aflewering fout</string>
     <string name="tempbasaldeliveryerror">Tempbasal aflewering fout</string>
+    <string name="overview_newtempbasal_basalpercent">Basale waarde [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = huidig)</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
@@ -246,6 +248,7 @@
     <string name="danar_iob_label">Pomp IAB</string>
     <string name="danar_dailyunits">Daaglikse eenhede</string>
     <string name="pump_lastbolus_label">Laaste bolus</string>
+    <string name="hoursago">%1$.1fh terug</string>
     <string name="danar_invalidinput">Ongeldige invoer</string>
     <string name="danar_valuenotsetproperly">Waarde nie behoorlik gestel</string>
     <string name="reloadprofile">Herlaai profiel</string>
@@ -525,6 +528,7 @@
     <string name="resistantadult">Insulien weerstandige volwasse</string>
     <string name="patientage_summary">Kies asseblief pasiënt ouderdom om veiligheids limiete te stel</string>
     <string name="Glimp">Glimp</string>
+    <string name="needwhitelisting">%1$s benodig battery optimisering bemagtiging vir beter werksverrigting</string>
     <string name="loopsuspended">Lus opgeskort</string>
     <string name="loopsuspendedfor">Opgeskort (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -560,6 +564,8 @@
     <string name="show_statuslights_summary">Wys status vlae vir cage, iage, sage, stoor en battery vlak op tuisskerm.</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
+    <string name="statuslights_bat_warning">Drempel waarskuwing battery vlak [%%]</string>
+    <string name="statuslights_bat_critical">Drempel kritieke battery vlak [%%]</string>
     <string name="iob">IAB</string>
     <string name="cob">KOB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -758,6 +764,7 @@
     <string name="combo_pump_state_running">Loop tans</string>
     <string name="combo_pump_action_cancelling_tbr">Kanselleer TBR</string>
     <string name="combo_pump_action_setting_tbr">Stel TBR (%1$d%% / %2$d min)</string>
+    <string name="combo_pump_action_bolusing">Bolusing (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Verfris</string>
     <string name="combo_pump_unsupported_operation">Versoekte bewerking nie ondersteun deur pomp</string>
     <string name="combo_low_suspend_forced_notification">Onveilige gebruik: uitgebreide of multigolf boluses is aktief. Lus modus is gestel om laag te opskort net 6 ure. Net gewone boluses is ondersteun in lus modus</string>
@@ -1149,6 +1156,12 @@
     <string name="sms_wrongcode">Verkeerde kode. Opdrag gekanselleer.</string>
     <string name="notconfigured">Nie gekonfigureer nie</string>
     <string name="profileswitchcreated">Profiel skakelaar geskep</string>
+    <string name="versionChecker">Weergawe Navolger</string>
+    <string name="old_version">ou weergawe</string>
+    <string name="very_old_version">baie ou weergawe</string>
+    <string name="new_version_warning">Nuwe weergawe reeds beskikbaar vir %1$d! Sal na 60 dae terugval na LGS, lus sal ongeldig gemaak word na 90 dae</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
