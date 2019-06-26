@@ -116,7 +116,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                         listRawData.add(dataClear.get(counter));
                         counter++;
                     } catch (Exception ex) {
-                        LOG.error("OpCode: " + ByteUtil.getHex((byte) opCode) + ", Invalid package: "
+                        LOG.error("OpCode: " + ByteUtil.shortHexString((byte) opCode) + ", Invalid package: "
                                 + ByteUtil.getHex(listRawData));
                         // throw ex;
                         incompletePacket = true;

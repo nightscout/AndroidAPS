@@ -129,6 +129,11 @@ public class PumpMessage implements RLMessage {
         return arrayOut;
     }
 
+    public byte[] getRawContentOfFrame() {
+        byte[] raw = getRawContent();
+        return ByteUtil.substring(raw, 0, raw.length - 1);
+    }
+
 
     public boolean isValid() {
         if (packetType == null)
@@ -169,7 +174,7 @@ public class PumpMessage implements RLMessage {
 
         if (showData) {
             sb.append(", rawResponse=");
-            sb.append(ByteUtil.getHex(getRawContent()));
+            sb.append(ByteUtil.shortHexString(getRawContent()));
         }
 
         sb.append("]");
@@ -185,7 +190,7 @@ public class PumpMessage implements RLMessage {
         sb.append(packetType == null ? "null" : packetType.name());
 
         sb.append(", address=(");
-        sb.append(ByteUtil.getHex(this.address));
+        sb.append(ByteUtil.shortHexString(this.address));
 
         sb.append("), commandType=");
         sb.append(commandType == null ? "null" : commandType.name());

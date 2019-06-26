@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.Expose;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.logging.L;
@@ -100,15 +100,15 @@ public class DailyTotalsDTO {
             this.entry.setDisplayableValue("Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
         } else {
             this.entry.setDisplayableValue("Basal Insulin: " + StringUtil.getFormatedValueUS(this.insulinBasal, 2)
-                + ", Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
+                    + ", Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
         }
 
     }
 
 
     private void decodeEndResultsTotals(PumpHistoryEntry entry) {
-        double totals = ByteUtil.toInt((int)entry.getHead()[0], (int)entry.getHead()[1], (int)entry.getHead()[2],
-            (int)entry.getHead()[3], ByteUtil.BitConversion.BIG_ENDIAN) * 0.025d;
+        double totals = ByteUtil.toInt((int) entry.getHead()[0], (int) entry.getHead()[1], (int) entry.getHead()[2],
+                (int) entry.getHead()[3], ByteUtil.BitConversion.BIG_ENDIAN) * 0.025d;
 
         this.insulinTotal = totals;
 
@@ -132,11 +132,11 @@ public class DailyTotalsDTO {
             int k1 = ByteUtil.toInt(body[i + 2], body[i + 1], body[i]);
 
             System.out.println(String.format(
-                "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0d, j / 10.0d,
-                body[i], ByteUtil.getHex(body[i])));
+                    "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0d, j / 10.0d,
+                    body[i], ByteUtil.shortHexString(body[i])));
 
             System.out.println(String.format("     number[k,j1,k1]=%d / %d /%d, del/40=%.3f, del/40=%.3f, del/40=%.3f",
-                k, j1, k1, k / 40.0d, j1 / 40.0d, k1 / 40.0d));
+                    k, j1, k1, k / 40.0d, j1 / 40.0d, k1 / 40.0d));
 
         }
     }
@@ -214,31 +214,31 @@ public class DailyTotalsDTO {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this) //
-            .add("bgAvg", bgAvg) //
-            .add("bgLow", bgLow) //
-            .add("bgHigh", bgHigh) //
-            .add("bgCount", bgCount) //
-            .add("sensorAvg", sensorAvg) //
-            .add("sensorMin", sensorMin) //
-            .add("sensorMax", sensorMax) //
-            .add("sensorCalcCount", sensorCalcCount) //
-            .add("sensorDataCount", sensorDataCount) //
-            .add("insulinTotal", insulinTotal) //
-            .add("insulinBasal", insulinBasal) //
-            .add("insulinBolus", insulinBolus) //
-            .add("insulinCarbs", insulinCarbs) //
-            .add("bolusTotal", bolusTotal) //
-            .add("bolusFood", bolusFood) //
-            .add("bolusCorrection", bolusCorrection) //
-            .add("bolusManual", bolusManual) //
-            .add("bolusCount", bolusCount) //
-            .add("bolusCountFoodOrCorr", bolusCountFoodOrCorr) //
-            .add("bolusCountFoodAndCorr", bolusCountFoodAndCorr) //
-            .add("bolusCountFood", bolusCountFood) //
-            .add("bolusCountCorr", bolusCountCorr) //
-            .add("bolusCountManual", bolusCountManual) //
-            .omitNullValues() //
-            .toString();
+                .add("bgAvg", bgAvg) //
+                .add("bgLow", bgLow) //
+                .add("bgHigh", bgHigh) //
+                .add("bgCount", bgCount) //
+                .add("sensorAvg", sensorAvg) //
+                .add("sensorMin", sensorMin) //
+                .add("sensorMax", sensorMax) //
+                .add("sensorCalcCount", sensorCalcCount) //
+                .add("sensorDataCount", sensorDataCount) //
+                .add("insulinTotal", insulinTotal) //
+                .add("insulinBasal", insulinBasal) //
+                .add("insulinBolus", insulinBolus) //
+                .add("insulinCarbs", insulinCarbs) //
+                .add("bolusTotal", bolusTotal) //
+                .add("bolusFood", bolusFood) //
+                .add("bolusCorrection", bolusCorrection) //
+                .add("bolusManual", bolusManual) //
+                .add("bolusCount", bolusCount) //
+                .add("bolusCountFoodOrCorr", bolusCountFoodOrCorr) //
+                .add("bolusCountFoodAndCorr", bolusCountFoodAndCorr) //
+                .add("bolusCountFood", bolusCountFood) //
+                .add("bolusCountCorr", bolusCountCorr) //
+                .add("bolusCountManual", bolusCountManual) //
+                .omitNullValues() //
+                .toString();
     }
 
 

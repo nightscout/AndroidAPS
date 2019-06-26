@@ -71,7 +71,7 @@ public class RileyLinkBLE {
                             + GattAttributes.lookup(characteristic.getUuid()) + " "
                             + ByteUtil.getHex(characteristic.getValue()));
                     if (characteristic.getUuid().equals(UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT))) {
-                        LOG.debug("Response Count is " + ByteUtil.getHex(characteristic.getValue()));
+                        LOG.debug("Response Count is " + ByteUtil.shortHexString(characteristic.getValue()));
                     }
                 }
                 if (radioResponseCountNotified != null) {
@@ -103,7 +103,7 @@ public class RileyLinkBLE {
                 final String uuidString = GattAttributes.lookup(characteristic.getUuid());
                 if (gattDebugEnabled && isLogEnabled()) {
                     LOG.trace(ThreadUtil.sig() + "onCharacteristicWrite " + getGattStatusMessage(status) + " "
-                            + uuidString + " " + ByteUtil.getHex(characteristic.getValue()));
+                            + uuidString + " " + ByteUtil.shortHexString(characteristic.getValue()));
                 }
                 mCurrentOperation.gattOperationCompletionCallback(characteristic.getUuid(), characteristic.getValue());
             }

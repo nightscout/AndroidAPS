@@ -107,6 +107,17 @@ public class ByteUtil {
         return rval;
     }
 
+    public static String shortHexString(List<Byte> list) {
+
+        byte[] abyte0 = getByteArrayFromList(list);
+
+        return shortHexString(abyte0);
+    }
+
+    public static String shortHexString(byte val) {
+        return getHexCompact(val);
+    }
+
 
     public static String showPrintable(byte[] ra) {
         String s = new String();
@@ -323,7 +334,7 @@ public class ByteUtil {
         if (abyte0 != null) {
             i = Math.min(i, abyte0.length);
             for (int j = 0; j < i; j++) {
-                stringbuffer.append(getHex(abyte0[j]));
+                stringbuffer.append(shortHexString(abyte0[j]));
                 if (j < i - 1) {
                     stringbuffer.append(" ");
                 }

@@ -129,7 +129,7 @@ public class RFSpy {
             byte[] response = writeToDataRaw(getVersionRaw, 5000);
 
             if (isLogEnabled())
-                LOG.debug("Firmware Version. GetVersion [response={}]", ByteUtil.getHex(response));
+                LOG.debug("Firmware Version. GetVersion [response={}]", ByteUtil.shortHexString(response));
 
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
@@ -172,7 +172,7 @@ public class RFSpy {
         // prepend length, and send it.
         byte[] prepended = ByteUtil.concat(new byte[]{(byte) (bytes.length)}, bytes);
 
-        LOG.debug("writeToData (raw={})", ByteUtil.getHex(prepended));
+        LOG.debug("writeToData (raw={})", ByteUtil.shortHexString(prepended));
 
         BLECommOperationResult writeCheck = rileyLinkBle.writeCharacteristic_blocking(radioServiceUUID, radioDataUUID,
                 prepended);

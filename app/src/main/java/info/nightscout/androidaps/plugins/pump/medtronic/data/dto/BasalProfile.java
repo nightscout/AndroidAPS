@@ -231,7 +231,7 @@ public class BasalProfile {
             try {
                 entries.add(new BasalProfileEntry(r, st));
             } catch (Exception ex) {
-                LOG.error("Error decoding basal profile from bytes: {}", ByteUtil.getHex(mRawData));
+                LOG.error("Error decoding basal profile from bytes: {}", ByteUtil.shortHexString(mRawData));
                 throw ex;
             }
 
@@ -282,7 +282,7 @@ public class BasalProfile {
         } catch (Exception ex) {
             LOG.error("=============================================================================");
             LOG.error("  Error generating entries. Ex.: " + ex, ex);
-            LOG.error("  rawBasalValues: " + ByteUtil.getHex(this.getRawData()));
+            LOG.error("  rawBasalValues: " + ByteUtil.shortHexString(this.getRawData()));
             LOG.error("=============================================================================");
 
             //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);

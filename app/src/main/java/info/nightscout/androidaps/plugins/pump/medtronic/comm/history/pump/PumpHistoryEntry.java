@@ -67,9 +67,20 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
 
     @Override
     public String getToStringStart() {
-        return "PumpHistoryRecord [type=" + StringUtil.getStringInLength(entryType.name(), 20) + " ["
+        return "PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name(), 20) + " ["
                 + StringUtil.getStringInLength("" + getOpCode(), 3) + ", 0x"
-                + ByteUtil.getHex((byte) getOpCode()) + "]";
+                + ByteUtil.shortHexString((byte) getOpCode()) + "]";
+    }
+
+
+    public String toString() {
+        Object object = this.getDecodedDataEntry("Object");
+
+        if (object == null) {
+            return super.toString();
+        } else {
+            return "PumpHistoryEntry [DT: " + DT + ", Object=" + object.toString() + "]";
+        }
     }
 
 

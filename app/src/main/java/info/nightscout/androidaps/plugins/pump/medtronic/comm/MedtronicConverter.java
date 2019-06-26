@@ -41,7 +41,7 @@ public class MedtronicConverter {
         }
 
         if (isLogEnabled())
-            LOG.debug("Raw response before convert: " + ByteUtil.getHex(rawContent));
+            LOG.debug("Raw response before convert: " + ByteUtil.shortHexString(rawContent));
 
         this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
 

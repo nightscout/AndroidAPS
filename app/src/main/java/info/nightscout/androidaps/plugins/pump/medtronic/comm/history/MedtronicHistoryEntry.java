@@ -135,7 +135,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
 
     public Object getDecodedDataEntry(String key) {
-        return this.decodedData.get(key);
+        return this.decodedData != null ? this.decodedData.get(key) : null;
     }
 
 
@@ -197,21 +197,21 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
         if (head != null) {
             sb.append(", head=");
-            sb.append(ByteUtil.getHex(this.head));
+            sb.append(ByteUtil.shortHexString(this.head));
         }
 
         if (datetime != null) {
             sb.append(", datetime=");
-            sb.append(ByteUtil.getHex(this.datetime));
+            sb.append(ByteUtil.shortHexString(this.datetime));
         }
 
         if (body != null) {
             sb.append(", body=");
-            sb.append(ByteUtil.getHex(this.body));
+            sb.append(ByteUtil.shortHexString(this.body));
         }
 
         sb.append(", rawData=");
-        sb.append(ByteUtil.getHex(this.rawData));
+        sb.append(ByteUtil.shortHexString(this.rawData));
         sb.append("]");
 
         // sb.append(" DT: ");
@@ -297,7 +297,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
         if (head == null) {
             return "Unidentified record. ";
         } else {
-            return "HistoryRecord: head=[" + ByteUtil.getHex(this.head) + "]";
+            return "HistoryRecord: head=[" + ByteUtil.shortHexString(this.head) + "]";
         }
     }
 

@@ -281,7 +281,7 @@ public class MedtronicUtil extends RileyLinkUtil {
         byte[] payload = sendPayloadBuffer.array();
 
         if (L.isEnabled(L.PUMPCOMM))
-            LOG.debug("buildCommandPayload [{}]", ByteUtil.getHex(payload));
+            LOG.debug("buildCommandPayload [{}]", ByteUtil.shortHexString(payload));
 
         // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 

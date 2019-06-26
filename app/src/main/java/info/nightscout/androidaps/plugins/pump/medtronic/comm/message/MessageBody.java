@@ -25,7 +25,7 @@ public class MessageBody {
         StringBuilder sb = new StringBuilder(getClass().getSimpleName());
 
         sb.append(" [txData=");
-        sb.append(ByteUtil.getHex(getTxData()));
+        sb.append(ByteUtil.shortHexString(getTxData()));
         sb.append("]");
 
         return sb.toString();

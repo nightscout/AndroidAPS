@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
@@ -40,7 +40,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
             bitcount += 6;
 
             while (bitcount >= 8) {
-                byte outByte = (byte)(acc >> (bitcount - 8) & 0xff);
+                byte outByte = (byte) (acc >> (bitcount - 8) & 0xff);
                 outData.add(outByte);
                 bitcount -= 8;
                 acc &= (0xffff >> (16 - bitcount));
@@ -51,13 +51,13 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
             acc |= 0x14; // marks uneven packet boundary.
             bitcount += 6;
             if (bitcount >= 8) {
-                byte outByte = (byte)((acc >> (bitcount - 8)) & 0xff);
+                byte outByte = (byte) ((acc >> (bitcount - 8)) & 0xff);
                 outData.add(outByte);
                 bitcount -= 8;
                 // acc &= (0xffff >> (16 - bitcount));
             }
             while (bitcount >= 8) {
-                outData.add((byte)0);
+                outData.add((byte) 0);
                 bitcount -= 8;
             }
         }
@@ -81,13 +81,13 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
 
         StringBuilder errorMessageBuilder = new StringBuilder();
 
-        errorMessageBuilder.append("Input data: " + ByteUtil.getHex(raw) + "\n");
+        errorMessageBuilder.append("Input data: " + ByteUtil.shortHexString(raw) + "\n");
 
         if ((raw.length % 2) != 0) {
             errorMessageBuilder.append("Warn: odd number of bytes.\n");
         }
 
-        byte[] rval = new byte[] {};
+        byte[] rval = new byte[]{};
         int availableBits = 0;
         int codingErrors = 0;
         int x = 0;
@@ -103,13 +103,13 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
             if (availableBits >= 12) {
                 // take top six
                 int highcode = (x >> (availableBits - 6)) & 0x3F;
-                int highIndex = encode4b6bListIndex((byte)(highcode));
+                int highIndex = encode4b6bListIndex((byte) (highcode));
                 // take bottom six
                 int lowcode = (x >> (availableBits - 12)) & 0x3F;
-                int lowIndex = encode4b6bListIndex((byte)(lowcode));
+                int lowIndex = encode4b6bListIndex((byte) (lowcode));
                 // special case at end of transmission on uneven boundaries:
                 if ((highIndex >= 0) && (lowIndex >= 0)) {
-                    byte decoded = (byte)((highIndex << 4) + lowIndex);
+                    byte decoded = (byte) ((highIndex << 4) + lowIndex);
                     rval = ByteUtil.concat(rval, decoded);
                     /*
                      * LOG.debug(String.format(
@@ -122,8 +122,8 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
                 } else {
                     // LOG.debug(String.format("i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining",i,x,highcode,lowcode,availableBits));
                     errorMessageBuilder.append(String.format(
-                        "decode4b6b: i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining.\n",
-                        i, x, highcode, lowcode, availableBits));
+                            "decode4b6b: i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining.\n",
+                            i, x, highcode, lowcode, availableBits));
                     codingErrors++;
                 }
 
@@ -139,7 +139,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
                 // LOG.error("decode4b6b: failed clean decode -- extra bits available (not marker)(" + availableBits +
                 // ")");
                 errorMessageBuilder.append("decode4b6b: failed clean decode -- extra bits available (not marker)("
-                    + availableBits + ")\n");
+                        + availableBits + ")\n");
                 codingErrors++;
             }
         } else {

@@ -644,7 +644,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         if (contents != null) {
             if (contents.length >= expectedLength) {
-                LOG.trace("{}: Content: {}", method, ByteUtil.getHex(contents));
+                LOG.trace("{}: Content: {}", method, ByteUtil.shortHexString(contents));
                 return null;
 
             } else {
@@ -722,7 +722,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 if (check == null) {
 
-                    data = response.getRawContent();
+                    data = response.getRawContentOfFrame();
 
                     PumpMessage ackMsg = makePumpMessage(MedtronicCommandType.CommandACK, new PumpAckMessageBody());
 
@@ -740,7 +740,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                         if (check2 == null) {
 
-                            data = ByteUtil.concat(data, ByteUtil.substring(response2.getMessageBody().getTxData(), 1));
+                            data = ByteUtil.concat(data, response2.getRawContentOfFrame());
 
                         } else {
                             this.errorMessage = check2;
@@ -755,13 +755,15 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 BasalProfile basalProfile = (BasalProfile) medtronicConverter.convertResponse(commandType, data);
 
-                if (isLogEnabled())
-                    LOG.debug("Converted response for {} is {}.", commandType.name(), basalProfile);
+                if (basalProfile != null) {
+                    if (isLogEnabled())
+                        LOG.debug("Converted response for {} is {}.", commandType.name(), basalProfile);
 
-                MedtronicUtil.setCurrentCommand(null);
-                MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
+                    MedtronicUtil.setCurrentCommand(null);
+                    MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
-                return basalProfile;
+                    return basalProfile;
+                }
 
             } catch (RileyLinkCommunicationException e) {
                 LOG.error("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
@@ -953,7 +955,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     LOG.warn("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
 
-            LOG.warn("Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.getHex(responseMessage.getRawContent()));
+            LOG.warn("Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent()));
         }
 
         return false;
