@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.logging.L;
@@ -82,7 +81,7 @@ public class DateTimeUtil {
         int second = (int) atechDateTime;
 
         try {
-            return new GregorianCalendar(year, month, dayOfMonth, hourOfDay, minute, second);
+            return new GregorianCalendar(year, month - 1, dayOfMonth, hourOfDay, minute, second);
         } catch (Exception ex) {
             if (L.isEnabled(L.PUMPCOMM))
                 LOG.error("DateTimeUtil", String.format("Error creating GregorianCalendar from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
@@ -153,19 +152,19 @@ public class DateTimeUtil {
     }
 
 
-    public static long toATechDate(Date date) {
-
-        long atechDateTime = 0L;
-
-        atechDateTime += (date.getYear() + 1900) * 10000000000L;
-        atechDateTime += (date.getMonth() + 1) * 100000000L;
-        atechDateTime += date.getDate() * 1000000L;
-        atechDateTime += date.getHours() * 10000L;
-        atechDateTime += date.getMinutes() * 100L;
-        atechDateTime += date.getSeconds();
-
-        return atechDateTime;
-    }
+//    public static long toATechDate(Date date) {
+//
+//        long atechDateTime = 0L;
+//
+//        atechDateTime += (date.getYear() + 1900) * 10000000000L;
+//        atechDateTime += (date.getMonth() + 1) * 100000000L;
+//        atechDateTime += date.getDate() * 1000000L;
+//        atechDateTime += date.getHours() * 10000L;
+//        atechDateTime += date.getMinutes() * 100L;
+//        atechDateTime += date.getSeconds();
+//
+//        return atechDateTime;
+//    }
 
 
     public static String toString(long atechDateTime) {
@@ -200,6 +199,7 @@ public class DateTimeUtil {
                 + getZeroPrefixed(gc.get(Calendar.SECOND));
     }
 
+
     public static String toStringFromTimeInMillis(long timeInMillis) {
 
         GregorianCalendar gc = new GregorianCalendar();
@@ -207,6 +207,7 @@ public class DateTimeUtil {
 
         return toString(gc);
     }
+
 
     private static String getZeroPrefixed(int number) {
         return (number < 10) ? "0" + number : "" + number;
@@ -224,9 +225,11 @@ public class DateTimeUtil {
     }
 
 
-    public static boolean isSameDayATDAndMillis(long atechDateTime, long date) {
+    public static boolean isSameDayATDAndMillis(long atechDateTime, long timeInMillis) {
 
-        Date dt = new Date(date);
+        GregorianCalendar dt = new GregorianCalendar();
+        dt.setTimeInMillis(timeInMillis);
+
         long entryDate = toATechDate(dt);
 
         return (isSameDay(atechDateTime, entryDate));
@@ -235,33 +238,11 @@ public class DateTimeUtil {
 
     public static long toMillisFromATD(long atechDateTime) {
 
-        int year = (int) (atechDateTime / 10000000000L);
-        atechDateTime -= year * 10000000000L;
+        GregorianCalendar gc = toGregorianCalendar(atechDateTime);
 
-        int month = (int) (atechDateTime / 100000000L);
-        atechDateTime -= month * 100000000L;
-
-        int dayOfMonth = (int) (atechDateTime / 1000000L);
-        atechDateTime -= dayOfMonth * 1000000L;
-
-        int hourOfDay = (int) (atechDateTime / 10000L);
-        atechDateTime -= hourOfDay * 10000L;
-
-        int minute = (int) (atechDateTime / 100L);
-        atechDateTime -= minute * 100L;
-
-        int second = (int) atechDateTime;
-
-        Date d = new Date();
-        d.setDate(dayOfMonth);
-        d.setMonth(month - 1);
-        d.setYear(year - 1900);
-        d.setHours(hourOfDay);
-        d.setMinutes(minute);
-        d.setSeconds(second);
-
-        return d.getTime();
+        return gc.getTimeInMillis();
     }
+
 
     public static int getATechDateDiferenceAsMinutes(Long date1, Long date2) {
 
