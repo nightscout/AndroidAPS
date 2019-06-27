@@ -29,9 +29,7 @@ public class DummyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
-        if (notification != null)
-            startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
+        super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 
@@ -45,6 +43,10 @@ public class DummyService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
+        if (notification != null)
+            startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
         MainApp.bus().register(this);
     }
 
