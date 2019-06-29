@@ -57,9 +57,8 @@ public class MedtronicUIPostprocessor {
             case GetBasalProfileSTD: {
                 BasalProfile basalProfile = (BasalProfile) uiTask.returnData;
 
-                Double[] profilesByHour = basalProfile.getProfilesByHour();
-
                 try {
+                    Double[] profilesByHour = basalProfile.getProfilesByHour();
 
                     if (profilesByHour != null) {
                         pumpStatus.basalsByHour = profilesByHour;
@@ -67,9 +66,10 @@ public class MedtronicUIPostprocessor {
                     } else {
                         uiTask.responseType = MedtronicUIResponseType.Error;
                         uiTask.errorDescription = "No profile found.";
+                        LOG.error("Basal Profile was NOT valid. [{}]", basalProfile.basalProfileToStringError());
                     }
                 } catch (Exception ex) {
-                    LOG.error("Basal Profile was returned, but was invalid.");
+                    LOG.error("Basal Profile was returned, but was invalid. [{}]", basalProfile.basalProfileToStringError());
                     uiTask.responseType = MedtronicUIResponseType.Error;
                     uiTask.errorDescription = "No profile found.";
                 }
@@ -115,7 +115,7 @@ public class MedtronicUIPostprocessor {
             case GetBatteryStatus: {
                 BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO) uiTask.returnData;
 
-                pumpStatus.batteryRemaining = (batteryStatusDTO.getCalculatedPercent(pumpStatus.batteryType));
+                pumpStatus.batteryRemaining = batteryStatusDTO.getCalculatedPercent(pumpStatus.batteryType);
 
                 if (batteryStatusDTO.voltage != null) {
                     pumpStatus.batteryVoltage = batteryStatusDTO.voltage;

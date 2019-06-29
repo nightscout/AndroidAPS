@@ -140,6 +140,10 @@ public class BasalProfile {
         return sb.toString();
     }
 
+    public String basalProfileToStringError() {
+        return "Basal Profile [rawData=" + ByteUtil.shortHexString(this.getRawData()) + "]";
+    }
+
 
     public String basalProfileToString() {
         StringBuffer sb = new StringBuffer("Basal Profile [");

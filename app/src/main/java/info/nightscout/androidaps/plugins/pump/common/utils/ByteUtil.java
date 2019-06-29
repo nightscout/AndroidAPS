@@ -114,6 +114,7 @@ public class ByteUtil {
         return shortHexString(abyte0);
     }
 
+
     public static String shortHexString(byte val) {
         return getHexCompact(val);
     }

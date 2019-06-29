@@ -75,6 +75,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
+import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.sendNotification;
+
 /**
  * Created by andy on 23.04.18.
  *
@@ -425,12 +427,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             // read time if changed, set new time
             hasTimeDateOrTimeZoneChanged = false;
-
-            workWithStatusRefresh(StatusRefreshAction.Add, MedtronicStatusRefreshType.PumpTime, 30L);
-
-            if (statusRefresh.containsKey(MedtronicStatusRefreshType.PumpTime)) {
-                statusRefresh.remove(MedtronicStatusRefreshType.PumpTime);
-            }
         }
 
 
@@ -544,8 +540,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         // time (1h)
         checkTimeAndOptionallySetTime();
-        //medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock);
-        scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 30);
 
         readPumpHistory();
 
@@ -601,14 +595,27 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (medtronicUITask.getResponseType() == MedtronicUIResponseType.Error) {
             medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD);
         }
-
-
     }
 
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        LOG.debug("isThisProfileSet: basalInitalized={}", getMDTPumpStatus().basalProfileStatus);
+        MedtronicPumpStatus mdtPumpStatus = getMDTPumpStatus();
+        LOG.debug("isThisProfileSet: basalInitalized={}", mdtPumpStatus.basalProfileStatus);
+
+        if (!isInitialized)
+            return true;
+
+        if (mdtPumpStatus.basalProfileStatus == BasalProfileStatus.NotInitialized) {
+            // this shouldn't happen, but if there was problem we try again
+            getBasalProfiles();
+            return isProfileSame(profile);
+        } else if (mdtPumpStatus.basalProfileStatus == BasalProfileStatus.ProfileChanged) {
+            return false;
+        } else {
+
+        }
+
 
         return (getMDTPumpStatus().basalProfileStatus != BasalProfileStatus.ProfileOK) || isProfileSame(profile);
     }
@@ -738,14 +745,22 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (timeDiff > 20) {
 
-            if (isLoggingEnabled())
-                LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump.", timeDiff);
+            if ((clock.localDeviceTime.getYear() < 2015) || (timeDiff <= 24 * 60 * 60)) {
 
-            medtronicUIComm.executeCommand(MedtronicCommandType.SetRealTimeClock);
+                if (isLoggingEnabled())
+                    LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump.", timeDiff);
 
-            if (clock.timeDifference == 0) {
-                Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, MainApp.gs(R.string.pump_time_updated), Notification.INFO, 60);
-                MainApp.bus().post(new EventNewNotification(notification));
+                medtronicUIComm.executeCommand(MedtronicCommandType.SetRealTimeClock);
+
+                if (clock.timeDifference == 0) {
+                    Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, MainApp.gs(R.string.pump_time_updated), Notification.INFO, 60);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                }
+            } else {
+                if (timeDiff > 24 * 60 * 60) {
+                    LOG.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {}, over 24h requested. Doing nothing.", timeDiff);
+                    sendNotification(MedtronicNotificationType.TimeChangeOver24h);
+                }
             }
 
         } else {
@@ -753,6 +768,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Do nothing.", timeDiff);
         }
 
+        scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 0);
     }
 
 

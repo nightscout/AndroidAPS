@@ -1220,7 +1220,7 @@ public class MedtronicHistoryData {
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
         if (isLogEnabled())
-            LOG.debug("hasBasalProfileChanged. Items: " + filteredItems);
+            LOG.debug("hasBasalProfileChanged. Items: " + gson.toJson(filteredItems));
 
         return (filteredItems.size() > 0);
     }
@@ -1253,6 +1253,7 @@ public class MedtronicHistoryData {
             if (isLogEnabled())
                 LOG.debug("processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
             BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
+
             mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
         }
     }

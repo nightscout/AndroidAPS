@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver;
 
+import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -75,7 +75,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     private Map<String, PumpType> medtronicPumpMap = null;
     private Map<String, MedtronicDeviceType> medtronicDeviceTypeMap = null;
     private RileyLinkTargetFrequency targetFrequency;
-    public BasalProfileStatus basalProfileStatus;
+    public BasalProfileStatus basalProfileStatus = BasalProfileStatus.NotInitialized;
     public BatteryType batteryType = BatteryType.None;
 
 
@@ -255,7 +255,7 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             String encodingTypeStr = SP.getString(MedtronicConst.Prefs.Encoding, null);
 
-            if (encodingTypeStr==null) {
+            if (encodingTypeStr == null) {
                 return false;
             }
 
@@ -270,7 +270,7 @@ public class MedtronicPumpStatus extends PumpStatus {
 
             String batteryTypeStr = SP.getString(MedtronicConst.Prefs.BatteryType, null);
 
-            if (batteryTypeStr==null)
+            if (batteryTypeStr == null)
                 return false;
 
             BatteryType batteryType = BatteryType.getByDescription(batteryTypeStr);
