@@ -112,10 +112,11 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     private void triggerNotificationUpdate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
-        else
-            MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
+        if (updateNotification() != null)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
+            else
+                MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
     }
 
     Notification updateNotification() {
