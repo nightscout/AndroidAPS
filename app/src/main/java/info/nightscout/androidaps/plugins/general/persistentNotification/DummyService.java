@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+
 import androidx.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
@@ -45,8 +46,11 @@ public class DummyService extends Service {
     public void onCreate() {
         super.onCreate();
         Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
-        if (notification != null)
-            startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
+        if (notification == null) {
+            log.debug("notification==null");
+            notification = new Notification();
+        }
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
         MainApp.bus().register(this);
     }
 
