@@ -1449,7 +1449,7 @@
     <string name="medtronic_error_pump_wrong_max_bolus_set">Wrong Max Bolus set on Pump (must be %1$.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Wrong Max Basal set on Pump (must be %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Medtronic Pump first, before you can use this operation.</string>
-
+    <string name="medtronic_error_pump_24h_time_change_requested">Over 24h Time change was requested.</string>
     <string name="xxx">xxx</string>
 
     <!-- MDT History -->
