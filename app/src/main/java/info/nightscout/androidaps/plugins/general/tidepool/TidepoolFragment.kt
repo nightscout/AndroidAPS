@@ -1,22 +1,30 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
-import com.squareup.otto.Subscribe
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.SubscriberFragment
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.utils.SP
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.tidepool_fragment.*
 
-class TidepoolFragment : SubscriberFragment() {
+class TidepoolFragment : Fragment() {
+
+    private var disposable: CompositeDisposable = CompositeDisposable()
+
+    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
+        add(disposable)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.tidepool_fragment, container, false)
@@ -28,21 +36,22 @@ class TidepoolFragment : SubscriberFragment() {
         tidepool_uploadnow.setOnClickListener { RxBus.send(EventTidepoolDoUpload()) }
         tidepool_removeall.setOnClickListener { RxBus.send(EventTidepoolResetData()) }
         tidepool_resertstart.setOnClickListener { SP.putLong(R.string.key_tidepool_last_end, 0) }
+
+        disposable.add(RxBus
+                .toObservable(EventTidepoolUpdateGUI::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    TidepoolPlugin.updateLog()
+                    tidepool_log.text = TidepoolPlugin.textLog
+                    tidepool_status.text = TidepoolUploader.connectionStatus.name
+                    tidepool_log.text = TidepoolPlugin.textLog
+                    tidepool_logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
+                }, {})
+        )
     }
 
-    @Subscribe
-    fun onStatusEvent(ev: EventNSClientUpdateGUI) {
-        updateGUI()
+    override fun onStop() {
+        super.onStop()
+        disposable.clear()
     }
-
-    override fun updateGUI() {
-        this.activity?.runOnUiThread {
-            TidepoolPlugin.updateLog()
-            tidepool_log.text = TidepoolPlugin.textLog
-            tidepool_status.text = TidepoolUploader.connectionStatus.name
-            tidepool_log.text = TidepoolPlugin.textLog
-            tidepool_logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
-        }
-    }
-
 }
