@@ -49,7 +49,7 @@ public class DateTimeUtil {
             return new LocalDateTime(year, month, dayOfMonth, hourOfDay, minute, second);
         } catch (Exception ex) {
             if (L.isEnabled(L.PUMPCOMM))
-                LOG.error("Error creating LocalDateTime from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second);
+                LOG.error("Error creating LocalDateTime from values [atechDateTime={}, year={}, month={}, day={}, hour={}, minute={}, second={}]. Exception: {}", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second, ex.getMessage());
             //return null;
             throw ex;
         }

@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1102,7 +1104,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             if (isLoggingEnabled())
                 LOG.debug(getLogPrefix() + "readPumpHistoryLogic(): lastPumpHistoryEntry: null");
 
-            Long lastPumpHistoryEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, 0L);
+            Long lastPumpHistoryEntryTime = getLastPumpEntryTime();
 
             LocalDateTime timeMinus36h = new LocalDateTime();
             timeMinus36h = timeMinus36h.minusHours(36);
@@ -1194,6 +1196,26 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // - determine pump status
 
         //
+
+    }
+
+    private Long getLastPumpEntryTime() {
+        Long lastPumpEntryTime = SP.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, 0L);
+
+        try {
+            LocalDateTime localDateTime = DateTimeUtil.toLocalDateTime(lastPumpEntryTime);
+
+            if (localDateTime.getYear() != (new GregorianCalendar().get(Calendar.YEAR))) {
+                LOG.warn("Saved LastPumpHistoryEntry was invalid. Year was not the same.");
+                return 0L;
+            }
+
+            return lastPumpEntryTime;
+
+        } catch (Exception ex) {
+            LOG.warn("Saved LastPumpHistoryEntry was invalid.");
+            return 0L;
+        }
 
     }
 
