@@ -41,7 +41,7 @@ public class AlarmSoundService extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
+        Notification notification = PersistentNotificationPlugin.getPlugin().getLastNotification();
         startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
         if (player != null && player.isPlaying())
             player.stop();
