@@ -17,6 +17,8 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.squareup.otto.Subscribe;
 
+import javax.annotation.Nonnull;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -79,7 +81,8 @@ public class PersistentNotificationPlugin extends PluginBase {
                 .neverVisible(true)
                 .pluginName(R.string.ongoingnotificaction)
                 .enableByDefault(true)
-                .alwaysEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                .alwaysEnabled(true)
+                .showInList(false)
                 .description(R.string.description_persistent_notification)
         );
         this.ctx = ctx;
@@ -87,8 +90,8 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
+        createNotificationChannel(); // make sure channels exist before triggering updates through the bus
         MainApp.bus().register(this);
-        createNotificationChannel();
         triggerNotificationUpdate();
         super.onStart();
     }
@@ -112,18 +115,14 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     private void triggerNotificationUpdate() {
-        if (updateNotification() != null)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
-            else
-                MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
+        else
+            MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
     }
 
+    @Nonnull
     Notification updateNotification() {
-        if (!isEnabled(PluginType.GENERAL)) {
-            return null;
-        }
-
         String line1 = null;
         String line2 = null;
         String line3 = null;
