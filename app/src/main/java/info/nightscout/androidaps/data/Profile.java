@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.data;
 
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;

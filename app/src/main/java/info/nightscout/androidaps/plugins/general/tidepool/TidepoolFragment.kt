@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import androidx.fragment.app.Fragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader

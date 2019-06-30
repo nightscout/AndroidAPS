@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.activities;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class PairingHelperActivity extends AppCompatActivity {

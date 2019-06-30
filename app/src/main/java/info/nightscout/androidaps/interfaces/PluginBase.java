@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
 import android.os.SystemClock;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
