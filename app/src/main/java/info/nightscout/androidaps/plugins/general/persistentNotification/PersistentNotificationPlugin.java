@@ -122,7 +122,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     @Nonnull
-    Notification updateNotification() {
+    public Notification updateNotification() {
         String line1 = null;
         String line2 = null;
         String line3 = null;
