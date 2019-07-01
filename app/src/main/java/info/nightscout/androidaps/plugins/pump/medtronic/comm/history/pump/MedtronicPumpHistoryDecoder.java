@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- * <p>
+ * 
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -95,7 +95,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             List<Byte> listRawData = new ArrayList<Byte>();
             listRawData.add((byte) opCode);
 
-            if (entryType == PumpHistoryEntryType.UnabsorbedInsulin) {
+            if (entryType == PumpHistoryEntryType.UnabsorbedInsulin
+                || entryType == PumpHistoryEntryType.UnabsorbedInsulin512) {
                 int elements = dataClear.get(counter);
                 listRawData.add((byte) elements);
                 counter++;
@@ -227,7 +228,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case ChangeWatchdogEnable:
             case ChangeOtherDeviceID:
             case ReadOtherDevicesIDs:
-            case BolusWizardEstimate512:
             case BGReceived512:
             case SensorStatus:
             case ReadCaptureEventEnabled:
@@ -263,6 +263,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 return RecordDecodeStatus.Ignored;
 
             case UnabsorbedInsulin:
+            case UnabsorbedInsulin512:
                 return RecordDecodeStatus.Ignored;
 
             // **** Implemented records ****
@@ -320,9 +321,11 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case SaveSettings:
                 return RecordDecodeStatus.OK;
 
-            case BolusWizardEstimate:
-                decodeBolusWizard(entry);
-                return RecordDecodeStatus.OK;
+            case BolusWizard:
+                return decodeBolusWizard(entry);
+
+            case BolusWizard512:
+                return decodeBolusWizard512(entry);
 
             case Prime:
                 decodePrime(entry);
@@ -334,7 +337,6 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case None:
             case UnknownBasePacket:
                 return RecordDecodeStatus.Error;
-
 
             default: {
                 LOG.debug("Not supported: " + entry.getEntryType());
@@ -432,17 +434,17 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    private void decodeBolusWizard(PumpHistoryEntry entry) {
+    private RecordDecodeStatus decodeBolusWizard(PumpHistoryEntry entry) {
         byte[] body = entry.getBody();
 
         BolusWizardDTO dto = new BolusWizardDTO();
 
-        float bolus_strokes = 10.0f;
+        float bolusStrokes = 10.0f;
 
         if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
                 MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
-            bolus_strokes = 40.0f;
+            bolusStrokes = 40.0f;
 
             dto.carbs = ((body[1] & 0x0c) << 6) + body[0];
 
@@ -451,31 +453,65 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             // carb_ratio (?) = (((self.body[2] & 0x07) << 8) + self.body[3]) /
             // 10.0s
             dto.insulinSensitivity = new Float(body[4]);
-            dto.bgTargetLow = (int) body[5];
-            dto.bgTargetHigh = (int) body[14];
-            dto.correctionEstimate = (((body[9] & 0x38) << 5) + body[6]) / bolus_strokes;
-            dto.foodEstimate = ((body[7] << 8) + body[8]) / bolus_strokes;
-            dto.unabsorbedInsulin = ((body[10] << 8) + body[11]) / bolus_strokes;
-            dto.bolusTotal = ((body[12] << 8) + body[13]) / bolus_strokes;
+            dto.bgTargetLow = (int)body[5];
+            dto.bgTargetHigh = (int)body[14];
+            dto.correctionEstimate = (((body[9] & 0x38) << 5) + body[6]) / bolusStrokes;
+            dto.foodEstimate = ((body[7] << 8) + body[8]) / bolusStrokes;
+            dto.unabsorbedInsulin = ((body[10] << 8) + body[11]) / bolusStrokes;
+            dto.bolusTotal = ((body[12] << 8) + body[13]) / bolusStrokes;
         } else {
             dto.bloodGlucose = (((body[1] & 0x0F) << 8) | entry.getHead()[0]);
-            dto.carbs = (int) body[0];
+            dto.carbs = (int)body[0];
             dto.carbRatio = Float.valueOf(body[2]);
             dto.insulinSensitivity = new Float(body[3]);
-            dto.bgTargetLow = (int) body[4];
-            dto.bgTargetHigh = (int) body[12];
-            dto.bolusTotal = body[11] / 10.0f;
-            dto.foodEstimate = body[6] / 10.0f;
-            dto.unabsorbedInsulin = body[9] / 10.0f;
-            dto.bolusTotal = body[11] / 10.0f;
-            dto.correctionEstimate = (body[7] + (body[5] & 0x0F)) / 10.0f;
+            dto.bgTargetLow = (int)body[4];
+            dto.bgTargetHigh = (int)body[12];
+            dto.bolusTotal = body[11] / bolusStrokes;
+            dto.foodEstimate = body[6] / bolusStrokes;
+            dto.unabsorbedInsulin = body[9] / bolusStrokes;
+            dto.bolusTotal = body[11] / bolusStrokes;
+            dto.correctionEstimate = (body[7] + (body[5] & 0x0F)) / bolusStrokes;
+        }
+
+        if (dto.bloodGlucose != null && dto.bloodGlucose < 0) {
+            dto.bloodGlucose = ByteUtil.convertUnsignedByteToInt(dto.bloodGlucose.byteValue());
         }
 
         dto.atechDateTime = entry.atechDateTime;
         entry.addDecodedData("Object", dto);
         entry.setDisplayableValue(dto.getDisplayableValue());
 
-        // this.writeData(PumpBaseType.Event, PumpEventType.BolusWizard, dto.getValue(), entry.getATechDate());
+        return RecordDecodeStatus.OK;
+    }
+
+
+    private RecordDecodeStatus decodeBolusWizard512(PumpHistoryEntry entry) {
+        byte[] body = entry.getBody();
+
+        BolusWizardDTO dto = new BolusWizardDTO();
+
+        float bolusStrokes = 10.0f;
+
+        dto.bloodGlucose = ((body[1] & 0x03 << 8) | entry.getHead()[0]);
+        dto.carbs = (body[1] & 0xC) << 6 | body[0]; // (int)body[0];
+        dto.carbRatio = Float.valueOf(body[2]);
+        dto.insulinSensitivity = new Float(body[3]);
+        dto.bgTargetLow = (int)body[4];
+        dto.foodEstimate = body[6] / 10.0f;
+        dto.correctionEstimate = (body[7] + (body[5] & 0x0F)) / bolusStrokes;
+        dto.unabsorbedInsulin = body[9] / bolusStrokes;
+        dto.bolusTotal = body[11] / bolusStrokes;
+        dto.bgTargetHigh = dto.bgTargetLow;
+
+        if (dto.bloodGlucose != null && dto.bloodGlucose < 0) {
+            dto.bloodGlucose = ByteUtil.convertUnsignedByteToInt(dto.bloodGlucose.byteValue());
+        }
+
+        dto.atechDateTime = entry.atechDateTime;
+        entry.addDecodedData("Object", dto);
+        entry.setDisplayableValue(dto.getDisplayableValue());
+
+        return RecordDecodeStatus.OK;
     }
 
 

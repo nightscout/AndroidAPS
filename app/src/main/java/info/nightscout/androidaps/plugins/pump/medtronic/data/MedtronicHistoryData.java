@@ -145,7 +145,7 @@ public class MedtronicHistoryData {
 
                     if (type == PumpHistoryEntryType.TempBasalRate || type == PumpHistoryEntryType.TempBasalDuration) {
                         TBRs.add(pumpHistoryEntry);
-                    } else if (type == PumpHistoryEntryType.BolusWizardEstimate) {
+                    } else if (type == PumpHistoryEntryType.BolusWizard || type == PumpHistoryEntryType.BolusWizard512) {
                         bolusEstimates.add(pumpHistoryEntry);
                         newHistory2.add(pumpHistoryEntry);
                     } else {
