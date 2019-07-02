@@ -34,6 +34,8 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     // protected LocalDateTime dateTime;
 
+    public long id;
+
     @Expose
     public String DT;
 

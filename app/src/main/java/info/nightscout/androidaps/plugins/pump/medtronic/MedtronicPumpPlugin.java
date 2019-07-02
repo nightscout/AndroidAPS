@@ -747,7 +747,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (timeDiff > 20) {
 
-            if ((clock.localDeviceTime.getYear() < 2015) || (timeDiff <= 24 * 60 * 60)) {
+            if ((clock.localDeviceTime.getYear() <= 2015) || (timeDiff <= 24 * 60 * 60)) {
 
                 if (isLoggingEnabled())
                     LOG.info("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {} s. Set time on pump.", timeDiff);
@@ -759,8 +759,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     MainApp.bus().post(new EventNewNotification(notification));
                 }
             } else {
-                if (timeDiff > 24 * 60 * 60) {
-                    LOG.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is {}, over 24h requested. Doing nothing.", timeDiff);
+                if ((clock.localDeviceTime.getYear() > 2015)) {
+                    LOG.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff={}]. Doing nothing.", timeDiff);
                     sendNotification(MedtronicNotificationType.TimeChangeOver24h);
                 }
             }

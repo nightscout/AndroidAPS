@@ -52,6 +52,14 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by andy on 10/12/18.
  */
+
+// TODO: After release we need to refactor how data is retrieved from pump, each entry in history needs to be marked, and sorting
+//  needs to happen according those markings, not on time stamp (since AAPS can change time anytime it drifts away). This
+//  needs to include not returning any records if TZ goes into -x area. To fully support this AAPS would need to take note of
+//  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
+//  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
+
+
 public class MedtronicHistoryData {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -66,6 +74,8 @@ public class MedtronicHistoryData {
 
     private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
+
+    private long lastIdUsed = 0;
 
 
     public MedtronicHistoryData() {
@@ -202,17 +212,26 @@ public class MedtronicHistoryData {
 
         PumpHistoryEntry pheLast = newHistory.get(0);
 
+        // find last entry
         for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
-
-            if (!this.allHistory.contains(pumpHistoryEntry)) {
-                this.allHistory.add(pumpHistoryEntry);
-            }
-
             if (pumpHistoryEntry.atechDateTime != null && pumpHistoryEntry.isAfter(pheLast.atechDateTime)) {
                 pheLast = pumpHistoryEntry;
             }
+        }
+
+        // add new entries
+        Collections.reverse(newHistory);
+
+        for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
+
+            if (!this.allHistory.contains(pumpHistoryEntry)) {
+                lastIdUsed++;
+                pumpHistoryEntry.id = lastIdUsed;
+                this.allHistory.add(pumpHistoryEntry);
+            }
 
         }
+
 
         if (pheLast == null) // if we don't have any valid record we don't do the filtering and setting
             return;
@@ -669,37 +688,32 @@ public class MedtronicHistoryData {
         if (entriesFromHistory.size() == 0) {
             return null;
         } else if (entriesFromHistory.size() == 1) {
-            //DbObjectBase treatment1 = entriesFromHistory.get(0);
-            //LocalDateTime ldt = new LocalDateTime(treatment1.getDate());
             return entriesFromHistory.get(0);
         }
 
-        for (int min = 0; min < 5; min++) {
-            for (int sec = 0; sec < 60; sec += 10) {
+        for (int sec = 0; sec <= 40; sec += 10) {
 
-                int diff = (min * 60 * 1000) + (sec * 1000);
+            int diff = (sec * 1000);
 
-                List<DbObjectBase> outList = new ArrayList<>();
+            List<DbObjectBase> outList = new ArrayList<>();
 
-                for (DbObjectBase treatment1 : entriesFromHistory) {
+            for (DbObjectBase treatment1 : entriesFromHistory) {
 
-                    if ((treatment1.getDate() > proposedTime - diff) && (treatment1.getDate() < proposedTime + diff)) {
-                        outList.add(treatment1);
-                    }
+                if ((treatment1.getDate() > proposedTime - diff) && (treatment1.getDate() < proposedTime + diff)) {
+                    outList.add(treatment1);
                 }
+            }
 
 //                LOG.debug("Entries: (timeDiff=[min={},sec={}],count={},list={})", min, sec, outList.size(),
 //                        gsonPretty.toJson(outList));
 
-                if (outList.size() == 1) {
-                    return outList.get(0);
-                }
+            if (outList.size() == 1) {
+                return outList.get(0);
+            }
 
-                if (min == 0 && sec == 10 && outList.size() > 1) {
-                    if (isLogEnabled())
-                        LOG.error("Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
-                                min, sec, outList.size(), gson.toJson(outList));
-                }
+            if (sec == 10 && outList.size() > 1) {
+                LOG.error("Too many entries (with too small diff): (timeDiff=[sec={}],count={},list={})",
+                        sec, outList.size(), gson.toJson(outList));
             }
         }
 
@@ -1120,24 +1134,8 @@ public class MedtronicHistoryData {
         return null;
     }
 
-    // is same now
     private long tryToGetByLocalTime(long atechDateTime) {
-
-        GregorianCalendar gc = DateTimeUtil.toGregorianCalendar(atechDateTime);
-        return gc.getTimeInMillis();
-
-//        LocalDateTime ldt = DateTimeUtil.toLocalDateTime(atechDateTime);
-//
-//        ldt = ldt.plusSeconds(pumpTime.timeDifference);
-//        ldt = ldt.millisOfSecond().setCopy(000);
-//
-//        if (isLogEnabled())
-//            LOG.debug("tryToGetByLocalTime: [TimeOfEntry={}, ClockPump={}, LocalTime={}, DifferenceSec={}, "
-//                            + "NewTimeOfEntry={}, time={}", atechDateTime, pumpTime.pumpTime.toString("HH:mm:ss"),
-//                    pumpTime.localDeviceTime.toString("HH:mm:ss"), pumpTime.timeDifference, ldt.toString("HH:mm:ss"), ldt
-//                            .toDate().getTime());
-//
-//        return ldt.toDate().getTime();
+        return DateTimeUtil.toMillisFromATD(atechDateTime);
     }
 
 
@@ -1147,7 +1145,7 @@ public class MedtronicHistoryData {
         PumpHistoryEntry currentTreatment = null;
 
         if (isCollectionEmpty(treatments)) {
-            return 10; // default return of 10 minutes
+            return 6; // default return of 6 (5 for diif on history reading + 1 for max allowed difference) minutes
         }
 
         for (PumpHistoryEntry treatment : treatments) {
@@ -1163,14 +1161,14 @@ public class MedtronicHistoryData {
         try {
 
             oldestEntryTime = DateTimeUtil.toLocalDateTime(dt);
-            oldestEntryTime = oldestEntryTime.minusMinutes(5);
+            oldestEntryTime = oldestEntryTime.minusMinutes(1);
 
-            if (this.pumpTime.timeDifference < 0) {
-                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
-            }
+//            if (this.pumpTime.timeDifference < 0) {
+//                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
+//            }
         } catch (Exception ex) {
             LOG.error("Problem decoding date from last record: {}" + currentTreatment);
-            return 10; // default return of 10 minutes
+            return 6; // default return of 6 minutes
         }
 
         LocalDateTime now = new LocalDateTime();
