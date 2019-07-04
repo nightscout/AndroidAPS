@@ -40,7 +40,7 @@ public class InsightAlertActivity extends AppCompatActivity {
             alertService.setAlertActivity(InsightAlertActivity.this);
             alert = alertService.getAlert();
             if (alert == null) finish();
-            update(alert);
+            else update(alert);
         }
 
         @Override

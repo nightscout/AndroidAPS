@@ -1162,6 +1162,8 @@ Unerwartetes Verhalten.</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
     <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2f IE</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
