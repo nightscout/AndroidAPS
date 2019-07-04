@@ -310,14 +310,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
 
     @Override
-    public List<Treatment> getTreatmentsFromHistoryXMinutesAgo(int minutesAgo) {
+    public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
         List<Treatment> in5minback = new ArrayList<>();
         long time = System.currentTimeMillis();
         synchronized (treatments) {
             for (Treatment t : treatments) {
                 if (!t.isValid)
                     continue;
-                if (t.date <= time && t.date > (time - minutesAgo * 60 * 1000))
+                if (t.date <= time && t.date >= fromTimestamp)
                     in5minback.add(t);
             }
             return in5minback;

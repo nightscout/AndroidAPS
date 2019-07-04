@@ -515,9 +515,9 @@ public class MedtronicHistoryData {
 
     private void processBolusEntries(List<PumpHistoryEntry> entryList) {
 
-        int dateDifference = getOldestDateDifference(entryList);
+        long oldestTimestamp = getOldestTimestamp(entryList);
 
-        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, ProcessHistoryRecord.Bolus);
+        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.Bolus);
 
 //        LOG.debug(processHistoryRecord.getDescription() + " List (before filter): {}, FromDb={}", gsonPretty.toJson(entryList),
 //                gsonPretty.toJson(entriesFromHistory));
@@ -568,9 +568,9 @@ public class MedtronicHistoryData {
             }
         }
 
-        int dateDifference = getOldestDateDifference(entryList);
+        long oldestTimestamp = getOldestTimestamp(entryList);
 
-        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntries(dateDifference, ProcessHistoryRecord.TBR);
+        List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.TBR);
 
         if (isLogEnabled())
             LOG.debug(ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
@@ -693,7 +693,7 @@ public class MedtronicHistoryData {
 
         long proposedTime = DateTimeUtil.toMillisFromATD(treatment.atechDateTime);
 
-        proposedTime += (this.pumpTime.timeDifference * 1000);
+        //proposedTime += (this.pumpTime.timeDifference * 1000);
 
         if (entriesFromHistory.size() == 0) {
             return null;
@@ -701,14 +701,11 @@ public class MedtronicHistoryData {
             return entriesFromHistory.get(0);
         }
 
-        for (int min = 0; min <= 2; min++) {
-            for (int sec = 0; sec < 60; sec += 10) {
+        for (int min = 0; min <= 2; min += 1) {
 
-                if (min==1 && sec==50) {
-                    sec = 59;
-                }
+            for (int sec = 0; sec <= 40; sec += 10) {
 
-                int diff = (min * 60 * 1000) + (sec * 1000);
+                int diff = (sec * 1000);
 
                 List<DbObjectBase> outList = new ArrayList<>();
 
@@ -738,16 +735,11 @@ public class MedtronicHistoryData {
     }
 
 
-    private List<? extends DbObjectBase> getDatabaseEntries(int dateDifference, ProcessHistoryRecord processHistoryRecord) {
+    private List<? extends DbObjectBase> getDatabaseEntriesByLastTimestamp(long startTimestamp, ProcessHistoryRecord processHistoryRecord) {
         if (processHistoryRecord == ProcessHistoryRecord.Bolus) {
-            return TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryXMinutesAgo(
-                    dateDifference);
+            return TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(startTimestamp);
         } else {
-
-            GregorianCalendar gc = new GregorianCalendar();
-            gc.add(Calendar.MINUTE, (-1) * dateDifference);
-
-            return databaseHelper.getTemporaryBasalsDataFromTime(gc.getTimeInMillis(), true);
+            return databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true);
         }
     }
 
@@ -1162,7 +1154,7 @@ public class MedtronicHistoryData {
         PumpHistoryEntry currentTreatment = null;
 
         if (isCollectionEmpty(treatments)) {
-            return 6; // default return of 6 (5 for diif on history reading + 1 for max allowed difference) minutes
+            return 8; // default return of 6 (5 for diif on history reading + 2 for max allowed difference) minutes
         }
 
         for (PumpHistoryEntry treatment : treatments) {
@@ -1178,14 +1170,14 @@ public class MedtronicHistoryData {
         try {
 
             oldestEntryTime = DateTimeUtil.toLocalDateTime(dt);
-            oldestEntryTime = oldestEntryTime.minusMinutes(1);
+            oldestEntryTime = oldestEntryTime.minusMinutes(3);
 
 //            if (this.pumpTime.timeDifference < 0) {
 //                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
 //            }
         } catch (Exception ex) {
             LOG.error("Problem decoding date from last record: {}" + currentTreatment);
-            return 6; // default return of 6 minutes
+            return 8; // default return of 6 minutes
         }
 
         LocalDateTime now = new LocalDateTime();
@@ -1198,6 +1190,40 @@ public class MedtronicHistoryData {
                     this.pumpTime.timeDifference, oldestEntryTime, now, minutes.getMinutes());
 
         return minutes.getMinutes();
+    }
+
+
+    private long getOldestTimestamp(List<PumpHistoryEntry> treatments) {
+
+        long dt = Long.MAX_VALUE;
+        PumpHistoryEntry currentTreatment = null;
+
+        for (PumpHistoryEntry treatment : treatments) {
+
+            if (treatment.atechDateTime < dt) {
+                dt = treatment.atechDateTime;
+                currentTreatment = treatment;
+            }
+        }
+
+        //LocalDateTime oldestEntryTime = null;
+
+        try {
+
+            GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(dt);
+            oldestEntryTime.add(Calendar.MINUTE, -2);
+
+            return oldestEntryTime.getTimeInMillis();
+
+//            if (this.pumpTime.timeDifference < 0) {
+//                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
+//            }
+        } catch (Exception ex) {
+            LOG.error("Problem decoding date from last record: {}" + currentTreatment);
+            return 8; // default return of 6 minutes
+        }
+
+
     }
 
 

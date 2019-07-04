@@ -31,7 +31,7 @@ public interface TreatmentsInterface {
 
     List<Treatment> getTreatmentsFromHistory();
     List<Treatment> getTreatments5MinBackFromHistory(long time);
-    List<Treatment> getTreatmentsFromHistoryXMinutesAgo(int minutesAgo);
+    List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
     long getLastBolusTime();
 
     // real basals (not faked by extended bolus)

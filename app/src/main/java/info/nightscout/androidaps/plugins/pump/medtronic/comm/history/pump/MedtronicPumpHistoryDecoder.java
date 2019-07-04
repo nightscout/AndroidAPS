@@ -147,7 +147,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 RecordDecodeStatus decoded = decodeRecord(pe);
 
                 if ((decoded == RecordDecodeStatus.OK) || (decoded == RecordDecodeStatus.Ignored)) {
-                    Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
+                    //Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
                 } else {
                     Log.w(TAG, "#" + record + " " + decoded.getDescription() + "  " + pe);
                 }
