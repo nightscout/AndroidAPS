@@ -679,6 +679,16 @@ public class MedtronicHistoryData {
     }
 
 
+    /**
+     * findDbEntry - finds Db entries in database, while theoretically this should have same dateTime they
+     *   don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
+     *   is no treatment at all. For now we look fro tratment that was from 0s - 1m59s within pump entry.
+     *
+     * @param treatment Pump Entry
+     * @param entriesFromHistory entries from history
+     *
+     * @return DbObject from AAPS (if found)
+     */
     private DbObjectBase findDbEntry(PumpHistoryEntry treatment, List<? extends DbObjectBase> entriesFromHistory) {
 
         long proposedTime = DateTimeUtil.toMillisFromATD(treatment.atechDateTime);
@@ -691,29 +701,36 @@ public class MedtronicHistoryData {
             return entriesFromHistory.get(0);
         }
 
-        for (int sec = 0; sec <= 40; sec += 10) {
+        for (int min = 0; min <= 2; min++) {
+            for (int sec = 0; sec < 60; sec += 10) {
 
-            int diff = (sec * 1000);
-
-            List<DbObjectBase> outList = new ArrayList<>();
-
-            for (DbObjectBase treatment1 : entriesFromHistory) {
-
-                if ((treatment1.getDate() > proposedTime - diff) && (treatment1.getDate() < proposedTime + diff)) {
-                    outList.add(treatment1);
+                if (min==1 && sec==50) {
+                    sec = 59;
                 }
-            }
+
+                int diff = (min * 60 * 1000) + (sec * 1000);
+
+                List<DbObjectBase> outList = new ArrayList<>();
+
+                for (DbObjectBase treatment1 : entriesFromHistory) {
+
+                    if ((treatment1.getDate() > proposedTime - diff) && (treatment1.getDate() < proposedTime + diff)) {
+                        outList.add(treatment1);
+                    }
+                }
 
 //                LOG.debug("Entries: (timeDiff=[min={},sec={}],count={},list={})", min, sec, outList.size(),
 //                        gsonPretty.toJson(outList));
 
-            if (outList.size() == 1) {
-                return outList.get(0);
-            }
+                if (outList.size() == 1) {
+                    return outList.get(0);
+                }
 
-            if (sec == 10 && outList.size() > 1) {
-                LOG.error("Too many entries (with too small diff): (timeDiff=[sec={}],count={},list={})",
-                        sec, outList.size(), gson.toJson(outList));
+                if (min == 0 && sec == 10 && outList.size() > 1) {
+                    if (isLogEnabled())
+                        LOG.error("Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
+                                min, sec, outList.size(), gson.toJson(outList));
+                }
             }
         }
 
