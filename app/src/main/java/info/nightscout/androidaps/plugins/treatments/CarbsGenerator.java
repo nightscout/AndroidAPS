@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;

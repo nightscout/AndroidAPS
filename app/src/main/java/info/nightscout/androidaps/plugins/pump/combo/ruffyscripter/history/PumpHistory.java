@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

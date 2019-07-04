@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.services;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 
 public class AlarmSoundService extends Service {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
@@ -28,8 +30,7 @@ public class AlarmSoundService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
     @Override
@@ -40,6 +41,8 @@ public class AlarmSoundService extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Notification notification = PersistentNotificationPlugin.getPlugin().getLastNotification();
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
         if (player != null && player.isPlaying())
             player.stop();
         if (L.isEnabled(L.CORE))

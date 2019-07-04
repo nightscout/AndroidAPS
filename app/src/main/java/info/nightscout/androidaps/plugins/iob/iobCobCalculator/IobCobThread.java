@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,7 +4,8 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 
@@ -29,9 +30,8 @@ public class DummyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
-        if (notification != null)
-            startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
+        super.onStartCommand(intent, flags, startId);
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, PersistentNotificationPlugin.getPlugin().updateNotification());
         return START_STICKY;
     }
 
@@ -45,6 +45,11 @@ public class DummyService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
+        // As onCreate() is not called every time a service is started, copied to onStartCommand().
+        Notification notification = PersistentNotificationPlugin.getPlugin().updateNotification();
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
         MainApp.bus().register(this);
     }
 

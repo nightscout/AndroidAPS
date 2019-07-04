@@ -13,13 +13,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Shader;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateFormat;
@@ -32,7 +31,6 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.wearable.DataMap;
 import com.ustwo.clockwise.common.WatchFaceTime;
@@ -43,13 +41,11 @@ import com.ustwo.clockwise.wearable.WatchFace;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.TempWatchData;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
-import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * Created by adrianLxM.

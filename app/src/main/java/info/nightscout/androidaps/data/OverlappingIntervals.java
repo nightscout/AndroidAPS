@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import info.nightscout.androidaps.interfaces.Interval;
 

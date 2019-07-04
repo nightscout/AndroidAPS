@@ -2,8 +2,8 @@ package info.nightscout.androidaps.utils;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
