@@ -57,6 +57,7 @@ public class AAPSMocker {
     public static CommandQueue queue;
     public static ConfigBuilderPlugin configBuilderPlugin;
     public static ProfileFunctions profileFunctions;
+    public static ConstraintChecker constraintChecker;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -172,7 +173,7 @@ public class AAPSMocker {
     }
 
     public static ConstraintChecker mockConstraintsChecker() {
-        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
+        constraintChecker = mock(ConstraintChecker.class);
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         return constraintChecker;
     }

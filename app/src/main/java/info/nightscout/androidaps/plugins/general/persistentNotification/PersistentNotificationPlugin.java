@@ -10,17 +10,19 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.RemoteInput;
-import android.support.v4.app.TaskStackBuilder;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.RemoteInput;
+import androidx.core.app.TaskStackBuilder;
 
 import com.squareup.otto.Subscribe;
+
+import javax.annotation.Nonnull;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -37,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -49,6 +52,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 public class PersistentNotificationPlugin extends PluginBase {
 
     private static PersistentNotificationPlugin plugin;
+    private Notification notification;
 
     public static PersistentNotificationPlugin getPlugin() {
         if (plugin == null) plugin = new PersistentNotificationPlugin(MainApp.instance());
@@ -72,13 +76,14 @@ public class PersistentNotificationPlugin extends PluginBase {
     /// End Android Auto
 
 
-    public PersistentNotificationPlugin(Context ctx) {
+    private PersistentNotificationPlugin(Context ctx) {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .neverVisible(true)
                 .pluginName(R.string.ongoingnotificaction)
                 .enableByDefault(true)
-                .alwaysEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                .alwaysEnabled(true)
+                .showInList(false)
                 .description(R.string.description_persistent_notification)
         );
         this.ctx = ctx;
@@ -86,8 +91,8 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
+        createNotificationChannel(); // make sure channels exist before triggering updates through the bus
         MainApp.bus().register(this);
-        createNotificationChannel();
         triggerNotificationUpdate();
         super.onStart();
     }
@@ -111,104 +116,106 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     private void triggerNotificationUpdate() {
-        MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
+        else
+            MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
     }
 
+    @Nonnull
     Notification updateNotification() {
-        if (!isEnabled(PluginType.GENERAL)) {
-            return null;
-        }
+        String line1 = null;
+        String line2 = null;
+        String line3 = null;
+        NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder = null;
 
-        String line1;
-        String line1_aa;
-
-        if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() == null || !ProfileFunctions.getInstance().isProfileValid("Notificiation"))
-            return null;
-        String units = ProfileFunctions.getInstance().getProfileUnits();
+        if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ProfileFunctions.getInstance().isProfileValid("Notification")) {
+            String line1_aa;
+            String units = ProfileFunctions.getInstance().getProfileUnits();
 
 
-        BgReading lastBG = DatabaseHelper.lastBg();
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+            BgReading lastBG = DatabaseHelper.lastBg();
+            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if (lastBG != null) {
-            line1 = line1_aa = lastBG.valueToUnitsToString(units);
-            if (glucoseStatus != null) {
-                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
-                line1_aa += "  " + lastBG.directionToSymbol();
+            if (lastBG != null) {
+                line1 = line1_aa = lastBG.valueToUnitsToString(units);
+                if (glucoseStatus != null) {
+                    line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                            + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
+                    line1_aa += "  " + lastBG.directionToSymbol();
+                } else {
+                    line1 += " " +
+                            MainApp.gs(R.string.old_data) +
+                            " ";
+                    line1_aa += line1 + ".";
+                }
             } else {
-                line1 += " " +
-                        MainApp.gs(R.string.old_data) +
-                        " ";
-                line1_aa += line1 + ".";
+                line1 = line1_aa = MainApp.gs(R.string.missed_bg_readings);
             }
-        } else {
-            line1 = line1_aa = MainApp.gs(R.string.missed_bg_readings);
+
+            TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+            if (activeTemp != null) {
+                line1 += "  " + activeTemp.toStringShort();
+                line1_aa += "  " + activeTemp.toStringShort() + ".";
+            }
+
+            //IOB
+            TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
+            TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
+            IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
+            IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
+
+
+            line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob) + ": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
+            String line2_aa = MainApp.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + MainApp.gs(R.string.cob) + ": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + ".";
+
+
+            line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h";
+            String line3_aa = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h.";
+
+
+            line3 += " - " + ProfileFunctions.getInstance().getProfileName();
+            line3_aa += " - " + ProfileFunctions.getInstance().getProfileName() + ".";
+
+            /// For Android Auto
+            Intent msgReadIntent = new Intent()
+                    .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                    .setAction(READ_ACTION)
+                    .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                    .setPackage(PACKAGE);
+
+            PendingIntent msgReadPendingIntent =
+                    PendingIntent.getBroadcast(ctx,
+                            ONGOING_NOTIFICATION_ID,
+                            msgReadIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent msgReplyIntent = new Intent()
+                    .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                    .setAction(REPLY_ACTION)
+                    .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                    .setPackage(PACKAGE);
+
+            PendingIntent msgReplyPendingIntent = PendingIntent.getBroadcast(
+                    ctx,
+                    ONGOING_NOTIFICATION_ID,
+                    msgReplyIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            // Build a RemoteInput for receiving voice input from devices
+            RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
+
+            // Create the UnreadConversation
+            unreadConversationBuilder =
+                    new NotificationCompat.CarExtender.UnreadConversation.Builder(line1_aa + "\n" + line2_aa)
+                            .setLatestTimestamp(System.currentTimeMillis())
+                            .setReadPendingIntent(msgReadPendingIntent)
+                            .setReplyAction(msgReplyPendingIntent, remoteInput);
+
+            /// Add dot to produce a "more natural sounding result"
+            unreadConversationBuilder.addMessage(line3_aa);
+            /// End Android Auto
         }
-
-        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
-        if (activeTemp != null) {
-            line1 += "  " + activeTemp.toStringShort();
-            line1_aa += "  " + activeTemp.toStringShort() + ".";
-        }
-
-        //IOB
-        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments();
-        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals();
-        IobTotal bolusIob = TreatmentsPlugin.getPlugin().getLastCalculationTreatments().round();
-        IobTotal basalIob = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals().round();
-
-
-        String line2 = MainApp.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + MainApp.gs(R.string.cob) + ": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString();
-        String line2_aa = MainApp.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + MainApp.gs(R.string.cob) + ": " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + ".";
-
-
-        String line3 = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h";
-        String line3_aa = DecimalFormatter.to2Decimal(ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate()) + " U/h.";
-
-
-        line3 += " - " + ProfileFunctions.getInstance().getProfileName();
-        line3_aa += " - " + ProfileFunctions.getInstance().getProfileName() + ".";
-
-        /// For Android Auto
-        Intent msgReadIntent = new Intent()
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                .setAction(READ_ACTION)
-                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
-                .setPackage(PACKAGE);
-
-        PendingIntent msgReadPendingIntent =
-                PendingIntent.getBroadcast(ctx,
-                        ONGOING_NOTIFICATION_ID,
-                        msgReadIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent msgReplyIntent = new Intent()
-                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                .setAction(REPLY_ACTION)
-                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
-                .setPackage(PACKAGE);
-
-        PendingIntent msgReplyPendingIntent = PendingIntent.getBroadcast(
-                ctx,
-                ONGOING_NOTIFICATION_ID,
-                msgReplyIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Build a RemoteInput for receiving voice input from devices
-        RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).build();
-
-        // Create the UnreadConversation
-        NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder =
-                new NotificationCompat.CarExtender.UnreadConversation.Builder(line1_aa + "\n" + line2_aa)
-                        .setLatestTimestamp(System.currentTimeMillis())
-                        .setReadPendingIntent(msgReadPendingIntent)
-                        .setReplyAction(msgReplyPendingIntent, remoteInput);
-
-        /// Add dot to produce a "more natural sounding result"
-        unreadConversationBuilder.addMessage(line3_aa);
-        /// End Android Auto
-
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         builder.setOngoing(true);
@@ -217,12 +224,14 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setSmallIcon(MainApp.getNotificationIcon());
         Bitmap largeIcon = BitmapFactory.decodeResource(ctx.getResources(), MainApp.getIcon());
         builder.setLargeIcon(largeIcon);
-        builder.setContentTitle(line1);
-        builder.setContentText(line2);
-        builder.setSubText(line3);
+        builder.setContentTitle(line1 != null ? line1 : MainApp.gs(R.string.noprofileset));
+        builder.setContentText(line2 != null ? line2 : MainApp.gs(R.string.noprofileset));
+        builder.setSubText(line3 != null ? line3 : MainApp.gs(R.string.noprofileset));
         /// Android Auto
-        builder.extend(new NotificationCompat.CarExtender()
-                .setUnreadConversation(unreadConversationBuilder.build()));
+        if (unreadConversationBuilder != null) {
+            builder.extend(new NotificationCompat.CarExtender()
+                    .setUnreadConversation(unreadConversationBuilder.build()));
+        }
         /// End Android Auto
 
 
@@ -242,6 +251,7 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         android.app.Notification notification = builder.build();
         mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
+        this.notification = notification;
         return notification;
     }
 
@@ -259,6 +269,17 @@ public class PersistentNotificationPlugin extends PluginBase {
             deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
         }
         return deltastring;
+    }
+
+    /***
+     * returns the current ongoing notification.
+     *
+     * If it does not exist, return a dummy notification. This should only happen if onStart() wasn't called.
+     */
+
+    public Notification getLastNotification() {
+        if (notification != null) return  notification;
+        else return new Notification();
     }
 
 

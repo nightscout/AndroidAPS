@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data;
 
-import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
+import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
 
 import java.util.ArrayList;
 import java.util.List;

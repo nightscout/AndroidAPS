@@ -50,7 +50,7 @@ public class QuickWizardEntry {
             useTemptarget: 0
         }
      */
-    public QuickWizardEntry() {
+    QuickWizardEntry() {
         String emptyData = "{\"buttonText\":\"\",\"carbs\":0,\"validFrom\":0,\"validTo\":86340}";
         try {
             storage = new JSONObject(emptyData);
@@ -60,18 +60,17 @@ public class QuickWizardEntry {
         position = -1;
     }
 
-    public QuickWizardEntry(JSONObject entry, int position) {
+    QuickWizardEntry(JSONObject entry, int position) {
         storage = entry;
         this.position = position;
     }
 
-    public Boolean isActive() {
+    Boolean isActive() {
         return Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo();
     }
 
-    public BolusWizard doCalc(Profile profile, TempTarget tempTarget, BgReading lastBG, boolean _synchronized) {
-        BolusWizard wizard = new BolusWizard();
-
+    public BolusWizard doCalc(Profile profile, String profileName, BgReading lastBG, boolean _synchronized) {
+        final TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         //BG
         double bg = 0;
         if (lastBG != null && useBG() == YES) {
@@ -84,11 +83,6 @@ public class QuickWizardEntry {
             CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(_synchronized, "QuickWizard COB");
             if (cobInfo.displayCob != null)
                 cob = cobInfo.displayCob;
-        }
-
-        // Temp target
-        if (useTempTarget() == NO) {
-            tempTarget = null;
         }
 
         // Bolus IOB
@@ -130,8 +124,7 @@ public class QuickWizardEntry {
             trend = true;
         }
 
-        wizard.doCalc(profile, tempTarget, carbs(), cob, bg, 0d, bolusIOB, basalIOB, superBolus, trend);
-        return wizard;
+        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, 100, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
     }
 
     public String buttonText() {

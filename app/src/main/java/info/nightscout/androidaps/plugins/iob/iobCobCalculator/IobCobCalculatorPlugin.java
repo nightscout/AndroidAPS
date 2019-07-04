@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
 
 import com.squareup.otto.Subscribe;
 
@@ -391,28 +391,30 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     public BasalData getBasalData(Profile profile, long time) {
-        long now = System.currentTimeMillis();
-        time = roundUpTime(time);
-        BasalData retval = basalDataTable.get(time);
-        if (retval == null) {
-            retval = new BasalData();
-            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(time);
-            retval.basal = profile.getBasal(time);
-            if (tb != null) {
-                retval.isTempBasalRunning = true;
-                retval.tempBasalAbsolute = tb.tempBasalConvertedToAbsolute(time, profile);
+        synchronized (dataLock) {
+            long now = System.currentTimeMillis();
+            time = roundUpTime(time);
+            BasalData retval = basalDataTable.get(time);
+            if (retval == null) {
+                retval = new BasalData();
+                TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(time);
+                retval.basal = profile.getBasal(time);
+                if (tb != null) {
+                    retval.isTempBasalRunning = true;
+                    retval.tempBasalAbsolute = tb.tempBasalConvertedToAbsolute(time, profile);
+                } else {
+                    retval.isTempBasalRunning = false;
+                    retval.tempBasalAbsolute = retval.basal;
+                }
+                if (time < now) {
+                    basalDataTable.append(time, retval);
+                }
+                //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
             } else {
-                retval.isTempBasalRunning = false;
-                retval.tempBasalAbsolute = retval.basal;
+                //log.debug(">>> getBasalData Cache hit " +  new Date(time).toLocaleString());
             }
-            if (time < now) {
-                basalDataTable.append(time, retval);
-            }
-            //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
-        } else {
-            //log.debug(">>> getBasalData Cache hit " +  new Date(time).toLocaleString());
+            return retval;
         }
-        return retval;
     }
 
     @Nullable

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;

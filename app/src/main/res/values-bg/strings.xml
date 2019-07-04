@@ -1160,6 +1160,8 @@
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
     <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Връщане към LGS след 60 дни, цикълът ще бъде изключен след 90 дни</string>
+    <string name="twohours">2ч</string>
+    <string name="formatinsulinunits">%1$.2fЕ</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

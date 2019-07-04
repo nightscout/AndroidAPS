@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils;
 
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
