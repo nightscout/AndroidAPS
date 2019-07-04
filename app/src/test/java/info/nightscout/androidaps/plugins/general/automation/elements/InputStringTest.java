@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.plugins.general.automation.elements;
 
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputFilter;
+
+import androidx.annotation.NonNull;
 
 import org.junit.Assert;
 import org.junit.Test;
