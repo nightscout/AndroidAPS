@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -204,7 +205,8 @@ public class MainApp extends Application {
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
             pluginsList.add(MaintenancePlugin.initPlugin(this));
-            pluginsList.add(AutomationPlugin.getPlugin());
+            if (engineeringMode)
+                pluginsList.add(AutomationPlugin.getPlugin());
 
             pluginsList.add(ConfigBuilderPlugin.getPlugin());
 
@@ -441,6 +443,6 @@ public class MainApp extends Application {
 
     public static int dpToPx(int dp) {
         float scale = sResources.getDisplayMetrics().density;
-        return (int) (dp*scale + 0.5f);
+        return (int) (dp * scale + 0.5f);
     }
 }
