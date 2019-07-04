@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentManager;
+
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
 

@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.support.v4.app.FragmentManager;
 import android.widget.LinearLayout;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
 
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -68,7 +68,7 @@ public class TriggerBolusAgo extends Trigger {
 
         double minutesAgo = (double) (DateUtil.now() - lastBolusTime) / (60 * 1000);
         if (L.isEnabled(L.AUTOMATION))
-            log.debug("LastBolus min ago: "+minutesAgo);
+            log.debug("LastBolus min ago: " + minutesAgo);
 
         boolean doRun = comparator.getValue().check((minutesAgo), getValue());
         if (doRun) {

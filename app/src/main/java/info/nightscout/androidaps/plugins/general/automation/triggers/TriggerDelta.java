@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 
-import android.support.v4.app.FragmentManager;
 import android.widget.LinearLayout;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
 
@@ -21,10 +22,10 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta.DeltaType;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel;
-import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta.DeltaType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;

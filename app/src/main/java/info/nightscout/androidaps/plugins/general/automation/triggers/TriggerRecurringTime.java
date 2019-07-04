@@ -2,13 +2,14 @@ package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentManager;
 import android.text.format.DateFormat;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentManager;
 
 import com.dpro.widgets.WeekdaysPicker;
 import com.google.common.base.Optional;

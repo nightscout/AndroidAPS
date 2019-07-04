@@ -1,13 +1,14 @@
 package info.nightscout.androidaps.plugins.general.automation.dialogs;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBolusAgo;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCOB;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerIob;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerLocation;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent;
@@ -28,8 +31,6 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRec
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerWifiSsid;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBolusAgo;
 
 public class ChooseTriggerDialog extends DialogFragment {
 

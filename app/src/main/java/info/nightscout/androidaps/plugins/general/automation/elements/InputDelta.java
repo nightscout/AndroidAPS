@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.elements;
 
-import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -9,6 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import androidx.annotation.StringRes;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
