@@ -322,6 +322,22 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         return last;
     }
 
+    public long getLastBolusTime(boolean isSMB) {
+        long now = System.currentTimeMillis();
+        long last = 0;
+        synchronized (treatments) {
+            for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
+                if (t.date > last && t.insulin > 0 && t.isValid && t.date <= now && isSMB == t.isSMB)
+                    last = t.date;
+            }
+        }
+        if (L.isEnabled(L.DATATREATMENTS))
+            log.debug("Last manual bolus time: " + new Date(last).toLocaleString());
+        return last;
+    }
+
     @Override
     public boolean isInHistoryRealTempBasalInProgress() {
         return getRealTempBasalFromHistory(System.currentTimeMillis()) != null;
