@@ -21,6 +21,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -342,6 +343,35 @@ public class GraphData {
         }
         return bgReadingsArray.size() > 0
                 ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : Profile.fromMgdlToUnits(100, units);
+    }
+
+    public void addActivity(long fromTime, long toTime, double scale) {
+        FixedLineGraphSeries<ScaledDataPoint> actSeries;
+        List<ScaledDataPoint> actArray = new ArrayList<>();
+        double lastAct = 0;
+        Scale actScale = new Scale();
+        IobTotal total = null;
+
+        for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
+            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            double act = 0d;
+            if (profile != null)
+                total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
+            act = total.activity;
+
+            actArray.add(new ScaledDataPoint(time, act, actScale));
+            lastAct = act;
+        }
+
+        ScaledDataPoint[] actData = new ScaledDataPoint[actArray.size()];
+        actData = actArray.toArray(actData);
+        actSeries = new FixedLineGraphSeries<>(actData);
+        actSeries.setDrawBackground(false);
+        actSeries.setColor(MainApp.gc(R.color.mdtp_white));
+        actSeries.setThickness(3);
+        actScale.setMultiplier(scale / 0.04d);  //TODO for clarity should be fixed scale, but what max? For now 0.04d seems reasonable.
+
+        addSeries(actSeries);
     }
 
     // scale in % of vertical size (like 0.3)

@@ -1523,6 +1523,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             // set manual x bounds to have nice steps
             graphData.formatAxis(fromTime, endTime);
 
+            // insulin activity
+            graphData.addActivity(fromTime, endTime, graphData.maxY);
+
             // Treatments
             graphData.addTreatments(fromTime, endTime);
 
