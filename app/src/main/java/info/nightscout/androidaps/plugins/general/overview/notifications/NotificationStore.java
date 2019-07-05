@@ -11,8 +11,8 @@ import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.app.NotificationCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import org.slf4j.Logger;
@@ -69,14 +69,20 @@ public class NotificationStore {
             if (usesChannels && n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
                 alarm.putExtra("soundid", n.soundId);
-                MainApp.instance().startService(alarm);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    MainApp.instance().startForegroundService(alarm);
+                else
+                    MainApp.instance().startService(alarm);
             }
 
         } else {
             if (n.soundId != null) {
                 Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
                 alarm.putExtra("soundid", n.soundId);
-                MainApp.instance().startService(alarm);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    MainApp.instance().startForegroundService(alarm);
+                else
+                    MainApp.instance().startService(alarm);
             }
         }
 

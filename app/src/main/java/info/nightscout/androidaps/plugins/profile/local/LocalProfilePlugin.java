@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.profile.local;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;

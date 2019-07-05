@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.wear;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.HandlerThread;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;

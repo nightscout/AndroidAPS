@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.broadcasts;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.sensitivity;
 
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

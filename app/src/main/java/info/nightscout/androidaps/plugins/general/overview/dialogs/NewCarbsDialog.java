@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
 import android.os.HandlerThread;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;

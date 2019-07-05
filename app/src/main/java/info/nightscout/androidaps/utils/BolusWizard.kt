@@ -2,8 +2,8 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AlertDialog
 import android.text.Html
+import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo

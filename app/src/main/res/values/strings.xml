@@ -991,6 +991,7 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
+    <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
@@ -1337,6 +1338,10 @@
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
 
+    <string name="dexcom_app_patched">Dexcom App (patched)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Receive BG values from the patched Dexcom app.</string>
+
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
@@ -1499,7 +1504,6 @@
 
     <string name="pump_no_connection_h">No connection for %1$d hour(s) %2$d min</string>
     <string name="pump_no_connection_d">No connection for %1$d day(s) %2$d hours</string>
-
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
