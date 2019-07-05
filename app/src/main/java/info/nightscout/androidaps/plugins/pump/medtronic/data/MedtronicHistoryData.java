@@ -701,9 +701,13 @@ public class MedtronicHistoryData {
             return entriesFromHistory.get(0);
         }
 
-        for (int min = 0; min <= 2; min += 1) {
+        for (int min = 0; min < 2; min += 1) {
 
-            for (int sec = 0; sec <= 40; sec += 10) {
+            for (int sec = 0; sec <= 50; sec += 10) {
+
+                if (min == 1 && sec == 50) {
+                    sec = 59;
+                }
 
                 int diff = (sec * 1000);
 
