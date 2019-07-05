@@ -866,6 +866,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="fabric_upload">Fabric-Upload</string>
     <string name="allow_automated_crash_reporting">Erlauben, dass automatische Fehler-Berichte und Nutzungsstatistiken an die Entwickler über den Service von Fabric.io gesendet werden</string>
     <string name="g5appnotdetected">Bitte aktualisiere deine Dexcom App auf eine unterstützte Version</string>
+    <string name="dexcom_app_not_installed">Dexcom App ist nicht installiert.</string>
     <string name="start_activity_tt">Starte Aktivitäts-TT</string>
     <string name="start_eating_soon_tt">Starte Essens-TT</string>
     <string name="temptargetshort">TT</string>
@@ -1164,6 +1165,8 @@ Unerwartetes Verhalten.</string>
     <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
+    <string name="dexcom_app_patched">gepatchte Dexcom App</string>
+    <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
