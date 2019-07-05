@@ -865,6 +865,7 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Laat outomatiese Foutverslagdoening en kenmerk data stuur na die ontwikkelaars via die fabric.io diens.</string>
     <string name="g5appnotdetected">Hernuwe asseblief jou G5 toepassing na \'n ondersteunde weergawe</string>
+    <string name="dexcom_app_not_installed">Dexcom toep is nie geïnstalleer nie.</string>
     <string name="start_activity_tt">Begin aktiwiteit TT</string>
     <string name="start_eating_soon_tt">Begin eet gou TT</string>
     <string name="temptargetshort">TT</string>
@@ -1162,6 +1163,9 @@
     <string name="new_version_warning">Nuwe weergawe reeds beskikbaar vir %1$d! Sal na 60 dae terugval na LGS, lus sal ongeldig gemaak word na 90 dae</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Ontvang BG waardes vanaf die opgedateerde Dexcom app.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
