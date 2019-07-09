@@ -1110,6 +1110,8 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="storage">restricción de almacenamiento interno</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

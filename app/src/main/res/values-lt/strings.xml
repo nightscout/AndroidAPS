@@ -1160,6 +1160,8 @@
     <string name="old_version">sena versija</string>
     <string name="very_old_version">labai sena versija</string>
     <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d dienų! Po 60 d. grįšite prie stabdymo prie žemo, po 90 d. ciklas bus išjungtas.</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d diena</item>
         <item quantity="few">%1$d diena</item>

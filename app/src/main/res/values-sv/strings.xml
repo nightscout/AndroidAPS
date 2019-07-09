@@ -1150,6 +1150,8 @@ Eversense-appen.</string>
     <string name="sms_wrongcode">Fel kod. Kommandot avbrutet.</string>
     <string name="notconfigured">Inte konfigurerad</string>
     <string name="profileswitchcreated">Skapade ett profilbyte</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

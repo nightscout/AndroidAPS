@@ -1160,6 +1160,8 @@
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
     <string name="new_version_warning">Νέα έκδοση για τουλάχιστον %1$d ημέρες διαθέσιμη! Επιστροφή σε LGS μετά από 60 ημέρες, το κύκλωμα θα απενεργοποιηθεί μετά από 90 ημέρες</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d ημέρα</item>
         <item quantity="other">%1$d ημέρες</item>

@@ -1115,6 +1115,8 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
     <string name="storage">interne opslag bijna vol</string>
     <string name="diskfull">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>

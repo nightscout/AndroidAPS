@@ -1160,6 +1160,8 @@
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
     <string name="new_version_warning">Nová verzia dostupná najmenej %1$d dní! Návrat k liečbe inzulínovou pumpou s podporou senzora po 60 dňoch, okruh bude deaktivovaný po 90 dňoch.</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

@@ -1161,6 +1161,8 @@
     <string name="old_version">stara wersja</string>
     <string name="very_old_version">bardzo stara wersja</string>
     <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po 60 dniach, pętla zostanie wyłączona po 90 dniach</string>
+    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>
