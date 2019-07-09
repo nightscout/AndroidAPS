@@ -367,7 +367,7 @@ public class GraphData {
         actData = actArray.toArray(actData);
         actSeries = new FixedLineGraphSeries<>(actData);
         actSeries.setDrawBackground(false);
-        actSeries.setColor(MainApp.gc(R.color.mdtp_white));
+        actSeries.setColor(MainApp.gc(R.color.activity));
         actSeries.setThickness(3);
         actScale.setMultiplier(scale / 0.04d);  //TODO for clarity should be fixed scale, but what max? For now 0.04d seems reasonable.
 

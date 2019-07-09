@@ -197,7 +197,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
 
-    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, DEVSLOPE}
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, ACT, DEVSLOPE}
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -413,6 +413,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             item.setCheckable(true);
             item.setChecked(SP.getBoolean("showratios", false));
 
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.ACT.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_activity));
+            title = item.getTitle();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showactivity", true));
+
             if (MainApp.devBranch) {
                 item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
                 title = item.getTitle();
@@ -438,6 +446,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         SP.putBoolean("showdeviations", !item.isChecked());
                     } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
                         SP.putBoolean("showratios", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.ACT.ordinal()) {
+                        SP.putBoolean("showactivity", !item.isChecked());
                     } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
                         SP.putBoolean("showdevslope", !item.isChecked());
                     }
@@ -1523,8 +1533,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             // set manual x bounds to have nice steps
             graphData.formatAxis(fromTime, endTime);
 
-            // insulin activity
-            graphData.addActivity(fromTime, endTime, graphData.maxY);
+            if(SP.getBoolean("showactivity", true)) {
+                graphData.addActivity(fromTime, endTime, graphData.maxY);
+            }
 
             // Treatments
             graphData.addTreatments(fromTime, endTime);
