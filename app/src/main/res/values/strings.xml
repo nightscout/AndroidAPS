@@ -1422,6 +1422,15 @@
     <string name="lastboluscompared">Last bolus time %1$s %2$s min ago</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="taskname">Task name</string>
+    <string name="eventname">Event name</string>
+    <string name="edit_short">EDIT</string>
+    <string name="please_choose_an_action_type">Please choose an action type:</string>
+    <string name="please_choose_a_trigger_type">Please choose a trigger type:</string>
+    <string name="if_label">If:</string>
+    <string name="then_label">Then:</string>
+    <string name="triggers">Triggers:</string>
+    <string name="remove_label">REMOVE</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

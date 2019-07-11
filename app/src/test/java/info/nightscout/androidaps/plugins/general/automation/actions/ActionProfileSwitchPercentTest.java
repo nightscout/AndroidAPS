@@ -39,7 +39,7 @@ public class ActionProfileSwitchPercentTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), actionProfileSwitchPercent.icon());
+        Assert.assertEquals(Optional.of(R.drawable.icon_actions_profileswitch), actionProfileSwitchPercent.icon());
     }
 
     @Test

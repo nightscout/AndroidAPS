@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
@@ -20,7 +16,7 @@
                 android:id="@+id/inputEventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Event Name" />
+                android:hint="@string/eventname" />
 
             <View
                 android:layout_width="fill_parent"
@@ -36,7 +32,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="if:"/>
+                    android:text="@string/if_label"/>
 
                 <TextView
                     android:id="@+id/editTrigger"
@@ -44,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:text="Edit" />
+                    android:text="@string/edit_short" />
 
             </RelativeLayout>
 
@@ -70,7 +66,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="then:"/>
+                    android:text="@string/then_label"/>
 
                 <TextView
                     android:id="@+id/editAction"
@@ -78,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:text="Edit" />
+                    android:text="@string/edit_short" />
 
             </RelativeLayout>
 
@@ -94,6 +90,4 @@
 
         </LinearLayout>
 
-    </ScrollView>
-
-</FrameLayout>
+</ScrollView>
