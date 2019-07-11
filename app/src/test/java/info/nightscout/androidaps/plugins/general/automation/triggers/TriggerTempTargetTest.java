@@ -79,7 +79,7 @@ public class TriggerTempTargetTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerTempTarget().icon());
+        Assert.assertEquals(Optional.of(R.drawable.ic_keyboard_tab), new TriggerTempTarget().icon());
     }
 
 

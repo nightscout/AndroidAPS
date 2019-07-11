@@ -91,7 +91,7 @@ public class TriggerProfilePercentTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerProfilePercent().icon());
+        Assert.assertEquals(Optional.of(R.drawable.icon_actions_profileswitch), new TriggerProfilePercent().icon());
     }
 
     @Test

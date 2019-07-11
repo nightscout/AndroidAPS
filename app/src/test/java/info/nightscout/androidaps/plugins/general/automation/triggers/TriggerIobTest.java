@@ -96,7 +96,7 @@ public class TriggerIobTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerIob().icon());
+        Assert.assertEquals(Optional.of(R.drawable.ic_keyboard_capslock), new TriggerIob().icon());
     }
 
 

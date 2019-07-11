@@ -112,7 +112,7 @@ public class TriggerIob extends Trigger {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.remove); // TODO icon
+        return Optional.of(R.drawable.ic_keyboard_capslock);
     }
 
     @Override

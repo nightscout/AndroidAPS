@@ -48,7 +48,7 @@ public class ActionNotificationTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), actionNotification.icon());
+        Assert.assertEquals(Optional.of(R.drawable.ic_notifications), actionNotification.icon());
     }
 
     @Test

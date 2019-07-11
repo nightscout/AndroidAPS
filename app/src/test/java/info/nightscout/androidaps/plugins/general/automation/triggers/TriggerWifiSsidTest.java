@@ -87,7 +87,7 @@ public class TriggerWifiSsidTest {
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerWifiSsid().icon());
+        Assert.assertEquals(Optional.of(R.drawable.ic_network_wifi), new TriggerWifiSsid().icon());
     }
 
     @Test

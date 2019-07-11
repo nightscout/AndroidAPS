@@ -81,6 +81,6 @@ public class ActionProfileSwitchPercent extends Action {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.remove);
+        return Optional.of(R.drawable.icon_actions_profileswitch);
     }
 }

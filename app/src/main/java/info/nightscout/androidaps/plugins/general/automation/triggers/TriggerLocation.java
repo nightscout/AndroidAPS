@@ -127,7 +127,7 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.remove); // TODO icon
+        return Optional.of(R.drawable.ic_location_on);
     }
 
     @Override
