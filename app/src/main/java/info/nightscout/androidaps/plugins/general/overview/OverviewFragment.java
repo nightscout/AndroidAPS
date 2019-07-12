@@ -1026,28 +1026,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
-            apsModeView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.APS_Loop_Enabled));
-            apsModeView.setTextColor(getTextColor(OverviewColorScheme.APS_Loop_Enabled));
+            apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonDefault));
+            apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
             final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
             if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuperBolus()) {
-                apsModeView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.APS_SuperBolus));
-                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor),
-                    loopPlugin.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(getTextColor(OverviewColorScheme.APS_SuperBolus));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
+                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend()));
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (loopPlugin.isDisconnected()) {
-                apsModeView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.APS_Loop_Disconnected));
-                apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor),
-                    loopPlugin.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(getTextColor(OverviewColorScheme.APS_Loop_Disconnected));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonCritical));
+                apsModeView.setText(String.format(MainApp.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend()));
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextCritical));
             } else if (loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuspended()) {
-                apsModeView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.APS_Loop_Suspended));
-                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuspendedfor),
-                    loopPlugin.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(getTextColor(OverviewColorScheme.APS_Loop_Suspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
+                apsModeView.setText(String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend()));
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (pump.isSuspended()) {
-                apsModeView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.APS_Pump_Suspended));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
                 apsModeView.setText(MainApp.gs(R.string.pumpsuspended));
-                apsModeView.setTextColor(getTextColor(OverviewColorScheme.APS_Pump_Suspended));
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
             } else if (loopPlugin.isEnabled(PluginType.LOOP)) {
                 if (closedLoopEnabled.value()) {
                     apsModeView.setText(MainApp.gs(R.string.closedloop));
@@ -1055,9 +1052,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     apsModeView.setText(MainApp.gs(R.string.openloop));
                 }
             } else {
-                apsModeView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.APS_Loop_Disabled));
+                apsModeView.setBackgroundColor(MainApp.gc(R.color.ribbonCritical));
                 apsModeView.setText(MainApp.gs(R.string.disabledloop));
-                apsModeView.setTextColor(getTextColor(OverviewColorScheme.APS_Loop_Disabled));
+                apsModeView.setTextColor(MainApp.gc(R.color.ribbonTextCritical));
             }
         } else {
             apsModeView.setVisibility(View.GONE);
@@ -1066,16 +1063,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // temp target
         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
-            tempTargetView.setTextColor(getTextColor(OverviewColorScheme.TempTargetSet));
-            tempTargetView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.TempTargetSet));
+            tempTargetView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
+            tempTargetView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
             tempTargetView.setVisibility(View.VISIBLE);
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units)
-                + " " + DateUtil.untilString(tempTarget.end()));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
         } else {
-            tempTargetView.setTextColor(getTextColor(OverviewColorScheme.TempTargetNotSet));
-            tempTargetView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.TempTargetNotSet));
-            tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units,
-                units));
+            tempTargetView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
+            tempTargetView.setBackgroundColor(MainApp.gc(R.color.ribbonDefault));
+            tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
 
@@ -1174,11 +1169,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         activeProfileView.setText(ProfileFunctions.getInstance().getProfileName());
         if (profile.getPercentage() != 100 || profile.getTimeshift() != 0) {
-            activeProfileView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.ProfileChanged));
-            activeProfileView.setTextColor(getTextColor(OverviewColorScheme.ProfileChanged));
+            activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
+            activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
         } else {
-            activeProfileView.setBackgroundColor(getBackgroundColor(OverviewColorScheme.ProfileNormal));
-            activeProfileView.setTextColor(getTextColor(OverviewColorScheme.ProfileNormal));
+            activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonDefault));
+            activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
         }
 
         // QuickWizard button
@@ -1507,17 +1502,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         if (L.isEnabled(L.OVERVIEW))
             Profiler.log(log, from, updateGUIStart);
-    }
-
-
-    boolean useNewRibbonColors = true;
-
-    public int getBackgroundColor(OverviewColorScheme scheme) {
-        return MainApp.gc(scheme.getBackground(useNewRibbonColors));
-    }
-
-    public int getTextColor(OverviewColorScheme scheme) {
-        return MainApp.gc(scheme.getTextColor(useNewRibbonColors));
     }
 
     public static void applyStatuslight(TextView view, String text, double value, double warnThreshold, double urgentThreshold, double invalid, boolean checkAscending) {
