@@ -19,7 +19,7 @@ public class MedtronicConverterUTest {
 
 
     // 00 03 00 05 01 00 C8 00 A0 01 01 00 01 00 00 64 01 05 00 14 00 64 01 00 00
-    @Test
+    //@Test
     public void testDecoding554() {
         byte[] data = ByteUtil
             .createByteArrayFromString("00 03 00 05 01 00 C8 00 A0 01 01 00 01 00 00 64 01 05 00 14 00 64 01 00 00");
