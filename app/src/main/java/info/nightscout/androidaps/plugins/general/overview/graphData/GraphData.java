@@ -346,7 +346,7 @@ public class GraphData {
                 ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : Profile.fromMgdlToUnits(100, units);
     }
 
-    public void addActivity(long fromTime, long toTime, double scale) {
+    public void addActivity(long fromTime, long toTime, boolean useForScale, double scale) {
         FixedLineGraphSeries<ScaledDataPoint> actSeriesHist;
         List<ScaledDataPoint> actArrayHist = new ArrayList<>();
         FixedLineGraphSeries<ScaledDataPoint> actSeriesPred;
@@ -369,9 +369,6 @@ public class GraphData {
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
         }
 
-        double maxIAValue = SP.getDouble(R.string.key_scale_insulin_activity, 0.05);
-        actScale.setMultiplier(maxY*scale / maxIAValue);
-
         ScaledDataPoint[] actData = new ScaledDataPoint[actArrayHist.size()];
         actData = actArrayHist.toArray(actData);
         actSeriesHist = new FixedLineGraphSeries<>(actData);
@@ -391,6 +388,13 @@ public class GraphData {
         paint.setPathEffect(new DashPathEffect(new float[]{4, 4}, 0));
         paint.setColor(MainApp.gc(R.color.activity));
         actSeriesPred.setCustomPaint(paint);
+
+        double maxIAValue = SP.getDouble(R.string.key_scale_insulin_activity, 0.05);
+        if (useForScale) {
+            maxY = maxIAValue;
+            minY = -maxIAValue;
+        }
+        actScale.setMultiplier(maxY * scale / maxIAValue);
 
         addSeries(actSeriesPred);
     }

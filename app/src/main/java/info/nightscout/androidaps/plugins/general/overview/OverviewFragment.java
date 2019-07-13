@@ -1560,7 +1560,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             graphData.formatAxis(fromTime, endTime);
 
             if(SP.getBoolean("showactivityprimary", true)) {
-                graphData.addActivity(fromTime, endTime, 1d);
+                graphData.addActivity(fromTime, endTime, false,1d);
             }
 
             // Treatments
@@ -1588,6 +1588,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             boolean useDevForScale = false;
             boolean useRatioForScale = false;
             boolean useDSForScale = false;
+            boolean useIAForScale = false;
 
             if (SP.getBoolean("showiob", true)) {
                 useIobForScale = true;
@@ -1597,6 +1598,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 useDevForScale = true;
             } else if (SP.getBoolean("showratios", false)) {
                 useRatioForScale = true;
+            } else if (SP.getBoolean("showactivitysecondary", false)) {
+                useIAForScale = true;
             } else if (SP.getBoolean("showdevslope", false)) {
                 useDSForScale = true;
             }
@@ -1610,7 +1613,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (SP.getBoolean("showratios", false))
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
             if(SP.getBoolean("showactivitysecondary", true))
-                secondGraphData.addActivity(fromTime, endTime, 1d);
+                secondGraphData.addActivity(fromTime, endTime, useIAForScale,1d);
             if (SP.getBoolean("showdevslope", false) && MainApp.devBranch)
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
@@ -1627,6 +1630,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             || SP.getBoolean("showcob", true)
                             || SP.getBoolean("showdeviations", false)
                             || SP.getBoolean("showratios", false)
+                            || SP.getBoolean("showactivitysecondary", false)
                             || SP.getBoolean("showdevslope", false)) {
                         iobGraph.setVisibility(View.VISIBLE);
                     } else {
