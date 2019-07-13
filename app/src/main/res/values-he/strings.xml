@@ -8,6 +8,4 @@
     <string name="description_loop">להפעיל או לכבות את הלולאה.</string>
     <string name="description_ns_client">מסנכרן את הנתונים שלך עם Nightscout</string>
     <string name="description_profile_nightscout">יבא פרופיל מ- Nightscout</string>
-    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
-    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
 </resources>

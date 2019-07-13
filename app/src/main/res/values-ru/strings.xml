@@ -1162,6 +1162,4 @@ Context | Edit Context</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
-    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
-    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
 </resources>

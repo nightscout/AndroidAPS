@@ -1020,8 +1020,6 @@
     <string name="insulinlimitviolation">인슐린 제한 위반</string>
     <string name="loop_openmode_min_change">최소 요청 변화 [%]</string>
     <string name="loop_openmode_min_change_summary">이 값보다 변화가 클때만 Loop가 새 변화 요청창을 띄울것 입니다. 기본 값은 20%입니다.</string>
-    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
-    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="other">%1$d 일</item>
     </plurals>

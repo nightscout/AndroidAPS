@@ -1335,7 +1335,7 @@
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
-    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
+    <string name="key_scale_insulin_activity" translatable="false">scale_insulin_activity</string>
     <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
 
     <plurals name="objective_days">

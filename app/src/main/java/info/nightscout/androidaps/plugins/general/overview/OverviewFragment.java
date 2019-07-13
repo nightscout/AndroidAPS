@@ -197,7 +197,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
 
-    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, ACT, DEVSLOPE}
+    public enum CHARTTYPE {PRE, BAS, IOB, COB, DEV, SEN, ACTPRIM, ACTSEC, DEVSLOPE}
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
@@ -383,14 +383,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             item.setCheckable(true);
             item.setChecked(SP.getBoolean("showbasals", true));
 
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.ACT.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_activity));
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.ACTPRIM.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_activity));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars =  title.length();
             s = new SpannableString(title);
             s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
             item.setTitle(s);
             item.setCheckable(true);
-            item.setChecked(SP.getBoolean("showactivity", true));
+            item.setChecked(SP.getBoolean("showactivityprimary", true));
 
             dividerItem = popup.getMenu().add("");
             dividerItem.setEnabled(false);
@@ -431,6 +431,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             item.setCheckable(true);
             item.setChecked(SP.getBoolean("showratios", false));
 
+            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.ACTSEC.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_activity));
+            title = item.getTitle();
+            if (titleMaxChars < title.length()) titleMaxChars =  title.length();
+            s = new SpannableString(title);
+            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
+            item.setTitle(s);
+            item.setCheckable(true);
+            item.setChecked(SP.getBoolean("showactivitysecondary", true));
+
             if (MainApp.devBranch) {
                 item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
                 title = item.getTitle();
@@ -461,8 +470,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         SP.putBoolean("showdeviations", !item.isChecked());
                     } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
                         SP.putBoolean("showratios", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.ACT.ordinal()) {
-                        SP.putBoolean("showactivity", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.ACTPRIM.ordinal()) {
+                        SP.putBoolean("showactivityprimary", !item.isChecked());
+                    } else if (item.getItemId() == CHARTTYPE.ACTSEC.ordinal()) {
+                        SP.putBoolean("showactivitysecondary", !item.isChecked());
                     } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
                         SP.putBoolean("showdevslope", !item.isChecked());
                     }
@@ -1548,7 +1559,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             // set manual x bounds to have nice steps
             graphData.formatAxis(fromTime, endTime);
 
-            if(SP.getBoolean("showactivity", true)) {
+            if(SP.getBoolean("showactivityprimary", true)) {
                 graphData.addActivity(fromTime, endTime, 1d);
             }
 
@@ -1598,6 +1609,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 secondGraphData.addDeviations(fromTime, now, useDevForScale, 1d);
             if (SP.getBoolean("showratios", false))
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
+            if(SP.getBoolean("showactivitysecondary", true))
+                secondGraphData.addActivity(fromTime, endTime, 1d);
             if (SP.getBoolean("showdevslope", false) && MainApp.devBranch)
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 

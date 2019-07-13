@@ -1138,8 +1138,6 @@
     <string name="sms_wrongcode">错误的代码。命令取消</string>
     <string name="notconfigured">未配置</string>
     <string name="profileswitchcreated">配置文件切换已创建</string>
-    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
-    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="other">%1$d　天</item>
     </plurals>

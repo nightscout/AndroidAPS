@@ -1149,8 +1149,6 @@
     <string name="sms_wrongcode">Verkeerde kode. Opdrag gekanselleer.</string>
     <string name="notconfigured">Nie gekonfigureer nie</string>
     <string name="profileswitchcreated">Profiel skakelaar geskep</string>
-    <string name="key_scale_insulin_activity">key_scale_insulin_activity</string>
-    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
