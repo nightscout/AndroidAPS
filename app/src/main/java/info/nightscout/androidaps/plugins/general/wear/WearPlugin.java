@@ -112,7 +112,7 @@ public class WearPlugin extends PluginBase {
         //Log.d(TAG, "WR: WearPlugin:requestNotificationCancel");
 
         Intent intent = new Intent(ctx, WatchUpdaterService.class)
-                .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
+            .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
         intent.putExtra("actionstring", actionstring);
         ctx.startService(intent);
     }

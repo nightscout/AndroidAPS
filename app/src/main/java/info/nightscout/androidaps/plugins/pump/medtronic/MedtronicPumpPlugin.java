@@ -290,13 +290,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    // @Override
-    // public boolean isSuspended() {
-    // // TO DO remove
-    // LOG.debug("MedtronicPumpPlugin::isSuspended");
-    // return isServiceSet() && medtronicHistoryData.is();
-    // }
-
     @Override
     public boolean isBusy() {
         if (isLoggingEnabled() && displayConnectionMessages)
@@ -1244,6 +1237,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             case PumpTime:
             case Configuration:
+            case BatteryStatus:
             case PumpHistory: {
                 workWithStatusRefresh(StatusRefreshAction.Add, refreshType,
                         getTimeInFutureFromMinutes(refreshType.getRefreshTime() + additionalTimeInMinutes));

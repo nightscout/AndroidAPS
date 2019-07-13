@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -33,9 +32,9 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
     private val log = LoggerFactory.getLogger(L.BGSOURCE)
 
     private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
-                                        "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
-                                        "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-                                        "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
+            "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
+            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
+            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
 
     const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
 
@@ -83,7 +82,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
             val meters = intent.getBundleExtra("meters")
             for (i in 0 until meters.size()) {
                 val meter = meters.getBundle(i.toString())
-                val timestamp = meter.getLong("timestamp") * 1000
+                val timestamp = meter!!.getLong("timestamp") * 1000
                 if (MainApp.getDbHelper().getCareportalEventFromTimestamp(timestamp) != null) continue
                 val jsonObject = JSONObject()
                 jsonObject.put("enteredBy", "AndroidAPS-Dexcom")
@@ -95,7 +94,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                 NSUpload.uploadCareportalEntryToNS(jsonObject)
             }
             if (SP.getBoolean(R.string.key_dexcom_lognssensorchange, false) && intent.hasExtra("sensorInsertionTime")) {
-                val sensorInsertionTime = intent.extras.getLong("sensorInsertionTime") * 1000
+                val sensorInsertionTime = intent.extras!!.getLong("sensorInsertionTime") * 1000
                 if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
                     val jsonObject = JSONObject()
                     jsonObject.put("enteredBy", "AndroidAPS-Dexcom")
@@ -104,7 +103,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                     NSUpload.uploadCareportalEntryToNS(jsonObject)
                 }
             }
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             log.error("Error while processing intent from Dexcom App", e)
         }
     }

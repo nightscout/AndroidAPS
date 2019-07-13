@@ -267,9 +267,6 @@ public class MainApp extends Application {
 
     private void setBTReceiver() {
 
-        // SP.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, null);
-        // SP.remove(MedtronicConst.Statistics.LastPumpHistoryEntry); // FIXME remove
-
         // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device,
         // also detected if timezone/time/date changed and send notification to any active pump driver.
         btReceiver = new BroadcastReceiver() {
