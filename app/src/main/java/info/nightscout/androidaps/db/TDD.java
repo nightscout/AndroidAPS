@@ -38,7 +38,7 @@ public class TDD {
 
     public TDD() { }
 
-    public TDD(long date, double bolus, double basal, double total) {
+    public TDD(long date, double bolus, double basal, double total){
         this.date = date;
         this.bolus = bolus;
         this.basal = basal;

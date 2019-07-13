@@ -17,6 +17,7 @@ import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
@@ -27,6 +28,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
@@ -93,7 +95,8 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
     public static boolean isMedtronicPump() {
-        return ConfigBuilderPlugin.getPlugin().getActivePump().deviceID().equals("Medtronic");
+        return MedtronicPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+        //return ConfigBuilderPlugin.getPlugin().getActivePump().deviceID().equals("Medtronic");
     }
 
 
