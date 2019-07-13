@@ -1345,6 +1345,17 @@
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Uploads data to Tidepool</string>
     <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
+    <string name="tidepool_upload_cgm">Upload CGM data</string>
+    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
+    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
+    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
+    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
+    <string name="tidepool_upload_tbr">Upload temporary basals</string>
+    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
+    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
+    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
+    <string name="tidepool_upload_bg">Upload BG tests</string>
+    <string name="key_instanceid" translatable="false">instanceid</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
@@ -1364,17 +1375,8 @@
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
-    <string name="tidepool_upload_cgm">Upload CGM data</string>
-    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
-    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
-    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
-    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
-    <string name="tidepool_upload_tbr">Upload temporary basals</string>
-    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
-    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
-    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
-    <string name="tidepool_upload_bg">Upload BG tests</string>
-    <string name="key_instanceid" translatable="false">instanceid</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
 
     <string name="dexcom_app_patched">Dexcom App (patched)</string>
     <string name="dexcom_short">DXCM</string>

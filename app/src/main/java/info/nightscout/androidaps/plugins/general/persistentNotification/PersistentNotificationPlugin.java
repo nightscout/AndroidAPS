@@ -52,6 +52,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 public class PersistentNotificationPlugin extends PluginBase {
 
     private static PersistentNotificationPlugin plugin;
+    private Notification notification;
 
     public static PersistentNotificationPlugin getPlugin() {
         if (plugin == null) plugin = new PersistentNotificationPlugin(MainApp.instance());
@@ -250,6 +251,7 @@ public class PersistentNotificationPlugin extends PluginBase {
 
         android.app.Notification notification = builder.build();
         mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
+        this.notification = notification;
         return notification;
     }
 
@@ -267,6 +269,17 @@ public class PersistentNotificationPlugin extends PluginBase {
             deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
         }
         return deltastring;
+    }
+
+    /***
+     * returns the current ongoing notification.
+     *
+     * If it does not exist, return a dummy notification. This should only happen if onStart() wasn't called.
+     */
+
+    public Notification getLastNotification() {
+        if (notification != null) return  notification;
+        else return new Notification();
     }
 
 

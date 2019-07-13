@@ -37,12 +37,9 @@ import android.widget.TextView;
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -55,7 +52,6 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.QuickWizardEntry;
@@ -95,7 +91,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
@@ -785,122 +780,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
         final Profile profile = ProfileFunctions.getInstance().getProfile();
-        final TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
+        final String profileName = ProfileFunctions.getInstance().getProfileName();
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && actualBg != null && profile != null) {
+        if (quickWizardEntry != null && actualBg != null && profile != null && pump != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
-            final BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, actualBg, true);
+            final BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true);
 
-            final JSONObject boluscalcJSON = new JSONObject();
-            try {
-                boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
-                boluscalcJSON.put("targetBGLow", wizard.targetBGLow);
-                boluscalcJSON.put("targetBGHigh", wizard.targetBGHigh);
-                boluscalcJSON.put("isf", wizard.sens);
-                boluscalcJSON.put("ic", wizard.ic);
-                boluscalcJSON.put("iob", -(wizard.insulingFromBolusIOB + wizard.insulingFromBasalsIOB));
-                boluscalcJSON.put("bolusiobused", true);
-                boluscalcJSON.put("basaliobused", true);
-                boluscalcJSON.put("bg", actualBg.valueToUnits(profile.getUnits()));
-                boluscalcJSON.put("insulinbg", wizard.insulinFromBG);
-                boluscalcJSON.put("insulinbgused", true);
-                boluscalcJSON.put("bgdiff", wizard.bgDiff);
-                boluscalcJSON.put("insulincarbs", wizard.insulinFromCarbs);
-                boluscalcJSON.put("carbs", quickWizardEntry.carbs());
-                boluscalcJSON.put("othercorrection", 0d);
-                boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
-                boluscalcJSON.put("insulin", wizard.calculatedTotalInsulin);
-            } catch (JSONException e) {
-                log.error("Unhandled exception", e);
-            }
-            if (wizard.calculatedTotalInsulin > 0d && quickWizardEntry.carbs() > 0d) {
-                DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-                String confirmMessage = MainApp.gs(R.string.entertreatmentquestion);
-
-                Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(wizard.calculatedTotalInsulin)).value();
+            if (wizard.getCalculatedTotalInsulin() > 0d && quickWizardEntry.carbs() > 0d) {
                 Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
-                confirmMessage += "\n" + MainApp.gs(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
-                confirmMessage += "\n" + MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-
-                if (Math.abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= 0.01 || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle(MainApp.gs(R.string.treatmentdeliveryerror));
-                    builder.setMessage(MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
-                    builder.setPositiveButton(MainApp.gs(R.string.ok), null);
-                    builder.show();
+                if (Math.abs(wizard.getInsulinAfterConstraints() - wizard.getCalculatedTotalInsulin()) >= pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(wizard.getInsulinAfterConstraints()) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
+                    OKDialog.show(getContext(), MainApp.gs(R.string.treatmentdeliveryerror), MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput), null);
                     return;
                 }
 
-                final Double finalInsulinAfterConstraints = insulinAfterConstraints;
-                final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
-                final Context context = getContext();
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                accepted = false;
-                builder.setTitle(MainApp.gs(R.string.confirmation));
-                builder.setMessage(confirmMessage);
-                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
-                    synchronized (builder) {
-                        if (accepted) {
-                            if (L.isEnabled(L.OVERVIEW))
-                                log.debug("guarding: already accepted");
-                            return;
-                        }
-                        accepted = true;
-                        if (Math.abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= 0.01 || finalCarbsAfterConstraints > 0) {
-                            if (wizard.superBolus) {
-                                final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
-                                if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                                    loopPlugin.superBolusTo(System.currentTimeMillis() + T.hours(2).msecs());
-                                    MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
-                                }
-                                ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, 120, true, profile, new Callback() {
-                                    @Override
-                                    public void run() {
-                                        if (!result.success) {
-                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                            i.putExtra("soundid", R.raw.boluserror);
-                                            i.putExtra("status", result.comment);
-                                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            MainApp.instance().startActivity(i);
-                                        }
-                                    }
-                                });
-                            }
-                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                            detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
-                            detailedBolusInfo.insulin = finalInsulinAfterConstraints;
-                            detailedBolusInfo.carbs = finalCarbsAfterConstraints;
-                            detailedBolusInfo.context = context;
-                            detailedBolusInfo.boluscalc = boluscalcJSON;
-                            detailedBolusInfo.source = Source.USER;
-                            if (finalInsulinAfterConstraints > 0 || ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().storesCarbInfo) {
-                                ConfigBuilderPlugin.getPlugin().getCommandQueue().bolus(detailedBolusInfo, new Callback() {
-                                    @Override
-                                    public void run() {
-                                        if (!result.success) {
-                                            Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                            i.putExtra("soundid", R.raw.boluserror);
-                                            i.putExtra("status", result.comment);
-                                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            MainApp.instance().startActivity(i);
-                                        }
-                                    }
-                                });
-                            } else {
-                                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
-                            }
-                        }
-                    }
-                });
-                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                builder.show();
+                wizard.confirmAndExecute(getContext());
             }
         }
-
     }
 
     @Override
@@ -1085,6 +983,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         final Profile profile = ProfileFunctions.getInstance().getProfile();
+        final String profileName = ProfileFunctions.getInstance().getProfileName();
 
         final String units = profile.getUnits();
         final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
@@ -1282,10 +1181,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
-            BolusWizard wizard = quickWizardEntry.doCalc(profile, tempTarget, lastBG, false);
-            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.calculatedTotalInsulin) + "U";
+            BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false);
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin()) + "U";
             quickWizardButton.setText(text);
-            if (wizard.calculatedTotalInsulin <= 0)
+            if (wizard.getCalculatedTotalInsulin() <= 0)
                 quickWizardButton.setVisibility(View.GONE);
         } else
             quickWizardButton.setVisibility(View.GONE);
