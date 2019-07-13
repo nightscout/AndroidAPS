@@ -359,8 +359,8 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             Profile profile = ProfileFunctions.getInstance().getProfile(time);
             double act = 0d;
-            if (profile != null)
-                total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
+            if (profile == null) continue;
+            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
             act = total.activity;
 
             if(time<=now)
