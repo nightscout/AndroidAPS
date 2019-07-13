@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 import android.util.Log;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 /**
  * Created by andy on 3/10/19.
  */
-
+@Ignore
 public class MedtronicHistoryDataUTest {
 
     TestLogger LOGGER = TestLoggerFactory.getTestLogger(MedtronicHistoryDataUTest.class);
