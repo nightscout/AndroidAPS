@@ -1613,7 +1613,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (SP.getBoolean("showratios", false))
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
             if(SP.getBoolean("showactivitysecondary", true))
-                secondGraphData.addActivity(fromTime, endTime, useIAForScale,1d);
+                secondGraphData.addActivity(fromTime, endTime, useIAForScale,useIAForScale ? 2d: 1d);
             if (SP.getBoolean("showdevslope", false) && MainApp.devBranch)
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
