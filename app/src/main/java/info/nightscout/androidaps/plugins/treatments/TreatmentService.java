@@ -244,8 +244,12 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public void createTreatmentFromJsonIfNotExists(JSONObject json) {
         try {
             Treatment treatment = Treatment.createFromJson(json);
-            if (treatment != null)
-                createOrUpdate(treatment, true);
+            if (treatment != null) {
+                if (!MedtronicUtil.isMedtronicPump())
+                    createOrUpdate(treatment);
+                else
+                    createOrUpdateMedtronic(treatment, false);
+            }
             else
                 log.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
@@ -254,7 +258,137 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
 
-    public UpdateReturn createOrUpdate(Treatment treatment, boolean fromNightScout) {
+    // return true if new record is created
+    public UpdateReturn createOrUpdate(Treatment treatment) {
+        try {
+            Treatment old;
+            treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
+
+            if (treatment.source == Source.PUMP) {
+                // check for changed from pump change in NS
+                Treatment existingTreatment = getPumpRecordById(treatment.pumpId);
+                if (existingTreatment != null) {
+                    boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    boolean sameSource = existingTreatment.source == treatment.source;
+                    if (!equalRePumpHistory) {
+                        // another treatment exists. Update it with the treatment coming from the pump
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+                        long oldDate = existingTreatment.date;
+
+                        //preserve carbs
+                        if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
+                            treatment.carbs = existingTreatment.carbs;
+                        }
+
+                        getDao().delete(existingTreatment); // need to delete/create because date may change too
+                        existingTreatment.copyBasics(treatment);
+                        getDao().create(existingTreatment);
+                        DatabaseHelper.updateEarliestDataChange(oldDate);
+                        DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                        scheduleTreatmentChange(treatment);
+                        return new UpdateReturn(sameSource, false); //updating a pump treatment with another one from the pump is not counted as clash
+                    }
+                    return new UpdateReturn(equalRePumpHistory, false);
+                }
+                existingTreatment = getDao().queryForId(treatment.date);
+                if (existingTreatment != null) {
+                    // another treatment exists with different pumpID. Update it with the treatment coming from the pump
+                    boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
+                    boolean sameSource = existingTreatment.source == treatment.source;
+                    long oldDate = existingTreatment.date;
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+
+                    //preserve carbs
+                    if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
+                        treatment.carbs = existingTreatment.carbs;
+                    }
+
+                    getDao().delete(existingTreatment); // need to delete/create because date may change too
+                    existingTreatment.copyFrom(treatment);
+                    getDao().create(existingTreatment);
+                    DatabaseHelper.updateEarliestDataChange(oldDate);
+                    DatabaseHelper.updateEarliestDataChange(existingTreatment.date);
+                    scheduleTreatmentChange(treatment);
+                    return new UpdateReturn(equalRePumpHistory || sameSource, false);
+                }
+                getDao().create(treatment);
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                DatabaseHelper.updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange(treatment);
+                return new UpdateReturn(true, true);
+            }
+            if (treatment.source == Source.NIGHTSCOUT) {
+                old = getDao().queryForId(treatment.date);
+                if (old != null) {
+                    if (!old.isEqual(treatment)) {
+                        boolean historyChange = old.isDataChanging(treatment);
+                        long oldDate = old.date;
+                        getDao().delete(old); // need to delete/create because date may change too
+                        old.copyFrom(treatment);
+                        getDao().create(old);
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                        if (historyChange) {
+                            DatabaseHelper.updateEarliestDataChange(oldDate);
+                            DatabaseHelper.updateEarliestDataChange(old.date);
+                        }
+                        scheduleTreatmentChange(treatment);
+                        return new UpdateReturn(true, true);
+                    }
+                    if (L.isEnabled(L.DATATREATMENTS))
+                        log.debug("Equal record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                    return new UpdateReturn(true, false);
+                }
+                // find by NS _id
+                if (treatment._id != null) {
+                    old = findByNSId(treatment._id);
+                    if (old != null) {
+                        if (!old.isEqual(treatment)) {
+                            boolean historyChange = old.isDataChanging(treatment);
+                            long oldDate = old.date;
+                            getDao().delete(old); // need to delete/create because date may change too
+                            old.copyFrom(treatment);
+                            getDao().create(old);
+                            if (L.isEnabled(L.DATATREATMENTS))
+                                log.debug("Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                            if (historyChange) {
+                                DatabaseHelper.updateEarliestDataChange(oldDate);
+                                DatabaseHelper.updateEarliestDataChange(old.date);
+                            }
+                            scheduleTreatmentChange(treatment);
+                            return new UpdateReturn(true, true);
+                        }
+                        if (L.isEnabled(L.DATATREATMENTS))
+                            log.debug("Equal record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                        return new UpdateReturn(true, false);
+                    }
+                }
+                getDao().create(treatment);
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                DatabaseHelper.updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange(treatment);
+                return new UpdateReturn(true, true);
+            }
+            if (treatment.source == Source.USER) {
+                getDao().create(treatment);
+                if (L.isEnabled(L.DATATREATMENTS))
+                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                DatabaseHelper.updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange(treatment);
+                return new UpdateReturn(true, true);
+            }
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new UpdateReturn(false, false);
+    }
+
+
+    public UpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
         try {
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
 

@@ -18,6 +18,7 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -89,6 +90,10 @@ public class MedtronicUtil extends RileyLinkUtil {
     public static int makeUnsignedShort(int b2, int b1) {
         int k = (b2 & 0xff) << 8 | b1 & 0xff;
         return k;
+    }
+
+    public static boolean isMedtronicPump() {
+        return ConfigBuilderPlugin.getPlugin().getActivePump().deviceID().equals("Medtronic");
     }
 
 
