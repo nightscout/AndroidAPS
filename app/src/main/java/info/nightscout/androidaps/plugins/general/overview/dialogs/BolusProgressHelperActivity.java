@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by adrian on 09/02/17.

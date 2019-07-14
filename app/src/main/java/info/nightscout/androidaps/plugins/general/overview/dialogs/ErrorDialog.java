@@ -2,8 +2,9 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +99,10 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
     private void startAlarm() {
         Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
         alarm.putExtra("soundid", soundId);
-        MainApp.instance().startService(alarm);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            MainApp.instance().startForegroundService(alarm);
+        else
+            MainApp.instance().startService(alarm);
     }
 
     private void stopAlarm() {

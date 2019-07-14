@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.otto.Subscribe;
@@ -477,7 +477,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
-    public Intervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
+    public NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         synchronized (tempBasals) {
             return new NonOverlappingIntervals<>(tempBasals);
         }

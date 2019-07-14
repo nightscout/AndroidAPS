@@ -1160,6 +1160,8 @@
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

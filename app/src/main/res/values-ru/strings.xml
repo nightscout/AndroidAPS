@@ -1162,4 +1162,6 @@ Context | Edit Context</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
+    <string name="twohours">2ч</string>
+    <string name="formatinsulinunits">%1$.2f ед</string>
 </resources>

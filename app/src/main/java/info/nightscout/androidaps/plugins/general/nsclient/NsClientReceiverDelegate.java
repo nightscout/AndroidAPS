@@ -10,6 +10,7 @@ import com.squareup.otto.Bus;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -99,6 +100,7 @@ class NsClientReceiverDelegate {
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
             bus.post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+            RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
         }
     }
 

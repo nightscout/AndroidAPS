@@ -991,6 +991,7 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
+    <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
@@ -1317,6 +1318,45 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
 
+    <string name="unit_second">second</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_day">day"</string>
+    <string name="unit_week">week"</string>
+    <string name="unit_seconds">seconds</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_days">days"</string>
+    <string name="unit_weeks">weeks"</string>
+    <string name="key_tidepool_username" translatable="false">tidepool_username</string>
+    <string name="key_tidepool_password" translatable="false">tidepool_password</string>
+    <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
+    <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
+    <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
+    <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
+    <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
+    <string name="title_tidepool_username">Login User Name</string>
+    <string name="summary_tidepool_password">Your Tidepool login password</string>
+    <string name="title_tidepool_password">Login Password</string>
+    <string name="title_tidepool_test_login">Test Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">If enabled, uploads will go to https://int-app.tidepool.org instead of the regular https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploads data to Tidepool</string>
+    <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
+    <string name="tidepool_upload_cgm">Upload CGM data</string>
+    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
+    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
+    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
+    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
+    <string name="tidepool_upload_tbr">Upload temporary basals</string>
+    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
+    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
+    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
+    <string name="tidepool_upload_bg">Upload BG tests</string>
+    <string name="key_instanceid" translatable="false">instanceid</string>
+
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
     <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
@@ -1337,6 +1377,12 @@
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
     <string name="key_scale_insulin_activity" translatable="false">scale_insulin_activity</string>
     <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+
+    <string name="dexcom_app_patched">Dexcom App (patched)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Receive BG values from the patched Dexcom app.</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

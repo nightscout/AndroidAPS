@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.setupwizard.elements;
 
-import android.support.v4.app.Fragment;
-import android.view.View;
+import androidx.fragment.app.Fragment;
+
 import android.widget.LinearLayout;
 
 import org.slf4j.Logger;

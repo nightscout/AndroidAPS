@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseService;
@@ -190,8 +190,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
         // prepare task for execution in 1 sec
         // cancel waiting task to prevent sending multiple posts
-        if (callback.getPost() != null)
-            callback.getPost().cancel(false);
+        ScheduledFuture<?> scheduledFuture =  callback.getPost();
+        if (scheduledFuture != null)
+            scheduledFuture.cancel(false);
         Runnable task = new PostRunnable();
         final int sec = 1;
         callback.setPost(eventWorker.schedule(task, sec, TimeUnit.SECONDS));
@@ -490,6 +491,23 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
             where.ge("date", mills);
+            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+            treatments = daoTreatments.query(preparedQuery);
+            return treatments;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
+   public List<Treatment> getTreatmentDataFromTime(long from, long to, boolean ascending) {
+        try {
+            Dao<Treatment, Long> daoTreatments = getDao();
+            List<Treatment> treatments;
+            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
             PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
             treatments = daoTreatments.query(preparedQuery);
             return treatments;

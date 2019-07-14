@@ -21,17 +21,17 @@ public class LocaleHelper {
     private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
 
     public static void onCreate(Context context) {
-        String lang = getPersistedData(context, Locale.getDefault().getLanguage());
+        String lang = getPersistedData(Locale.getDefault().getLanguage());
         setLocale(context, lang);
     }
 
     public static void onCreate(Context context, String defaultLanguage) {
-        String lang = getPersistedData(context, defaultLanguage);
+        String lang = getPersistedData(defaultLanguage);
         setLocale(context, lang);
     }
 
-    public static String getLanguage(Context context) {
-        return getPersistedData(context, Locale.getDefault().getLanguage());
+    public static String getLanguage() {
+        return getPersistedData(Locale.getDefault().getLanguage());
     }
 
     public static void setLocale(Context context, String language) {
@@ -39,7 +39,7 @@ public class LocaleHelper {
         updateResources(context, language);
     }
 
-    private static String getPersistedData(Context context, String defaultLanguage) {
+    private static String getPersistedData(String defaultLanguage) {
         return SP.getString(SELECTED_LANGUAGE, defaultLanguage);
     }
 
@@ -61,5 +61,9 @@ public class LocaleHelper {
         configuration.locale = locale;
 
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+    }
+
+    public static Locale getLocale() {
+        return new Locale(getPersistedData("en"));
     }
 }

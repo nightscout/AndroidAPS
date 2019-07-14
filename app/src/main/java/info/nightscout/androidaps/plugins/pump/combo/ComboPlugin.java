@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.pump.combo;
 
 import android.content.DialogInterface;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -65,6 +65,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 05.08.2016.
@@ -1312,8 +1313,18 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "Roche";
+    }
+
+    @Override
+    public String model() {
         return "Combo";
+    }
+
+    @Override
+    public String serialNumber() {
+        return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
     }
 
     @Override

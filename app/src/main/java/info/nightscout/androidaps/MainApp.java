@@ -4,9 +4,10 @@ import android.app.Application;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -50,6 +51,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessRec
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
 import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
@@ -72,8 +74,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.source.SourceMM640gPlugin;
@@ -145,7 +146,7 @@ public class MainApp extends Application {
         File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
-        devBranch = BuildConfig.VERSION.contains("dev");
+        devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(".*[a-zA-Z]+.*");
 
         sBus = L.isEnabled(L.EVENTS) && devBranch ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
@@ -192,8 +193,7 @@ public class MainApp extends Application {
             pluginsList.add(SourceNSClientPlugin.getPlugin());
             pluginsList.add(SourceMM640gPlugin.getPlugin());
             pluginsList.add(SourceGlimpPlugin.getPlugin());
-            pluginsList.add(SourceDexcomG5Plugin.getPlugin());
-            pluginsList.add(SourceDexcomG6Plugin.getPlugin());
+            pluginsList.add(SourceDexcomPlugin.INSTANCE);
             pluginsList.add(SourcePoctechPlugin.getPlugin());
             pluginsList.add(SourceTomatoPlugin.getPlugin());
             pluginsList.add(SourceEversensePlugin.getPlugin());
@@ -204,6 +204,8 @@ public class MainApp extends Application {
             pluginsList.add(StatuslinePlugin.initPlugin(this));
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
+            if (engineeringMode)
+                pluginsList.add(TidepoolPlugin.INSTANCE);
             pluginsList.add(MaintenancePlugin.initPlugin(this));
 
             pluginsList.add(ConfigBuilderPlugin.getPlugin());

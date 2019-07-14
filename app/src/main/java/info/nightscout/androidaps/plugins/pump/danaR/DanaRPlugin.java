@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
@@ -358,6 +358,11 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         result.isTempCancel = true;
         return result;
+    }
+
+    @Override
+    public String model() {
+        return "DanaR";
     }
 
     private PumpEnactResult cancelRealTempBasal() {

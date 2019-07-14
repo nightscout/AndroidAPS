@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
@@ -769,7 +769,17 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "SOOIL";
+    }
+
+    @Override
+    public String model() {
+        return "DanaRS";
+    }
+
+    @Override
+    public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 

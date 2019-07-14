@@ -3,7 +3,7 @@ package info.nightscout.androidaps.db;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.CloseableIterator;
@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -410,6 +411,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventNewBg");
                 MainApp.bus().post(new EventNewBG(bgReading));
+                RxBus.INSTANCE.send(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }
@@ -434,7 +436,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             return null;
 
         for (int i = 0; i < bgList.size(); i++)
-            if (bgList.get(i).value > 39)
+            if (bgList.get(i).value >= 39)
                 return bgList.get(i);
         return null;
     }
@@ -596,7 +598,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    //  -------------------- TREATMENT HANDLING -------------------
+    //  -------------------- TEMPTARGET HANDLING -------------------
 
     public static void updateEarliestDataChange(long newDate) {
         if (earliestDataChange == null) {
@@ -618,6 +620,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
             where.ge("date", mills);
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            tempTargets = daoTempTargets.query(preparedQuery);
+            return tempTargets;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<TempTarget>();
+    }
+
+    public List<TempTarget> getTemptargetsDataFromTime(long from, long to, boolean ascending) {
+        try {
+            Dao<TempTarget, Long> daoTempTargets = getDaoTempTargets();
+            List<TempTarget> tempTargets;
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
             PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
             tempTargets = daoTempTargets.query(preparedQuery);
             return tempTargets;
@@ -941,6 +960,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
             where.ge("date", mills);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            tempbasals = getDaoTemporaryBasal().query(preparedQuery);
+            return tempbasals;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<TemporaryBasal>();
+    }
+
+    public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long from, long to, boolean ascending) {
+        try {
+            List<TemporaryBasal> tempbasals;
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
             PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
             tempbasals = getDaoTemporaryBasal().query(preparedQuery);
             return tempbasals;
@@ -1354,6 +1389,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
+    public List<CareportalEvent> getCareportalEvents(long start, long end, boolean ascending) {
+        try {
+            List<CareportalEvent> careportalEvents;
+            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.between("date", start, end);
+            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
+            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            preprocessOpenAPSOfflineEvents(careportalEvents);
+            return careportalEvents;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
     public void preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
         OverlappingIntervals offlineEvents = new OverlappingIntervals();
         for (int i = 0; i < list.size(); i++) {
@@ -1498,6 +1550,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.limit(100L);
             Where where = queryBuilder.where();
             where.ge("date", mills);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            return profileSwitches;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
+
+    public List<ProfileSwitch> getProfileSwitchEventsFromTime(long from, long to, boolean ascending) {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            queryBuilder.limit(100L);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;

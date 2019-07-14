@@ -7,8 +7,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 
@@ -242,6 +242,7 @@ public class RuffyScripter implements RuffyCommands {
             Thread cmdThread = null;
             try {
                 activeCmd = cmd;
+                unparsableMenuEncountered = false;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
                 log.debug("Connection ready to execute cmd " + cmd);
