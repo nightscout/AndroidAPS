@@ -865,6 +865,7 @@
     <string name="fabric_upload">Odesílání do Fabric</string>
     <string name="allow_automated_crash_reporting">Automatické odesílání chyb aplikace a statistiky používání vývojářům pomocí služby fabric.io.</string>
     <string name="g5appnotdetected">Prosím aktualizujte Dexcom aplikaci na podporovanou verzi</string>
+    <string name="dexcom_app_not_installed">Aplikace Dexcom není nainstalována.</string>
     <string name="start_activity_tt">Spustit Dočasný cíl Aktivita</string>
     <string name="start_eating_soon_tt">Spustit Dočasný cíl Blížící se jídlo</string>
     <string name="temptargetshort">DoCíl</string>
@@ -1160,6 +1161,11 @@
     <string name="old_version">stará verze</string>
     <string name="very_old_version">velmi stará verze</string>
     <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po 60 dnech, vypnutí smyčky po 90 dnech</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
