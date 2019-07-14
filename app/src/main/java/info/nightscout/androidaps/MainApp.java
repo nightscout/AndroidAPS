@@ -290,7 +290,7 @@ public class MainApp extends Application {
                                 break;
 
                             case BluetoothAdapter.STATE_ON: {
-                                if ("Medtronic".equals(activePump.deviceID())) {
+                                if ("Medtronic".equals(activePump.manufacter())) {
                                     Log.v("MainApp", "Bluetooth on");
                                     RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
                                 }

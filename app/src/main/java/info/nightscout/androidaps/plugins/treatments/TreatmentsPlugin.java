@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -577,10 +578,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
 
         return newRecordCreated;
-    }
-
-    private boolean isMedtronicPump() {
-        return ConfigBuilderPlugin.getPlugin().getActivePump().deviceID().equals("Medtronic");
     }
 
     @Override

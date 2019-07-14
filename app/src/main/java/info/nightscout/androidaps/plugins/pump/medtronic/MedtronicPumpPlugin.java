@@ -6,9 +6,9 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +42,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
@@ -633,7 +634,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         StringBuilder stringBuilder = new StringBuilder("Requested Basals (h): ");
 
-        for (Profile.BasalValue basalValue : profile.getBasalValues()) {
+        for (Profile.ProfileValue basalValue : profile.getBasalValues()) {
 
             double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value);
 
@@ -1368,6 +1369,20 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         }
     }
 
+    @Override
+    public String manufacter() {
+        return "Medtronic";
+    }
+
+    @Override
+    public String model() {
+        return getMDTPumpStatus().medtronicDeviceType.getPumpModel();
+    }
+
+    @Override
+    public String serialNumber() {
+        return getMDTPumpStatus().serialNumber;
+    }
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
