@@ -3,7 +3,6 @@
 
     <PreferenceCategory
         android:key="tidepool_upload_screen"
-        android:summary="@string/summary_tidepool_upload_screen"
         android:title="@string/tidepool">
 
         <EditTextPreference
