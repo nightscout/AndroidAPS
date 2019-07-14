@@ -19,7 +19,7 @@ public class NonOverlappingIntervals<T extends Interval> extends Intervals<T> {
         rawData = other.rawData.clone();
     }
 
-    protected synchronized void merge() {
+    public synchronized void merge() {
         for (int index = 0; index < rawData.size() - 1; index++) {
             Interval i = rawData.valueAt(index);
             long startOfNewer = rawData.valueAt(index + 1).start();

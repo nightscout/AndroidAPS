@@ -53,7 +53,9 @@ public interface PumpInterface {
 
     // Status to be passed to NS
     JSONObject getJSONStatus(Profile profile, String profileName);
-    String deviceID();
+    String manufacter();
+    String model();
+    String serialNumber();
 
     // Pump capabilities
     PumpDescription getPumpDescription();
