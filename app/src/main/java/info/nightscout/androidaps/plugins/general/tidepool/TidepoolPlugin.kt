@@ -5,6 +5,7 @@ import android.text.Spanned
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -30,7 +31,6 @@ import io.reactivex.schedulers.Schedulers
 import org.slf4j.LoggerFactory
 import java.util.*
 
-
 object TidepoolPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(R.string.tidepool)
@@ -39,6 +39,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         .preferencesId(R.xml.pref_tidepool)
         .description(R.string.description_tidepool)
 ) {
+
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -75,15 +76,17 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         disposable += RxBus
                 .toObservable(EventNewBG::class.java)
                 .observeOn(Schedulers.io())
-                .subscribe({ event ->
-                    if (event.bgReading!!.date < TidepoolUploader.getLastEnd())
-                        TidepoolUploader.setLastEnd(event.bgReading.date)
+                .filter { it.bgReading != null } // better would be optional in API level >24
+                .map { it.bgReading }
+                .subscribe { bgReading ->
+                    if (bgReading!!.date < TidepoolUploader.getLastEnd())
+                        TidepoolUploader.setLastEnd(bgReading.date)
                     if (isEnabled(PluginType.GENERAL)
                             && (!SP.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
                             && (!SP.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
                             && RateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                         doUpload()
-                }, {})
+                }
         disposable += RxBus
                 .toObservable(EventPreferenceChange::class.java)
                 .observeOn(Schedulers.io())

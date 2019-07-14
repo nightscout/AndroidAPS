@@ -120,8 +120,7 @@ object UploadChunk {
         val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
-            val pe = ProfileElement(ps)
-            selection.add(pe)
+            ProfileElement.newInstanceOrNull(ps)?.let { selection.add(it) }
         }
         if (selection.size > 0)
             RxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))

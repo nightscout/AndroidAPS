@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.InstanceId
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProfileElement(ps: ProfileSwitch)
+class ProfileElement private constructor(ps: ProfileSwitch)
     : BaseElement(ps.date, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.date).toByteArray()).toString()) {
 
     @Expose
@@ -25,9 +25,11 @@ class ProfileElement(ps: ProfileSwitch)
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
     @Expose
-    internal var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber() ?: InstanceId.instanceId())
+    internal var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
+            ?: InstanceId.instanceId())
     @Expose
-    internal var deviceSerialNumber: String = ConfigBuilderPlugin.getPlugin().activePump?.serialNumber() ?: InstanceId.instanceId()
+    internal var deviceSerialNumber: String = ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
+            ?: InstanceId.instanceId()
     @Expose
     internal var clockDriftOffset: Long = 0
     @Expose
@@ -35,7 +37,8 @@ class ProfileElement(ps: ProfileSwitch)
 
     init {
         type = "pumpSettings"
-        val profile: Profile = ps.getProfileObject()!!
+        val profile: Profile? = ps.profileObject
+        checkNotNull(profile)
         for (br in profile.basalValues)
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
         for (target in profile.singleTargets)
@@ -94,4 +97,15 @@ class ProfileElement(ps: ProfileSwitch)
             internal var amount: Double
     )
 
+    companion object {
+        @JvmStatic
+        fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
+            ProfileElement(ps)
+        } catch (e: Throwable) {
+            null
+        }
+    }
+
 }
+
+

@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthReplyMes
 import info.nightscout.androidaps.plugins.general.tidepool.messages.DatasetReplyMessage
 import okhttp3.Headers
 
-class Session (var authHeader: String?, private var sessionTokenHeader: String) {
+class Session(var authHeader: String?, private var sessionTokenHeader: String) {
 
     val service = TidepoolUploader.getRetrofitInstance()?.create(TidepoolApiService::class.java)
 
@@ -28,9 +28,12 @@ class Session (var authHeader: String?, private var sessionTokenHeader: String) 
         if (obj is AuthReplyMessage) {
             authReply = obj
         } else if (obj is List<*>) {
-            val list = obj as List<*>?
-            if (list!!.isNotEmpty() && list[0] is DatasetReplyMessage) {
-                datasetReply = list[0] as DatasetReplyMessage
+            val list = obj as? List<*>?
+
+            list?.getOrNull(0)?.let {
+                if (it is DatasetReplyMessage) {
+                    datasetReply = it
+                }
             }
         } else if (obj is DatasetReplyMessage) {
             datasetReply = obj

@@ -6,8 +6,8 @@ import android.os.SystemClock
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.*
 import info.nightscout.androidaps.utils.DateUtil
@@ -27,7 +27,6 @@ object TidepoolUploader {
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
 
     private var wl: PowerManager.WakeLock? = null
-
 
     private const val INTEGRATION_BASE_URL = "https://int-api.tidepool.org"
     private const val PRODUCTION_BASE_URL = "https://api.tidepool.org"
@@ -82,10 +81,11 @@ object TidepoolUploader {
         // TODO failure backoff
         extendWakeLock(30000)
         session = Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER)
-        if (session?.authHeader != null) {
+        val authHeader = session?.authHeader
+        if (authHeader != null) {
             connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTING
             RxBus.send(EventTidepoolStatus(("Connecting")))
-            val call = session!!.service?.getLogin(session?.authHeader!!)
+            val call = session?.service?.getLogin(authHeader)
 
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(session!!, "Login", {
                 startSession(session!!, doUpload)
@@ -105,21 +105,19 @@ object TidepoolUploader {
 
     fun testLogin(rootContext: Context) {
         val session = Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER)
-        if (session.authHeader != null) {
-            val call = session.service!!.getLogin(session.authHeader!!)
+        session.authHeader?.let {
+            val call = session.service?.getLogin(it)
 
-            call.enqueue(TidepoolCallback<AuthReplyMessage>(session, "Login", {
+            call?.enqueue(TidepoolCallback<AuthReplyMessage>(session, "Login", {
                 OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Successfully logged into Tidepool.", null)
             }, {
                 OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.", null)
             }))
 
-        } else {
-            OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null)
         }
+                ?: OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null)
 
     }
-
 
     private fun loginFailed() {
         releaseWakeLock()
@@ -173,39 +171,43 @@ object TidepoolUploader {
 
     @Synchronized
     fun doUpload() {
-        if (session == null) {
-            log.error("Session is null, cannot proceed")
-            releaseWakeLock()
-            return
-        }
-        extendWakeLock(60000)
-        session!!.iterations++
-        val chunk = UploadChunk.getNext(session)
-        when {
-            chunk == null -> {
-                log.error("Upload chunk is null, cannot proceed")
+        session.let { session ->
+            if (session == null) {
+                log.error("Session is null, cannot proceed")
                 releaseWakeLock()
+                return
             }
-            chunk.length == 2 -> {
-                if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty dataset - marking as succeeded")
-                RxBus.send(EventTidepoolStatus(("No data to upload")))
-                releaseWakeLock()
-                unploadNext()
-            }
-            else -> {
-                val body = RequestBody.create(MediaType.parse("application/json"), chunk)
+            extendWakeLock(60000)
+            session.iterations++
+            val chunk = UploadChunk.getNext(session)
+            when {
+                chunk == null -> {
+                    log.error("Upload chunk is null, cannot proceed")
+                    releaseWakeLock()
+                }
 
-                RxBus.send(EventTidepoolStatus(("Uploading")))
-                val call = session!!.service!!.doUpload(session!!.token!!, session!!.datasetReply!!.getUploadId()!!, body)
-                call.enqueue(TidepoolCallback<UploadReplyMessage>(session!!, "Data Upload", {
-                    setLastEnd(session!!.end)
-                    RxBus.send(EventTidepoolStatus(("Upload completed OK")))
+                chunk.length == 2 -> {
+                    if (L.isEnabled(L.TIDEPOOL)) log.debug("Empty dataset - marking as succeeded")
+                    RxBus.send(EventTidepoolStatus(("No data to upload")))
                     releaseWakeLock()
                     unploadNext()
-                }, {
-                    RxBus.send(EventTidepoolStatus(("Upload FAILED")))
-                    releaseWakeLock()
-                }))
+                }
+
+                else -> {
+                    val body = RequestBody.create(MediaType.parse("application/json"), chunk)
+
+                    RxBus.send(EventTidepoolStatus(("Uploading")))
+                    val call = session.service!!.doUpload(session.token!!, session.datasetReply!!.getUploadId()!!, body)
+                    call.enqueue(TidepoolCallback<UploadReplyMessage>(session, "Data Upload", {
+                        setLastEnd(session.end)
+                        RxBus.send(EventTidepoolStatus(("Upload completed OK")))
+                        releaseWakeLock()
+                        unploadNext()
+                    }, {
+                        RxBus.send(EventTidepoolStatus(("Upload FAILED")))
+                        releaseWakeLock()
+                    }))
+                }
             }
         }
     }
@@ -238,10 +240,16 @@ object TidepoolUploader {
     }
 
     fun deleteAllData() {
-        if (session!!.authReply!!.userid != null) {
+        val session = this.session
+        val token = session?.token
+        val userid = session?.authReply?.userid
+        try {
+            requireNotNull(session)
+            requireNotNull(token)
+            requireNotNull(userid)
             extendWakeLock(60000)
-            val call = session!!.service?.deleteAllData(session!!.token!!, session!!.authReply!!.userid!!)
-            call?.enqueue(TidepoolCallback(session!!, "Delete all data", {
+            val call = session.service?.deleteAllData(token, userid)
+            call?.enqueue(TidepoolCallback(session, "Delete all data", {
                 connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
                 RxBus.send(EventTidepoolStatus(("All data removed OK")))
                 releaseWakeLock()
@@ -250,7 +258,7 @@ object TidepoolUploader {
                 RxBus.send(EventTidepoolStatus(("All data remove FAILED")))
                 releaseWakeLock()
             }))
-        } else {
+        } catch (e: IllegalArgumentException) {
             log.error("Got login response but cannot determine userId - cannot proceed")
         }
     }
@@ -271,7 +279,6 @@ object TidepoolUploader {
         }
     }
 
-
     @Synchronized
     private fun extendWakeLock(ms: Long) {
         if (wl == null) {
@@ -286,12 +293,13 @@ object TidepoolUploader {
 
     @Synchronized
     private fun releaseWakeLock() {
-        if (wl == null) return
-        if (wl!!.isHeld) {
-            try {
-                wl!!.release()
-            } catch (e: Exception) {
-                log.error("Error releasing wakelock: $e")
+        wl?.let {
+            if (it.isHeld) {
+                try {
+                    it.release()
+                } catch (e: Exception) {
+                    log.error("Error releasing wakelock: $e")
+                }
             }
         }
     }

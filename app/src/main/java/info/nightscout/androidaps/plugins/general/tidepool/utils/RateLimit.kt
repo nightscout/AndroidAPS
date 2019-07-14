@@ -16,10 +16,12 @@ object RateLimit {
     @Synchronized
     fun rateLimit(name: String, seconds: Int): Boolean {
         // check if over limit
-        if (rateLimits.containsKey(name) && DateUtil.now() - rateLimits[name]!! < T.secs(seconds.toLong()).msecs()) {
-            if (L.isEnabled(L.TIDEPOOL))
-                log.debug("$name rate limited: $seconds seconds")
-            return false
+        rateLimits[name]?.let {
+            if (DateUtil.now() - it < T.secs(seconds.toLong()).msecs()) {
+                if (L.isEnabled(L.TIDEPOOL))
+                    log.debug("$name rate limited: $seconds seconds")
+                return false
+            }
         }
         // not over limit
         rateLimits[name] = DateUtil.now()
