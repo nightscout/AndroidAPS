@@ -151,7 +151,7 @@ public class MedtronicFragment extends SubscriberFragment {
         if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
             startActivity(new Intent(getContext(), MedtronicHistoryActivity.class));
         } else {
-            MedtronicUtil.displayNotConfiguredDialog();
+            MedtronicUtil.displayNotConfiguredDialog(getContext());
         }
     }
 
@@ -160,7 +160,7 @@ public class MedtronicFragment extends SubscriberFragment {
     void onRefreshClick() {
 
         if (!MedtronicUtil.getPumpStatus().verifyConfiguration()) {
-            MedtronicUtil.displayNotConfiguredDialog();
+            MedtronicUtil.displayNotConfiguredDialog(getContext());
             return;
         }
 
@@ -191,7 +191,7 @@ public class MedtronicFragment extends SubscriberFragment {
         if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
             startActivity(new Intent(getContext(), RileyLinkStatusActivity.class));
         } else {
-            MedtronicUtil.displayNotConfiguredDialog();
+            MedtronicUtil.displayNotConfiguredDialog(getContext());
         }
     }
 

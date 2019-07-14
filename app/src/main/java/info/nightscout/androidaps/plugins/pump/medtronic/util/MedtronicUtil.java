@@ -1,26 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util;
 
-import android.content.Intent;
-
+import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.joda.time.LocalTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -40,6 +26,16 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
+import info.nightscout.androidaps.utils.OKDialog;
+import org.joda.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by andy on 5/9/18.
@@ -529,16 +525,9 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    public static void displayNotConfiguredDialog() {
-        new Thread(() -> {
-
-            Intent i = new Intent(MainApp.instance(), MessageHelperActivity.class);
-            i.putExtra("status", MainApp.gs(R.string.medtronic_error_operation_not_possible_no_configuration));
-            i.putExtra("title", MainApp.gs(R.string.combo_warning));
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApp.instance().startActivity(i);
-
-        }).start();
+    public static void displayNotConfiguredDialog(Context context) {
+        OKDialog.show(context, MainApp.gs(R.string.combo_warning),
+                MainApp.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null);
     }
 
 }
