@@ -1333,7 +1333,6 @@
     <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
     <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
     <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
-    <string name="summary_tidepool_upload_screen">Upload data to the Tidepool service</string>
     <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
     <string name="title_tidepool_username">Login User Name</string>
     <string name="summary_tidepool_password">Your Tidepool login password</string>
