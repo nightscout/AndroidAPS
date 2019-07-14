@@ -289,9 +289,6 @@
             android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
             android:exported="true" />
-        <activity
-            android:name=".plugins.general.overview.dialogs.MessageHelperActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />

@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import androidx.annotation.NonNull;
 
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,6 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.MessageHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
@@ -828,7 +828,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog. Context: "
                         // + MainApp.instance().getApplicationContext());
 
-                        Intent i = new Intent(MainApp.instance(), MessageHelperActivity.class);
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", MainApp.gs(R.string.medtronic_cmd_cancel_bolus_not_supported));
                         i.putExtra("title", MainApp.gs(R.string.combo_warning));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1507,7 +1508,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
                     ServiceTaskExecutor.startTask(new WakeAndTuneTask());
                 } else {
-                    MedtronicUtil.displayNotConfiguredDialog();
+                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                    i.putExtra("status", MainApp.gs(R.string.medtronic_error_operation_not_possible_no_configuration));
+                    i.putExtra("title", MainApp.gs(R.string.combo_warning));
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    MainApp.instance().startActivity(i);
                 }
             }
             break;
