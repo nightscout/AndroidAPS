@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.SP;
 
 
@@ -437,8 +438,18 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public String deviceID() {
-        return "VirtualPump";
+    public String manufacter() {
+        return pumpDescription.pumpType.getManufacter();
+    }
+
+    @Override
+    public String model() {
+        return pumpDescription.pumpType.getModel();
+    }
+
+    @Override
+    public String serialNumber() {
+        return InstanceId.INSTANCE.instanceId();
     }
 
     @Override

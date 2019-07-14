@@ -188,7 +188,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             calculatedTotalInsulin = 0.0
         }
 
-        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump.pumpDescription.bolusStep
+        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep ?: 0.1
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
         insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
@@ -278,7 +278,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
 
                             val pump1 = ConfigBuilderPlugin.getPlugin().activePump
 
-                            if (pump1.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                            if (pump1?.pumpDescription?.tempBasalStyle == PumpDescription.ABSOLUTE) {
                                 ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
                                     override fun run() {
                                         if (!result.success) {
@@ -318,7 +318,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
                         detailedBolusInfo.boluscalc = nsJSON()
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
-                        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().activePump.pumpDescription.storesCarbInfo) {
+                        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.storesCarbInfo == true) {
                             ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
