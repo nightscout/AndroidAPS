@@ -63,6 +63,11 @@ object TidepoolUploader {
         return retrofit
     }
 
+    fun createSession(): Session {
+        val service = getRetrofitInstance()?.create(TidepoolApiService::class.java)
+        return Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER, service)
+    }
+
     // TODO: call on preference change
     fun resetInstance() {
         retrofit = null
@@ -80,7 +85,7 @@ object TidepoolUploader {
         }
         // TODO failure backoff
         extendWakeLock(30000)
-        session = Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER)
+        session = createSession()
         val authHeader = session?.authHeader
         if (authHeader != null) {
             connectionStatus = TidepoolUploader.ConnectionStatus.CONNECTING
@@ -104,7 +109,7 @@ object TidepoolUploader {
     }
 
     fun testLogin(rootContext: Context) {
-        val session = Session(AuthRequestMessage.getAuthRequestHeader(), SESSION_TOKEN_HEADER)
+        val session = createSession()
         session.authHeader?.let {
             val call = session.service?.getLogin(it)
 

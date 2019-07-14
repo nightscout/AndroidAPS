@@ -4,9 +4,9 @@ import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthReplyMes
 import info.nightscout.androidaps.plugins.general.tidepool.messages.DatasetReplyMessage
 import okhttp3.Headers
 
-class Session(var authHeader: String?, private var sessionTokenHeader: String) {
-
-    val service = TidepoolUploader.getRetrofitInstance()?.create(TidepoolApiService::class.java)
+class Session(val authHeader: String?,
+              private val sessionTokenHeader: String,
+              val service: TidepoolApiService?) {
 
     internal var token: String? = null
     internal var authReply: AuthReplyMessage? = null
