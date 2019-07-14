@@ -31,6 +31,8 @@ object TidepoolUploader {
     private const val INTEGRATION_BASE_URL = "https://int-api.tidepool.org"
     private const val PRODUCTION_BASE_URL = "https://api.tidepool.org"
 
+    internal const val VERSION = "0.0.1"
+
     private var retrofit: Retrofit? = null
 
     private var session: Session? = null

@@ -46,7 +46,7 @@ class OpenDatasetRequestMessage : BaseMessage() {
         @Expose
         val name = BuildConfig.APPLICATION_ID
         @Expose
-        val version = BuildConfig.VERSION_NAME
+        val version = TidepoolUploader.VERSION
     }
 
     inner class Deduplicator {
