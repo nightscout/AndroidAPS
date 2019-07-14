@@ -1166,6 +1166,7 @@ Unerwartetes Verhalten.</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
+    <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
