@@ -65,6 +65,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 05.08.2016.
@@ -1312,8 +1313,18 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "Roche";
+    }
+
+    @Override
+    public String model() {
         return "Combo";
+    }
+
+    @Override
+    public String serialNumber() {
+        return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
     }
 
     @Override

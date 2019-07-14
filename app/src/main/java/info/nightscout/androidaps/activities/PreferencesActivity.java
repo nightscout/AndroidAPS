@@ -15,12 +15,15 @@ import android.text.TextUtils;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
@@ -64,6 +67,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         MainApp.bus().post(new EventPreferenceChange(key));
+        RxBus.INSTANCE.send(new EventPreferenceChange(key));
         if (key.equals("language")) {
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
@@ -184,6 +188,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginType.INSULIN);
 
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
 
                 addPreferencesFromResource(R.xml.pref_others);
@@ -194,7 +199,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
 
             if (Config.NSCLIENT) {
-                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen)findPreference(getString(R.string.key_advancedsettings));
+                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) findPreference(getString(R.string.key_advancedsettings));
                 if (scrnAdvancedSettings != null) {
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
@@ -205,6 +210,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
 
             initSummary(getPreferenceScreen());
+
+            final Preference tidepoolTestLogin = findPreference(MainApp.gs(R.string.key_tidepool_test_login));
+            if (tidepoolTestLogin != null)
+                tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
+                    TidepoolUploader.INSTANCE.testLogin(getActivity());
+                    return false;
+                });
         }
 
         @Override

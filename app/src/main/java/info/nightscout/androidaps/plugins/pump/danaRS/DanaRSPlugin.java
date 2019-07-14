@@ -769,7 +769,17 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "SOOIL";
+    }
+
+    @Override
+    public String model() {
+        return "DanaRS";
+    }
+
+    @Override
+    public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 

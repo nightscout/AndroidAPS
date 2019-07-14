@@ -400,6 +400,19 @@ public class Profile {
         return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + MainApp.gs(R.string.profile_per_unit));
     }
 
+    public ProfileValue[] getIsfs() {
+        if (isf_v == null)
+            isf_v = convertToSparseArray(ic);
+        ProfileValue[] ret = new ProfileValue[isf_v.size()];
+
+        for (Integer index = 0; index < isf_v.size(); index++) {
+            Integer tas = (int) isf_v.keyAt(index);
+            double value = isf_v.valueAt(index);
+            ret[index] = new ProfileValue(tas, value);
+        }
+        return ret;
+    }
+
     public double getIc() {
         return getIcTimeFromMidnight(secondsFromMidnight());
     }
@@ -418,6 +431,19 @@ public class Profile {
         if (ic_v == null)
             ic_v = convertToSparseArray(ic);
         return getValuesList(ic_v, null, new DecimalFormat("0.0"), MainApp.gs(R.string.profile_carbs_per_unit));
+    }
+
+    public ProfileValue[] getIcs() {
+        if (ic_v == null)
+            ic_v = convertToSparseArray(ic);
+        ProfileValue[] ret = new ProfileValue[ic_v.size()];
+
+        for (Integer index = 0; index < ic_v.size(); index++) {
+            Integer tas = (int) ic_v.keyAt(index);
+            double value = ic_v.valueAt(index);
+            ret[index] = new ProfileValue(tas, value);
+        }
+        return ret;
     }
 
     public double getBasal() {
@@ -441,8 +467,8 @@ public class Profile {
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), MainApp.gs(R.string.profile_ins_units_per_hout));
     }
 
-    public class BasalValue {
-        public BasalValue(int timeAsSeconds, double value) {
+    public class ProfileValue {
+        public ProfileValue(int timeAsSeconds, double value) {
             this.timeAsSeconds = timeAsSeconds;
             this.value = value;
         }
@@ -451,15 +477,15 @@ public class Profile {
         public double value;
     }
 
-    public synchronized BasalValue[] getBasalValues() {
+    public synchronized ProfileValue[] getBasalValues() {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
-        BasalValue[] ret = new BasalValue[basal_v.size()];
+        ProfileValue[] ret = new ProfileValue[basal_v.size()];
 
         for (Integer index = 0; index < basal_v.size(); index++) {
             Integer tas = (int) basal_v.keyAt(index);
             double value = basal_v.valueAt(index);
-            ret[index] = new BasalValue(tas, value);
+            ret[index] = new ProfileValue(tas, value);
         }
         return ret;
     }
@@ -498,6 +524,49 @@ public class Profile {
         if (targetHigh_v == null)
             targetHigh_v = convertToSparseArray(targetHigh);
         return getValueToTime(targetHigh_v, timeAsSeconds);
+    }
+
+    public class TargetValue {
+        public TargetValue(int timeAsSeconds, double low, double high) {
+            this.timeAsSeconds = timeAsSeconds;
+            this.low = low;
+            this.high = high;
+        }
+
+        public int timeAsSeconds;
+        public double low;
+        public double high;
+    }
+
+    public TargetValue[] getTargets() {
+        if (targetLow_v == null)
+            targetLow_v = convertToSparseArray(targetLow);
+        if (targetHigh_v == null)
+            targetHigh_v = convertToSparseArray(targetHigh);
+        TargetValue[] ret = new TargetValue[targetLow_v.size()];
+
+        for (Integer index = 0; index < targetLow_v.size(); index++) {
+            Integer tas = (int) targetLow_v.keyAt(index);
+            double low = targetLow_v.valueAt(index);
+            double high = targetHigh_v.valueAt(index);
+            ret[index] = new TargetValue(tas, low, high);
+        }
+        return ret;
+    }
+
+    public ProfileValue[] getSingleTargets() {
+        if (targetLow_v == null)
+            targetLow_v = convertToSparseArray(targetLow);
+        if (targetHigh_v == null)
+            targetHigh_v = convertToSparseArray(targetHigh);
+        ProfileValue[] ret = new ProfileValue[targetLow_v.size()];
+
+        for (Integer index = 0; index < targetLow_v.size(); index++) {
+            Integer tas = (int) targetLow_v.keyAt(index);
+            double target = (targetLow_v.valueAt(index) + targetHigh_v.valueAt(index)) / 2;
+            ret[index] = new ProfileValue(tas, target);
+        }
+        return ret;
     }
 
     public String getTargetList() {

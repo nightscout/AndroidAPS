@@ -17,9 +17,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.DbObjectBase;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -164,6 +166,15 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         } catch (JSONException ignored) {
         }
         return null;
+    }
+
+    public double getIc() {
+        JSONObject bw = getBoluscalc();
+         if (bw == null || !bw.has("ic")) {
+             Profile profile = ProfileFunctions.getInstance().getProfile(date);
+             return profile.getIc(date);
+        }
+         return JsonHelper.safeGetDouble(bw, "ic");
     }
 
     /*

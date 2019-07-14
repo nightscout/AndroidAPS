@@ -87,6 +87,7 @@ public class L {
     public static final String DATAFOOD = "DATAFOOD";
     public static final String DATATREATMENTS = "DATATREATMENTS";
     public static final String NSCLIENT = "NSCLIENT";
+    public static final String TIDEPOOL = "TIDEPOOL";
     public static final String CONSTRAINTS = "CONSTRAINTS";
     public static final String PUMP = "PUMP";
     public static final String PUMPQUEUE = "PUMPQUEUE";
@@ -114,6 +115,7 @@ public class L {
         logElements.add(new LogElement(EVENTS, false, true));
         logElements.add(new LogElement(NOTIFICATION, true));
         logElements.add(new LogElement(NSCLIENT, true));
+        logElements.add(new LogElement(TIDEPOOL, true));
         logElements.add(new LogElement(OVERVIEW, true));
         logElements.add(new LogElement(PROFILE, true));
         logElements.add(new LogElement(PUMP, true));

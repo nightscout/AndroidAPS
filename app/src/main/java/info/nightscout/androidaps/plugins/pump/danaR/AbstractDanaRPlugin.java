@@ -376,7 +376,12 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "SOOIL";
+    };
+
+    @Override
+    public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 
