@@ -1153,9 +1153,13 @@ Eversense-appen.</string>
     <string name="unit_second">sekund</string>
     <string name="unit_minute">minut</string>
     <string name="unit_hour">timme</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">vecka</string>
     <string name="unit_seconds">sekunder</string>
     <string name="unit_minutes">minuter</string>
     <string name="unit_hours">timmar</string>
+    <string name="unit_days">dagar</string>
+    <string name="unit_weeks">veckor</string>
     <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>
     <string name="title_tidepool_username">Användarnamn</string>
     <string name="summary_tidepool_password">Ditt Tidepool-lösenord</string>
