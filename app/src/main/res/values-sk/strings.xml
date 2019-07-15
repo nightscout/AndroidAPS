@@ -875,6 +875,7 @@
     <string name="bolusrecordedonly">Bolus bude iba zaznamenaný</string>
     <string name="ns_autobackfill_summary">Automaticky doplňovať chýbajúcu glykémiu z NS</string>
     <string name="loop_smbsetbypump_label">SMB podané pumpou</string>
+    <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_sensitivity">Citlivosť</string>
     <string name="overview_show_deviations">Odchýlky</string>
     <string name="overview_show_cob">Aktívne sacharidy</string>
