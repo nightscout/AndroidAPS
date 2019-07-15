@@ -1153,13 +1153,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="unit_second">seconde</string>
     <string name="unit_minute">minute</string>
     <string name="unit_hour">heure</string>
-    <string name="unit_day">jour\"</string>
-    <string name="unit_week">semaine\"</string>
     <string name="unit_seconds">secondes</string>
     <string name="unit_minutes">minutes</string>
     <string name="unit_hours">heures</string>
-    <string name="unit_days">jours\"</string>
-    <string name="unit_weeks">semaines\"</string>
     <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
     <string name="title_tidepool_username">Nom d\'utilisateur</string>
     <string name="summary_tidepool_password">Mot de passe de connexion Tidepool</string>
