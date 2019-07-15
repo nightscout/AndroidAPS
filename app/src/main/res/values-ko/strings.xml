@@ -9,6 +9,7 @@
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
+    <string name="danar_useextended_title">200%%이상 주입 위해 확장 Bolus 사용</string>
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="ns_sync_use_absolute_title">Basal 절대값 사용하기</string>
     <string name="alert_dialog_storage_permission_text">폰을 재부팅하거나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그 기록이 되지 않습니다.(알고리즘이 정상적인 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
@@ -43,6 +44,8 @@
     <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
     <string name="description_sensitivity_weighted_average">민감도가 편차의 가중평균으로 계산됩니다. 최근의 편차가 더 가중됩니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다. 이 알고리즘의 민감도가 가장 빠릅니다.</string>
     <string name="description_source_dexcom_g5">패치된 DexcomG5 앱에서 혈당값 받기</string>
+    <string name="description_source_dexcom_g6">패치된 DexcomG6 앱에서 혈당값 받기</string>
+    <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
     <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
@@ -264,6 +267,8 @@
     <string name="smscommunicator_calibrationreplywithcode">보정값 %1$.2f을 전송하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다.</string>
+    <string name="bolusrequested">%1$.2fU을 주입합니다</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다</string>
     <string name="bolusdelivering">%1$.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
     <string name="glucosetype_finger">체혈</string>
@@ -309,6 +314,7 @@
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
+    <string name="overview_bolusprogress_goingtodeliver">%1$.2fU을 주입합니다</string>
     <string name="objectives_0_objective">표시설정과 모니터설정을 완료하고, Basal과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
     <string name="objectives_1_objective">Open Loop를 시작한다.</string>
