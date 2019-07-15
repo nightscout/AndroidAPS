@@ -51,6 +51,7 @@
     <string name="description_wear">WearOS 워치를 이용하여 AndroidAPS를 모니터하고 제어합니다.</string>
     <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
     <string name="description_sms_communicator">SMS 전송을 이용하여 AndroidAPS를 원격 제어합니다.</string>
+    <string name="objectives_button_back">뒤로</string>
     <string name="objectives_button_start">시작</string>
     <string name="objectives_button_verify">확인</string>
     <string name="nsprofileview_units_label">단위</string>
@@ -143,6 +144,8 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">Bolus 주입 에러</string>
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
+    <string name="overview_newtempbasal_basalpercent">Basal 값[%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = 현재)</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
@@ -242,6 +245,7 @@
     <string name="danar_iob_label">펌프 IOB</string>
     <string name="danar_dailyunits">일 인슐린 총량</string>
     <string name="pump_lastbolus_label">최근 Bolus:</string>
+    <string name="hoursago">%1$.1f시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
     <string name="reloadprofile">프로파일 새로고침</string>
@@ -259,6 +263,8 @@
     <string name="smscommunicator_bolusreplywithcode">Bolus %1$.2fU 을 주입하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_calibrationreplywithcode">보정값 %1$.2f을 전송하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
+    <string name="bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다.</string>
+    <string name="bolusdelivering">%1$.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
     <string name="glucosetype_finger">체혈</string>
     <string name="glucosetype_sensor">센서</string>
