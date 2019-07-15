@@ -876,6 +876,7 @@ Eversense-appen.</string>
     <string name="bolusrecordedonly">Bolusen sparas bara i loggboken</string>
     <string name="ns_autobackfill_summary">Hämta saknad BG-data från Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB satt i pump</string>
+    <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_sensitivity">Känslighet (Sens)</string>
     <string name="overview_show_deviations">Avvikelser (Dev)</string>
     <string name="overview_show_cob">Aktiva KH (COB)</string>
@@ -1187,6 +1188,7 @@ Eversense-appen.</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
     <string name="new_version_warning">Ny version tillgänglig sedan %1$d dagar! Systemet kommer att byta läge till \"stopp innan lågt\" efter 60 dagar och sluta loopa helt efter 90 dagar</string>
+    <string name="scale_insulin_activity">Skala för insulinaktivitet [U/min]</string>
     <string name="twohours">2 tim</string>
     <string name="formatinsulinunits">%1$.2f enheter</string>
     <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
