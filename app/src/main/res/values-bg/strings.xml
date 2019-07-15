@@ -1152,13 +1152,9 @@
     <string name="unit_second">секунда</string>
     <string name="unit_minute">минута</string>
     <string name="unit_hour">час</string>
-    <string name="unit_day">ден\"</string>
-    <string name="unit_week">седмица\"</string>
     <string name="unit_seconds">секунди</string>
     <string name="unit_minutes">минути</string>
     <string name="unit_hours">часове</string>
-    <string name="unit_days">дни\"</string>
-    <string name="unit_weeks">седмици\"</string>
     <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>
     <string name="title_tidepool_username">Потребителско име</string>
     <string name="summary_tidepool_password">Tidepool парола</string>
