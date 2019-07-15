@@ -1174,6 +1174,9 @@ Context | Edit Context</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
     <string name="tidepool_upload_cgm">Загрузить данные мониторинга</string>
     <string name="tidepool_upload_bolus">Загрузить лечение (инсулин, углеводы)</string>
+    <string name="tidepool_upload_tbr">Загрузить временные базалы</string>
+    <string name="tidepool_upload_profile">Загрузить переключения профиля, временные цели</string>
+    <string name="tidepool_upload_bg">Загрузить тесты ГК</string>
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
     <string name="dst_loop_disabled_warning">Переход на летнее время меньше 3 часов назад - Замкнутый цикл отключен</string>
     <string name="storage">ограничение по объему карты памяти</string>
@@ -1186,6 +1189,28 @@ Context | Edit Context</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
+    <string name="scale_insulin_activity">Шкала активности инсулина [ед/мин]</string>
     <string name="twohours">2ч</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
+    <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Получать данные ГК от модифицированного приложения Dexcom.</string>
+    <plurals name="objective_days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дня</item>
+    </plurals>
+    <plurals name="objective_hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="few">%1$d часа</item>
+        <item quantity="many">%1$d часов</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
+    <plurals name="objective_minutes">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минут</item>
+    </plurals>
 </resources>
