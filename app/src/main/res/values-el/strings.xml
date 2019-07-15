@@ -1152,13 +1152,9 @@
     <string name="unit_second">δευτερόλεπτο</string>
     <string name="unit_minute">λεπτό</string>
     <string name="unit_hour">ώρα</string>
-    <string name="unit_day">ημέρα\"</string>
-    <string name="unit_week">εβδομάδα\"</string>
     <string name="unit_seconds">δευτερόλεπτα</string>
     <string name="unit_minutes">λεπτά</string>
     <string name="unit_hours">ώρες</string>
-    <string name="unit_days">ημέρες\"</string>
-    <string name="unit_weeks">εβδομάδες</string>
     <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
     <string name="title_tidepool_username">Όνομα Χρήστη</string>
     <string name="summary_tidepool_password">Το συνθηματικό του Tidepool</string>
