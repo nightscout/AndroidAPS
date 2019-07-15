@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.common;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;

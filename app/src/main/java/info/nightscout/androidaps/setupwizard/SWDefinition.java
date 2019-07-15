@@ -3,7 +3,7 @@ package info.nightscout.androidaps.setupwizard;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.squareup.otto.Subscribe;
 

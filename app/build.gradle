@@ -6,27 +6,37 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+        classpath 'de.undercouch:gradle-download-task:3.4.3'
     }
 }
-apply plugin: "com.android.application"
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: "io.fabric"
-apply plugin: "jacoco-android"
+apply plugin: 'io.fabric'
+apply plugin: 'jacoco-android'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'de.undercouch.download'
+
+
+jacoco {
+    toolVersion = "0.8.3"
+}
 
 ext {
-    supportLibraryVersion = "27.1.1"
+    supportLibraryVersion = "28.0.0"
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
-    butterknifeVersion = "8.8.1"
+    butterknifeVersion = "10.1.0"
 }
 
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     jcenter { url "https://jcenter.bintray.com/" }
+    mavenCentral()
 }
 
 def generateGitBuild = { ->
@@ -67,30 +77,54 @@ def generateDate = { ->
     return stringBuilder.toString()
 }
 
+def isMaster = { ->
+    return !version.contains('-')
+}
+
+def allCommited = { ->
+    StringBuilder stringBuilder = new StringBuilder();
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'status', '-s'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        return false; // NoGitSystemAvailable
+    }
+    return stringBuilder.toString().isEmpty()
+
+}
+
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "skipped", "started"]
     testLogging.exceptionFormat = "full"
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 25
+        minSdkVersion 23
+        targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.2.3-dev"
+        version "2.4-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
-        buildConfigField "String", "REMOTE", '"' + generateGitRemote()+ '"'
+        buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
         ndk {
             moduleName "BleCommandUtil"
         }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
     lintOptions {
         // TODO remove once wear dependency com.google.android.gms:play-services-wearable:7.3.0
@@ -120,7 +154,7 @@ android {
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_launcher",
+                    appIcon     : "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
         }
@@ -130,7 +164,7 @@ android {
             resValue "string", "app_name", "Pumpcontrol"
             versionName version + "-pumpcontrol"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_pumpcontrol",
+                    appIcon     : "@mipmap/ic_pumpcontrol",
                     appIconRound: "@null"
             ]
         }
@@ -140,7 +174,7 @@ android {
             resValue "string", "app_name", "NSClient"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_yellowowl",
+                    appIcon     : "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -150,7 +184,7 @@ android {
             resValue "string", "app_name", "NSClient2"
             versionName version + "-nsclient"
             manifestPlaceholders = [
-                    appIcon: "@mipmap/ic_yellowowl",
+                    appIcon     : "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }
@@ -161,11 +195,18 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues = true
-        unitTests.includeAndroidResources = true
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+
+            all {
+                maxParallelForks = 10
+                forkEvery = 20
+            }
+        }
     }
 
-    useLibrary  "org.apache.http.legacy"
+    useLibrary "org.apache.http.legacy"
 }
 
 allprojects {
@@ -177,31 +218,30 @@ allprojects {
     }
 }
 
-configurations {
-    libs
-}
-
 dependencies {
     wearApp project(':wear')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.google.android.gms:play-services-wearable:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+    implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.9@aar") {
         transitive = true;
     }
-    libs "MilosKozak:danars-support-lib:master@zip"
 
-    implementation "com.android.support:appcompat-v7:${supportLibraryVersion}"
-    implementation "com.android.support:support-v13:${supportLibraryVersion}"
-    implementation "com.android.support:support-v4:${supportLibraryVersion}"
-    implementation "com.android.support:cardview-v7:${supportLibraryVersion}"
-    implementation "com.android.support:recyclerview-v7:${supportLibraryVersion}"
-    implementation "com.android.support:gridlayout-v7:${supportLibraryVersion}"
-    implementation "com.android.support:design:${supportLibraryVersion}"
-    implementation "com.android.support:percent:${supportLibraryVersion}"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "com.wdullaer:materialdatetimepicker:2.3.0"
+
+    // Otto bus will be replaced by rx
     implementation "com.squareup:otto:1.3.7"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+
     implementation "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
     implementation "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
     implementation("com.github.tony19:logback-android-classic:1.1.1-6") {
@@ -212,7 +252,7 @@ dependencies {
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
 
@@ -223,7 +263,7 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }
-    implementation "com.google.code.gson:gson:2.8.2"
+    implementation "com.google.code.gson:gson:2.8.5"
     implementation "com.google.guava:guava:24.1-jre"
 
     implementation "net.danlew:android.joda:2.9.9.1"
@@ -243,24 +283,39 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:2.9.9"
     testImplementation "com.google.truth:truth:0.39"
-    testImplementation 'org.robolectric:robolectric:3.8'
+    testImplementation 'org.robolectric:robolectric:4.2.1'
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
 
     androidTestImplementation "org.mockito:mockito-core:2.8.47"
     androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+
+    // new for tidepool
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+
 }
 
-task unzip(type: Copy) {
-    def zipPath = configurations.libs.find { it.name.startsWith("danars") }
-    def zipFile = file(zipPath)
-    def outputDir = file("${buildDir}/unpacked/dist")
 
-    from zipTree(zipFile)
+task downloadZipFile(type: Download) {
+    src 'https://github.com/MilosKozak/danars-support-lib/archive/master.zip'
+    dest new File(buildDir, 'danars.zip')
+}
+
+task downloadAndUnzipFile(dependsOn: downloadZipFile, type: Copy) {
+    from zipTree(downloadZipFile.dest)
+    def outputDir = file("${buildDir}/unpacked/dist")
     into outputDir
 }
 
-task copyLibs(dependsOn: unzip, type: Copy) {
+
+task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
     def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
     def target = file("src/main/jniLibs/")
 
@@ -274,3 +329,12 @@ task full_clean(type: Delete) {
 
 clean.dependsOn full_clean
 preBuild.dependsOn copyLibs
+
+printf('--------------\n')
+printf('isMaster: %s\n', isMaster().toString())
+printf('allCommited: %s\n', allCommited().toString())
+printf('--------------\n')
+if (isMaster() && !allCommited()) {
+    throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
+}
+

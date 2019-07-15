@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -376,7 +376,12 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "SOOIL";
+    };
+
+    @Override
+    public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 

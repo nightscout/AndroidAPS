@@ -148,8 +148,6 @@ Eversense-appen.</string>
     <string name="constraints_violation">Begränsning nådd</string>
     <string name="treatmentdeliveryerror">Fel vid bolusleverans</string>
     <string name="tempbasaldeliveryerror">Fel vid justering av temp basal</string>
-    <string name="overview_newtempbasal_basalpercent">Basal [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = profilens värde)</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkylator</string>
@@ -249,7 +247,6 @@ Eversense-appen.</string>
     <string name="danar_iob_label">Pumpens IOB</string>
     <string name="danar_dailyunits">Enheter per dag</string>
     <string name="pump_lastbolus_label">Senaste bolus</string>
-    <string name="hoursago">%.1f tim sedan</string>
     <string name="danar_invalidinput">Fel på inmatning</string>
     <string name="danar_valuenotsetproperly">Misslyckades med inställning</string>
     <string name="reloadprofile">Ladda om profil</string>
@@ -529,7 +526,6 @@ Eversense-appen.</string>
     <string name="resistantadult">Insulinresistent vuxen</string>
     <string name="patientage_summary">Vg ange personens ålder för inställningar av gränser</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="loopsuspended">Loop pausad</string>
     <string name="loopsuspendedfor">Pausad (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d min)</string>
@@ -565,8 +561,6 @@ Eversense-appen.</string>
     <string name="show_statuslights_summary">Aktivera statusindikationerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
-    <string name="statuslights_bat_warning">Varningsnivå för batteri [%]</string>
-    <string name="statuslights_bat_critical">Akut varningsnivå för batteri [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmwareversion</string>
@@ -765,7 +759,6 @@ Eversense-appen.</string>
     <string name="combo_pump_state_running">Körs</string>
     <string name="combo_pump_action_cancelling_tbr">Avbryter temp basal</string>
     <string name="combo_pump_action_setting_tbr">Sätter temp basal (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Levererar bolus (%.1f enheter)</string>
     <string name="combo_pump_action_refreshing">Uppdaterar</string>
     <string name="combo_pump_unsupported_operation">Önskad åtgärd stöds inte av pumpen</string>
     <string name="combo_low_suspend_forced_notification">Osäker användning: Förlängd- eller kombibolus är aktiv. Loop mode är satt till att bromsa vid lågt BG i 6 timmar. Endast normala bolusar tillåtna i loopläge.</string>

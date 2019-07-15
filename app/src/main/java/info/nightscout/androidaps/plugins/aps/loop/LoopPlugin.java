@@ -10,8 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
@@ -644,14 +644,27 @@ public class LoopPlugin extends PluginBase {
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
 
         LoopPlugin.getPlugin().disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
-        ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
-            @Override
-            public void run() {
-                if (!result.success) {
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+
+        if (pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalAbsolute(0, durationInMinutes, true, profile, new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            ConfigBuilderPlugin.getPlugin().getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
+                @Override
+                public void run() {
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
+        }
+
         if (pump.getPumpDescription().isExtendedBolusCapable && activeTreatments.isInHistoryExtendedBoluslInProgress()) {
             ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelExtended(new Callback() {
                 @Override

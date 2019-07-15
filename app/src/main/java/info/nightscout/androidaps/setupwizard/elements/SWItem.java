@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
@@ -98,6 +99,7 @@ public class SWItem {
                 if (L.isEnabled(L.CORE))
                     log.debug("Firing EventPreferenceChange");
                 MainApp.bus().post(new EventPreferenceChange(preferenceId));
+                RxBus.INSTANCE.send(new EventPreferenceChange(preferenceId));
                 MainApp.bus().post(new EventSWUpdate());
                 scheduledEventPost = null;
             }

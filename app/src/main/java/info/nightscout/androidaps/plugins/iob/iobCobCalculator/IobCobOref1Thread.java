@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +96,7 @@ public class IobCobOref1Thread extends Thread {
 
             long oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable);
 
-            synchronized (iobCobCalculatorPlugin.dataLock) {
+            synchronized (iobCobCalculatorPlugin.getDataLock()) {
                 if (bgDataReload) {
                     iobCobCalculatorPlugin.loadBgData(end);
                     iobCobCalculatorPlugin.createBucketedData();

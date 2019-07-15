@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 18.10.2017.
@@ -346,6 +347,59 @@ public class GraphData {
         }
         return bgReadingsArray.size() > 0
                 ? Profile.fromMgdlToUnits(bgReadingsArray.get(0).value, units) : Profile.fromMgdlToUnits(100, units);
+    }
+
+    public void addActivity(long fromTime, long toTime, boolean useForScale, double scale) {
+        FixedLineGraphSeries<ScaledDataPoint> actSeriesHist;
+        List<ScaledDataPoint> actArrayHist = new ArrayList<>();
+        FixedLineGraphSeries<ScaledDataPoint> actSeriesPred;
+        List<ScaledDataPoint> actArrayPred = new ArrayList<>();
+
+        double now = System.currentTimeMillis();
+        Scale actScale = new Scale();
+        IobTotal total = null;
+
+        for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
+            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            double act = 0d;
+            if (profile == null) continue;
+            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
+            act = total.activity;
+
+            if(time<=now)
+                actArrayHist.add(new ScaledDataPoint(time, act, actScale));
+            else
+                actArrayPred.add(new ScaledDataPoint(time, act, actScale));
+        }
+
+        ScaledDataPoint[] actData = new ScaledDataPoint[actArrayHist.size()];
+        actData = actArrayHist.toArray(actData);
+        actSeriesHist = new FixedLineGraphSeries<>(actData);
+        actSeriesHist.setDrawBackground(false);
+        actSeriesHist.setColor(MainApp.gc(R.color.activity));
+        actSeriesHist.setThickness(3);
+
+        addSeries(actSeriesHist);
+
+        actData = new ScaledDataPoint[actArrayPred.size()];
+        actData = actArrayPred.toArray(actData);
+        actSeriesPred = new FixedLineGraphSeries<>(actData);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(3);
+        paint.setPathEffect(new DashPathEffect(new float[]{4, 4}, 0));
+        paint.setColor(MainApp.gc(R.color.activity));
+        actSeriesPred.setCustomPaint(paint);
+
+        double maxIAValue = SP.getDouble(R.string.key_scale_insulin_activity, 0.05);
+        if (useForScale) {
+            maxY = maxIAValue;
+            minY = -maxIAValue;
+        }
+        actScale.setMultiplier(maxY * scale / maxIAValue);
+
+        addSeries(actSeriesPred);
     }
 
     // scale in % of vertical size (like 0.3)

@@ -10,11 +10,11 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,20 +160,25 @@ public class InsightPairingActivity extends AppCompatActivity implements Insight
     private void startBLScan() {
         if (!scanning) {
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-            intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(broadcastReceiver, intentFilter);
-            bluetoothAdapter.startDiscovery();
-            scanning = true;
+            if (bluetoothAdapter != null) {
+                if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+                intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(broadcastReceiver, intentFilter);
+                bluetoothAdapter.startDiscovery();
+                scanning = true;
+            }
         }
     }
 
     private void stopBLScan() {
         if (scanning) {
             unregisterReceiver(broadcastReceiver);
-            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter != null) {
+                bluetoothAdapter.cancelDiscovery();
+            }
             scanning = false;
         }
     }

@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.InstanceId;
 
 
 /**
@@ -236,8 +237,18 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public String deviceID() {
+    public String manufacter() {
+        return "AndroidAPS";
+    }
+
+    @Override
+    public String model() {
         return "MDI";
+    }
+
+    @Override
+    public String serialNumber() {
+        return InstanceId.INSTANCE.instanceId();
     }
 
     @Override
@@ -247,7 +258,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return deviceID();
+        return model();
     }
 
     @Override

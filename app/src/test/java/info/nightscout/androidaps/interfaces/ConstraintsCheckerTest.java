@@ -283,13 +283,15 @@ public class ConstraintsCheckerTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockCommandQueue();
 
+        when(mainApp.getPackageName()).thenReturn("info.nightscout.androidaps");
+
         // RS constructor
         when(SP.getString(R.string.key_danars_address, "")).thenReturn("");
 
         //SafetyPlugin
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
-        constraintChecker = new ConstraintChecker(mainApp);
+        constraintChecker = new ConstraintChecker();
 
         safetyPlugin = SafetyPlugin.getPlugin();
         objectivesPlugin = ObjectivesPlugin.getPlugin();

@@ -152,8 +152,8 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
-    <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -276,7 +276,7 @@
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
     <string name="pump_lastbolus_label">Last bolus</string>
-    <string name="hoursago">%.1fh ago</string>
+    <string name="hoursago">%1$.1fh ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
     <string name="reloadprofile">Reload profile</string>
@@ -582,7 +582,7 @@
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
+    <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
@@ -624,9 +624,9 @@
     <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
     <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
-    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
+    <string name="statuslights_bat_warning">Threshold warning battery level [%%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
-    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
+    <string name="statuslights_bat_critical">Threshold critical battery level [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -869,7 +869,7 @@
     <string name="combo_pump_state_running">Running</string>
     <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
     <string name="combo_pump_action_setting_tbr">Setting TBR (%1$d%% / %2$d min)</string>
-    <string name="combo_pump_action_bolusing">Bolusing (%.1f U)</string>
+    <string name="combo_pump_action_bolusing">Bolusing (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">Refreshing</string>
     <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
     <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
@@ -991,6 +991,7 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
+    <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
@@ -1001,6 +1002,7 @@
     <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
     <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
+    <string name="overview_show_activity">Activity</string>
     <string name="overview_show_sensitivity">Sensitivity</string>
     <string name="overview_show_deviations">Deviations</string>
     <string name="overview_show_cob">Carbs On Board</string>
@@ -1316,6 +1318,45 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
 
+    <string name="unit_second">second</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconds</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
+    <string name="key_tidepool_username" translatable="false">tidepool_username</string>
+    <string name="key_tidepool_password" translatable="false">tidepool_password</string>
+    <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
+    <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
+    <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
+    <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
+    <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
+    <string name="title_tidepool_username">Login User Name</string>
+    <string name="summary_tidepool_password">Your Tidepool login password</string>
+    <string name="title_tidepool_password">Login Password</string>
+    <string name="title_tidepool_test_login">Test Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">If enabled, uploads will go to https://int-app.tidepool.org instead of the regular https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploads data to Tidepool</string>
+    <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
+    <string name="tidepool_upload_cgm">Upload CGM data</string>
+    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
+    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
+    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
+    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
+    <string name="tidepool_upload_tbr">Upload temporary basals</string>
+    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
+    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
+    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
+    <string name="tidepool_upload_bg">Upload BG tests</string>
+    <string name="key_instanceid" translatable="false">instanceid</string>
+
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
     <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
@@ -1326,6 +1367,23 @@
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
+    <string name="versionChecker">Version Checker</string>
+    <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
+    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+
+    <string name="old_version">old version</string>
+    <string name="very_old_version">very old version</string>
+    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
+    <string name="key_scale_insulin_activity" translatable="false">scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+
+    <string name="dexcom_app_patched">Dexcom App (patched)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Receive BG values from the patched Dexcom app.</string>
+
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

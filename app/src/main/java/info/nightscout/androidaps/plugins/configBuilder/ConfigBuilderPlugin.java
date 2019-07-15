@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.configBuilder;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -232,26 +232,32 @@ public class ConfigBuilderPlugin extends PluginBase {
         return commandQueue;
     }
 
+    @Nullable
     public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
+    @Nullable
     public ProfileInterface getActiveProfileInterface() {
         return activeProfile;
     }
 
+    @Nullable
     public InsulinInterface getActiveInsulin() {
         return activeInsulin;
     }
 
+    @Nullable
     public APSInterface getActiveAPS() {
         return activeAPS;
     }
 
+    @Nullable
     public PumpInterface getActivePump() {
         return activePump;
     }
 
+    @Nullable
     public SensitivityInterface getActiveSensitivity() {
         return activeSensitivity;
     }
