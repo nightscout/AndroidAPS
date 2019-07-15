@@ -1152,9 +1152,13 @@
     <string name="unit_second">sekunda</string>
     <string name="unit_minute">minuta</string>
     <string name="unit_hour">hodina</string>
+    <string name="unit_day">den</string>
+    <string name="unit_week">týden</string>
     <string name="unit_seconds">sekund</string>
     <string name="unit_minutes">minut</string>
     <string name="unit_hours">hodin</string>
+    <string name="unit_days">dnů</string>
+    <string name="unit_weeks">týdnů</string>
     <string name="summary_tidepool_username">Vaše uživatelské jméno na Tidepoolu, obvykle vaše e-mailová adresa</string>
     <string name="title_tidepool_username">Uživatelské jméno</string>
     <string name="summary_tidepool_password">Heslo na Tidepoolu</string>
