@@ -875,6 +875,7 @@
     <string name="bolusrecordedonly">Bolus bude pouze zaznamenán</string>
     <string name="ns_autobackfill_summary">Automaticky doplňovat chybějící glykémie z NS</string>
     <string name="loop_smbsetbypump_label">SMB provedené pumpou</string>
+    <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_sensitivity">Citlivost</string>
     <string name="overview_show_deviations">Odchylky</string>
     <string name="overview_show_cob">Zbývající sacharidy</string>
@@ -1186,6 +1187,7 @@
     <string name="old_version">stará verze</string>
     <string name="very_old_version">velmi stará verze</string>
     <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po 60 dnech, vypnutí smyčky po 90 dnech</string>
+    <string name="scale_insulin_activity">Měřítko grafu aktivity inzulinu [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
