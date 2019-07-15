@@ -1320,13 +1320,13 @@
     <string name="unit_second">second</string>
     <string name="unit_minute">minute</string>
     <string name="unit_hour">hour</string>
-    <string name="unit_day">day"</string>
-    <string name="unit_week">week"</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
     <string name="unit_seconds">seconds</string>
     <string name="unit_minutes">minutes</string>
     <string name="unit_hours">hours</string>
-    <string name="unit_days">days"</string>
-    <string name="unit_weeks">weeks"</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
     <string name="key_tidepool_username" translatable="false">tidepool_username</string>
     <string name="key_tidepool_password" translatable="false">tidepool_password</string>
     <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
