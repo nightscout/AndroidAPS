@@ -1152,9 +1152,13 @@
     <string name="unit_second">segundo</string>
     <string name="unit_minute">minuto</string>
     <string name="unit_hour">hora</string>
+    <string name="unit_day">día</string>
+    <string name="unit_week">semana</string>
     <string name="unit_seconds">segundos</string>
     <string name="unit_minutes">minutos</string>
     <string name="unit_hours">horas</string>
+    <string name="unit_days">días</string>
+    <string name="unit_weeks">semanas</string>
     <string name="summary_tidepool_username">Tu nombre de usuario de Tidepool, normalmente tu dirección de correo electrónico</string>
     <string name="title_tidepool_username">Nombre de usuario</string>
     <string name="summary_tidepool_password">Tu contraseña de acceso a Tidepool</string>
