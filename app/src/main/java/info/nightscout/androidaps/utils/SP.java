@@ -125,7 +125,7 @@ public class SP {
         editor.putInt(MainApp.gs(resourceID), value);
         editor.apply();
     }
-    
+
     static public void putString(int resourceID, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(MainApp.gs(resourceID), value);
