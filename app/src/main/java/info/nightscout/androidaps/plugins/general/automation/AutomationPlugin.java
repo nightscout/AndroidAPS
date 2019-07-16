@@ -26,6 +26,14 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopDisable;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopResume;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopSuspend;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionNotification;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitchPercent;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionStopTempTarget;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
@@ -214,4 +222,15 @@ public class AutomationPlugin extends PluginBase {
         }
         storeToSP(); // save last run time
     }
+
+    public static final List<Action> actionDummyObjects = new ArrayList<Action>() {{
+        //add(new ActionLoopDisable());
+        //add(new ActionLoopEnable());
+        //add(new ActionLoopResume());
+        //add(new ActionLoopSuspend());
+        add(new ActionStartTempTarget());
+        add(new ActionStopTempTarget());
+        add(new ActionNotification());
+        add(new ActionProfileSwitchPercent());
+    }};
 }

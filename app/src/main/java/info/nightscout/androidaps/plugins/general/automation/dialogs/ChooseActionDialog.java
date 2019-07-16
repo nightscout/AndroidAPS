@@ -10,23 +10,13 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopDisable;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopResume;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopSuspend;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionNotification;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitchPercent;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionStopTempTarget;
 
 public class ChooseActionDialog extends DialogFragment {
 
@@ -35,17 +25,6 @@ public class ChooseActionDialog extends DialogFragment {
     }
 
     private static OnClickListener mClickListener = null;
-
-    private static final List<Action> actionDummyObjects = new ArrayList<Action>() {{
-        add(new ActionLoopDisable());
-        add(new ActionLoopEnable());
-        add(new ActionLoopResume());
-        add(new ActionLoopSuspend());
-        add(new ActionStartTempTarget());
-        add(new ActionStopTempTarget());
-        add(new ActionNotification());
-        add(new ActionProfileSwitchPercent());
-    }};
 
     private Unbinder mUnbinder;
 
@@ -66,7 +45,7 @@ public class ChooseActionDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_choose_action, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        for (Action a : actionDummyObjects) {
+        for (Action a : AutomationPlugin.actionDummyObjects) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(a.friendlyName());
             radioButton.setTag(a);
