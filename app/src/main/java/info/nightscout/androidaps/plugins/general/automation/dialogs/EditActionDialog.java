@@ -80,16 +80,14 @@ public class EditActionDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
-    @SuppressWarnings("unused")
-    public void onButtonOk(View view) {
+    public void onButtonOk(View unused) {
         resultAction.apply(mAction);
         dismiss();
         MainApp.bus().post(new EventAutomationUpdateGui());
     }
 
     @OnClick(R.id.cancel)
-    @SuppressWarnings("unused")
-    public void onButtonCancel(View view) {
+    public void onButtonCancel(View unused) {
         dismiss();
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
+import info.nightscout.androidaps.plugins.general.automation.dialogs.TriggerListAdapter;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 public class TriggerConnector extends Trigger {
@@ -217,7 +217,7 @@ public class TriggerConnector extends Trigger {
         return null;
     }
 
-    private AutomationFragment.TriggerListAdapter adapter;
+    private TriggerListAdapter adapter;
 
     public void rebuildView(FragmentManager fragmentManager) {
         if (adapter != null)
@@ -236,7 +236,7 @@ public class TriggerConnector extends Trigger {
         triggerListLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         root.addView(triggerListLayout);
 
-        adapter = new AutomationFragment().new TriggerListAdapter(fragmentManager, root.getContext(), triggerListLayout, this);
+        adapter = new TriggerListAdapter(fragmentManager, root.getContext(), triggerListLayout, this);
     }
 
     public TriggerConnector simplify() {

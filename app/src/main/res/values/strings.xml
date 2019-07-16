@@ -1442,6 +1442,7 @@
     <string name="profilepercentage">Profile percentage</string>
     <string name="percent_u">Percent [%]:</string>
     <string name="startprofile">Start profile %1$d%% for %2$d min</string>
+    <string name="startprofileforever">Start profile %1$d%%</string>
     <string name="exists">exists</string>
     <string name="notexists">not exists</string>
     <string name="temptargetcompared">Temp target %1$s</string>
@@ -1470,6 +1471,7 @@
     <string name="then_label">Then:</string>
     <string name="triggers">Triggers:</string>
     <string name="remove_label">REMOVE</string>
+    <string name="preconditions">Preconditions:</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

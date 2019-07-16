@@ -26,10 +26,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopDisable;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopResume;
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopSuspend;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionNotification;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitchPercent;
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget;
@@ -194,7 +190,7 @@ public class AutomationPlugin extends PluginBase {
         if (L.isEnabled(L.AUTOMATION))
             log.debug("processActions");
         for (AutomationEvent event : getAutomationEvents()) {
-            if (event.getTrigger().shouldRun()) {
+            if (event.getTrigger().shouldRun() && event.getPreconditions().shouldRun()) {
                 List<Action> actions = event.getActions();
                 for (Action action : actions) {
                     action.doAction(new Callback() {

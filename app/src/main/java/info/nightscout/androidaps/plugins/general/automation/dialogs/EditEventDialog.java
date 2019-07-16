@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +24,11 @@ import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent;
-import info.nightscout.androidaps.plugins.general.automation.AutomationFragment;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationAddAction;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 public class EditEventDialog extends DialogFragment {
@@ -35,12 +36,7 @@ public class EditEventDialog extends DialogFragment {
         void onClick(AutomationEvent event);
     }
 
-    private static OnClickListener mClickListener = null;
     private static AutomationEvent staticEvent;
-
-    public static void setOnClickListener(OnClickListener clickListener) {
-        mClickListener = clickListener;
-    }
 
     @BindView(R.id.inputEventTitle)
     TextInputEditText mEditEventTitle;
@@ -48,17 +44,23 @@ public class EditEventDialog extends DialogFragment {
     @BindView(R.id.editTrigger)
     TextView mEditTrigger;
 
-    @BindView(R.id.editAction)
-    TextView mEditAction;
+    @BindView(R.id.addAction)
+    TextView mAddAction;
 
     @BindView(R.id.triggerDescription)
     TextView mTriggerDescription;
+
+    @BindView(R.id.forcedtriggerdescription)
+    TextView mForcedTriggerDescription;
+
+    @BindView(R.id.forcedtriggerdescriptionlabel)
+    TextView mForcedTriggerDescriptionLabel;
 
     @BindView(R.id.actionListView)
     RecyclerView mActionListView;
 
     private Unbinder mUnbinder;
-    private AutomationFragment.ActionListAdapter mActionListAdapter;
+    private ActionListAdapter mActionListAdapter;
     private AutomationEvent mEvent;
     private boolean mAddNew;
 
@@ -99,11 +101,6 @@ public class EditEventDialog extends DialogFragment {
         // display root trigger
         mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
 
-        // setup trigger click event listener
-        EditTriggerDialog.setOnClickListener(trigger -> {
-            mEvent.setTrigger(trigger);
-            mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
-        });
         mEditTrigger.setOnClickListener(v -> {
             EditTriggerDialog dialog = EditTriggerDialog.newInstance(mEvent.getTrigger());
             if (getFragmentManager() != null)
@@ -111,20 +108,17 @@ public class EditEventDialog extends DialogFragment {
         });
 
         // setup action list view
-        mActionListAdapter = new AutomationFragment.ActionListAdapter(getFragmentManager(), mEvent.getActions());
+        mActionListAdapter = new ActionListAdapter(getFragmentManager(), mEvent.getActions());
         mActionListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mActionListView.setAdapter(mActionListAdapter);
 
-        // setup action click event listener
-        ChooseActionDialog.setOnClickListener(newActionObject -> {
-            mEvent.addAction(newActionObject);
-            mActionListAdapter.notifyDataSetChanged();
+        mAddAction.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null)
+                new ChooseActionDialog().show(fragmentManager, "ChooseActionDialog");
         });
-        mEditAction.setOnClickListener(v -> {
-            ChooseActionDialog dialog = ChooseActionDialog.newInstance();
-            if (getFragmentManager() != null)
-                dialog.show(getFragmentManager(), "ChooseActionDialog");
-        });
+
+        showPreconditions();
 
         MainApp.bus().register(this);
 
@@ -142,12 +136,34 @@ public class EditEventDialog extends DialogFragment {
     public void onEventAutomationUpdateGui(EventAutomationUpdateGui ignored) {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> mActionListAdapter.notifyDataSetChanged());
+            activity.runOnUiThread(() -> {
+                mActionListAdapter.notifyDataSetChanged();
+                showPreconditions();
+            });
+    }
+
+    @Subscribe
+    public void onEventAutomationAddAction(EventAutomationAddAction event) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(() -> {
+                mEvent.addAction(event.getAction());
+                mActionListAdapter.notifyDataSetChanged();
+            });
+    }
+
+    @Subscribe
+    public void onEventAutomationUpdateTrigger(EventAutomationUpdateTrigger event) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(() -> {
+                mEvent.setTrigger(event.getTrigger());
+                mTriggerDescription.setText(mEvent.getTrigger().friendlyDescription());
+            });
     }
 
     @OnClick(R.id.ok)
-    @SuppressWarnings("unused")
-    public void onButtonOk(View view) {
+    public void onButtonOk(View unused) {
         // check for title
         String title = mEditEventTitle.getText().toString();
         if (title.isEmpty()) {
@@ -178,14 +194,12 @@ public class EditEventDialog extends DialogFragment {
             plugin.getAutomationEvents().add(mEvent);
         }
 
-        if (mClickListener != null) mClickListener.onClick(mEvent);
         dismiss();
         MainApp.bus().post(new EventAutomationDataChanged());
     }
 
     @OnClick(R.id.cancel)
-    @SuppressWarnings("unused")
-    public void onButtonCancel(View view) {
+    public void onButtonCancel(View unused) {
         dismiss();
     }
 
@@ -195,4 +209,15 @@ public class EditEventDialog extends DialogFragment {
         bundle.putBoolean("addNew", mAddNew);
     }
 
+    private void showPreconditions() {
+        TriggerConnector forcedTriggers = mEvent.getPreconditions();
+        if (forcedTriggers.size() > 0) {
+            mForcedTriggerDescription.setVisibility(View.VISIBLE);
+            mForcedTriggerDescriptionLabel.setVisibility(View.VISIBLE);
+            mForcedTriggerDescription.setText(forcedTriggers.friendlyDescription());
+        } else {
+            mForcedTriggerDescription.setVisibility(View.GONE);
+            mForcedTriggerDescriptionLabel.setVisibility(View.GONE);
+        }
+    }
 }

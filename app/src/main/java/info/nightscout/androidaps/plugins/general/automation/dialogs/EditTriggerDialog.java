@@ -13,7 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 
 public class EditTriggerDialog extends DialogFragment {
@@ -21,8 +23,6 @@ public class EditTriggerDialog extends DialogFragment {
     public interface OnClickListener {
         void onClick(Trigger newTriggerObject);
     }
-
-    private static OnClickListener mClickListener = null;
 
     @BindView(R.id.layoutTrigger)
     LinearLayout mLayoutTrigger;
@@ -58,10 +58,6 @@ public class EditTriggerDialog extends DialogFragment {
         return view;
     }
 
-    public static void setOnClickListener(OnClickListener clickListener) {
-        mClickListener = clickListener;
-    }
-
     @Override
     public void onDestroyView() {
         mUnbinder.unbind();
@@ -69,17 +65,13 @@ public class EditTriggerDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
-    @SuppressWarnings("unused")
-    public void onButtonOk(View view) {
-        if (mClickListener != null)
-            mClickListener.onClick(mTrigger);
-
+    public void onButtonOk(View unused) {
         dismiss();
+        MainApp.bus().post(new EventAutomationUpdateTrigger(mTrigger));
     }
 
     @OnClick(R.id.cancel)
-    @SuppressWarnings("unused")
-    public void onButtonCancel(View view) {
+    public void onButtonCancel(View unused) {
         dismiss();
     }
 

@@ -116,7 +116,7 @@ public class TriggerTempTarget extends Trigger {
         return this;
     }
 
-    TriggerTempTarget comparator(ComparatorExists.Compare compare) {
+    public TriggerTempTarget comparator(ComparatorExists.Compare compare) {
         this.comparator = new ComparatorExists().setValue(compare);
         return this;
     }

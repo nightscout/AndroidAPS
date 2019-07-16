@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import javax.annotation.Nullable;
 
+import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.queue.Callback;
 
 /*
@@ -43,6 +44,8 @@ import info.nightscout.androidaps.queue.Callback;
 
 
 public abstract class Action {
+
+    public Trigger precondition = null;
 
     public abstract int friendlyName();
 

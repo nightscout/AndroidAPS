@@ -32,7 +32,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/condition" />
+                android:text="@string/condition"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/editTrigger"
@@ -54,6 +55,21 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical" />
 
+        <TextView
+            android:id="@+id/forcedtriggerdescriptionlabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/preconditions"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/forcedtriggerdescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" />
+
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
@@ -68,10 +84,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/action" />
+                android:text="@string/action"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/editAction"
+                android:id="@+id/addAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

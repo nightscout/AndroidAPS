@@ -13,8 +13,8 @@ public class InputPercent extends Element {
     final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            value = Math.max(value, 0d);
-            value = Math.min(value, 500d);
+            value = Math.max(value, 70d);
+            value = Math.min(value, 130d);
         }
 
         @Override
@@ -41,7 +41,7 @@ public class InputPercent extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(100d, 0d, 500d, 10d, new DecimalFormat("0"), true, textWatcher);
+        numberPicker.setParams(100d, 70d, 130d, 5d, new DecimalFormat("0"), true, textWatcher);
         numberPicker.setValue(value);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);

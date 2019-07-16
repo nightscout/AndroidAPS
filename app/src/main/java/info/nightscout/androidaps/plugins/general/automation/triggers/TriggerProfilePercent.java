@@ -126,7 +126,7 @@ public class TriggerProfilePercent extends Trigger {
         return new TriggerProfilePercent(this);
     }
 
-    TriggerProfilePercent setValue(double value) {
+    public TriggerProfilePercent setValue(double value) {
         pct.setValue(value);
         return this;
     }
@@ -136,7 +136,7 @@ public class TriggerProfilePercent extends Trigger {
         return this;
     }
 
-    TriggerProfilePercent comparator(Comparator.Compare compare) {
+    public TriggerProfilePercent comparator(Comparator.Compare compare) {
         this.comparator = new Comparator().setValue(compare);
         return this;
     }

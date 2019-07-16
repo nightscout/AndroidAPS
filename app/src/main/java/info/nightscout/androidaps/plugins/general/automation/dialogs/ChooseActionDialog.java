@@ -14,9 +14,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationAddAction;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 
 public class ChooseActionDialog extends DialogFragment {
 
@@ -24,21 +27,10 @@ public class ChooseActionDialog extends DialogFragment {
         void onClick(Action newActionObject);
     }
 
-    private static OnClickListener mClickListener = null;
-
     private Unbinder mUnbinder;
 
     @BindView(R.id.radioGroup)
     RadioGroup mRadioGroup;
-
-    public static ChooseActionDialog newInstance() {
-        Bundle args = new Bundle();
-
-        ChooseActionDialog fragment = new ChooseActionDialog();
-        fragment.setArguments(args);
-
-        return fragment;
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,10 +87,6 @@ public class ChooseActionDialog extends DialogFragment {
     }
 
 
-    public static void setOnClickListener(OnClickListener clickListener) {
-        mClickListener = clickListener;
-    }
-
     @Override
     public void onDestroyView() {
         mUnbinder.unbind();
@@ -106,17 +94,14 @@ public class ChooseActionDialog extends DialogFragment {
     }
 
     @OnClick(R.id.ok)
-    @SuppressWarnings("unused")
-    public void onButtonOk(View view) {
-        if (mClickListener != null)
-            mClickListener.onClick(instantiateAction());
-
+    public void onButtonOk(View unused) {
         dismiss();
+        MainApp.bus().post(new EventAutomationAddAction(instantiateAction()));
+        MainApp.bus().post(new EventAutomationUpdateGui());
     }
 
     @OnClick(R.id.cancel)
-    @SuppressWarnings("unused")
-    public void onButtonCancel(View view) {
+    public void onButtonCancel(View unused) {
         dismiss();
     }
 

@@ -14,10 +14,12 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -28,6 +30,10 @@ public class ActionStartTempTarget extends Action {
     InputBg value = new InputBg();
     InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
     private TempTarget tempTarget;
+
+    public ActionStartTempTarget() {
+        precondition = new TriggerTempTarget().comparator(ComparatorExists.Compare.NOT_EXISTS);
+    }
 
     @Override
     public int friendlyName() {

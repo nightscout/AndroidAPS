@@ -33,6 +33,15 @@ public class AutomationEvent {
         return actions;
     }
 
+    public TriggerConnector getPreconditions() {
+        TriggerConnector trigger = new TriggerConnector(TriggerConnector.Type.AND);
+        for (Action action : actions) {
+            if (action.precondition != null)
+                trigger.add(action.precondition);
+        }
+        return trigger;
+    }
+
     public void addAction(Action action) {
         actions.add(action);
     }
