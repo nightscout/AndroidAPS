@@ -37,7 +37,7 @@ public class ChooseActionDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_choose_action, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        for (Action a : AutomationPlugin.actionDummyObjects) {
+        for (Action a : AutomationPlugin.getPlugin().getActionDummyObjects()) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(a.friendlyName());
             radioButton.setTag(a);

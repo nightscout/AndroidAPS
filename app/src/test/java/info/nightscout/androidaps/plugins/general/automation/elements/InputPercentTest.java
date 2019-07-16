@@ -18,7 +18,7 @@ public class InputPercentTest {
         t.textWatcher.beforeTextChanged(null, 0, 0, 0);
         t.textWatcher.onTextChanged(null, 0, 0, 0);
         t.textWatcher.afterTextChanged(null);
-        Assert.assertEquals(500d, t.getValue(), 0.01d);
+        Assert.assertEquals(130d, t.getValue(), 0.01d);
     }
 
     @Test

@@ -219,14 +219,16 @@ public class AutomationPlugin extends PluginBase {
         storeToSP(); // save last run time
     }
 
-    public static final List<Action> actionDummyObjects = new ArrayList<Action>() {{
-        //add(new ActionLoopDisable());
-        //add(new ActionLoopEnable());
-        //add(new ActionLoopResume());
-        //add(new ActionLoopSuspend());
-        add(new ActionStartTempTarget());
-        add(new ActionStopTempTarget());
-        add(new ActionNotification());
-        add(new ActionProfileSwitchPercent());
-    }};
+    public final List<Action> getActionDummyObjects() {
+        return new ArrayList<Action>() {{
+            //add(new ActionLoopDisable());
+            //add(new ActionLoopEnable());
+            //add(new ActionLoopResume());
+            //add(new ActionLoopSuspend());
+            add(new ActionStartTempTarget());
+            add(new ActionStopTempTarget());
+            add(new ActionNotification());
+            add(new ActionProfileSwitchPercent());
+        }};
+    }
 }

@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.nightscout.androidaps.plugins.general.automation.dialogs.TriggerListAdapter;
 import info.nightscout.androidaps.plugins.general.automation.triggers.DummyTrigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
@@ -44,7 +45,7 @@ public class ComposeTriggerTest {
         // initialize scenario
         TriggerConnector root = new TriggerConnector(TriggerConnector.Type.AND);
         Trigger t[] = new Trigger[4];
-        for(int i = 0; i < t.length; ++i) {
+        for (int i = 0; i < t.length; ++i) {
             t[i] = new DummyTrigger();
             root.add(t[i]);
         }
@@ -52,7 +53,7 @@ public class ComposeTriggerTest {
 
         // change connector of t1,t2 from "and" to "or"
         Assert.assertEquals(root, t[2].getConnector());
-        AutomationFragment.changeConnector(null, t[2], t[2].getConnector(), TriggerConnector.Type.OR);
+        TriggerListAdapter.changeConnector(null, t[2], t[2].getConnector(), TriggerConnector.Type.OR);
 
         Assert.assertEquals(3, root.size());
         Assert.assertEquals(t[0], root.get(0));
@@ -66,9 +67,9 @@ public class ComposeTriggerTest {
 
         // undo
         Assert.assertEquals(newConnector, t[2].getConnector());
-        AutomationFragment.changeConnector(null, t[2], t[2].getConnector(), TriggerConnector.Type.AND);
+        TriggerListAdapter.changeConnector(null, t[2], t[2].getConnector(), TriggerConnector.Type.AND);
         Assert.assertEquals(4, root.size());
-        for(int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             Assert.assertEquals(t[i], root.get(i));
         }
     }

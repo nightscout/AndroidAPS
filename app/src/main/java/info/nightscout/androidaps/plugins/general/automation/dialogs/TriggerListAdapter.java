@@ -161,7 +161,7 @@ public class TriggerListAdapter {
         build(fragmentManager);
     }
 
-    private void changeConnector(final FragmentManager fragmentManager, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
+    public static void changeConnector(final FragmentManager fragmentManager, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
         if (connector.size() > 2) {
             // split connector
             int pos = connector.pos(trigger) - 1;
