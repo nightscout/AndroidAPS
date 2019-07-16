@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -1313,13 +1314,13 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public String manufacter() {
-        return "Roche";
+    public ManufacturerType manufacturer() {
+        return ManufacturerType.Roche;
     }
 
     @Override
-    public String model() {
-        return "Combo";
+    public PumpType model() {
+        return PumpType.AccuChekCombo;
     }
 
     @Override
