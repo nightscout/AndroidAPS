@@ -242,6 +242,7 @@ public class RuffyScripter implements RuffyCommands {
             Thread cmdThread = null;
             try {
                 activeCmd = cmd;
+                unparsableMenuEncountered = false;
                 long connectStart = System.currentTimeMillis();
                 ensureConnected();
                 log.debug("Connection ready to execute cmd " + cmd);
