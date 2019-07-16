@@ -26,6 +26,9 @@ public class LocationService extends Service {
     private LocationManager mLocationManager = null;
     private static final float LOCATION_DISTANCE = 10f;
 
+    private static final long LOCATION_INTERVAL_ACTIVE = T.mins(5).msecs();
+    private static final long LOCATION_INTERVAL_PASSIVE = T.mins(1).msecs(); // this doesn't cost more power
+
     public LocationService() {
         MainApp.bus().register(this);
     }
@@ -93,21 +96,21 @@ public class LocationService extends Service {
             if (SP.getString(R.string.key_location, "NONE").equals("NETWORK"))
                 mLocationManager.requestLocationUpdates(
                         LocationManager.NETWORK_PROVIDER,
-                        T.mins(5).msecs(),
+                        LOCATION_INTERVAL_ACTIVE,
                         LOCATION_DISTANCE,
                         mLocationListener = new LocationListener(LocationManager.NETWORK_PROVIDER)
                 );
             if (SP.getString(R.string.key_location, "NONE").equals("GPS"))
                 mLocationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
-                        T.mins(5).msecs(),
+                        LOCATION_INTERVAL_ACTIVE,
                         LOCATION_DISTANCE,
                         mLocationListener = new LocationListener(LocationManager.GPS_PROVIDER)
                 );
             if (SP.getString(R.string.key_location, "NONE").equals("PASSIVE"))
                 mLocationManager.requestLocationUpdates(
                         LocationManager.PASSIVE_PROVIDER,
-                        T.mins(1).msecs(),
+                        LOCATION_INTERVAL_PASSIVE,
                         LOCATION_DISTANCE,
                         mLocationListener = new LocationListener(LocationManager.PASSIVE_PROVIDER)
                 );
