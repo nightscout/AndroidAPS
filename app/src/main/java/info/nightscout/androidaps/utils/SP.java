@@ -102,12 +102,6 @@ public class SP {
         editor.apply();
     }
 
-    static public void putDouble(int resourceID, double value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(MainApp.gs(resourceID), Double.toString(value));
-        editor.apply();
-    }
-
     static public void putLong(String key, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
@@ -131,20 +125,7 @@ public class SP {
         editor.putInt(MainApp.gs(resourceID), value);
         editor.apply();
     }
-
-
-    static public void putDouble(int resourceID, Double value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(MainApp.gs(resourceID), value.toString());
-        editor.apply();
-    }
-
-    static public void putDouble(String key, Double value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value.toString());
-        editor.apply();
-    }
-
+    
     static public void putString(int resourceID, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(MainApp.gs(resourceID), value);
