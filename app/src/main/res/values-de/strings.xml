@@ -876,6 +876,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="bolusrecordedonly">Bolus wird nur erfasst.</string>
     <string name="ns_autobackfill_summary">Lade fehlende Blutzuckerwerte automatisch aus Nightscout nach.</string>
     <string name="loop_smbsetbypump_label">SMB von der Pumpe abgegeben</string>
+    <string name="overview_show_activity">Aktivität</string>
     <string name="overview_show_sensitivity">Sensitivität</string>
     <string name="overview_show_deviations">Abweichungen</string>
     <string name="overview_show_cob">Aktive Kohlenhydrate</string>
@@ -1188,6 +1189,7 @@ Unerwartetes Verhalten.</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
     <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
+    <string name="scale_insulin_activity">Skala Insulinaktivität [IE/min.]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
