@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,8 +85,14 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
 
         // edit event
         holder.rootLayout.setOnClickListener(v -> {
-            EditEventDialog dialog = EditEventDialog.newInstance(event, false);
-            dialog.show(mFragmentManager, "EditEventDialog");
+            //EditEventDialog dialog = EditEventDialog.Companion.newInstance(event, false);
+            EditEventDialog dialog = new EditEventDialog();
+            Bundle args = new Bundle();
+            args.putString("event", event.toJSON());
+            args.putInt("position", position);
+            dialog.setArguments(args);
+            if (mFragmentManager != null)
+                dialog.show(mFragmentManager, "EditEventDialog");
         });
     }
 

@@ -16,16 +16,13 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationAddAction;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 
 public class ChooseActionDialog extends DialogFragment {
-
-    public interface OnClickListener {
-        void onClick(Action newActionObject);
-    }
 
     private Unbinder mUnbinder;
 
@@ -37,7 +34,7 @@ public class ChooseActionDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_choose_action, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        for (Action a : AutomationPlugin.getPlugin().getActionDummyObjects()) {
+        for (Action a : AutomationPlugin.INSTANCE.getActionDummyObjects()) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(a.friendlyName());
             radioButton.setTag(a);
@@ -96,8 +93,8 @@ public class ChooseActionDialog extends DialogFragment {
     @OnClick(R.id.ok)
     public void onButtonOk(View unused) {
         dismiss();
-        MainApp.bus().post(new EventAutomationAddAction(instantiateAction()));
-        MainApp.bus().post(new EventAutomationUpdateGui());
+        RxBus.INSTANCE.send(new EventAutomationAddAction(instantiateAction()));
+        RxBus.INSTANCE.send(new EventAutomationUpdateGui());
     }
 
     @OnClick(R.id.cancel)

@@ -15,12 +15,12 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel;
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
@@ -52,7 +52,7 @@ public class TriggerWifiSsid extends Trigger {
 
     @Override
     public synchronized boolean shouldRun() {
-        EventNetworkChange eventNetworkChange = AutomationPlugin.getPlugin().getEventNetworkChange();
+        EventNetworkChange eventNetworkChange = NetworkChangeReceiver.getLastEvent();
         if (eventNetworkChange == null)
             return false;
 

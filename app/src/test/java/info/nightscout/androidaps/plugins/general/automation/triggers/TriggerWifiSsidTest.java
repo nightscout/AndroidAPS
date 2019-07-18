@@ -17,23 +17,22 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNetworkChange;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.utils.DateUtil;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, AutomationPlugin.class, DateUtil.class})
+@PrepareForTest({MainApp.class, Bus.class, NetworkChangeReceiver.class, DateUtil.class})
 public class TriggerWifiSsidTest {
 
-    AutomationPlugin automationPlugin;
     long now = 1514766900000L;
 
     @Test
     public void shouldRunTest() {
         EventNetworkChange e = new EventNetworkChange();
-        when(automationPlugin.getEventNetworkChange()).thenReturn(e);
+        when(NetworkChangeReceiver.getLastEvent()).thenReturn(e);
 
         TriggerWifiSsid t = new TriggerWifiSsid().setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL);
 
@@ -56,7 +55,7 @@ public class TriggerWifiSsidTest {
         Assert.assertTrue(t.shouldRun());
 
         // no network data
-        when(automationPlugin.getEventNetworkChange()).thenReturn(null);
+        when(NetworkChangeReceiver.getLastEvent()).thenReturn(null);
         Assert.assertFalse(t.shouldRun());
     }
 
@@ -68,7 +67,7 @@ public class TriggerWifiSsidTest {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.getComparator().getValue());
     }
 
-     String json = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"ssid\":\"aSSID\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerWifiSsid\"}";
+    String json = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"ssid\":\"aSSID\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerWifiSsid\"}";
 
     @Test
     public void toJSONTest() {
@@ -105,9 +104,7 @@ public class TriggerWifiSsidTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockBus();
 
-        PowerMockito.mockStatic(AutomationPlugin.class);
-        automationPlugin = PowerMockito.mock(AutomationPlugin.class);
-        when(AutomationPlugin.getPlugin()).thenReturn(automationPlugin);
+        PowerMockito.mockStatic(NetworkChangeReceiver.class);
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(now);

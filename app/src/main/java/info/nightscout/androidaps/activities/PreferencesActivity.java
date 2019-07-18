@@ -189,7 +189,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
-                addPreferencesFromResourceIfEnabled(AutomationPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(AutomationPlugin.INSTANCE, PluginType.GENERAL);
 
                 addPreferencesFromResource(R.xml.pref_others);
                 addPreferencesFromResource(R.xml.pref_datachoices);

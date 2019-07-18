@@ -18,7 +18,7 @@
             android:text="@string/triggers" />
 
         <LinearLayout
-            android:id="@+id/layoutTrigger"
+            android:id="@+id/automation_layoutTrigger"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"

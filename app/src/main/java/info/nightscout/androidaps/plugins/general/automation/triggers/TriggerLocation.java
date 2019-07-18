@@ -38,7 +38,7 @@ public class TriggerLocation extends Trigger {
     InputString name = new InputString();
 
     Runnable buttonAction = () -> {
-        EventLocationChange event = AutomationPlugin.getPlugin().getEventLocationChange();
+        EventLocationChange event = AutomationPlugin.INSTANCE.getEventLocationChange();
         if (event != null) {
             latitude.setValue(event.location.getLatitude());
             longitude.setValue(event.location.getLongitude());
@@ -62,7 +62,7 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public synchronized boolean shouldRun() {
-        EventLocationChange eventLocationChange = AutomationPlugin.getPlugin().getEventLocationChange();
+        EventLocationChange eventLocationChange = AutomationPlugin.INSTANCE.getEventLocationChange();
         if (eventLocationChange == null)
             return false;
 
@@ -164,7 +164,7 @@ public class TriggerLocation extends Trigger {
                 .add(new LabelWithElement(MainApp.gs(R.string.latitude_short), "", latitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.longitude_short), "", longitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.distance_short), "", distance))
-                .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), AutomationPlugin.getPlugin().getEventLocationChange() != null)
+                .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), AutomationPlugin.INSTANCE.getEventLocationChange() != null)
                 .build(root);
     }
 }

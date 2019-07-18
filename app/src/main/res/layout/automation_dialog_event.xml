@@ -13,7 +13,7 @@
         android:padding="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputEventTitle"
+            android:id="@+id/automation_inputEventTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/taskname" />
@@ -36,7 +36,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/editTrigger"
+                android:id="@+id/automation_editTrigger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -48,7 +48,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/triggerDescription"
+            android:id="@+id/automation_triggerDescription"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
@@ -56,14 +56,14 @@
             android:orientation="vertical" />
 
         <TextView
-            android:id="@+id/forcedtriggerdescriptionlabel"
+            android:id="@+id/automation_forcedTriggerDescriptionLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/preconditions"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/forcedtriggerdescription"
+            android:id="@+id/automation_forcedTriggerDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -88,7 +88,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/addAction"
+                android:id="@+id/automation_addAction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -100,7 +100,7 @@
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/actionListView"
+            android:id="@+id/automation_actionListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"

@@ -70,4 +70,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public static boolean isWifiConnected() {
         return lastEvent != null && lastEvent.wifiConnected;
     }
+
+    public static EventNetworkChange getLastEvent() {
+        return lastEvent;
+    }
 }

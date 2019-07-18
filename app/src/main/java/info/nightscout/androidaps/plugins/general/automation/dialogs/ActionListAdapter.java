@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.dialogs;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 
 public class ActionListAdapter extends RecyclerView.Adapter<ActionListAdapter.ViewHolder> {
-    private final List<Action> mActionList;
-    private final FragmentManager mFragmentManager;
+    private final List<Action> actionList;
+    private final FragmentManager fragmentManager;
 
-    public ActionListAdapter(FragmentManager manager, List<Action> events) {
-        this.mActionList = events;
-        this.mFragmentManager = manager;
+    public ActionListAdapter(FragmentManager manager, List<Action> actions) {
+        this.actionList = actions;
+        this.fragmentManager = manager;
     }
 
     @NonNull
@@ -36,24 +37,28 @@ public class ActionListAdapter extends RecyclerView.Adapter<ActionListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Action action = mActionList.get(position);
+        final Action action = actionList.get(position);
         holder.actionTitle.setText(action.shortDescription());
         holder.layoutText.setOnClickListener(v -> {
             if (action.hasDialog()) {
-                EditActionDialog dialog = EditActionDialog.newInstance(action);
-                dialog.show(mFragmentManager, "EditActionDialog");
+                Bundle args = new Bundle();
+                args.putInt("actionPosition", position);
+                args.putString("action", action.toJSON());
+                EditActionDialog dialog = new EditActionDialog();
+                dialog.setArguments(args);
+                dialog.show(fragmentManager, "EditActionDialog");
             }
         });
         holder.iconTrash.setOnClickListener(v -> {
-            mActionList.remove(action);
+            actionList.remove(action);
             notifyDataSetChanged();
-            MainApp.bus().post(new EventAutomationUpdateGui());
+            RxBus.INSTANCE.send(new EventAutomationUpdateGui());
         });
     }
 
     @Override
     public int getItemCount() {
-        return mActionList.size();
+        return actionList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

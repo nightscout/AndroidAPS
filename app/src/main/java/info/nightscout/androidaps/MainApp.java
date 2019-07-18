@@ -209,7 +209,7 @@ public class MainApp extends Application {
                 pluginsList.add(TidepoolPlugin.INSTANCE);
             pluginsList.add(MaintenancePlugin.initPlugin(this));
             if (engineeringMode)
-                pluginsList.add(AutomationPlugin.getPlugin());
+                pluginsList.add(AutomationPlugin.INSTANCE);
 
             pluginsList.add(ConfigBuilderPlugin.getPlugin());
 
