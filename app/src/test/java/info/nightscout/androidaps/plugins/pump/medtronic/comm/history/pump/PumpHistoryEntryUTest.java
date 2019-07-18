@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class PumpHistoryEntryUTest {
 
-    @Test
+    //@Test
     public void checkIsAfter() {
 
         long dateObject = 20191010000000L;
@@ -22,7 +22,7 @@ public class PumpHistoryEntryUTest {
         Assert.assertTrue(phe.isAfter(queryObject));
     }
 
-    @Test
+    //@Test
     public void testDatesTDD() {
         long[]  data = { 1557010799726L,
         1557010799651L,
