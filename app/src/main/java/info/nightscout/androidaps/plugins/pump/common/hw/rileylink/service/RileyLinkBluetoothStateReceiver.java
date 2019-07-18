@@ -1,20 +1,22 @@
-package info.nightscout.androidaps.receivers;
+package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 
-public class BluetoothStateReceiver extends BroadcastReceiver {
+public class RileyLinkBluetoothStateReceiver extends BroadcastReceiver {
 
     private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
@@ -23,8 +25,6 @@ public class BluetoothStateReceiver extends BroadcastReceiver {
         final String action = intent.getAction();
 
         PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-
-        LOG.debug("BluetoothStateReceiver");
 
         if (action != null && activePump != null) {
 
@@ -36,10 +36,8 @@ public class BluetoothStateReceiver extends BroadcastReceiver {
                     break;
 
                 case BluetoothAdapter.STATE_ON: {
-                    if ("Medtronic".equals(activePump.manufacter())) {
-                        LOG.debug("BluetoothStateReceiver: Bluetooth back on. Sending broadcast to RileyLink Framework");
+                        LOG.debug("RileyLinkBluetoothStateReceiver: Bluetooth back on. Sending broadcast to RileyLink Framework");
                         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
-                    }
                 }
                 break;
             }
@@ -47,4 +45,14 @@ public class BluetoothStateReceiver extends BroadcastReceiver {
     }
 
 
+    public void unregisterBroadcasts() {
+        MainApp.instance().unregisterReceiver(this);
+    }
+
+
+    public void registerBroadcasts() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        MainApp.instance().registerReceiver(this, filter);
+    }
 }

@@ -59,7 +59,9 @@ public class RileyLinkStatusHistory extends Fragment implements RefreshableInter
 
     @Override
     public void refreshData() {
-        recyclerViewAdapter.addItemsAndClean(RileyLinkUtil.getRileyLinkHistory());
+        if (RileyLinkUtil.getRileyLinkHistory()!=null) {
+            recyclerViewAdapter.addItemsAndClean(RileyLinkUtil.getRileyLinkHistory());
+        }
     }
 
 

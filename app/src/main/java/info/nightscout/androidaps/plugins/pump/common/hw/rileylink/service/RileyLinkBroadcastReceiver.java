@@ -254,4 +254,7 @@ public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
         return (L.isEnabled(L.PUMPCOMM));
     }
 
+    public void unregisterBroadcasts() {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
+    }
 }

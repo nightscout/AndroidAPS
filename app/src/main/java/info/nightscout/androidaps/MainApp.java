@@ -94,6 +94,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
+import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.fabric.sdk.android.Fabric;
@@ -122,6 +123,7 @@ public class MainApp extends Application {
     private static DBAccessReceiver dbAccessReciever = new DBAccessReceiver();
     private LocalBroadcastManager lbm;
     BroadcastReceiver btReceiver;
+    TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
 
     public static boolean devBranch;
     public static boolean engineeringMode;
@@ -163,7 +165,7 @@ public class MainApp extends Application {
 
         //trigger here to see the new version on app start after an update
         triggerCheckVersion();
-        setBTReceiver();
+        //setBTReceiver();
 
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
@@ -265,55 +267,11 @@ public class MainApp extends Application {
 
         //register dbaccess
         lbm.registerReceiver(dbAccessReciever, new IntentFilter(Intents.ACTION_DATABASE));
-    }
 
-
-    private void setBTReceiver() {
-
-        // RileyLink framework needs to know, when BT was reconnected, so that we can reconnect to RL device,
-        // also detected if timezone/time/date changed and send notification to any active pump driver.
-        btReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                final String action = intent.getAction();
-
-                PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-
-                if (action != null && activePump != null) {
-                    if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                        final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                        switch (state) {
-                            case BluetoothAdapter.STATE_OFF:
-                            case BluetoothAdapter.STATE_TURNING_OFF:
-                            case BluetoothAdapter.STATE_TURNING_ON:
-                                break;
-
-                            case BluetoothAdapter.STATE_ON: {
-                                if ("Medtronic".equals(activePump.manufacter())) {
-                                    Log.v("MainApp", "Bluetooth on");
-                                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothReconnected);
-                                }
-                            }
-                            break;
-                        }
-                    } else {
-                        activePump.timeDateOrTimeZoneChanged();
-                    }
-                }
-            }
-        };
-
-        // Register for broadcasts on BluetoothAdapter state change
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        filter.addAction(Intent.ACTION_TIME_CHANGED);
-        filter.addAction(Intent.ACTION_DATE_CHANGED);
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        registerReceiver(btReceiver, filter);
+        this.timeDateOrTZChangeReceiver = new TimeDateOrTZChangeReceiver();
+        this.timeDateOrTZChangeReceiver.registerBroadcasts(this);
 
     }
-
 
     private void startKeepAliveService() {
         if (keepAliveReceiver == null) {
@@ -502,5 +460,10 @@ public class MainApp extends Application {
         if (btReceiver != null) {
             unregisterReceiver(btReceiver);
         }
+
+        if (timeDateOrTZChangeReceiver!=null) {
+            unregisterReceiver(timeDateOrTZChangeReceiver);
+        }
+
     }
 }

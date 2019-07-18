@@ -40,14 +40,20 @@ public class InitializePumpManagerTask extends ServiceTask {
     @Override
     public void run() {
 
-        double lastGoodFrequency = SP.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
-        lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
+        double lastGoodFrequency = 0.0d;
 
-        RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency = lastGoodFrequency;
+        if (RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency==null) {
 
-        if (RileyLinkUtil.getRileyLinkTargetFrequency() == null) {
-            String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
+            lastGoodFrequency = SP.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
+            lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
 
+            RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency = lastGoodFrequency;
+
+//            if (RileyLinkUtil.getRileyLinkTargetFrequency() == null) {
+//                String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
+//            }
+        } else {
+            lastGoodFrequency = RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency;
         }
 
         if ((lastGoodFrequency > 0.0d)

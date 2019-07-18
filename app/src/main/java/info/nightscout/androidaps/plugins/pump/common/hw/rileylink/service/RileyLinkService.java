@@ -41,6 +41,7 @@ public abstract class RileyLinkService extends Service {
     protected Context context;
     protected RileyLinkBroadcastReceiver mBroadcastReceiver;
     protected RileyLinkServiceData rileyLinkServiceData;
+    protected RileyLinkBluetoothStateReceiver bluetoothStateReceiver;
 
     public RileyLinkService(Context context) {
         super();
@@ -87,6 +88,15 @@ public abstract class RileyLinkService extends Service {
             rileyLinkBLE.disconnect(); // dispose of Gatt (disconnect and close)
             rileyLinkBLE = null;
         }
+
+        if (mBroadcastReceiver!=null) {
+            mBroadcastReceiver.unregisterBroadcasts();
+        }
+
+        if (bluetoothStateReceiver!=null) {
+            bluetoothStateReceiver.unregisterBroadcasts();
+        }
+
     }
 
 
@@ -97,6 +107,10 @@ public abstract class RileyLinkService extends Service {
 
         mBroadcastReceiver = new RileyLinkBroadcastReceiver(this, this.context);
         mBroadcastReceiver.registerBroadcasts();
+
+
+        bluetoothStateReceiver = new RileyLinkBluetoothStateReceiver();
+        bluetoothStateReceiver.registerBroadcasts();
 
         //LOG.debug("onCreate(): It's ALIVE!");
     }
