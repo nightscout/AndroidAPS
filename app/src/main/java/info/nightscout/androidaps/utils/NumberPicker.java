@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         View.OnTouchListener, View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NumberPicker.class);
 
-    TextView editText;
+    EditText editText;
     Button minusButton;
     Button plusButton;
 
@@ -56,7 +55,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
 
         private final int doubleLimit = 5;
 
-        public UpdateCounterTask(boolean inc) {
+        UpdateCounterTask(boolean inc) {
             mInc = inc;
         }
 
@@ -85,14 +84,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     public NumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        this.initialize(context, attrs);
+        this.initialize(context);
     }
 
-    public NumberPicker(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    private void initialize(Context context, AttributeSet attrs) {
+    private void initialize(Context context) {
         // set layout view
         LayoutInflater.from(context).inflate(R.layout.number_picker_layout, this, true);
 
@@ -104,20 +99,17 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         editText = (EditText) findViewById(R.id.display);
         editText.setId(View.generateViewId());
 
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case MSG_INC:
-                        inc(msg.arg1);
-                        return;
-                    case MSG_DEC:
-                        dec(msg.arg1);
-                        return;
-                }
-                super.handleMessage(msg);
+        mHandler = new Handler(msg -> {
+            switch (msg.what) {
+                case MSG_INC:
+                    inc(msg.arg1);
+                    return true;
+                case MSG_DEC:
+                    dec(msg.arg1);
+                    return true;
             }
-        };
+            return false;
+        });
 
         minusButton.setOnTouchListener(this);
         minusButton.setOnKeyListener(this);
@@ -146,6 +138,21 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     public void setTextWatcher(TextWatcher textWatcher) {
         this.textWatcher = textWatcher;
         editText.addTextChangedListener(textWatcher);
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                value = SafeParse.stringToDouble(editText.getText().toString());
+                if (value > maxValue) {
+                    value = maxValue;
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
+                    updateEditText();
+                }
+                if (value < minValue) {
+                    value = minValue;
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
+                    updateEditText();
+                }
+            }
+        });
     }
 
     public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, TextWatcher textWatcher) {
