@@ -1084,6 +1084,20 @@
     <string name="insight_delivered">%1$.2fU / %2$.2fU 주입됨</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">튜브 변경</string>
+    <string name="pump_time_updated">펌프 시간 업데이트</string>
+    <string name="confirm">확인</string>
+    <string name="mute_alert">음소거</string>
+    <string name="pump_alert">펌프 경고</string>
+    <string name="log_site_changes">위치 변경 기록</string>
+    <string name="log_reservoir_changes">주사기 교체 기록</string>
+    <string name="log_tube_changes">튜브 교체 기록</string>
+    <string name="log_battery_changes">배터리 교체 기록</string>
+    <string name="log_operating_mode_changes">작동 모드 변경 기록</string>
+    <string name="log_alerts">경고 기록</string>
+    <string name="enable_tbr_emulation">임시Basal 에뮬레이션 활성화</string>
+    <string name="enable_tbr_emulation_summary">250%% 제한을 무시하기 위해 임시Basal 대신 확정Boluses 사용</string>
+    <string name="disconnect_delay">연결해제 지연 [초]</string>
+    <string name="serial_number">시리얼번호</string>
     <plurals name="objective_days">
         <item quantity="other">%1$d 일</item>
     </plurals>
