@@ -47,15 +47,20 @@ public class TriggerRecurringTimeTest {
 
     }
 
-    String timeJson = "{\"data\":{\"runAt\":1514766840000,\"THURSDAY\":false,\"lastRun\":0,\"SUNDAY\":false,\"recurring\":false,\"TUESDAY\":false,\"FRIDAY\":false,\"minute\":0,\"WEDNESDAY\":false,\"MONDAY\":false,\"hour\":0,\"SATURDAY\":false,\"validTo\":0},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime\"}";
+    String timeJson = "{\"data\":{\"WEDNESDAY\":false,\"MONDAY\":false,\"THURSDAY\":false,\"lastRun\":1514766840000,\"SUNDAY\":false,\"hour\":0,\"TUESDAY\":false,\"FRIDAY\":false,\"SATURDAY\":false,\"minute\":0,\"validTo\":0},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime\"}";
 
     @Test
-    public void toJSONTest() {
+    public void toJSONTest() throws JSONException {
+        TriggerRecurringTime t = new TriggerRecurringTime().lastRun(now - T.mins(1).msecs());
+        Assert.assertEquals(timeJson, t.toJSON());
     }
 
     @Test
     public void fromJSONTest() throws JSONException {
-    }
+        TriggerRecurringTime t = new TriggerRecurringTime().lastRun(now - T.mins(1).msecs());
+
+        TriggerRecurringTime t2 = (TriggerRecurringTime) Trigger.instantiate(new JSONObject(t.toJSON()));
+        Assert.assertEquals(now - T.mins(1).msecs(), t2.lastRun);    }
 
     @Before
     public void mock() {
