@@ -148,6 +148,8 @@ Eversense-appen.</string>
     <string name="constraints_violation">Begränsning nådd</string>
     <string name="treatmentdeliveryerror">Fel vid bolusleverans</string>
     <string name="tempbasaldeliveryerror">Fel vid justering av temp basal</string>
+    <string name="overview_newtempbasal_basalpercent">Basaldos [%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = profilens värde)</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkylator</string>
@@ -247,6 +249,7 @@ Eversense-appen.</string>
     <string name="danar_iob_label">Pumpens IOB</string>
     <string name="danar_dailyunits">Enheter per dag</string>
     <string name="pump_lastbolus_label">Senaste bolus</string>
+    <string name="hoursago">%1$.1f tim sedan</string>
     <string name="danar_invalidinput">Fel på inmatning</string>
     <string name="danar_valuenotsetproperly">Misslyckades med inställning</string>
     <string name="reloadprofile">Ladda om profil</string>
@@ -526,6 +529,7 @@ Eversense-appen.</string>
     <string name="resistantadult">Insulinresistent vuxen</string>
     <string name="patientage_summary">Vg ange personens ålder för inställningar av gränser</string>
     <string name="Glimp">Glimp</string>
+    <string name="needwhitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="loopsuspended">Loop pausad</string>
     <string name="loopsuspendedfor">Pausad (%1$d min)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d min)</string>
@@ -561,6 +565,8 @@ Eversense-appen.</string>
     <string name="show_statuslights_summary">Aktivera statusindikationerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
+    <string name="statuslights_bat_warning">Varningsnivå för batteri [%%]</string>
+    <string name="statuslights_bat_critical">Akut varningsnivå för batteri [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmwareversion</string>
@@ -759,6 +765,7 @@ Eversense-appen.</string>
     <string name="combo_pump_state_running">Körs</string>
     <string name="combo_pump_action_cancelling_tbr">Avbryter temp basal</string>
     <string name="combo_pump_action_setting_tbr">Sätter temp basal (%1$d%% / %2$d min)</string>
+    <string name="combo_pump_action_bolusing">Levererar bolus (%1$.1f enheter)</string>
     <string name="combo_pump_action_refreshing">Uppdaterar</string>
     <string name="combo_pump_unsupported_operation">Önskad åtgärd stöds inte av pumpen</string>
     <string name="combo_low_suspend_forced_notification">Osäker användning: Förlängd- eller kombibolus är aktiv. Loop mode är satt till att bromsa vid lågt BG i 6 timmar. Endast normala bolusar tillåtna i loopläge.</string>
@@ -859,6 +866,7 @@ Eversense-appen.</string>
     <string name="fabric_upload">Uppladdning till Fabric</string>
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
     <string name="g5appnotdetected">Vänligen uppdatera din Dexcom-app till en supportad version</string>
+    <string name="dexcom_app_not_installed">Dexcom-appen är inte installerad.</string>
     <string name="start_activity_tt">Starta \"Träning\"</string>
     <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
     <string name="temptargetshort">TT</string>
@@ -868,6 +876,7 @@ Eversense-appen.</string>
     <string name="bolusrecordedonly">Bolusen sparas bara i loggboken</string>
     <string name="ns_autobackfill_summary">Hämta saknad BG-data från Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB satt i pump</string>
+    <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_sensitivity">Känslighet (Sens)</string>
     <string name="overview_show_deviations">Avvikelser (Dev)</string>
     <string name="overview_show_cob">Aktiva KH (COB)</string>
@@ -1142,6 +1151,31 @@ Eversense-appen.</string>
     <string name="dexcom_lognssensorchange_summary">Loggar automatiskt ett sensorbyte i NS när en sensor startas</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">timme</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">vecka</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minuter</string>
+    <string name="unit_hours">timmar</string>
+    <string name="unit_days">dagar</string>
+    <string name="unit_weeks">veckor</string>
+    <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>
+    <string name="title_tidepool_username">Användarnamn</string>
+    <string name="summary_tidepool_password">Ditt Tidepool-lösenord</string>
+    <string name="title_tidepool_password">Lösenord</string>
+    <string name="title_tidepool_test_login">Testlogin på Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Om man slår på denna, kommer datat skickas till https://int-app.tidepool.org istället för https://app.tidepool.org</string>
+    <string name="title_tidepool_dev_servers">Använd Integration (test) servrar</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laddar upp data till Tidepool</string>
+    <string name="tidepool_upload_cgm">Ladda upp CGM-data</string>
+    <string name="tidepool_upload_bolus">Ladda upp behandlingar (insulin, kolhydrater)</string>
+    <string name="tidepool_upload_tbr">Ladda upp temp basaler</string>
+    <string name="tidepool_upload_profile">Ladda upp profilbyten och temp mål</string>
+    <string name="tidepool_upload_bg">Ladda upp BG-test</string>
     <string name="dst_in_24h_warning">Sommar/vintertid inträffar inom 24 timmar</string>
     <string name="dst_loop_disabled_warning">Sommar/vintertid ändrades för mindre än 3 timmar sedan. Closed Loop avstängt</string>
     <string name="storage">intern lagringsbegränsning</string>
@@ -1150,6 +1184,16 @@ Eversense-appen.</string>
     <string name="sms_wrongcode">Fel kod. Kommandot avbrutet.</string>
     <string name="notconfigured">Inte konfigurerad</string>
     <string name="profileswitchcreated">Skapade ett profilbyte</string>
+    <string name="versionChecker">Versionskontroll</string>
+    <string name="old_version">gammal version</string>
+    <string name="very_old_version">väldigt gammal version</string>
+    <string name="new_version_warning">Ny version tillgänglig sedan %1$d dagar! Systemet kommer att byta läge till \"stopp innan lågt\" efter 60 dagar och sluta loopa helt efter 90 dagar</string>
+    <string name="scale_insulin_activity">Skala för insulinaktivitet [U/min]</string>
+    <string name="twohours">2 tim</string>
+    <string name="formatinsulinunits">%1$.2f enheter</string>
+    <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
