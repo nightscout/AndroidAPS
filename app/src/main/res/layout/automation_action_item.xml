@@ -12,7 +12,7 @@
     android:layout_marginTop="8dp">
 
     <ImageView
-        android:id="@+id/iconTrash"
+        android:id="@+id/automation_iconTrash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_trash_outline"
@@ -22,31 +22,22 @@
         android:contentDescription="@string/overview_quickwizard_item_remove_button" />
 
     <LinearLayout
-        android:id="@+id/layoutText"
+        android:id="@+id/automation_layoutText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/iconTrash"
+        android:layout_toStartOf="@id/automation_iconTrash"
         android:layout_alignParentStart="true">
 
         <TextView
-            android:id="@+id/viewActionTitle"
+            android:id="@+id/automation_viewActionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/viewActionDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -53,7 +53,7 @@ class EditEventDialog : DialogFragment() {
         }
 
         // setup action list view
-        actionListAdapter = ActionListAdapter(fragmentManager, event.actions)
+        fragmentManager?.let { actionListAdapter = ActionListAdapter(it, event.actions)}
         automation_actionListView.layoutManager = LinearLayoutManager(context)
         automation_actionListView.adapter = actionListAdapter
 
