@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import kotlinx.android.synthetic.main.automation_dialog_edit_trigger.*
+import kotlinx.android.synthetic.main.okcancel.*
 
 class EditTriggerDialog : DialogFragment() {
 
@@ -34,13 +35,13 @@ class EditTriggerDialog : DialogFragment() {
         trigger?.let { it.generateDialog(automation_layoutTrigger, fragmentManager) }
 
         // OK button
-        view.findViewById<Button>(R.id.ok).setOnClickListener {
+        ok.setOnClickListener {
             dismiss()
             RxBus.send(EventAutomationUpdateTrigger(trigger!!))
         }
 
         // Cancel button
-        view.findViewById<Button>(R.id.cancel).setOnClickListener { dismiss() }
+        cancel.setOnClickListener { dismiss() }
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {

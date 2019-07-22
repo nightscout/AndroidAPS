@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
 import kotlinx.android.synthetic.main.automation_dialog_action.*
+import kotlinx.android.synthetic.main.okcancel.*
 import org.json.JSONObject
 
 class EditActionDialog : DialogFragment() {
@@ -40,7 +41,7 @@ class EditActionDialog : DialogFragment() {
         }
 
         // OK button
-        view.findViewById<Button>(R.id.ok).setOnClickListener {
+        ok.setOnClickListener {
             dismiss()
             action?.let {
                 RxBus.send(EventAutomationUpdateAction(it, actionPosition))
@@ -48,7 +49,7 @@ class EditActionDialog : DialogFragment() {
         }
 
         // Cancel button
-        view.findViewById<Button>(R.id.cancel).setOnClickListener { dismiss() }
+        cancel.setOnClickListener { dismiss() }
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {

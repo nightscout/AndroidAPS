@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_marginVertical="5dp" />
 
-        <include layout="@layout/mdtp_done_button" />
+        <include layout="@layout/okcancel" />
 
     </LinearLayout>
 

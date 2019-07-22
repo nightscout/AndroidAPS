@@ -38,7 +38,7 @@ public class TriggerListAdapter {
         return mFragmentManager;
     }
 
-    void destroy() {
+    private void destroy() {
         mRootLayout.removeAllViews();
     }
 
@@ -62,7 +62,7 @@ public class TriggerListAdapter {
             Button buttonAdd = new Button(mContext);
             buttonAdd.setText(MainApp.gs(R.string.addnew));
             buttonAdd.setOnClickListener(v -> {
-                ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
+                ChooseTriggerDialog dialog = new ChooseTriggerDialog();
                 dialog.setOnClickListener(newTriggerObject -> {
                     mRootConnector.add(newTriggerObject);
                     rebuild(fragmentManager);
@@ -135,7 +135,7 @@ public class TriggerListAdapter {
         Button buttonAdd = new Button(mContext);
         buttonAdd.setText(MainApp.gs(R.string.add_short));
         buttonAdd.setOnClickListener(v -> {
-            ChooseTriggerDialog dialog = ChooseTriggerDialog.newInstance();
+            ChooseTriggerDialog dialog = new ChooseTriggerDialog();
             dialog.show(fragmentManager, "ChooseTriggerDialog");
             dialog.setOnClickListener(newTriggerObject -> {
                 TriggerConnector connector = trigger.getConnector();

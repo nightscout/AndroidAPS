@@ -17,6 +17,7 @@ import info.nightscout.androidaps.utils.ToastUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_dialog_event.*
+import kotlinx.android.synthetic.main.okcancel.*
 
 class EditEventDialog : DialogFragment() {
 
@@ -60,7 +61,7 @@ class EditEventDialog : DialogFragment() {
         automation_addAction.setOnClickListener { fragmentManager?.let { ChooseActionDialog().show(it, "ChooseActionDialog") } }
 
         // OK button
-        view.findViewById<Button>(R.id.ok).setOnClickListener {
+        ok.setOnClickListener {
             // check for title
             val title = automation_inputEventTitle.text.toString()
             if (title.isEmpty()) {
@@ -90,7 +91,7 @@ class EditEventDialog : DialogFragment() {
         }
 
         // Cancel button
-        view.findViewById<Button>(R.id.cancel).setOnClickListener { dismiss() }
+        cancel.setOnClickListener { dismiss() }
 
         showPreconditions()
 
