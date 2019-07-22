@@ -42,12 +42,12 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
         Double maxInsulin = MainApp.getConstraintChecker().getMaxExtendedBolusAllowed().value();
         editInsulin = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_insulin);
-        editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
+        editInsulin.setParams(0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false, view.findViewById(R.id.ok));
 
         double extendedDurationStep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().extendedBolusDurationStep;
         double extendedMaxDuration = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().extendedBolusMaxDuration;
         editDuration = (NumberPicker) view.findViewById(R.id.overview_newextendedbolus_duration);
-        editDuration.setParams(extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false);
+        editDuration.setParams(extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);

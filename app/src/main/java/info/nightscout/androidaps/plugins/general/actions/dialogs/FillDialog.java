@@ -103,7 +103,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         double bolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         editInsulin = view.findViewById(R.id.fill_insulinamount);
-        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, view.findViewById(R.id.ok), textWatcher);
 
 
         Button preset1Button = view.findViewById(R.id.fill_preset_button1);
