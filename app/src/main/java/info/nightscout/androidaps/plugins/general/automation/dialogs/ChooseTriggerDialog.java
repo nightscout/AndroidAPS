@@ -10,27 +10,13 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBolusAgo;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCOB;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerIob;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerLocation;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerRecurringTime;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime;
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerWifiSsid;
 
 public class ChooseTriggerDialog extends DialogFragment {
 
@@ -38,25 +24,10 @@ public class ChooseTriggerDialog extends DialogFragment {
         void onClick(Trigger newTriggerObject);
     }
 
-    private static final List<Trigger> triggerDummyObjects = new ArrayList<Trigger>() {{
-        add(new TriggerTime());
-        add(new TriggerRecurringTime());
-        add(new TriggerBg());
-        add(new TriggerDelta());
-        add(new TriggerIob());
-        add(new TriggerCOB());
-        add(new TriggerProfilePercent());
-        add(new TriggerTempTarget());
-        add(new TriggerWifiSsid());
-        add(new TriggerLocation());
-        add(new TriggerAutosensValue());
-        add(new TriggerBolusAgo());
-    }};
-
     private Unbinder mUnbinder;
     private OnClickListener mClickListener = null;
 
-    @BindView(R.id.radioGroup)
+    @BindView(R.id.automation_chooseTriggerRadioGroup)
     RadioGroup mRadioGroup;
 
     public static ChooseTriggerDialog newInstance() {
@@ -73,7 +44,7 @@ public class ChooseTriggerDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.automation_dialog_choose_trigger, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        for (Trigger t : triggerDummyObjects) {
+        for (Trigger t : AutomationPlugin.INSTANCE.getTriggerDummyObjects()) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(t.friendlyName());
             radioButton.setTag(t);

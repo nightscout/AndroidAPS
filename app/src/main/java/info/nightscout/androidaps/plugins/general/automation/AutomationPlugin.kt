@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
+import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.services.LocationService
@@ -192,6 +193,23 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 ActionStopTempTarget(),
                 ActionNotification(),
                 ActionProfileSwitchPercent()
+        )
+    }
+
+    fun getTriggerDummyObjects(): List<Trigger> {
+        return listOf(
+                TriggerTime(),
+                TriggerRecurringTime(),
+                TriggerBg(),
+                TriggerDelta(),
+                TriggerIob(),
+                TriggerCOB(),
+                TriggerProfilePercent(),
+                TriggerTempTarget(),
+                TriggerWifiSsid(),
+                TriggerLocation(),
+                TriggerAutosensValue(),
+                TriggerBolusAgo()
         )
     }
 

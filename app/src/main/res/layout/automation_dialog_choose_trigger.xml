@@ -18,7 +18,7 @@
             android:text="@string/please_choose_a_trigger_type" />
 
         <RadioGroup
-            android:id="@+id/radioGroup"
+            android:id="@+id/automation_chooseTriggerRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="5dp" />
