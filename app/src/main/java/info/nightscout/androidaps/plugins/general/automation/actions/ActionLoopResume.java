@@ -7,6 +7,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.queue.Callback;
@@ -28,7 +29,7 @@ public class ActionLoopResume extends Action {
             LoopPlugin.getPlugin().suspendTo(0);
             ConfigBuilderPlugin.getPlugin().storeSettings("ActionLoopResume");
             NSUpload.uploadOpenAPSOffline(0);
-            MainApp.bus().post(new EventRefreshOverview("ActionLoopResume"));
+            RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopResume"));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
         } else {

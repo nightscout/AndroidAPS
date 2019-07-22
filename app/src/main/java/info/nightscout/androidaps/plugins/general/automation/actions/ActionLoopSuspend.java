@@ -12,6 +12,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
@@ -35,7 +36,7 @@ public class ActionLoopSuspend extends Action {
     public void doAction(Callback callback) {
         if (!LoopPlugin.getPlugin().isSuspended()) {
             LoopPlugin.getPlugin().suspendLoop(minutes.getMinutes());
-            MainApp.bus().post(new EventRefreshOverview("ActionLoopSuspend"));
+            RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopSuspend"));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
         } else {

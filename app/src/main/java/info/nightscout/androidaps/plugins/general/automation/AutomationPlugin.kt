@@ -66,7 +66,6 @@ object AutomationPlugin : PluginBase(PluginDescription()
         val context = MainApp.instance().applicationContext
         context.startService(Intent(context, LocationService::class.java))
 
-        MainApp.bus().register(this)
         super.onStart()
         loadFromSP()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
@@ -171,7 +170,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
                             executionLog.add(sb.toString())
                             if (L.isEnabled(L.AUTOMATION))
                                 log.debug("Executed: $sb")
-                            MainApp.bus().post(EventAutomationUpdateGui())
+                            RxBus.send(EventAutomationUpdateGui())
                         }
                     })
                 }

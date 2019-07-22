@@ -16,7 +16,7 @@ class ChooseTriggerDialog : DialogFragment() {
 
     private var checkedIndex = -1
 
-    private var mClickListener: OnClickListener? = null
+    private var clickListener: OnClickListener? = null
 
     interface OnClickListener {
         fun onClick(newTriggerObject: Trigger?)
@@ -49,10 +49,7 @@ class ChooseTriggerDialog : DialogFragment() {
         // OK button
         ok.setOnClickListener {
             dismiss()
-            if (mClickListener != null)
-                mClickListener!!.onClick(instantiateTrigger())
-
-            dismiss()
+            clickListener?.onClick(instantiateTrigger())
         }
 
         // Cancel button
@@ -60,7 +57,7 @@ class ChooseTriggerDialog : DialogFragment() {
     }
 
     fun setOnClickListener(clickListener: OnClickListener) {
-        mClickListener = clickListener
+        this.clickListener = clickListener
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {

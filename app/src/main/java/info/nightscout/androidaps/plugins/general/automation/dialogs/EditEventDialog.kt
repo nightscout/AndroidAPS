@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import info.nightscout.androidaps.R
@@ -54,7 +53,7 @@ class EditEventDialog : DialogFragment() {
         }
 
         // setup action list view
-        fragmentManager?.let { actionListAdapter = ActionListAdapter(it, event.actions)}
+        fragmentManager?.let { actionListAdapter = ActionListAdapter(it, event.actions) }
         automation_actionListView.layoutManager = LinearLayoutManager(context)
         automation_actionListView.adapter = actionListAdapter
 

@@ -11,6 +11,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
@@ -36,9 +37,9 @@ public class ActionNotification extends Action {
     @Override
     public void doAction(Callback callback) {
         Notification notification = new Notification(Notification.USERMESSAGE, text.getValue(), Notification.URGENT);
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
         NSUpload.uploadError(text.getValue());
-        MainApp.bus().post(new EventRefreshOverview("ActionNotification"));
+        RxBus.INSTANCE.send(new EventRefreshOverview("ActionNotification"));
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
 

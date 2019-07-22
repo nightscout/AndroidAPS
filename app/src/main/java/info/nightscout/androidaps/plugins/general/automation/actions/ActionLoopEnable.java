@@ -8,6 +8,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
@@ -27,7 +28,7 @@ public class ActionLoopEnable extends Action {
         if (!LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
             LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, true);
             ConfigBuilderPlugin.getPlugin().storeSettings("ActionLoopEnable");
-            MainApp.bus().post(new EventRefreshOverview("ActionLoopEnable"));
+            RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopEnable"));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
         } else {
