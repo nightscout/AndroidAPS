@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
+import com.google.common.base.Optional;
 import com.squareup.otto.Bus;
 
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import java.util.GregorianCalendar;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
 
@@ -58,6 +60,31 @@ public class TriggerTimeTest {
 
         TriggerTime t2 = (TriggerTime) Trigger.instantiate(new JSONObject(t.toJSON()));
         Assert.assertEquals(now - T.mins(1).msecs(), t2.getRunAt());
+    }
+
+    @Test
+    public void copyConstructorTest() {
+        TriggerTime t = new TriggerTime();
+        t.runAt(now);
+
+        TriggerTime t1 = (TriggerTime) t.duplicate();
+        Assert.assertEquals(now, t1.getRunAt(), 0.01d);
+    }
+
+    @Test
+    public void friendlyNameTest() {
+        Assert.assertEquals(R.string.time, new TriggerTime().friendlyName());
+    }
+
+    @Test
+    public void friendlyDescriptionTest() {
+        Assert.assertEquals(null, new TriggerTime().friendlyDescription()); //not mocked    }
+    }
+
+    @Test
+    public void iconTest() {
+        Assert.assertEquals(Optional.of(R.drawable.ic_access_alarm_24dp), new TriggerTime().icon());
+
     }
 
     @Before
