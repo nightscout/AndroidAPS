@@ -16,15 +16,14 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputButton;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDouble;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel;
+import info.nightscout.androidaps.services.LocationService;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
@@ -37,16 +36,14 @@ public class TriggerLocation extends Trigger {
     InputDouble distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
     InputString name = new InputString();
 
-    Runnable buttonAction = () -> {
-        EventLocationChange event = AutomationPlugin.INSTANCE.getEventLocationChange();
-        if (event != null) {
-            latitude.setValue(event.location.getLatitude());
-            longitude.setValue(event.location.getLongitude());
+    private Runnable buttonAction = () -> {
+        Location location = LocationService.getLastLocation();
+        if (location != null) {
+            latitude.setValue(location.getLatitude());
+            longitude.setValue(location.getLongitude());
             log.debug(String.format("Grabbed location: %f %f", latitude.getValue(), longitude.getValue()));
         }
     };
-
-    private InputButton button = new InputButton(MainApp.gs(R.string.currentlocation), buttonAction);
 
     public TriggerLocation() {
         super();
@@ -62,8 +59,8 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public synchronized boolean shouldRun() {
-        EventLocationChange eventLocationChange = AutomationPlugin.INSTANCE.getEventLocationChange();
-        if (eventLocationChange == null)
+        Location location = LocationService.getLastLocation();
+        if (location == null)
             return false;
 
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
@@ -72,7 +69,7 @@ public class TriggerLocation extends Trigger {
         Location a = new Location("Trigger");
         a.setLatitude(latitude.getValue());
         a.setLongitude(longitude.getValue());
-        double calculatedDistance = eventLocationChange.location.distanceTo(a);
+        double calculatedDistance = location.distanceTo(a);
 
         if (calculatedDistance < distance.getValue()) {
             if (L.isEnabled(L.AUTOMATION))
@@ -164,7 +161,7 @@ public class TriggerLocation extends Trigger {
                 .add(new LabelWithElement(MainApp.gs(R.string.latitude_short), "", latitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.longitude_short), "", longitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.distance_short), "", distance))
-                .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), AutomationPlugin.INSTANCE.getEventLocationChange() != null)
+                .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), LocationService.getLastLocation() != null)
                 .build(root);
     }
 }

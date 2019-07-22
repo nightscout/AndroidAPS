@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -20,15 +19,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.services.LocationService;
 import info.nightscout.androidaps.utils.DateUtil;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, AutomationPlugin.class})
+@PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, LocationService.class})
 
 public class TriggerLocationTest {
 
@@ -41,12 +39,9 @@ public class TriggerLocationTest {
         AAPSMocker.mockApplicationContext();
 
         PowerMockito.mockStatic(DateUtil.class);
-        PowerMockito.mockStatic(AutomationPlugin.class);
-        AutomationPlugin plugin = Mockito.mock(AutomationPlugin.class);
-        PowerMockito.when(AutomationPlugin.getPlugin()).thenReturn(plugin);
+        PowerMockito.mockStatic(LocationService.class);
         when(DateUtil.now()).thenReturn(now);
-        PowerMockito.when(AutomationPlugin.getPlugin().getEventLocationChange()).thenReturn(new EventLocationChange(mockedLocation()));
-
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocation());
 
 
         MockitoAnnotations.initMocks(this);
@@ -73,11 +68,11 @@ public class TriggerLocationTest {
         t.latitude.setValue(213);
         t.longitude.setValue(212);
         t.distance.setValue(2);
-        PowerMockito.when(AutomationPlugin.getPlugin().getEventLocationChange()).thenReturn(null);
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(null);
         Assert.assertFalse(t.shouldRun());
-        PowerMockito.when(AutomationPlugin.getPlugin().getEventLocationChange()).thenReturn(new EventLocationChange(mockedLocation()));
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocation());
         Assert.assertTrue(t.shouldRun());
-        t.lastRun(now-1);
+        t.lastRun(now - 1);
         Assert.assertFalse(t.shouldRun());
 
         t = new TriggerLocation();
@@ -97,7 +92,7 @@ public class TriggerLocationTest {
     }
 
     @Test
-    public void fromJSONTest()  throws JSONException {
+    public void fromJSONTest() throws JSONException {
         TriggerLocation t = new TriggerLocation();
         t.latitude.setValue(213);
         t.longitude.setValue(212);
@@ -153,8 +148,7 @@ public class TriggerLocationTest {
         Assert.assertEquals(t.lastRun, 1514766900000L, 0d);
     }
 
-
-    public Location mockedLocation(){
+    public Location mockedLocation() {
         Location newLocation = new Location("test");
         newLocation.setLatitude(10);
         newLocation.setLongitude(11);

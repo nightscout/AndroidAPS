@@ -46,8 +46,6 @@ object AutomationPlugin : PluginBase(PluginDescription()
     private const val key_AUTOMATION_EVENTS = "AUTOMATION_EVENTS"
 
     val automationEvents = ArrayList<AutomationEvent>()
-    var eventLocationChange: EventLocationChange? = null
-        private set
     var executionLog: MutableList<String> = ArrayList()
 
     private val loopHandler = Handler()
@@ -91,10 +89,10 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 .toObservable(EventLocationChange::class.java)
                 .observeOn(Schedulers.io())
                 .subscribe({ e ->
-                    eventLocationChange = e
-                    if (e != null)
-                        log.debug("Grabbed location: $e.location.latitude $e.location.longitude Provider: $e.location.provider")
-                    processActions()
+                    e?.let {
+                        log.debug("Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
+                        processActions()
+                    }
                 }, {})
         disposable += RxBus
                 .toObservable(EventChargingState::class.java)

@@ -8,15 +8,16 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+
 import androidx.core.app.ActivityCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
@@ -29,12 +30,9 @@ public class LocationService extends Service {
     private static final long LOCATION_INTERVAL_ACTIVE = T.mins(5).msecs();
     private static final long LOCATION_INTERVAL_PASSIVE = T.mins(1).msecs(); // this doesn't cost more power
 
-    public LocationService() {
-        MainApp.bus().register(this);
-    }
+    private static Location mLastLocation;
 
     private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
 
         LocationListener(String provider) {
             if (L.isEnabled(L.LOCATION))
@@ -47,7 +45,7 @@ public class LocationService extends Service {
             if (L.isEnabled(L.LOCATION))
                 log.debug("onLocationChanged: " + location);
             mLastLocation.set(location);
-            MainApp.bus().post(new EventLocationChange(location));
+            RxBus.INSTANCE.send(new EventLocationChange(location));
         }
 
         @Override
@@ -126,7 +124,6 @@ public class LocationService extends Service {
         if (L.isEnabled(L.LOCATION))
             log.debug("onDestroy");
         super.onDestroy();
-        MainApp.bus().unregister(this);
         if (mLocationManager != null) {
             try {
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -145,5 +142,9 @@ public class LocationService extends Service {
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
+    }
+
+    public static Location getLastLocation() {
+        return mLastLocation;
     }
 }
