@@ -18,12 +18,12 @@
             android:text="@string/please_choose_an_action_type" />
 
         <RadioGroup
-            android:id="@+id/radioGroup"
+            android:id="@+id/automation_radioGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginVertical="5dp" />
 
-        <include layout="@layout/mdtp_done_button" />
+        <include layout="@layout/okcancel" />
 
     </LinearLayout>
 
