@@ -235,13 +235,13 @@ public class DateUtil {
                 t = t / 60;
                 if (t != 1) unit = MainApp.gs(R.string.unit_hours);
                 if (t > 24) {
-                    unit = MainApp.gs(R.string.unit_day);
+                    unit = MainApp.gs(R.string.unit_day) + "\"";
                     t = t / 24;
-                    if (t != 1) unit = MainApp.gs(R.string.unit_days);
+                    if (t != 1) unit = MainApp.gs(R.string.unit_days) + "\"";
                     if (t > 28) {
-                        unit = MainApp.gs(R.string.unit_week);
+                        unit = MainApp.gs(R.string.unit_week) + "\"";
                         t = t / 7;
-                        if (t != 1) unit = MainApp.gs(R.string.unit_weeks);
+                        if (t != 1) unit = MainApp.gs(R.string.unit_weeks) + "\"";
                     }
                 }
             }

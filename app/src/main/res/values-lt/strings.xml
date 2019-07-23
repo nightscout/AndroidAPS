@@ -1148,6 +1148,14 @@
     <string name="dexcom_lognssensorchange_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="unit_second">sekundė</string>
+    <string name="unit_minute">minutė</string>
+    <string name="unit_hour">valanda</string>
+    <string name="unit_seconds">sekundės</string>
+    <string name="unit_minutes">minutės</string>
+    <string name="unit_hours">valandos</string>
+    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>
+    <string name="title_tidepool_username">Vartotojo vardas</string>
     <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val ar mažiau</string>
     <string name="dst_loop_disabled_warning">Laikas persuktas prieš mažiau nei 3 val - Uždaras ciklas deaktyvuotas</string>
     <string name="storage">vidinės saugyklos apribojimas</string>

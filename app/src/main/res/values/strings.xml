@@ -1004,6 +1004,7 @@
     <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
     <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
+    <string name="overview_show_activity">Activity</string>
     <string name="overview_show_sensitivity">Sensitivity</string>
     <string name="overview_show_deviations">Deviations</string>
     <string name="overview_show_cob">Carbs On Board</string>
@@ -1363,13 +1364,13 @@
     <string name="unit_second">second</string>
     <string name="unit_minute">minute</string>
     <string name="unit_hour">hour</string>
-    <string name="unit_day">day"</string>
-    <string name="unit_week">week"</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
     <string name="unit_seconds">seconds</string>
     <string name="unit_minutes">minutes</string>
     <string name="unit_hours">hours</string>
-    <string name="unit_days">days"</string>
-    <string name="unit_weeks">weeks"</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
     <string name="key_tidepool_username" translatable="false">tidepool_username</string>
     <string name="key_tidepool_password" translatable="false">tidepool_password</string>
     <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
@@ -1429,6 +1430,8 @@
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
+    <string name="key_scale_insulin_activity" translatable="false">scale_insulin_activity</string>
+    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
 

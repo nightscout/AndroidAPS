@@ -403,8 +403,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public String model() {
-        return "DanaRv2";
+    public PumpType model() {
+        return PumpType.DanaRv2;
     }
 
     @Override

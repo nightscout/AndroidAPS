@@ -365,8 +365,8 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public String model() {
-        return "DanaRKorean";
+    public PumpType model() {
+        return PumpType.DanaRKorean;
     }
 
     private PumpEnactResult cancelRealTempBasal() {
