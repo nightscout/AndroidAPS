@@ -1391,6 +1391,16 @@
     <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
     <!-- MDT Configuration -->
+    <string name="pref_key_medtronic_serial">pref_medtronic_serial</string>
+    <string name="pref_key_medtronic_pump_type">pref_medtronic_pump_type</string>
+    <string name="pref_key_medtronic_frequency">pref_medtronic_frequency</string>
+    <string name="pref_key_medtronic_max_bolus">pref_medtronic_max_bolus</string>
+    <string name="pref_key_medtronic_max_basal">pref_medtronic_max_basal</string>
+    <string name="pref_key_medtronic_bolus_delay">pref_medtronic_bolus_delay</string>
+    <string name="pref_key_medtronic_encoding">pref_medtronic_encoding</string>
+    <string name="pref_key_medtronic_battery_type">pref_medtronic_battery_type</string>
+    <string name="pref_key_rileylink_mac_address">pref_rileylink_mac_address</string>
+
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
     <string name="medtronic_pump_frequency">Pump Frequency</string>
@@ -1494,7 +1504,6 @@
     <string name="medtronic_error_pump_wrong_max_basal_set">Wrong Max Basal set on Pump (must be %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Medtronic Pump first, before you can use this operation.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">Over 24h Time change was requested.</string>
-    <string name="xxx">xxx</string>
 
     <!-- MDT History -->
     <string name="medtronic_history_group_basal">Basals</string>

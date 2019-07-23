@@ -323,7 +323,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    private double checkParameterValue(String key, String defaultValue, double defaultValueDouble) {
+    private double checkParameterValue(int key, String defaultValue, double defaultValueDouble) {
         double val = 0.0d;
 
         String value = SP.getString(key, defaultValue);
