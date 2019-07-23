@@ -238,11 +238,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
         Double maxCorrection = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
-        editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+        editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok), textWatcher);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
         double bolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
-        editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
-        editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
+        editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, view.findViewById(R.id.ok), textWatcher);
+        editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
         initDialog();
 
         setCancelable(true);
