@@ -41,7 +41,7 @@ public class InputPercent extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(100d, 70d, 130d, 5d, new DecimalFormat("0"), true, textWatcher);
+        numberPicker.setParams(100d, 70d, 130d, 5d, new DecimalFormat("0"), true, null, textWatcher);
         numberPicker.setValue(value);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);

@@ -25,10 +25,10 @@ public class InputDuration extends Element {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
         if (unit.equals(TimeUnit.MINUTES)) {
             // Minutes
-            numberPicker.setParams(0d, 0d, 24 * 60d, 10d, new DecimalFormat("0"), false);
+            numberPicker.setParams(0d, 0d, 24 * 60d, 10d, new DecimalFormat("0"), false, null);
         } else {
             // Hours
-            numberPicker.setParams(0d, 0d, 24d, 1d, new DecimalFormat("0"), false);
+            numberPicker.setParams(0d, 0d, 24d, 1d, new DecimalFormat("0"), false, null);
         }
         numberPicker.setValue((double) value);
         numberPicker.setOnValueChangedListener(value -> this.value = (int) value);

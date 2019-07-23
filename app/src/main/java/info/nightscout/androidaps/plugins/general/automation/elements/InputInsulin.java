@@ -40,7 +40,7 @@ public class InputInsulin extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(0d, -20d, 20d, 0.1, new DecimalFormat("0.0"), true, textWatcher);
+        numberPicker.setParams(0d, -20d, 20d, 0.1, new DecimalFormat("0.0"), true, null, textWatcher);
         numberPicker.setValue(value);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);

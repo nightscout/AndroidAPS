@@ -122,7 +122,7 @@ public class InputDelta extends Element {
         spinner.setSelection(this.deltaType.ordinal());
 //        root.addView(spinner);
         numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, textWatcher);
+        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, textWatcher);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         LinearLayout l = new LinearLayout(root.getContext());
         l.setOrientation(LinearLayout.VERTICAL);

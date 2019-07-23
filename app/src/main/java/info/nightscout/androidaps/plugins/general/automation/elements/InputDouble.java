@@ -58,7 +58,7 @@ public class InputDouble extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, textWatcher);
+        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, textWatcher);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);
     }
