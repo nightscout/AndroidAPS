@@ -1391,15 +1391,15 @@
     <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
     <!-- MDT Configuration -->
-    <string name="pref_key_medtronic_serial">pref_medtronic_serial</string>
-    <string name="pref_key_medtronic_pump_type">pref_medtronic_pump_type</string>
-    <string name="pref_key_medtronic_frequency">pref_medtronic_frequency</string>
-    <string name="pref_key_medtronic_max_bolus">pref_medtronic_max_bolus</string>
-    <string name="pref_key_medtronic_max_basal">pref_medtronic_max_basal</string>
-    <string name="pref_key_medtronic_bolus_delay">pref_medtronic_bolus_delay</string>
-    <string name="pref_key_medtronic_encoding">pref_medtronic_encoding</string>
-    <string name="pref_key_medtronic_battery_type">pref_medtronic_battery_type</string>
-    <string name="pref_key_rileylink_mac_address">pref_rileylink_mac_address</string>
+    <string name="pref_key_medtronic_serial" translatable="false">pref_medtronic_serial</string>
+    <string name="pref_key_medtronic_pump_type" translatable="false">pref_medtronic_pump_type</string>
+    <string name="pref_key_medtronic_frequency" translatable="false">pref_medtronic_frequency</string>
+    <string name="pref_key_medtronic_max_bolus" translatable="false">pref_medtronic_max_bolus</string>
+    <string name="pref_key_medtronic_max_basal" translatable="false">pref_medtronic_max_basal</string>
+    <string name="pref_key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
+    <string name="pref_key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+    <string name="pref_key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
+    <string name="pref_key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
 
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
