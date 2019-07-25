@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
@@ -171,6 +172,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(DanaRSPlugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
 
                     if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
                             || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)

@@ -101,8 +101,8 @@ public enum PumpType {
     Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 24 * 60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
-            0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities), // TODO
+            new DoseSettings(0.05d, 30, 24*60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
+            0.05d, 0.05d, null, PumpCapability.MedtronicCapabilities), //
 
     Medtronic_515_715("Medtronic 515/715", "515/715", Medtronic_512_712),
     Medtronic_522_722("Medtronic 522/722", "522/722", Medtronic_512_712),
@@ -110,8 +110,8 @@ public enum PumpType {
     Medtronic_523_723_Revel("Medtronic 523/723 (Revel)", ManufacturerType.Medtronic, "523/723 (Revel)", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 24 * 60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
-            0.025d, 0.025d, DoseStepSize.MedtronicVeoBasal, PumpCapability.VirtualPumpCapabilities), //
+            new DoseSettings(0.05d, 30, 24*60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
+            0.025d, 0.025d, DoseStepSize.MedtronicVeoBasal, PumpCapability.MedtronicCapabilities), //
 
     Medtronic_554_754_Veo("Medtronic 554/754 (Veo)", "554/754 (Veo)", Medtronic_523_723_Revel), // TODO
 

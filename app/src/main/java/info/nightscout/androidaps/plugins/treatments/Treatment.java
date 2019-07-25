@@ -16,6 +16,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
@@ -29,7 +30,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
-public class Treatment implements DataPointWithLabelInterface {
+public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -103,15 +104,16 @@ public class Treatment implements DataPointWithLabelInterface {
                 ", insulin= " + insulin +
                 ", carbs= " + carbs +
                 ", mealBolus= " + mealBolus +
+                ", source= " + source +
                 "}";
     }
 
     public boolean isDataChanging(Treatment other) {
         if (date != other.date)
             return true;
-        if (insulin != other.insulin)
+        if (!isSame(insulin, other.insulin))
             return true;
-        if (carbs != other.carbs)
+        if (!isSame(carbs, other.carbs))
             return true;
         return false;
     }
@@ -119,9 +121,9 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isEqual(Treatment other) {
         if (date != other.date)
             return false;
-        if (insulin != other.insulin)
+        if (!isSame(insulin, other.insulin))
             return false;
-        if (carbs != other.carbs)
+        if (!isSame(carbs, other.carbs))
             return false;
         if (mealBolus != other.mealBolus)
             return false;
@@ -134,11 +136,33 @@ public class Treatment implements DataPointWithLabelInterface {
         return true;
     }
 
+    public boolean isEqualWithoutPumpId(Treatment other) {
+        if (date != other.date)
+            return false;
+        if (!isSame(insulin, other.insulin))
+            return false;
+        if (!isSame(carbs, other.carbs))
+            return false;
+        if (mealBolus != other.mealBolus)
+            return false;
+        if (isSMB != other.isSMB)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public boolean isSame(Double d1, Double d2) {
+        double diff = d1 - d2;
+
+        return (Math.abs(diff) <= 0.000001);
+    }
+
     @Nullable
     public JSONObject getBoluscalc() {
         try {
             if (boluscalc != null)
-            return new JSONObject(boluscalc);
+                return new JSONObject(boluscalc);
         } catch (JSONException ignored) {
         }
         return null;
@@ -161,12 +185,13 @@ public class Treatment implements DataPointWithLabelInterface {
         if (date != other.date) {
             return false;
         }
-        if (insulin != other.insulin) {
+
+        if (!isSame(insulin, other.insulin))
             return false;
-        }
-        if (carbs != other.carbs) {
+
+        if (!isSame(carbs, other.carbs))
             return false;
-        }
+
         return true;
     }
 
@@ -252,5 +277,15 @@ public class Treatment implements DataPointWithLabelInterface {
 
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
         return insulinInterface.iobCalcForTreatment(this, time, dia);
+    }
+
+    @Override
+    public long getDate() {
+        return this.date;
+    }
+
+    @Override
+    public long getPumpId() {
+        return this.pumpId;
     }
 }

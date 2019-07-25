@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -49,6 +50,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -290,6 +292,23 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
     }
 
+
+    @Override
+    public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
+        List<Treatment> in5minback = new ArrayList<>();
+        long time = System.currentTimeMillis();
+        synchronized (treatments) {
+            for (Treatment t : treatments) {
+                if (!t.isValid)
+                    continue;
+                if (t.date <= time && t.date >= fromTimestamp)
+                    in5minback.add(t);
+            }
+            return in5minback;
+        }
+    }
+
+
     @Override
     public List<Treatment> getTreatments5MinBackFromHistory(long time) {
         List<Treatment> in5minback = new ArrayList<>();
@@ -517,6 +536,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     // return true if new record is created
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
+        boolean medtronicPump = MedtronicUtil.isMedtronicPump();
+
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
         treatment.source = detailedBolusInfo.source;
@@ -529,7 +550,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
         treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
-        TreatmentService.UpdateReturn creatOrUpdateResult = getService().createOrUpdate(treatment);
+        TreatmentService.UpdateReturn creatOrUpdateResult;
+
+        if (!medtronicPump)
+            creatOrUpdateResult = getService().createOrUpdate(treatment);
+        else
+            creatOrUpdateResult = getService().createOrUpdateMedtronic(treatment, false);
+
         boolean newRecordCreated = creatOrUpdateResult.newRecord;
         //log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
@@ -539,7 +566,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
             carbsTreatment.source = detailedBolusInfo.source;
-            getService().createOrUpdate(carbsTreatment);
+            if (!medtronicPump)
+                getService().createOrUpdate(carbsTreatment);
+            else
+                getService().createOrUpdateMedtronic(carbsTreatment, false);
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
         if (newRecordCreated && detailedBolusInfo.isValid)

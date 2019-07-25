@@ -32,7 +32,20 @@
         <item name="android:windowMinWidthMinor">96%</item>
     </style>
 
+    <style name="Theme.AppCompat.NoTitle" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
     <style name="ButtonSmallFontStyle">
         <item name="android:textSize">10sp</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

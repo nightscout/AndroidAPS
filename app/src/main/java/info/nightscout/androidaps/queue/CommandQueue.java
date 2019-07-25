@@ -433,6 +433,19 @@ public class CommandQueue {
         return true;
     }
 
+
+    public synchronized boolean statusInQueue() {
+        if (isRunning(Command.CommandType.READSTATUS))
+            return true;
+        for (int i = 0; i < queue.size(); i++) {
+            if (queue.get(i).commandType == Command.CommandType.READSTATUS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     // returns true if command is queued
     public boolean loadHistory(byte type, Callback callback) {
         if (isRunning(Command.CommandType.LOADHISTORY)) {
