@@ -865,6 +865,7 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Laat outomatiese Foutverslagdoening en kenmerk data stuur na die ontwikkelaars via die fabric.io diens.</string>
     <string name="g5appnotdetected">Hernuwe asseblief jou G5 toepassing na \'n ondersteunde weergawe</string>
+    <string name="dexcom_app_not_installed">Dexcom toep is nie geïnstalleer nie.</string>
     <string name="start_activity_tt">Begin aktiwiteit TT</string>
     <string name="start_eating_soon_tt">Begin eet gou TT</string>
     <string name="temptargetshort">TT</string>
@@ -874,6 +875,7 @@
     <string name="bolusrecordedonly">Bolus sal slegs opgeneem word</string>
     <string name="ns_autobackfill_summary">Autobackfill vermiste BGs vanaf NS</string>
     <string name="loop_smbsetbypump_label">SMB gestel deur pomp</string>
+    <string name="overview_show_activity">Aktiwiteit</string>
     <string name="overview_show_sensitivity">Sensitiewiteit</string>
     <string name="overview_show_deviations">Afwykings</string>
     <string name="overview_show_cob">Karbs AanBoord</string>
@@ -884,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
     <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
     <string name="not_eng_mode_or_release">Ingenieurswese modus ontsper nie en nie op publike vrylating tak</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Lees basale profiel</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Die pomp geskiedenis het verander nadat die bolus berekening uitgevoer was. Die bolus was nie afgelewer nie. Herbereken asseblief of \'n bolus steeds nodig is.</string>
     <string name="combo_error_updating_treatment_record">Bolus suksesvol afgelewer, maar die behandeling inskrywing het gefaal. Dit kan gebeur as twee klein boluses van dieselfde grootte binne die laaste twee minute toegedien word. Kontroleer die pomp geskiedenis en behandeling inskrywings en gebruik die Careportal om vermiste inskrywings te voeg. Maak seker om nie enige inskrywings vir dieselfde minuut en dieselfde bedrag by te voeg.</string>
@@ -1148,6 +1149,31 @@
     <string name="dexcom_lognssensorchange_summary">Skep geleentheid \"sensor verandering\" in NS automaties op sensor begin</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="unit_second">sekonde</string>
+    <string name="unit_minute">minuut</string>
+    <string name="unit_hour">uur</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">sekondes</string>
+    <string name="unit_minutes">minute</string>
+    <string name="unit_hours">ure</string>
+    <string name="unit_days">dae</string>
+    <string name="unit_weeks">weke</string>
+    <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
+    <string name="title_tidepool_username">Login Gebruiker Naam</string>
+    <string name="summary_tidepool_password">Jou Tidepool login kode</string>
+    <string name="title_tidepool_password">Login wagwoord</string>
+    <string name="title_tidepool_test_login">Toets Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">As ge-aktiveer sal data oplaai na https://int-app.tidepool.org instede van die gewone https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Gebruik Integrasie (toets) bedieners</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laai data op na Tidepool</string>
+    <string name="tidepool_upload_cgm">Laai CGM data op</string>
+    <string name="tidepool_upload_bolus">Laai behandelings op (insulien, karbs)</string>
+    <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
+    <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
+    <string name="tidepool_upload_bg">Laai BG toetse op</string>
     <string name="dst_in_24h_warning">Daglig spaar tyd verandering in 24 h of minder</string>
     <string name="dst_loop_disabled_warning">Daglig spaar tyd het verander minder as 3 ure terug - Geslote lus afgeskakel</string>
     <string name="storage">interne berging beperking</string>
@@ -1160,8 +1186,24 @@
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="new_version_warning">Nuwe weergawe reeds beskikbaar vir %1$d! Sal na 60 dae terugval na LGS, lus sal ongeldig gemaak word na 90 dae</string>
+    <string name="scale_insulin_activity">Grafiek skall insulien aktiwiteit [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Ontvang BG waardes vanaf die opgedateerde Dexcom app.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>

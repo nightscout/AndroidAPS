@@ -244,8 +244,8 @@ public class TimeListEdit {
         if (i == 0) next = ONEHOURINSECONDS;
         fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
-        editText1.setParams(value1(i), min, max, step, formatter, false);
-        editText2.setParams(value2(i), min, max, step, formatter, false);
+        editText1.setParams(value1(i), min, max, step, formatter, false, view.findViewById(R.id.localprofile_save));
+        editText2.setParams(value2(i), min, max, step, formatter, false, view.findViewById(R.id.localprofile_save));
 
         if (data2 == null) {
             editText2.setVisibility(View.GONE);

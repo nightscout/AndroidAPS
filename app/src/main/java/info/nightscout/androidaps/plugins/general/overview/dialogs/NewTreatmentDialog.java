@@ -101,8 +101,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         editCarbs = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_carbsamount);
         editInsulin = (NumberPicker) view.findViewById(R.id.treatments_newtreatment_insulinamount);
 
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, view.findViewById(R.id.ok), textWatcher);
 
         recordOnlyCheckbox = (CheckBox) view.findViewById(R.id.newtreatment_record_only);
 
@@ -142,7 +142,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                             confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>";
                         }
                         if (Math.abs(insulinAfterConstraints - insulin) > pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(insulinAfterConstraints) || !Objects.equals(carbsAfterConstraints, carbs))
-                            confirmMessage += "<br/><font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>";
+                            confirmMessage += "<br/>" + MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), insulin, insulinAfterConstraints);
                     }
                     if (carbsAfterConstraints > 0)
                         confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbsAfterConstraints + "g" + "</font>";

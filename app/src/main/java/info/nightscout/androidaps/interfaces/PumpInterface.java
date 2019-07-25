@@ -7,8 +7,10 @@ import java.util.List;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 
 /**
  * Created by mike on 04.06.2016.
@@ -53,8 +55,8 @@ public interface PumpInterface {
 
     // Status to be passed to NS
     JSONObject getJSONStatus(Profile profile, String profileName);
-    String manufacter();
-    String model();
+    ManufacturerType manufacturer();
+    PumpType model();
     String serialNumber();
 
     // Pump capabilities
@@ -72,5 +74,11 @@ public interface PumpInterface {
     List<CustomAction> getCustomActions();
 
     void executeCustomAction(CustomActionType customActionType);
+
+    /**
+     * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for
+     * example update clock on pump).
+     */
+    void timeDateOrTimeZoneChanged();
 
 }

@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
+import androidx.fragment.app.FragmentActivity;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.*;
@@ -226,6 +229,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     protected void onStop() {
         super.onStop();
         MainApp.instance().unbindService(serviceConnection);
+    }
+
+    @Override
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        confirmPumpPluginActivation(pluginSwitcher, activity);
     }
 
     @Override
@@ -945,13 +953,13 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public String manufacter() {
-        return "Roche";
+    public ManufacturerType manufacturer() {
+        return ManufacturerType.Roche;
     }
 
     @Override
-    public String model() {
-        return "Insight";
+    public PumpType model() {
+        return PumpType.AccuChekInsightBluetooth;
     }
 
     @Override
@@ -1593,4 +1601,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public boolean canHandleDST() {
         return true;
     }
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
 }

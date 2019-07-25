@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -536,6 +538,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return tddList;
     }
 
+    public List<TDD> getTDDsForLastXDays(int days) {
+        List<TDD> tddList;
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.add(Calendar.DAY_OF_YEAR, (-1) * days);
+
+        try {
+            QueryBuilder<TDD, String> queryBuilder = getDaoTDD().queryBuilder();
+            queryBuilder.orderBy("date", false);
+            Where<TDD, String> where = queryBuilder.where();
+            where.ge("date", gc.getTimeInMillis());
+            PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
+            tddList = getDaoTDD().query(preparedQuery);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+            tddList = new ArrayList<>();
+        }
+        return tddList;
+    }
 
     // ------------- DbRequests handling -------------------
 
@@ -871,6 +891,31 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         log.debug("TEMPBASAL: Already exists from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                     return false;
                 }
+
+                // search by date (in case its standard record that has become pump record)
+                QueryBuilder<TemporaryBasal, Long> queryBuilder2 = getDaoTemporaryBasal().queryBuilder();
+                Where where2 = queryBuilder2.where();
+                where2.eq("date", tempBasal.date);
+                PreparedQuery<TemporaryBasal> preparedQuery2 = queryBuilder2.prepare();
+                List<TemporaryBasal> trList2 = getDaoTemporaryBasal().query(preparedQuery2);
+
+                if (trList2.size() > 0) {
+                    old = trList2.get(0);
+
+                    old.copyFromPump(tempBasal);
+                    old.source = Source.PUMP;
+
+                    if (L.isEnabled(L.DATABASE))
+                        log.debug("TEMPBASAL: Updated record with Pump Data : " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
+
+                    getDaoTemporaryBasal().update(old);
+
+                    updateEarliestDataChange(tempBasal.date);
+                    scheduleTemporaryBasalChange();
+
+                    return false;
+                }
+
                 getDaoTemporaryBasal().create(tempBasal);
                 if (L.isEnabled(L.DATABASE))
                     log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
@@ -1110,6 +1155,29 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return null;
     }
+
+
+    public TemporaryBasal findTempBasalByPumpId(Long pumpId) {
+        try {
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
+            queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            queryBuilder.orderBy("date", false);
+            Where where = queryBuilder.where();
+            where.eq("pumpId", pumpId);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
+
+            if (list.size() > 0)
+                return list.get(0);
+            else
+                return null;
+
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
+    }
+
 
     // ------------ ExtendedBolus handling ---------------
 

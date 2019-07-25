@@ -39,7 +39,7 @@ public class OKDialog {
 
             builder.create().show();
         } catch (Exception e) {
-            log.debug("show_dialog exception: " + e);
+            log.debug("show_dialog exception: ", e);
         }
     }
 

@@ -28,6 +28,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -438,13 +439,13 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public String manufacter() {
-        return pumpDescription.pumpType.getManufacter();
+    public ManufacturerType manufacturer() {
+        return pumpDescription.pumpType.getManufacturer();
     }
 
     @Override
-    public String model() {
-        return pumpDescription.pumpType.getModel();
+    public PumpType model() {
+        return pumpDescription.pumpType;
     }
 
     @Override
@@ -491,5 +492,12 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         this.pumpType = pumpTypeNew;
 
     }
+
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
 
 }

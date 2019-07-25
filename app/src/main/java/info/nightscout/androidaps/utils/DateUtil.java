@@ -120,11 +120,19 @@ public class DateUtil {
     }
 
     public static String timeString(Date date) {
-        return new DateTime(date).toString(DateTimeFormat.shortTime());
+        String format = "hh:mma";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "HH:mm";
+        }
+        return new DateTime(date).toString(DateTimeFormat.forPattern(format));
     }
 
     public static String timeString(long mills) {
-        return new DateTime(mills).toString(DateTimeFormat.shortTime());
+        String format = "hh:mma";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "HH:mm";
+        }
+        return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
     }
 
     public static String timeFullString(long mills) {
@@ -200,6 +208,10 @@ public class DateUtil {
     public static boolean isCloseToNow(long date) {
         long diff = Math.abs(date - now());
         return diff < T.mins(2).msecs();
+    }
+
+    public static GregorianCalendar gregorianCalendar() {
+        return new GregorianCalendar();
     }
 
     public static long getTimeZoneOffsetMs() {

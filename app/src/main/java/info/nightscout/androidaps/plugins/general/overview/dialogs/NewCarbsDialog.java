@@ -130,15 +130,15 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         startHypoTTCheckbox = view.findViewById(R.id.newcarbs_hypo_tt);
 
         editTime = view.findViewById(R.id.newcarbs_time);
-        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
+        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         editDuration = view.findViewById(R.id.new_carbs_duration);
-        editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
+        editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
 
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         Button fav1Button = view.findViewById(R.id.newcarbs_plus1);
         fav1Button.setOnClickListener(this);

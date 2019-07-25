@@ -884,7 +884,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
     <string name="engineering_mode_enabled">Mod inginer activat</string>
     <string name="not_eng_mode_or_release">Modul inginer nu este activat și nu este în versiunea lansată</string>
-    <string name="pump_basebasalrate">%.2f U/o</string>
     <string name="combo_actvity_reading_basal_profile">Se citește profilul bazal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Istoricul pompei s-a schimbat după calcularea bolusului. Bolusul nu a fost livrat. Recalculați dacă mai este necesar un bolus.</string>
     <string name="combo_error_updating_treatment_record">Bolus livrat, dar nu s-a reușit înregistrarea evenimentului. Aceasta se poate întâmpla când două bolusuri mici de aceeași valoare sunt livrate în mai puțin de două minute. Verificați istoricul pompei și înregistrările tratamentelor și folosiți Careportal pentru adăugarea intrărilor lipsă. Asigurați-vă că nu adăugați intrări duble.</string>
@@ -1160,6 +1159,18 @@
     <string name="old_version">versiune veche</string>
     <string name="very_old_version">versiune foarte veche</string>
     <string name="new_version_warning">Noua versiune este disponibilă de cel puțin %1$d zile! Revenire la LGS după 60 zile, bucla va fi dezactivată după 90 zile</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zi</item>

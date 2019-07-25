@@ -28,7 +28,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPORARYBASALS)
-public class TemporaryBasal implements Interval {
+public class TemporaryBasal implements Interval, DbObjectBase {
     private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
@@ -155,6 +155,14 @@ public class TemporaryBasal implements Interval {
         pumpId = t.pumpId;
         isFakeExtended = t.isFakeExtended;
         netExtendedRate = t.netExtendedRate;
+    }
+
+    public void copyFromPump(TemporaryBasal t) {
+        durationInMinutes = t.durationInMinutes;
+        isAbsolute = t.isAbsolute;
+        percentRate = t.percentRate;
+        absoluteRate = t.absoluteRate;
+        pumpId = t.pumpId;
     }
 
     // -------- Interval interface ---------
@@ -490,4 +498,13 @@ public class TemporaryBasal implements Interval {
         }
     }
 
+    @Override
+    public long getDate() {
+        return this.date;
+    }
+
+    @Override
+    public long getPumpId() {
+        return this.pumpId;
+    }
 }

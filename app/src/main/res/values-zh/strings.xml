@@ -865,6 +865,7 @@
     <string name="fabric_upload">通过Fabric上传</string>
     <string name="allow_automated_crash_reporting">允许通过fabric.io服务将自动崩溃报告和功能使用数据发送给开发人员。</string>
     <string name="g5appnotdetected">请将您的 dexcom app 更新为支持的版本</string>
+    <string name="dexcom_app_not_installed">未安装德康app。</string>
     <string name="start_activity_tt">开始运动临时目标</string>
     <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
     <string name="temptargetshort">TT(临时目标)</string>
@@ -874,6 +875,7 @@
     <string name="bolusrecordedonly">大剂量将仅被记录</string>
     <string name="ns_autobackfill_summary">Autobackfill 现在无法从NS获取血糖</string>
     <string name="loop_smbsetbypump_label">通过泵设置SMB微型大剂量</string>
+    <string name="overview_show_activity">活动</string>
     <string name="overview_show_sensitivity">灵敏度</string>
     <string name="overview_show_deviations">偏差</string>
     <string name="overview_show_cob">活性碳水化合物</string>
@@ -884,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
     <string name="engineering_mode_enabled">已启用工程模式</string>
     <string name="not_eng_mode_or_release">工程模式没有启用或者在这个版本上不支持</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">正在读取基础率配置文件</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">在大剂量计算之后，泵的历史记录已经发生变化了。大剂量将不会被输注，如果仍然需要大剂量输注请重新计算</string>
     <string name="combo_error_updating_treatment_record">大剂量输注成功，但添加到治疗记录时失败。如果在最近两分钟内使用相同量的两个小大剂量，就会发生这种情况。请检查泵的历史记录和治疗条目，并使用记录标签添加丢失的条目。确保在同一分钟不要添加重复的条目</string>
@@ -1148,6 +1149,31 @@
     <string name="dexcom_lognssensorchange_summary">在传感器启动时在 NS服务器 自动创建事件 \"传感器更改\"</string>
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
+    <string name="unit_second">秒</string>
+    <string name="unit_minute">分钟</string>
+    <string name="unit_hour">小时</string>
+    <string name="unit_day">天</string>
+    <string name="unit_week">周</string>
+    <string name="unit_seconds">秒</string>
+    <string name="unit_minutes">分钟</string>
+    <string name="unit_hours">小时</string>
+    <string name="unit_days">天</string>
+    <string name="unit_weeks">周</string>
+    <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>
+    <string name="title_tidepool_username">登录用户名</string>
+    <string name="summary_tidepool_password">登录密码</string>
+    <string name="title_tidepool_password">登录密码</string>
+    <string name="title_tidepool_test_login">测试Tidepool登录</string>
+    <string name="summary_tidepool_dev_servers">如果启用，则上载将转到https://intapp.tidepool.org，而不是常规https://app.tidepool.org/。</string>
+    <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">数据上传到Tidepool</string>
+    <string name="tidepool_upload_cgm">上传CGM数据</string>
+    <string name="tidepool_upload_bolus">上传治疗方案（胰岛素，碳水化合物）</string>
+    <string name="tidepool_upload_tbr">上传临时基础率</string>
+    <string name="tidepool_upload_profile">上传配置文件切换，临时目标</string>
+    <string name="tidepool_upload_bg">上传血糖值</string>
     <string name="dst_in_24h_warning">在24小时内或更少时间内更夏令时时间</string>
     <string name="dst_loop_disabled_warning">不到3小时前夏令时时间变化了-已禁用闭环</string>
     <string name="storage">内部储存空间不足</string>
@@ -1160,6 +1186,24 @@
     <string name="old_version">旧版本</string>
     <string name="very_old_version">非常旧版本</string>
     <string name="new_version_warning">至少可用 %1$d 天的新版本！60 天后返回 LGS，90 天后循环将被禁用</string>
+    <string name="scale_insulin_activity">图表显示活性胰岛素（U/分钟）</string>
+    <string name="twohours">2小时</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">德康app（补丁版）</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">从补丁版的德康APP收到血糖值</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="other">%1$d　天</item>
     </plurals>

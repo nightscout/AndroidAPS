@@ -126,12 +126,12 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
         editLayout = view.findViewById(R.id.newinsulin_time_layout);
         editLayout.setVisibility(View.GONE);
         editTime = view.findViewById(R.id.newinsulin_time);
-        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
+        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
 
         editInsulin = view.findViewById(R.id.newinsulin_amount);
-        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, view.findViewById(R.id.ok), textWatcher);
 
         Button plus1Button = view.findViewById(R.id.newinsulin_plus05);
         plus1Button.setOnClickListener(this);
@@ -226,7 +226,7 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
             }
 
             if (Math.abs(insulinAfterConstraints - insulin) > pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
+                actions.add(MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), insulin, insulinAfterConstraints));
 
             int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
             eatingSoonTTDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : Constants.defaultEatingSoonTTDuration;
