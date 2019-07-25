@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.common;
 
 import java.util.Date;
 
+import androidx.fragment.app.FragmentActivity;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -105,6 +107,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
      */
     public abstract void onStartCustomActions();
 
+    @Override
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        confirmPumpPluginActivation(pluginSwitcher, activity);
+    }
 
     /**
      * Service class (same one you did serviceConnection for)
