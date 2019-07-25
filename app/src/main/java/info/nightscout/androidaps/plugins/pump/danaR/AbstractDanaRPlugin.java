@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.danaR;
 
 import androidx.annotation.Nullable;
 
+import androidx.fragment.app.FragmentActivity;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -75,6 +77,11 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
             NSProfilePlugin.getPlugin().setPluginEnabled(PluginType.PROFILE, true);
             NSProfilePlugin.getPlugin().setFragmentVisible(PluginType.PROFILE, true);
         }
+    }
+
+    @Override
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        confirmPumpPluginActivation(pluginSwitcher, activity);
     }
 
     @Override
