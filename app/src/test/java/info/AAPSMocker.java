@@ -55,6 +55,8 @@ public class AAPSMocker {
     public static Intent intentSent = null;
 
     public static CommandQueue queue;
+    public static ConfigBuilderPlugin configBuilderPlugin;
+    public static ProfileFunctions profileFunctions;
     public static ConstraintChecker constraintChecker;
 
     public static void mockStrings() {
@@ -147,6 +149,12 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
         when(MainApp.gs(R.string.cob)).thenReturn("COB");
         when(MainApp.gs(R.string.value_unavailable_short)).thenReturn("n/a");
+        when(MainApp.gs(R.string.starttemptarget)).thenReturn("Start temp target");
+        when(MainApp.gs(R.string.stoptemptarget)).thenReturn("Stop temp target");
+        when(MainApp.gs(R.string.disableloop)).thenReturn("Disable loop");
+        when(MainApp.gs(R.string.enableloop)).thenReturn("Enable loop");
+        when(MainApp.gs(R.string.resumeloop)).thenReturn("Resume loop");
+        when(MainApp.gs(R.string.suspendloop)).thenReturn("Suspend loop");
         when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
     }
 
@@ -160,7 +168,7 @@ public class AAPSMocker {
 
     public static void mockConfigBuilder() {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
-        ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
+        configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
@@ -272,7 +280,7 @@ public class AAPSMocker {
 
     public static void mockProfileFunctions() {
         PowerMockito.mockStatic(ProfileFunctions.class);
-        ProfileFunctions profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        profileFunctions = PowerMockito.mock(ProfileFunctions.class);
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);

@@ -77,6 +77,7 @@ public class L {
 
     public static final String CORE = "CORE";
     public static final String AUTOSENS = "AUTOSENS";
+    public static final String AUTOMATION = "AUTOMATION";
     public static final String EVENTS = "EVENTS";
     public static final String GLUCOSE = "GLUCOSE";
     public static final String BGSOURCE = "BGSOURCE";
@@ -97,11 +98,13 @@ public class L {
     public static final String PROFILE = "PROFILE";
     public static final String CONFIGBUILDER = "CONFIGBUILDER";
     public static final String UI = "UI";
+    public static final String LOCATION = "LOCATION";
     public static final String SMS = "SMS";
 
     private static void initialize() {
         logElements = new ArrayList<>();
         logElements.add(new LogElement(APS, true));
+        logElements.add(new LogElement(AUTOMATION, true));
         logElements.add(new LogElement(AUTOSENS, false));
         logElements.add(new LogElement(BGSOURCE, true));
         logElements.add(new LogElement(GLUCOSE, false));
@@ -113,6 +116,7 @@ public class L {
         logElements.add(new LogElement(DATASERVICE, true));
         logElements.add(new LogElement(DATATREATMENTS, true));
         logElements.add(new LogElement(EVENTS, false, true));
+        logElements.add(new LogElement(LOCATION, true));
         logElements.add(new LogElement(NOTIFICATION, true));
         logElements.add(new LogElement(NSCLIENT, true));
         logElements.add(new LogElement(TIDEPOOL, true));

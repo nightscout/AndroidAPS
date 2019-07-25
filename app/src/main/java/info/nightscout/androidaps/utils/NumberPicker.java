@@ -33,6 +33,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         View.OnTouchListener, View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(NumberPicker.class);
 
+    public interface OnValueChangedListener {
+        void onValueChanged(double value);
+    }
+
     EditText editText;
     Button minusButton;
     Button plusButton;
@@ -49,6 +53,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
 
     private Handler mHandler;
     private ScheduledExecutorService mUpdater;
+    private OnValueChangedListener mOnValueChangedListener;
 
     private class UpdateCounterTask implements Runnable {
         private boolean mInc;
@@ -133,15 +138,19 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             @Override
             public void afterTextChanged(Editable s) {
                 value = SafeParse.stringToDouble(editText.getText().toString());
+                callValueChangedListener();
                 if (okButton != null) {
                     if (value > maxValue || value < minValue)
                         okButton.setVisibility(INVISIBLE);
                     else
                         okButton.setVisibility(VISIBLE);
                 }
-
             }
         });
+    }
+
+    public void setOnValueChangedListener(OnValueChangedListener onValueChangedListener) {
+        mOnValueChangedListener = onValueChangedListener;
     }
 
     public void setTextWatcher(TextWatcher textWatcher) {
@@ -182,6 +191,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         this.step = step;
         this.formater = formater;
         this.allowZero = allowZero;
+        callValueChangedListener();
         this.okButton = okButton;
 
         editText.setKeyListener(DigitsKeyListener.getInstance(minValue < 0, step != Math.rint(step)));
@@ -197,6 +207,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         if (textWatcher != null)
             editText.removeTextChangedListener(textWatcher);
         this.value = value;
+        callValueChangedListener();
         updateEditText();
         if (textWatcher != null)
             editText.addTextChangedListener(textWatcher);
@@ -218,6 +229,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         value += step * multiplier;
         if (value > maxValue) {
             value = maxValue;
+            callValueChangedListener();
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
             stopUpdating();
         }
@@ -228,6 +240,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         value -= step * multiplier;
         if (value < minValue) {
             value = minValue;
+            callValueChangedListener();
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
             stopUpdating();
         }
@@ -239,6 +252,11 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             editText.setText("");
         else
             editText.setText(formater.format(value));
+    }
+
+    private void callValueChangedListener() {
+        if (mOnValueChangedListener != null)
+            mOnValueChangedListener.onValueChanged(value);
     }
 
     private void startUpdating(boolean inc) {

@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -190,6 +191,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(AutomationPlugin.INSTANCE, PluginType.GENERAL);
 
                 addPreferencesFromResource(R.xml.pref_others);
                 addPreferencesFromResource(R.xml.pref_datachoices);
