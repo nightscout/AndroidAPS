@@ -886,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
     <string name="engineering_mode_enabled">Tryb Inżynierski włączony</string>
     <string name="not_eng_mode_or_release">Tryb inżynierski nie włączony i nie pracuje wersja \"kandydat do wydania\" (RC)</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Wczytuje profil bazowy</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Historia pompy zmieniła się po wykonaniu obliczenia bolusa. Bolus nie został dostarczony. Proszę, przelicz ponownie, jeśli wciąż potrzebujesz bolusa.</string>
     <string name="combo_error_updating_treatment_record">Bolus został pomyślnie dostarczony, ale dodanie wpisu leczenia nie powiodło się. Może się to zdarzyć, jeśli w ciągu ostatnich dwóch minut podano dwa małe bolusy o tej samej wielkości. Sprawdź historię pompy i leczenie i użyj PortaluOpieki, aby dodać brakujące wpisy. Make sure not to add any entries for the exact same minute and same amount.</string>
@@ -1167,6 +1166,18 @@
     <string name="dexcom_app_patched">Apka Dexcom (spatchowana)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Pobieraj wartości BG ze spatchowanej aplikacji Dexcom.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

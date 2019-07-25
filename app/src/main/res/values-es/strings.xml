@@ -885,7 +885,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
     <string name="not_eng_mode_or_release">Modo de ingeniería no está activado y no disponible en esta rama</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Leyendo perfil basal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">El historial de la bomba ha cambiado después de que se realizó el cálculo del bolo. El bolo no fue entregado. Por favor, vuelva a calcular si aún se necesita un bolo.</string>
     <string name="combo_error_updating_treatment_record">El bolo se administró con éxito, pero falló la incorporación de la entrada del tratamiento. Esto puede suceder si se administran dos bolos pequeños del mismo tamaño en los últimos dos minutos. Verifique el historial de la bomba y las entradas de tratamiento y use el portal de tratamientos para agregar entradas faltantes. Asegúrese de no agregar ninguna entrada para el mismo minuto exacto y la misma cantidad.</string>
@@ -1191,6 +1190,18 @@
     <string name="dexcom_app_patched">DexcomG App (parcheada)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Recibir valores de glucosa de la app parcheada de Dexcom.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

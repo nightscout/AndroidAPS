@@ -886,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="not_eng_mode_or_release">Vývojársky mód nie je povolený a nebeží vydaná verzia</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Načítavam bazálny profil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">História v pumpe sa zmenila po spočítaní bolusu. Bolus nebol podaný. Prosím spočítajte ho znovu, pokiaľ je stále potrebný.</string>
     <string name="combo_error_updating_treatment_record">Bolus úspešne podaný, ale zápis se nepodaril. To sa môže stať, pokiaľ sú podané bolusy rovnakej veľkosti v priebehu 2 minút. Skontrolujte históriu pumpy a zadajte chýbajúce položky do ošetrení. Uistite sa, že nezadávate rovnakú veľkosť v rámci 1 minúty.</string>
@@ -1187,11 +1186,24 @@
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
     <string name="new_version_warning">Nová verzia dostupná najmenej %1$d dní! Návrat k liečbe inzulínovou pumpou s podporou senzora po 60 dňoch, okruh bude deaktivovaný po 90 dňoch.</string>
+    <string name="scale_insulin_activity">Mierka grafu aktivity inzulínu</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Prijímaj hodnoty glykémie z upravenej Dexcom aplikácie.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
