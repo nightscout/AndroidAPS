@@ -361,8 +361,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public String model() {
-        return "DanaR";
+    public PumpType model() {
+        return PumpType.DanaR;
     }
 
     private PumpEnactResult cancelRealTempBasal() {

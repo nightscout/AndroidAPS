@@ -66,17 +66,17 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         basalPercent = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
         double maxTempPercent = pumpDescription.maxTempPercent;
         double tempPercentStep = pumpDescription.tempPercentStep;
-        basalPercent.setParams(100d, 0d, maxTempPercent, tempPercentStep, new DecimalFormat("0"), true);
+        basalPercent.setParams(100d, 0d, maxTempPercent, tempPercentStep, new DecimalFormat("0"), true, view.findViewById(R.id.ok));
 
         Profile profile = ProfileFunctions.getInstance().getProfile();
         Double currentBasal = profile != null ? profile.getBasal() : 0d;
         basalAbsolute = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalabsoluteinput);
-        basalAbsolute.setParams(currentBasal, 0d, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, new DecimalFormat("0.00"), true);
+        basalAbsolute.setParams(currentBasal, 0d, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, new DecimalFormat("0.00"), true, view.findViewById(R.id.ok));
 
         double tempDurationStep = pumpDescription.tempDurationStep;
         double tempMaxDuration = pumpDescription.tempMaxDuration;
         duration = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_duration);
-        duration.setParams(tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, new DecimalFormat("0"), false);
+        duration.setParams(tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         if ((pumpDescription.tempBasalStyle & PumpDescription.PERCENT) == PumpDescription.PERCENT && (pumpDescription.tempBasalStyle & PumpDescription.ABSOLUTE) == PumpDescription.ABSOLUTE) {
             // Both allowed

@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -769,13 +770,13 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public String manufacter() {
-        return "SOOIL";
+    public ManufacturerType manufacturer() {
+        return ManufacturerType.Sooil;
     }
 
     @Override
-    public String model() {
-        return "DanaRS";
+    public PumpType model() {
+        return PumpType.DanaRS;
     }
 
     @Override

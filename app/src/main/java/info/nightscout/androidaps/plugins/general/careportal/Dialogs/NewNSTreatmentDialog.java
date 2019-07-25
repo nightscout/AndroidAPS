@@ -266,14 +266,14 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editBg = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_bginput);
         editTemptarget = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_temptarget);
         if (profile == null) {
-            editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
-            editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
+            editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok), bgTextWatcher);
+            editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
         } else if (units.equals(Constants.MMOL)) {
-            editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
-            editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
+            editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok), bgTextWatcher);
+            editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
         } else {
-            editBg.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, bgTextWatcher);
-            editTemptarget.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
+            editBg.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), bgTextWatcher);
+            editTemptarget.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -287,16 +287,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
         Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
         editCarbs = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbsinput);
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         editInsulin = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_insulininput);
-        editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
+        editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false, view.findViewById(R.id.ok));
 
         editSplit = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_splitinput);
-        editSplit.setParams(100d, 0d, 100d, 5d, new DecimalFormat("0"), true);
+        editSplit.setParams(100d, 0d, 100d, 5d, new DecimalFormat("0"), true, view.findViewById(R.id.ok));
         editDuration = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_durationinput);
-        editDuration.setParams(0d, 0d, 24 * 60d, 10d, new DecimalFormat("0"), false);
+        editDuration.setParams(0d, 0d, 24 * 60d, 10d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         TextWatcher percentTextWatcher = new TextWatcher() {
             @Override
@@ -320,7 +320,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if (profile != null)
             maxPercent = MainApp.getConstraintChecker().getMaxBasalPercentAllowed(profile).value();
         editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
-        editPercent.setParams(0d, -100d, (double) maxPercent, 5d, new DecimalFormat("0"), true, percentTextWatcher);
+        editPercent.setParams(0d, -100d, (double) maxPercent, 5d, new DecimalFormat("0"), true, view.findViewById(R.id.ok), percentTextWatcher);
 
         TextWatcher absoluteTextWatcher = new TextWatcher() {
             @Override
@@ -344,16 +344,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if (profile != null)
             maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
         editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
-        editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
+        editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, view.findViewById(R.id.ok), absoluteTextWatcher);
 
         editCarbTime = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbtimeinput);
-        editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
+        editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         editPercentage = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentage);
-        editPercentage.setParams(100d, (double) Constants.CPP_MIN_PERCENTAGE, (double) Constants.CPP_MAX_PERCENTAGE, 1d, new DecimalFormat("0"), false);
+        editPercentage.setParams(100d, (double) Constants.CPP_MIN_PERCENTAGE, (double) Constants.CPP_MAX_PERCENTAGE, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
-        editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false);
+        editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         ProfileSwitch ps = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now());
         if (ps != null && ps.isCPP) {
