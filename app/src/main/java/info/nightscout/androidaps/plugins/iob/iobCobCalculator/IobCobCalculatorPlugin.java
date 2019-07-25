@@ -485,6 +485,20 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return new CobInfo(displayCob, futureCarbs);
     }
 
+    public double slowAbsorptionPercentage(int timeInMinutes) {
+        double sum = 0;
+        int count = 0;
+        int valuesToProcess = timeInMinutes / 5;
+        synchronized (dataLock) {
+            for (int i = autosensDataTable.size() - 1; i >= 0 && count < valuesToProcess; i--) {
+                if (autosensDataTable.valueAt(i).failoverToMinAbsorbtionRate)
+                    sum++;
+                count++;
+            }
+        }
+        return sum /count;
+    }
+
     @Nullable
     public AutosensData getLastAutosensData(String reason) {
         if (autosensDataTable.size() < 1) {

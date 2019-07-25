@@ -242,7 +242,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
         double bolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, view.findViewById(R.id.ok), textWatcher);
-        editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
+        editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
         initDialog();
 
         setCancelable(true);
@@ -392,7 +392,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 c_cob = cobInfo.displayCob;
         }
 
-        wizard = new BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, 100d, bgCheckbox.isChecked(), cobCheckbox.isChecked(), bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), ttCheckbox.isChecked(), bgtrendCheckbox.isChecked(), notesEdit.getText().toString(), SafeParse.stringToInt(editCarbTime.getText()));
+        int carbTime = SafeParse.stringToInt(editCarbTime.getText());
+
+        wizard = new BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, 100d, bgCheckbox.isChecked(), cobCheckbox.isChecked(), bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), ttCheckbox.isChecked(), bgtrendCheckbox.isChecked(), notesEdit.getText().toString(), carbTime);
 
         bg.setText(c_bg + " ISF: " + DecimalFormatter.to1Decimal(wizard.getSens()));
         bgInsulin.setText(StringUtils.formatInsulin(wizard.getInsulinFromBG()));
