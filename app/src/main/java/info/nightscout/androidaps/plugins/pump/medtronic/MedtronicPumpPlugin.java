@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -1370,13 +1371,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     @Override
-    public String manufacter() {
-        return "Medtronic";
+    public ManufacturerType manufacturer() {
+        return getMDTPumpStatus().pumpType.getManufacturer();
     }
 
     @Override
-    public String model() {
-        return getMDTPumpStatus().medtronicDeviceType.getPumpModel();
+    public PumpType model() {
+        return getMDTPumpStatus().pumpType;
     }
 
     @Override
