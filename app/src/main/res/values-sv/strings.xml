@@ -9,7 +9,7 @@
     <string name="nav_resetdb">Återställ databaserna</string>
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="nav_exit">Avsluta</string>
-    <string name="danar_useextended_title">Använd förlängd bolus för att ange &gt;200% basal</string>
+    <string name="danar_useextended_title">Använd förlängd bolus för att ange &gt;200%% basal</string>
     <string name="danar_bt_name_title">Dana R Bluetooth Pump</string>
     <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
     <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
@@ -887,6 +887,7 @@ Eversense-appen.</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inte tillåtet.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
     <string name="not_eng_mode_or_release">Engineering Mode inte aktiverat och appen körs inte som release</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Läser basalprofil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Pumphistoriken ändrad efter att boluskalkylen gjordes. Bolusen har inte levererats. Vänligen gör en ny kalkyl vid behov.</string>
     <string name="combo_error_updating_treatment_record">Bolusen levererad, men det gick inte att lägga till den i loggen. Detta kan hända om två små bolusar ges inom två minuter. Vänligen kontrollera pumpens historik och Careportal och lägg till om det saknas. Se till att inte lägga till två bolusar med samma mängd och samma tid.</string>
@@ -1194,17 +1195,119 @@ Eversense-appen.</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
     <!-- Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operation stöds inte av pumpen/pumpdrivrutinen.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operationen stöds inte av pumpen ännu.</string>
     <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Pumpintegration för Medtronic. Kräver Riley Link-enhet och fungerar bara mot vissa pumpmodeller</string>
     <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Serienummer på pumpen</string>
+    <string name="medtronic_pump_type">Pumptyp</string>
+    <string name="medtronic_pump_frequency">Pumpfrekvens</string>
+    <string name="medtronic_pump_bolus_delay">Fördröjning innan bolus startas (s)</string>
+    <string name="medtronic_pump_max_bolus">Max bolus enligt pumpen (U)</string>
+    <string name="medtronic_pump_max_basal">Max basal på pumpen (U/h)</string>
+    <string name="medtronic_pump_encoding">Medtronickodning</string>
+    <string name="medtronic_pump_frequency_us_ca">USA &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Resten av världen (868 MHz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">4b6b Mjukvarukodning</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">4b6b Hårdvarukodning</string>
+    <string name="rileylink_mac_address">Riley Link MAC-adress</string>
+    <string name="medtronic_custom_action_wake_and_tune">Väck och finjustera frekvens</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Ta bort bolusblockering</string>
+    <string name="medtronic_custom_action_reset_rileylink">Återställ Riley Link-konfiguration</string>
+    <string name="medtronic_pump_battery_select">Batterityp</string>
+    <string name="medtronic_pump_battery_no">Ej vald</string>
+    <string name="medtronic_pump_battery_alkaline">Alkaliskt</string>
+    <string name="medtronic_pump_battery_lithium">Litium</string>
     <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">SÖK</string>
+    <string name="rileylink_scanner_scan_stop">AVBRYT</string>
+    <string name="rileylink_scanner_selected_device">Vald</string>
+    <string name="rileylink_scanner_scan">Sök</string>
+    <string name="rileylink_scanner_title">Riley Link-sökning</string>
+    <string name="rileylink_scanner_scan_menu">Sök efter Riley Link</string>
+    <string name="rileylink_scanner_ble_not_supported">Enheten stöder inte BLE.</string>
+    <string name="rileylink_scanner_ble_not_enabled">Bluetooth avstängt.</string>
+    <string name="location_not_found_title">Platsdata är inte aktiverat</string>
+    <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
+    <string name="location_yes">Aktivera</string>
+    <string name="location_no">Nej</string>
+    <string name="rileylink_scanner_scanning">Söker</string>
+    <string name="rileylink_scanner_scanning_finished">Sökning avslutad</string>
+    <string name="rileylink_scanner_scanning_error">Fel vid sökning: %1$d</string>
     <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Inställningar</string>
+    <string name="rileylink_settings_tab2">Historik</string>
+    <string name="rileylink_settings_tab3">Enhet</string>
+    <string name="rileylink_status">Riley Link Status</string>
+    <string name="medtronic_pump_status">Pumpstatus</string>
+    <string name="rileylink_settings_title">Inställningar för Riley Link</string>
+    <string name="title_activity_rileylink_settings">Inställningar för Riley Link</string>
+    <string name="rileylink_title">Riley Link</string>
+    <string name="rileylink_configured_address">Konfigurerad adress</string>
+    <string name="rileylink_connected_device">Ansluten enhet</string>
+    <string name="rileylink_connection_status">Anslutningsstatus</string>
+    <string name="rileylink_connection_error">Anslutningsproblem</string>
+    <string name="rileylink_device">Enhet</string>
+    <string name="rileylink_device_type">Enhetstyp</string>
+    <string name="rileylink_device_model">Modell</string>
+    <string name="rileylink_last_used_frequency">Senast använda frekvens</string>
+    <string name="rileylink_last_device_contact">Senaste anslutning</string>
+    <string name="rileylink_firmware_version">Firmware</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth initieras…</string>
+    <string name="rileylink_state_bt_error">Bluetoothfel</string>
+    <string name="rileylink_state_bt_ready">Bluetooth redo</string>
+    <string name="rileylink_state_not_started">Inte startad</string>
+    <string name="rileylink_state_rl_init">Riley Link initierar…</string>
+    <string name="rileylink_state_rl_error">Riley Link-fel</string>
+    <string name="rileylink_state_pc_tune_up">Justerar Riley Link mot pump</string>
+    <string name="rileylink_state_pc_error">Problem att ansluta till pumpen</string>
+    <string name="rileylink_state_connected">Ansluten</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Enheten är inte en Riley Link</string>
+    <string name="rileylink_error_unreachable">Riley Link kan inte nås</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth avstängt</string>
+    <string name="rileylink_error_no_bt_adapter">Ingen bluetoothadapter</string>
+    <string name="rileylink_error_tuneup_failed">Frekvensjustering misslyckades</string>
+    <string name="rileylink_error_pump_unreachable">Pumpen kan inte nås</string>
+    <string name="rileylink_error_pod_unreachable">Podden kan inte nås</string>
+    <string name="rileylink_error_address_not_set_short">Ej vald</string>
     <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Medtronicpump</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Fel</string>
+    <string name="medtronic_error_serial_not_set">Serienummer ej angett.</string>
+    <string name="medtronic_error_serial_invalid">Serienummer felaktigt.</string>
+    <string name="medtronic_error_pump_type_not_set">Pumptyp ej vald.</string>
+    <string name="medtronic_error_pump_type_invalid">Pumptypen stöds inte.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pumpfrekvens ej vald.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pumpfrekvens stöds inte.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Riley Link adress felaktig.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basalprofiler inte aktiverat på pumpen.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Fel basalprofiltyp inställt på pumpen (måste vara STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Fel typ av temp basal på pumpen (måste vara satt till Absolut).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operationen inte möjlig. \n\n Du måste konfigurera Medtronicpump innan du kan använda denna funktion.</string>
     <!-- MDT History -->
     <!-- MDT Pump Status -->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cant_cancel_tbr">Kunde inte avbryta temp basal.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Kunde inte byta basalprofil.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basalprofilen är samma som nuvarande. Ingen ändring gjord.</string>
+    <string name="medtronic_cmd_desc_get_history">Hämta historik - Sida %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Hämta historik - Sida %1$d</string>
+    <string name="medtronic_cmd_desc_get_history_base">Hämta historik - Sida %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Hämta tid och datum från pumpen</string>
+    <string name="medtronic_cmd_desc_get_settings">Hämta inställningar</string>
+    <string name="medtronic_cmd_desc_get_model">Hämta pumpmodell</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Hämta basalprofil</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Sätt basalprofil</string>
+    <string name="medtronic_cmd_desc_get_tbr">Hämta temp basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Sätt temp basal</string>
+    <string name="medtronic_cmd_desc_set_bolus">Leverera bolus</string>
+    <string name="pump_no_connection_h">Ingen anslutning på %1$d tim %2$d min</string>
+    <string name="pump_no_connection_d">Ingen anslutning på %1$d d %2$d tim</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
