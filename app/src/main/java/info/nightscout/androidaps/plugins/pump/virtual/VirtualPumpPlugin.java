@@ -493,4 +493,11 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
     }
 
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
+
 }

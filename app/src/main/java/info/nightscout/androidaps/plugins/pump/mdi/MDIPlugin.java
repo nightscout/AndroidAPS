@@ -278,4 +278,10 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
         return true;
     }
 
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
+
 }

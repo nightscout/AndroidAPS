@@ -843,4 +843,9 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return false;
     }
 
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
 }
