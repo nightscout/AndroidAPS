@@ -886,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="engineering_mode_enabled">Режим отладки включен</string>
     <string name="not_eng_mode_or_release">Режим отладки не задействован и отсутствует на ветке релиза</string>
-    <string name="pump_basebasalrate">%.2f ед/ч</string>
     <string name="combo_actvity_reading_basal_profile">Чтение базального профиля</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">История событий помпы изменилась с момента вычисления болюса. Болюс не подан. Пожалуйста пересчитайте потребность в болюсе.</string>
     <string name="combo_error_updating_treatment_record">Болюс подан успешно, но запись о назначении не сделана. Это может быть вызвано тем, что за последние две минуты назначено два болюса одного объема. Пожалуйста проверьте историю событий помпы и записи о назначениях и добавьте пропущенные записи из Портала назначений. Не добавляйте записи с одним и тем же временем и одинаковым объемом.</string>
@@ -1195,6 +1194,18 @@ Context | Edit Context</string>
     <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Получать данные ГК от модифицированного приложения Dexcom.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

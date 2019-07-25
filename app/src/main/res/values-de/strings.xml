@@ -887,7 +887,6 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
     <string name="not_eng_mode_or_release">Entwickler-Modus nicht aktiviert und keine Release-Version</string>
-    <string name="pump_basebasalrate">%1$.2f IE/h</string>
     <string name="combo_actvity_reading_basal_profile">Basalratenprofil wird gelesen</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Nach der Berechnung des Bolus hat sich die Pumpenhistorie geändert. Daher wurde kein Bolus abgegeben. Bitte prüfe, ob überhaupt noch ein Bolus benötigt wird.</string>
     <string name="combo_error_updating_treatment_record">Der Bolus wurde erfolgreich abgegeben, aber nicht als Behandlungseintrag gespeichert. Dies kann passieren, wenn zwei kleine, gleich große Boli innerhalb von zwei Minuten verabreicht werden. Bitte überprüfe die Pumpenhistorie und Behandlungseinträge. Verwende das Careportal, um fehlende Einträge hinzuzufügen. Stelle sicher, dass keine Einträge für genau dieselbe Minute und dieselbe Menge hinzugefügt werden.</string>
@@ -1195,6 +1194,18 @@ Unerwartetes Verhalten.</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Empfange Blutzucker-Werte von der gepatchten Dexcom App.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

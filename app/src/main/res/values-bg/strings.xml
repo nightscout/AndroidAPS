@@ -885,7 +885,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
     <string name="not_eng_mode_or_release">Режим за раработчици (Engineering mode) не е активиран и не е release версия</string>
-    <string name="pump_basebasalrate">%.2f Е/ч</string>
     <string name="combo_actvity_reading_basal_profile">Прочита базалният профил</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Историята на помпата се промени след извършване на изчислението за болус. Болусът не беше доставен. Моля, преизчислете дали все още е необходим болус.</string>
     <string name="combo_error_updating_treatment_record">Болус успешно инжектиран, но добавянето на лечение в базата данни е неуспешно. Това може да се случи, ако два малки болуса със същия размер са направени в рамките на последните две минути. Проверете записите в историята на помпата и използвайте Careportal, за да добавите липсващи записи. Уверете се,че не добавяте еднакви записи за точно една и съща минута и същото количество инсулин.</string>
@@ -1155,6 +1154,7 @@
     <string name="unit_seconds">секунди</string>
     <string name="unit_minutes">минути</string>
     <string name="unit_hours">часове</string>
+    <string name="unit_weeks">седмици</string>
     <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>
     <string name="title_tidepool_username">Потребителско име</string>
     <string name="summary_tidepool_password">Tidepool парола</string>
@@ -1187,6 +1187,18 @@
     <string name="dexcom_app_patched">Dexcom приложение (модифицирано)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

@@ -885,7 +885,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
     <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
     <string name="not_eng_mode_or_release">Η μηχανική λειτουργία δεν είναι ενεργοποιημένη και δεν είναι ελευθερωμένη</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Ανάγνωση βασικού προφίλ</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Το ιστορικό της αντλίας έχει αλλάξει μετά την εκτέλεση του υπολογισμού του bolus. Το bolus δεν εκτελέστηκε. Παρακαλούμε να υπολογίσετε ξανά αν είναι ακόμα απαραίτητο.</string>
     <string name="combo_error_updating_treatment_record">Το bolus εκτελέστηκε με επιτυχία, αλλά η καταχώριση στην θεραπεία απέτυχε. Αυτό μπορεί να συμβεί εάν χορηγηθούν δύο bolus ίδιου μεγέθους μέσα σε 2 λεπτά. Ελέγξτε το ιστορικό της αντλίας και το ιστορικό στο μενού Θεραπείες και χρησιμοποιείστε το Careportal για να εισαγάγετε τα στοιχεία που λείπουν. Βεβαιωθείτε ότι δεν εισάγετε το ίδιο μέγεθος στον ακριβώς ίδιο χρόνο.</string>
@@ -1187,6 +1186,18 @@
     <string name="dexcom_app_patched">Εφαρμογή Dexcom (τροποποιημένη)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Λάβετε τις τιμές BG από την εφαρμογή του Dexcom.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d ημέρα</item>
         <item quantity="other">%1$d ημέρες</item>

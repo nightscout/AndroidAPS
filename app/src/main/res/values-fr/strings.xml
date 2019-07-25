@@ -886,7 +886,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
     <string name="not_eng_mode_or_release">Le mode Ingénierie n\'est pas activé et n\'existe pas sur cette version</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Lecture du profil basal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">L\'historique de la pompe a été modifié depuis le calcul du bolus. Le bolus n\'a pas été administré. Merci de recalculer le bolus s\'il est toujours nécessaire.</string>
     <string name="combo_error_updating_treatment_record">Le bolus a été délivré mais il n\'a pas pu être ajouté à l\'historique des traitements. Ceci peut se produire lorsque deux petits bolus de la même taille sont gérés dans les deux dernières minutes. Merci de vérifier l\'historique de la pompe et les entrées de traitements puis utilisez le Careportal pour y ajouter les entrées manquantes. Assurez-vous de ne pas ajouter des entrées au cours de la même minute et pour la même quantité d\'insuline.</string>
@@ -1188,6 +1187,18 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="dexcom_app_patched">App Dexcom (patchée)</string>
     <string name="dexcom_short">Dexcom</string>
     <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

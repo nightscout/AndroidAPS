@@ -886,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
     <string name="engineering_mode_enabled">Expertní mód povolen</string>
     <string name="not_eng_mode_or_release">Expertní mód není povolen a neběží vydaná verze</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Načítám bazální profil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba.</string>
     <string name="combo_error_updating_treatment_record">Bolus úspěšně podán, ale zápis se nezdařil. To se může stát pokud jsou podány bolusy stejné velikosti během 2 minut. Zkontrolujte historii pumpy a zadejte chybějící položky do ošetření. Ujistěte se, že nezadáváte stejnou velikost v rámci 1 minuty.</string>
@@ -1193,6 +1192,18 @@
     <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

@@ -884,7 +884,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="engineering_mode_enabled">Inžinerinis režimas įjungtas</string>
     <string name="not_eng_mode_or_release">Inžinerinis režimas negalimas vartotojo atšakoje</string>
-    <string name="pump_basebasalrate">%.2f vv/val</string>
     <string name="combo_actvity_reading_basal_profile">Nuskaitomas bazės profilis</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Skaičiuojant bolusą pasikeitė pompos istorija. Bolusas nesuleistas. Prašome perskaičiuoti, jei boluso vis dar reikia.</string>
     <string name="combo_error_updating_treatment_record">Bolusas sėkmingai suleistas, tačiau įrašas žurnale neįvestas. Taip gali nutikti, jei du vienodi nedideli bolusai suleisti per pastarąsias 2 min. Patikrinkite pompos istoriją ir įrašų žurnalą bei naudodamiesi Careportal įveskite trūkstamus įrašus. Patikrinkite, ar įvedamas įrašas neturi tokios pat laiko žymos ir insulino kiekio, kaip jau egzistuojantis.</string>
@@ -1168,6 +1167,18 @@
     <string name="old_version">sena versija</string>
     <string name="very_old_version">labai sena versija</string>
     <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d dienų! Po 60 d. grįšite prie stabdymo prie žemo, po 90 d. ciklas bus išjungtas.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d diena</item>
         <item quantity="few">%1$d diena</item>

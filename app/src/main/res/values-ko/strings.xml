@@ -886,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
     <string name="not_eng_mode_or_release">전문가 모드가 활성화되어 있지 않고 Release 버전이 실행되고 있지 않습니다.</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Basal 프로파일 읽는중</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus 계산이 수행된 후 펌프 이력이 변경되었습니다. Bolus가 주입되지 않았습니다. Bolus가 여전히 필요하다면 다시 계산하세요.</string>
     <string name="combo_error_updating_treatment_record">Bolus가 성공적으로 주입되었지만, 관리 항목에 추가하지 못했습니다. 이것은 동일한 양의 소량의 2개의 Bolus가 최근 2 분 이내에 주입되는 경우에 발생할 수 있습니다. 펌프 이력과 관리 항목을 확인하고 손실된 항목을 추가하기위해 케어포털을 이용하세요. 동일한 시간과 인슐린양의 항목을 추가하지 마세요.</string>
@@ -1193,6 +1192,18 @@
     <string name="dexcom_app_patched">Dexcom 앱(패치버전)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">패치된 Dexcom 앱에서 혈당값 받기</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="other">%1$d 일</item>
     </plurals>

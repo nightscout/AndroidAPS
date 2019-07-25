@@ -866,6 +866,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Sta automatische crashrapporten en verder gebruik van data toe zodat deze naar de ontwikkelaars via fabric.io kan verzonden worden.</string>
     <string name="g5appnotdetected">Gelieve Dexcom app naar ondersteunde versie te updaten</string>
+    <string name="dexcom_app_not_installed">Dexcom app is niet geïnstalleerd.</string>
     <string name="start_activity_tt">Start inspanning TT</string>
     <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
     <string name="temptargetshort">TT</string>
@@ -875,6 +876,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="bolusrecordedonly">Bolus zal enkel opgeslagen worden</string>
     <string name="ns_autobackfill_summary">Automatische onbekende BGs aanvullen van NS</string>
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
+    <string name="overview_show_activity">Activiteit</string>
     <string name="overview_show_sensitivity">Gevoeligheid</string>
     <string name="overview_show_deviations">Afwijkingen</string>
     <string name="overview_show_cob">Opgenomen Koolhydraten</string>
@@ -885,7 +887,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
     <string name="not_eng_mode_or_release">Engineering modus is niet geactiveerd en dit is niet de release branche</string>
-    <string name="pump_basebasalrate">%.2f E/uur</string>
+    <string name="pump_basebasalrate">%1$.2f E/uur</string>
     <string name="combo_actvity_reading_basal_profile">Basaal profiel wordt gelezen</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">De pomp historiek is gewijzigd nadat de bolus berekend was. De bolus is Niet toegediend. Programmeer een nieuwe bolus indien nodig.</string>
     <string name="combo_error_updating_treatment_record">Bolus succesvol toegediend, maar toevoegen van de behandeling is gefaald. Dit kan voorvallen wanneer twee kleine bolussen van dezelfde grote gekozen waren gedurende de laatste 2 minuten. Controleer aub de pomphistoriek en de behandelingen, voeg de ontbrekende toe via het Careportal. Let op dat je geen 2 dezelfde hoeveelheden hebt op hetzelfde ogenblik.</string>
@@ -1149,6 +1151,31 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="dexcom_lognssensorchange_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="unit_second">seconde</string>
+    <string name="unit_minute">minuut</string>
+    <string name="unit_hour">uur</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconden</string>
+    <string name="unit_minutes">minuten</string>
+    <string name="unit_hours">uren</string>
+    <string name="unit_days">dagen</string>
+    <string name="unit_weeks">weken</string>
+    <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
+    <string name="title_tidepool_username">Inlog gebruikersnaam</string>
+    <string name="summary_tidepool_password">Uw Tidepool login wachtwoord</string>
+    <string name="title_tidepool_password">Login wachtwoord</string>
+    <string name="title_tidepool_test_login">Test Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">Indien ingeschakeld zullen uploads gaan naar https://int-app.tidepool.org in plaats van de reguliere https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Gebruik integratie (test) servers</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Upload gegevens naar Tidepool</string>
+    <string name="tidepool_upload_cgm">CGM-gegevens uploaden</string>
+    <string name="tidepool_upload_bolus">Upload behandelingen (insuline, carbs)</string>
+    <string name="tidepool_upload_tbr">Tijdelijke basalen uploaden</string>
+    <string name="tidepool_upload_profile">Upload profiel wisselingen, tijdelijke doelen</string>
+    <string name="tidepool_upload_bg">Upload BG-tests</string>
     <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
     <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Closed Loop modus gedeactiveerd</string>
     <string name="storage">interne opslag bijna vol</string>
@@ -1161,7 +1188,24 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="old_version">oude versie</string>
     <string name="very_old_version">zeer oude versie</string>
     <string name="new_version_warning">Er is als sinds ten minste %1$d dagen een nieuwe versie beschikbaar! Na 60 dagen wordt de loop beperkt tot LGS, na 90 dagen zal de loop worden uitgeschakeld</string>
+    <string name="scale_insulin_activity">Schaal voor insuline activiteit in grafieken [E/min]</string>
     <string name="twohours">2u</string>
+    <string name="formatinsulinunits">%1$.2fE</string>
+    <string name="dexcom_app_patched">Dexcom App (patched)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Ontvang BG waardes van de aangepaste Dexcom G app.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>

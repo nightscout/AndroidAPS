@@ -886,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
     <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
     <string name="not_eng_mode_or_release">Ingenieurswese modus ontsper nie en nie op publike vrylating tak</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Lees basale profiel</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Die pomp geskiedenis het verander nadat die bolus berekening uitgevoer was. Die bolus was nie afgelewer nie. Herbereken asseblief of \'n bolus steeds nodig is.</string>
     <string name="combo_error_updating_treatment_record">Bolus suksesvol afgelewer, maar die behandeling inskrywing het gefaal. Dit kan gebeur as twee klein boluses van dieselfde grootte binne die laaste twee minute toegedien word. Kontroleer die pomp geskiedenis en behandeling inskrywings en gebruik die Careportal om vermiste inskrywings te voeg. Maak seker om nie enige inskrywings vir dieselfde minuut en dieselfde bedrag by te voeg.</string>
@@ -1193,6 +1192,18 @@
     <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Ontvang BG waardes vanaf die opgedateerde Dexcom app.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
