@@ -7,7 +7,7 @@ ext {
 
 def generateGitBuild = { ->
 
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder()
     stringBuilder.append('"')
     try {
         def stdout = new ByteArrayOutputStream()

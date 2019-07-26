@@ -40,7 +40,7 @@ repositories {
 }
 
 def generateGitBuild = { ->
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder()
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
