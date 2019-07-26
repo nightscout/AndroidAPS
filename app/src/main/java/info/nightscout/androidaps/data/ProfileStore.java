@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data;
 
-import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
+import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;

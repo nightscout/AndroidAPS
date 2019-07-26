@@ -865,6 +865,7 @@
     <string name="fabric_upload">Envio Fabric</string>
     <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
     <string name="g5appnotdetected">Por favor atualize as sua aplicação Dexcom para uma versão suportada</string>
+    <string name="dexcom_app_not_installed">App Dexcom não está instalada.</string>
     <string name="start_activity_tt">Iniciar atividade TT</string>
     <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
     <string name="temptargetshort">TT</string>
@@ -874,6 +875,7 @@
     <string name="bolusrecordedonly">O bolus apenas será gravado</string>
     <string name="ns_autobackfill_summary">Preencher glicemias em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
+    <string name="overview_show_activity">Actividade</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
     <string name="overview_show_cob">Carboidratos a bordo</string>
@@ -884,7 +886,7 @@
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
     <string name="not_eng_mode_or_release">Modo de engenharia não habilitado e não no na versão mestra</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">A ler perfil basal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">O histórico da bomba foi alterado após o cálculo do bolo ter sido realizado. O bolus não foi injectado. Por favor, verifique se bolus ainda é necessário.</string>
     <string name="combo_error_updating_treatment_record">O bolus foi injectado, mas não foi possível adicionar ao histórico. Isto é possível se dois bolus do mesmo valor baixo foram administrados nos últimos dois minutos. Por favor verifique o histórico da bomba e use o Careportal para adicionar os dados em falta caso necessário. Cuidado para não adicionar dados com o mesmo valor no mesmo minuto.</string>
@@ -1148,6 +1150,22 @@
     <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="unit_second">segundo</string>
+    <string name="unit_minute">minuto</string>
+    <string name="unit_hour">hora</string>
+    <string name="unit_day">dia</string>
+    <string name="unit_week">semana</string>
+    <string name="unit_seconds">segundos</string>
+    <string name="unit_minutes">minutos</string>
+    <string name="unit_hours">horas</string>
+    <string name="unit_days">dias</string>
+    <string name="unit_weeks">semanas</string>
+    <string name="title_tidepool_username">Nome de Utilizador</string>
+    <string name="title_tidepool_password">Palavra-passe</string>
+    <string name="title_tidepool_test_login">Teste de Conta Tidepool</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="tidepool_upload_bg">Enviar testes Glicemia</string>
     <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
     <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Closed Loop desligado</string>
     <string name="storage">restrição de armazenamento interno</string>
@@ -1160,6 +1178,81 @@
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">App Dexcom (com patch)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Receber valores da Glicemia da app Dexcom (com patch).</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Número de série da Bomba</string>
+    <string name="medtronic_pump_type">Tipo de Bomba</string>
+    <string name="rileylink_mac_address">Endereço MAC do RileyLink</string>
+    <string name="medtronic_pump_battery_select">Tipo de Bateria (Visão Detalhada)</string>
+    <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
+    <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
+    <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
+    <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">PROCURAR</string>
+    <string name="rileylink_scanner_scan_stop">PARAR</string>
+    <string name="rileylink_scanner_selected_device">Seleccionado</string>
+    <string name="rileylink_scanner_scan">Procurar</string>
+    <string name="rileylink_scanner_title">Procura RileyLink</string>
+    <string name="rileylink_scanner_scan_menu">Procurar por RileyLink</string>
+    <string name="location_yes">Activar</string>
+    <string name="location_no">Não</string>
+    <string name="rileylink_scanner_scanning">A procurar</string>
+    <string name="rileylink_scanner_scanning_finished">Procura terminada</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Definições</string>
+    <string name="rileylink_settings_tab2">Histórico</string>
+    <string name="rileylink_settings_tab3">Dispositivo</string>
+    <string name="rileylink_status">Estado do RileyLink</string>
+    <string name="medtronic_pump_status">Estado da Bomba</string>
+    <string name="rileylink_settings_title">Definições do RileyLink</string>
+    <string name="title_activity_rileylink_settings">Definições do RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Endereço Configurado</string>
+    <string name="rileylink_connected_device">Dispositivo Ligado</string>
+    <string name="rileylink_connection_status">Estado de Ligação</string>
+    <string name="rileylink_connection_error">Erro de Ligação</string>
+    <string name="rileylink_device">Dispositivo</string>
+    <string name="rileylink_device_type">Tipo de dispositivo</string>
+    <string name="rileylink_device_model">Modelo do dispositivo</string>
+    <string name="rileylink_last_used_frequency">Frequência da última utilização</string>
+    <string name="rileylink_firmware_version">Firmware RL</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_error">Erro de Bluetooth</string>
+    <string name="rileylink_state_rl_init">Inicialização do RileyLink…</string>
+    <string name="rileylink_state_rl_error">Erro no RileyLink</string>
+    <string name="rileylink_state_connected">Ligado</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_address_not_set_short">Não definido</string>
+    <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Erros</string>
+    <!-- MDT History -->
+    <string name="medtronic_history_group_basal">Basais</string>
+    <string name="medtronic_history_group_statistic">Estatísticas</string>
+    <string name="medtronic_history_group_unknown">Desconhecido</string>
+    <string name="medtronic_history_group_all">Tudo</string>
+    <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_desc_get_history_base">Obter Histórico - Página %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Obter Hora da Bomba</string>
+    <string name="medtronic_cmd_desc_get_settings">Obter Definições</string>
+    <string name="medtronic_cmd_desc_get_model">Obter Modelo de Bomba</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Obter Perfil Basal</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Definir Perfil Basal</string>
+    <string name="medtronic_cmd_desc_get_tbr">Obter Basal Temporária</string>
+    <string name="medtronic_cmd_desc_set_tbr">Definir Basal Temporária</string>
+    <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="pump_no_connection_h">Sem ligação por %1$d hora(s) %2$d min</string>
+    <string name="pump_no_connection_d">Sem ligação por %1$d dia(s) %2$d horas</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

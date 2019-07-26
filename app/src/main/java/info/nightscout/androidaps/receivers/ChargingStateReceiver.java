@@ -10,12 +10,15 @@ import info.nightscout.androidaps.events.EventChargingState;
 
 public class ChargingStateReceiver extends BroadcastReceiver {
 
+    private static EventChargingState lastEvent;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         EventChargingState event = grabChargingState(context);
 
         if (event != null)
             MainApp.bus().post(event);
+        lastEvent = event;
     }
 
     public EventChargingState grabChargingState(Context context) {
@@ -32,4 +35,11 @@ public class ChargingStateReceiver extends BroadcastReceiver {
         return event;
     }
 
+    static public boolean isCharging() {
+        return lastEvent != null && lastEvent.isCharging;
+    }
+
+    static public EventChargingState getLastEvent() {
+        return lastEvent;
+    }
 }

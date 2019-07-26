@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,8 @@ import info.nightscout.androidaps.logging.L;
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private static Logger log = LoggerFactory.getLogger(L.CORE);
+
+    private static EventNetworkChange lastEvent = null;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -61,6 +63,15 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 log.debug("NETCHANGE: Disconnected.");
         }
 
+        lastEvent = event;
         return event;
+    }
+
+    public static boolean isWifiConnected() {
+        return lastEvent != null && lastEvent.wifiConnected;
+    }
+
+    public static EventNetworkChange getLastEvent() {
+        return lastEvent;
     }
 }

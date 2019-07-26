@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.text.Spanned;
 
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class OKDialog {
 
             builder.create().show();
         } catch (Exception e) {
-            log.debug("show_dialog exception: " + e);
+            log.debug("show_dialog exception: ", e);
         }
     }
 

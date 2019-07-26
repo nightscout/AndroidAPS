@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.pump.combo;
 
 import android.content.DialogInterface;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -65,6 +66,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 05.08.2016.
@@ -162,32 +164,9 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
-        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || context == null) {
-            pluginSwitcher.invoke();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.allow_hardware_pump_text)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            pluginSwitcher.invoke();
-                            SP.putBoolean("allow_hardware_pump", true);
-                            if (L.isEnabled(L.PUMP))
-                                log.debug("First time HW pump allowed!");
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            pluginSwitcher.cancel();
-                            if (L.isEnabled(L.PUMP))
-                                log.debug("User does not allow switching to HW pump!");
-                        }
-                    });
-            builder.create().show();
-        }
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        confirmPumpPluginActivation(pluginSwitcher, activity);
     }
-
 
     @Override
     public boolean isInitialized() {
@@ -1312,8 +1291,18 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public String deviceID() {
-        return "Combo";
+    public ManufacturerType manufacturer() {
+        return ManufacturerType.Roche;
+    }
+
+    @Override
+    public PumpType model() {
+        return PumpType.AccuChekCombo;
+    }
+
+    @Override
+    public String serialNumber() {
+        return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
     }
 
     @Override
@@ -1395,5 +1384,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     public boolean canHandleDST() {
         return false;
     }
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
 
 }

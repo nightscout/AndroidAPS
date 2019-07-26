@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-
-import javax.annotation.Nonnull;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;

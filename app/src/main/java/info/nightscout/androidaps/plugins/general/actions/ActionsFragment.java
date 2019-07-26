@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,7 @@ import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.TDDStatsActivity;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -130,6 +131,11 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        updateGUI();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventCustomActionsChanged ev) {
         updateGUI();
     }
 
@@ -247,6 +253,9 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
             for (CustomAction customAction : customActions) {
 
+                if (!customAction.isEnabled())
+                    continue;
+
                 SingleClickButton btn = new SingleClickButton(getContext(), null, android.R.attr.buttonStyle);
                 btn.setText(MainApp.gs(customAction.getName()));
 
@@ -264,10 +273,8 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
 
                 this.pumpCustomActions.put(MainApp.gs(customAction.getName()), customAction);
                 this.pumpCustomButtons.add(btn);
-
             }
         }
-
     }
 
 
@@ -283,7 +290,6 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         }
 
         pumpCustomButtons.clear();
-        pumpCustomActions.clear();
     }
 
 

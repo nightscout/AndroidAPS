@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -126,26 +127,8 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
-        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || context == null) {
-            pluginSwitcher.invoke();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.allow_hardware_pump_text)
-                    .setPositiveButton(R.string.yes, (dialog, id) -> {
-                        pluginSwitcher.invoke();
-                        SP.putBoolean("allow_hardware_pump", true);
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("First time HW pump allowed!");
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                        pluginSwitcher.cancel();
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("User does not allow switching to HW pump!");
-                    });
-            builder.create().show();
-        }
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        confirmPumpPluginActivation(pluginSwitcher, activity);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -769,7 +752,17 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public String deviceID() {
+    public ManufacturerType manufacturer() {
+        return ManufacturerType.Sooil;
+    }
+
+    @Override
+    public PumpType model() {
+        return PumpType.DanaRS;
+    }
+
+    @Override
+    public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 
@@ -830,6 +823,11 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     @Override
     public boolean canHandleDST() {
         return false;
+    }
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
     }
 
 }

@@ -13,7 +13,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
 import android.text.format.DateFormat;
 import android.util.Log;

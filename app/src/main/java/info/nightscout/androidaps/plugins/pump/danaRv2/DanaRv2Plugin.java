@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
@@ -124,29 +124,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @Override
     public void finishHandshaking() {
         sExecutionService.finishHandshaking();
-    }
-
-    @Override
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
-        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || context == null) {
-            pluginSwitcher.invoke();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.allow_hardware_pump_text)
-                    .setPositiveButton(R.string.yes, (dialog, id) -> {
-                        pluginSwitcher.invoke();
-                        SP.putBoolean("allow_hardware_pump", true);
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("First time HW pump allowed!");
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                        pluginSwitcher.cancel();
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("User does not allow switching to HW pump!");
-                    });
-            builder.create().show();
-        }
     }
 
     // Pump interface
@@ -400,6 +377,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             log.error("cancelRealTempBasal: Failed to cancel temp basal");
             return result;
         }
+    }
+
+    @Override
+    public PumpType model() {
+        return PumpType.DanaRv2;
     }
 
     @Override

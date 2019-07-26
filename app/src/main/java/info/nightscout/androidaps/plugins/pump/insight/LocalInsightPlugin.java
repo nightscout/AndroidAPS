@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 
+import androidx.fragment.app.FragmentActivity;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.*;
@@ -168,7 +171,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 .mainType(PluginType.PUMP)
                 .description(R.string.description_pump_insight_local)
                 .fragmentClass(LocalInsightFragment.class.getName())
-                .preferencesId(R.xml.pref_insight_local));
+                .preferencesId(MainApp.instance().getPackageName().equals("info.nightscout.androidaps")
+                        ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol));
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
@@ -225,6 +229,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     protected void onStop() {
         super.onStop();
         MainApp.instance().unbindService(serviceConnection);
+    }
+
+    @Override
+    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        confirmPumpPluginActivation(pluginSwitcher, activity);
     }
 
     @Override
@@ -416,8 +425,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
-            Profile.BasalValue basalValue = profile.getBasalValues()[i];
-            Profile.BasalValue nextValue = null;
+            Profile.ProfileValue basalValue = profile.getBasalValues()[i];
+            Profile.ProfileValue nextValue = null;
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             BasalProfileBlock profileBlock = new BasalProfileBlock();
@@ -470,8 +479,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         if (activeBasalProfile != BasalProfile.PROFILE_1) return false;
         for (int i = 0; i < profileBlocks.size(); i++) {
             BasalProfileBlock profileBlock = profileBlocks.get(i);
-            Profile.BasalValue basalValue = profile.getBasalValues()[i];
-            Profile.BasalValue nextValue = null;
+            Profile.ProfileValue basalValue = profile.getBasalValues()[i];
+            Profile.ProfileValue nextValue = null;
             if (profile.getBasalValues().length > i + 1)
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
@@ -944,9 +953,19 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public String deviceID() {
-        if (connectionService == null || alertService == null) return null;
-        return connectionService.getPumpSystemIdentification().getSerialNumber();
+    public ManufacturerType manufacturer() {
+        return ManufacturerType.Roche;
+    }
+
+    @Override
+    public PumpType model() {
+        return PumpType.AccuChekInsightBluetooth;
+    }
+
+    @Override
+    public String serialNumber() {
+        if (connectionService == null || alertService == null) return "Unknown";
+        return  connectionService.getPumpSystemIdentification().getSerialNumber();
     }
 
     public PumpEnactResult stopPump() {
@@ -1582,4 +1601,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public boolean canHandleDST() {
         return true;
     }
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+
+    }
+
 }

@@ -9,6 +9,7 @@
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
+    <string name="danar_useextended_title">200%%이상 주입 위해 확장 Bolus 사용</string>
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="ns_sync_use_absolute_title">Basal 절대값 사용하기</string>
     <string name="alert_dialog_storage_permission_text">폰을 재부팅하거나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그 기록이 되지 않습니다.(알고리즘이 정상적인 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
@@ -43,6 +44,8 @@
     <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
     <string name="description_sensitivity_weighted_average">민감도가 편차의 가중평균으로 계산됩니다. 최근의 편차가 더 가중됩니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다. 이 알고리즘의 민감도가 가장 빠릅니다.</string>
     <string name="description_source_dexcom_g5">패치된 DexcomG5 앱에서 혈당값 받기</string>
+    <string name="description_source_dexcom_g6">패치된 DexcomG6 앱에서 혈당값 받기</string>
+    <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
     <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
@@ -51,6 +54,7 @@
     <string name="description_wear">WearOS 워치를 이용하여 AndroidAPS를 모니터하고 제어합니다.</string>
     <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
     <string name="description_sms_communicator">SMS 전송을 이용하여 AndroidAPS를 원격 제어합니다.</string>
+    <string name="objectives_button_back">뒤로</string>
     <string name="objectives_button_start">시작</string>
     <string name="objectives_button_verify">확인</string>
     <string name="nsprofileview_units_label">단위</string>
@@ -143,6 +147,8 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">Bolus 주입 에러</string>
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
+    <string name="overview_newtempbasal_basalpercent">Basal 값[%%]</string>
+    <string name="overview_newtempbasal_percent_label">%% (100%% = 현재)</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
@@ -242,6 +248,7 @@
     <string name="danar_iob_label">펌프 IOB</string>
     <string name="danar_dailyunits">일 인슐린 총량</string>
     <string name="pump_lastbolus_label">최근 Bolus:</string>
+    <string name="hoursago">%1$.1f시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
     <string name="danar_valuenotsetproperly">값이 제대로 설정되지 않았습니다</string>
     <string name="reloadprofile">프로파일 새로고침</string>
@@ -259,6 +266,10 @@
     <string name="smscommunicator_bolusreplywithcode">Bolus %1$.2fU 을 주입하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_calibrationreplywithcode">보정값 %1$.2f을 전송하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
+    <string name="bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다.</string>
+    <string name="bolusrequested">%1$.2fU을 주입합니다</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU이 주입 완료되었습니다</string>
+    <string name="bolusdelivering">%1$.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
     <string name="glucosetype_finger">체혈</string>
     <string name="glucosetype_sensor">센서</string>
@@ -303,6 +314,7 @@
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
+    <string name="overview_bolusprogress_goingtodeliver">%1$.2fU을 주입합니다</string>
     <string name="objectives_0_objective">표시설정과 모니터설정을 완료하고, Basal과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
     <string name="objectives_1_objective">Open Loop를 시작한다.</string>
@@ -325,12 +337,26 @@
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
     <string name="valuelimitedto">%1$.2f, %2$.2f으로 제한됨</string>
+    <string name="valueoutofrange">%1$s값이 하드한계를 벗어났습니다</string>
     <string name="smscommunicator_remotecommandnotallowed">원격 명령이 허가되지 않았습니다</string>
+    <string name="smscommunicator_remotebolusnotallowed">원격 주입이 불가능합니다. 나중에 다시 시도해주세요.</string>
+    <string name="smscommunicator_basalreplywithcode">%2$d분 동안 Basal %1$.2fU/h 주입하려면 %3$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_profilereplywithcode">프로파일을 %1$s %2$d%%로 변경하려면 %3$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_extendedreplywithcode">%2$d분 동안 확장 Bolus %1$.2fU 주입하려면 %3$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_basalpctreplywithcode">%2$d 분 동안 Basal %1$d%% 주입하려면 %3$s을 입력하고 답장하세요</string>
     <string name="smscommunicator_suspendreplywithcode">%1$d분동안 Loop 일시중지하려면 %2$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalset">Temp Basal %1$.2fU/h for %2$d min started successfully</string>
+    <string name="smscommunicator_extendedset">%2$d분 동안 확장Bolus %1$.2fU주입이 성공적으로 시작되었습니다</string>
+    <string name="smscommunicator_tempbasalset_percent">%2$d분 동안 임시Basal %1$d%%주입이 성공적으로 시작되었습니다</string>
     <string name="smscommunicator_tempbasalfailed">Temp Basal start failed</string>
+    <string name="smscommunicator_extendedfailed">확장 Bolus 실행 실패</string>
+    <string name="smscommunicator_basalstopreplywithcode">임시Basal을 중지하려면 %1$s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_extendedstopreplywithcode">확장 Bolus를 중지하려면 %1$s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalcanceled">Temp Basal canceled</string>
+    <string name="smscommunicator_extendedcanceled">확장 Bolus 취소</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling Temp Basal failed</string>
+    <string name="smscommunicator_extendedcancelfailed">확장 Bolus 취소가 실패하였습니다.</string>
+    <string name="smscommunicator_unknowncommand">알려지지 않은 명령이거나 잘못된 답장입니다</string>
     <string name="quickwizard">빠른마법사</string>
     <string name="quickwizardsettings">빠른마법사 설정</string>
     <string name="overview_editquickwizard_buttontext">버튼명:</string>
@@ -393,6 +419,7 @@
     <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">스크립트 디버그</string>
+    <string name="openapsama_useautosens">Autosens 기능 사용</string>
     <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="deletefuturetreatments">미래시점의 관리 삭제</string>
     <string name="eatingsoon">식사직전</string>
@@ -437,6 +464,7 @@
     <string name="profile">프로파일</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
+    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
     <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens가 목표도 조절합니다.</string>
     <string name="openapsama_autosens_adjusttargets_summary">기본값: 활성\n이것은 autosens가 ISF와 Basal뿐만 아니라, 혈당 목표범위를 조절할 수 있게 합니다.</string>
@@ -449,6 +477,7 @@
     <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
     <string name="overview_calibration">보정</string>
+    <string name="send_calibration">보정값 %1$.1f을 xDrip에 전송하시겠습니까?</string>
     <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
     <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
     <string name="smscommunicator_calibrationsent">보정 전송됨. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
@@ -499,6 +528,7 @@
     <string name="resistantadult">인슐린 저항성 높은 성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="Glimp">Glimp</string>
+    <string name="needwhitelisting">최적의 성능을 위해 %1$s에서 배터리 최적화를 해제해야합니다.</string>
     <string name="loopsuspended">Loop 일시중지</string>
     <string name="loopsuspendedfor">일시중지중 (%d분)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d 분)</string>
@@ -512,6 +542,7 @@
     <string name="disconnectpumpfor2h">2시간동안 펌프 일시중지</string>
     <string name="disconnectpumpfor3h">3시간동안 펌프 일시중지</string>
     <string name="resume">재실행</string>
+    <string name="reconnect">펌프 재연결</string>
     <string name="smscommunicator_wrongduration">기간이 잘못되었습니다.</string>
     <string name="smscommunicator_loopsuspended">Loop가 일시중지 되었습니다.</string>
     <string name="smscommunicator_loopresumed">Loop가 재실행 되었습니다.</string>
@@ -529,6 +560,12 @@
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">마법사에서 Superbolus 활성화하기</string>
     <string name="enablesuperbolus_summary">마법사에서 Superbolus 기능을 활성화합니다. 어떤 기능인지 확실히 알기전까지 활성화 하지 마세요. 제대로 알지 못하고 사용하면 일슐린이 과다 주입될 수 있습니다!</string>
+    <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
+    <string name="show_statuslights_summary">홈화면에 캐뉼라 사용기간, 인슐린 사용기간, 센서 사용기간, 펌프용 주사기와 배터리 남은 양의 표시등을 활성화합니다.</string>
+    <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
+    <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
+    <string name="statuslights_bat_warning">배터리량 경고 기준값[%%]</string>
+    <string name="statuslights_bat_critical">배터리량 위험 기준값[%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">펌웨어</string>
@@ -536,6 +573,7 @@
     <string name="danar_bluetooth_status">블루투스 상태</string>
     <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
+    <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
     <string name="xdripstatus_settings">xDrip 상태(워치)</string>
     <string name="xdripstatus">xDrip 상태표시라인(워치)</string>
     <string name="xdripstatus_shortname">xds</string>
@@ -580,6 +618,7 @@
     <string name="absorptionsettings_title">흡수 설정</string>
     <string name="absorption_maxtime_title">식사 최대 흡수 시간 [h]</string>
     <string name="absorption_maxtime_summary">식사로 섭취한 탄수화물이 모두 흡수될기까지 예상되는 시간</string>
+    <string name="danar_visualizeextendedaspercentage_title">확장Bolus를 %%로 표시하기</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
@@ -681,7 +720,10 @@
     <string name="btwatchdog_title">블루투스 감시기능</string>
     <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
     <string name="DexcomG5">DexcomG5 앱(패치버전)</string>
+    <string name="DexcomG6">DexcomG6 앱(패치버전)</string>
+    <string name="eversense">Eversense 앱(패치버전)</string>
     <string name="dexcomg5_nsupload_title">NS에 혈당데이터 업로드하기</string>
+    <string name="bgsource_upload">혈당 업로드 설정</string>
     <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
     <string name="wear_detailed_delta_summary">소수점 자리 추가된 증분값 보여주기</string>
     <string name="smbmaxminutes_summary">SMB가 Basal을 제한할 수 있는 최대 시간(분)</string>
@@ -689,6 +731,8 @@
     <string name="dexcomg5_xdripupload_title">혈당 데이터를 xDrip+에 전송하기</string>
     <string name="dexcomg5_xdripupload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
     <string name="nsclientbg">NSClient 혈당</string>
+    <string name="minimalbasalvaluereplaced">지원되는 최소값으로 Basal값이 대체되었습니다:%1$s</string>
+    <string name="maximumbasalvaluereplaced">지원되는 최대값으로 Basal값이 대체되었습니다:%1$s</string>
     <string name="overview_editquickwizard_usebg">혈당 계산</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB 계산</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB 계산</string>
@@ -706,6 +750,8 @@
     <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
     <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
     <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
+    <string name="basalprofilenotaligned">Basal값이 시간단위로 설정되지 않았습니다: %1$s</string>
+    <string name="zerovalueinprofile">유효하지 않은 프로파일: %1$s</string>
     <string name="combo_programming_bolus">Bolus 주입을 위한 펌프 프로그래밍</string>
     <string name="combo_refresh">새로고침</string>
     <string name="combo_pump_state_label">상태</string>
@@ -718,6 +764,7 @@
     <string name="combo_pump_state_running">실행중</string>
     <string name="combo_pump_action_cancelling_tbr">임시기초주입 취소중</string>
     <string name="combo_pump_action_setting_tbr">임시기초주입 설정중 (%1$d%% / %2$d분)</string>
+    <string name="combo_pump_action_bolusing">Bolus 주입중 (%1$.1f U)</string>
     <string name="combo_pump_action_refreshing">새로고침중</string>
     <string name="combo_pump_unsupported_operation">요청하신 동작은 펌프에서 지원하지 않습니다.</string>
     <string name="combo_low_suspend_forced_notification">위험한 사용: 확장Bolus 혹은 멀티웨이브Bolus가 활성화 됩니다. Loop 모드가 저혈당 방지로 오직 6시간만 설정됩니다. Loop 모드에선 일반 Bolus만 지원합니다.</string>
@@ -742,6 +789,7 @@
     <string name="combo_error_bolus_verification_failed">Bolus를 주입하고 펌프 이력을 확인하는데 실패하였습니다. 펌프를 확인해보세요. 만약 Bolus 주입이 되었다면 펌프와 다음번 연결시 그 내용이 관리에 추가될 것입니다.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Bolus 주입 위한 인슐린이 주사기에 부족합니다.</string>
     <string name="extendedbolusdeliveryerror">확장Bolus 주입 에러</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insightpump">Insight 펌프</string>
     <string name="status_no_colon">상태</string>
     <string name="changed">변경됨</string>
@@ -816,6 +864,8 @@
     <string name="data_choices">데이터선택</string>
     <string name="fabric_upload">Fabric 업로드</string>
     <string name="allow_automated_crash_reporting">fabric.io 서비스를 통해 개발자에게 앱 오류 및 특정 데이터를 자동 전송합니다.</string>
+    <string name="g5appnotdetected">Dexcom앱을 지원가능한 버전으로 업데이트하세요.</string>
+    <string name="dexcom_app_not_installed">Dexcom 앱이 설치되지 않았습니다.</string>
     <string name="start_activity_tt">활동 임시목표 시작</string>
     <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
     <string name="temptargetshort">TT</string>
@@ -825,6 +875,7 @@
     <string name="bolusrecordedonly">Bolus가 기록만 됩니다.</string>
     <string name="ns_autobackfill_summary">NS에서 누락된 혈당이 자동으로 채워집니다.</string>
     <string name="loop_smbsetbypump_label">펌프에 의한 SMB 설정</string>
+    <string name="overview_show_activity">활동</string>
     <string name="overview_show_sensitivity">민감도</string>
     <string name="overview_show_deviations">편차</string>
     <string name="overview_show_cob">체내탄수화물양(COB)</string>
@@ -835,7 +886,6 @@
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
     <string name="not_eng_mode_or_release">전문가 모드가 활성화되어 있지 않고 Release 버전이 실행되고 있지 않습니다.</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Basal 프로파일 읽는중</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus 계산이 수행된 후 펌프 이력이 변경되었습니다. Bolus가 주입되지 않았습니다. Bolus가 여전히 필요하다면 다시 계산하세요.</string>
     <string name="combo_error_updating_treatment_record">Bolus가 성공적으로 주입되었지만, 관리 항목에 추가하지 못했습니다. 이것은 동일한 양의 소량의 2개의 Bolus가 최근 2 분 이내에 주입되는 경우에 발생할 수 있습니다. 펌프 이력과 관리 항목을 확인하고 손실된 항목을 추가하기위해 케어포털을 이용하세요. 동일한 시간과 인슐린양의 항목을 추가하지 마세요.</string>
@@ -858,6 +908,8 @@
     <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
     <string name="autosensdisabledinpreferences">설정에서 Autosens가 비활성화 되었습니다.</string>
     <string name="smbdisabledinpreferences">설정에서 SMB가 비활성화 되었습니다.</string>
+    <string name="uamdisabledinpreferences">설정에서 UAM이 비활성화 되었습니다.</string>
+    <string name="uamdisabledoref1notselected">Oref1 민감도 플러그인이 필요하므로 UAM이 비활성화 되었습니다.</string>
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
     <string name="itmustbepositivevalue">양의 값이어야 합니다.</string>
@@ -979,6 +1031,7 @@
     <string name="nth_objective">%1$d. 목표</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
+    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
     <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[임시목표 100이상을 위해 민감도를 올립니다.]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">낮은 임시목표는 민감도를 내립니다.</string>
@@ -1020,6 +1073,137 @@
     <string name="insulinlimitviolation">인슐린 제한 위반</string>
     <string name="loop_openmode_min_change">최소 요청 변화 [%]</string>
     <string name="loop_openmode_min_change_summary">이 값보다 변화가 클때만 Loop가 새 변화 요청창을 띄울것 입니다. 기본 값은 20%입니다.</string>
+    <string name="pairfirst">펌프를 폰과 동기화 하십시오</string>
+    <string name="searching_for_devices">장치 검색중...</string>
+    <string name="please_wait">잠시 기다려 주세요...</string>
+    <string name="pairing_completed">동기화 완료</string>
+    <string name="code_compare">이 장치에서 보여지는 코드와 펌프에서 보여지는 코드가 동일한가요?</string>
+    <string name="insight_pairing">Insight와 동기화</string>
+    <string name="insight_local">아큐-첵 Insight</string>
+    <string name="insight_delivered">%1$.2fU / %2$.2fU 주입됨</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
+    <string name="tube_changed">튜브 변경</string>
+    <string name="pump_time_updated">펌프 시간 업데이트</string>
+    <string name="confirm">확인</string>
+    <string name="mute_alert">음소거</string>
+    <string name="pump_alert">펌프 경고</string>
+    <string name="log_site_changes">위치 변경 기록</string>
+    <string name="log_reservoir_changes">주사기 교체 기록</string>
+    <string name="log_tube_changes">튜브 교체 기록</string>
+    <string name="log_battery_changes">배터리 교체 기록</string>
+    <string name="log_operating_mode_changes">작동 모드 변경 기록</string>
+    <string name="log_alerts">경고 기록</string>
+    <string name="enable_tbr_emulation">임시Basal 에뮬레이션 활성화</string>
+    <string name="enable_tbr_emulation_summary">250%% 제한을 무시하기 위해 임시Basal 대신 확정Boluses 사용</string>
+    <string name="disconnect_delay">연결해제 지연 [초]</string>
+    <string name="serial_number">시리얼번호</string>
+    <string name="release_software_version">출시 소프트웨어 버전</string>
+    <string name="ui_processor_software_version">UI 프로세서 소프트웨어 버전</string>
+    <string name="pc_processor_software_version">PC 프로세서 소프트웨어 버전</string>
+    <string name="md_tel_processor_software_version">MD tel 프로세서 소프트웨어 버전</string>
+    <string name="safety_processor_software_version">안전 프로세서 소프트웨어 버전</string>
+    <string name="bt_info_page_version">블루투스 정보 페이지 버전</string>
+    <string name="bluetooth_address">블루투스 주소</string>
+    <string name="system_id_appendix">시스템 ID 부록</string>
+    <string name="manufacturing_date">제조일</string>
+    <string name="delete_pairing">동기화 삭제</string>
+    <string name="pairing_information">동기화 정보</string>
+    <string name="refreh_status">상태 새로고침</string>
+    <string name="start_pump">펌프 시작</string>
+    <string name="stop_pump">펌프 중지</string>
+    <string name="operating_mode">작동 모드</string>
+    <string name="insight_status">상태</string>
+    <string name="tdd_bolus">TDD Bolus</string>
+    <string name="tdd_basal">TDD Basal</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="recovering">복구중</string>
+    <string name="not_paired">동기화 되지 않음</string>
+    <string name="last_connected">최신 연결</string>
+    <string name="started">시작됨</string>
+    <string name="stopped">중지됨</string>
+    <string name="tbr_formatter">%2$d / %3$d분 동안 %1$d%%</string>
+    <string name="extended_bolus">확장 Bolus</string>
+    <string name="multiwave_bolus">Multiwave Bolus</string>
+    <string name="eb_formatter">%3$d분 동안 %1$.2f / %2$.2f U</string>
+    <string name="enable_tbr_over_notification">임시Basal 종료 알림 활성\n(펌프설정)</string>
+    <string name="disable_tbr_over_notification">임시Basal 종료 알림 비활성\n(펌프설정)</string>
+    <string name="refresh">새로고침</string>
+    <string name="description_pump_insight_local">아큐-첵 Insight 펌프 연동</string>
+    <string name="not_inserted">삽입되지 않음</string>
+    <string name="short_status_last_connected">최신연결: %1$d 분전</string>
+    <string name="short_status_tbr">임시: %2$d / %3$d 분 동안 %1$d%%</string>
+    <string name="short_status_extended">확장: %3$d분 동안 %1$.2f / %2$.2f U</string>
+    <string name="short_status_multiwave">Multiwave: %3$d 분 동안 %1$.2f / %2$.2f U</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Reser.: %1$.2fU</string>
+    <string name="short_status_battery">Batt.: %1$d%%</string>
+    <string name="max_recovery_duration">최대 복구 기간 [초]</string>
+    <string name="min_recovery_duration">최소 복구 기간 [초]</string>
+    <string name="recovery_duration">복구 기간</string>
+    <string name="timeout_during_handshake">연결 시간 초과 - 블루투스 재설정</string>
+    <string name="profile_total">== ∑  %1$s U</string>
+    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="dexcom_lognssensorchange_title">센서 교체 NS에 기록하기</string>
+    <string name="dexcom_lognssensorchange_summary">센서교체시 NS에 자동으로 \"센서 교체\" 이벤트를 생성합니다.</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="unit_second">초</string>
+    <string name="unit_minute">분</string>
+    <string name="unit_hour">시</string>
+    <string name="unit_day">일</string>
+    <string name="unit_week">주</string>
+    <string name="unit_seconds">초</string>
+    <string name="unit_minutes">분</string>
+    <string name="unit_hours">시</string>
+    <string name="unit_days">일</string>
+    <string name="unit_weeks">주</string>
+    <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>
+    <string name="title_tidepool_username">로그인 사용자명</string>
+    <string name="summary_tidepool_password">Tidepool 로그인 비밀번호</string>
+    <string name="title_tidepool_password">로그인 비밀번호</string>
+    <string name="title_tidepool_test_login">Tidepool 로그인 테스트하기</string>
+    <string name="summary_tidepool_dev_servers">활성화하면 업로드 정보가 https://app.tidepool.org/이 아닌 https://int-app.tidepool.org/로 전송됩니다.</string>
+    <string name="title_tidepool_dev_servers">테스트 서버 사용</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">데이터를 Tidepool로 업로드</string>
+    <string name="tidepool_upload_cgm">CGM 데이터 업로드</string>
+    <string name="tidepool_upload_bolus">관리정보(인슐린, 탄수화물) 업로드</string>
+    <string name="tidepool_upload_tbr">임시 Basal 업로드</string>
+    <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
+    <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
+    <string name="dst_in_24h_warning">24시간 이내 썸머타임 변경</string>
+    <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
+    <string name="storage">내부 저장 용량 제한</string>
+    <string name="diskfull">내부 저장 공간을 최소 %1$d MB 이상 비우세요! Loop가 비활성화되었습니다!</string>
+    <string name="wrongformat">잘못된 형식</string>
+    <string name="sms_wrongcode">잘못된 코드입니다. 명령이 취소됩니다.</string>
+    <string name="notconfigured">설정되지 않음</string>
+    <string name="profileswitchcreated">프로파일 변경 생성됨</string>
+    <string name="versionChecker">버전 검사기</string>
+    <string name="old_version">오래된 버전</string>
+    <string name="very_old_version">아주 오래된 버전</string>
+    <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! 60일 후엔 LGS(저혈당 주입중지기능)으로 복귀되며, 90일이후엔 Loop가 비활성화 될 것입니다.</string>
+    <string name="scale_insulin_activity">인슐린 활동 그래프 크기[U/min]</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">Dexcom 앱(패치버전)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">패치된 Dexcom 앱에서 혈당값 받기</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="other">%1$d 일</item>
     </plurals>

@@ -9,6 +9,7 @@
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
+    <color name="activity">#d3f166</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="inrange">#00FF00</color>
@@ -19,6 +20,7 @@
     <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
+    <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
     <color name="basebasal">#C83F51B5</color>
     <color name="tempbasal">#C803A9F4</color>

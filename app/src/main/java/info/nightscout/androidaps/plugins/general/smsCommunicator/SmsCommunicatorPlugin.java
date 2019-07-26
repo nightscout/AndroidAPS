@@ -790,7 +790,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         passCode += Character.toString((char) (startChar2 + Math.random() * ('z' - 'a' + 1)));
         int startChar3 = Math.random() > 0.5 ? 'a' : 'A';
         passCode += Character.toString((char) (startChar3 + Math.random() * ('z' - 'a' + 1)));
-        passCode.replace('l', 'k').replace('I', 'J');
+        passCode = passCode.replace('l', 'k').replace('I', 'J');
         return passCode;
     }
 

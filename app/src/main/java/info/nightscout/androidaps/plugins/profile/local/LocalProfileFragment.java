@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.profile.local;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -78,7 +78,7 @@ public class LocalProfileFragment extends SubscriberFragment {
         PumpDescription pumpDescription = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription();
         View layout = inflater.inflate(R.layout.localprofile_fragment, container, false);
         diaView = (NumberPicker) layout.findViewById(R.id.localprofile_dia);
-        diaView.setParams(LocalProfilePlugin.getPlugin().dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
+        diaView.setParams(LocalProfilePlugin.getPlugin().dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, layout.findViewById(R.id.localprofile_save), textWatch);
         mgdlView = (RadioButton) layout.findViewById(R.id.localprofile_mgdl);
         mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
         icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.getPlugin().ic, null, 0.5, 50d, 0.1d, new DecimalFormat("0.0"), save);
@@ -124,7 +124,7 @@ public class LocalProfileFragment extends SubscriberFragment {
             LocalProfilePlugin.getPlugin().loadSettings();
             mgdlView.setChecked(LocalProfilePlugin.getPlugin().mgdl);
             mmolView.setChecked(LocalProfilePlugin.getPlugin().mmol);
-            diaView.setParams(LocalProfilePlugin.getPlugin().dia, 5d, 12d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
+            diaView.setParams(LocalProfilePlugin.getPlugin().dia, 5d, 12d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.localprofile_save), textWatch);
             icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.getPlugin().ic, null, 0.5, 50d, 0.1d, new DecimalFormat("0.0"), save);
             isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.getPlugin().isf, null, 0.5, 500d, 0.1d, new DecimalFormat("0.0"), save);
             basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + getSumLabel(), LocalProfilePlugin.getPlugin().basal, null, pumpDescription.basalMinimumRate, 10, 0.01d, new DecimalFormat("0.00"), save);

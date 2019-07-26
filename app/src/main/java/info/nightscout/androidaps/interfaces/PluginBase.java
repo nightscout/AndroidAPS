@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.interfaces;
 
 import android.os.SystemClock;
-import android.support.v4.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.utils.SP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +43,28 @@ public abstract class PluginBase {
     // Plugins that have special constraints if they get switched to may override this method
     public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
         pluginSwitcher.invoke();
+    }
+
+    protected void confirmPumpPluginActivation(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
+        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
+        if (allowHardwarePump || activity == null) {
+            pluginSwitcher.invoke();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage(R.string.allow_hardware_pump_text)
+                    .setPositiveButton(R.string.yes, (dialog, id) -> {
+                        pluginSwitcher.invoke();
+                        SP.putBoolean("allow_hardware_pump", true);
+                        if (L.isEnabled(L.PUMP))
+                            log.debug("First time HW pump allowed!");
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                        pluginSwitcher.cancel();
+                        if (L.isEnabled(L.PUMP))
+                            log.debug("User does not allow switching to HW pump!");
+                    });
+            builder.create().show();
+        }
     }
 
 //    public PluginType getType() {

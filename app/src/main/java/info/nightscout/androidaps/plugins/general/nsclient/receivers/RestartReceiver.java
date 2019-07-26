@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.receivers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import androidx.legacy.content.WakefulBroadcastReceiver;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;

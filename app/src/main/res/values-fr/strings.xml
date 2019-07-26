@@ -866,6 +866,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="fabric_upload">Téléchargement Fabric</string>
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
     <string name="g5appnotdetected">SVP actualisez votre app Dexcom vers une version compatible</string>
+    <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
     <string name="temptargetshort">Traitement</string>
@@ -885,7 +886,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
     <string name="not_eng_mode_or_release">Le mode Ingénierie n\'est pas activé et n\'existe pas sur cette version</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Lecture du profil basal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">L\'historique de la pompe a été modifié depuis le calcul du bolus. Le bolus n\'a pas été administré. Merci de recalculer le bolus s\'il est toujours nécessaire.</string>
     <string name="combo_error_updating_treatment_record">Le bolus a été délivré mais il n\'a pas pu être ajouté à l\'historique des traitements. Ceci peut se produire lorsque deux petits bolus de la même taille sont gérés dans les deux dernières minutes. Merci de vérifier l\'historique de la pompe et les entrées de traitements puis utilisez le Careportal pour y ajouter les entrées manquantes. Assurez-vous de ne pas ajouter des entrées au cours de la même minute et pour la même quantité d\'insuline.</string>
@@ -1149,6 +1149,27 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="dexcom_lognssensorchange_summary">Créer automatiquement sur NS un événement \"Changement de capteur\" au démarrage du capteur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <string name="unit_second">seconde</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">heure</string>
+    <string name="unit_seconds">secondes</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">heures</string>
+    <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
+    <string name="title_tidepool_username">Nom d\'utilisateur</string>
+    <string name="summary_tidepool_password">Mot de passe de connexion Tidepool</string>
+    <string name="title_tidepool_password">Mot de passe de connexion</string>
+    <string name="title_tidepool_test_login">Test de la connexion Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Si activé, les transferts iront vers https://int-app.tidepool.org au lieu de https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Transfère les données vers Tidepool</string>
+    <string name="tidepool_upload_cgm">Transférer les données CGM</string>
+    <string name="tidepool_upload_bolus">Transférer les traitements (insuline, glucides)</string>
+    <string name="tidepool_upload_tbr">Transférer les Basal temporaires</string>
+    <string name="tidepool_upload_profile">Transférer les changements de profils, les objectifs temporaires</string>
+    <string name="tidepool_upload_bg">Transférer les tests de glycémies</string>
     <string name="dst_in_24h_warning">Changement d\'heure d\'été dans moins de 24 heures</string>
     <string name="dst_loop_disabled_warning">Changement d\'heure d\'été dans moins de 3 heures - Boucle fermée désactivée</string>
     <string name="storage">stockage interne limité</string>
@@ -1161,6 +1182,23 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="old_version">ancienne version</string>
     <string name="very_old_version">très ancienne version</string>
     <string name="new_version_warning">Une nouvelle version est disponible depuis au moins %1$d jours ! Retour au traitement par pompe assistée par capteur (Arrêt par Glycémie Basse (AGB), Low Glucose Suspend (LGS) ) après 60 jours et la Boucle sera désactivée après 90 jours</string>
+    <string name="twohours">2 h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
+    <string name="dexcom_app_patched">App Dexcom (patchée)</string>
+    <string name="dexcom_short">Dexcom</string>
+    <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée.</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

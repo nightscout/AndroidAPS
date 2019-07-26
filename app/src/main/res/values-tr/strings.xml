@@ -838,7 +838,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="closed_loop_disabled_on_dev_branch">Dev sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu aktivleşti</string>
     <string name="not_eng_mode_or_release">Engineering mode etkin değil ve yayım sürümü değil</string>
-    <string name="pump_basebasalrate">%.2f Ü/s</string>
     <string name="combo_actvity_reading_basal_profile">Bazal oranı profili okunuyor</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus hesaplaması yapıldıktan sonra pompa geçmişi değişti. Bolus teslim edilmedi. Bir bolus hala gerekli ise lütfen yeniden hesaplayın.</string>
     <string name="combo_error_updating_treatment_record">Bolus başarıyla gönderildi, ancak tedavi girişinin eklenmesi başarısız oldu. Son iki dakika içinde aynı boyutta iki küçük bolüs verilirse bu durum meydana gelebilir. Lütfen pompa geçmişini ve tedavi girişlerini kontrol edin ve eksik girişler eklemek için Careportal\'ı kullanın. Aynı dakika ve aynı tutar için herhangi bir giriş eklemediğinizden emin olun.</string>
@@ -1033,6 +1032,18 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="profile_per_unit">/U</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+    <!-- Pump Abstract -->
+    <!-- Medtronic (MDT) - Base -->
+    <!-- MDT Configuration -->
+    <!-- RL BLE Scanning -->
+    <!-- RL Status Page -->
+    <!-- RL State -->
+    <!-- RL Errors -->
+    <!-- RL Target Device -->
+    <!-- MDT Errors -->
+    <!-- MDT History -->
+    <!-- MDT Pump Status -->
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <plurals name="objective_days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
