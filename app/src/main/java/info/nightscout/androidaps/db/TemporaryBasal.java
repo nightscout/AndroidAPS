@@ -323,7 +323,8 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                 if (isAbsolute) {
                     netBasalRate = absoluteRate - basalRate;
                 } else {
-                    netBasalRate = (percentRate - 100) / 100d * basalRate;
+                    double abs = percentRate / 100d * profile.getBasal(calcdate);
+                    netBasalRate = abs - basalRate;
                 }
 
                 if (calcdate > dia_ago && calcdate <= time) {

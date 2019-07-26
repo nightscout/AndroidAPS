@@ -366,7 +366,7 @@ public class GraphData {
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
             act = total.activity;
 
-            if(time<=now)
+            if (time <= now)
                 actArrayHist.add(new ScaledDataPoint(time, act, actScale));
             else
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
@@ -403,7 +403,7 @@ public class GraphData {
     }
 
     // scale in % of vertical size (like 0.3)
-    public void addIob(long fromTime, long toTime, boolean useForScale, double scale) {
+    public void addIob(long fromTime, long toTime, boolean useForScale, double scale, boolean showPrediction) {
         FixedLineGraphSeries<ScaledDataPoint> iobSeries;
         List<ScaledDataPoint> iobArray = new ArrayList<>();
         Double maxIobValueFound = Double.MIN_VALUE;
@@ -432,37 +432,41 @@ public class GraphData {
         iobSeries.setColor(MainApp.gc(R.color.iob));
         iobSeries.setThickness(3);
 
-        List<DataPointWithLabelInterface> iobPred = new ArrayList<>();
+        if (showPrediction) {
+            AutosensResult lastAutosensResult;
+            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("GraphData");
+            if (autosensData == null)
+                lastAutosensResult = new AutosensResult();
+            else
+                lastAutosensResult = autosensData.autosensResult;
+            boolean isTempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis()) != null;
 
-        AutosensResult lastAutosensResult;
-        AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("GraphData");
-        if (autosensData == null)
-            lastAutosensResult = new AutosensResult();
-        else
-            lastAutosensResult = autosensData.autosensResult;
-        boolean isTempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis()) != null;
-        IobTotal[] iobPredArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+            List<DataPointWithLabelInterface> iobPred = new ArrayList<>();
+            IobTotal[] iobPredArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+            for (IobTotal i : iobPredArray) {
+                iobPred.add(i.setColor(MainApp.gc(R.color.iobPredAS)));
+                maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
+            }
+            DataPointWithLabelInterface[] iobp = new DataPointWithLabelInterface[iobPred.size()];
+            iobp = iobPred.toArray(iobp);
+            addSeries(new PointsWithLabelGraphSeries<>(iobp));
 
-        for (IobTotal i : iobPredArray) {
-            iobPred.add(i.setColor(R.color.iobPredAS));
-            maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
+
+            List<DataPointWithLabelInterface> iobPred2 = new ArrayList<>();
+            IobTotal[] iobPredArray2 = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(new AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+            for (IobTotal i : iobPredArray2) {
+                iobPred2.add(i.setColor(MainApp.gc(R.color.iobPred)));
+                maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
+            }
+            DataPointWithLabelInterface[] iobp2 = new DataPointWithLabelInterface[iobPred2.size()];
+            iobp2 = iobPred2.toArray(iobp2);
+            addSeries(new PointsWithLabelGraphSeries<>(iobp2));
+
+            if (L.isEnabled(L.AUTOSENS)) {
+                log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray));
+                log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(1) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray2));
+            }
         }
-
-        log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray));
-
-        IobTotal[] iobPredArray2 = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(new AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
-
-        for (IobTotal i : iobPredArray2) {
-            iobPred.add(i.setColor(R.color.iobPred));
-            maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
-        }
-
-        log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(1) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray2));
-
-        DataPointWithLabelInterface[] iobp = new DataPointWithLabelInterface[iobPred.size()];
-        iobp = iobPred.toArray(iobp);
-        addSeries(new PointsWithLabelGraphSeries<>(iobp));
-
 
         if (useForScale) {
             maxY = maxIobValueFound;
