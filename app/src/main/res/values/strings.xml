@@ -1427,6 +1427,9 @@
     <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
     <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+    <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
+    <string name="signature_verifier">Signature verifier</string>
+    <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
 
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>

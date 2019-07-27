@@ -1175,6 +1175,8 @@
     <string name="notconfigured">Não configurado</string>
     <string name="profileswitchcreated">Troca de perfil criada</string>
     <string name="versionChecker">Verificador de Versão</string>
+    <string name="signature_verifier">Verificador de assinatura</string>
+    <string name="running_invalid_version">Detectamos que está  a correr uma versão inválida. Loop desactivado!</string>
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
@@ -1253,6 +1255,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
     <string name="pump_no_connection_h">Sem ligação por %1$d hora(s) %2$d min</string>
     <string name="pump_no_connection_d">Sem ligação por %1$d dia(s) %2$d horas</string>
+    <string name="insulinFromCob"><![CDATA[insulina COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
+    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB podem ser estar desajustados !!!</font>]]></string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

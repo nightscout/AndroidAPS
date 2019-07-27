@@ -886,6 +886,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
     <string name="engineering_mode_enabled">Expertní mód povolen</string>
     <string name="not_eng_mode_or_release">Expertní mód není povolen a neběží vydaná verze</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Načítám bazální profil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Historie v pumpě se změnila po spočítání bolusu. Bolus nebyl proveden. Prosím spočítejte ho znovu, pokud je to stále potřeba.</string>
     <string name="combo_error_updating_treatment_record">Bolus úspěšně podán, ale zápis se nezdařil. To se může stát pokud jsou podány bolusy stejné velikosti během 2 minut. Zkontrolujte historii pumpy a zadejte chybějící položky do ošetření. Ujistěte se, že nezadáváte stejnou velikost v rámci 1 minuty.</string>
@@ -1141,6 +1142,27 @@
     <string name="min_recovery_duration">Min. doba čekání na obnovení spojení [s]</string>
     <string name="recovery_duration">Doba čekání na obnovení spojení</string>
     <string name="timeout_during_handshake">Vypršel limit spojení - resetujte Bluetooth</string>
+    <string name="automation_missing_task_name">Zadejte prosím název úlohy.</string>
+    <string name="alreadyenabled">Aktuálně povoleno</string>
+    <string name="alreadydisabled">Aktuálně zakázáno</string>
+    <string name="alreadysuspended">Aktuálně pozastaveno</string>
+    <string name="resumeloop">Obnovit smyčku</string>
+    <string name="notsuspended">Nepozastaveno</string>
+    <string name="starttemptarget">Start dočasného cíle</string>
+    <string name="stoptemptarget">Stop dočasného cíle</string>
+    <string name="islesser">je menší než</string>
+    <string name="isequalorlesser">je rovno nebo menší než</string>
+    <string name="isequal">je rovno</string>
+    <string name="isequalorgreater">je rovno nebo větší než</string>
+    <string name="isgreater">je větší než</string>
+    <string name="isnotavailable">není k dispozici</string>
+    <string name="unknown">neznámý</string>
+    <string name="glucoseisnotavailable">Glykémie není k dispozici</string>
+    <string name="and">A</string>
+    <string name="or">Nebo</string>
+    <string name="xor">Exkluzivní nebo</string>
+    <string name="use_network_location">Povolit zjištění polohy podle sítě</string>
+    <string name="use_gps_location">Použití GPS pozice</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
