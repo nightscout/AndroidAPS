@@ -256,7 +256,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (L.isEnabled(L.PUMP))
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
             if (percentRate == 0 && durationInMinutes > 30) {
-                result = setTempBasalPercent(percentRate, durationInMinutes, profile, false);
+                result = setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew);
             } else {
                 // use special APS temp basal call ... 100+/15min .... 100-/30min
                 result = setHighTempBasalPercent(percentRate);
