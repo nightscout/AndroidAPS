@@ -14,7 +14,8 @@ android:
   - extra-google-google_play_services
   
 before_install:
-#- yes | sdkmanager "platforms;android-28"
+  - touch $HOME/.android/repositories.cfg
+  - yes | sdkmanager "platforms;android-28"
 
 script:
   # Unit Test
