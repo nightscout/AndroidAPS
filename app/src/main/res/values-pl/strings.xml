@@ -1239,6 +1239,8 @@
     <string name="copy_short">KOPIUJ</string>
     <string name="addnew">Dodaj nowy</string>
     <string name="versionChecker">Kontroler wersji</string>
+    <string name="signature_verifier">Weryfikator podpisu</string>
+    <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="old_version">stara wersja</string>
     <string name="very_old_version">bardzo stara wersja</string>
     <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po 60 dniach, pętla zostanie wyłączona po 90 dniach</string>
