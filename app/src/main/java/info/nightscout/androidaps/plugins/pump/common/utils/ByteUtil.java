@@ -305,12 +305,12 @@ public class ByteUtil {
     }
 
 
-    public static String getHex(byte abyte0[]) {
+    public static String getHex(byte[] abyte0) {
         return abyte0 != null ? getHex(abyte0, abyte0.length) : null;
     }
 
 
-    public static String getString(short abyte0[]) {
+    public static String getString(short[] abyte0) {
         StringBuilder sb = new StringBuilder();
 
         for (short i : abyte0) {
@@ -330,7 +330,7 @@ public class ByteUtil {
     }
 
 
-    public static String getHex(byte abyte0[], int i) {
+    public static String getHex(byte[] abyte0, int i) {
         StringBuffer stringbuffer = new StringBuffer();
         if (abyte0 != null) {
             i = Math.min(i, abyte0.length);

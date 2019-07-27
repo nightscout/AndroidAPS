@@ -853,7 +853,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         if (extendedBolus != null) {
                             extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
                             if (extendedBolus.durationInMinutes <= 0) {
-                                ;
                                 final String _id = extendedBolus._id;
                                 if (NSUpload.isIdValid(_id))
                                     NSUpload.removeCareportalEntryFromNS(_id);

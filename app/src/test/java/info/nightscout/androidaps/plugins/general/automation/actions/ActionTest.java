@@ -32,7 +32,7 @@ public class ActionTest extends Action {
 
     @Override
     public Optional<Integer> icon() {
-        return null;
+        return Optional.absent();
     }
 
     @Test

@@ -17,7 +17,7 @@ public class JsonHelper {
 
     private static final Logger log = LoggerFactory.getLogger(JsonHelper.class);
 
-    private JsonHelper() {};
+    private JsonHelper() {}
 
     public static Object safeGetObject(JSONObject json, String fieldName, Object defaultValue) {
         Object result = defaultValue;

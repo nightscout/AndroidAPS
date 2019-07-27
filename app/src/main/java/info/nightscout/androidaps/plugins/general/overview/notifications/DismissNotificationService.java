@@ -21,7 +21,7 @@ public class DismissNotificationService extends IntentService {
 
     public DismissNotificationService(){
         super("DismissNotificationService");
-    };
+    }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {

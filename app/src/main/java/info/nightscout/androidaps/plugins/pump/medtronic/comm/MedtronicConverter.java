@@ -412,7 +412,7 @@ public class MedtronicConverter {
     }
 
 
-    public double decodeMaxBolus(byte ai[]) {
+    public double decodeMaxBolus(byte[] ai) {
         return is523orHigher() ? decodeBolusInsulin(ByteUtil.toInt(ai[5], ai[6])) : decodeBolusInsulin(ByteUtil
                 .asUINT8(ai[5]));
     }

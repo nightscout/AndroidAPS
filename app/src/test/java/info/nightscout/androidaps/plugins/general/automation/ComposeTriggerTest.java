@@ -44,7 +44,7 @@ public class ComposeTriggerTest {
     public void testChangeConnector() {
         // initialize scenario
         TriggerConnector root = new TriggerConnector(TriggerConnector.Type.AND);
-        Trigger t[] = new Trigger[4];
+        Trigger[] t = new Trigger[4];
         for (int i = 0; i < t.length; ++i) {
             t[i] = new DummyTrigger();
             root.add(t[i]);

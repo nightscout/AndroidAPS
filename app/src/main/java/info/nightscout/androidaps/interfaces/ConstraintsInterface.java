@@ -61,6 +61,6 @@ public interface ConstraintsInterface {
 
     default Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         return maxIob;
-    };
+    }
 
 }

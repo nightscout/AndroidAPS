@@ -4,5 +4,5 @@ public enum BatteryType {
 
     ALKALI,
     LITHIUM,
-    NI_MH;
+    NI_MH
 }

@@ -217,7 +217,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
     }
 
 
-    private <E extends Object> List<E> reverseList(List<E> dataClearInput, Class<E> clazz) {
+    private <E> List<E> reverseList(List<E> dataClearInput, Class<E> clazz) {
 
         List<E> outList = new ArrayList<E>();
 
@@ -263,7 +263,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
         if (!entry.getEntryType().hasDate())
             return null;
 
-        byte data[] = entry.getDatetime();
+        byte[] data = entry.getDatetime();
 
         if (entry.getEntryType().getDateType() == CGMSHistoryEntryType.DateType.MinuteSpecific) {
 

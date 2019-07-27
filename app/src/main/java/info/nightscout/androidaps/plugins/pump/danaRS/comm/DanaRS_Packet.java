@@ -47,8 +47,6 @@ public class DanaRS_Packet {
         return null;
     }
 
-    ;
-
     // STATIC FUNCTIONS
 
     public static int getCommand(byte[] data) {

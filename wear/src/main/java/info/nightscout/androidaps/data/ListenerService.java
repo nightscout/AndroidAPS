@@ -585,7 +585,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private void showBolusProgress(int progresspercent, String progresstatus) {
         Intent cancelIntent = new Intent(this, ListenerService.class);
         cancelIntent.setAction(ACTION_CANCELBOLUS);
-        PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);;
+        PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);
 
         long[] vibratePattern;
         boolean vibreate = PreferenceManager

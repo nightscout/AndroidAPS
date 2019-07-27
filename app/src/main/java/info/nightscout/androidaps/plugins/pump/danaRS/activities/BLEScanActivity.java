@@ -27,7 +27,6 @@ public class BLEScanActivity extends AppCompatActivity {
     private ListView listView = null;
     private ListAdapter mListAdapter = null;
     private ArrayList<BluetoothDeviceItem> mDevices = new ArrayList<>();
-    ;
 
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothLeScanner mBluetoothLeScanner = null;

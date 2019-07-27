@@ -8,6 +8,6 @@ public enum MedtronicUIResponseType {
 
     Data,
     Error,
-    Invalid;
+    Invalid
 
 }

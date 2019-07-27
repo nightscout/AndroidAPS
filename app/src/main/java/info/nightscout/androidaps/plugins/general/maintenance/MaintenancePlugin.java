@@ -178,7 +178,7 @@ public class MaintenancePlugin extends PluginBase {
      * @return
      */
     public String constructName() {
-        return "AndroidAPS_LOG_" + String.valueOf(new Date().getTime()) + LoggerUtils.SUFFIX;
+        return "AndroidAPS_LOG_" + new Date().getTime() + LoggerUtils.SUFFIX;
     }
 
     public void zip(File zipFile, List<File> files) throws IOException {
@@ -187,7 +187,7 @@ public class MaintenancePlugin extends PluginBase {
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
 
         for (File file : files) {
-            byte data[] = new byte[BUFFER_SIZE];
+            byte[] data = new byte[BUFFER_SIZE];
 
             try(FileInputStream fileInputStream = new FileInputStream( file )) {
 
