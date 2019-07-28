@@ -18,12 +18,14 @@ import java.util.Objects;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -219,7 +221,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         IobTotal result = new IobTotal(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
-        int realDuration = getDurationToTime(time);
+        double realDuration = getDurationToTime(time);
 
         if (realDuration > 0) {
             double dia_ago = time - dia * 60 * 60 * 1000;
@@ -232,6 +234,56 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
                 if (calcdate > dia_ago && calcdate <= time) {
                     double tempBolusSize = absoluteRate() * spacing / 60d;
+
+                    Treatment tempBolusPart = new Treatment();
+                    tempBolusPart.insulin = tempBolusSize;
+                    tempBolusPart.date = calcdate;
+
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
+                    result.iob += aIOB.iobContrib;
+                    result.activity += aIOB.activityContrib;
+                    result.extendedBolusInsulin += tempBolusPart.insulin;
+                }
+            }
+        }
+        return result;
+    }
+
+    public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
+        IobTotal result = new IobTotal(time);
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+
+        double realDuration = getDurationToTime(time);
+        double netBasalAmount = 0d;
+
+        double sensitivityRatio = lastAutosensResult.ratio;
+        double normalTarget = 100;
+
+        if (exercise_mode && isTempTarget && profile.getTarget() >= normalTarget + 5) {
+            // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
+            // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
+            double c = half_basal_exercise_target - normalTarget;
+            sensitivityRatio = c / (c + profile.getTarget() - normalTarget);
+        }
+
+        if (realDuration > 0) {
+            double netBasalRate;
+            double dia_ago = time - dia * 60 * 60 * 1000;
+            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
+            double spacing = realDuration / aboutFiveMinIntervals;
+
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
+                // find middle of the interval
+                long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
+
+                double basalRate = profile.getBasal(calcdate);
+                double basalRateCorrection = basalRate * (sensitivityRatio - 1);
+
+
+                netBasalRate = absoluteRate() - basalRateCorrection;
+
+                if (calcdate > dia_ago && calcdate <= time) {
+                    double tempBolusSize = netBasalRate * spacing / 60d;
 
                     Treatment tempBolusPart = new Treatment();
                     tempBolusPart.insulin = tempBolusSize;

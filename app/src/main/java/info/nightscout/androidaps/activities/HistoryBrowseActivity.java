@@ -327,7 +327,7 @@ public class HistoryBrowseActivity extends AppCompatActivity {
             }
 
             if (showIob)
-                secondGraphData.addIob(fromTime, toTime, useIobForScale, 1d);
+                secondGraphData.addIob(fromTime, toTime, useIobForScale, 1d, showPrediction);
             if (showCob)
                 secondGraphData.addCob(fromTime, toTime, useCobForScale, useCobForScale ? 1d : 0.5d);
             if (showDev)
