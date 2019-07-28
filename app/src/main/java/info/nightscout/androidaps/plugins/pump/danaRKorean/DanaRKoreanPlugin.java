@@ -242,7 +242,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                 // Correct basal already set ?
                 if (L.isEnabled(L.PUMP))
                     log.debug("setTempBasalAbsolute: currently running: " + activeTemp.toString());
-                if (activeTemp.percentRate == percentRate) {
+                if (activeTemp.percentRate == percentRate && activeTemp.getPlannedRemainingMinutes() > 4) {
                     if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
