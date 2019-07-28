@@ -275,7 +275,7 @@ dependencies {
     implementation "com.jakewharton:butterknife:${butterknifeVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 
-    implementation 'com.github.DavidProdinger:weekdays-selector:1.0.4'
+    implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
     testImplementation "junit:junit:4.12"
     testImplementation "org.json:json:20140107"
