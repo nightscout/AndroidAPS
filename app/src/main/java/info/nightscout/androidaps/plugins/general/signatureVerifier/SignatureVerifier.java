@@ -111,12 +111,14 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
             synchronized ($lock) {
                 if (revokedCerts == null) return false;
                 Signature[] signatures = MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), PackageManager.GET_SIGNATURES).signatures;
-                for (Signature signature : signatures) {
-                    MessageDigest digest = MessageDigest.getInstance("SHA256");
-                    byte[] fingerprint = digest.digest(signature.toByteArray());
-                    for (byte[] cert : revokedCerts) {
-                        if (Arrays.equals(cert, fingerprint)) {
-                            return true;
+                if (signatures != null) {
+                    for (Signature signature : signatures) {
+                        MessageDigest digest = MessageDigest.getInstance("SHA256");
+                        byte[] fingerprint = digest.digest(signature.toByteArray());
+                        for (byte[] cert : revokedCerts) {
+                            if (Arrays.equals(cert, fingerprint)) {
+                                return true;
+                            }
                         }
                     }
                 }
