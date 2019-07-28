@@ -1506,7 +1506,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
 
             if (SP.getBoolean("showiob", true))
-                secondGraphData.addIob(fromTime, now, useIobForScale, 1d);
+                secondGraphData.addIob(fromTime, now, useIobForScale, 1d, SP.getBoolean("showprediction", false));
             if (SP.getBoolean("showcob", true))
                 secondGraphData.addCob(fromTime, now, useCobForScale, useCobForScale ? 1d : 0.5d);
             if (SP.getBoolean("showdeviations", false))

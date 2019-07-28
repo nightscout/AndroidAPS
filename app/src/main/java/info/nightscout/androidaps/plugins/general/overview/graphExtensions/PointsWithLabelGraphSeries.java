@@ -79,7 +79,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         EXERCISE,
         GENERAL,
         GENERALWITHDURATION,
-        COBFAILOVER
+        COBFAILOVER,
+        IOBPREDICTION
     }
 
     /**
@@ -203,6 +204,11 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             // draw data point
             if (!overdraw) {
                 if (value.getShape() == Shape.BG || value.getShape() == Shape.COBFAILOVER) {
+                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStrokeWidth(0);
+                    canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
+                } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOBPREDICTION) {
+                    mPaint.setColor(value.getColor());
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);

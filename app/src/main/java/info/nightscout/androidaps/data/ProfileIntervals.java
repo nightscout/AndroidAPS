@@ -31,7 +31,7 @@ public class ProfileIntervals<T extends Interval> {
         rawData = other.rawData.clone();
     }
 
-    public synchronized ProfileIntervals reset() {
+    public synchronized ProfileIntervals<T> reset() {
         rawData = new LongSparseArray<>();
         return this;
     }
