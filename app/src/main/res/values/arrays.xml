@@ -17,7 +17,6 @@
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
         <item>@string/fr_lang</item>
-        <item>@string/ga_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
@@ -40,7 +39,6 @@
         <item>cs</item>
         <item>de</item>
         <item>fr</item>
-        <item>ga</item>
         <item>nl</item>
         <item>es</item>
         <item>el</item>

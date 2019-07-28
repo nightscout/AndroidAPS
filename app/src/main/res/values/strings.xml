@@ -1,4 +1,30 @@
 <resources>
+    <string name="en_lang" translatable="false">English</string>
+    <string name="cs_lang" translatable="false">Czech</string>
+    <string name="af_lang" translatable="false">Afrikaans</string>
+    <string name="bg_lang" translatable="false">Bulgarian</string>
+    <string name="nl_lang" translatable="false">Dutch</string>
+<!--    <string name="fi_lang" translatable="false">Finnish</string> -->
+    <string name="fr_lang" translatable="false">French</string>
+    <string name="de_lang" translatable="false">German</string>
+    <string name="el_lang" translatable="false">Greek</string>
+<!--   <string name="he_lang" translatable="false">Hebrew</string> -->
+    <string name="zh_lang" translatable="false">Chinese</string>
+<!--    <string name="ga_lang" translatable="false">Irish</string> -->
+    <string name="it_lang" translatable="false">Italian</string>
+<!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="ko_lang" translatable="false">Korean</string>
+    <string name="lt_lang" translatable="false">Lithuanian</string>
+    <string name="pl_lang" translatable="false">Polish</string>
+    <string name="pt_lang" translatable="false">Portuguese</string>
+<!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
+    <string name="ro_lang" translatable="false">Romanian</string>
+    <string name="ru_lang" translatable="false">Russian</string>
+    <string name="sk_lang" translatable="false">Slovak</string>
+    <string name="es_lang" translatable="false">Spanish</string>
+    <string name="sv_lang" translatable="false">Swedish</string>
+    <string name="tr_lang" translatable="false">Turkish</string>
+
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -186,9 +212,6 @@
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
-    <string name="af_lang" translatable="false">Afrikaans</string>
-    <string name="cs_lang" translatable="false">Czech</string>
-    <string name="en_lang" translatable="false">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
@@ -239,25 +262,10 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
-    <string name="nl_lang" translatable="false">Dutch</string>
-    <string name="de_lang" translatable="false">German</string>
-    <string name="es_lang" translatable="false">Spanish</string>
-    <string name="el_lang" translatable="false">Greek</string>
-    <string name="it_lang" translatable="false">Italian</string>
-    <string name="ro_lang" translatable="false">Romanian</string>
-    <string name="pt_lang" translatable="false">Portuguese</string>
-    <string name="ru_lang" translatable="false">Russian</string>
-    <string name="sk_lang" translatable="false">Slovak</string>
-    <string name="sv_lang" translatable="false">Swedish</string>
-    <string name="fr_lang" translatable="false">French</string>
-    <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="tr_lang" translatable="false">Turkish</string>
-    <string name="pl_lang" translatable="false">Polish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
     <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
-    <string name="bg_lang" translatable="false">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language" translatable="false">Language</string>
 
@@ -396,8 +404,6 @@
     <string name="overview_quickwizard_item_remove_button">Remove</string>
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
-    <string name="ko_lang" translatable="false">Korean</string>
-    <string name="lt_lang" translatable="false">Lithuanian</string>
     <string name="actions">Actions</string>
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
@@ -1127,7 +1133,6 @@
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
     <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
-    <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
     <string translatable="false" name="key_wearwizard_tt">wearwizard_tt</string>
