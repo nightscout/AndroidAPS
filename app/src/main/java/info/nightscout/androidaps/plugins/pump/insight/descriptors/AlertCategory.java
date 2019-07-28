@@ -5,5 +5,5 @@ public enum AlertCategory {
     REMINDER,
     MAINTENANCE,
     WARNING,
-    ERROR;
+    ERROR
 }

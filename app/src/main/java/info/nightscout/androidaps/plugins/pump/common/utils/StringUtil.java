@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class StringUtil {
 
-    public static DecimalFormat DecimalFormaters[] = {
+    public static DecimalFormat[] DecimalFormaters = {
             new DecimalFormat("#0"), new DecimalFormat("#0.0"), new DecimalFormat("#0.00"), new DecimalFormat("#0.000")};
 
 

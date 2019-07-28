@@ -30,9 +30,9 @@ public enum CGMSHistoryEntryType {
     SensorCalFactor(0x0f, "SensorCalFactor", 1, 4, 2, DateType.MinuteSpecific), //
     Something10(0x10, "10-Something", 1, 4, 0, DateType.MinuteSpecific), //
     Something19(0x13, "19-Something", 1, 0, 0, DateType.PreviousTimeStamp),
-    GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp);;
+    GlucoseSensorData(0xFF, "GlucoseSensorData", 1, 0, 0, DateType.PreviousTimeStamp);
 
-    private static Map<Integer, CGMSHistoryEntryType> opCodeMap = new HashMap<Integer, CGMSHistoryEntryType>();
+    private static Map<Integer, CGMSHistoryEntryType> opCodeMap = new HashMap<>();
 
     static {
         for (CGMSHistoryEntryType type : values()) {
@@ -40,7 +40,7 @@ public enum CGMSHistoryEntryType {
         }
     }
 
-    public boolean schemaSet = false;
+    public boolean schemaSet;
     private int opCode;
     private String description;
     private int headLength;
@@ -129,7 +129,6 @@ public enum CGMSHistoryEntryType {
         MinuteSpecific, //
         SecondSpecific, //
         PreviousTimeStamp //
-        ;
 
     }
 

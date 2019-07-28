@@ -4,5 +4,5 @@ public enum PairingStatus {
 
     CONFIRMED,
     REJECTED,
-    PENDING;
+    PENDING
 }

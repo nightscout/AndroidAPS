@@ -14,5 +14,5 @@ public enum SatlError {
     WRONG_STATE,
     INVALID_MESSAGE_TYPE,
     INVALID_PAYLOAD_LENGTH,
-    NONE;
+    NONE
 }

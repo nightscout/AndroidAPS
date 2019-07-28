@@ -10,6 +10,6 @@ public enum ServiceTransportType {
     ServiceNotification, //
 
     ServiceCommand, //
-    ServiceResult;
+    ServiceResult
 
 }

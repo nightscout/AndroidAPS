@@ -21,7 +21,7 @@ public class TempBasalProcessDTO {
     }
 
 
-    public static enum Operation {
+    public enum Operation {
         None,
         Add,
         Edit

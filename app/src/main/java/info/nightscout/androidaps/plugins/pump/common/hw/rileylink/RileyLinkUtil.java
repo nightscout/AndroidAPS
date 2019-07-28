@@ -1,20 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import android.content.Context;
+import android.content.Intent;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
-import android.content.Intent;
-
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
@@ -112,7 +111,7 @@ public class RileyLinkUtil {
 
 
     private static synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState,
-            RileyLinkError errorCode, boolean set) {
+                                                                           RileyLinkError errorCode, boolean set) {
 
         if (set) {
 
@@ -121,17 +120,17 @@ public class RileyLinkUtil {
 
             if (L.isEnabled(L.PUMP))
                 LOG.info("RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
-                    + errorCode.name());
+                        + errorCode.name());
 
             RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
-                RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
+                    RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
             MainApp.bus().post(new EventMedtronicDeviceStatusChange(newState, errorCode));
             return null;
 
         } else {
             return (RileyLinkUtil.rileyLinkServiceData == null || RileyLinkUtil.rileyLinkServiceData.serviceState == null) ? //
-            RileyLinkServiceState.NotStarted
-                : RileyLinkUtil.rileyLinkServiceData.serviceState;
+                    RileyLinkServiceState.NotStarted
+                    : RileyLinkUtil.rileyLinkServiceData.serviceState;
         }
 
     }
@@ -259,7 +258,7 @@ public class RileyLinkUtil {
                 case 0x03: // Complete list of 16-bit UUIDs
                     while (length >= 2) {
                         uuids
-                            .add(UUID.fromString(String.format("%08x-0000-1000-8000-00805f9b34fb", buffer.getShort())));
+                                .add(UUID.fromString(String.format("%08x-0000-1000-8000-00805f9b34fb", buffer.getShort())));
                         length -= 2;
                     }
                     break;
@@ -275,11 +274,7 @@ public class RileyLinkUtil {
                 case 0x09:
                     byte[] nameBytes = new byte[length - 1];
                     buffer.get(nameBytes);
-                    try {
-                        name = new String(nameBytes, "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                    name = new String(nameBytes, StandardCharsets.UTF_8);
                     break;
                 default:
                     buffer.position(buffer.position() + length - 1);
