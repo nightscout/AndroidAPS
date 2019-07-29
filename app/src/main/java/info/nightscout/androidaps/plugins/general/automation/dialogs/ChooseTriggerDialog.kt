@@ -19,7 +19,7 @@ class ChooseTriggerDialog : DialogFragment() {
     private var clickListener: OnClickListener? = null
 
     interface OnClickListener {
-        fun onClick(newTriggerObject: Trigger?)
+        fun onClick(newTriggerObject: Trigger)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +49,9 @@ class ChooseTriggerDialog : DialogFragment() {
         // OK button
         ok.setOnClickListener {
             dismiss()
-            clickListener?.onClick(instantiateTrigger())
+            instantiateTrigger()?.let {
+                clickListener?.onClick(it)
+            }
         }
 
         // Cancel button
