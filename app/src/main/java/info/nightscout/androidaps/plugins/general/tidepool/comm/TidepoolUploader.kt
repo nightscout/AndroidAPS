@@ -98,7 +98,7 @@ object TidepoolUploader {
                 startSession(session!!, doUpload)
             }, {
                 connectionStatus = TidepoolUploader.ConnectionStatus.FAILED
-                loginFailed()
+                releaseWakeLock()
             }))
             return
         } else {
@@ -124,10 +124,6 @@ object TidepoolUploader {
         }
                 ?: OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null)
 
-    }
-
-    private fun loginFailed() {
-        releaseWakeLock()
     }
 
     private fun startSession(session: Session, doUpload: Boolean = false) {
@@ -204,16 +200,18 @@ object TidepoolUploader {
                     val body = RequestBody.create(MediaType.parse("application/json"), chunk)
 
                     RxBus.send(EventTidepoolStatus(("Uploading")))
-                    val call = session.service!!.doUpload(session.token!!, session.datasetReply!!.getUploadId()!!, body)
-                    call.enqueue(TidepoolCallback<UploadReplyMessage>(session, "Data Upload", {
-                        setLastEnd(session.end)
-                        RxBus.send(EventTidepoolStatus(("Upload completed OK")))
-                        releaseWakeLock()
-                        unploadNext()
-                    }, {
-                        RxBus.send(EventTidepoolStatus(("Upload FAILED")))
-                        releaseWakeLock()
-                    }))
+                    if (session.service != null && session.token != null && session.datasetReply != null) {
+                        val call = session.service.doUpload(session.token!!, session.datasetReply!!.getUploadId()!!, body)
+                        call.enqueue(TidepoolCallback<UploadReplyMessage>(session, "Data Upload", {
+                            setLastEnd(session.end)
+                            RxBus.send(EventTidepoolStatus(("Upload completed OK")))
+                            releaseWakeLock()
+                            unploadNext()
+                        }, {
+                            RxBus.send(EventTidepoolStatus(("Upload FAILED")))
+                            releaseWakeLock()
+                        }))
+                    }
                 }
             }
         }
