@@ -134,7 +134,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         if (L.isEnabled(L.AUTOSENS))
             log.debug("Using most recent " + deviationsArray.size() + " deviations");
         if (deviationsArray.size() < 96) {
-            int pad = Math.round((1 - deviationsArray.size() / 96) * 18);
+            int pad = (int) Math.round((1 - (double) deviationsArray.size() / 96) * 18);
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Adding " + pad + " more zero deviations");
             for (int d = 0; d < pad; d++) {
