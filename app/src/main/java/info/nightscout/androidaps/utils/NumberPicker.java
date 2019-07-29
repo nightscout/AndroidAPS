@@ -163,13 +163,15 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
                     value = maxValue;
                     ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
                     updateEditText();
-                    okButton.setVisibility(VISIBLE);
+                    if (okButton != null)
+                        okButton.setVisibility(VISIBLE);
                 }
                 if (value < minValue) {
                     value = minValue;
                     ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.youareonallowedlimit));
                     updateEditText();
-                    okButton.setVisibility(VISIBLE);
+                    if (okButton != null)
+                        okButton.setVisibility(VISIBLE);
                 }
             }
         });
