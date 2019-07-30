@@ -211,7 +211,7 @@
     <string name="careportal_newnstreatment_sensor">Sensorius</string>
     <string name="careportal_newnstreatment_carbs_label">Angliavandeniai</string>
     <string name="careportal_newnstreatment_insulin_label">Insulinas</string>
-    <string name="careportal_newnstreatment_carbtime_label">Angliavandenių veikimo laikas</string>
+    <string name="careportal_newnstreatment_carbtime_label">Angliavandenių laikas</string>
     <string name="careportal_newnstreatment_split_label">Išskaidyti</string>
     <string name="careportal_newnstreatment_duration_label">Trukmė</string>
     <string name="careportal_newnstreatment_percent_label">Procentai</string>

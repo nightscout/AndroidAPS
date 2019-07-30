@@ -883,7 +883,7 @@
     <string name="bolusrecordedonly">Bolus zostanie tylko zapisany w rekordach</string>
     <string name="ns_autobackfill_summary">Automatycznie wypełnij brakujące BG z NS</string>
     <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
-    <string name="overview_show_activity">Ćwiczenia</string>
+    <string name="overview_show_activity">Aktywność</string>
     <string name="overview_show_sensitivity">Wrażliwość</string>
     <string name="overview_show_deviations">Odchylenia</string>
     <string name="overview_show_cob">COB (Aktywne Węglow.)</string>
@@ -1081,6 +1081,7 @@
     <string name="speederror">Błąd prędkości</string>
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
     <string name="loop_openmode_min_change">Minimalna żądana zmiana [%]</string>
+    <string name="loop_openmode_min_change_summary">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
     <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
     <string name="searching_for_devices">Wyszukiwanie urządzeń…</string>
     <string name="please_wait">Proszę czekać…</string>
@@ -1168,9 +1169,9 @@
     <string name="starttemptarget">Rozpocznij cel tymczasowy</string>
     <string name="stoptemptarget">Zatrzymaj cel tymczasowy</string>
     <string name="islesser">jest mniejsze niż</string>
-    <string name="isequalorlesser">jest równe lub mniejsze niż</string>
+    <string name="isequalorlesser">jest mniejsze lub równe</string>
     <string name="isequal">jest równe</string>
-    <string name="isequalorgreater">jest równe lub większe niż</string>
+    <string name="isequalorgreater">jest większe lub równe</string>
     <string name="isgreater">jest większe niż</string>
     <string name="isnotavailable">nie jest dostępne</string>
     <string name="unknown">nieznany</string>
