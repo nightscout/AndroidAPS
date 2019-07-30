@@ -1,17 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.common;
 
-import java.util.Date;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-
-import com.squareup.otto.Subscribe;
+import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -22,12 +22,14 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -48,9 +50,9 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
-        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
+            .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
     protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
-        .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
+            .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
 
     protected PumpDescription pumpDescription = new PumpDescription();
     protected PumpStatus pumpStatus;
@@ -231,7 +233,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
-            boolean enforceNew) {
+                                                boolean enforceNew) {
         if (isLoggingEnabled())
             LOG.warn("setTempBasalAbsolute [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
@@ -240,7 +242,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
-            boolean enforceNew) {
+                                               boolean enforceNew) {
         if (isLoggingEnabled())
             LOG.warn("setTempBasalPercent [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
@@ -294,8 +296,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // Short info for SMS, Wear etc
 
     public boolean isFakingTempsByExtendedBoluses() {
-        if (isLoggingEnabled())
-            LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
+        //if (isLoggingEnabled())
+        //    LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
         return false;
     }
 
@@ -332,7 +334,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
             TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate",
-                    tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
+                        tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
@@ -364,20 +366,20 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         String ret = "";
         if (pumpStatus.lastConnection != 0) {
             Long agoMsec = System.currentTimeMillis() - pumpStatus.lastConnection;
-            int agoMin = (int)(agoMsec / 60d / 1000d);
+            int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " min ago\n";
         }
         if (pumpStatus.lastBolusTime != null && pumpStatus.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pumpStatus.lastBolusAmount) + "U @" + //
-                android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
+                    android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
         }
         TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin()
-            .getRealTempBasalFromHistory(System.currentTimeMillis());
+                .getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
         ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(
-            System.currentTimeMillis());
+                System.currentTimeMillis());
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
@@ -401,7 +403,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                 if (isLoggingEnabled())
                     LOG.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult().success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                    .comment(MainApp.gs(R.string.danar_invalidinput));
+                        .comment(MainApp.gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -419,7 +421,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                     LOG.debug("deliverTreatment: Carb only treatment.");
 
                 return new PumpEnactResult().success(true).enacted(true).bolusDelivered(0d)
-                    .carbsDelivered(detailedBolusInfo.carbs).comment(MainApp.gs(R.string.virtualpump_resultok));
+                        .carbsDelivered(detailedBolusInfo.carbs).comment(MainApp.gs(R.string.virtualpump_resultok));
             }
         } finally {
             triggerUIChange();
@@ -442,5 +444,33 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     public static PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(resourceId));
     }
+
+
+    @Override
+    public boolean canHandleDST() {
+        return false;
+    }
+
+
+    @Override
+    public ManufacturerType manufacturer() {
+        return pumpStatus.pumpType.getManufacturer();
+    }
+
+    @Override
+    public PumpType model() {
+        return pumpStatus.pumpType;
+    }
+
+
+    @Override
+    public void timeDateOrTimeZoneChanged() {
+    }
+
+
+    public void refreshCustomActionsList() {
+        MainApp.bus().post(new EventCustomActionsChanged());
+    }
+
 
 }

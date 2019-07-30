@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/omnipod_name">
+
+        <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
+            android:id="@+id/rileylink_mac_address_omnipod"
+            android:enabled="true"
+            android:summary=""
+            android:title="RileyLink Configuration"
+            android:key="@string/pref_key_rileylink_mac_address">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+        </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
+
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
-
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
@@ -38,7 +36,6 @@ public abstract class RileyLinkCommunicationManager {
     private static final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
 
     protected final RFSpy rfspy;
-    protected final Context context;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
     protected long lastGoodReceiverCommunicationTime = 0;
@@ -51,8 +48,7 @@ public abstract class RileyLinkCommunicationManager {
     private int timeoutCount = 0;
 
 
-    public RileyLinkCommunicationManager(Context context, RFSpy rfspy) {
-        this.context = context;
+    public RileyLinkCommunicationManager(RFSpy rfspy) {
         this.rfspy = rfspy;
         this.rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
         RileyLinkUtil.setRileyLinkCommunicationManager(this);
@@ -125,7 +121,6 @@ public abstract class RileyLinkCommunicationManager {
     }
 
 
-
     // FIXME change wakeup
     // TODO we might need to fix this. Maybe make pump awake for shorter time (battery factor for pump) - Andy
     public void wakeUp(int duration_minutes, boolean force) {
@@ -143,8 +138,8 @@ public abstract class RileyLinkCommunicationManager {
                 LOG.info("Waking pump...");
 
             byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
-            RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0, (byte)200,
-                (byte)0, (byte)0, 25000, (byte)0);
+            RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 200,
+                    (byte) 0, (byte) 0, 25000, (byte) 0);
             if (isLogEnabled())
                 LOG.info("wakeup: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
 
@@ -225,8 +220,8 @@ public abstract class RileyLinkCommunicationManager {
             for (int j = 0; j < tries; j++) {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
-                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte)0, (byte)0,
-                    (byte)0, (byte)0, 1250, (byte)0);
+                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0,
+                        (byte) 0, (byte) 0, 1250, (byte) 0);
                 if (resp.wasTimeout()) {
                     LOG.error("scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
@@ -258,7 +253,7 @@ public abstract class RileyLinkCommunicationManager {
                 trial.tries++;
             }
             sumRSSI += -99.0 * (trial.tries - trial.successes);
-            trial.averageRSSI2 = (double)(sumRSSI) / (double)(trial.tries);
+            trial.averageRSSI2 = (double) (sumRSSI) / (double) (trial.tries);
 
             trial.calculateAverage();
 
@@ -273,7 +268,7 @@ public abstract class RileyLinkCommunicationManager {
             FrequencyTrial one = results.trials.get(k);
 
             stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, ""
-                + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList));
+                    + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList));
         }
 
         LOG.info(stringBuilder.toString());
@@ -315,7 +310,7 @@ public abstract class RileyLinkCommunicationManager {
         // RLMessage msg = makeRLMessage(RLMessageType.ReadSimpleData);
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
         RadioPacket pkt = new RadioPacket(pumpMsgContent);
-        RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte)0, (byte)0, (byte)0, (byte)0, SCAN_TIMEOUT, (byte)0);
+        RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte) 0, (byte) 0, (byte) 0, (byte) 0, SCAN_TIMEOUT, (byte) 0);
         if (resp.wasTimeout()) {
             LOG.warn("tune_tryFrequency: no pump response at frequency {}", freqMHz);
         } else if (resp.looksLikeRadioPacket()) {
@@ -327,8 +322,8 @@ public abstract class RileyLinkCommunicationManager {
                     LOG.warn("tune_tryFrequency: saw response level {} at frequency {}", radioResponse.rssi, freqMHz);
                     return calculateRssi(radioResponse.rssi);
                 } else {
-                        LOG.warn("tune_tryFrequency: invalid radio response:"
-                        + ByteUtil.shortHexString(radioResponse.getPayload()));
+                    LOG.warn("tune_tryFrequency: invalid radio response:"
+                            + ByteUtil.shortHexString(radioResponse.getPayload()));
                 }
 
             } catch (RileyLinkCommunicationException e) {
@@ -350,7 +345,7 @@ public abstract class RileyLinkCommunicationManager {
                 // Try again at larger step size
                 stepsize += 0.05;
             } else {
-                if ((int)(evenBetterFrequency * 100) == (int)(betterFrequency * 100)) {
+                if ((int) (evenBetterFrequency * 100) == (int) (betterFrequency * 100)) {
                     // value did not change, so we're done.
                     break;
                 }
