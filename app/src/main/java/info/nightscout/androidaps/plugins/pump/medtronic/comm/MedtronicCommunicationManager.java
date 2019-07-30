@@ -951,11 +951,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     return true;
 
             } catch (RileyLinkCommunicationException e) {
-                if (isLogEnabled())
-                    LOG.warn("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
+                LOG.warn("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
 
-            LOG.warn("Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent()));
+            if (responseMessage!=null)
+                LOG.warn("Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent()));
+            else
+                LOG.warn("Set Basal Profile: Null response.");
         }
 
         return false;

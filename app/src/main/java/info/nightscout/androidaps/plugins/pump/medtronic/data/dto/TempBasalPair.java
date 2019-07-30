@@ -63,7 +63,7 @@ public class TempBasalPair {
     public TempBasalPair(byte[] response) {
 
         if (L.isEnabled(L.PUMPCOMM))
-            LOG.debug("Received response: " + response);
+            LOG.debug("Received TempBasal response: " + ByteUtil.getHex(response));
 
         isPercent = response[0] == 1;
 
@@ -75,7 +75,13 @@ public class TempBasalPair {
             insulinRate = strokes / 40.0d;
         }
 
-        durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
+        if (response.length<6) {
+            durationMinutes = ByteUtil.asUINT8(response[4]);
+        } else {
+            durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
+        }
+
+        LOG.warn("TempBasalPair (with {} byte response): {}", response.length, toString());
 
     }
 

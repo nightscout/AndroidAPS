@@ -384,11 +384,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         RileyLinkServiceState rileyLinkServiceState = MedtronicUtil.getServiceState();
 
+        if (rileyLinkServiceState==null) {
+            LOG.error("RileyLink unreachable. RileyLinkServiceState is null.");
+            return false;
+        }
+
         if (rileyLinkServiceState != RileyLinkServiceState.PumpConnectorReady //
                 && rileyLinkServiceState != RileyLinkServiceState.RileyLinkReady //
                 && rileyLinkServiceState != RileyLinkServiceState.TuneUpDevice) {
-            if (isLoggingEnabled())
-                LOG.error("RileyLink unreachable.");
+            LOG.error("RileyLink unreachable.");
             return false;
         }
 

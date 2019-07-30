@@ -369,7 +369,9 @@ public class RileyLinkBLE {
 
         rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
         // if this succeeds, we get a connection state change callback?
-        connectGatt();
+
+        if (rileyLinkDevice!=null)
+            connectGatt();
     }
 
 
