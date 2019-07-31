@@ -98,7 +98,7 @@ public enum PumpType {
             0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities),
 
     // Medtronic
-    Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.05d, null, //
+    Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.1d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 24*60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
