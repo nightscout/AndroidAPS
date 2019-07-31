@@ -192,7 +192,7 @@ public class CommandQueue {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
 
         if (type == Command.CommandType.SMB_BOLUS) {
-            if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
+            if (isRunning(Command.CommandType.BOLUS) || isRunning(Command.CommandType.SMB_BOLUS) || bolusInQueue()) {
                 if (L.isEnabled(L.PUMPQUEUE))
                     log.debug("Rejecting SMB since a bolus is queue/running");
                 return false;
@@ -202,6 +202,7 @@ public class CommandQueue {
                     log.debug("Rejecting bolus, another bolus was issued since request time");
                 return false;
             }
+            removeAll(Command.CommandType.SMB_BOLUS);
         }
 
 
