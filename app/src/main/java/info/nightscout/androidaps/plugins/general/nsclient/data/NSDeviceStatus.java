@@ -194,7 +194,7 @@ public class NSDeviceStatus {
             level = Levels.URGENT;
         else if (!deviceStatusPumpData.isPercent && deviceStatusPumpData.voltage < NSSettingsStatus.getInstance().extendedPumpSettings("urgentBattV"))
             level = Levels.URGENT;
-        else if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("warnClock") < now)
+        else if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("warnClock") * 60 * 1000L < now)
             level = Levels.WARN;
         else if (deviceStatusPumpData.reservoir < NSSettingsStatus.getInstance().extendedPumpSettings("warnRes"))
             level = Levels.WARN;
