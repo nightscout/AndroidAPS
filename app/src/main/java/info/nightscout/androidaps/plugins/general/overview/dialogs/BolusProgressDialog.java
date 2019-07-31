@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,9 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     public static boolean running = true;
     public static boolean stopPressed = false;
 
+    private String state;
+    private final static String DEFAULT_STATE = MainApp.gs(R.string.waitingforpump);
+
     public BolusProgressDialog() {
         super();
     }
@@ -62,7 +66,8 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         progressBar = view.findViewById(R.id.overview_bolusprogress_progressbar);
         stopButton.setOnClickListener(this);
         progressBar.setMax(100);
-        statusView.setText(MainApp.gs(R.string.waitingforpump));
+        state = savedInstanceState != null ? savedInstanceState.getString("state", DEFAULT_STATE) : DEFAULT_STATE;
+        statusView.setText(state);
         setCancelable(false);
         stopPressed = false;
         return view;
@@ -115,6 +120,13 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("state", state);
+        log.debug("storing state: " + state);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.overview_bolusprogress_stop:
@@ -143,6 +155,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 }
             });
         }
+        state = ev.status;
     }
 
     @Subscribe
