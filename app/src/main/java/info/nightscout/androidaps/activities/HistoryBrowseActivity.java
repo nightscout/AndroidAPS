@@ -2,9 +2,6 @@ package info.nightscout.androidaps.activities;
 
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
@@ -14,6 +11,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.jjoe64.graphview.GraphView;
 import com.squareup.otto.Subscribe;
@@ -36,13 +37,14 @@ import info.nightscout.androidaps.events.EventCustomCalculationFinished;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
 public class HistoryBrowseActivity extends AppCompatActivity {
@@ -247,6 +249,15 @@ public class HistoryBrowseActivity extends AppCompatActivity {
         buttonZoom.setText(String.valueOf(rangeToDisplay));
 
         final boolean showPrediction = false;
+
+        showBasal = SP.getBoolean("hist_showbasals", true);
+        showIob = SP.getBoolean("hist_showiob", true);
+        showCob = SP.getBoolean("hist_showcob", true);
+        showDev = SP.getBoolean("hist_showdeviations", false);
+        showRat = SP.getBoolean("hist_showratios", false);
+        showActPrim = SP.getBoolean("hist_showactivityprimary", false);
+        showActSec = SP.getBoolean("hist_showactivitysecondary", false);
+        showDevslope = SP.getBoolean("hist_showdevslope", false);
 
         int hoursToFetch;
         final long toTime;
@@ -453,21 +464,21 @@ public class HistoryBrowseActivity extends AppCompatActivity {
 
             popup.setOnMenuItemClickListener(item1 -> {
                 if (item1.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
-                    showBasal = !item1.isChecked();
+                    SP.putBoolean("hist_showbasals", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
-                    showIob = !item1.isChecked();
+                    SP.putBoolean("hist_showiob", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
-                    showCob = !item1.isChecked();
+                    SP.putBoolean("hist_showcob", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
-                    showDev = !item1.isChecked();
+                    SP.putBoolean("hist_showdeviations", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
-                    showRat = !item1.isChecked();
+                    SP.putBoolean("hist_showratios", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTPRIM.ordinal()) {
-                    showActPrim = !item1.isChecked();
+                    SP.putBoolean("hist_showactivityprimary", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTSEC.ordinal()) {
-                    showActSec = !item1.isChecked();
+                    SP.putBoolean("hist_showactivitysecondary", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
-                    showDevslope = !item1.isChecked();
+                    SP.putBoolean("hist_showdevslope", !item1.isChecked());
                 }
                 updateGUI("onGraphCheckboxesCheckedChanged");
                 return true;
