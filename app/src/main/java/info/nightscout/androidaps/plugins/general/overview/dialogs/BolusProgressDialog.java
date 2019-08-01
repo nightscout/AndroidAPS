@@ -4,14 +4,15 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.SystemClock;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import com.squareup.otto.Subscribe;
 
@@ -86,10 +87,14 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         } else {
             if (getDialog() != null)
                 getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            MainApp.subscribe(this);
             running = true;
             if (L.isEnabled(L.UI))
                 log.debug("onResume running");
+        }
+        try {
+            MainApp.bus().register(this);
+        } catch (IllegalArgumentException e) {
+            log.error("Already registered");
         }
     }
 
@@ -112,11 +117,15 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
 
     @Override
     public void onPause() {
-        running = false;
-        super.onPause();
-        MainApp.unsubscribe(this);
         if (L.isEnabled(L.UI))
             log.debug("onPause");
+        running = false;
+        super.onPause();
+        try {
+            MainApp.bus().unregister(this);
+        } catch (IllegalArgumentException e) {
+            log.error("Already unregistered");
+        }
     }
 
     @Override
@@ -196,9 +205,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                         log.error("Unhandled exception", e);
                     }
                 });
-            } else {
-                if (L.isEnabled(L.UI))
-                    log.debug("activity == null");
             }
         });
         t.start();

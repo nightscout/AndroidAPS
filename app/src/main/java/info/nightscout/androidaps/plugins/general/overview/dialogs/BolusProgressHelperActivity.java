@@ -15,10 +15,9 @@ public class BolusProgressHelperActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            this.getIntent().getDoubleExtra("insulin", 0d);
             BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setHelperActivity(this);
-            bolusProgressDialog.setInsulin(this.getIntent().getDoubleExtra("insulin", 0d));
-            bolusProgressDialog.show(this.getSupportFragmentManager(), "BolusProgress");
+            bolusProgressDialog.setInsulin(getIntent().getDoubleExtra("insulin", 0d));
+            bolusProgressDialog.show(getSupportFragmentManager(), "BolusProgress");
     }
 }
