@@ -119,7 +119,7 @@ public class SWDefinition {
                 .validator(() -> SP.getBoolean(R.string.key_i_understand, false))
         )
         .add(new SWScreen(R.string.permission)
-                .skippable(false)
+                .skippable(true)
                 .add(new SWInfotext()
                         .label(String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name))))
                 .add(new SWBreak())
