@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils;
 
+import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -18,14 +19,23 @@ public class JSONFormatter {
     private static Logger log = LoggerFactory.getLogger(JSONFormatter.class);
 
     public static Spanned format(final String jsonString) {
-        final JsonVisitor visitor = new JsonVisitor(4, ' ');
+        final JsonVisitor visitor = new JsonVisitor(1, '\t');
         try {
             if (jsonString.equals("undefined"))
                 return Html.fromHtml("undefined");
             else if (jsonString.getBytes()[0] == '[')
-                return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
-            else
-                return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0), Html.FROM_HTML_MODE_COMPACT);
+                } else {
+                    return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
+                }
+            else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0), Html.FROM_HTML_MODE_COMPACT);
+                } else {
+                    return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
+                }
+            }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
             return Html.fromHtml("");
@@ -33,7 +43,7 @@ public class JSONFormatter {
     }
 
     public static Spanned format(final JSONObject object) {
-        final JsonVisitor visitor = new JsonVisitor(4, ' ');
+        final JsonVisitor visitor = new JsonVisitor(1, '\t');
         try {
             return Html.fromHtml(visitor.visit(object, 0));
         } catch (JSONException e) {
@@ -58,7 +68,7 @@ public class JSONFormatter {
             } else {
                 ret += write("[", indent);
                 for (int i = 0; i < length; i++) {
-                    ret += visit(array.get(i), indent + 1);
+                    ret += visit(array.get(i), indent);
                 }
                 ret += write("]", indent);
             }
@@ -73,8 +83,8 @@ public class JSONFormatter {
                 final Iterator<String> keys = obj.keys();
                 while (keys.hasNext()) {
                     final String key = keys.next();
-                    ret += write("<b>" + key + "</b>: ", indent + 1);
-                    ret += visit(obj.get(key), 0);
+                    ret += write("<b>" + key + "</b>: ", indent);
+                    ret += visit(obj.get(key), indent + 1);
                     ret += "<br>";
                 }
             }
@@ -86,7 +96,7 @@ public class JSONFormatter {
             if (object instanceof JSONArray) {
                 ret += visit((JSONArray) object, indent);
             } else if (object instanceof JSONObject) {
-                ret += visit((JSONObject) object, indent);
+                ret += "<br>" + visit((JSONObject) object, indent);
             } else {
                 if (object instanceof String) {
                     ret += write("\"" + ((String) object).replace("<", "&lt;").replace(">", "&gt;") + "\"", indent);

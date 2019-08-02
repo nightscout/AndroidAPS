@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,26 +96,26 @@ public class OpenAPSSMBFragment extends SubscriberFragment {
                     }
                     DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = plugin.lastDetermineBasalAdapterSMBJS;
                     if (determineBasalAdapterSMBJS != null) {
-                        glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getGlucoseStatusParam()).toString().trim());
-                        currentTempView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getCurrentTempParam()).toString().trim());
+                        glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getGlucoseStatusParam()));
+                        currentTempView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getCurrentTempParam()));
                         try {
                             JSONArray iobArray = new JSONArray(determineBasalAdapterSMBJS.getIobDataParam());
-                            iobDataView.setText((String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0))).trim());
+                            iobDataView.setText(TextUtils.concat(String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0))));
                         } catch (JSONException e) {
                             log.error("Unhandled exception", e);
                             iobDataView.setText("JSONException see log for details");
                         }
-                        profileView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getProfileParam()).toString().trim());
-                        mealDataView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getMealDataParam()).toString().trim());
-                        scriptdebugView.setText(determineBasalAdapterSMBJS.getScriptDebug().trim());
+                        profileView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getProfileParam()));
+                        mealDataView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getMealDataParam()));
+                        scriptdebugView.setText(determineBasalAdapterSMBJS.getScriptDebug());
                         if (lastAPSResult != null && lastAPSResult.inputConstraints != null)
-                            constraintsView.setText(lastAPSResult.inputConstraints.getReasons().trim());
+                            constraintsView.setText(lastAPSResult.inputConstraints.getReasons());
                     }
                     if (plugin.lastAPSRun != 0) {
                         lastRunView.setText(DateUtil.dateAndTimeFullString(plugin.lastAPSRun));
                     }
                     if (plugin.lastAutosensResult != null) {
-                        autosensDataView.setText(JSONFormatter.format(plugin.lastAutosensResult.json()).toString().trim());
+                        autosensDataView.setText(JSONFormatter.format(plugin.lastAutosensResult.json()));
                     }
                 }
             });
