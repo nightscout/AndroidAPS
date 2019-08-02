@@ -97,12 +97,14 @@ public class ErrorDialog extends DialogFragment implements View.OnClickListener 
     }
 
     private void startAlarm() {
-        Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
-        alarm.putExtra("soundid", soundId);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            MainApp.instance().startForegroundService(alarm);
-        else
-            MainApp.instance().startService(alarm);
+        if (soundId != 0) {
+            Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+            alarm.putExtra("soundid", soundId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                MainApp.instance().startForegroundService(alarm);
+            else
+                MainApp.instance().startService(alarm);
+        }
     }
 
     private void stopAlarm() {

@@ -18,7 +18,7 @@ public class ErrorHelperActivity extends AppCompatActivity {
         ErrorDialog errorDialog = new ErrorDialog();
         errorDialog.setHelperActivity(this);
         errorDialog.setStatus(getIntent().getStringExtra("status"));
-        errorDialog.setSound(getIntent().getIntExtra("soundid", 0));
+        errorDialog.setSound(getIntent().getIntExtra("soundid", R.raw.error));
         errorDialog.setTitle(getIntent().getStringExtra("title"));
         errorDialog.show(this.getSupportFragmentManager(), "Error");
 
