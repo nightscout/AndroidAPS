@@ -36,7 +36,7 @@
         android:label="@string/app_name"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/AppTheme.Launcher"
         android:fullBackupContent="true">
         <meta-data
             android:name="com.google.android.gms.car.application"
