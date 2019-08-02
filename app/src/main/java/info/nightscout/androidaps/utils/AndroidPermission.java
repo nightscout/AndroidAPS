@@ -3,8 +3,13 @@ package info.nightscout.androidaps.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
+import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -25,22 +30,38 @@ public class AndroidPermission {
 
     public static void askForPermission(Activity activity, String[] permission, Integer requestCode) {
         boolean test = false;
+        boolean testBattery = false;
         for (int i = 0; i < permission.length; i++) {
             test = test || (ContextCompat.checkSelfPermission(activity, permission[i]) != PackageManager.PERMISSION_GRANTED);
+            if (permission[i] == Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) {
+                PowerManager powerManager = (PowerManager) activity.getSystemService(activity.POWER_SERVICE);
+                String packageName = activity.getPackageName();
+                testBattery = testBattery || !powerManager.isIgnoringBatteryOptimizations(packageName);
+            }
         }
         if (test) {
             ActivityCompat.requestPermissions(activity, permission, requestCode);
+        }
+        if (testBattery) {
+            Intent i = new Intent();
+            i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            i.setData(Uri.parse("package:" + activity.getPackageName()));
+            activity.startActivity(i);
         }
     }
 
     public static void askForPermission(Activity activity, String permission, Integer requestCode) {
         String[] permissions = {permission};
-
-        if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(activity, permissions, requestCode);
+        askForPermission(activity, permissions, requestCode);
     }
 
     public static boolean checkForPermission(Context context, String permission) {
+        if (permission == Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) {
+            PowerManager powerManager = (PowerManager) context.getSystemService(context.POWER_SERVICE);
+            String packageName = context.getPackageName();
+            return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+                    && powerManager.isIgnoringBatteryOptimizations(packageName);
+        }
         return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
