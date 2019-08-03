@@ -38,6 +38,8 @@ public class AlarmSoundService extends Service {
         super.onCreate();
         if (L.isEnabled(L.CORE))
             log.debug("onCreate");
+        Notification notification = PersistentNotificationPlugin.getPlugin().getLastNotification();
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
