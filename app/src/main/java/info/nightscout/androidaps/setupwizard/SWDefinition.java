@@ -75,8 +75,10 @@ public class SWDefinition {
     }
 
     SWDefinition() {
-        if (Config.APS || Config.PUMPCONTROL)
+        if (Config.APS)
             SWDefinitionFull();
+        else if (Config.PUMPCONTROL)
+            SWDefinitionPumpControl();
         else if (Config.NSCLIENT)
             SWDefinitionNSClient();
     }
@@ -453,6 +455,29 @@ public class SWDefinition {
                 .add(screenLoop)
                 .add(screenSensitivity)
                 .add(getScreenObjectives)
+        ;
+    }
+
+    private void SWDefinitionPumpControl() {
+        // List all the screens here
+        add(screenSetupWizard)
+                .add(screenLanguage)
+                .add(screenEula)
+                .add(screenPermissionBattery)
+                .add(screenPermissionBt)
+                .add(screenPermissionStore)
+                .add(screenImport)
+                .add(screenNsClient)
+                .add(screenAge)
+                .add(screenInsulin)
+                .add(screenBgSource)
+                .add(screenProfile)
+                .add(screenNsProfile)
+                .add(screenLocalProfile)
+                .add(screenSimpleProfile)
+                .add(screenProfileSwitch)
+                .add(screenPump)
+                .add(screenSensitivity)
         ;
     }
 
