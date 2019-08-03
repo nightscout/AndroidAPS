@@ -24,11 +24,11 @@ public class LocationHelper {
      * @return true if location is enabled, false otherwise.
      */
     public static boolean isLocationEnabled(Context context) {
-        LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         return (locationManager != null && //
-        (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || //
-        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)));
+                (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || //
+                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)));
 
         // return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
@@ -69,9 +69,7 @@ public class LocationHelper {
      */
     public static void requestLocationForBluetooth(Activity activity) {
         // Location needs to be enabled for Bluetooth discovery on Marshmallow.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            LocationHelper.requestLocation(activity);
-        }
+        LocationHelper.requestLocation(activity);
     }
 
     // public static Boolean locationPermission(ActivityWithMenu act) {

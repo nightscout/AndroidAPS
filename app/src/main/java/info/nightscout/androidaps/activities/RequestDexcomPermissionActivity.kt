@@ -11,11 +11,7 @@ class RequestDexcomPermissionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(arrayOf(SourceDexcomPlugin.PERMISSION), requestCode)
-        } else {
-            finish()
-        }
+        requestPermissions(arrayOf(SourceDexcomPlugin.PERMISSION), requestCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

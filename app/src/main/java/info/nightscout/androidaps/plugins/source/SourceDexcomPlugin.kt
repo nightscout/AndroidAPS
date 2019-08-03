@@ -44,7 +44,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
 
     override fun onStart() {
         super.onStart()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(MainApp.instance(), PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(MainApp.instance(), PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             val intent = Intent(MainApp.instance(), RequestDexcomPermissionActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             MainApp.instance().startActivity(intent)
