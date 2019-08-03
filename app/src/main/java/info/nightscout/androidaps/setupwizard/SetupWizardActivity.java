@@ -3,6 +3,8 @@ package info.nightscout.androidaps.setupwizard;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -223,4 +225,10 @@ public class SetupWizardActivity extends AppCompatActivity {
         updateButtons();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AndroidPermission.CASE_BATTERY)
+            updateButtons();
+    }
 }
