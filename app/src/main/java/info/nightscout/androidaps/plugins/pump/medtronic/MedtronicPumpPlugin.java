@@ -1529,6 +1529,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     ServiceTaskExecutor.startTask(new WakeAndTuneTask());
                 } else {
                     Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                    i.putExtra("soundid", R.raw.boluserror);
                     i.putExtra("status", MainApp.gs(R.string.medtronic_error_operation_not_possible_no_configuration));
                     i.putExtra("title", MainApp.gs(R.string.combo_warning));
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

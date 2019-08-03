@@ -38,6 +38,8 @@ public class AlarmSoundService extends Service {
         super.onCreate();
         if (L.isEnabled(L.CORE))
             log.debug("onCreate");
+        Notification notification = PersistentNotificationPlugin.getPlugin().getLastNotification();
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, notification);
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -51,28 +53,22 @@ public class AlarmSoundService extends Service {
             resourceId = intent.getIntExtra("soundid", R.raw.error);
 
         player = new MediaPlayer();
-        AssetFileDescriptor afd = MainApp.sResources.openRawResourceFd(resourceId);
-        if (afd == null)
-            return START_STICKY;
         try {
+            AssetFileDescriptor afd = MainApp.sResources.openRawResourceFd(resourceId);
+            if (afd == null)
+                return START_STICKY;
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             afd.close();
-        } catch (IOException e) {
-            log.error("Unhandled exception", e);
-        }
-        player.setLooping(true); // Set looping
-        AudioManager manager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-        if (manager == null || !manager.isMusicActive()) {
-            player.setVolume(100, 100);
-        }
-
-        try {
+            player.setLooping(true); // Set looping
+            AudioManager manager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+            if (manager == null || !manager.isMusicActive()) {
+                player.setVolume(100, 100);
+            }
             player.prepare();
             player.start();
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-
         return START_STICKY;
     }
 
