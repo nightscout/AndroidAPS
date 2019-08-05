@@ -159,10 +159,13 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                         break;
                     case R.id.profileswitch_date:
                     case R.id.profileswitch_name:
-                        long time = ((ProfileSwitch) v.getTag()).date;
-                        ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(time);
+                        Bundle args = new Bundle();
+                        args.putLong("time", ((ProfileSwitch) v.getTag()).date);
+                        ProfileViewerDialog pvd = new ProfileViewerDialog();
+                        pvd.setArguments(args);
                         FragmentManager manager = getFragmentManager();
-                        pvd.show(manager, "ProfileViewDialog");
+                        if (manager != null)
+                            pvd.show(manager, "ProfileViewDialog");
                         break;
                 }
             }

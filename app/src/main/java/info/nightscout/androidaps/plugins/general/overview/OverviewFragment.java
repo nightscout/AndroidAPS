@@ -633,9 +633,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
             newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
         } else if (item.getTitle().equals(MainApp.gs(R.string.danar_viewprofile))) {
-            ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(System.currentTimeMillis());
+            Bundle args = new Bundle();
+            args.putLong("time", DateUtil.now());
+            ProfileViewerDialog pvd = new ProfileViewerDialog();
+            pvd.setArguments(args);
             FragmentManager manager = getFragmentManager();
-            pvd.show(manager, "ProfileViewDialog");
+            if (manager != null)
+                pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(MainApp.gs(R.string.eatingsoon))) {
             DefaultValueHelper defHelper = new DefaultValueHelper();
             double target = defHelper.determineEatingSoonTT(profile.getUnits());

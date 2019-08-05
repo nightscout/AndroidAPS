@@ -172,6 +172,7 @@
     <string name="openapsma_lastenact_label">Last enacted</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
     <string name="safety">Safety</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
@@ -937,6 +938,7 @@
     <string name="insight_incompatible">Incompatible</string>
     <string name="second">second</string>
     <string name="minute">minute</string>
+    <string name="format_hours">%1$.2f h</string>
     <string name="hour">hour</string>
     <string name="day">day</string>
     <string name="week">week</string>
