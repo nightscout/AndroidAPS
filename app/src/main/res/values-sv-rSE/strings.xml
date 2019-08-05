@@ -996,7 +996,6 @@ Eversense-appen.</string>
     <string name="adjustprofileinns">Ändringar måste göras i NS</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
     <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AndroidAPS föreslå/göra basalförändringar</string>
-    <string name="setupwizard_objectives_description">Tryck på knappen nedan för att aktivera Mål. Titta på fliken Mål efter att du slutfört den här guiden för att göra AndroidAPS helt funktionell. \n</string>
     <string name="enableobjectives">Aktivera mål</string>
     <string name="apssetup">Konfigurera APS-insticksprogram </string>
     <string name="sensitivitysetup">Konfigurera insticksprogram för känslighet</string>
@@ -1081,6 +1080,7 @@ Eversense-appen.</string>
     <string name="speederror">Felaktig hastighet</string>
     <string name="insulinlimitviolation">Insulingräns nådd</string>
     <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
+    <string name="loop_openmode_min_change_summary">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
     <string name="pairfirst">Vänligen para ihop pumpen med telefonen.</string>
     <string name="searching_for_devices">Söker enheter…</string>
     <string name="please_wait">Var god vänta…</string>
@@ -1243,6 +1243,8 @@ Eversense-appen.</string>
     <string name="copy_short">KOPIERA</string>
     <string name="addnew">Lägg till</string>
     <string name="versionChecker">Versionskontroll</string>
+    <string name="signature_verifier">Signaturverifierare</string>
+    <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
     <string name="new_version_warning">Ny version tillgänglig sedan %1$d dagar! Systemet kommer att byta läge till \"stopp innan lågt\" efter 60 dagar och sluta loopa helt efter 90 dagar</string>

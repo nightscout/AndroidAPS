@@ -67,7 +67,7 @@
     <string name="nsprofileview_ic_label">IA (insulino/angliavandenių santykis)</string>
     <string name="nsprofileview_isf_label">JIF (jautrumo insulinui faktorius)</string>
     <string name="nsprofileview_basal_label">Valandinė bazė</string>
-    <string name="nsprofileview_target_label">Tikslinė gliukozės vertė</string>
+    <string name="nsprofileview_target_label">Tikslas</string>
     <string name="noprofileset">Nenustatytas profilis</string>
     <string name="treatments_insulin_label_string">Insulinas:</string>
     <string name="treatments_carbs_label_string">Angliavandeniai:</string>
@@ -990,7 +990,6 @@
     <string name="adjustprofileinns">Pakeitimai turi būti daromi NS</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
-    <string name="setupwizard_objectives_description">Paspauskite mygtuką žemiau, norėdami aktyvuoti Tikslus. Užbaigę sąranką apsilankykite Tikslų skiltyje, kad AndroidAPS būtų visiškai funkcionali.\n</string>
     <string name="enableobjectives">Aktyvuoti Tikslus</string>
     <string name="apssetup">Konfigūruoti DKS įskiepį</string>
     <string name="sensitivitysetup">Konfigūruoti Jautrumo nustatymo įskiepį</string>
@@ -1176,6 +1175,11 @@
     <!-- MDT Configuration -->
     <!-- RL BLE Scanning -->
     <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Parametrai</string>
+    <string name="rileylink_settings_tab2">Istorija</string>
+    <string name="rileylink_settings_tab3">Prietaisas</string>
+    <string name="rileylink_settings_title">RileyLink parametrai</string>
+    <string name="title_activity_rileylink_settings">RileyLink parametrai</string>
     <!-- RL State -->
     <!-- RL Errors -->
     <!-- RL Target Device -->
@@ -1183,6 +1187,7 @@
     <!-- MDT History -->
     <!-- MDT Pump Status -->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_desc_get_settings">Gauti parametrus</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d diena</item>
         <item quantity="few">%1$d diena</item>

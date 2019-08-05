@@ -944,7 +944,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="adjustprofileinns">Değişiklikler Nightscout\'da yapılmalıdır</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
-    <string name="setupwizard_objectives_description">Hedefleri etkinleştirmek için aşağıdaki düğmeye basın. Android sihirbazını tamamen işlevsel hale getirmek için bu sihirbazı tamamladıktan sonra Hedefler sekmesine bakın.\n</string>
     <string name="enableobjectives">Hedefleri etkinleştir</string>
     <string name="apssetup">APS eklentisini yapılandır</string>
     <string name="sensitivitysetup">Duyarlılık eklentisini yapılandır</string>

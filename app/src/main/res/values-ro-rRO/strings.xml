@@ -990,7 +990,6 @@
     <string name="adjustprofileinns">Schimbările trebuie făcute în NS</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
-    <string name="setupwizard_objectives_description">Apăsați butonul pentru a activa Obiectivele. După terminarea procesului de setare, alegeți fereastra Obiective pentru a face AndroidAPS complet funcțional.\n</string>
     <string name="enableobjectives">Activați Obiectivele</string>
     <string name="apssetup">Configurați plugin APS</string>
     <string name="sensitivitysetup">Configurați pluginul pentru Sensibilitate</string>

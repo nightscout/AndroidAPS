@@ -996,7 +996,6 @@
     <string name="adjustprofileinns">Zmiany muszą być dokonane w NS</string>
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_loop_description">Naciśnij przycisk poniżej, by umożliwić AndroidAPS wprowadzenie zmian insuliny bazowej</string>
-    <string name="setupwizard_objectives_description">Naciśnij przycisk poniżej, by aktywować funkcję Zadania. Wejdź w zakładkę Zadania po ukończeniu pracy kreatora w celu uzyskania pełnej funkcjonalności AndroidAPS.\n</string>
     <string name="enableobjectives">Uruchom Zadania</string>
     <string name="apssetup">Skonfiguruj wtyczkę APS</string>
     <string name="sensitivitysetup">Skonfiguruj wtyczkę wrażliwości</string>

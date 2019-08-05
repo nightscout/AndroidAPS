@@ -996,7 +996,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="adjustprofileinns">Wijzigingen moeten worden gedaan in Nightscout</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AndroidAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
-    <string name="setupwizard_objectives_description">Druk op de knop hieronder voor het activeren van Doelen. Kijk in het tabblad Doelen nadat u klaar bent met deze wizard, om AndroidAPS volledig functioneel te krijgen. \n</string>
     <string name="enableobjectives">Inschakelen van Doelen</string>
     <string name="apssetup">APS plugin configureren</string>
     <string name="sensitivitysetup">Gevoeligheid plugin configureren</string>
@@ -1239,6 +1238,10 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="action">Actie:</string>
     <string name="iob_u">IOB [E]:</string>
     <string name="glucose_u">Glucose [%1$s]:</string>
+    <string name="delete_short">DEL</string>
+    <string name="add_short">TOEV</string>
+    <string name="copy_short">COPY</string>
+    <string name="addnew">Voeg nieuwe toe</string>
     <string name="versionChecker">Versie Checker</string>
     <string name="signature_verifier">Handtekening controle</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
@@ -1251,6 +1254,42 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="dexcom_app_patched">Dexcom App (patched)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Ontvang BG waardes van de aangepaste Dexcom G app.</string>
+    <string name="notification">Notificatie</string>
+    <string name="notification_message">Notificatie: %1$s</string>
+    <string name="message_short">Boodsch:</string>
+    <string name="profilepercentage">Profiel percentage</string>
+    <string name="percent_u">Procent [%]:</string>
+    <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
+    <string name="startprofileforever">Profiel %1$d%% starten</string>
+    <string name="exists">bestaand</string>
+    <string name="notexists">niet bestaand</string>
+    <string name="temptargetcompared">Tijdelijk streefdoel %1$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Gevoeligheid %1$s %2$s %%</string>
+    <string name="autosenslabel">Gevoeligheid %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
+    <string name="deltalabel">BG verschil</string>
+    <string name="currentlocation">Huidige locatie</string>
+    <string name="location">Locatie</string>
+    <string name="latitude_short">Br:</string>
+    <string name="longitude_short">Leng:</string>
+    <string name="distance_short">Afst [m]:</string>
+    <string name="name_short">Naam:</string>
+    <string name="locationis">Locatie is %1$s</string>
+    <string name="lastboluslabel">Laatste bolus</string>
+    <string name="lastboluscompared">Laatste bolus %1$s %2$s min geleden</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="taskname">Taaknaam</string>
+    <string name="eventname">Gebeurtenisnaam</string>
+    <string name="edit_short">EDIT</string>
+    <string name="please_choose_an_action_type">Kies een type actie:</string>
+    <string name="please_choose_a_trigger_type">Kies een type trigger:</string>
+    <string name="if_label">Als:</string>
+    <string name="then_label">Dan:</string>
+    <string name="triggers">Triggers:</string>
+    <string name="remove_label">VERWIJDER</string>
+    <string name="preconditions">Voorwaarden:</string>
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Bewerking niet ondersteund door pomp en/of driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operatie NU nog niet ondersteund door pomp.</string>
@@ -1269,10 +1308,13 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Codering</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Codering</string>
     <string name="rileylink_mac_address">MAC-adres RileyLink</string>
+    <string name="medtronic_custom_action_wake_and_tune">Ontwaak en maak verbinding</string>
     <string name="medtronic_custom_action_clear_bolus_block">Bolus Blok wissen</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Configuratie</string>
+    <string name="medtronic_pump_battery_select">Batterij type (batterij weergave)</string>
     <string name="medtronic_pump_battery_no">Niet geselecteerd (Eenvoudige weergave)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (uitgebreide weergave)</string>
+    <string name="medtronic_pump_battery_lithium">Lithium (uitgebreide weergave)</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1303,11 +1345,58 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="rileylink_connection_status">Verbinding Status</string>
     <string name="rileylink_connection_error">Verbindingsfout</string>
     <string name="rileylink_device">Apparaat</string>
+    <string name="rileylink_device_type">Apparaat type</string>
+    <string name="rileylink_device_model">Apparaat model</string>
+    <string name="rileylink_last_used_frequency">Laatst gebruikte frequentie</string>
+    <string name="rileylink_last_device_contact">Laatste contact met apparaat</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
     <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth initialiseren…</string>
+    <string name="rileylink_state_bt_error">Bluetooth fout</string>
+    <string name="rileylink_state_bt_ready">Bluetooth gekoppeld</string>
+    <string name="rileylink_state_not_started">Niet gestart</string>
+    <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
+    <string name="rileylink_state_rl_error">RileyLink fout</string>
+    <string name="rileylink_state_pc_tune_up">RileyLink en Pomp status opvragen</string>
+    <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
+    <string name="rileylink_state_connected">Verbonden</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Apparaat is geen RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink onbereikbaar</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth is uitgeschakeld</string>
+    <string name="rileylink_error_no_bt_adapter">Geen Bluetooth Adapter</string>
+    <string name="rileylink_error_tuneup_failed">Verbinding maken mislukt</string>
+    <string name="rileylink_error_pump_unreachable">Pomp niet bereikbaar</string>
+    <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
+    <string name="rileylink_error_address_not_set_short">Niet ingesteld</string>
     <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Foutmeldingen</string>
+    <string name="medtronic_error_serial_not_set">Serie# niet ingesteld.</string>
+    <string name="medtronic_error_serial_invalid">Serie# ongeldig.</string>
+    <string name="medtronic_error_pump_type_not_set">Pomp type niet ingesteld.</string>
+    <string name="medtronic_error_pump_type_invalid">Pomp type niet ondersteund.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pomp frequentie niet ingesteld.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pomp frequentie niet ondersteund.</string>
+    <string name="medtronic_error_rileylink_address_invalid">RileyLink adres ongeldig.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Gedetecteerde pomp type komt niet overeen met ingestelde pomp type.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basaalprofielen zijn niet ingeschakeld op pomp.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basaalprofiel ingesteld op pomp is onjuist (moet STD zijn).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Verkeerde Tijdelijk Basaal-type ingesteld op pomp (moet Insulinesnelh (E/H) zijn).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Verkeerde Max Bolus ingesteld op pomp (moet %1$.2f zijn).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Verkeerde Max Basaal ingesteld op pomp (moet %1$.2f zijn).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Bewerking is niet mogelijk.\n\n Je moet eerst Medtronic Pomp ingesteld hebben, voordat je deze bewerking kunt gebruiken.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Meer dan 24u tijd gevraagd.</string>
     <!-- MDT History -->
+    <string name="medtronic_history_group_basal">Basaalstanden</string>
+    <string name="medtronic_history_group_configuration">Instellingen</string>
+    <string name="medtronic_history_group_notification">Meldingen</string>
+    <string name="medtronic_history_group_statistic">Statistieken</string>
+    <string name="medtronic_history_group_unknown">Onbekend</string>
+    <string name="medtronic_history_group_all">Alle</string>
+    <string name="medtronic_pump_history">Medtronic Pomp Geschiedenis</string>
     <!-- MDT Pump Status -->
     <string name="medtronic_pump_status_never_contacted">Nooit verbonden</string>
     <string name="medtronic_pump_status_waking_up">Ontwaken</string>
@@ -1341,6 +1430,9 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
     <string name="pump_no_connection_h">Geen verbinding gedurende %1$d uur %2$d min</string>
     <string name="pump_no_connection_d">Geen verbinding gedurende %1$d dag(en) %2$d uur</string>
+    <string name="insulinFromCob"><![CDATA[COB insuline: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
+    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus limiet bereikt: %2$.2fU naar %3$.2fU</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening goed. COB kan sterk afwijken!!!</font> zijn]]></string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>

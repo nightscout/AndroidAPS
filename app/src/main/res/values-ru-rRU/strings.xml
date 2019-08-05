@@ -995,7 +995,6 @@
     <string name="adjustprofileinns">Изменения должны быть сделано в Nightscout</string>
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AndroidAPS мог предложить/внести изменения в базал</string>
-    <string name="setupwizard_objectives_description">Нажмите на кнопку ниже, чтобы включить Цели. По окончании работы Мастера проверьте вкладку Цели, чтобы сделать AndroidAPS полностью функциональным. \n</string>
     <string name="enableobjectives">Включить Цели</string>
     <string name="apssetup">Настроить плагин APS</string>
     <string name="sensitivitysetup">Настроить плагин чувствительности Sensitivity</string>

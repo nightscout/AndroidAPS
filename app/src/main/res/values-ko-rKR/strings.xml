@@ -992,7 +992,6 @@
     <string name="adjustprofileinns">오직 NS에서 변경해야합니다.</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
     <string name="setupwizard_loop_description">AndroidAPS가 Basal 변화를 제안 혹은 실행하게 하려면 아래 버튼을 누르세요.</string>
-    <string name="setupwizard_objectives_description">목표를 활성화하기 위해 아래 버튼을 누르세요. 이 마법사를 종료된 다음 AndroidAPS의 모든 기능을 이용하기 위해 목표 탭을 확인하세요.\n</string>
     <string name="enableobjectives">목표 활성화하기</string>
     <string name="apssetup">APS 플러그인 설정하기</string>
     <string name="sensitivitysetup">민감도 플러그인 설정하기</string>
@@ -1141,10 +1140,17 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="max_recovery_duration">최대 복구 기간 [초]</string>
-    <string name="min_recovery_duration">최소 복구 기간 [초]</string>
+    <string name="max_recovery_duration">최대 재연결 시간 [초]</string>
+    <string name="min_recovery_duration">최소 재연결 시간 [초]</string>
     <string name="recovery_duration">복구 기간</string>
     <string name="timeout_during_handshake">연결 시간 초과 - 블루투스 재설정</string>
+    <string name="weekday_sunday_short">일</string>
+    <string name="weekday_saturday_short">토</string>
+    <string name="weekday_friday_short">금</string>
+    <string name="weekday_thursday_short">목</string>
+    <string name="weekday_wednesday_short">수</string>
+    <string name="weekday_tuesday_short">화</string>
+    <string name="weekday_monday_short">월</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>

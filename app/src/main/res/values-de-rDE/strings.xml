@@ -18,7 +18,7 @@
     <string name="danar_bt_name_title">DanaR Blueetooth--Gerät</string>
     <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuale Basalwerte beim Upload zu NightScout.</string>
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
-    <string name="description_actions">Schaltflächen, um schnell auf geläufige Funktionen zugreifen zu können</string>
+    <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_careportal">Gib erweiterte Tagebuch-Einträge ein.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
     <string name="description_objectives">Das Programm kennenlernen</string>
@@ -996,7 +996,6 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="adjustprofileinns">Änderungen müssen in Nightscout vorgenommen werden.</string>
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
-    <string name="setupwizard_objectives_description">Drücken Sie die Taste unten, um die Zielsetzungen zu aktivieren. Nachdem Sie den Assistenten beendet haben, navigieren Sie zur Registerkarte Zielsetzungen, um alle AndroidAPS-Funktionen anzuzeigen.\n</string>
     <string name="enableobjectives">Zielsetzungen aktivieren</string>
     <string name="apssetup">APS-Plugin konfigurieren</string>
     <string name="sensitivitysetup">Sensitivitäts Plugin konfigurieren</string>

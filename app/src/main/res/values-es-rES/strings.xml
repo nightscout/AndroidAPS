@@ -990,7 +990,6 @@
     <string name="adjustprofileinns">Cambios deben hacerse en NS</string>
     <string name="exitwizard">Saltar asistente de configuración</string>
     <string name="setupwizard_loop_description">Presiona el botón de abajo para permitir a AndroidAPS sugerir/hacer cambios en basales</string>
-    <string name="setupwizard_objectives_description">Presionar el botón de abajo para habilitar Objetivos. Ver pestaña de Objetivos, después de finalizar este asistente, para hacer AndroidAPS completamente funcional. \n</string>
     <string name="enableobjectives">Habilitar objetivos</string>
     <string name="apssetup">Configurar complemento APS</string>
     <string name="sensitivitysetup">Configurar complemento Sensibilidad</string>

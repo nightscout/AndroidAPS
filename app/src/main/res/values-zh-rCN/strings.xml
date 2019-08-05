@@ -992,7 +992,6 @@
     <string name="adjustprofileinns">更改必须在 NS 中完成</string>
     <string name="exitwizard">跳过设置向导</string>
     <string name="setupwizard_loop_description">按下下面的按钮, 以使 AndroidAPS 建议或者更改基础率</string>
-    <string name="setupwizard_objectives_description">按下下面的按钮以启用目标。在 \"目标\" 标签中, 完成此向导后, 使 AndroidAPS 完全正常工作。\n</string>
     <string name="enableobjectives">启用目标</string>
     <string name="apssetup">配置APS插件</string>
     <string name="sensitivitysetup">配置灵敏度插件</string>

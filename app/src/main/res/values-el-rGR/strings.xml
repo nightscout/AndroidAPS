@@ -995,7 +995,6 @@
     <string name="adjustprofileinns">Αλλαγές πρέπει να γίνουν στο NS</string>
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
     <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να ενεργοποιήσετε το AndroidAPS για να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
-    <string name="setupwizard_objectives_description">Πατήστε το πλήκτρο παρακάτω για να ενεργοποιήσετε τους Στόχους. Δείτε την καρτέλα \"Στόχοι\", αφού ολοκληρώσετε αυτόν τον οδηγό, για να κάνετε το AndroidAPS πλήρως λειτουργικό.\n</string>
     <string name="enableobjectives">Ενεργοποιήσετε τους Στόχους</string>
     <string name="apssetup">Ρυθμίστε την προσθήκη APS</string>
     <string name="sensitivitysetup">Ρυθμίσετε την προσθήκη Ευαισθησία</string>

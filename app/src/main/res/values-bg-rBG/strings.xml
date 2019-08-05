@@ -995,7 +995,6 @@
     <string name="adjustprofileinns">Промени трябва да се направят и в NS</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_loop_description">Натиснете бутона по-долу за да позволите AndroidAPS да предлага/прави промени в базалните стойности</string>
-    <string name="setupwizard_objectives_description">Натиснете бутона по долу за да разрешите Целите. Погледнете в раздела Цели, след като завършите този съветник, за да направите AndroidAPS напълно функционален. \n</string>
     <string name="enableobjectives">Разреши Цели</string>
     <string name="apssetup">Конфигуриране на APS модул</string>
     <string name="sensitivitysetup">Конфигуриране на модул за чувствителност</string>

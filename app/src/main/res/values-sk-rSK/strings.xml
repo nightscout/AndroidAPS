@@ -995,7 +995,6 @@
     <string name="adjustprofileinns">Zmeny musia byť urobené v NS</string>
     <string name="exitwizard">Preskočiť sprievodcu</string>
     <string name="setupwizard_loop_description">Stlačte tlačidlo nižšie, pre povolenie, aby mohlo AndroidAPS navrhovať, alebo robiť zmeny bazálu</string>
-    <string name="setupwizard_objectives_description">Stlačte tlačidlo nižšie pre povolenie Cieľov. Po ukončení sprievodcu prejdite na záložku Cieľov, aby ste získali všetky funkcie AndroidAPS.\n</string>
     <string name="enableobjectives">Povoliť Ciele</string>
     <string name="apssetup">Nastavenie APS</string>
     <string name="sensitivitysetup">Nastavenie citlivosti</string>

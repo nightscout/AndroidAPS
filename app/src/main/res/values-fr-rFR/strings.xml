@@ -996,7 +996,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="adjustprofileinns">Des modifications doivent être effectuées dans NS</string>
     <string name="exitwizard">Passer l\'Assistant de configuration</string>
     <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AndroidAPS à suggérer/faire des changements de basal</string>
-    <string name="setupwizard_objectives_description">Appuyez sur le bouton ci-dessous pour activer les Objectifs. Vérifiez le menu Objectifs une fois que vous arriverez à la fin de cet assistant de configuration de façon à ce qu\'AndroidAPS soit totalement opérationnel.\n</string>
     <string name="enableobjectives">Activez les objectifs</string>
     <string name="apssetup">Configurer le plugin APS</string>
     <string name="sensitivitysetup">Configurer le plugin de Sensibilité</string>
