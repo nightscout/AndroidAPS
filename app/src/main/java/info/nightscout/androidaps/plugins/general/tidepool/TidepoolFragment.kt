@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -46,7 +47,9 @@ class TidepoolFragment : Fragment() {
                     tidepool_status.text = TidepoolUploader.connectionStatus.name
                     tidepool_log.text = TidepoolPlugin.textLog
                     tidepool_logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         )
     }
 

@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolU
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
@@ -56,7 +57,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                 .toObservable(EventTidepoolDoUpload::class.java)
                 .observeOn(Schedulers.io())
                 .subscribe({ doUpload() }, {
-                    log.error(it.message)
+                    FabricPrivacy.logException(it)
                 })
         disposable += RxBus
                 .toObservable(EventTidepoolResetData::class.java)
@@ -70,12 +71,14 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                         TidepoolUploader.doLogin()
                     }
                 }, {
-                    log.error(it.message)
+                    FabricPrivacy.logException(it)
                 })
         disposable += RxBus
                 .toObservable(EventTidepoolStatus::class.java)
                 .observeOn(Schedulers.io())
-                .subscribe({ event -> addToLog(event) }, {})
+                .subscribe({ event -> addToLog(event) }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventNewBG::class.java)
                 .observeOn(Schedulers.io())
@@ -90,7 +93,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                             && RateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                         doUpload()
                 }, {
-                    log.error(it.message)
+                    FabricPrivacy.logException(it)
                 })
         disposable += RxBus
                 .toObservable(EventPreferenceChange::class.java)
@@ -102,13 +105,13 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                     )
                         TidepoolUploader.resetInstance()
                 }, {
-                    log.error(it.message)
+                    FabricPrivacy.logException(it)
                 })
         disposable += RxBus
                 .toObservable(EventNetworkChange::class.java)
                 .observeOn(Schedulers.io())
                 .subscribe({}, {
-                    log.error(it.message)
+                    FabricPrivacy.logException(it)
                 }) // TODO start upload on wifi connect
 
     }

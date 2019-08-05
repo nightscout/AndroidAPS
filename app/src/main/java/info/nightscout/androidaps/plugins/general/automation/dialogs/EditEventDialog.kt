@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.events.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -100,7 +101,9 @@ class EditEventDialog : DialogFragment() {
                 .subscribe({
                     actionListAdapter?.notifyDataSetChanged()
                     showPreconditions()
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         )
         disposable.add(RxBus
                 .toObservable(EventAutomationAddAction::class.java)
@@ -108,7 +111,9 @@ class EditEventDialog : DialogFragment() {
                 .subscribe({
                     event.addAction(it.action)
                     actionListAdapter?.notifyDataSetChanged()
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         )
         disposable.add(RxBus
                 .toObservable(EventAutomationUpdateTrigger::class.java)
@@ -116,7 +121,9 @@ class EditEventDialog : DialogFragment() {
                 .subscribe({
                     event.trigger = it.trigger
                     automation_triggerDescription.text = event.trigger.friendlyDescription()
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         )
         disposable.add(RxBus
                 .toObservable(EventAutomationUpdateAction::class.java)
@@ -124,7 +131,9 @@ class EditEventDialog : DialogFragment() {
                 .subscribe({
                     event.actions[it.position] = it.action
                     actionListAdapter?.notifyDataSetChanged()
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         )
     }
 

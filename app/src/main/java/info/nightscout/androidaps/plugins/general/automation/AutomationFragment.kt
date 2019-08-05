@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
+import info.nightscout.androidaps.utils.FabricPrivacy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -56,13 +57,17 @@ class AutomationFragment : Fragment() {
                         sb.append("\n")
                     }
                     automation_logView.text = sb.toString()
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventAutomationDataChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     eventListAdapter?.notifyDataSetChanged()
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
     }
 
     override fun onStop() {

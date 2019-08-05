@@ -39,10 +39,8 @@ public class DateUtil {
      *
      * @param isoDateString the iso date string
      * @return the date
-     * @throws Exception the exception
      */
-    public static Date fromISODateString(String isoDateString)
-            throws Exception {
+    public static Date fromISODateString(String isoDateString) {
 
         DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
         DateTime dateTime = DateTime.parse(isoDateString, parser);
@@ -148,6 +146,7 @@ public class DateUtil {
     }
 
     public static String dateAndTimeString(long mills) {
+        if (mills == 0) return "";
         return dateString(mills) + " " + timeString(mills);
     }
 
