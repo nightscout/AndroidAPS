@@ -21,10 +21,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolU
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -44,8 +41,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val listLog = ArrayList<EventTidepoolStatus>()
-    @Suppress("DEPRECATION") // API level 24 to replace call
-    var textLog: Spanned = Html.fromHtml("")
+    var textLog: Spanned = HtmlHelper.fromHtml("")
 
     operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
         add(disposable)
@@ -150,8 +146,7 @@ object TidepoolPlugin : PluginBase(PluginDescription()
                     newTextLog.append(log.toPreparedHtml())
                 }
             }
-            @Suppress("DEPRECATION") // API level 24 to replace call
-            textLog = Html.fromHtml(newTextLog.toString())
+            textLog = HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
             ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }

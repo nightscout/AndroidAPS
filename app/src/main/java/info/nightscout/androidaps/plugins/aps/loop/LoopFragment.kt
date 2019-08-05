@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.aps.loop
 
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HtmlHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -59,6 +59,7 @@ class LoopFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+        updateGUI()
     }
 
     override fun onStop() {
@@ -67,18 +68,17 @@ class LoopFragment : Fragment() {
     }
 
     fun updateGUI() {
-        val lastRun = LoopPlugin.lastRun
-        lastRun?.let {
+        LoopPlugin.lastRun?.let {
             loop_request.text = it.request?.toSpanned() ?: ""
             loop_constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
             loop_source.text = it.source ?: ""
-            loop_lastrun.text = it.lastAPSRun?.let { lastrun -> DateUtil.dateAndTimeString(lastrun.time) }
+            loop_lastrun.text = it.lastAPSRun?.let { lastRun -> DateUtil.dateAndTimeString(lastRun.time) }
                     ?: ""
             loop_lastenact.text = it.lastAPSRun?.let { lastEnact -> DateUtil.dateAndTimeString(lastEnact.time) }
                     ?: ""
-            loop_tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> Html.fromHtml(tbrSetByPump.toHtml()) }
+            loop_tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
                     ?: ""
-            loop_smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> Html.fromHtml(smbSetByPump.toHtml()) }
+            loop_smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
                     ?: ""
 
             val constraints =
@@ -92,7 +92,7 @@ class LoopFragment : Fragment() {
         }
     }
 
-    internal fun clearGUI() {
+    private fun clearGUI() {
         loop_request.text = ""
         loop_constraints.text = ""
         loop_constraintsprocessed.text = ""
