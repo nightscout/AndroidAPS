@@ -250,8 +250,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity) {
-        confirmPumpPluginActivation(newState, activity);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        confirmPumpPluginActivation(newState, activity, type);
     }
 
     @Override

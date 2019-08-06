@@ -126,8 +126,8 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity) {
-        confirmPumpPluginActivation(newState, activity);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        confirmPumpPluginActivation(newState, activity, type);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

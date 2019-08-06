@@ -162,8 +162,8 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity) {
-        confirmPumpPluginActivation(newState, activity);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        confirmPumpPluginActivation(newState, activity, type);
     }
 
     @Override

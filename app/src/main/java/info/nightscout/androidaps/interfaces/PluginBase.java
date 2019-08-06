@@ -45,39 +45,44 @@ public abstract class PluginBase {
 
     // Default always calls invoke
     // Plugins that have special constraints if they get switched to may override this method
-    public void switchAllowed(boolean newState, FragmentActivity activity) {
-        performPluginSwitch(newState);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        performPluginSwitch(newState, type);
     }
 
-    protected void confirmPumpPluginActivation(boolean newState, FragmentActivity activity) {
-        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || activity == null) {
-            performPluginSwitch(newState);
+    protected void confirmPumpPluginActivation(boolean newState, FragmentActivity activity, PluginType type) {
+        if (type == PluginType.PUMP) {
+            boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
+            if (allowHardwarePump || activity == null) {
+                performPluginSwitch(newState, type);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(R.string.allow_hardware_pump_text)
+                        .setPositiveButton(R.string.yes, (dialog, id) -> {
+                            performPluginSwitch(newState, type);
+                            SP.putBoolean("allow_hardware_pump", true);
+                            if (L.isEnabled(L.PUMP))
+                                log.debug("First time HW pump allowed!");
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                            MainApp.bus().post(new EventConfigBuilderUpdateGui());
+                            if (L.isEnabled(L.PUMP))
+                                log.debug("User does not allow switching to HW pump!");
+                        });
+                builder.create().show();
+            }
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setMessage(R.string.allow_hardware_pump_text)
-                    .setPositiveButton(R.string.yes, (dialog, id) -> {
-                        performPluginSwitch(newState);
-                        SP.putBoolean("allow_hardware_pump", true);
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("First time HW pump allowed!");
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                        MainApp.bus().post(new EventConfigBuilderUpdateGui());
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("User does not allow switching to HW pump!");
-                    });
-            builder.create().show();
+            performPluginSwitch(newState, type);
         }
     }
 
-    private void performPluginSwitch(boolean enabled) {
-        setPluginEnabled(getType(), enabled);
-        setFragmentVisible(getType(), enabled);
+    private void performPluginSwitch(boolean enabled, PluginType type) {
+        setPluginEnabled(type, enabled);
+        setFragmentVisible(type, enabled);
         ConfigBuilderFragment.processOnEnabledCategoryChanged(this, getType());
         ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
         MainApp.bus().post(new EventRefreshGui());
         MainApp.bus().post(new EventConfigBuilderChange());
+        MainApp.bus().post(new EventConfigBuilderUpdateGui());
         ConfigBuilderPlugin.getPlugin().logPluginStatus();
     }
 

@@ -27,6 +27,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
@@ -108,8 +109,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     public abstract void onStartCustomActions();
 
     @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity) {
-        confirmPumpPluginActivation(newState, activity);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        confirmPumpPluginActivation(newState, activity, type);
     }
 
     /**

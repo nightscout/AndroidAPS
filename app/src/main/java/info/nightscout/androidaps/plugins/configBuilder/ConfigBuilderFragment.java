@@ -84,13 +84,6 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.unbind();
-        pluginViewHolders.clear();
-    }
-
-    @Override
     protected void updateGUI() {
         for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.update();
     }
@@ -99,9 +92,7 @@ public class ConfigBuilderFragment extends SubscriberFragment {
     public void on(EventConfigBuilderUpdateGui e) {
         Activity activity = getActivity();
         if (activity != null)
-            activity.runOnUiThread(() -> {
-                updateGUI();
-            });
+            activity.runOnUiThread(this::updateGUI);
     }
 
     private void createViews() {
