@@ -12,12 +12,12 @@
         android:text="@string/unlock_settings" />
 
     <ScrollView
-        android:id="@+id/main_layout"
+        android:id="@+id/configbuilder_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/categories"
+            android:id="@+id/configbuilder_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

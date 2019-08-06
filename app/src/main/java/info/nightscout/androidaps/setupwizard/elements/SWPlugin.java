@@ -86,7 +86,7 @@ public class SWPlugin extends SWItem {
             PluginBase plugin = (PluginBase) rb.getTag();
             plugin.setPluginEnabled(pType, rb.isChecked());
             plugin.setFragmentVisible(pType, rb.isChecked() && makeVisible);
-            ConfigBuilderFragment.processOnEnabledCategoryChanged(plugin, pType);
+            ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(plugin, pType);
             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
             MainApp.bus().post(new EventConfigBuilderChange());
             MainApp.bus().post(new EventSWUpdate());

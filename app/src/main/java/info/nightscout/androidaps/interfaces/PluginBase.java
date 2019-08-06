@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.EventConfigBuilderUpdateGui;
 import info.nightscout.androidaps.utils.SP;
 import org.slf4j.Logger;
@@ -64,7 +65,7 @@ public abstract class PluginBase {
                                 log.debug("First time HW pump allowed!");
                         })
                         .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                            MainApp.bus().post(new EventConfigBuilderUpdateGui());
+                            RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
                             if (L.isEnabled(L.PUMP))
                                 log.debug("User does not allow switching to HW pump!");
                         });
@@ -78,11 +79,11 @@ public abstract class PluginBase {
     private void performPluginSwitch(boolean enabled, PluginType type) {
         setPluginEnabled(type, enabled);
         setFragmentVisible(type, enabled);
-        ConfigBuilderFragment.processOnEnabledCategoryChanged(this, getType());
+        ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(this, getType());
         ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
         MainApp.bus().post(new EventRefreshGui());
         MainApp.bus().post(new EventConfigBuilderChange());
-        MainApp.bus().post(new EventConfigBuilderUpdateGui());
+        RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
         ConfigBuilderPlugin.getPlugin().logPluginStatus();
     }
 

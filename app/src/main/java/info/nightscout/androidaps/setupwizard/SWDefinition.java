@@ -169,7 +169,7 @@ public class SWDefinition {
                     .action(() -> {
                         NSClientPlugin.getPlugin().setPluginEnabled(PluginType.GENERAL, true);
                         NSClientPlugin.getPlugin().setFragmentVisible(PluginType.GENERAL, true);
-                        ConfigBuilderFragment.processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL);
+                        ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                         MainApp.bus().post(new EventConfigBuilderChange());
                         MainApp.bus().post(new EventSWUpdate(true));
@@ -386,7 +386,7 @@ public class SWDefinition {
                     .action(() -> {
                         LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, true);
                         LoopPlugin.getPlugin().setFragmentVisible(PluginType.LOOP, true);
-                        ConfigBuilderFragment.processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP);
+                        ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                         MainApp.bus().post(new EventConfigBuilderChange());
                         MainApp.bus().post(new EventSWUpdate(true));
