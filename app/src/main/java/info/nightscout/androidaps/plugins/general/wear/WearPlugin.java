@@ -20,11 +20,16 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by adrian on 17/11/16.
@@ -38,6 +43,7 @@ public class WearPlugin extends PluginBase {
     private static WearPlugin wearPlugin;
     private static String TAG = "WearPlugin";
 
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public static WearPlugin getPlugin() {
         return wearPlugin;
@@ -71,11 +77,20 @@ public class WearPlugin extends PluginBase {
             watchUS.setSettings();
         }
         super.onStart();
+
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventOpenAPSUpdateGui.class)
+                .observeOn(Schedulers.io())
+                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                        error -> FabricPrivacy.logException(error)
+                ));
     }
+
 
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     private void sendDataToWatch(boolean status, boolean basals, boolean bgValue) {
@@ -112,7 +127,7 @@ public class WearPlugin extends PluginBase {
         //Log.d(TAG, "WR: WearPlugin:requestNotificationCancel");
 
         Intent intent = new Intent(ctx, WatchUpdaterService.class)
-            .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
+                .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
         intent.putExtra("actionstring", actionstring);
         ctx.startService(intent);
     }
@@ -133,11 +148,6 @@ public class WearPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventOpenAPSUpdateGui ev) {
         sendDataToWatch(true, true, false);
     }
 
