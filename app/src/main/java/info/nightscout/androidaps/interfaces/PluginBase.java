@@ -111,10 +111,6 @@ public abstract class PluginBase {
         return pluginDescription.preferencesId;
     }
 
-    public int getAdvancedPreferencesId() {
-        return pluginDescription.advancedPreferencesId;
-    }
-
     public boolean isEnabled(PluginType type) {
         if (pluginDescription.alwaysEnabled && type == pluginDescription.mainType)
             return true;
