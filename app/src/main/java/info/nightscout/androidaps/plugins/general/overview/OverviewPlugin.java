@@ -47,7 +47,7 @@ public class OverviewPlugin extends PluginBase {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(OverviewFragment.class.getName())
-                .alwayVisible(true)
+                .alwaysVisible(true)
                 .alwaysEnabled(true)
                 .pluginName(R.string.overview)
                 .shortName(R.string.overview_shortname)

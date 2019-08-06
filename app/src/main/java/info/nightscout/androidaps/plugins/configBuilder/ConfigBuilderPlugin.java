@@ -57,7 +57,7 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .fragmentClass(ConfigBuilderFragment.class.getName())
                 .showInList(true)
                 .alwaysEnabled(true)
-                .alwayVisible(false)
+                .alwaysVisible(false)
                 .pluginName(R.string.configbuilder)
                 .shortName(R.string.configbuilder_shortname)
                 .description(R.string.description_config_builder)
@@ -102,7 +102,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
             for (PluginBase p : pluginList) {
                 PluginType type = p.getType();
-                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwayVisible)
+                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible)
                     continue;
                 if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible)
                     continue;
@@ -262,7 +262,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeSensitivity;
     }
 
-    void logPluginStatus() {
+    public void logPluginStatus() {
         if (L.isEnabled(L.CONFIGBUILDER))
             for (PluginBase p : pluginList) {
                 log.debug(p.getName() + ":" +

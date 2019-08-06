@@ -1,20 +1,20 @@
 package info.nightscout.androidaps.plugins.configBuilder;
 
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +22,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.PreferencesActivity;
-import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -99,6 +95,15 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         for (PluginViewHolder pluginViewHolder : pluginViewHolders) pluginViewHolder.update();
     }
 
+    @Subscribe
+    public void on(EventConfigBuilderUpdateGui e) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(() -> {
+                updateGUI();
+            });
+    }
+
     private void createViews() {
         createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginType.PROFILE));
         createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginType.INSULIN));
@@ -119,15 +124,11 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         ((TextView) parent.findViewById(R.id.category_description)).setText(MainApp.gs(description));
         LinearLayout pluginContainer = parent.findViewById(R.id.category_plugins);
         for (PluginBase plugin: plugins) {
-            PluginViewHolder pluginViewHolder = new PluginViewHolder(pluginType, plugin);
+            PluginViewHolder pluginViewHolder = new PluginViewHolder(this, pluginType, plugin);
             pluginContainer.addView(pluginViewHolder.getBaseView());
             pluginViewHolders.add(pluginViewHolder);
         }
         categories.addView(parent);
-    }
-
-    private boolean areMultipleSelectionsAllowed(PluginType type) {
-        return type == PluginType.GENERAL || type == PluginType.CONSTRAINTS ||type == PluginType.LOOP;
     }
 
     public static void processOnEnabledCategoryChanged(PluginBase changedPlugin, PluginType type) {
@@ -185,99 +186,4 @@ public class ConfigBuilderFragment extends SubscriberFragment {
         }
     }
 
-    public class PluginViewHolder {
-
-        private Unbinder unbinder;
-        private PluginType pluginType;
-        private PluginBase plugin;
-
-        LinearLayout baseView;
-        @BindView(R.id.plugin_enabled_exclusive)
-        RadioButton enabledExclusive;
-        @BindView(R.id.plugin_enabled_inclusive)
-        CheckBox enabledInclusive;
-        @BindView(R.id.plugin_name)
-        TextView pluginName;
-        @BindView(R.id.plugin_description)
-        TextView pluginDescription;
-        @BindView(R.id.plugin_preferences)
-        ImageButton pluginPreferences;
-        @BindView(R.id.plugin_visibility)
-        CheckBox pluginVisibility;
-
-        public PluginViewHolder(PluginType pluginType, PluginBase plugin) {
-            this.pluginType = pluginType;
-            this.plugin = plugin;
-            baseView = (LinearLayout) getLayoutInflater().inflate(R.layout.configbuilder_single_plugin, null);
-            unbinder = ButterKnife.bind(this, baseView);
-            update();
-        }
-
-        public LinearLayout getBaseView() {
-            return baseView;
-        }
-
-        public void update() {
-            enabledExclusive.setVisibility(areMultipleSelectionsAllowed(pluginType) ? View.GONE : View.VISIBLE);
-            enabledInclusive.setVisibility(areMultipleSelectionsAllowed(pluginType) ? View.VISIBLE : View.GONE);
-            enabledExclusive.setChecked(plugin.isEnabled(pluginType));
-            enabledInclusive.setChecked(plugin.isEnabled(pluginType));
-            enabledInclusive.setEnabled(!plugin.pluginDescription.alwaysEnabled);
-            enabledExclusive.setEnabled(!plugin.pluginDescription.alwaysEnabled);
-            pluginName.setText(plugin.getName());
-            if (plugin.getDescription() == null) pluginDescription.setVisibility(View.GONE);
-            else {
-                pluginDescription.setVisibility(View.VISIBLE);
-                pluginDescription.setText(plugin.getDescription());
-            }
-            pluginPreferences.setVisibility(plugin.getPreferencesId() == -1 || !plugin.isEnabled(pluginType) ? View.INVISIBLE : View.VISIBLE);
-            pluginVisibility.setVisibility(plugin.hasFragment() ? View.VISIBLE : View.INVISIBLE);
-            pluginVisibility.setEnabled(!(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwayVisible) && plugin.isEnabled(pluginType));
-            pluginVisibility.setChecked(plugin.isFragmentVisible());
-        }
-
-        @OnClick(R.id.plugin_visibility)
-        void onVisibilityChanged() {
-            plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked());
-            ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible");
-            MainApp.bus().post(new EventRefreshGui());
-            ConfigBuilderPlugin.getPlugin().logPluginStatus();
-        }
-
-        @OnClick({R.id.plugin_enabled_exclusive, R.id.plugin_enabled_inclusive})
-        void onEnabledChanged() {
-            plugin.switchAllowed(new PluginSwitcher(), getActivity());
-        }
-
-        @OnClick(R.id.plugin_preferences)
-        void onPluginPreferencesClicked() {
-            PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", () -> {
-                Intent i = new Intent(getContext(), PreferencesActivity.class);
-                i.putExtra("id", plugin.getPreferencesId());
-                startActivity(i);
-            }, null);
-        }
-
-        public void unbind() {
-            unbinder.unbind();
-        }
-
-        public class PluginSwitcher {
-            public void invoke() {
-                boolean enabled = enabledExclusive.getVisibility() == View.VISIBLE ? enabledExclusive.isChecked() : enabledInclusive.isChecked();
-                plugin.setPluginEnabled(pluginType, enabled);
-                plugin.setFragmentVisible(pluginType, enabled);
-                processOnEnabledCategoryChanged(plugin, pluginType);
-                updateGUI();
-                ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
-                MainApp.bus().post(new EventRefreshGui());
-                MainApp.bus().post(new EventConfigBuilderChange());
-                ConfigBuilderPlugin.getPlugin().logPluginStatus();
-            }
-
-            public void cancel(){
-                updateGUI();
-            }
-        }
-    }
 }
