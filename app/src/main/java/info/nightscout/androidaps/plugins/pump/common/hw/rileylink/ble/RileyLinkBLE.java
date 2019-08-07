@@ -370,13 +370,21 @@ public class RileyLinkBLE {
         rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
         // if this succeeds, we get a connection state change callback?
 
-        if (rileyLinkDevice!=null)
+        if (rileyLinkDevice!=null) {
             connectGatt();
+        } else {
+            LOG.error("RileyLink device not found with address: " + RileyLinkAddress);
+        }
     }
 
 
     // This function must be run on UI thread.
     public void connectGatt() {
+        if (this.rileyLinkDevice==null) {
+            LOG.error("RileyLink device is null, can't do connectGatt.");
+            return;
+        }
+
         bluetoothConnectionGatt = rileyLinkDevice.connectGatt(context, true, bluetoothGattCallback);
         // , BluetoothDevice.TRANSPORT_LE
         if (bluetoothConnectionGatt == null) {
@@ -384,7 +392,7 @@ public class RileyLinkBLE {
         } else {
             if (gattDebugEnabled) {
                 if (isLogEnabled())
-                    LOG.debug("Gatt Connected?");
+                    LOG.debug("Gatt Connected.");
             }
         }
     }
@@ -527,17 +535,24 @@ public class RileyLinkBLE {
             if (mCurrentOperation != null) {
                 rval.resultCode = BLECommOperationResult.RESULT_BUSY;
             } else {
-                BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(
-                        charaUUID);
-                mCurrentOperation = new CharacteristicReadOperation(bluetoothConnectionGatt, chara);
-                mCurrentOperation.execute(this);
-                if (mCurrentOperation.timedOut) {
-                    rval.resultCode = BLECommOperationResult.RESULT_TIMEOUT;
-                } else if (mCurrentOperation.interrupted) {
-                    rval.resultCode = BLECommOperationResult.RESULT_INTERRUPTED;
+                if (bluetoothConnectionGatt.getService(serviceUUID) == null) {
+                    // Catch if the service is not supported by the BLE device
+                    rval.resultCode = BLECommOperationResult.RESULT_NONE;
+                    LOG.error("BT Device not supported");
+                    // TODO: 11/07/2016 UI update for user
                 } else {
-                    rval.resultCode = BLECommOperationResult.RESULT_SUCCESS;
-                    rval.value = mCurrentOperation.getValue();
+                    BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(
+                            charaUUID);
+                    mCurrentOperation = new CharacteristicReadOperation(bluetoothConnectionGatt, chara);
+                    mCurrentOperation.execute(this);
+                    if (mCurrentOperation.timedOut) {
+                        rval.resultCode = BLECommOperationResult.RESULT_TIMEOUT;
+                    } else if (mCurrentOperation.interrupted) {
+                        rval.resultCode = BLECommOperationResult.RESULT_INTERRUPTED;
+                    } else {
+                        rval.resultCode = BLECommOperationResult.RESULT_SUCCESS;
+                        rval.value = mCurrentOperation.getValue();
+                    }
                 }
             }
             mCurrentOperation = null;
