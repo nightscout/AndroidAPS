@@ -742,6 +742,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         ClockDTO clock = MedtronicUtil.getPumpTime();
 
+        if (clock==null) { // retry
+            medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock);
+
+            clock = MedtronicUtil.getPumpTime();
+        }
+
+        if (clock==null)
+            return;
+
         int timeDiff = Math.abs(clock.timeDifference);
 
         if (timeDiff > 20) {
