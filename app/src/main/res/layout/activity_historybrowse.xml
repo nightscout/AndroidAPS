@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/historybrowse_left"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -40,13 +40,13 @@
                 android:layout_weight="1"
                 android:text="Button" />
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/historybrowse_right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/historybrowse_end"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
