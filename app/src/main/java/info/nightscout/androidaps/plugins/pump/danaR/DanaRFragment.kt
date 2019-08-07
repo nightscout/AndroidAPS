@@ -55,16 +55,6 @@ class DanaRFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        loopHandler.removeCallbacks(refreshLoop)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.danar_fragment, container, false)
@@ -109,11 +99,13 @@ class DanaRFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         MainApp.bus().unregister(this)
+        loopHandler.removeCallbacks(refreshLoop)
     }
 
     override fun onResume() {
         super.onResume()
         MainApp.bus().register(this)
+        loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         activity?.runOnUiThread { updateGUI() }
     }
 
