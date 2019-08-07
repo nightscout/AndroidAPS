@@ -7,13 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
@@ -44,12 +43,14 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
 
     @Override
     protected void configurePumpSpecificSettings() {
-        pumpStatus = MedtronicUtil.getPumpStatus();
+        pumpStatus = OmnipodUtil.getPumpStatus();
     }
 
 
     @Override
     public <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz) {
+        // TODO
+
         //PumpMessage pumpMessage = new PumpMessage(payload);
         //eturn (E) pumpMessage;
         return null;

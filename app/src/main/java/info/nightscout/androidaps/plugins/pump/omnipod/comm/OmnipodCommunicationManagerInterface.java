@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 
 public interface OmnipodCommunicationManagerInterface {
