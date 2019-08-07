@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
@@ -124,7 +124,7 @@ public class RileyLinkUtil {
 
             RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
                     RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
-            MainApp.bus().post(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
             return null;
 
         } else {

@@ -18,18 +18,11 @@ public enum PumpDeviceState {
     PumpUnreachable(R.string.medtronic_pump_status_pump_unreachable), //
     InvalidConfiguration(R.string.medtronic_pump_status_invalid_config);
 
-    Integer resourceId = null;
-
-
-    PumpDeviceState() {
-
-    }
-
+    Integer resourceId;
 
     PumpDeviceState(int resourceId) {
         this.resourceId = resourceId;
     }
-
 
     public Integer getResourceId() {
         return resourceId;

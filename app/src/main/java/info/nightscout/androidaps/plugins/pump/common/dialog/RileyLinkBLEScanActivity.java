@@ -42,6 +42,7 @@ import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
@@ -108,7 +109,7 @@ public class RileyLinkBLEScanActivity extends AppCompatActivity {
             MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
             pumpStatus.verifyConfiguration(); // force reloading of address
 
-            MainApp.bus().post(new EventMedtronicPumpConfigurationChanged());
+            RxBus.INSTANCE.send(new EventMedtronicPumpConfigurationChanged());
 
             finish();
         });
