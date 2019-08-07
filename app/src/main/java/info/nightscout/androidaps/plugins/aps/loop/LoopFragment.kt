@@ -41,6 +41,11 @@ class LoopFragment : Fragment() {
             Thread { LoopPlugin.getPlugin().invoke("Loop button", true) }.start()
         }
 
+        updateGUI()
+    }
+
+    override fun onResume() {
+        super.onResume()
         disposable += RxBus
                 .toObservable(EventLoopUpdateGui::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -59,11 +64,10 @@ class LoopFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
-        updateGUI()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         disposable.clear()
     }
 

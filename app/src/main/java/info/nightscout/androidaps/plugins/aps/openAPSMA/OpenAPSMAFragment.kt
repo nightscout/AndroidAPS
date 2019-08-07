@@ -40,6 +40,10 @@ class OpenAPSMAFragment : Fragment() {
         }
 
         updateGUI()
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         disposable += RxBus
                 .toObservable(EventOpenAPSUpdateGui::class.java)
@@ -57,6 +61,11 @@ class OpenAPSMAFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
     }
 
     fun updateGUI() {

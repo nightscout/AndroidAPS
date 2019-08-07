@@ -37,7 +37,10 @@ class TidepoolFragment : Fragment() {
         tidepool_uploadnow.setOnClickListener { RxBus.send(EventTidepoolDoUpload()) }
         tidepool_removeall.setOnClickListener { RxBus.send(EventTidepoolResetData()) }
         tidepool_resertstart.setOnClickListener { SP.putLong(R.string.key_tidepool_last_end, 0) }
+    }
 
+    override fun onResume() {
+        super.onResume()
         disposable.add(RxBus
                 .toObservable(EventTidepoolUpdateGUI::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -53,8 +56,8 @@ class TidepoolFragment : Fragment() {
         )
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         disposable.clear()
     }
 }

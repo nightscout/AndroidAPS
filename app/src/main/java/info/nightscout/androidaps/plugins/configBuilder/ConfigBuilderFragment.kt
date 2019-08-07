@@ -45,8 +45,11 @@ class ConfigBuilderFragment : Fragment() {
             }, null)
         }
 
-        createViews()
+        updateGUI()
+    }
 
+    override fun onResume() {
+        super.onResume()
         disposable.add(RxBus
                 .toObservable(EventConfigBuilderUpdateGui::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,7 +60,12 @@ class ConfigBuilderFragment : Fragment() {
                 }))
     }
 
-    private fun createViews() {
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
+    }
+
+    private fun updateGUI() {
         createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface::class.java, PluginType.PROFILE))
         createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface::class.java, PluginType.INSULIN))
         createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface::class.java, PluginType.BGSOURCE))

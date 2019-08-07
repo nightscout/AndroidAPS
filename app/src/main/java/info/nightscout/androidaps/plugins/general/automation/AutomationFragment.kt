@@ -46,6 +46,10 @@ class AutomationFragment : Fragment() {
             fragmentManager?.let { dialog.show(it, "EditEventDialog") }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         disposable += RxBus
                 .toObservable(EventAutomationUpdateGui::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -70,8 +74,8 @@ class AutomationFragment : Fragment() {
                 })
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         disposable.clear()
     }
 

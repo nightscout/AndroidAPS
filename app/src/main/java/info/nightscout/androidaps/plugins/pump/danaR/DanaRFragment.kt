@@ -84,29 +84,24 @@ class DanaRFragment : Fragment() {
             DanaRPump.getInstance().lastConnection = 0
             ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked connect to pump", null)
         }
-
-        disposable += RxBus
-                .toObservable(EventDanaRNewStatus::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposable.clear()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        MainApp.bus().unregister(this)
-        loopHandler.removeCallbacks(refreshLoop)
+        updateGUI()
     }
 
     override fun onResume() {
         super.onResume()
         MainApp.bus().register(this)
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
-        activity?.runOnUiThread { updateGUI() }
+        disposable += RxBus
+                .toObservable(EventDanaRNewStatus::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
+        MainApp.bus().unregister(this)
+        loopHandler.removeCallbacks(refreshLoop)
     }
 
     @Subscribe

@@ -34,7 +34,6 @@ class NSProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         close.visibility = View.GONE // not needed for fragment
-        updateGUI()
 
         nsprofile_profileswitch.setOnClickListener {
             val name = nsprofile_spinner.selectedItem?.toString() ?: ""
@@ -91,7 +90,11 @@ class NSProfileFragment : Fragment() {
                 }
             }
         }
+        updateGUI()
+    }
 
+    override fun onResume() {
+        super.onResume()
         disposable.add(RxBus
                 .toObservable(EventNSProfileUpdateGUI::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -101,6 +104,11 @@ class NSProfileFragment : Fragment() {
                     FabricPrivacy.logException(it)
                 })
         )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
     }
 
     fun updateGUI() {
