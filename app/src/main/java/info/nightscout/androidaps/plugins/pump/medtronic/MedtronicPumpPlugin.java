@@ -73,6 +73,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicStatusRef
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -494,7 +495,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     private void setRefreshButtonEnabled(boolean enabled) {
-        MedtronicFragment.refreshButtonEnabled(enabled);
+        MainApp.bus().post(new EventRefreshButtonState(enabled));
     }
 
 

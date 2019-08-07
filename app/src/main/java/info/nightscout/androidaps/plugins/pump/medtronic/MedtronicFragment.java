@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -65,8 +66,6 @@ public class MedtronicFragment extends SubscriberFragment {
     @BindView(R.id.medtronic_basabasalrate)
     TextView basaBasalRateView;
 
-    // @BindView(R.id.medtronic_btconnection)
-    // TextView btConnectionView;
     @BindView(R.id.medtronic_tempbasal)
     TextView tempBasalView;
     @BindView(R.id.medtronic_pumpstate_battery)
@@ -88,9 +87,6 @@ public class MedtronicFragment extends SubscriberFragment {
     @BindView(R.id.medtronic_refresh)
     Button refreshButton;
     private Handler loopHandler = new Handler();
-    private static Activity localActivity;
-
-    static Button refreshButtonStatic;
 
     private Runnable refreshLoop = new Runnable() {
 
@@ -126,7 +122,7 @@ public class MedtronicFragment extends SubscriberFragment {
             View view = inflater.inflate(R.layout.medtronic_fragment, container, false);
             unbinder = ButterKnife.bind(this, view);
 
-            overviewPumpMedtronicView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
+            overviewPumpMedtronicView.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder));
 
             rileyLinkStatus.setText(getTranslation(RileyLinkServiceState.NotStarted.getResourceId(getTargetDevice())));
             rileyLinkStatus.setTextSize(14);
@@ -134,8 +130,6 @@ public class MedtronicFragment extends SubscriberFragment {
             pumpStatusIconView.setTextColor(Color.WHITE);
             pumpStatusIconView.setTextSize(14);
             pumpStatusIconView.setText("{fa-bed}");
-
-            refreshButtonStatic = refreshButton;
 
             return view;
         } catch (Exception e) {
@@ -164,8 +158,8 @@ public class MedtronicFragment extends SubscriberFragment {
             return;
         }
 
-        if (refreshButtonStatic != null)
-            refreshButtonStatic.setEnabled(false);
+        if (refreshButton != null)
+            refreshButton.setEnabled(false);
 
         MedtronicPumpPlugin.getPlugin().resetStatusState();
 
@@ -177,8 +171,8 @@ public class MedtronicFragment extends SubscriberFragment {
 
                 if (activity != null) {
                     activity.runOnUiThread(() -> {
-                        if (refreshButtonStatic != null)
-                            refreshButtonStatic.setEnabled(true);
+                        if (refreshButton != null)
+                            refreshButton.setEnabled(true);
                     });
                 }
             }
@@ -202,21 +196,11 @@ public class MedtronicFragment extends SubscriberFragment {
     }
 
 
-    public static void refreshButtonEnabled(boolean enable) {
-        if (localActivity != null) {
-            localActivity.runOnUiThread(() -> {
-                if (refreshButtonStatic != null) {
-                    refreshButtonStatic.setEnabled(enable);
-                }
-            });
-        }
+    @Subscribe
+    public void onStatusEvent(final EventRefreshButtonState e) {
+        if (getActivity() != null)
+            getActivity().runOnUiThread(() -> refreshButton.setEnabled(e.getNewState()));
     }
-
-
-    public static Activity getCustomActivity() {
-        return localActivity;
-    }
-
 
     @Subscribe
     public void onStatusEvent(final EventMedtronicDeviceStatusChange eventStatusChange) {
@@ -225,7 +209,6 @@ public class MedtronicFragment extends SubscriberFragment {
         Activity activity = getActivity();
 
         if (activity != null) {
-            localActivity = activity;
             activity.runOnUiThread(() -> {
                 MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
                 setDeviceStatus(pumpStatus);
@@ -363,12 +346,12 @@ public class MedtronicFragment extends SubscriberFragment {
     }
 
 
-    public RileyLinkTargetDevice getTargetDevice() {
+    private RileyLinkTargetDevice getTargetDevice() {
         return RileyLinkTargetDevice.MedtronicPump;
     }
 
 
-    public String getTranslation(int resourceId) {
+    private String getTranslation(int resourceId) {
         return MainApp.gs(resourceId);
     }
 
@@ -417,8 +400,7 @@ public class MedtronicFragment extends SubscriberFragment {
                 if (lastConnectionView == null) // ui not yet initialized
                     return;
 
-                localActivity = activity;
-                MedtronicPumpPlugin plugin = (MedtronicPumpPlugin) MedtronicPumpPlugin.getPlugin();
+                MedtronicPumpPlugin plugin = MedtronicPumpPlugin.getPlugin();
                 MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
 
                 setDeviceStatus(pumpStatus);
