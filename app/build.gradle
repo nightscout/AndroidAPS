@@ -16,7 +16,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
-apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'de.undercouch.download'
 
 
@@ -29,7 +28,6 @@ ext {
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
-    butterknifeVersion = "10.1.0"
 }
 
 
@@ -271,9 +269,6 @@ dependencies {
     implementation "uk.com.robust-it:cloning:1.9.9"
 
     implementation 'org.mozilla:rhino:1.7.7.2'
-
-    implementation "com.jakewharton:butterknife:${butterknifeVersion}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
