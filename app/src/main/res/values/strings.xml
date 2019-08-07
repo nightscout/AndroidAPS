@@ -1359,7 +1359,7 @@
     <string name="automation">Automation</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
@@ -1660,6 +1660,7 @@
     <string name="insulinFromCob"><![CDATA[COB insulin: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be really off !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

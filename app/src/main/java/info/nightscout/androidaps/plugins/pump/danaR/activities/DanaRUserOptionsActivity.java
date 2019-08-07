@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashActivity;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
@@ -31,7 +32,7 @@ import info.nightscout.androidaps.utils.NumberPicker;
  * Created by Rumen Georgiev on 5/31/2018.
  */
 
-public class DanaRUserOptionsActivity extends Activity {
+public class DanaRUserOptionsActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
     Switch timeFormat;
@@ -65,7 +66,7 @@ public class DanaRUserOptionsActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_user_options);
 

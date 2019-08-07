@@ -464,7 +464,7 @@ public class Profile {
     public String getBasalList() {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
-        return getValuesList(basal_v, null, new DecimalFormat("0.00"), MainApp.gs(R.string.profile_ins_units_per_hout));
+        return getValuesList(basal_v, null, new DecimalFormat("0.00"), MainApp.gs(R.string.profile_ins_units_per_hour));
     }
 
     public class ProfileValue {

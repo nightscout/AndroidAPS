@@ -635,6 +635,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.gs(R.string.danar_viewprofile))) {
             Bundle args = new Bundle();
             args.putLong("time", DateUtil.now());
+            args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal());
             ProfileViewerDialog pvd = new ProfileViewerDialog();
             pvd.setArguments(args);
             FragmentManager manager = getFragmentManager();

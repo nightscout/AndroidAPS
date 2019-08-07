@@ -22,7 +22,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/overview_pumpstatuslayout"
+                    android:id="@+id/dana_pumpstatuslayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -31,7 +31,7 @@
                     android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/overview_pumpstatus"
+                        android:id="@+id/dana_pumpstatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"

@@ -161,6 +161,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                     case R.id.profileswitch_name:
                         Bundle args = new Bundle();
                         args.putLong("time", ((ProfileSwitch) v.getTag()).date);
+                        args.putLong("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal());
                         ProfileViewerDialog pvd = new ProfileViewerDialog();
                         pvd.setArguments(args);
                         FragmentManager manager = getFragmentManager();
