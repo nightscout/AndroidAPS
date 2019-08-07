@@ -91,7 +91,7 @@
     <string name="treatments_wizard_bolusiob_label">Bolo IOB</string>
     <string name="openapsma_run">Avvia ora</string>
     <string name="vitualpump_label">MICROINFUSORE VIRTUALE</string>
-    <string name="pump_basebasalrate_label">Velocità basale minima</string>
+    <string name="pump_basebasalrate_label">Vel. basale originale</string>
     <string name="pump_tempbasal_label">Basale temporanea</string>
     <string name="virtualpump_extendedbolus_label">Bolo Esteso</string>
     <string name="pump_battery_label">Batteria</string>
@@ -123,7 +123,7 @@
     <string name="tempbasal">BasaleTemp</string>
     <string name="treatments">Trattamenti</string>
     <string name="virtualpump">Micro Virtuale</string>
-    <string name="careportal">Portale</string>
+    <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Microinfusore</string>
     <string name="configbuilder_pump_description">Quale microinfusore vuoi utilizzare con AndroidAPS?</string>
     <string name="configbuilder_treatments">Trattamenti</string>
@@ -180,7 +180,7 @@
     <string name="unsupportedclientver">Versione NSClient non supportata</string>
     <string name="unsupportednsversion">Versione non supportata di Nightscout</string>
     <string name="nsclientnotinstalled">NSClient non istallato. Record perduto!</string>
-    <string name="objectives_bgavailableinns">BG disponibile in NS</string>
+    <string name="objectives_bgavailableinns">Glicemia disponibile in NS</string>
     <string name="objectives_pumpstatusavailableinns">Stato Micro disponibile in NS</string>
     <string name="objectives_manualenacts">Manuale</string>
     <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
@@ -321,15 +321,15 @@
     <string name="waitingforpump">In attesa del micro</string>
     <string name="overview_bolusprogress_goingtodeliver">Sto per erogare %1$.2fU</string>
     <string name="objectives_0_objective">Configurazione della visualizzazione e del monitoraggio, analisi basali e rapporti</string>
-    <string name="objectives_0_gate">Verificare che BG sia disponibile su Nightscout e che i dati sull\'insulina del micro siano in fase di caricamento</string>
+    <string name="objectives_0_gate">Verificare che la Glicemia sia disponibile su Nightscout e che i dati sull\'insulina del micro siano in fase di caricamento</string>
     <string name="objectives_1_objective">Partenza con Loop Aperto</string>
     <string name="objectives_1_gate">Esegui l\'applicazione in modalità Loop Aperto per alcuni giorni e accetta manualmente le basali temporanee. Imposta e utilizza i target temporanei, anche quelli predefiniti (ad esempio, per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
     <string name="objectives_2_objective">Comprendi il tuo Loop Aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
     <string name="objectives_2_gate">Sulla base di tale esperienza, decidi quale deve essere il valore max della basale e impostalo sul microinfusore e nelle preferenze</string>
     <string name="objectives_3_objective">Iniziare a chiudere il Loop con Low Glucose Suspend</string>
     <string name="objectives_3_gate">Esegui l\'applicazione in Loop Chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>
-    <string name="objectives_4_objective">Regola il Loop Chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target BG</string>
-    <string name="objectives_4_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi BG, prima di abbassare il target delle Glicemia</string>
+    <string name="objectives_4_objective">Regola il Loop Chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
+    <string name="objectives_4_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi glicemia, prima di abbassare il target glicemico</string>
     <string name="objectives_5_objective">Regola le basali e i rapporti se necessario, quindi attiva auto-sens</string>
     <string name="objectives_5_gate">1 settimana di looping diurno con dichiarazione regolare dei carboidrati, eseguito con successo</string>
     <string name="objectives_6_objective">Abilita funzioni aggiuntive per l\'uso diurno, ad esempio AMA (advanced meal assist - assistenza avanzata del pasto)</string>
@@ -429,7 +429,7 @@
     <string name="deletefuturetreatments">Elimina trattamenti nel futuro</string>
     <string name="eatingsoon">Mangiare a breve</string>
     <string name="hypo">Ipo</string>
-    <string name="activity">Attività Fisica</string>
+    <string name="activity">Attività</string>
     <string name="removerecord">Rimuovi campo:</string>
     <string name="danar_stats">Statistiche DanaR</string>
     <string name="danar_stats_cumulative_tdd">TDD totale</string>
@@ -443,7 +443,7 @@
     <string name="danar_stats_weight">Peso</string>
     <string name="danar_stats_warning_Message">Probabilmente inaccurato se si usano i boli per il caricamento/riempimento al posto dell\'apposita funzione!</string>
     <string name="danar_stats_olddata_Message">Dati Vecchi, premere \"RICARICA\"</string>
-    <string name="danar_stats_tbb">Totale Base basale</string>
+    <string name="danar_stats_tbb">Totale basale originale</string>
     <string name="danar_stats_tbb2">TBB * 2</string>
     <string name="initializing">Inizializzazione...</string>
     <string name="actions_shortname">ACT</string>
@@ -715,10 +715,10 @@
     <string name="executingrightnow">Il comando verrà eseguito ora</string>
     <string name="pumpdrivercorrected">Driver del micro corretto</string>
     <string name="pump_unreachable">Micro irraggiungibile</string>
-    <string name="missed_bg_readings">Letture BG mancanti</string>
+    <string name="missed_bg_readings">Letture Glicemia mancanti</string>
     <string name="raise_notifications_as_android_notifications">Utilizza le notifiche di sistema per avvisi e notifiche</string>
     <string name="localalertsettings_title">Allarmi locali</string>
-    <string name="enable_missed_bg_readings_alert">Allarme se non vengono ricevuti dati BG</string>
+    <string name="enable_missed_bg_readings_alert">Allarme se non si ricevono dati Glicemia</string>
     <string name="enable_pump_unreachable_alert">Allarme se il micro non è raggiungibile</string>
     <string name="pump_unreachable_threshold">Soglia micro irraggiungibile [min]</string>
     <string name="urgent_alarm">Allarme Urgente</string>
@@ -729,18 +729,18 @@
     <string name="DexcomG5">DexcomG5 App (modificata)</string>
     <string name="DexcomG6">DexcomG6 App (modificata)</string>
     <string name="eversense">Eversense App (modificata)</string>
-    <string name="dexcomg5_nsupload_title">Carica dati BG su NS</string>
+    <string name="dexcomg5_nsupload_title">Carica dati Glicemia su NS</string>
     <string name="bgsource_upload">Impostazioni caricamento BG</string>
     <string name="wear_detailed_delta_title">Visualizza delta dettagliato</string>
     <string name="wear_detailed_delta_summary">Visualizza delta con una cifra decimale in più</string>
     <string name="smbmaxminutes_summary">Max minuti basale con cui limitare SMB</string>
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
-    <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
+    <string name="dexcomg5_xdripupload_title">Invia dati Glicemia a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
-    <string name="overview_editquickwizard_usebg">Calcolo BG</string>
+    <string name="overview_editquickwizard_usebg">Calcolo Glicemia</string>
     <string name="overview_editquickwizard_usebolusiob">Calcolo IOB bolo</string>
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB basale</string>
     <string name="overview_editquickwizard_usetrend">Calcolo Trend</string>
@@ -756,7 +756,7 @@
     <string name="nsclienthaswritepermission">NSClient ha il permesso di scrittura</string>
     <string name="closedmodeenabled">Modalità Chiusa attivata</string>
     <string name="maxiobset">IOB massima impostata correttamente</string>
-    <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
+    <string name="hasbgdata">Glicemia disponibile da sorgente selezionata</string>
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
     <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <string name="combo_programming_bolus">Programmazione micro per erogazione</string>
@@ -841,9 +841,9 @@
     <string name="automatically_connect_when">Connetti automaticamente quando vengono aperte le schermate AndroidAPS, prima che venga richiesto qualsiasi comando del micro, per ridurre il ritardo della connessione</string>
     <string name="not_recommended_due_to_battery_drain">Non consigliato a causa del consumo della batteria</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
-    <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente BG con buon filtraggio dati, come G5</string>
+    <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemie con buon filtraggio dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i carboidrati</string>
-    <string name="enablesmbaftercarbs_summary">Abilita SMB per 6h dopo la dichiarazione di carboidrati, anche con 0 COB. Possibile solo con sorgente BG con buon filtraggio dati, come G5</string>
+    <string name="enablesmbaftercarbs_summary">Abilita SMB per 6h dopo la dichiarazione di carboidrati, anche con 0 COB. Possibile solo con sorgente glicemie con buon filtraggio dati, come G5</string>
     <string name="enablesmbwithcob">Abilita SMB con COB</string>
     <string name="enablesmbwithcob_summary">Abilita SMB quando COB è attivo.</string>
     <string name="enablesmbwithtemptarget">Abilita SMB con temp-target</string>
@@ -1037,8 +1037,8 @@
     <string name="time_elapsed">Tempo trascorso</string>
     <string name="nth_objective">%1$d. Obiettivo</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ricevere i valori BG da app Poctech</string>
-    <string name="description_source_tomato">Ricevere i valori BG da Tomato app (dispositivo MiaoMiao)</string>
+    <string name="description_source_poctech">Ricevi valori Glicemia da app Poctech</string>
+    <string name="description_source_tomato">Ricevi valori Glicemia da app Tomato (dispositivo MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">High Temp-Target aumenta la sensibilità</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per temp-target >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Low Temp-Target diminuisce la sensibilità</string>
@@ -1247,7 +1247,7 @@
     <string name="old_version">versione datata</string>
     <string name="very_old_version">versione molto datata</string>
     <string name="new_version_warning">Nuova versione disponibile da %1$d giorni! Ritorno a LGS trascorsi 60 giorni, disattivazione del loop dopo 90 giorni</string>
-    <string name="scale_insulin_activity">Azione insulinica su scala grafica [U/min]</string>
+    <string name="scale_insulin_activity">Azione insulina su scala grafica [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Dexcom App (modificata)</string>
