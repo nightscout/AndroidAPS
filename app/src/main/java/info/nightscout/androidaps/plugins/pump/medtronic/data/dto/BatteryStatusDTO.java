@@ -27,6 +27,9 @@ public class BatteryStatusDTO {
 
         int percentInt = (int) (percent * 100.0d);
 
+        if (percentInt<0)
+            percentInt = 1;
+
         if (percentInt > 100)
             percentInt = 100;
 

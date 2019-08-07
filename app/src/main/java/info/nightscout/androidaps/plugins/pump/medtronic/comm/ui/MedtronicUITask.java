@@ -68,6 +68,7 @@ public class MedtronicUITask {
 
             case GetRealTimeClock: {
                 returnData = communicationManager.getPumpTime();
+                MedtronicUtil.setPumpTime(null);
             }
             break;
 
