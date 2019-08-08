@@ -23,12 +23,13 @@ import android.widget.TextView;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashActivity;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryGroup;
 
-public class MedtronicHistoryActivity extends Activity {
+public class MedtronicHistoryActivity extends NoSplashActivity {
 
     private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
@@ -120,7 +121,7 @@ public class MedtronicHistoryActivity extends Activity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.medtronic_history_activity);
 
