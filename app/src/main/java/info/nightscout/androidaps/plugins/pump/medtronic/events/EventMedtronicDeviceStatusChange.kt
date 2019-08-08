@@ -14,16 +14,16 @@ class EventMedtronicDeviceStatusChange : Event {
     private var errorDescription: String? = null
 
 
-    constructor(rileyLinkServiceState: RileyLinkServiceState, rileyLinkError: RileyLinkError?) {
+    constructor(rileyLinkServiceState: RileyLinkServiceState?, rileyLinkError: RileyLinkError?) {
         this.rileyLinkServiceState = rileyLinkServiceState
         this.rileyLinkError = rileyLinkError
     }
 
-    constructor(pumpDeviceState: PumpDeviceState) {
+    constructor(pumpDeviceState: PumpDeviceState?) {
         this.pumpDeviceState = pumpDeviceState
     }
 
-    constructor(pumpDeviceState: PumpDeviceState, errorDescription: String) {
+    constructor(pumpDeviceState: PumpDeviceState?, errorDescription: String?) {
         this.pumpDeviceState = pumpDeviceState
         this.errorDescription = errorDescription
     }
