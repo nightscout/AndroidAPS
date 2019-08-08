@@ -2,29 +2,30 @@ package info.nightscout.androidaps.plugins.general.overview.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.QuickWizard;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 
-public class QuickWizardListActivity extends AppCompatActivity implements View.OnClickListener {
+public class QuickWizardListActivity extends NoSplashAppCompatActivity implements View.OnClickListener {
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -113,7 +114,7 @@ public class QuickWizardListActivity extends AppCompatActivity implements View.O
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview_quickwizardlist_activity);
 

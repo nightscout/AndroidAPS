@@ -1,11 +1,9 @@
 package info.nightscout.androidaps.activities
 
-import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin
 
-class RequestDexcomPermissionActivity : AppCompatActivity() {
+class RequestDexcomPermissionActivity : NoSplashAppCompatActivity() {
 
     private val requestCode = "AndroidAPS <3".map { it.toInt() }.sum()
 

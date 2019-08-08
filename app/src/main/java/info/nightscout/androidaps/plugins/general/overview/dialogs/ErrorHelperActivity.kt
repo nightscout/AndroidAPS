@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.SP
 
-class ErrorHelperActivity : AppCompatActivity() {
+class ErrorHelperActivity : NoSplashAppCompatActivity() {
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    @Override
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val errorDialog = ErrorDialog()
         errorDialog.helperActivity = this

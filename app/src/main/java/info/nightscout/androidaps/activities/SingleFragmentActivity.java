@@ -13,12 +13,12 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.utils.PasswordProtection;
 
-public class SingleFragmentActivity extends AppCompatActivity {
+public class SingleFragmentActivity extends NoSplashAppCompatActivity {
 
     private PluginBase plugin;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_fragment);
 
