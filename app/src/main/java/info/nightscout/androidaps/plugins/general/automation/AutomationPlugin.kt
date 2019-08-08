@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation
 
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -65,7 +66,10 @@ object AutomationPlugin : PluginBase(PluginDescription()
 
     override fun onStart() {
         val context = MainApp.instance().applicationContext
-        context.startService(Intent(context, LocationService::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            context.startForegroundService(Intent(context, LocationService::class.java))
+        else
+            context.startService(Intent(context, LocationService::class.java))
 
         super.onStart()
         loadFromSP()
@@ -76,9 +80,11 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 .observeOn(Schedulers.io())
                 .subscribe({ e ->
                     if (e.isChanged(R.string.key_location)) {
-                        val ctx = MainApp.instance().applicationContext
-                        ctx.stopService(Intent(ctx, LocationService::class.java))
-                        ctx.startService(Intent(ctx, LocationService::class.java))
+                        context.stopService(Intent(context, LocationService::class.java))
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                            context.startForegroundService(Intent(context, LocationService::class.java))
+                        else
+                            context.startService(Intent(context, LocationService::class.java))
                     }
                 }, {
                     FabricPrivacy.logException(it)

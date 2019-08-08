@@ -18,6 +18,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
@@ -76,9 +77,10 @@ public class LocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         if (L.isEnabled(L.LOCATION))
             log.debug("onStartCommand");
-        super.onStartCommand(intent, flags, startId);
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, PersistentNotificationPlugin.getPlugin().updateNotification());
         return START_STICKY;
     }
 
