@@ -2,18 +2,19 @@ package info.nightscout.androidaps.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.utils.PasswordProtection;
 
-public class SingleFragmentActivity extends NoSplashAppCompatActivity {
+public class SingleFragmentActivity extends AppCompatActivity {
 
     private PluginBase plugin;
 
