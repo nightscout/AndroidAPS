@@ -159,6 +159,7 @@ public class AAPSMocker {
     }
 
     public static MainApp mockMainApp() {
+        System.setProperty("disableFirebase", "true");
         PowerMockito.mockStatic(MainApp.class);
         MainApp mainApp = mock(MainApp.class);
         when(MainApp.instance()).thenReturn(mainApp);

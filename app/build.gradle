@@ -143,6 +143,9 @@ android {
         debug {
             testCoverageEnabled(project.hasProperty('coverage'))
         }
+        firebaseDisable {
+            System.setProperty("disableFirebase", "true")
+        }
     }
     productFlavors {
         flavorDimensions "standard"
