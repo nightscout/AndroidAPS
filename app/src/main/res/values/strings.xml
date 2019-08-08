@@ -172,6 +172,7 @@
     <string name="openapsma_lastenact_label">Last enacted</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
     <string name="safety">Safety</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
@@ -937,6 +938,7 @@
     <string name="insight_incompatible">Incompatible</string>
     <string name="second">second</string>
     <string name="minute">minute</string>
+    <string name="format_hours">%1$.2f h</string>
     <string name="hour">hour</string>
     <string name="day">day</string>
     <string name="week">week</string>
@@ -1357,7 +1359,7 @@
     <string name="automation">Automation</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
@@ -1658,6 +1660,7 @@
     <string name="insulinFromCob"><![CDATA[COB insulin: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be really off !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

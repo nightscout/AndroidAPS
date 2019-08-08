@@ -19,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -419,7 +420,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
         historyRileyLink.add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
 
-        MainApp.bus().post(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 
 
@@ -488,7 +489,7 @@ public class MedtronicUtil extends RileyLinkUtil {
             setCurrentCommand(currentCommand);
         }
 
-        MainApp.bus().post(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 
 

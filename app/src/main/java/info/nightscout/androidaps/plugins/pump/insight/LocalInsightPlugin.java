@@ -9,12 +9,7 @@ import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.fragment.app.FragmentActivity;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.*;
-import info.nightscout.androidaps.plugins.pump.insight.descriptors.*;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -48,8 +43,11 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
+import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -76,6 +74,13 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.StartOfTBREvent;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.TotalDailyDoseEvent;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events.TubeFilledEvent;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.BRProfile1Block;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.BRProfileBlock;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.FactoryMinBolusAmountBlock;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.MaxBasalAmountBlock;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.MaxBolusAmountBlock;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.CancelBolusMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.CancelTBRMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ChangeTBRMessage;
@@ -99,6 +104,19 @@ import info.nightscout.androidaps.plugins.pump.insight.connection_service.Insigh
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveTBR;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfile;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BasalProfileBlock;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BatteryStatus;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.BolusType;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.PumpTime;
+import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
@@ -232,8 +250,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
-        confirmPumpPluginActivation(pluginSwitcher, activity);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        confirmPumpPluginActivation(newState, activity, type);
     }
 
     @Override

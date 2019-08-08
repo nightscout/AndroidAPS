@@ -1,39 +1,31 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
-import butterknife.BindView;
+import java.util.ArrayList;
+import java.util.List;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 
-public class RileyLinkStatusActivity extends AppCompatActivity {
+public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
 
-    @BindView(R.id.rls_t1_connection_status)
     TextView connectionStatus;
-
-    @BindView(R.id.rls_t1_configured_address)
     TextView configuredAddress;
-
-    @BindView(R.id.rls_t1_connected_device)
     TextView connectedDevice;
-
-    @BindView(R.id.rls_t1_connection_error)
     TextView connectionError;
     RileyLinkServiceData rileyLinkServiceData;
 
@@ -47,7 +39,7 @@ public class RileyLinkStatusActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rileylink_status);
 
@@ -55,34 +47,30 @@ public class RileyLinkStatusActivity extends AppCompatActivity {
         // primary sections of the activity.
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager)findViewById(R.id.rileylink_settings_container);
+        mViewPager = (ViewPager) findViewById(R.id.rileylink_settings_container);
         // mViewPager.setAdapter(mSectionsPagerAdapter);
         setupViewPager(mViewPager);
 
-        tabLayout = (TabLayout)findViewById(R.id.rileylink_settings_tabs);
+        tabLayout = (TabLayout) findViewById(R.id.rileylink_settings_tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.rileylink_settings_fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.rileylink_settings_fab);
+        floatingActionButton.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
-
-                RefreshableInterface selectableInterface = (RefreshableInterface)mSectionsPagerAdapter
+            RefreshableInterface selectableInterface = (RefreshableInterface) mSectionsPagerAdapter
                     .getItem(tabLayout.getSelectedTabPosition());
-                selectableInterface.refreshData();
+            selectableInterface.refreshData();
 
-                // refreshData(tabLayout.getSelectedTabPosition());
+            // refreshData(tabLayout.getSelectedTabPosition());
 
-                // Toast.makeText(getApplicationContext(), "Test pos: " + tabLayout.getSelectedTabPosition(),
-                // Toast.LENGTH_LONG);
-            }
+            // Toast.makeText(getApplicationContext(), "Test pos: " + tabLayout.getSelectedTabPosition(),
+            // Toast.LENGTH_LONG);
         });
 
-        this.connectionStatus = (TextView)findViewById(R.id.rls_t1_connection_status);
-        this.configuredAddress = (TextView)findViewById(R.id.rls_t1_configured_address);
-        this.connectedDevice = (TextView)findViewById(R.id.rls_t1_connected_device);
-        this.connectionError = (TextView)findViewById(R.id.rls_t1_connection_error);
+        this.connectionStatus = findViewById(R.id.rls_t1_connection_status);
+        this.configuredAddress = findViewById(R.id.rls_t1_configured_address);
+        this.connectedDevice = findViewById(R.id.rls_t1_connected_device);
+        this.connectionError = findViewById(R.id.rls_t1_connection_error);
 
         rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
 

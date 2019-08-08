@@ -2,7 +2,6 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import android.content.Intent
-import android.text.Html
 import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -189,7 +188,8 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             calculatedTotalInsulin = 0.0
         }
 
-        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep ?: 0.1
+        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
+                ?: 0.1
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
         insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
@@ -273,7 +273,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
 
             val builder = AlertDialog.Builder(context)
             builder.setTitle(MainApp.gs(R.string.confirmation))
-            builder.setMessage(Html.fromHtml(confirmMessage))
+            builder.setMessage(HtmlHelper.fromHtml(confirmMessage))
             builder.setPositiveButton(MainApp.gs(R.string.ok)) { _, _ ->
                 synchronized(builder) {
                     if (accepted) {

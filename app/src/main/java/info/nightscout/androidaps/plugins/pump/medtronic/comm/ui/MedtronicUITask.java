@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -181,9 +182,8 @@ public class MedtronicUITask {
     }
 
 
-    public void postProcess(MedtronicUIPostprocessor postprocessor) {
+    void postProcess(MedtronicUIPostprocessor postprocessor) {
 
-        EventMedtronicDeviceStatusChange statusChange;
         if (isLogEnabled())
             LOG.debug("MedtronicUITask: @@@ In execute. {}", commandType);
 
@@ -192,15 +192,13 @@ public class MedtronicUITask {
         }
 
         if (responseType == MedtronicUIResponseType.Invalid) {
-            statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
-                    "Unsupported command in MedtronicUITask");
-            MainApp.bus().post(statusChange);
+            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+                    "Unsupported command in MedtronicUITask"));
         } else if (responseType == MedtronicUIResponseType.Error) {
-            statusChange = new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
-                    errorDescription);
-            MainApp.bus().post(statusChange);
+            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+                    errorDescription));
         } else {
-            MainApp.bus().post(new EventMedtronicPumpValuesChanged());
+            RxBus.INSTANCE.send(new EventMedtronicPumpValuesChanged());
             MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
         }
 

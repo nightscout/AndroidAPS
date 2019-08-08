@@ -21,6 +21,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.CommandQueue;
@@ -57,7 +58,7 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .fragmentClass(ConfigBuilderFragment.class.getName())
                 .showInList(true)
                 .alwaysEnabled(true)
-                .alwayVisible(false)
+                .alwaysVisible(false)
                 .pluginName(R.string.configbuilder)
                 .shortName(R.string.configbuilder_shortname)
                 .description(R.string.description_config_builder)
@@ -102,7 +103,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
             for (PluginBase p : pluginList) {
                 PluginType type = p.getType();
-                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwayVisible)
+                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible)
                     continue;
                 if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible)
                     continue;
@@ -262,7 +263,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeSensitivity;
     }
 
-    void logPluginStatus() {
+    public void logPluginStatus() {
         if (L.isEnabled(L.CONFIGBUILDER))
             for (PluginBase p : pluginList) {
                 log.debug(p.getName() + ":" +
@@ -405,4 +406,58 @@ public class ConfigBuilderPlugin extends PluginBase {
         return found;
     }
 
+    public void processOnEnabledCategoryChanged(PluginBase changedPlugin, PluginType type) {
+        ArrayList<PluginBase> pluginsInCategory = null;
+        switch (type) {
+            // Multiple selection allowed
+            case GENERAL:
+            case CONSTRAINTS:
+            case LOOP:
+                break;
+            // Single selection allowed
+            case INSULIN:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
+                break;
+            case SENSITIVITY:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
+                break;
+            case APS:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
+                break;
+            case PROFILE:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
+                break;
+            case BGSOURCE:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
+                break;
+            case TREATMENT:
+            case PUMP:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(PumpInterface.class);
+                break;
+        }
+        if (pluginsInCategory != null) {
+            boolean newSelection = changedPlugin.isEnabled(type);
+            if (newSelection) { // new plugin selected -> disable others
+                for (PluginBase p : pluginsInCategory) {
+                    if (p.getName().equals(changedPlugin.getName())) {
+                        // this is new selected
+                    } else {
+                        p.setPluginEnabled(type, false);
+                        p.setFragmentVisible(type, false);
+                    }
+                }
+            } else { // enable first plugin in list
+                if (type == PluginType.PUMP)
+                    VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
+                else if (type == PluginType.INSULIN)
+                    InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(type, true);
+                else if (type == PluginType.SENSITIVITY)
+                    SensitivityOref0Plugin.getPlugin().setPluginEnabled(type, true);
+                else if (type == PluginType.PROFILE)
+                    NSProfilePlugin.getPlugin().setPluginEnabled(type, true);
+                else
+                    pluginsInCategory.get(0).setPluginEnabled(type, true);
+            }
+        }
+    }
 }

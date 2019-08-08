@@ -27,6 +27,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
@@ -43,7 +44,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.ToastUtils;
 
-public class DanaRHistoryActivity extends Activity {
+public class DanaRHistoryActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
     private Handler mHandler;
@@ -96,7 +97,7 @@ public class DanaRHistoryActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_historyactivity);
 

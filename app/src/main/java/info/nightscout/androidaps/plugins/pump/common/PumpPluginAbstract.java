@@ -1,19 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.common;
 
-import java.util.Date;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 
 import androidx.fragment.app.FragmentActivity;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
+
+import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-
-import com.squareup.otto.Subscribe;
+import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -27,6 +27,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
@@ -108,8 +109,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     public abstract void onStartCustomActions();
 
     @Override
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
-        confirmPumpPluginActivation(pluginSwitcher, activity);
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        confirmPumpPluginActivation(newState, activity, type);
     }
 
     /**

@@ -62,7 +62,7 @@ public class MaintenancePlugin extends PluginBase {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(MaintenanceFragment.class.getName())
-                .alwayVisible(false)
+                .alwaysVisible(false)
                 .alwaysEnabled(true)
                 .pluginName(R.string.maintenance)
                 .shortName(R.string.maintenance_shortname)

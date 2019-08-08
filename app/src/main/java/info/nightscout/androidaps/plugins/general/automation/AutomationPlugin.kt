@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.services.LocationService
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
 import io.reactivex.disposables.CompositeDisposable
@@ -79,11 +80,15 @@ object AutomationPlugin : PluginBase(PluginDescription()
                         ctx.stopService(Intent(ctx, LocationService::class.java))
                         ctx.startService(Intent(ctx, LocationService::class.java))
                     }
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventAutomationDataChanged::class.java)
                 .observeOn(Schedulers.io())
-                .subscribe({ storeToSP() }, {})
+                .subscribe({ storeToSP() }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventLocationChange::class.java)
                 .observeOn(Schedulers.io())
@@ -92,19 +97,27 @@ object AutomationPlugin : PluginBase(PluginDescription()
                         log.debug("Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
                         processActions()
                     }
-                }, {})
+                }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventChargingState::class.java)
                 .observeOn(Schedulers.io())
-                .subscribe({ processActions() }, {})
+                .subscribe({ processActions() }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventNetworkChange::class.java)
                 .observeOn(Schedulers.io())
-                .subscribe({ processActions() }, {})
+                .subscribe({ processActions() }, {
+                    FabricPrivacy.logException(it)
+                })
         disposable += RxBus
                 .toObservable(EventAutosensCalculationFinished::class.java)
                 .observeOn(Schedulers.io())
-                .subscribe({ processActions() }, {})
+                .subscribe({ processActions() }, {
+                    FabricPrivacy.logException(it)
+                })
     }
 
     override fun onStop() {

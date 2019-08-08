@@ -2,12 +2,9 @@ package info.nightscout.androidaps.plugins.common;
 
 import androidx.fragment.app.Fragment;
 
-import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 
 abstract public class SubscriberFragment extends Fragment {
-    protected Unbinder unbinder;
-
     @Override
     public void onPause() {
         super.onPause();
@@ -20,13 +17,6 @@ abstract public class SubscriberFragment extends Fragment {
         MainApp.bus().register(this);
         updateGUI();
     }
-
-    @Override public synchronized void onDestroyView() {
-        super.onDestroyView();
-        if (unbinder != null)
-            unbinder.unbind();
-    }
-
 
     protected abstract void updateGUI();
 }
