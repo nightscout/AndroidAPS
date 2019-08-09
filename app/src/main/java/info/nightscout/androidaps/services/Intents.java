@@ -23,8 +23,6 @@ public interface Intents {
 
     // App -> NSClient
     String ACTION_DATABASE = "info.nightscout.client.DBACCESS";
-    String ACTION_RESTART = "info.nightscout.client.RESTART";
-    String ACTION_RESEND = "info.nightscout.client.RESEND";
     String ACTION_ACK_ALARM = "info.nightscout.client.ACK_ALARM";
 
     // xDrip -> App

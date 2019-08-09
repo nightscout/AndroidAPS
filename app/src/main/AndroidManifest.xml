@@ -123,15 +123,7 @@
         </receiver>
 
         <!-- NSClient -->
-        <receiver
-            android:name=".plugins.general.nsclient.receivers.RestartReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.RESTART" />
-            </intent-filter>
-        </receiver>
-        <receiver
+         <receiver
             android:name=".plugins.general.nsclient.receivers.DBAccessReceiver"
             android:enabled="true"
             android:exported="true">

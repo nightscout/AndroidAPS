@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator;
 
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -20,7 +19,6 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -40,14 +38,15 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.SP;
@@ -400,12 +399,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processTREATMENTS(String[] splitted, Sms receivedSms) {
         if (splitted[1].toUpperCase().equals("REFRESH")) {
-            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
             TreatmentsPlugin.getPlugin().getService().resetTreatments();
-            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-            String reply = "TREATMENTS REFRESH " + q.size() + " receivers";
-            sendSMS(new Sms(receivedSms.phoneNumber, reply));
+            MainApp.bus().post(new EventNSClientRestart());
+            sendSMS(new Sms(receivedSms.phoneNumber, "TREATMENTS REFRESH SENT"));
             receivedSms.processed = true;
         } else
             sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
@@ -413,11 +409,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processNSCLIENT(String[] splitted, Sms receivedSms) {
         if (splitted[1].toUpperCase().equals("RESTART")) {
-            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-            String reply = "NSCLIENT RESTART " + q.size() + " receivers";
-            sendSMS(new Sms(receivedSms.phoneNumber, reply));
+            MainApp.bus().post(new EventNSClientRestart());
+            sendSMS(new Sms(receivedSms.phoneNumber, "NSCLIENT RESTART SENT"));
             receivedSms.processed = true;
         } else
             sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
