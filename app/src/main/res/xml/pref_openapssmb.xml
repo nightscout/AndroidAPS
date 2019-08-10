@@ -79,6 +79,33 @@
             validate:minNumber="15"
             validate:testType="numericRange" />
 
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="30"
+                android:dialogMessage="@string/uamsmbmaxminutes"
+                android:digits="0123456789"
+                android:inputType="number"
+                android:key="key_uamsmbmaxminutes"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/uamsmbmaxminutes_summary"
+                validate:maxNumber="120"
+                validate:minNumber="15"
+                validate:testType="numericRange" />
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="0.1"
+                android:inputType="numberDecimal"
+                android:key="key_bolus_increment"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/bolus_increment_summary"
+                validate:floatmaxNumber="1.0"
+                validate:floatminNumber="0.05"
+                validate:testType="floatNumericRange" />
+
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_use_uam"
