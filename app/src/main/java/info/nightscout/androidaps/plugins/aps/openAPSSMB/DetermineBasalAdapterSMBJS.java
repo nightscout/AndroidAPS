@@ -48,6 +48,7 @@ public class DetermineBasalAdapterSMBJS {
     private JSONObject mAutosensData = null;
     private boolean mMicrobolusAllowed;
     private boolean mSMBAlwaysAllowed;
+    private long mCurrentTime;
 
     private String storedCurrentTemp = null;
     private String storedIobData = null;
@@ -58,6 +59,7 @@ public class DetermineBasalAdapterSMBJS {
     private String storedAutosens_data = null;
     private String storedMicroBolusAllowed = null;
     private String storedSMBAlwaysAllowed = null;
+    private String storedCurrentTime = null;
 
     private String scriptDebug = "";
 
@@ -87,6 +89,7 @@ public class DetermineBasalAdapterSMBJS {
             log.debug("Reservoir data: " + "undefined");
             log.debug("MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
             log.debug("SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
+//            log.debug("Current Time:      " + (storedCurrentTime = "" + mCurrentTime));
         }
 
         DetermineBasalResultSMB determineBasalResultSMB = null;
@@ -129,7 +132,8 @@ public class DetermineBasalAdapterSMBJS {
                         makeParam(mMealData, rhino, scope),
                         setTempBasalFunctionsObj,
                         new Boolean(mMicrobolusAllowed),
-                        makeParam(null, rhino, scope) // reservoir data as undefined
+                        makeParam(null, rhino, scope), // reservoir data as undefined
+                        mCurrentTime
                 };
 
 
@@ -163,6 +167,7 @@ public class DetermineBasalAdapterSMBJS {
         storedCurrentTemp = mCurrentTemp.toString();
         storedProfile = mProfile.toString();
         storedMeal_data = mMealData.toString();
+        //storedCurrentTime = "" + mCurrentTime;
 
         return determineBasalResultSMB;
 
@@ -171,6 +176,10 @@ public class DetermineBasalAdapterSMBJS {
     String getGlucoseStatusParam() {
         return storedGlucoseStatus;
     }
+
+    // String getCurrentTimeParam() {
+    //     return storedCurrentTime;
+    // }
 
     String getCurrentTempParam() {
         return storedCurrentTemp;
@@ -331,6 +340,8 @@ public class DetermineBasalAdapterSMBJS {
         }
         mMicrobolusAllowed = microBolusAllowed;
         mSMBAlwaysAllowed = advancedFiltering;
+
+        mCurrentTime = System.currentTimeMillis();
 
     }
 
