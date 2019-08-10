@@ -267,6 +267,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableSMB_after_carbs", smbEnabled && SP.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering);
         mProfile.put("maxSMBBasalMinutes", SP.getInt(R.string.key_smbmaxminutes, SMBDefaults.maxSMBBasalMinutes));
         mProfile.put("maxUAMSMBBasalMinutes", SP.getInt("key_uamsmbmaxminutes", SMBDefaults.maxUAMSMBBasalMinutes));
+        mProfile.put("SMBInterval", SP.getInt("key_smbinterval", SMBDefaults.SMBInterval));
         if (bolusincrement < pumpbolusstep){
           //the bolus incrument is less than what the pump can support (by pump settings or pump restriction), set to value supported by the pump
           bolusincrement = pumpbolusstep;
