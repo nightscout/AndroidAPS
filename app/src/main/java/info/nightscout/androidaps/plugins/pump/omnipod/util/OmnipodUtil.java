@@ -4,7 +4,13 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,19 +43,11 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static RileyLinkOmnipodService omnipodService;
     private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
-    public static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    public static Gson gsonInstancePretty = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-            .setPrettyPrinting().create();
-
+    private static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public static Gson getGsonInstance() {
         return gsonInstance;
     }
-
-    public static Gson getGsonInstancePretty() {
-        return gsonInstancePretty;
-    }
-
 
     public static int makeUnsignedShort(int b2, int b1) {
         int k = (b2 & 0xff) << 8 | b1 & 0xff;
@@ -166,5 +164,19 @@ public class OmnipodUtil extends RileyLinkUtil {
 
     public static void setPumpStatus(OmnipodPumpStatus omnipodPumpStatus) {
         OmnipodUtil.omnipodPumpStatus = omnipodPumpStatus;
+    }
+
+    private static Gson createGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapter(DateTime.class, (JsonSerializer<DateTime>) (dateTime, typeOfSrc, context) ->
+                        new JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)))
+                .registerTypeAdapter(DateTime.class, (JsonDeserializer<DateTime>) (json, typeOfT, context) ->
+                        ISODateTimeFormat.dateTime().parseDateTime(json.getAsString()))
+                .registerTypeAdapter(DateTimeZone.class, (JsonSerializer<DateTimeZone>) (timeZone, typeOfSrc, context) ->
+                        new JsonPrimitive(timeZone.getID()))
+                .registerTypeAdapter(DateTimeZone.class, (JsonDeserializer<DateTimeZone>) (json, typeOfT, context) ->
+                        DateTimeZone.forID(json.getAsString()));
+
+        return gsonBuilder.create();
     }
 }

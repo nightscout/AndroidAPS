@@ -63,17 +63,33 @@ public abstract class RileyLinkCommunicationManager {
     // All pump communications go through this function.
     protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms, null, clazz);
+    }
+
+    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
+            throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms, clazz);
+    }
+
+    // For backward compatibility
+    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
+            throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
+    }
+
+    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
+            throws RileyLinkCommunicationException {
 
         if (showPumpMessages) {
             if (isLogEnabled())
                 LOG.info("Sent:" + ByteUtil.shortHexString(msg.getTxData()));
         }
 
-        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()), timeout_ms);
+        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()),
+                (byte)0, (byte)repeatCount, (byte)0, (byte)0, timeout_ms, (byte)retryCount, extendPreamble_ms);
 
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse();
-
-        E response = createResponseMessage(rfSpyResponse.getRadioResponse().getPayload(), clazz);
+        E response = createResponseMessage(radioResponse.getPayload(), clazz);
 
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
@@ -399,7 +415,9 @@ public abstract class RileyLinkCommunicationManager {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
         SP.putLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime);
-        pumpStatus.setLastCommunicationToNow();
+        if(pumpStatus != null) {
+            pumpStatus.setLastCommunicationToNow();
+        }
     }
 
 
