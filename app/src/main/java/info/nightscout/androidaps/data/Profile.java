@@ -23,6 +23,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.MidnightTime;
+import info.nightscout.androidaps.utils.Round;
 
 public class Profile {
     private static Logger log = LoggerFactory.getLogger(Profile.class);
@@ -475,6 +476,17 @@ public class Profile {
 
         public int timeAsSeconds;
         public double value;
+
+        public boolean equals(Object otherObject) {
+            if (!(otherObject instanceof ProfileValue)) {
+                return false;
+            }
+
+            ProfileValue otherProfileValue = (ProfileValue) otherObject;
+
+            return (timeAsSeconds == otherProfileValue.timeAsSeconds) && Round.isSame(value, otherProfileValue.value);
+
+        }
     }
 
     public synchronized ProfileValue[] getBasalValues() {
@@ -665,4 +677,27 @@ public class Profile {
     public int getTimeshift() {
         return timeshift;
     }
+
+
+    public boolean isProfileTheSame(Profile otherProfile) {
+
+        if (!Round.isSame(this.baseBasalSum(), otherProfile.baseBasalSum()))
+            return false;
+
+        ProfileValue[] basalValues = this.getBasalValues();
+        ProfileValue[] otherBasalValues = otherProfile.getBasalValues();
+
+        if (basalValues.length != otherBasalValues.length)
+            return false;
+
+        for (int i = 0; i < basalValues.length; i++) {
+            if (!basalValues[i].equals(otherBasalValues[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 }

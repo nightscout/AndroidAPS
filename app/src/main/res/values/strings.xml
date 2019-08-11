@@ -1662,6 +1662,31 @@
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be really off !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
 
+    <!-- Omnipod -->
+
+    <!-- Omnipod - Base -->
+    <string name="omnipod_name" translatable="false">Omnipod</string>
+    <string name="omnipod_name_short" translatable="false">POD</string>
+    <string name="description_pump_omnipod">Pump integration for Omnipod, requires RileyLink (with at least 2.0 firmware) device.</string>
+
+    <!-- Omnipod - Fragment -->
+    <string name="omnipod_pod_mgmt">Pod Mgmt</string>
+    <string name="omnipod_pod_status">Pod Status</string>
+
+    <!-- Omnipod - Error -->
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>
+
+    <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_cmd_init_pod">Init Pod</string>
+    <string name="omnipod_cmd_deactivate_pod">Deactivate Pod</string>
+    <string name="omnipod_cmd_reset_pod">Reset Pod</string>
+
+
+    <string name="omnipod_namex" translatable="false">Omnipod</string>
+    <string name="omnipod_namex2" translatable="false">Omnipod</string>
+    <string name="omnipod_namexxx" translatable="false">Omnipod</string>
+
+
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
