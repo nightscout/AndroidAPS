@@ -1637,6 +1637,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Could not cancel current TBR. Stopping operation.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profile set failed, because following patterns, have too big basal rate: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus could not be delivered.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus could not be delivered, because available amount (%1$d) is less than Bolus required (%2$d).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR could not be set.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Could not cancel current TBR.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Basal profile could not be set.</string>
