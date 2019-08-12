@@ -1190,7 +1190,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="automation_short">Auto</string>
     <string name="automation">Automatisering</string>
     <string name="profile_total">== ∑  %1$s E</string>
-    <string name="profile_ins_units_per_hout">E/uur</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <string name="profile_per_unit">/E</string>
     <string name="dexcom_lognssensorchange_title">Noteer sensor wissel in NS</string>

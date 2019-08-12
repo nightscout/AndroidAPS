@@ -1145,7 +1145,6 @@
     <string name="recovery_duration">恢复持续时间</string>
     <string name="timeout_during_handshake">握手时超时-重启蓝牙</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">克/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="dexcom_lognssensorchange_title">记录传感器更换至NS服务器</string>

@@ -146,6 +146,7 @@
     <string name="openapsma_lastenact_label">Последнее предпринятое</string>
     <string name="ok">OK</string>
     <string name="cancel">Отменить</string>
+    <string name="close">Закрыть</string>
     <string name="noapsselected">APS не выбрана или не выдала результат</string>
     <string name="safety">безопасность</string>
     <string name="openapsma_disabled">модуль не активен</string>
@@ -830,6 +831,7 @@
     <string name="insight_incompatible">Несовместима</string>
     <string name="second">сек.</string>
     <string name="minute">мин.</string>
+    <string name="format_hours">%1$.2f ч</string>
     <string name="hour">ч.</string>
     <string name="day">дн.</string>
     <string name="week">нед.</string>
@@ -1191,7 +1193,7 @@ Context | Edit Context</string>
     <string name="automation_short">Авто</string>
     <string name="automation">Автоматизация</string>
     <string name="profile_total">== ∑  %1$s ед</string>
-    <string name="profile_ins_units_per_hout">Ед/ч</string>
+    <string name="profile_ins_units_per_hour">ед/ч</string>
     <string name="profile_carbs_per_unit">г/ед</string>
     <string name="profile_per_unit">/ед</string>
     <string name="dexcom_lognssensorchange_title">Внести замену сенсора в лог NS</string>
@@ -1434,6 +1436,7 @@ Context | Edit Context</string>
     <string name="insulinFromCob"><![CDATA[COB инсулин: <font color=\'%1$s\'>%2$.1fг %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Применено ограничение на болюс: %2$.2fед до %3$.2fед</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f/%2$d ед</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

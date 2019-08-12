@@ -146,6 +146,7 @@
     <string name="openapsma_lastenact_label">Zuletzt abgegeben</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
+    <string name="close">Schliessen</string>
     <string name="noapsselected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
@@ -831,6 +832,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="insight_incompatible">Inkompatibel</string>
     <string name="second">Sekunde</string>
     <string name="minute">Minute</string>
+    <string name="format_hours">%1$.2f h</string>
     <string name="hour">Stunde</string>
     <string name="day">Tag</string>
     <string name="week">Woche</string>
@@ -1191,7 +1193,7 @@ Unerwartetes Verhalten.</string>
     <string name="automation_short">Automatisch</string>
     <string name="automation">Automatisierung</string>
     <string name="profile_total">== ∑  %1$s IE</string>
-    <string name="profile_ins_units_per_hout">IE/h</string>
+    <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
     <string name="profile_per_unit">/IE</string>
     <string name="dexcom_lognssensorchange_title">Speichere Sensor Wechsel in Nightscout</string>
@@ -1434,6 +1436,7 @@ Unerwartetes Verhalten.</string>
     <string name="insulinFromCob"><![CDATA[COB Insulin: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus-Einschränkung angewendet: %2$.2fU zu %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Langsamer Kohlyenhydrate-Abbau erkannt: %2$d%% der Zeit. Überprüfe deine Berechnung. COB könnte sehr falsch sein !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d IE</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
