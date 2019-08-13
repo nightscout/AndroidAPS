@@ -44,6 +44,10 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
 
 
     private PodSessionState getPodSessionState() {
+
+        
+
+
         return null;
     }
 
