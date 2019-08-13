@@ -1672,6 +1672,8 @@
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
     <string name="omnipod_pod_status">Pod Status</string>
+    <string name="omnipod_reservoir_left">%1$d U left</string>
+    <string name="omnipod_reservoir_over50">Over 50 U</string>
 
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>

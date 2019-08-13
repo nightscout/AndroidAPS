@@ -61,23 +61,23 @@ public abstract class RileyLinkCommunicationManager {
 
 
     // All pump communications go through this function.
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, null, clazz);
     }
 
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms, clazz);
     }
 
     // For backward compatibility
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
     }
 
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
 
         if (showPumpMessages) {

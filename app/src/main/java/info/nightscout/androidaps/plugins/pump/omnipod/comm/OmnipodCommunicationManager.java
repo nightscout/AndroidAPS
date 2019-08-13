@@ -13,7 +13,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCons
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PairAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
 
@@ -26,6 +29,8 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
 
     private static OmnipodCommunicationManager omnipodCommunicationManager;
     String errorMessage;
+    OmnipodCommunicationService communicationService;
+    OmnipodManager omnipodManager;
 
 
     public OmnipodCommunicationManager(Context context, RFSpy rfspy) {
@@ -33,7 +38,15 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
         omnipodCommunicationManager = this;
         OmnipodUtil.getPumpStatus().previousConnection = SP.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+        communicationService = new OmnipodCommunicationService(this);
+        omnipodManager = new OmnipodManager(communicationService, getPodSessionState());
     }
+
+
+    private PodSessionState getPodSessionState() {
+        return null;
+    }
+
 
 
     public static OmnipodCommunicationManager getInstance() {
@@ -82,6 +95,10 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
     // This are just skeleton methods, we need to see what we can get returned and act accordingly
 
     public PodCommResponse initPod() {
+        omnipodManager.pairAndPrime();
+
+
+
         return null;
     }
 
