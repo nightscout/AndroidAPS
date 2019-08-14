@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.NonceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -202,7 +203,15 @@ public class PodSessionState extends PodState {
     private void store() {
         Gson gson = OmnipodUtil.getGsonInstance();
         SP.putString(OmnipodConst.Prefs.PodState, gson.toJson(this));
+        OmnipodUtil.setPodSessionState(this);
     }
+
+    public String getExpiryDateAsString() {
+        // TODO
+        return "???";
+    }
+
+
 
     @Override
     public String toString() {

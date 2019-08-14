@@ -43,12 +43,13 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
@@ -67,22 +68,23 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
-    protected static OmnipodPumpPlugin plugin = null;
+    private static OmnipodPumpPlugin plugin = null;
     private RileyLinkOmnipodService omnipodService;
-    private OmnipodPumpStatus pumpStatusLocal = null;
-    private OmnipodUIComm omnipodUIComm = new OmnipodUIComm();
+    protected OmnipodPumpStatus pumpStatusLocal = null;
+    protected OmnipodUIComm omnipodUIComm;
 
     // variables for handling statuses and history
-    private boolean firstRun = true;
-    private boolean isRefresh = false;
+    protected boolean firstRun = true;
+    protected boolean isRefresh = false;
     private boolean isBasalProfileInvalid = false;
     private boolean basalProfileChanged = false;
     private boolean isInitialized = false;
-    private OmnipodCommunicationManager omnipodCommunicationManager;
+    protected OmnipodCommunicationManagerInterface omnipodCommunicationManager;
 
     public static boolean isBusy = false;
-    private List<Long> busyTimestamps = new ArrayList<>();
-    private boolean sentIdToFirebase = false;
+    protected List<Long> busyTimestamps = new ArrayList<>();
+    protected boolean sentIdToFirebase = false;
+
     private boolean hasTimeDateOrTimeZoneChanged = false;
 
     private Profile currentProfile;
@@ -101,6 +103,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         );
 
         displayConnectionMessages = false;
+
+        if (omnipodCommunicationManager == null) {
+            omnipodCommunicationManager = OmnipodCommunicationManager.getInstance();
+        }
+
+        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);
+
+        OmnipodUtil.setPlugin(this);
 
         serviceConnection = new ServiceConnection() {
 
@@ -132,6 +142,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
                 }).start();
             }
         };
+    }
+
+
+    protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType) {
+        super(pluginDescription, pumpType);
     }
 
 
@@ -288,17 +303,18 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
         if (firstRun) {
             initializePump(!isRefresh);
+        } else {
+            getPodPumpStatus();
         }
 
-//        getPodPumpStatus();
-//
-//        if (firstRun) {
-//            initializePump(!isRefresh);
-//        } else {
-//            refreshAnyStatusThatNeedsToBeRefreshed();
-//        }
-//
-//        MainApp.bus().post(new EventMedtronicPumpValuesChanged());
+        triggerUIChange();
+    }
+
+    private void getPodPumpStatus() {
+        // TODO read pod status
+        LOG.error("getPodPumpStatus() NOT IMPLEMENTED");
+
+        // we would probably need to read Basal Profile here too
     }
 
 
@@ -318,34 +334,29 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         if (isLoggingEnabled())
             LOG.info(getLogPrefix() + "initializePump - start");
 
-        if (omnipodCommunicationManager == null) {
-            omnipodCommunicationManager = OmnipodCommunicationManager.getInstance();
+
+        setRefreshButtonEnabled(false);
+
+        String podState = SP.getString(OmnipodConst.Prefs.PodState, null);
+
+        if (podState != null) {
+            PodSessionState podSessionState = OmnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
+            OmnipodUtil.setPodSessionState(podSessionState);
+
+            LOG.debug("PodSessionState (saved): " + podSessionState);
+
+            // TODO handle if session state too old
+
+            // TODO handle basal
+
+            // TODO handle time
+
+            getPodPumpStatus();
+        } else {
+            LOG.debug("No PodSessionState found. Pod probably not running.");
         }
 
-//        setRefreshButtonEnabled(false);
-//
-//        getPodPumpStatus();
-//
-//        if (isRefresh) {
-//            if (isPumpNotReachable()) {
-//                if (isLoggingEnabled())
-//                    LOG.error(getLogPrefix() + "initializePump::Pump unreachable.");
-//                MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable);
-//
-//                setRefreshButtonEnabled(true);
-//
-//                return;
-//            }
-//
-//            MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
-//        }
-//
-//        this.pumpState = PumpDriverState.Connected;
-//
-//        pumpStatusLocal.setLastCommunicationToNow();
-//        setRefreshButtonEnabled(true);
-
-        // TODO need to read status and BasalProfile if pod inited and pod status and set correct commands enabled
+        setRefreshButtonEnabled(true);
 
         if (!isRefresh) {
             pumpState = PumpDriverState.Initialized;
@@ -360,7 +371,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         }
 
         isInitialized = true;
-        // this.pumpState = PumpDriverState.Initialized;
 
         this.firstRun = false;
     }
@@ -369,7 +379,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     @Override
     public boolean isThisProfileSet(Profile profile) {
 
-        // status was not yet read from pod
+        // TODO status was not yet read from pod
         if (currentProfile == null) {
             return true;
         }
@@ -404,19 +414,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
     @Override
     public double getReservoirLevel() {
-        // TODO
         return getPodPumpStatusObject().reservoirRemainingUnits;
     }
 
 
     @Override
     public int getBatteryLevel() {
-        // TODO
-        return getPodPumpStatusObject().batteryRemaining;
+        return 75;
     }
 
 
-    private OmnipodPumpStatus getPodPumpStatusObject() {
+    protected OmnipodPumpStatus getPodPumpStatusObject() {
         if (pumpStatusLocal == null) {
             // FIXME I don't know why this happens
             if (isLoggingEnabled())
@@ -429,7 +437,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
 
     protected void triggerUIChange() {
-        MainApp.bus().post(new EventOmnipodPumpValuesChanged());
+        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
     }
 
 
@@ -445,7 +453,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
             OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBolus,
                     detailedBolusInfo.insulin);
 
-            Boolean response = (Boolean) responseTask.returnData;
+            Boolean response = responseTask.wasCommandSuccessful();
 
             setRefreshButtonEnabled(true);
 
@@ -454,7 +462,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
-                getPodPumpStatusObject().reservoirRemainingUnits -= detailedBolusInfo.insulin;
+                if (getPodPumpStatusObject().reservoirRemainingUnits != 0) {
+                    getPodPumpStatusObject().reservoirRemainingUnits -= detailedBolusInfo.insulin;
+                }
 
                 incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
                         : OmnipodConst.Statistics.StandardBoluses);
@@ -484,22 +494,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     }
 
 
-    private PumpEnactResult setNotReachable(boolean isBolus, boolean success) {
-        setRefreshButtonEnabled(true);
-
-        if (success) {
-            return new PumpEnactResult() //
-                    .success(true) //
-                    .enacted(false);
-        } else {
-            return new PumpEnactResult() //
-                    .success(false) //
-                    .enacted(false) //
-                    .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
-        }
-    }
-
-
     public void stopBolusDelivering() {
 
         LOG.info(getLogPrefix() + "stopBolusDelivering");
@@ -510,7 +504,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
             OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.CancelBolus);
 
-            Boolean response = (Boolean) responseTask.returnData;
+            Boolean response = responseTask.wasCommandSuccessful();
 
             setRefreshButtonEnabled(true);
 
@@ -575,7 +569,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
             // CANCEL
             OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
 
-            Boolean response = (Boolean) responseTask2.returnData;
+            Boolean response = responseTask2.wasCommandSuccessful();
+            ;
 
             if (response) {
                 if (isLoggingEnabled())
@@ -595,7 +590,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTemporaryBasal,
                 absoluteRate, durationInMinutes);
 
-        Boolean response = (Boolean) responseTask.returnData;
+        Boolean response = responseTask.wasCommandSuccessful();
 
         if (isLoggingEnabled())
             LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + response);
@@ -630,7 +625,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
     }
 
-    private TempBasalPair readTBR() {
+    protected TempBasalPair readTBR() {
         // TODO we can do it like this or read status from pod ??
         if (pumpStatusLocal.tempBasalEnd < System.currentTimeMillis()) {
             // TBR done
@@ -643,7 +638,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     }
 
 
-    private void finishAction(String overviewKey) {
+    protected void finishAction(String overviewKey) {
         if (overviewKey != null)
             MainApp.bus().post(new EventRefreshOverview(overviewKey));
 
@@ -653,16 +648,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     }
 
 
-    private long getTimeInFutureFromMinutes(int minutes) {
+    protected long getTimeInFutureFromMinutes(int minutes) {
         return System.currentTimeMillis() + getTimeInMs(minutes);
     }
 
 
-    private long getTimeInMs(int minutes) {
+    protected long getTimeInMs(int minutes) {
         return getTimeInS(minutes) * 1000L;
     }
 
-    private int getTimeInS(int minutes) {
+    protected int getTimeInS(int minutes) {
         return minutes * 60;
     }
 
@@ -688,7 +683,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
         OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
 
-        Boolean response = (Boolean) responseTask2.returnData;
+        Boolean response = responseTask2.wasCommandSuccessful();
 
         finishAction("TBR");
 
@@ -738,7 +733,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBasalProfile,
                 profile);
 
-        Boolean response = (Boolean) responseTask.returnData;
+        Boolean response = responseTask.wasCommandSuccessful();
 
         if (isLoggingEnabled())
             LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
@@ -756,18 +751,18 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
     // OPERATIONS not supported by Pump or Plugin
 
-    private List<CustomAction> customActions = null;
+    protected List<CustomAction> customActions = null;
 
     private CustomAction customActionResetRLConfig = new CustomAction(
             R.string.medtronic_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
 
-    private CustomAction customActionInitPod = new CustomAction(
+    protected CustomAction customActionInitPod = new CustomAction(
             R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.InitPod, true);
 
-    private CustomAction customActionDeactivatePod = new CustomAction(
+    protected CustomAction customActionDeactivatePod = new CustomAction(
             R.string.omnipod_cmd_deactivate_pod, OmnipodCustomActionType.DeactivatePod, false);
 
-    private CustomAction customActionResetPod = new CustomAction(
+    protected CustomAction customActionResetPod = new CustomAction(
             R.string.omnipod_cmd_reset_pod, OmnipodCustomActionType.ResetPodStatus, true);
 
 
@@ -776,7 +771,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
         if (customActions == null) {
             this.customActions = Arrays.asList(
-                    customActionResetRLConfig);
+                    customActionResetRLConfig, //
+                    customActionInitPod, //
+                    customActionDeactivatePod, //
+                    customActionResetPod);
         }
 
         return this.customActions;

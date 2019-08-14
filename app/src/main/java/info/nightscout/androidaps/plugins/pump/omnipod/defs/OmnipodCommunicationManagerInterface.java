@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.comm;
+package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -56,6 +56,11 @@ public interface OmnipodCommunicationManagerInterface {
      * Cancel Temporary Basal (if TB is already stopped, return acknowledgment)
      */
     PodCommResponse cancelTemporaryBasal();
+
+    /**
+     * Acknowledge alerts
+     */
+    PodCommResponse acknowledgeAlerts();
 
 
 }

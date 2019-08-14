@@ -10,6 +10,10 @@ public class PodCommResponse {
     Object customData;
     Object errorResponse;
 
+    public boolean isAcknowledged() {
+        return (acknowledged != null && acknowledged);
+    }
+
     // some status data if it can be returned (battery, reservoir, etc)
 
 }

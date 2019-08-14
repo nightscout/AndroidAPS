@@ -8,6 +8,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -19,14 +21,15 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.utils.OKDialog;
@@ -44,6 +47,9 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
     private static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static PodSessionState podSessionState;
+    private static PodDeviceState podDeviceState;
+    private static OmnipodPumpPlugin omnipodPumpPlugin;
 
     public static Gson getGsonInstance() {
         return gsonInstance;
@@ -81,29 +87,6 @@ public class OmnipodUtil extends RileyLinkUtil {
         }
 
         return array;
-    }
-
-
-    public static void sendNotification(MedtronicNotificationType notificationType) {
-        Notification notification = new Notification( //
-                notificationType.getNotificationType(), //
-                MainApp.gs(notificationType.getResourceId()), //
-                notificationType.getNotificationUrgency());
-        MainApp.bus().post(new EventNewNotification(notification));
-    }
-
-
-    public static void sendNotification(MedtronicNotificationType notificationType, Object... parameters) {
-        Notification notification = new Notification( //
-                notificationType.getNotificationType(), //
-                MainApp.gs(notificationType.getResourceId(), parameters), //
-                notificationType.getNotificationUrgency());
-        MainApp.bus().post(new EventNewNotification(notification));
-    }
-
-
-    public static void dismissNotification(MedtronicNotificationType notificationType) {
-        MainApp.bus().post(new EventDismissNotification(notificationType.getNotificationType()));
     }
 
 
@@ -179,4 +162,33 @@ public class OmnipodUtil extends RileyLinkUtil {
 
         return gsonBuilder.create();
     }
+
+    public static void setPodSessionState(PodSessionState podSessionState) {
+        omnipodPumpStatus.podSessionState = podSessionState;
+        RxBus.INSTANCE.send(new EventOmnipodDeviceStatusChange(podSessionState));
+    }
+
+    @Nullable
+    public static PodDeviceState getPodDeviceState() {
+        return null;
+    }
+
+
+    public static void setPodDeviceState(PodDeviceState podDeviceState) {
+        OmnipodUtil.podDeviceState = podDeviceState;
+    }
+
+
+    @NotNull
+    public static OmnipodPumpPlugin getPlugin() {
+        return OmnipodUtil.omnipodPumpPlugin;
+    }
+
+
+    @NotNull
+    public static void setPlugin(OmnipodPumpPlugin pumpPlugin) {
+        OmnipodUtil.omnipodPumpPlugin = pumpPlugin;
+    }
+
+
 }

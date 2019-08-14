@@ -22,6 +22,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
 
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
@@ -83,17 +85,17 @@ class OmnipodFragment : Fragment() {
         }
 
         omnipod_refresh.setOnClickListener {
-//            if (!OmnipodUtil.getPumpStatus().verifyConfiguration()) {
-//                OmnipodUtil.displayNotConfiguredDialog(context)
-//            } else {
-//                omnipod_refresh.isEnabled = false
-//                MedtronicPumpPlugin.getPlugin().resetStatusState()
-//                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked refresh", object : Callback() {
-//                    override fun run() {
-//                        activity?.runOnUiThread { omnipod_refresh.isEnabled = true }
-//                    }
-//                })
-//            }
+            if (!OmnipodUtil.getPumpStatus().verifyConfiguration()) {
+                OmnipodUtil.displayNotConfiguredDialog(context)
+            } else {
+                omnipod_refresh.isEnabled = false
+                OmnipodUtil.getPlugin().resetStatusState()
+                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked refresh", object : Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread { omnipod_refresh.isEnabled = true }
+                    }
+                })
+            }
         }
 
         omnipod_stats.setOnClickListener {
@@ -163,7 +165,7 @@ class OmnipodFragment : Fragment() {
         pumpStatus.rileyLinkServiceState = checkStatusSet(pumpStatus.rileyLinkServiceState,
                 RileyLinkUtil.getServiceState()) as RileyLinkServiceState?
 
-        val resourceId = pumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.MedtronicPump)
+        val resourceId = pumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
         val rileyLinkError = RileyLinkUtil.getError()
         omnipod_rl_status.text =
                 when {
@@ -181,6 +183,62 @@ class OmnipodFragment : Fragment() {
                 pumpStatus.rileyLinkError?.let {
                     MainApp.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
                 } ?: "-"
+
+        if (pumpStatus.podNumber==null) {
+
+        }
+
+
+        if (pumpStatus.podSessionState==null) {
+            omnipod_pod_address.text = MainApp.gs(R.string.omnipod_pod_name_no_info)
+            omnipod_pod_expiry.text = "-"
+            omnipod_pod_status.text = "{fa-bed}   "
+        } else {
+
+            omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
+            omnipod_pod_expiry.text = pumpStatus.podSessionState.expiryDateAsString
+
+           pumpStatus.podDeviceState = checkStatusSet(pumpStatus.podDeviceState,
+                OmnipodUtil.getPodDeviceState()) as PodDeviceState?
+
+            var podDeviceState = pumpStatus.podDeviceState
+
+        when (podDeviceState) {
+            null,
+            PumpDeviceState.Sleeping -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+            PumpDeviceState.NeverContacted,
+            PumpDeviceState.WakingUp,
+            PumpDeviceState.PumpUnreachable,
+            PumpDeviceState.ErrorWhenCommunicating,
+            PumpDeviceState.TimeoutWhenCommunicating,
+            PumpDeviceState.InvalidConfiguration -> omnipod_pod_status.text = " " + MainApp.gs(podDeviceState.resourceId)
+            PumpDeviceState.Active -> {
+
+                omnipod_pod_status.text = "Active";
+//                val cmd = OmnipodUtil.getCurrentCommand()
+//                if (cmd == null)
+//                    omnipod_pod_status.text = " " + MainApp.gs(pumpStatus.pumpDeviceState.resourceId)
+//                else {
+//                    log.debug("Command: " + cmd)
+//                    val cmdResourceId = cmd.resourceId
+//                    if (cmd == MedtronicCommandType.GetHistoryData) {
+//                        omnipod_pod_status.text = OmnipodUtil.frameNumber?.let {
+//                            MainApp.gs(cmdResourceId, OmnipodUtil.pageNumber, OmnipodUtil.frameNumber)
+//                        }
+//                                ?: MainApp.gs(R.string.medtronic_cmd_desc_get_history_request, OmnipodUtil.pageNumber)
+//                    } else {
+//                        omnipod_pod_status.text = " " + (cmdResourceId?.let { MainApp.gs(it) }
+//                                ?: cmd.getCommandDescription())
+//                    }
+//                }
+            }
+            else -> log.warn("Unknown pump state: " + pumpStatus.podDeviceState)
+        }
+
+
+
+        }
+
 
 //        pumpStatus.pumpDeviceState = checkStatusSet(pumpStatus.pumpDeviceState,
 //                OmnipodUtil.getPumpDeviceState()) as PumpDeviceState?

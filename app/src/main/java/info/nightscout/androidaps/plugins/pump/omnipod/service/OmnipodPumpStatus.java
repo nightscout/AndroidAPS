@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.service;
 
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,8 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
@@ -37,12 +40,14 @@ public class OmnipodPumpStatus extends PumpStatus {
     public long tempBasalEnd;
     public Double tempBasalAmount = 0.0d;
     public Integer tempBasalLength;
+    public PodSessionState podSessionState;
 
     private boolean rileyLinkAddressChanged = false;
     private String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
 
     public String podNumber;
+    public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
 
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {

@@ -3,17 +3,18 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 /**
  * Created by andy on 4.8.2019
@@ -24,7 +25,7 @@ public class OmnipodUITask {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     public OmnipodCommandType commandType;
-    public Object returnData;
+    public PodCommResponse returnData;
     private String errorDescription;
     private Object[] parameters;
     private PodResponseType responseType;
@@ -41,7 +42,7 @@ public class OmnipodUITask {
     }
 
 
-    public void execute(OmnipodCommunicationManager communicationManager) {
+    public void execute(OmnipodCommunicationManagerInterface communicationManager) {
 
         if (isLogEnabled())
             LOG.debug("OmnipodUITask: @@@ In execute. {}", commandType);
@@ -100,6 +101,8 @@ public class OmnipodUITask {
 
         }
 
+        // TODO response
+
     }
 
 
@@ -146,19 +149,19 @@ public class OmnipodUITask {
         }
 
         if (responseType == PodResponseType.Invalid) {
-            statusChange = new EventOmnipodDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     "Unsupported command in OmnipodUITask");
-            MainApp.bus().post(statusChange);
+            RxBus.INSTANCE.send(statusChange);
         } else if (responseType == PodResponseType.Error) {
-            statusChange = new EventOmnipodDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     errorDescription);
-            MainApp.bus().post(statusChange);
+            RxBus.INSTANCE.send(statusChange);
         } else {
-            MainApp.bus().post(new EventMedtronicPumpValuesChanged());
-            MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
+            OmnipodUtil.getPumpStatus().setLastCommunicationToNow();
+            RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
         }
 
-        MedtronicUtil.setCurrentCommand(null);
+        OmnipodUtil.setPodDeviceState(PodDeviceState.Sleeping);
     }
 
 
@@ -180,5 +183,13 @@ public class OmnipodUITask {
     public PodResponseType getResponseType() {
         return this.responseType;
     }
+
+    public boolean wasCommandSuccessful() {
+        if (returnData == null) {
+            return false;
+        }
+        return returnData.isAcknowledged();
+    }
+
 
 }

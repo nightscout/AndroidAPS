@@ -1674,6 +1674,12 @@
     <string name="omnipod_pod_status">Pod Status</string>
     <string name="omnipod_reservoir_left">%1$d U left</string>
     <string name="omnipod_reservoir_over50">Over 50 U</string>
+    <string name="omnipod_pod_address">Pod Address</string>
+    <string name="omnipod_pod_expiry">Pod Expires</string>
+    <string name="omnipod_pod_name_no_info">No info</string>
+    <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
+    <string name="omnipod_ack_short">Ack Alerts</string>
+
 
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>
@@ -1687,6 +1693,15 @@
     <string name="omnipod_namex" translatable="false">Omnipod</string>
     <string name="omnipod_namex2" translatable="false">Omnipod</string>
     <string name="omnipod_namexxx" translatable="false">Omnipod</string>
+
+
+    <!-- Omnipod Dash -->
+
+    <!-- Omnipod - Base -->
+    <string name="omnipod_dash_name" translatable="false">Omnipod Dash</string>
+    <string name="omnipod_dash_name_short" translatable="false">DASH</string>
+    <string name="description_pump_omnipod_dash">Pump integration for Omnipod Dash.</string>
+
 
 
     <plurals name="objective_days">

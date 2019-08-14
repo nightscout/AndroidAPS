@@ -82,9 +82,11 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     protected void onStart() {
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, getServiceClass());
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        if (getServiceClass()!=null) {
+            Context context = MainApp.instance().getApplicationContext();
+            Intent intent = new Intent(context, getServiceClass());
+            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
 
         serviceRunning = true;
 
@@ -96,8 +98,10 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     protected void onStop() {
-        Context context = MainApp.instance().getApplicationContext();
-        context.unbindService(serviceConnection);
+        if (serviceConnection!=null) {
+            Context context = MainApp.instance().getApplicationContext();
+            context.unbindService(serviceConnection);
+        }
 
         serviceRunning = false;
 
