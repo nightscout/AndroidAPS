@@ -212,17 +212,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private void migrateSettings() {
 
         if ("US (916 MHz)".equals(SP.getString(MedtronicConst.Prefs.PumpFrequency, null))) {
-            SP.putString(MedtronicConst.Prefs.PumpFrequency, MainApp.gs(R.string.medtronic_pump_frequency_us_ca));
+            SP.putString(MedtronicConst.Prefs.PumpFrequency, MainApp.gs(R.string.key_medtronic_pump_frequency_us_ca));
         }
 
         String encoding = SP.getString(MedtronicConst.Prefs.Encoding, null);
 
         if ("RileyLink 4b6b Encoding".equals(encoding)) {
-            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.medtronic_pump_encoding_4b6b_rileylink));
+            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink));
         }
 
         if ("Local 4b6b Encoding".equals(encoding)) {
-            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.medtronic_pump_encoding_4b6b_local));
+            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.key_medtronic_pump_encoding_4b6b_local));
         }
     }
 

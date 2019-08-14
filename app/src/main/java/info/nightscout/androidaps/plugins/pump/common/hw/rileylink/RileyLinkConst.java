@@ -31,7 +31,7 @@ public class RileyLinkConst {
 
         //public static final String PrefPrefix = "pref_rileylink_";
         //public static final String RileyLinkAddress = PrefPrefix + "mac_address"; // pref_rileylink_mac_address
-        public static final int RileyLinkAddress = R.string.pref_key_rileylink_mac_address;
+        public static final int RileyLinkAddress = R.string.key_rileylink_mac_address;
         public static final String LastGoodDeviceCommunicationTime = Prefix + "lastGoodDeviceCommunicationTime";
         public static final String LastGoodDeviceFrequency = Prefix + "LastGoodDeviceFrequency";
     }
