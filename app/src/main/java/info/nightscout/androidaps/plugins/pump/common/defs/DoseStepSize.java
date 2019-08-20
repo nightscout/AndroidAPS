@@ -26,6 +26,9 @@ public enum DoseStepSize
             new DoseStepSizeEntry(0f, 1f, 0.025f), //
             new DoseStepSizeEntry(1f, 10f, 0.05f), //
             new DoseStepSizeEntry(10f, Double.MAX_VALUE, 0.1f)), //
+    MedtronicVeoBolus( //
+            new DoseStepSizeEntry(0f, 1f, 0.025f), //
+            new DoseStepSizeEntry(1f, Double.MAX_VALUE, 0.05f)) //
 
     ;
 
