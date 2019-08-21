@@ -226,7 +226,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AndroidPermission.CASE_BATTERY)
             updateButtons();

@@ -3,7 +3,9 @@ package info.nightscout.androidaps.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -45,10 +48,26 @@ public class AndroidPermission {
             ActivityCompat.requestPermissions(activity, permission, requestCode);
         }
         if (testBattery) {
-            Intent i = new Intent();
-            i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            i.setData(Uri.parse("package:" + activity.getPackageName()));
-            activity.startActivityForResult(i, CASE_BATTERY);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {
+                    Intent i = new Intent();
+                    i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    i.setData(Uri.parse("package:" + activity.getPackageName()));
+                    activity.startActivityForResult(i, CASE_BATTERY);
+                } catch (ActivityNotFoundException e) {
+                    SP.putBoolean(R.string.key_permission_battery_optimization_failed, true);
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                    alert.setMessage(R.string.alert_dialog_permission_battery_optimization_failed);
+                    alert.setPositiveButton(R.string.ok, null);
+                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            activity.recreate();
+                        }
+                    });
+                    alert.show();
+            }
         }
     }
 
@@ -60,9 +79,12 @@ public class AndroidPermission {
     public static boolean permissionNotGranted(Context context, String permission) {
         boolean selfCheck = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
         if (permission.equals(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            String packageName = context.getPackageName();
-            selfCheck = selfCheck && powerManager.isIgnoringBatteryOptimizations(packageName);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && !SP.getBoolean(R.string.key_permission_battery_optimization_failed, false)) {
+                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                String packageName = context.getPackageName();
+                selfCheck = selfCheck && powerManager.isIgnoringBatteryOptimizations(packageName);
+            }
         }
         return !selfCheck;
     }
