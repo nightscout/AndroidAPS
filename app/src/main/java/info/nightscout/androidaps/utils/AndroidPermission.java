@@ -67,6 +67,7 @@ public class AndroidPermission {
                         }
                     });
                     alert.show();
+                }
             }
         }
     }
