@@ -1175,7 +1175,7 @@
     <string name="glucoseisnotavailable">Γλυκόζη δεν είναι διαθέσιμη</string>
     <string name="glucosecomparedmgdl">Γλυκόζη %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Γλυκόζη %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Προφίλ % %1$s %2$d</string>
+    <string name="percentagecompared">Προφίλ %% %1$s %2$d</string>
     <string name="iobcompared">ΙΟΒ %1$s %2$.1f</string>
     <string name="and">Και</string>
     <string name="or">ή</string>
@@ -1238,7 +1238,6 @@
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
     <string name="new_version_warning">Νέα έκδοση για τουλάχιστον %1$d ημέρες διαθέσιμη! Επιστροφή σε LGS μετά από 60 ημέρες, το κύκλωμα θα απενεργοποιηθεί μετά από 90 ημέρες</string>
-    <string name="scale_insulin_activity">Γραφική κλίμακα δραστηριότητας ινσουλίνης [U/min]</string>
     <string name="twohours">2ώρες</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Εφαρμογή Dexcom (τροποποιημένη)</string>

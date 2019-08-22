@@ -1179,7 +1179,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="glucoseisnotavailable">La glycémie n\'est pas disponible</string>
     <string name="glucosecomparedmgdl">Glycémie %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glycémie %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Profil % %1$s %2$d</string>
+    <string name="percentagecompared">Profil %% %1$s %2$d</string>
     <string name="iobcompared">IA %1$s %2$.1f</string>
     <string name="and">Et</string>
     <string name="or">Ou</string>
@@ -1250,7 +1250,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="old_version">ancienne version</string>
     <string name="very_old_version">très ancienne version</string>
     <string name="new_version_warning">Une nouvelle version est disponible depuis au moins %1$d jours ! Retour au traitement par pompe assistée par capteur (Arrêt par Glycémie Basse (AGB), Low Glucose Suspend (LGS) ) après 60 jours et la Boucle sera désactivée après 90 jours</string>
-    <string name="scale_insulin_activity">Courbe de l\'activité de l\'insuline [U/min]</string>
     <string name="twohours">2 h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">App Dexcom (patchée)</string>
@@ -1415,6 +1414,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Impossible d\'annuler le DBT (TBR) actuel. Arrêt de l\'opération.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Le nouveau profil a échoué car le taux basal suivant est trop élevé : %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Le Bolus n\'a pas pu être délivré.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Le Bolus n\'a pas pu être délivré, car la quantité d\'insuline disponible (%1$.2f) est inférieure à celle requise (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">DBT n\'a pas pu être défini.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Impossible d\'annuler le DBT actuel.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Le profil Basal n\'a pas pu être défini.</string>
