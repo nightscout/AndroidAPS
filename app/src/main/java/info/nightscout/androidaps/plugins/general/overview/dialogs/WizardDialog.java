@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,6 +20,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.squareup.otto.Subscribe;
 
@@ -254,6 +254,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             editCarbTime.setValue(savedInstanceState.getDouble("editCarbTime"));
             editCorr.setValue(savedInstanceState.getDouble("editCorr"));
         }
+        processCobCheckBox();
         return view;
     }
 
@@ -261,7 +262,21 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         saveCheckedStates();
         ttCheckbox.setEnabled(bgCheckbox.isChecked() && TreatmentsPlugin.getPlugin().getTempTargetFromHistory() != null);
+        if (buttonView.getId() == cobCheckbox.getId())
+            processCobCheckBox();
         calculateInsulin();
+    }
+
+    private void processCobCheckBox() {
+        if (cobCheckbox.isChecked()) {
+            bolusIobCheckbox.setEnabled(false);
+            basalIobCheckbox.setEnabled(false);
+            bolusIobCheckbox.setChecked(true);
+            basalIobCheckbox.setChecked(true);
+        } else {
+            bolusIobCheckbox.setEnabled(true);
+            basalIobCheckbox.setEnabled(true);
+        }
     }
 
     private void saveCheckedStates() {
