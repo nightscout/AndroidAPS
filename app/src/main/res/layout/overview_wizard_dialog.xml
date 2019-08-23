@@ -197,6 +197,18 @@
                 android:text="2.35U 28g"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
+            <TextView
+                android:id="@+id/treatments_wizard_percent_used"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/background_darkgray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="50%"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/iob" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -226,7 +238,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/mdtp_done_button" />
+        <include layout="@layout/okcancel" />
 
         <View
             android:layout_width="fill_parent"

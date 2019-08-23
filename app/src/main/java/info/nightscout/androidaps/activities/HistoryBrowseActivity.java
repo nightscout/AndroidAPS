@@ -194,7 +194,7 @@ public class HistoryBrowseActivity extends NoSplashActivity {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished e) {
-        if (e.cause == eventCustomCalculationFinished) {
+        if (e.getCause() == eventCustomCalculationFinished) {
             log.debug("EventAutosensCalculationFinished");
             runOnUiThread(() -> {
                 synchronized (HistoryBrowseActivity.this) {
