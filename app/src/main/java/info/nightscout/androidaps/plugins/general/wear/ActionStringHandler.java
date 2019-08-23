@@ -69,12 +69,6 @@ public class ActionStringHandler {
     private static String lastConfirmActionString = null;
     private static BolusWizard lastBolusWizard = null;
 
-    private static HandlerThread handlerThread = new HandlerThread(FillDialog.class.getSimpleName());
-
-    static {
-        handlerThread.start();
-    }
-
     public synchronized static void handleInitiate(String actionstring) {
 
         if (!SP.getBoolean("wearcontrol", false)) return;

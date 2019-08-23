@@ -12,9 +12,9 @@ import info.nightscout.androidaps.R;
 
 public enum BatteryType {
 
-    None(R.string.medtronic_pump_battery_no, 0, 0),
-    Alkaline(R.string.medtronic_pump_battery_alkaline, 1.20d, 1.47d), //
-    Lithium(R.string.medtronic_pump_battery_lithium, 1.22d, 1.64d);
+    None(R.string.key_medtronic_pump_battery_no, 0, 0),
+    Alkaline(R.string.key_medtronic_pump_battery_alkaline, 1.20d, 1.47d), //
+    Lithium(R.string.key_medtronic_pump_battery_lithium, 1.22d, 1.64d);
 
     private final String description;
     public double lowVoltage;

@@ -54,7 +54,7 @@ def generateGitBuild = { ->
 }
 
 def generateGitRemote = { ->
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder()
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -70,7 +70,7 @@ def generateGitRemote = { ->
 }
 
 def generateDate = { ->
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder()
     stringBuilder.append((new Date()).format('yyyy.MM.dd-HH:mm'))
     return stringBuilder.toString()
 }
@@ -80,7 +80,7 @@ def isMaster = { ->
 }
 
 def allCommited = { ->
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder()
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -90,7 +90,7 @@ def allCommited = { ->
         String commitObject = stdout.toString().trim()
         stringBuilder.append(commitObject)
     } catch (ignored) {
-        return false; // NoGitSystemAvailable
+        return false // NoGitSystemAvailable
     }
     return stringBuilder.toString().isEmpty()
 
@@ -109,7 +109,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.4-dev-a"
+        version "2.4-dev-b"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -225,7 +225,7 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-core:17.1.0'
     implementation("com.crashlytics.sdk.android:crashlytics:2.9.9@aar") {
         transitive = true;
     }

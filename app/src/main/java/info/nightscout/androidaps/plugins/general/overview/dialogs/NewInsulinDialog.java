@@ -75,8 +75,6 @@ public class NewInsulinDialog extends DialogFragment implements OnClickListener 
     private boolean okClicked;
 
     public NewInsulinDialog() {
-        HandlerThread mHandlerThread = new HandlerThread(NewInsulinDialog.class.getSimpleName());
-        mHandlerThread.start();
     }
 
     final private TextWatcher textWatcher = new TextWatcher() {

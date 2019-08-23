@@ -146,6 +146,7 @@
     <string name="openapsma_lastenact_label">Naposledy podané</string>
     <string name="ok">OK</string>
     <string name="cancel">Zrušiť</string>
+    <string name="close">Zatvoriť</string>
     <string name="noapsselected">NEVYBRANÉ ŽIADNE APS, ALEBO NEVRÁTILO VÝSLEDOK</string>
     <string name="safety">Bezpečnosť</string>
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
@@ -830,6 +831,7 @@
     <string name="insight_incompatible">Nekompatibilný</string>
     <string name="second">sekunda</string>
     <string name="minute">minút</string>
+    <string name="format_hours">%1$.2f h</string>
     <string name="hour">hodín</string>
     <string name="day">dní</string>
     <string name="week">týždňov</string>
@@ -1189,7 +1191,7 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatika</string>
     <string name="profile_total">== ∑  %1$s JI</string>
-    <string name="profile_ins_units_per_hout">JI/h</string>
+    <string name="profile_ins_units_per_hour">JI/h</string>
     <string name="profile_carbs_per_unit">g/JI</string>
     <string name="profile_per_unit">/JI</string>
     <string name="dexcom_lognssensorchange_title">Ulož výmenu senzora do NS</string>
@@ -1432,6 +1434,7 @@
     <string name="insulinFromCob"><![CDATA[Inzulín z COB: <font color=\'%1$s\'>%2$.1fg %3$.2fJI</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Aplikované obmedzenie bolusu: %2$.2fJI na %3$.2fJI</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d JI</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

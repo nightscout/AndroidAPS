@@ -111,6 +111,7 @@ class MedtronicFragment : Fragment() {
         updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         MainApp.bus().register(this)
@@ -142,6 +143,7 @@ class MedtronicFragment : Fragment() {
                 }, { FabricPrivacy.logException(it) })
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
@@ -249,7 +251,9 @@ class MedtronicFragment : Fragment() {
     }
 
     // GUI functions
+    @Synchronized
     fun updateGUI() {
+        if (medtronic_rl_status == null) return
         val plugin = MedtronicPumpPlugin.getPlugin()
         val pumpStatus = MedtronicUtil.getPumpStatus()
 

@@ -508,6 +508,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loopsuspended">Döngü durduldu</string>
     <string name="loopsuspendedfor">Askıya alındı (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
+    <string name="suspendloop">Döngüyü duraklat</string>
     <string name="suspendloopfor1h">Döngü 1s\'liğine askıya alındı</string>
     <string name="suspendloopfor2h">Döngü 2s\'liğine askıya alındı</string>
     <string name="suspendloopfor3h">Döngü 3s\'liğine askıya alındı</string>
@@ -1030,7 +1031,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_openmode_min_change">Minimum istek değişikliği [%]</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla bağlayın!</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">Ü/s</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="tomato">Tomato (MiaoMiao)</string>

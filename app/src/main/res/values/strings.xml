@@ -1440,8 +1440,6 @@
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
-    <string name="key_scale_insulin_activity" translatable="false">scale_insulin_activity</string>
-    <string name="scale_insulin_activity">Graph scale insulin activity [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
 
@@ -1496,15 +1494,22 @@
     <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
 
     <!-- MDT Configuration -->
-    <string name="pref_key_medtronic_serial" translatable="false">pref_medtronic_serial</string>
-    <string name="pref_key_medtronic_pump_type" translatable="false">pref_medtronic_pump_type</string>
-    <string name="pref_key_medtronic_frequency" translatable="false">pref_medtronic_frequency</string>
-    <string name="pref_key_medtronic_max_bolus" translatable="false">pref_medtronic_max_bolus</string>
-    <string name="pref_key_medtronic_max_basal" translatable="false">pref_medtronic_max_basal</string>
-    <string name="pref_key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
-    <string name="pref_key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
-    <string name="pref_key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
-    <string name="pref_key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_medtronic_serial" translatable="false">pref_medtronic_serial</string>
+    <string name="key_medtronic_pump_type" translatable="false">pref_medtronic_pump_type</string>
+    <string name="key_medtronic_frequency" translatable="false">pref_medtronic_frequency</string>
+    <string name="key_medtronic_max_bolus" translatable="false">pref_medtronic_max_bolus</string>
+    <string name="key_medtronic_max_basal" translatable="false">pref_medtronic_max_basal</string>
+    <string name="key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
+    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+    <string name="key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
+    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_medtronic_pump_frequency_us_ca" translatable="false">medtronic_pump_frequency_us_ca</string>
+    <string name="key_medtronic_pump_frequency_worldwide" translatable="false">medtronic_pump_frequency_worldwide</string>
+    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
+    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
+    <string name="key_medtronic_pump_battery_no" translatable="false">medtronic_pump_battery_no</string>
+    <string name="key_medtronic_pump_battery_alkaline" translatable="false">medtronic_pump_battery_alkaline</string>
+    <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
 
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
@@ -1637,6 +1642,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Could not cancel current TBR. Stopping operation.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profile set failed, because following patterns, have too big basal rate: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus could not be delivered.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus could not be delivered, because available insulin amount (%1$.2f) is less than bolus required (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR could not be set.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Could not cancel current TBR.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Basal profile could not be set.</string>

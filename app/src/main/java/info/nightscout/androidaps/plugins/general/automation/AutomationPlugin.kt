@@ -171,7 +171,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
         if (L.isEnabled(L.AUTOMATION))
             log.debug("processActions")
         for (event in automationEvents) {
-            if (event.trigger.shouldRun() && event.preconditions.shouldRun()) {
+            if (event.isEnabled() && event.trigger.shouldRun() && event.preconditions.shouldRun()) {
                 val actions = event.actions
                 for (action in actions) {
                     action.doAction(object : Callback() {

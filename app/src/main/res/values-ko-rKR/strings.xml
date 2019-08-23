@@ -1152,7 +1152,6 @@
     <string name="weekday_tuesday_short">화</string>
     <string name="weekday_monday_short">월</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="dexcom_lognssensorchange_title">센서 교체 NS에 기록하기</string>

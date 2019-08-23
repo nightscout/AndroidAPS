@@ -1189,7 +1189,6 @@
     <string name="automation_short">Автом</string>
     <string name="automation">Автоматизация</string>
     <string name="profile_total">Общо  %1$s Е</string>
-    <string name="profile_ins_units_per_hout">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
     <string name="profile_per_unit">/Е</string>
     <string name="dexcom_lognssensorchange_title">Записвай смяната на сензор в NS</string>

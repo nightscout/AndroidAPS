@@ -109,7 +109,7 @@ class NsClientReceiverDelegate {
 
         boolean newAllowedState = true;
 
-        if (!ev.isCharging && chargingOnly) {
+        if (!ev.isCharging() && chargingOnly) {
             newAllowedState = false;
         }
 

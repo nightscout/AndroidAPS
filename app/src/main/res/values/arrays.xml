@@ -176,6 +176,11 @@
         <item>@string/medtronic_pump_frequency_worldwide</item>
     </string-array>
 
+   <string-array name="medtronicPumpFreqValues">
+        <item>@string/key_medtronic_pump_frequency_us_ca</item>
+        <item>@string/key_medtronic_pump_frequency_worldwide</item>
+    </string-array>
+
     <string-array name="medtronicBolusDelay">
         <item>5</item>
         <item>10</item>
@@ -187,10 +192,21 @@
         <item>@string/medtronic_pump_encoding_4b6b_rileylink</item>
     </string-array>
 
+    <string-array name="medtronicEncodingValues">
+        <item>@string/key_medtronic_pump_encoding_4b6b_local</item>
+        <item>@string/key_medtronic_pump_encoding_4b6b_rileylink</item>
+    </string-array>
+
     <string-array name="medtronicBatteryType">
         <item>@string/medtronic_pump_battery_no</item>
         <item>@string/medtronic_pump_battery_alkaline</item>
         <item>@string/medtronic_pump_battery_lithium</item>
+    </string-array>
+
+    <string-array name="medtronicBatteryTypeValues">
+        <item>@string/key_medtronic_pump_battery_no</item>
+        <item>@string/key_medtronic_pump_battery_alkaline</item>
+        <item>@string/key_medtronic_pump_battery_lithium</item>
     </string-array>
 
 </resources>

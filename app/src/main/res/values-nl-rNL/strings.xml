@@ -146,6 +146,7 @@
     <string name="openapsma_lastenact_label">Laatste uitvoering</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuleer</string>
+    <string name="close">Sluiten</string>
     <string name="noapsselected">GEEN APS GESELECTEERD OF TOEGEKEND RESULTAAT</string>
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
@@ -831,6 +832,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="insight_incompatible">incompatibel</string>
     <string name="second">seconde</string>
     <string name="minute">minuut</string>
+    <string name="format_hours">%1$.2f u</string>
     <string name="hour">uur</string>
     <string name="day">dag</string>
     <string name="week">week</string>
@@ -1190,7 +1192,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="automation_short">Auto</string>
     <string name="automation">Automatisering</string>
     <string name="profile_total">== ∑  %1$s E</string>
-    <string name="profile_ins_units_per_hout">E/uur</string>
+    <string name="profile_ins_units_per_hour">E/u</string>
     <string name="profile_carbs_per_unit">g/E</string>
     <string name="profile_per_unit">/E</string>
     <string name="dexcom_lognssensorchange_title">Noteer sensor wissel in NS</string>
@@ -1433,6 +1435,7 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="insulinFromCob"><![CDATA[COB insuline: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus limiet bereikt: %2$.2fU naar %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening goed. COB kan sterk afwijken!!!</font> zijn]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d E</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dag</item>
