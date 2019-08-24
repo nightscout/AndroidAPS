@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,8 @@ public class AndroidPermission {
     public static final int CASE_BATTERY = 0x4;
     public static final int CASE_PHONE_STATE = 0x5;
 
+    private static boolean permission_battery_optimization_failed = false;
+
     @SuppressLint("BatteryLife")
     private static void askForPermission(Activity activity, String[] permission, Integer requestCode) {
         boolean test = false;
@@ -45,10 +48,15 @@ public class AndroidPermission {
             ActivityCompat.requestPermissions(activity, permission, requestCode);
         }
         if (testBattery) {
-            Intent i = new Intent();
-            i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            i.setData(Uri.parse("package:" + activity.getPackageName()));
-            activity.startActivityForResult(i, CASE_BATTERY);
+            try {
+                Intent i = new Intent();
+                i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                i.setData(Uri.parse("package:" + activity.getPackageName()));
+                activity.startActivityForResult(i, CASE_BATTERY);
+            } catch (ActivityNotFoundException e) {
+                permission_battery_optimization_failed = true;
+                OKDialog.show(activity, MainApp.gs(R.string.permission), MainApp.gs(R.string.alert_dialog_permission_battery_optimization_failed), activity::recreate);
+             }
         }
     }
 
@@ -60,9 +68,11 @@ public class AndroidPermission {
     public static boolean permissionNotGranted(Context context, String permission) {
         boolean selfCheck = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
         if (permission.equals(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            String packageName = context.getPackageName();
-            selfCheck = selfCheck && powerManager.isIgnoringBatteryOptimizations(packageName);
+            if (!permission_battery_optimization_failed) {
+                PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                String packageName = context.getPackageName();
+                selfCheck = selfCheck && powerManager.isIgnoringBatteryOptimizations(packageName);
+            }
         }
         return !selfCheck;
     }
