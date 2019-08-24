@@ -65,6 +65,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         context.unbindService(mConnection);
 
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
