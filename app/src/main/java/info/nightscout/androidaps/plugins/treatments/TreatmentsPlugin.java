@@ -295,14 +295,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
 
+    /**
+     * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
+     * map "Fill Canulla" entries to history (and not to add double bolus for it)
+     *
+     * @param fromTimestamp
+     * @return
+     */
     @Override
     public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
         List<Treatment> in5minback = new ArrayList<>();
         long time = System.currentTimeMillis();
         synchronized (treatments) {
             for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
                 if (t.date <= time && t.date >= fromTimestamp)
                     in5minback.add(t);
             }
