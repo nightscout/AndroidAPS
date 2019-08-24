@@ -86,6 +86,8 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, PersistentNotificationPlugin.getPlugin().updateNotification());
 
         if (L.isEnabled(L.LOCATION))
             log.debug("onCreate");
