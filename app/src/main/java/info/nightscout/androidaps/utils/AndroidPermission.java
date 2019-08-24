@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -32,6 +30,8 @@ public class AndroidPermission {
     public static final int CASE_BATTERY = 0x4;
     public static final int CASE_PHONE_STATE = 0x5;
 
+    private static boolean permission_battery_optimization_failed = false;
+
     @SuppressLint("BatteryLife")
     private static void askForPermission(Activity activity, String[] permission, Integer requestCode) {
         boolean test = false;
@@ -48,27 +48,15 @@ public class AndroidPermission {
             ActivityCompat.requestPermissions(activity, permission, requestCode);
         }
         if (testBattery) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                try {
-                    Intent i = new Intent();
-                    i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    i.setData(Uri.parse("package:" + activity.getPackageName()));
-                    activity.startActivityForResult(i, CASE_BATTERY);
-                } catch (ActivityNotFoundException e) {
-                    SP.putBoolean(R.string.key_permission_battery_optimization_failed, true);
-
-                    AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-                    alert.setMessage(R.string.alert_dialog_permission_battery_optimization_failed);
-                    alert.setPositiveButton(R.string.ok, null);
-                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            activity.recreate();
-                        }
-                    });
-                    alert.show();
-                }
-            }
+            try {
+                Intent i = new Intent();
+                i.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                i.setData(Uri.parse("package:" + activity.getPackageName()));
+                activity.startActivityForResult(i, CASE_BATTERY);
+            } catch (ActivityNotFoundException e) {
+                permission_battery_optimization_failed = true;
+                OKDialog.show(activity, MainApp.gs(R.string.permission), MainApp.gs(R.string.alert_dialog_permission_battery_optimization_failed), activity::recreate);
+             }
         }
     }
 
@@ -80,8 +68,7 @@ public class AndroidPermission {
     public static boolean permissionNotGranted(Context context, String permission) {
         boolean selfCheck = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
         if (permission.equals(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                    && !SP.getBoolean(R.string.key_permission_battery_optimization_failed, false)) {
+            if (!permission_battery_optimization_failed) {
                 PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 String packageName = context.getPackageName();
                 selfCheck = selfCheck && powerManager.isIgnoringBatteryOptimizations(packageName);
