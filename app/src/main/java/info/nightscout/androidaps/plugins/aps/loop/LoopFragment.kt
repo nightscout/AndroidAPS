@@ -15,18 +15,14 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.loop_fragment.*
 
 class LoopFragment : Fragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

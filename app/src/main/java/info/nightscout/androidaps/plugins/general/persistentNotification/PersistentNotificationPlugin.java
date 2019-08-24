@@ -113,6 +113,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     protected void onStop() {
         MainApp.bus().unregister(this);
         MainApp.instance().stopService(new Intent(MainApp.instance(), DummyService.class));
+        super.onStop();
     }
 
     private void triggerNotificationUpdate() {

@@ -16,16 +16,11 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.tidepool_fragment.*
 
 class TidepoolFragment : Fragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.tidepool_fragment, container, false)

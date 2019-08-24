@@ -12,19 +12,15 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDi
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.automation_fragment.*
 
 class AutomationFragment : Fragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var eventListAdapter: EventListAdapter? = null
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.automation_fragment, container, false)

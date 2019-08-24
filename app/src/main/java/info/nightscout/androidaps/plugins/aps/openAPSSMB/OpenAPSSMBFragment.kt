@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.aps.openAPSSMB
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -15,9 +16,9 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.openapsama_fragment.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -26,10 +27,6 @@ import org.slf4j.LoggerFactory
 class OpenAPSSMBFragment : Fragment() {
     private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -85,6 +82,7 @@ class OpenAPSSMBFragment : Fragment() {
                 openapsma_iobdata.text = TextUtils.concat(String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
                 log.error("Unhandled exception", e)
+                @SuppressLint("SetTextl18n")
                 openapsma_iobdata.text = "JSONException see log for details"
             }
 

@@ -128,6 +128,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     @Subscribe
