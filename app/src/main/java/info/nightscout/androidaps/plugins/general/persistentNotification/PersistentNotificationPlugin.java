@@ -89,10 +89,10 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
+        super.onStart();
         createNotificationChannel(); // make sure channels exist before triggering updates through the bus
         MainApp.bus().register(this);
-        triggerNotificationUpdate();
-        super.onStart();
+        triggerNotificationUpdate(true);
     }
 
     private void createNotificationChannel() {
@@ -114,21 +114,23 @@ public class PersistentNotificationPlugin extends PluginBase {
         super.onStop();
     }
 
-    private void triggerNotificationUpdate() {
+    private void triggerNotificationUpdate(boolean boot) {
+        updateNotification(boot);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             MainApp.instance().startForegroundService(new Intent(MainApp.instance(), DummyService.class));
         else
             MainApp.instance().startService(new Intent(MainApp.instance(), DummyService.class));
     }
 
-    @Nonnull
-    public Notification updateNotification() {
-        String line1 = null;
+    private void updateNotification(boolean boot) {
+        String line1;
         String line2 = null;
         String line3 = null;
         NotificationCompat.CarExtender.UnreadConversation.Builder unreadConversationBuilder = null;
 
-        if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ProfileFunctions.getInstance().isProfileValid("Notification")) {
+        if (boot) {
+            line1 = MainApp.gs(R.string.loading);
+        } else if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ProfileFunctions.getInstance().isProfileValid("Notification")) {
             String line1_aa;
             String units = ProfileFunctions.getInstance().getProfileUnits();
 
@@ -214,6 +216,8 @@ public class PersistentNotificationPlugin extends PluginBase {
             /// Add dot to produce a "more natural sounding result"
             unreadConversationBuilder.addMessage(line3_aa);
             /// End Android Auto
+        } else {
+            line1 = MainApp.gs(R.string.noprofileset);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MainApp.instance(), CHANNEL_ID);
@@ -223,9 +227,9 @@ public class PersistentNotificationPlugin extends PluginBase {
         builder.setSmallIcon(MainApp.getNotificationIcon());
         Bitmap largeIcon = BitmapFactory.decodeResource(MainApp.instance().getResources(), MainApp.getIcon());
         builder.setLargeIcon(largeIcon);
-        builder.setContentTitle(line1 != null ? line1 : MainApp.gs(R.string.noprofileset));
-        builder.setContentText(line2 != null ? line2 : MainApp.gs(R.string.noprofileset));
-        builder.setSubText(line3 != null ? line3 : MainApp.gs(R.string.noprofileset));
+        if (line1 != null) builder.setContentTitle(line1);
+        if (line2 != null) builder.setContentText(line2);
+        if (line3 != null) builder.setSubText(line3);
         /// Android Auto
         if (unreadConversationBuilder != null) {
             builder.extend(new NotificationCompat.CarExtender()
@@ -251,7 +255,6 @@ public class PersistentNotificationPlugin extends PluginBase {
         android.app.Notification notification = builder.build();
         mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
         this.notification = notification;
-        return notification;
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
@@ -278,48 +281,50 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     public Notification getLastNotification() {
         if (notification != null) return  notification;
-        else return new Notification();
+        else {
+            throw new IllegalStateException("Notification is null");
+        }
     }
 
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
-        triggerNotificationUpdate();
+        triggerNotificationUpdate(false);
     }
 
 }
