@@ -350,7 +350,7 @@ public class TimeListEdit {
             data1.put(index, newObject1);
             if (data2 != null) {
                 JSONObject newObject2 = new JSONObject();
-                newObject1.put("time", time);
+                newObject2.put("time", time);
                 newObject2.put("timeAsSeconds", timeAsSeconds);
                 newObject2.put("value", value2);
                 data2.put(index, newObject2);
