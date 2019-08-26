@@ -164,13 +164,13 @@ public class Profile {
             try {
                 final JSONObject o = array.getJSONObject(index);
                 long tas = 0;
-                try {
-                    tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
-                } catch (JSONException e) {
+//                try {
+//                    tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
+//                } catch (JSONException e) {
                     String time = o.getString("time");
                     tas = getShitfTimeSecs(DateUtil.toSeconds(time));
                     //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
-                }
+//                }
                 double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
             } catch (JSONException e) {
