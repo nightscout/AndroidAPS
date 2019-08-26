@@ -76,9 +76,9 @@ class DanaRFragment : Fragment() {
             DanaRPump.getInstance().lastConnection = 0
             ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked connect to pump", null)
         }
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         MainApp.bus().register(this)
@@ -87,8 +87,10 @@ class DanaRFragment : Fragment() {
                 .toObservable(EventDanaRNewStatus::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
@@ -97,12 +99,12 @@ class DanaRFragment : Fragment() {
     }
 
     @Subscribe
-    public fun onStatusEvent(c: EventPumpStatusChanged) {
+    fun onStatusEvent(c: EventPumpStatusChanged) {
         activity?.runOnUiThread {
             when {
-                c.sStatus == EventPumpStatusChanged.CONNECTING -> danar_btconnection.text = "{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s"
-                c.sStatus == EventPumpStatusChanged.CONNECTED -> danar_btconnection.text = "{fa-bluetooth}"
-                c.sStatus == EventPumpStatusChanged.DISCONNECTED -> danar_btconnection.text = "{fa-bluetooth-b}"
+                c.sStatus == EventPumpStatusChanged.CONNECTING -> danar_btconnection?.text = "{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s"
+                c.sStatus == EventPumpStatusChanged.CONNECTED -> danar_btconnection?.text = "{fa-bluetooth}"
+                c.sStatus == EventPumpStatusChanged.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
             }
             if (c.textStatus() != "") {
                 dana_pumpstatus.text = c.textStatus()
@@ -115,20 +117,22 @@ class DanaRFragment : Fragment() {
     }
 
     @Subscribe
-    public fun onStatusEvent(s: EventTempBasalChange) =
+    fun onStatusEvent(s: EventTempBasalChange) =
             activity?.runOnUiThread { updateGUI() }
 
 
     @Subscribe
-    public fun onStatusEvent(s: EventExtendedBolusChange) =
+    fun onStatusEvent(s: EventExtendedBolusChange) =
             activity?.runOnUiThread { updateGUI() }
 
     @Subscribe
-    public fun onStatusEvent(s: EventQueueChanged) =
+    fun onStatusEvent(s: EventQueueChanged) =
             activity?.runOnUiThread { updateGUI() }
 
     // GUI functions
+    @Synchronized
     internal fun updateGUI() {
+        if (danar_dailyunits == null) return
         val pump = DanaRPump.getInstance()
         val plugin: PumpInterface = ConfigBuilderPlugin.getPlugin().activePump ?: return
         if (pump.lastConnection != 0L) {

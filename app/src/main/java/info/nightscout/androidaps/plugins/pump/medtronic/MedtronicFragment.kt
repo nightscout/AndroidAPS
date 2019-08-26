@@ -99,8 +99,6 @@ class MedtronicFragment : Fragment() {
                 MedtronicUtil.displayNotConfiguredDialog(context)
             }
         }
-
-        updateGUI()
     }
 
     @Synchronized
@@ -133,6 +131,8 @@ class MedtronicFragment : Fragment() {
                     MedtronicUtil.getPumpStatus().verifyConfiguration()
                     updateGUI()
                 }, { FabricPrivacy.logException(it) })
+
+        updateGUI()
     }
 
     @Synchronized

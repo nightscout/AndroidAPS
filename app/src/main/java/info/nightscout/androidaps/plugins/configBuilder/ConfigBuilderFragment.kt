@@ -44,10 +44,9 @@ class ConfigBuilderFragment : Fragment() {
                 unlock.visibility = View.GONE
             }, null)
         }
-
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable.add(RxBus
@@ -58,13 +57,16 @@ class ConfigBuilderFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 }))
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
+    @Synchronized
     private fun updateGUI() {
         createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface::class.java, PluginType.PROFILE))
         createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface::class.java, PluginType.INSULIN))

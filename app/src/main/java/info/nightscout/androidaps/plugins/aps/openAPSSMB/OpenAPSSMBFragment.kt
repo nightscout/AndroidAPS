@@ -39,10 +39,9 @@ class OpenAPSSMBFragment : Fragment() {
         openapsma_run.setOnClickListener {
             OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSSMB button", false)
         }
-
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += RxBus
@@ -61,14 +60,19 @@ class OpenAPSSMBFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
+    @Synchronized
     fun updateGUI() {
+        if (openapsma_result == null) return
         val plugin = OpenAPSSMBPlugin.getPlugin()
         plugin.lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
@@ -101,7 +105,9 @@ class OpenAPSSMBFragment : Fragment() {
         }
     }
 
+    @Synchronized
     private fun updateResultGUI(text: String) {
+        if (openapsma_result == null) return
         openapsma_result.text = text
         openapsma_glucosestatus.text = ""
         openapsma_currenttemp.text = ""

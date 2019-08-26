@@ -44,19 +44,14 @@ class AutomationFragment : Fragment() {
 
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += RxBus
                 .toObservable(EventAutomationUpdateGui::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    eventListAdapter?.notifyDataSetChanged()
-                    val sb = StringBuilder()
-                    for (l in AutomationPlugin.executionLog) {
-                        sb.append(l)
-                        sb.append("\n")
-                    }
-                    automation_logView.text = sb.toString()
+                    updateGui()
                 }, {
                     FabricPrivacy.logException(it)
                 })
@@ -68,11 +63,25 @@ class AutomationFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+        updateGui()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
+    }
+
+    @Synchronized
+    private fun updateGui() {
+        if (eventListAdapter == null) return
+        eventListAdapter?.notifyDataSetChanged()
+        val sb = StringBuilder()
+        for (l in AutomationPlugin.executionLog) {
+            sb.append(l)
+            sb.append("\n")
+        }
+        automation_logView.text = sb.toString()
     }
 
 }

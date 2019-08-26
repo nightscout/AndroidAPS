@@ -34,6 +34,7 @@ class TidepoolFragment : Fragment() {
         tidepool_resertstart.setOnClickListener { SP.putLong(R.string.key_tidepool_last_end, 0) }
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable.add(RxBus
@@ -41,16 +42,17 @@ class TidepoolFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     TidepoolPlugin.updateLog()
-                    tidepool_log.text = TidepoolPlugin.textLog
-                    tidepool_status.text = TidepoolUploader.connectionStatus.name
-                    tidepool_log.text = TidepoolPlugin.textLog
-                    tidepool_logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
+                    tidepool_log?.text = TidepoolPlugin.textLog
+                    tidepool_status?.text = TidepoolUploader.connectionStatus.name
+                    tidepool_log?.text = TidepoolPlugin.textLog
+                    tidepool_logscrollview?.fullScroll(ScrollView.FOCUS_DOWN)
                 }, {
                     FabricPrivacy.logException(it)
                 })
         )
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()

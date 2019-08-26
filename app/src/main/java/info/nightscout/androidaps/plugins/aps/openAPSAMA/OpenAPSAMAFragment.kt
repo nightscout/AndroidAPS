@@ -38,10 +38,9 @@ class OpenAPSAMAFragment : Fragment() {
         openapsma_run.setOnClickListener {
             OpenAPSAMAPlugin.getPlugin().invoke("OpenAPSAMA button", false)
         }
-
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
 
@@ -61,14 +60,19 @@ class OpenAPSAMAFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
+    @Synchronized
     private fun updateGUI() {
+        if (openapsma_result == null) return
         OpenAPSAMAPlugin.getPlugin().lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
             openapsma_request.text = lastAPSResult.toSpanned()

@@ -36,10 +36,9 @@ class LoopFragment : Fragment() {
             loop_lastrun.text = MainApp.gs(R.string.executing)
             Thread { LoopPlugin.getPlugin().invoke("Loop button", true) }.start()
         }
-
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += RxBus
@@ -60,14 +59,19 @@ class LoopFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
+    @Synchronized
     fun updateGUI() {
+        if (loop_request == null) return
         LoopPlugin.lastRun?.let {
             loop_request.text = it.request?.toSpanned() ?: ""
             loop_constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
@@ -92,7 +96,9 @@ class LoopFragment : Fragment() {
         }
     }
 
+    @Synchronized
     private fun clearGUI() {
+        if (loop_request == null) return
         loop_request.text = ""
         loop_constraints.text = ""
         loop_constraintsprocessed.text = ""
