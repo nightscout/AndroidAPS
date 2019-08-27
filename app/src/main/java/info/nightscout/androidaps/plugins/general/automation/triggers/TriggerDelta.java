@@ -194,7 +194,7 @@ public class TriggerDelta extends Trigger {
         new LayoutBuilder()
                 .add(new StaticLabel(R.string.deltalabel))
                 .add(comparator)
-                .add(new LabelWithElement(MainApp.gs(R.string.deltalabel) + ": ", "", value))
+                .add(new LabelWithElement(MainApp.gs(R.string.deltalabel_u, getUnits()) + ": ", "", value))
                 .build(root);
     }
 

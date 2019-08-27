@@ -1463,6 +1463,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BG difference</string>
+    <string name="deltalabel_u">BG difference [%1$s]</string>
     <string name="currentlocation">Current Location</string>
     <string name="location">Location</string>
     <string name="latitude_short">Lat:</string>
