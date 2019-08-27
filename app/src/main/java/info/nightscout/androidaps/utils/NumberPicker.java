@@ -196,7 +196,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         callValueChangedListener();
         this.okButton = okButton;
 
-        editText.setKeyListener(DigitsKeyListener.getInstance(minValue < 0, step != Math.rint(step)));
+        editText.setKeyListener(DigitsKeyListenerWithComma.getInstance(minValue < 0, step != Math.rint(step)));
 
         if (textWatcher != null)
             editText.removeTextChangedListener(textWatcher);
