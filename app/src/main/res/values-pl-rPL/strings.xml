@@ -146,6 +146,7 @@
     <string name="openapsma_lastenact_label">Ostatnie działanie</string>
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
+    <string name="close">Zamknij</string>
     <string name="noapsselected">NIE WYBRANO APS LUB NIE UZYSKANO WYNIKU</string>
     <string name="safety">Zabezpieczenia</string>
     <string name="openapsma_disabled">Wtyczka jest wyłączona</string>
@@ -831,6 +832,7 @@
     <string name="insight_incompatible">Niekompatybilny</string>
     <string name="second">sekunda</string>
     <string name="minute">minuta</string>
+    <string name="format_hours">%1$.2f h</string>
     <string name="hour">godzina</string>
     <string name="day">dzień</string>
     <string name="week">tydzień</string>
@@ -1190,6 +1192,7 @@
     <string name="automation_short">Auto</string>
     <string name="automation">Automatyzacja</string>
     <string name="profile_total">== ∑ %1$s U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="dexcom_lognssensorchange_title">Prześlij zmianę sensora do NS</string>
@@ -1247,7 +1250,6 @@
     <string name="old_version">stara wersja</string>
     <string name="very_old_version">bardzo stara wersja</string>
     <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po 60 dniach, pętla zostanie wyłączona po 90 dniach</string>
-    <string name="scale_insulin_activity">Graficzny wykres aktywności insuliny [U/min]</string>
     <string name="twohours">2 h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Apka Dexcom (spatchowana)</string>
@@ -1412,6 +1414,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Nie udało się anulować aktualnej dawki tymczasowej (TBR). Operacja zatrzymania.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Ustawienia Profilu nie powiodły się ponieważ następująca wartość jest za duża: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Nie udało się dostarczyć bolusa.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus nie mógł być dostarczony ponieważ Ilość dostępnej insuliny (%1$.2f) jest mniejsza niż wymagany bolus (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Nie udało się ustawić dawki tymczasowej (TBR).</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Nie udało się anulować bazy tymczasowej (TBR).</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Profil bazy nie został ustawiony.</string>
@@ -1432,6 +1435,7 @@
     <string name="insulinFromCob"><![CDATA[Insulina COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Wprowadzono ograniczenie bolusa: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogą się znacznie różnić !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

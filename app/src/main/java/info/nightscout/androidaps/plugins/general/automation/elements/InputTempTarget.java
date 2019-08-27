@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.elements;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.LinearLayout;
 
 import java.text.DecimalFormat;
@@ -10,11 +8,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.utils.NumberPicker;
 
-public class InputBg extends Element {
-    static final int MMOL_MIN = 3;
-    static final int MMOL_MAX = 20;
-    static final int MGDL_MIN = 54;
-    static final int MGDL_MAX = 360;
+public class InputTempTarget extends Element {
 
     private String units = Constants.MGDL;
     private double value;
@@ -23,16 +17,16 @@ public class InputBg extends Element {
     private double step;
     private DecimalFormat decimalFormat;
 
-    public InputBg() {
+    public InputTempTarget() {
         super();
         setUnits(ProfileFunctions.getInstance().getProfileUnits());
         if (getUnits().equals(Constants.MMOL))
-            value = MMOL_MIN;
+            value = Constants.MIN_TT_MMOL;
         else
-            value = MGDL_MIN;
+            value = Constants.MIN_TT_MGDL;
     }
 
-    public InputBg(InputBg another) {
+    public InputTempTarget(InputTempTarget another) {
         super();
         value = another.getValue();
         setUnits(another.getUnits());
@@ -51,18 +45,18 @@ public class InputBg extends Element {
         return units;
     }
 
-    public InputBg setUnits(String units) {
+    public InputTempTarget setUnits(String units) {
         // set default initial value
         if (units.equals(Constants.MMOL)) {
             // mmol
-            minValue = MMOL_MIN;
-            maxValue = MMOL_MAX;
+            minValue = Constants.MIN_TT_MMOL;
+            maxValue = Constants.MAX_TT_MMOL;
             step = 0.1;
             decimalFormat = new DecimalFormat("0.0");
         } else {
             // mg/dL
-            minValue = MGDL_MIN;
-            maxValue = MGDL_MAX;
+            minValue = Constants.MIN_TT_MGDL;
+            maxValue = Constants.MAX_TT_MGDL;
             step = 1;
             decimalFormat = new DecimalFormat("0");
         }
@@ -71,7 +65,7 @@ public class InputBg extends Element {
         return this;
     }
 
-    public InputBg setValue(double value) {
+    public InputTempTarget setValue(double value) {
         this.value = value;
         return this;
     }

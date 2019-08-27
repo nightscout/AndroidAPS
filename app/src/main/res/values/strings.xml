@@ -38,6 +38,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth device</string>
     <string name="ns_sync_use_absolute_title">Always use basal absolute values</string>
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
 
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_careportal">Enter advanced log book entries.</string>
@@ -1462,6 +1463,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BG difference</string>
+    <string name="deltalabel_u">BG difference [%1$s]</string>
     <string name="currentlocation">Current Location</string>
     <string name="location">Location</string>
     <string name="latitude_short">Lat:</string>
@@ -1670,6 +1672,7 @@
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
+    <string name="loading">Loading ...</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

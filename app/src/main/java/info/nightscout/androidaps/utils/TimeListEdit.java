@@ -80,6 +80,7 @@ public class TimeListEdit {
 
     private void buildView() {
         layout = view.findViewById(resLayoutId);
+        layout.removeAllViewsInLayout();
 
         textlabel = new TextView(context);
         textlabel.setText(label);
@@ -235,8 +236,8 @@ public class TimeListEdit {
         if (i == 0) next = ONEHOURINSECONDS;
         fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
-        editText1.setParams(value1(i), min, max, step, formatter, false, view.findViewById(R.id.localprofile_save));
-        editText2.setParams(value2(i), min, max, step, formatter, false, view.findViewById(R.id.localprofile_save));
+        editText1.setParams(value1(i), min, max, step, formatter, false,null);
+        editText2.setParams(value2(i), min, max, step, formatter, false, null);
 
         if (data2 == null) {
             editText2.setVisibility(View.GONE);
@@ -350,7 +351,7 @@ public class TimeListEdit {
             data1.put(index, newObject1);
             if (data2 != null) {
                 JSONObject newObject2 = new JSONObject();
-                newObject1.put("time", time);
+                newObject2.put("time", time);
                 newObject2.put("timeAsSeconds", timeAsSeconds);
                 newObject2.put("value", value2);
                 data2.put(index, newObject2);

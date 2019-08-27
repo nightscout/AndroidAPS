@@ -263,17 +263,17 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 if (sensorRadioButton.isChecked()) meterRadioButton.setChecked(true);
             }
         };
-        editBg = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_bginput);
-        editTemptarget = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_temptarget);
+        editBg = view.findViewById(R.id.careportal_newnstreatment_bginput);
+        editTemptarget = view.findViewById(R.id.careportal_newnstreatment_temptarget);
         if (profile == null) {
-            editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok), bgTextWatcher);
-            editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
+            editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), bgTextWatcher);
+            editTemptarget.setParams(Constants.MIN_TT_MGDL, Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
         } else if (units.equals(Constants.MMOL)) {
             editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok), bgTextWatcher);
-            editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
+            editTemptarget.setParams(Constants.MIN_TT_MMOL, Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
         } else {
             editBg.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), bgTextWatcher);
-            editTemptarget.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
+            editTemptarget.setParams(Constants.MIN_TT_MGDL, Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
