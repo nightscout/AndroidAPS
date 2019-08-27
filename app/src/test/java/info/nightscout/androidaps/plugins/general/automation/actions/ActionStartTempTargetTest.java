@@ -16,8 +16,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.SP;
@@ -40,7 +40,7 @@ public class ActionStartTempTargetTest {
     public void shortDescriptionTest() {
         actionStartTempTarget = new ActionStartTempTarget();
         actionStartTempTarget.reason = "Test";
-        actionStartTempTarget.value = new InputBg().setValue(100).setUnits(Constants.MGDL);
+        actionStartTempTarget.value = new InputTempTarget().setValue(100).setUnits(Constants.MGDL);
         actionStartTempTarget.duration = new InputDuration(30, InputDuration.TimeUnit.MINUTES);
         Assert.assertEquals("Start temp target: 100mg/dl@null(Test)", actionStartTempTarget.shortDescription());
     }
@@ -70,7 +70,7 @@ public class ActionStartTempTargetTest {
     public void toJSONTest() {
         actionStartTempTarget = new ActionStartTempTarget();
         actionStartTempTarget.reason = "Test";
-        actionStartTempTarget.value = new InputBg().setValue(100).setUnits(Constants.MGDL);
+        actionStartTempTarget.value = new InputTempTarget().setValue(100).setUnits(Constants.MGDL);
         actionStartTempTarget.duration = new InputDuration(30, InputDuration.TimeUnit.MINUTES);
         Assert.assertEquals("{\"data\":{\"reason\":\"Test\",\"durationInMinutes\":30,\"units\":\"mg/dl\",\"value\":100},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget\"}", actionStartTempTarget.toJSON());
     }
