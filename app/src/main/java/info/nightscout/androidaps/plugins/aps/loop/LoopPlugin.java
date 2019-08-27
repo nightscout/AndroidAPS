@@ -155,7 +155,7 @@ public class LoopPlugin extends PluginBase {
      */
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (!(ev.cause instanceof EventNewBG)) {
+        if (!(ev.getCause() instanceof EventNewBG)) {
             // Autosens calculation not triggered by a new BG
             return;
         }
