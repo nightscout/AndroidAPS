@@ -183,7 +183,8 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         }
         setParams(initValue, minValue, maxValue, step, formater, allowZero, okButton);
         this.textWatcher = textWatcher;
-        editText.addTextChangedListener(textWatcher);
+        if (textWatcher != null)
+            editText.addTextChangedListener(textWatcher);
     }
 
     public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, Button okButton) {
