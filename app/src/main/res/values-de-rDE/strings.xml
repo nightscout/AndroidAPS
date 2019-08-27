@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">DanaR Blueetooth--Gerät</string>
     <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuale Basalwerte beim Upload zu NightScout.</string>
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_careportal">Gib erweiterte Tagebuch-Einträge ein.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
@@ -461,7 +462,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="treatments_shortname">BEH</string>
     <string name="careportal_shortname">CP</string>
     <string name="objectives_shortname">ZIEL</string>
-    <string name="wear_shortname">WEAR</string>
+    <string name="wear_shortname">UHR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Kurze Tab-Überschriften</string>
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
@@ -1174,7 +1175,7 @@ Unerwartetes Verhalten.</string>
     <string name="isequalorlesser">ist gleich oder kleiner als</string>
     <string name="isequal">ist gleich</string>
     <string name="isequalorgreater">ist gleich oder größer als</string>
-    <string name="isgreater">ist grösser als</string>
+    <string name="isgreater">ist größer als</string>
     <string name="isnotavailable">ist nicht verfügbar</string>
     <string name="unknown">unbekannt</string>
     <string name="glucoseisnotavailable">Glukosewert nicht verfügbar</string>
@@ -1185,12 +1186,12 @@ Unerwartetes Verhalten.</string>
     <string name="and">Und</string>
     <string name="or">Oder</string>
     <string name="xor">Entweder oder</string>
-    <string name="atspecifiedtime">Bei %1$s</string>
+    <string name="atspecifiedtime">Um %1$s</string>
     <string name="use_network_location">Netzwerkstandorts verwenden</string>
     <string name="use_gps_location">GPS-Position verwenden</string>
     <string name="use_passive_location">Passiven Standort verwenden</string>
     <string name="locationservice">Standortdienste</string>
-    <string name="automation_short">Automatisch</string>
+    <string name="automation_short">Auto</string>
     <string name="automation">Automatisierung</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="profile_ins_units_per_hour">IE/h</string>
@@ -1251,7 +1252,6 @@ Unerwartetes Verhalten.</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
     <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
-    <string name="scale_insulin_activity">Skala Insulinaktivität [IE/min.]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
@@ -1274,12 +1274,12 @@ Unerwartetes Verhalten.</string>
     <string name="deltalabel">BZ-Unterschied</string>
     <string name="currentlocation">Aktueller Standort</string>
     <string name="location">Standort</string>
-    <string name="latitude_short">Breitegrad:</string>
+    <string name="latitude_short">Breitengrad:</string>
     <string name="longitude_short">Längengrad:</string>
-    <string name="distance_short">Distanz [m]:</string>
+    <string name="distance_short">Umkreis [m]:</string>
     <string name="name_short">Name:</string>
     <string name="locationis">Standort: %1$s</string>
-    <string name="lastboluslabel">Letzter Bolus</string>
+    <string name="lastboluslabel">Letzter Bolus vor</string>
     <string name="lastboluscompared">Letzter Bolus vor %1$s %2$s Min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
@@ -1416,6 +1416,7 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Aktuelle TBR konnte nicht gestoppt werden. Funktion unterbrochen.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Einstellen des Profils fehlgeschlagen weil folgende Basal-Raten zu hoch sind: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus konnte nicht abgegeben werden.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Der Bolus konnte nicht abgegeben werden, da weniger Insulin zur Verfügung steht (%1$.2f) als für den Bolus benötigt wird (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR konnte nicht eingestellt werden.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Konnte die aktuelle TBR nicht abbrechen.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Basalprofil konnte nicht eingestellt werden.</string>
@@ -1437,6 +1438,7 @@ Unerwartetes Verhalten.</string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus-Einschränkung angewendet: %2$.2fU zu %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Langsamer Kohlyenhydrate-Abbau erkannt: %2$d%% der Zeit. Überprüfe deine Berechnung. COB könnte sehr falsch sein !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
+    <string name="loading">Lädt ...</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

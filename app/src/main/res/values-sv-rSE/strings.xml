@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">Dana R Bluetooth Pump</string>
     <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
     <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
     <string name="description_careportal">Mata in avancerade poster i loggboken</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
@@ -1250,7 +1251,6 @@ Eversense-appen.</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
     <string name="new_version_warning">Ny version tillgänglig sedan %1$d dagar! Systemet kommer att byta läge till \"stopp innan lågt\" efter 60 dagar och sluta loopa helt efter 90 dagar</string>
-    <string name="scale_insulin_activity">Skala för insulinaktivitet [U/min]</string>
     <string name="twohours">2 tim</string>
     <string name="formatinsulinunits">%1$.2f enheter</string>
     <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
@@ -1271,6 +1271,7 @@ Eversense-appen.</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Skillnad</string>
+    <string name="deltalabel_u">BG-skillnad [%1$s]</string>
     <string name="currentlocation">Nuvarande plats</string>
     <string name="location">Plats</string>
     <string name="latitude_short">Lat:</string>
@@ -1415,6 +1416,7 @@ Eversense-appen.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Kunde inte avbryta nuvarande temp basal. Avbryter kommandot.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Misslyckades med att sätta basalprofilen. Följande timmar har för högt värde angivet: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus misslyckades.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">En bolus om %2$.2f enheter kan inte levereras när reservoaren bara innehåller %1$.2f enheter.</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Temp basal kunde inte anges.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Kunde inte avbryta temp basal.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Kunde inte byta basalprofil.</string>
@@ -1436,6 +1438,7 @@ Eversense-appen.</string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolusbegränsning: %2$.2fU till %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="loading">Laddar...</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>
