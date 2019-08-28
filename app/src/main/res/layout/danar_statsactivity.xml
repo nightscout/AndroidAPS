@@ -8,7 +8,6 @@
     tools:context=".plugins.pump.danaR.activities.DanaRHistoryActivity">
 
     <LinearLayout
-        android:id="@+id/danar_statstop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -118,7 +117,6 @@
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/danar_stats_editTotalBaseBasal_label"
                             android:gravity="left"
                             android:layout_weight="1" />
 
@@ -144,7 +142,6 @@
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/danar_stats_editTotalBaseBasal2_label"
                             android:gravity="left"
                             android:layout_weight="1" />
 

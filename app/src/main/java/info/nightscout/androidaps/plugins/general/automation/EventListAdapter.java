@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,8 +21,10 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 
 class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder> {
@@ -51,6 +54,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final AutomationEvent event = mEventList.get(position);
         holder.eventTitle.setText(event.getTitle());
+        holder.enabled.setChecked(event.isEnabled());
         holder.iconLayout.removeAllViews();
 
         // trigger icons
@@ -76,6 +80,13 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
         for (int res : actionIcons) {
             addImage(res, holder.context, holder.iconLayout);
         }
+
+        // enabled event
+        holder.enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            event.setEnabled(isChecked);
+            notifyDataSetChanged();
+            RxBus.INSTANCE.send(new EventAutomationDataChanged());
+        });
 
         // remove event
         holder.iconTrash.setOnClickListener(v -> {
@@ -107,6 +118,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
         final TextView eventTitle;
         final Context context;
         final ImageView iconTrash;
+        final CheckBox enabled;
 
         ViewHolder(View view, Context context) {
             super(view);
@@ -115,6 +127,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
             rootLayout = view.findViewById(R.id.rootLayout);
             iconLayout = view.findViewById(R.id.iconLayout);
             iconTrash = view.findViewById(R.id.iconTrash);
+            enabled = view.findViewById(R.id.automation_enabled);
         }
     }
 }

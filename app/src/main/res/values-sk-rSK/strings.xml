@@ -1249,7 +1249,6 @@
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
     <string name="new_version_warning">Nová verzia dostupná najmenej %1$d dní! Návrat k liečbe inzulínovou pumpou s podporou senzora po 60 dňoch, okruh bude deaktivovaný po 90 dňoch.</string>
-    <string name="scale_insulin_activity">Mierka grafu aktivity inzulinu [JI/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fJI</string>
     <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
@@ -1414,6 +1413,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Nie je možné zastaviť aktuálny dočasný bazál. Ukončujem operáciu.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Nastavenie profilu zlyhalo, pretože následujúce hodnoty bazálu, sú príliš vysoké: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus nemohol byť podaný.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus nebolo možné podať, pretože dostupné množstvo inzulínu (%1$.2f) je menšie než požadovaný bolus (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Dočasný bazál nemohol byť nastavený.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Aktuálny dočasný bazál nemohol byť zrušený.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Bazálny profil nemohol byť nastavený.</string>

@@ -91,6 +91,7 @@ public class WearPlugin extends PluginBase {
     protected void onStop() {
         MainApp.bus().unregister(this);
         disposable.clear();
+        super.onStop();
     }
 
     private void sendDataToWatch(boolean status, boolean basals, boolean bgValue) {

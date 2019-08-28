@@ -15,8 +15,8 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists;
-import info.nightscout.androidaps.plugins.general.automation.elements.InputBg;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget;
@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionStartTempTarget extends Action {
     String reason = "";
-    InputBg value = new InputBg();
+    InputTempTarget value = new InputTempTarget();
     InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
     private TempTarget tempTarget;
 

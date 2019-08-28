@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">устройство блутус danaR</string>
     <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
     <string name="alert_dialog_storage_permission_text">Пожалуйста перезагрузите телефон или перезапустите AndroidAPS из системных настроек \иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_careportal">Введите дополнительные записи логов.</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
@@ -845,9 +846,9 @@
     <string name="enablesmbalways">Всегда включать супер микро болюс SMB</string>
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
-    <string name="enablesmbaftercarbs_summary">Включать супер микро болюс SMB на 6 часов после углеводов, даже при 0 активного инсулина COB. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
-    <string name="enablesmbwithcob">Включить супер микро болюс при активном инсулине COB</string>
-    <string name="enablesmbwithcob_summary">Включить супер микро болюс SMB, когда активен инсулин COB.</string>
+    <string name="enablesmbaftercarbs_summary">Включать супер микро болюс SMB на 6 часов после углеводов, даже при 0 активных углеводов COB. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
+    <string name="enablesmbwithcob">Включить супер микро болюс при активных углеводах COB</string>
+    <string name="enablesmbwithcob_summary">Включить супер микро болюс SMB, когда имеются активные углеводы COB.</string>
     <string name="enablesmbwithtemptarget">Включить супер микро болюс SMB с временными целями</string>
     <string name="enablesmbwithtemptarget_summary">Включить супер микро болюс SMB при активной временной цели (близкий прием пищи, нагрузка)</string>
     <string name="enablesmbwithhightemptarget">Включить супер микро болюс SMB с высокими значениями временных целей</string>
@@ -1251,7 +1252,6 @@ Context | Edit Context</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
-    <string name="scale_insulin_activity">Шкала активности инсулина [ед/мин]</string>
     <string name="twohours">2ч</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
     <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
@@ -1416,6 +1416,7 @@ Context | Edit Context</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Не удалось отменить текущий врем базал TBR. Остановка операции.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Не удалось установить профиль потому что следующие шаблоны имеют слишком большой базал %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Болюс не подан.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Болюс не подан т.к. доступное количество инсулина (%1$.2f) меньше, чем требуемый болюс (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Врем базал TBR не задан.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Не удалось отменить текущий врем базал TBR.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Профиль базала не установлен.</string>
@@ -1437,6 +1438,7 @@ Context | Edit Context</string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Применено ограничение на болюс: %2$.2fед до %3$.2fед</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f/%2$d ед</string>
+    <string name="loading">Загрузка...</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

@@ -123,6 +123,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         context.unbindService(mConnection);
 
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     @Override

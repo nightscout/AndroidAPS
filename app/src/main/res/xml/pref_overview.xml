@@ -143,6 +143,19 @@
 
         <PreferenceScreen android:title="@string/advancedsettings_title" android:key="@string/key_advancedsettings">
 
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="100"
+                android:dialogMessage="@string/deliverpartofboluswizard"
+                android:inputType="number"
+                android:key="@string/key_boluswizard_percentage"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/partialboluswizard"
+                validate:maxNumber="100"
+                validate:minNumber="10"
+                validate:testType="numericRange" />
+
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_usesuperbolus"

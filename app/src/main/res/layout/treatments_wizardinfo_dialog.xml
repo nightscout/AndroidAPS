@@ -117,7 +117,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/treatments_wizard_cob_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -174,7 +173,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bolusiob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -210,7 +208,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_basaliob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -314,7 +311,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_correction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
@@ -410,6 +406,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="86dp"
+                android:text="@string/percent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="94dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/treatments_wizard_percent_used"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="50dp"
+                android:gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:width="86dp"
                 android:text="@string/treatments_wizard_total_label"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
@@ -440,7 +471,7 @@
             android:paddingBottom="8dp">
 
             <Button
-                android:id="@+id/ok"
+                android:id="@+id/close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"

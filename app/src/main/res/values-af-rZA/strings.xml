@@ -1249,7 +1249,6 @@
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="new_version_warning">Nuwe weergawe reeds beskikbaar vir %1$d! Sal na 60 dae terugval na LGS, lus sal ongeldig gemaak word na 90 dae</string>
-    <string name="scale_insulin_activity">Grafiek skall insulien aktiwiteit [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
@@ -1414,6 +1413,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Kon nie TBR kanselleer. Operasie is gestaak.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profiel stel gefaal want die patroon het \'n te groot basale koers: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus kon nie gelewer word nie.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus kon nie gelewer word nie, want beskikbare insulin (%1$.2f) is mider as bolus versoek(%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR Kon nie stel.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Kon nie huidige TBR staak.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Basale profiel kon nie stel.</string>

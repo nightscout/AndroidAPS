@@ -1062,6 +1062,21 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
+    @Override
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
+                                               boolean enforceNew) {
+        if (percent==0) {
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+        } else {
+            double absoluteValue = profile.getBasal() * (percent /100.0d);
+            getMDTPumpStatus();
+            absoluteValue = pumpStatusLocal.pumpType.determineCorrectBasalSize(absoluteValue);
+            LOG.warn("setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (%d). This will start setTempBasalAbsolute, with calculated value (%.3f). Result might not be 100% correct.", percent, absoluteValue);
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+        }
+    }
+
+
     private void finishAction(String overviewKey) {
 
         if (overviewKey != null)

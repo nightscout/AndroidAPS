@@ -69,7 +69,6 @@
             android:title="@string/medtronic_pump_battery_select" />
 
         <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
-            android:id="@+id/rileylink_mac_address_mdt"
             android:enabled="true"
             android:summary=""
             android:title="RileyLink Configuration"
