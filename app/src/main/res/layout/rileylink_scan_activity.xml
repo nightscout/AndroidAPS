@@ -8,11 +8,9 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.gxwtech.roundtrip2.RileyLinkScan"
-        android:id="@+id/RileyLinkScan">
+        tools:context="com.gxwtech.roundtrip2.RileyLinkScan">
 
         <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/rileylink_appBarBTScan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="0dp">

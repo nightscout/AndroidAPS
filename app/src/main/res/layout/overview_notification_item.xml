@@ -12,35 +12,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/notification_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_weight="0.2"
+            android:text="@string/dismiss" />
+
+        <TextView
+            android:id="@+id/notification_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:text="Notification text" />
 
-            <TextView
-                android:text="Time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/notification_time"
-                android:layout_weight="0.1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/notification_text"
-                android:layout_weight="1"
-                android:text="Notification text" />
-
-            <Button
-                android:text="@string/dismiss"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:id="@+id/notification_dismiss"
-                android:layout_weight="0.2" />
-        </LinearLayout>
-
+        <TextView
+            android:id="@+id/notification_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="Time" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

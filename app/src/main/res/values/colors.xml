@@ -19,7 +19,6 @@
     <color name="high">#FFFF00</color>
     <color name="actionsConfirm">#FFFF00</color>
     <color name="listdelimiter">#505050</color>
-    <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
@@ -35,7 +34,6 @@
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
-    <color name="tempTargetDisabledBackground">#303F9F</color>
 
 
     <color name="colorPrimary">#212121</color>
@@ -48,7 +46,6 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
-    <color name="configBuilderSelectedBackground">#262525</color>
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>

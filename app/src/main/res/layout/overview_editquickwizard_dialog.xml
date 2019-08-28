@@ -127,7 +127,6 @@
                 android:entries="@array/quickWizardUseTrendArray" />
 
             <TextView
-                android:id="@+id/overview_editquickwizard_usesuperbolus_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usesuperbolus"

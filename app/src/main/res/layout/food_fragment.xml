@@ -16,7 +16,6 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/foodSearchImage"
                 android:layout_width="wrap_content"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
