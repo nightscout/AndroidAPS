@@ -107,10 +107,10 @@ class DanaRFragment : Fragment() {
                 c.sStatus == EventPumpStatusChanged.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
             }
             if (c.textStatus() != "") {
-                dana_pumpstatus.text = c.textStatus()
-                dana_pumpstatuslayout.visibility = View.VISIBLE
+                dana_pumpstatus?.text = c.textStatus()
+                dana_pumpstatuslayout?.visibility = View.VISIBLE
             } else {
-                dana_pumpstatuslayout.visibility = View.GONE
+                dana_pumpstatuslayout?.visibility = View.GONE
             }
         }
 
