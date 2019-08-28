@@ -1604,6 +1604,7 @@
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="loading">Loading ...</string>
+    <string name="snooze">Snooze</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
