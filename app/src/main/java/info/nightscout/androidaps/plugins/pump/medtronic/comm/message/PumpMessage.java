@@ -129,9 +129,10 @@ public class PumpMessage implements RLMessage {
         return arrayOut;
     }
 
+
     public byte[] getRawContentOfFrame() {
-        byte[] raw = getRawContent();
-        return ByteUtil.substring(raw, 0, raw.length - 1);
+        byte[] raw = messageBody.getTxData();
+        return ByteUtil.substring(raw, 1);
     }
 
 
