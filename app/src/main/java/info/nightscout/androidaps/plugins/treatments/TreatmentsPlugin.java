@@ -110,6 +110,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     protected void onStop() {
         MainApp.bus().register(this);
+        super.onStop();
     }
 
     public TreatmentService getService() {

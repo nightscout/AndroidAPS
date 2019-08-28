@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth zařízení</string>
     <string name="ns_sync_use_absolute_title">Vždy použít absolutní hodnoty bazálu</string>
     <string name="alert_dialog_storage_permission_text">Prosím restartujte Váš telefon nebo restartujte AndroidAPS z nastavení systému\njinak nebudou zaznamenány ladící informace (důležité pro sledování a kontrolu, zda algoritmus pracuje správně)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
     <string name="description_careportal">Zadávání událostí pro management diabetu.</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
@@ -1249,7 +1250,6 @@
     <string name="old_version">stará verze</string>
     <string name="very_old_version">velmi stará verze</string>
     <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po 60 dnech, vypnutí smyčky po 90 dnech</string>
-    <string name="scale_insulin_activity">Měřítko grafu aktivity inzulinu [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
@@ -1270,6 +1270,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Rozdíl glykémie</string>
+    <string name="deltalabel_u">Rozdíl glykémie [%1$s]</string>
     <string name="currentlocation">Současná poloha</string>
     <string name="location">Poloha</string>
     <string name="latitude_short">Zem. šířka:</string>
@@ -1414,6 +1415,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Nelze zastavit současný dočasný bazál. Ukončuji operaci.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Nastavení profilu selhalo, protože následující vzorec má příliš velké bazály: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus nemohl být odeslán.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus nebylo možné vydat, protože dostupné množství inzulinu (%1$.2f) je menší než požadovaný bolus (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Dočasný bazál nemohl být nastaven.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Současný dočasný bazál nemohl být zrušen.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Bazální profil nemohl být nastaven.</string>
@@ -1435,6 +1437,7 @@
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Aplikováno omezení bolusu: %2$.2fU na %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekována pomalá absorbce sacharidů: %2$d%% času. Překontrolujte kalkulaci. COB může být o hodně jinak !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="loading">Načítání…</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

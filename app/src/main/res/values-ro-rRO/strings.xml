@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">Dispozitive bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
     <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din System Settings \naltfel AndroidAPS nu va putea face loguri (importante pentru verificarea corectitudinii funcționării algoritmilor)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
     <string name="description_careportal">Accesaţi secţiunea de loguri avansate.</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
@@ -1249,7 +1250,6 @@
     <string name="old_version">versiune veche</string>
     <string name="very_old_version">versiune foarte veche</string>
     <string name="new_version_warning">Noua versiune este disponibilă de cel puțin %1$d zile! Revenire la LGS după 60 zile, bucla va fi dezactivată după 90 zile</string>
-    <string name="scale_insulin_activity">Scala graficului activității insulinei [U/min]</string>
     <string name="twohours">2o</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Aplicația Dexcom (modificată)</string>
@@ -1414,6 +1414,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Nu a putut fi anulată RBT curentă. Se oprește operațiunea de anulare.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Stabilirea profilului a eșuat deoarece, pe baza modelelor, aveți o rată bazală prea mare: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolusul nu a putut fi livrat.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolusul nu a putut fi livrat deoarece cantitatea de insulină din rezervor (%1$.2f) este mai mică decât cea necesară (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">RBT nu a putut fi setată.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Nu a putut fi anulată RBT curentă.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Profilul bazal nu a putut fi stabilit.</string>

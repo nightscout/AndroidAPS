@@ -14,16 +14,16 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, ProfileFunctions.class})
-public class InputBgTest {
+public class InputTempTargetTest {
 
     @Test
     public void getSetValueTest() {
-        InputBg i = new InputBg().setUnits(Constants.MMOL).setValue(5d);
+        InputTempTarget i = new InputTempTarget().setUnits(Constants.MMOL).setValue(5d);
         Assert.assertEquals(5d, i.getValue(), 0.01d);
-        Assert.assertEquals(InputBg.MMOL_MIN, i.minValue, 0.01d);
-        i = new InputBg().setValue(100d).setUnits(Constants.MGDL);
+        Assert.assertEquals(Constants.MIN_TT_MMOL, i.minValue, 0.01d);
+        i = new InputTempTarget().setValue(100d).setUnits(Constants.MGDL);
         Assert.assertEquals(100d, i.getValue(), 0.01d);
-        Assert.assertEquals(InputBg.MGDL_MIN, i.minValue, 0.01d);
+        Assert.assertEquals(Constants.MIN_TT_MGDL, i.minValue, 0.01d);
         Assert.assertEquals(Constants.MGDL, i.getUnits());
     }
 

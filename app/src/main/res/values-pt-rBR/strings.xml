@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="ns_sync_use_absolute_title">Sempre usar valores absolutos basais</string>
     <string name="alert_dialog_storage_permission_text">Por favor, reinicie seu telefone ou reinicie o AndroidAPS nas Configurações do Sistema \nCaso contrário o Android APS não terá registro (importante para rastrear e verificar que os algoritmos estão funcionando corretamente)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_careportal">Digite as entradas avançadas do livro de log.</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -1249,7 +1250,6 @@
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
-    <string name="scale_insulin_activity">Atividade de insulina em escala gráfica [U/min]</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">App Dexcom (com patch)</string>
@@ -1414,6 +1414,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Não foi possível cancelar a TBR atual. A parar a operação.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Falhou Definir Perfil devido aos seguintes padrões, tem uma taxa de basal muito grande: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">O bólus não pôde ser entregue.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bólus não foi entregue, porque o quantidade de insulina disponível (%1$.2f) é menor que o bólus necessário (%2$.2f).</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR não pode ser definida.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Não foi possível cancelar a TBR atual.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Perfil Basal não pôde ser definido.</string>
@@ -1435,6 +1436,7 @@
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB podem ser estar desajustados !!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="loading">A carregar ...</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

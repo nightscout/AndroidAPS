@@ -146,6 +146,7 @@
     <string name="openapsma_lastenact_label">Последно зададено</string>
     <string name="ok">ОК</string>
     <string name="cancel">Откажи</string>
+    <string name="close">Затвори</string>
     <string name="noapsselected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="safety">Сигурност</string>
     <string name="openapsma_disabled">Модула е изключен</string>
@@ -830,6 +831,7 @@
     <string name="insight_incompatible">Несъвместимо</string>
     <string name="second">секунда</string>
     <string name="minute">минута</string>
+    <string name="format_hours">%1$.2f ч</string>
     <string name="hour">час</string>
     <string name="day">ден</string>
     <string name="week">седмица</string>
@@ -1189,6 +1191,7 @@
     <string name="automation_short">Автом</string>
     <string name="automation">Автоматизация</string>
     <string name="profile_total">Общо  %1$s Е</string>
+    <string name="profile_ins_units_per_hour">Е/ч</string>
     <string name="profile_carbs_per_unit">гр/Е</string>
     <string name="profile_per_unit">/Е</string>
     <string name="dexcom_lognssensorchange_title">Записвай смяната на сензор в NS</string>
@@ -1246,7 +1249,6 @@
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
     <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Връщане към LGS след 60 дни, цикълът ще бъде изключен след 90 дни</string>
-    <string name="scale_insulin_activity">Графика на инсулиновата активност [Е/мин]</string>
     <string name="twohours">2ч</string>
     <string name="formatinsulinunits">%1$.2fЕ</string>
     <string name="dexcom_app_patched">Dexcom приложение (модифицирано)</string>
@@ -1411,6 +1413,7 @@
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Не може да бъде изключен вр. базал. Операцията е спряна.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Смяната на профила е невъзможна, поради твърде голям размер: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Болус не може да бъде стартиран.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Болусът не може да бъде стартиран понеже в резервоара има %1$.2f Е, а желаният болус е %2$.2f Е.</string>
     <string name="medtronic_cmd_tbr_could_not_be_delivered">Временен базал не може да бъде стартиран.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Не може да бъде изключен вр. базал.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Профилът не може да бъде приложен.</string>
@@ -1431,6 +1434,7 @@
     <string name="insulinFromCob"><![CDATA[Инсулин за въгл: <font color=\'%1$s\'>%2$.1fг %3$.2fЕ</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Ограничение на болуса: %2$.2fЕ на %3$.2fЕ</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може има голяма грешка !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d Е</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

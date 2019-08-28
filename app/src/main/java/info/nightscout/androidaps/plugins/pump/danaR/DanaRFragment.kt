@@ -27,23 +27,15 @@ import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog
 import info.nightscout.androidaps.queue.events.EventQueueChanged
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SetWarnColor
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.danar_fragment.*
 import org.slf4j.LoggerFactory
 
 class DanaRFragment : Fragment() {
     private val log = LoggerFactory.getLogger(L.PUMP)
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
@@ -84,9 +76,9 @@ class DanaRFragment : Fragment() {
             DanaRPump.getInstance().lastConnection = 0
             ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked connect to pump", null)
         }
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         MainApp.bus().register(this)
@@ -95,8 +87,10 @@ class DanaRFragment : Fragment() {
                 .toObservable(EventDanaRNewStatus::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
@@ -105,38 +99,40 @@ class DanaRFragment : Fragment() {
     }
 
     @Subscribe
-    public fun onStatusEvent(c: EventPumpStatusChanged) {
+    fun onStatusEvent(c: EventPumpStatusChanged) {
         activity?.runOnUiThread {
             when {
-                c.sStatus == EventPumpStatusChanged.CONNECTING -> danar_btconnection.text = "{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s"
-                c.sStatus == EventPumpStatusChanged.CONNECTED -> danar_btconnection.text = "{fa-bluetooth}"
-                c.sStatus == EventPumpStatusChanged.DISCONNECTED -> danar_btconnection.text = "{fa-bluetooth-b}"
+                c.sStatus == EventPumpStatusChanged.CONNECTING -> danar_btconnection?.text = "{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s"
+                c.sStatus == EventPumpStatusChanged.CONNECTED -> danar_btconnection?.text = "{fa-bluetooth}"
+                c.sStatus == EventPumpStatusChanged.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
             }
             if (c.textStatus() != "") {
-                dana_pumpstatus.text = c.textStatus()
-                dana_pumpstatuslayout.visibility = View.VISIBLE
+                dana_pumpstatus?.text = c.textStatus()
+                dana_pumpstatuslayout?.visibility = View.VISIBLE
             } else {
-                dana_pumpstatuslayout.visibility = View.GONE
+                dana_pumpstatuslayout?.visibility = View.GONE
             }
         }
 
     }
 
     @Subscribe
-    public fun onStatusEvent(s: EventTempBasalChange) =
+    fun onStatusEvent(s: EventTempBasalChange) =
             activity?.runOnUiThread { updateGUI() }
 
 
     @Subscribe
-    public fun onStatusEvent(s: EventExtendedBolusChange) =
+    fun onStatusEvent(s: EventExtendedBolusChange) =
             activity?.runOnUiThread { updateGUI() }
 
     @Subscribe
-    public fun onStatusEvent(s: EventQueueChanged) =
+    fun onStatusEvent(s: EventQueueChanged) =
             activity?.runOnUiThread { updateGUI() }
 
     // GUI functions
+    @Synchronized
     internal fun updateGUI() {
+        if (danar_dailyunits == null) return
         val pump = DanaRPump.getInstance()
         val plugin: PumpInterface = ConfigBuilderPlugin.getPlugin().activePump ?: return
         if (pump.lastConnection != 0L) {

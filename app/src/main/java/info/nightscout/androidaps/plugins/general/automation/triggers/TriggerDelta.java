@@ -33,15 +33,15 @@ import info.nightscout.androidaps.utils.T;
 
 public class TriggerDelta extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-    private double minValue = 0d;
-    private double maxValue = 1d;
-    private double step = 1;
-    private DecimalFormat decimalFormat = new DecimalFormat("1");
+
+    private final int MMOL_MAX = 4;
+    private final int MGDL_MAX = 72;
+
     private String units;
     private DeltaType deltaType;
 
-    private InputDelta value = new InputDelta( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat, deltaType);
-    private Comparator comparator = new Comparator();
+    private InputDelta value;
+    private Comparator comparator;
 
     public TriggerDelta() {
         super();
@@ -61,6 +61,16 @@ public class TriggerDelta extends Trigger {
         deltaType = value.getDeltaType();
         return value.getValue();
     }
+
+    private void initializer() {
+        this.deltaType = DeltaType.DELTA;
+        comparator = new Comparator();
+        if (units.equals(Constants.MMOL))
+            value = new InputDelta(0, -MMOL_MAX, MMOL_MAX, 0.1d, new DecimalFormat("0.1"), DeltaType.DELTA);
+        else
+            value = new InputDelta(0, -MGDL_MAX, MGDL_MAX, 0.1d, new DecimalFormat("1"), DeltaType.DELTA);
+    }
+
 
     public DeltaType getType() {
         return deltaType;
@@ -150,7 +160,7 @@ public class TriggerDelta extends Trigger {
 
     @Override
     public Optional<Integer> icon() {
-        return Optional.of(R.drawable.icon_auto_delta); 
+        return Optional.of(R.drawable.icon_auto_delta);
     }
 
     @Override
@@ -169,23 +179,6 @@ public class TriggerDelta extends Trigger {
         return this;
     }
 
-    void initializer(){
-        if (this.units.equals(Constants.MMOL)) {
-            this.maxValue = 4d;
-            this.minValue = -4d;
-            this.step = 0.1d;
-            this.decimalFormat = new DecimalFormat("0.1");
-            this.deltaType = DeltaType.DELTA;
-        } else {
-            this.maxValue = 72d;
-            this.minValue = -72d;
-            this.step = 1d;
-            this.deltaType = DeltaType.DELTA;
-        }
-        value = new InputDelta( (double) minValue,(double) minValue, (double) maxValue, step, decimalFormat, deltaType);
-    }
-
-
     TriggerDelta lastRun(long lastRun) {
         this.lastRun = lastRun;
         return this;
@@ -201,7 +194,7 @@ public class TriggerDelta extends Trigger {
         new LayoutBuilder()
                 .add(new StaticLabel(R.string.deltalabel))
                 .add(comparator)
-                .add(new LabelWithElement(MainApp.gs(R.string.deltalabel) + ": ", "", value))
+                .add(new LabelWithElement(MainApp.gs(R.string.deltalabel_u, getUnits()) + ": ", "", value))
                 .build(root);
     }
 

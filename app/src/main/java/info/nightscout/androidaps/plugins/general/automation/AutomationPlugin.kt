@@ -21,12 +21,8 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.services.LocationService
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.*
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
@@ -58,10 +54,6 @@ object AutomationPlugin : PluginBase(PluginDescription()
             processActions()
             loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         }
-    }
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
     }
 
     override fun onStart() {
@@ -131,6 +123,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
         loopHandler.removeCallbacks(refreshLoop)
         val context = MainApp.instance().applicationContext
         context.stopService(Intent(context, LocationService::class.java))
+        super.onStop()
     }
 
     private fun storeToSP() {

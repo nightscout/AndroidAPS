@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
-import android.text.Html
 import android.text.Spanned
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -23,7 +22,6 @@ import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.utils.*
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -42,10 +40,6 @@ object TidepoolPlugin : PluginBase(PluginDescription()
 
     private val listLog = ArrayList<EventTidepoolStatus>()
     var textLog: Spanned = HtmlHelper.fromHtml("")
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onStart() {
         super.onStart()

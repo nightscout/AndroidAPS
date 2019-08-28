@@ -1250,7 +1250,6 @@ Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sport
     <string name="old_version">oude versie</string>
     <string name="very_old_version">zeer oude versie</string>
     <string name="new_version_warning">Er is als sinds ten minste %1$d dagen een nieuwe versie beschikbaar! Na 60 dagen wordt de loop beperkt tot LGS, na 90 dagen zal de loop worden uitgeschakeld</string>
-    <string name="scale_insulin_activity">Schaal voor insuline activiteit in grafieken [E/min]</string>
     <string name="twohours">2u</string>
     <string name="formatinsulinunits">%1$.2fE</string>
     <string name="dexcom_app_patched">Dexcom App (patched)</string>

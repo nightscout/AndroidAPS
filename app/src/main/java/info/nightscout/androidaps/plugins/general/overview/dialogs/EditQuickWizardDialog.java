@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -59,17 +60,17 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         View view = inflater.inflate(R.layout.overview_editquickwizard_dialog, container, false);
-        buttonEdit = (EditText) view.findViewById(R.id.overview_editquickwizard_button_edit);
-        carbsEdit = (EditText) view.findViewById(R.id.overview_editquickwizard_carbs_edit);
-        fromSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_from_spinner);
-        toSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_to_spinner);
-        useBGSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usebg_spinner);
-        useCOBSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usecob_spinner);
-        useBolusIOBSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usebolusiob_spinner);
-        useBasalIOBSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usebasaliob_spinner);
-        useTrendSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usetrend_spinner);
-        useSuperBolusSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usesuperbolus_spinner);
-        useTempTargetSpinner = (Spinner) view.findViewById(R.id.overview_editquickwizard_usetemptarget_spinner);
+        buttonEdit = view.findViewById(R.id.overview_editquickwizard_button_edit);
+        carbsEdit = view.findViewById(R.id.overview_editquickwizard_carbs_edit);
+        fromSpinner = view.findViewById(R.id.overview_editquickwizard_from_spinner);
+        toSpinner = view.findViewById(R.id.overview_editquickwizard_to_spinner);
+        useBGSpinner = view.findViewById(R.id.overview_editquickwizard_usebg_spinner);
+        useCOBSpinner = view.findViewById(R.id.overview_editquickwizard_usecob_spinner);
+        useBolusIOBSpinner = view.findViewById(R.id.overview_editquickwizard_usebolusiob_spinner);
+        useBasalIOBSpinner = view.findViewById(R.id.overview_editquickwizard_usebasaliob_spinner);
+        useTrendSpinner = view.findViewById(R.id.overview_editquickwizard_usetrend_spinner);
+        useSuperBolusSpinner = view.findViewById(R.id.overview_editquickwizard_usesuperbolus_spinner);
+        useTempTargetSpinner = view.findViewById(R.id.overview_editquickwizard_usetemptarget_spinner);
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
@@ -103,6 +104,19 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
         setSelection(useTrendSpinner, entry.useTrend());
         setSelection(useSuperBolusSpinner, entry.useSuperBolus());
         setSelection(useTempTargetSpinner, entry.useTempTarget());
+
+        useCOBSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                processCob();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        processCob();
 
         return view;
     }
@@ -144,6 +158,18 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
             case R.id.cancel:
                 dismiss();
                 break;
+        }
+    }
+
+    private void processCob() {
+        if (getSelection(useCOBSpinner) == QuickWizardEntry.YES) {
+            useBolusIOBSpinner.setEnabled(false);
+            useBasalIOBSpinner.setEnabled(false);
+            setSelection(useBolusIOBSpinner, QuickWizardEntry.YES);
+            setSelection(useBasalIOBSpinner, QuickWizardEntry.YES);
+        } else {
+            useBolusIOBSpinner.setEnabled(true);
+            useBasalIOBSpinner.setEnabled(true);
         }
     }
 

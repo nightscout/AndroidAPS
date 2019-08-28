@@ -114,7 +114,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/treatments_wizard_carbtime_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -148,7 +147,6 @@
 
 
         <LinearLayout
-            android:id="@+id/treatments_wizard_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -197,6 +195,18 @@
                 android:text="2.35U 28g"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
+            <TextView
+                android:id="@+id/treatments_wizard_percent_used"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/background_darkgray"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="50%"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/iob" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -226,7 +236,7 @@
 
         </LinearLayout>
 
-        <include layout="@layout/mdtp_done_button" />
+        <include layout="@layout/okcancel" />
 
         <View
             android:layout_width="fill_parent"
@@ -323,7 +333,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/treatments_wizard_cob_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -380,7 +389,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bolusiob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -416,7 +424,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_basaliob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -518,7 +525,6 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_correction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"

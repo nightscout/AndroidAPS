@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.aps.openAPSSMB
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -15,9 +16,9 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.openapsama_fragment.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -26,10 +27,6 @@ import org.slf4j.LoggerFactory
 class OpenAPSSMBFragment : Fragment() {
     private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,10 +39,9 @@ class OpenAPSSMBFragment : Fragment() {
         openapsma_run.setOnClickListener {
             OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSSMB button", false)
         }
-
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         disposable += RxBus
@@ -64,14 +60,19 @@ class OpenAPSSMBFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
+    @Synchronized
     fun updateGUI() {
+        if (openapsma_result == null) return
         val plugin = OpenAPSSMBPlugin.getPlugin()
         plugin.lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
@@ -85,6 +86,7 @@ class OpenAPSSMBFragment : Fragment() {
                 openapsma_iobdata.text = TextUtils.concat(String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
                 log.error("Unhandled exception", e)
+                @SuppressLint("SetTextl18n")
                 openapsma_iobdata.text = "JSONException see log for details"
             }
 
@@ -103,7 +105,9 @@ class OpenAPSSMBFragment : Fragment() {
         }
     }
 
+    @Synchronized
     private fun updateResultGUI(text: String) {
+        if (openapsma_result == null) return
         openapsma_result.text = text
         openapsma_glucosestatus.text = ""
         openapsma_currenttemp.text = ""

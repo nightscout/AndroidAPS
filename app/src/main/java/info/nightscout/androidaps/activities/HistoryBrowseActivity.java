@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
 public class HistoryBrowseActivity extends NoSplashActivity {
@@ -194,7 +195,7 @@ public class HistoryBrowseActivity extends NoSplashActivity {
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished e) {
-        if (e.cause == eventCustomCalculationFinished) {
+        if (e.getCause() == eventCustomCalculationFinished) {
             log.debug("EventAutosensCalculationFinished");
             runOnUiThread(() -> {
                 synchronized (HistoryBrowseActivity.this) {
@@ -236,6 +237,15 @@ public class HistoryBrowseActivity extends NoSplashActivity {
         buttonZoom.setText(String.valueOf(rangeToDisplay));
 
         final boolean showPrediction = false;
+
+        showBasal = SP.getBoolean("hist_showbasals", true);
+        showIob = SP.getBoolean("hist_showiob", true);
+        showCob = SP.getBoolean("hist_showcob", true);
+        showDev = SP.getBoolean("hist_showdeviations", false);
+        showRat = SP.getBoolean("hist_showratios", false);
+        showActPrim = SP.getBoolean("hist_showactivityprimary", false);
+        showActSec = SP.getBoolean("hist_showactivitysecondary", false);
+        showDevslope = SP.getBoolean("hist_showdevslope", false);
 
         int hoursToFetch;
         final long toTime;
@@ -442,21 +452,21 @@ public class HistoryBrowseActivity extends NoSplashActivity {
 
             popup.setOnMenuItemClickListener(item1 -> {
                 if (item1.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
-                    showBasal = !item1.isChecked();
+                    SP.putBoolean("hist_showbasals", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
-                    showIob = !item1.isChecked();
+                    SP.putBoolean("hist_showiob", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
-                    showCob = !item1.isChecked();
+                    SP.putBoolean("hist_showcob", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
-                    showDev = !item1.isChecked();
+                    SP.putBoolean("hist_showdeviations", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
-                    showRat = !item1.isChecked();
+                    SP.putBoolean("hist_showratios", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTPRIM.ordinal()) {
-                    showActPrim = !item1.isChecked();
+                    SP.putBoolean("hist_showactivityprimary", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTSEC.ordinal()) {
-                    showActSec = !item1.isChecked();
+                    SP.putBoolean("hist_showactivitysecondary", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
-                    showDevslope = !item1.isChecked();
+                    SP.putBoolean("hist_showdevslope", !item1.isChecked());
                 }
                 updateGUI("onGraphCheckboxesCheckedChanged");
                 return true;
