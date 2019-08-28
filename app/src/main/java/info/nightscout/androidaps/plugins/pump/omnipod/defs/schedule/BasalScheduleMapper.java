@@ -8,6 +8,7 @@ import java.util.List;
 import info.nightscout.androidaps.data.Profile;
 
 public class BasalScheduleMapper {
+    // TODO add tests
     public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
         Profile.ProfileValue[] basalValues = profile.getBasalValues();
         List<BasalScheduleEntry> entries = new ArrayList<>();

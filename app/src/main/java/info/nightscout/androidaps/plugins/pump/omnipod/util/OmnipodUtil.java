@@ -25,8 +25,8 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
@@ -46,7 +46,7 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static RileyLinkOmnipodService omnipodService;
     private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
-    private static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static Gson gsonInstance = createGson();
     private static PodSessionState podSessionState;
     private static PodDeviceState podDeviceState;
     private static OmnipodPumpPlugin omnipodPumpPlugin;
@@ -99,11 +99,9 @@ public class OmnipodUtil extends RileyLinkUtil {
         OmnipodUtil.lowLevelDebug = lowLevelDebug;
     }
 
-
-    public static OmnipodCommunicationManager getOmnipodCommunicationManager() {
-        return (OmnipodCommunicationManager) RileyLinkUtil.rileyLinkCommunicationManager;
+    public static OmnipodCommunicationManagerInterface getOmnipodCommunicationManager() {
+        return (OmnipodCommunicationManagerInterface) RileyLinkUtil.rileyLinkCommunicationManager;
     }
-
 
     public static RileyLinkOmnipodService getOmnipodService() {
         return OmnipodUtil.omnipodService;

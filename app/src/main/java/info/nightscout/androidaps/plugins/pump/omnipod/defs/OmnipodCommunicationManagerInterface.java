@@ -9,9 +9,14 @@ public interface OmnipodCommunicationManagerInterface {
     // TODO add methods that can be used by OmniPod Eros and Omnipod Dash
 
     /**
-     * Initialize Pod
+     * Pair and prime
      */
-    PodCommResponse initPod();
+    PodCommResponse pairAndPrime();
+
+    /**
+     * Insert cannula
+     */
+    PodCommResponse insertCannula(Profile basalProfile);
 
     /**
      * Get Pod Status (is pod running, battery left ?, reservoir, etc)
@@ -26,19 +31,19 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Set Basal Profile
      */
-    PodCommResponse setBasalProfile(Profile profile);
+    PodCommResponse setBasalProfile(Profile basalProfile);
 
     /**
-     * Reset Pod status (if we forget to disconnect Pod and want to init new pod, and want to forget current pod)
+     * Reset Pod state (if we forget to disconnect Pod and want to init new pod, and want to forget current pod)
      */
-    PodCommResponse resetPodStatus();
+    PodCommResponse resetPodState();
 
     /**
      * Set Bolus
      *
      * @param amount amount of bolus in U
      */
-    PodCommResponse setBolus(Double amount);
+    PodCommResponse bolus(Double amount);
 
     /**
      * Cancel Bolus (if bolus is already stopped, return acknowledgment)
@@ -48,9 +53,9 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Set Temporary Basal
      *
-     * @param tbr TempBasalPair object containg amount and duration in minutes
+     * @param tempBasalPair TempBasalPair object containg amount and duration in minutes
      */
-    PodCommResponse setTemporaryBasal(TempBasalPair tbr);
+    PodCommResponse setTemporaryBasal(TempBasalPair tempBasalPair);
 
     /**
      * Cancel Temporary Basal (if TB is already stopped, return acknowledgment)

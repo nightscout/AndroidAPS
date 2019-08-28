@@ -35,8 +35,6 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
 
     private PodSessionState getPodSessionState() {
-
-
         return null;
     }
 
@@ -63,44 +61,55 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
 
     // This are just skeleton methods, we need to see what we can get returned and act accordingly
-
-    public PodCommResponse initPod() {
+    @Override
+    public PodCommResponse pairAndPrime() {
         //omnipodManager.pairAndPrime();
 
 
         return null;
     }
 
+    @Override
+    public PodCommResponse insertCannula(Profile basalProfile) {
+        return null;
+    }
 
+    @Override
     public PodCommResponse getPodStatus() {
         return null;
     }
 
-
+    @Override
     public PodCommResponse deactivatePod() {
         return null;
     }
 
-    public PodCommResponse setBasalProfile(Profile profile) {
+    @Override
+    public PodCommResponse setBasalProfile(Profile basalProfile) {
         return null;
     }
 
-    public PodCommResponse resetPodStatus() {
+    @Override
+    public PodCommResponse resetPodState() {
         return null;
     }
 
-    public PodCommResponse setBolus(Double parameter) {
+    @Override
+    public PodCommResponse bolus(Double parameter) {
         return null;
     }
 
+    @Override
     public PodCommResponse cancelBolus() {
         return null;
     }
 
-    public PodCommResponse setTemporaryBasal(TempBasalPair tbr) {
+    @Override
+    public PodCommResponse setTemporaryBasal(TempBasalPair tempBasalPair) {
         return null;
     }
 
+    @Override
     public PodCommResponse cancelTemporaryBasal() {
         return null;
     }
@@ -109,5 +118,4 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     public PodCommResponse acknowledgeAlerts() {
         return null;
     }
-
 }

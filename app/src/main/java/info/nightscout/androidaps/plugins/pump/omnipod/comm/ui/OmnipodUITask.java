@@ -55,7 +55,7 @@ public class OmnipodUITask {
 //            break;
 
             case InitPod:
-                returnData = communicationManager.initPod();
+                returnData = communicationManager.pairAndPrime();
                 break;
 
             case DeactivatePod:
@@ -63,7 +63,7 @@ public class OmnipodUITask {
                 break;
 
             case ResetPodStatus:
-                returnData = communicationManager.resetPodStatus();
+                returnData = communicationManager.resetPodState();
                 break;
 
             case SetBasalProfile:
@@ -74,7 +74,7 @@ public class OmnipodUITask {
                 Double amount = getDoubleFromParameters(0);
 
                 if (amount != null)
-                    returnData = communicationManager.setBolus(amount);
+                    returnData = communicationManager.bolus(amount);
             }
             break;
 

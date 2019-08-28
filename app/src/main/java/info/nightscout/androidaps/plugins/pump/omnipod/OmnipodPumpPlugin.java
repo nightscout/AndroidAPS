@@ -43,7 +43,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
@@ -105,7 +104,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         displayConnectionMessages = false;
 
         if (omnipodCommunicationManager == null) {
-            omnipodCommunicationManager = OmnipodCommunicationManager.getInstance();
+            omnipodCommunicationManager = OmnipodManager.getInstance();
         }
 
         omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);
