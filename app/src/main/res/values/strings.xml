@@ -55,7 +55,7 @@
     <string name="description_smb">Most recent algorithm for advanced users</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
-    <string name="description_profile_local">Define a profile which is offline available.</string>
+    <string name="description_profile_local">Define a profile which is available offline.</string>
     <string name="description_profile_nightscout">Provides the profile you have defined in Nightscout</string>
     <string name="description_profile_simple">Define a profile with only one time block.</string>
     <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed</string>
