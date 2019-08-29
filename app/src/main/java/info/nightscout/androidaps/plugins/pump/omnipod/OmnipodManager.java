@@ -80,7 +80,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -106,7 +106,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -123,7 +123,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -142,7 +142,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -161,7 +161,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -180,7 +180,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -205,7 +205,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -224,7 +224,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -241,7 +241,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -258,7 +258,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -275,7 +275,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -292,7 +292,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -310,7 +310,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -336,7 +336,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
         return new PumpEnactResult().success(true).enacted(true);
