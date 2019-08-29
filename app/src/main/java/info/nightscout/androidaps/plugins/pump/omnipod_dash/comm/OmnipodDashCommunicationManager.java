@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -62,7 +62,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
     // This are just skeleton methods, we need to see what we can get returned and act accordingly
     @Override
-    public PodCommResponse pairAndPrime() {
+    public PumpEnactResult pairAndPrime() {
         //omnipodManager.pairAndPrime();
 
 
@@ -70,52 +70,52 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
     @Override
-    public PodCommResponse insertCannula(Profile basalProfile) {
+    public PumpEnactResult insertCannula(Profile basalProfile) {
         return null;
     }
 
     @Override
-    public PodCommResponse getPodStatus() {
+    public PumpEnactResult getPodStatus() {
         return null;
     }
 
     @Override
-    public PodCommResponse deactivatePod() {
+    public PumpEnactResult deactivatePod() {
         return null;
     }
 
     @Override
-    public PodCommResponse setBasalProfile(Profile basalProfile) {
+    public PumpEnactResult setBasalProfile(Profile basalProfile) {
         return null;
     }
 
     @Override
-    public PodCommResponse resetPodState() {
+    public PumpEnactResult resetPodState() {
         return null;
     }
 
     @Override
-    public PodCommResponse bolus(Double parameter) {
+    public PumpEnactResult bolus(Double parameter) {
         return null;
     }
 
     @Override
-    public PodCommResponse cancelBolus() {
+    public PumpEnactResult cancelBolus() {
         return null;
     }
 
     @Override
-    public PodCommResponse setTemporaryBasal(TempBasalPair tempBasalPair) {
+    public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         return null;
     }
 
     @Override
-    public PodCommResponse cancelTemporaryBasal() {
+    public PumpEnactResult cancelTemporaryBasal() {
         return null;
     }
 
     @Override
-    public PodCommResponse acknowledgeAlerts() {
+    public PumpEnactResult acknowledgeAlerts() {
         return null;
     }
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
@@ -28,7 +29,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.Inser
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PairService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTempBasalService;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfo;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
@@ -60,12 +60,8 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         instance = this;
     }
 
-    public OmnipodManager(OmnipodCommunicationService communicationService) {
-        this(communicationService, null);
-    }
-
     @Override
-    public PodCommResponse insertCannula(Profile profile) {
+    public PumpEnactResult insertCannula(Profile profile) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             throw new IllegalArgumentException("Pod should be paired and primed first");
         } else if (podState.getSetupProgress().isAfter(SetupProgress.CANNULA_INSERTING)) {
@@ -84,7 +80,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse pairAndPrime() {
+    public PumpEnactResult pairAndPrime() {
         if (podState == null) {
             podState = communicationService.executeAction(new PairAction(new PairService()));
         }
@@ -103,7 +99,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse cancelBolus() {
+    public PumpEnactResult cancelBolus() {
         if (!isInitialized()) {
             throw new IllegalStateException("Pod should be initialized first");
         }
@@ -113,7 +109,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse getPodStatus() {
+    public PumpEnactResult getPodStatus() {
         if (podState == null) {
             throw new IllegalStateException("Pod should be paired first");
         }
@@ -123,7 +119,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse deactivatePod() {
+    public PumpEnactResult deactivatePod() {
         if (podState == null) {
             throw new IllegalStateException("Pod should be paired first");
         }
@@ -134,7 +130,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse setBasalProfile(Profile basalProfile) {
+    public PumpEnactResult setBasalProfile(Profile basalProfile) {
         if (!isInitialized()) {
             throw new IllegalStateException("Pod should be initialized first");
         }
@@ -146,7 +142,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse resetPodState() {
+    public PumpEnactResult resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
 
@@ -154,7 +150,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse bolus(Double units) {
+    public PumpEnactResult bolus(Double units) {
         if (!isInitialized()) {
             throw new IllegalStateException("Pod should be initialized first");
         }
@@ -164,7 +160,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse setTemporaryBasal(TempBasalPair tempBasalPair) {
+    public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         if (!isInitialized()) {
             throw new IllegalStateException("Pod should be initialized first");
         }
@@ -176,7 +172,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse cancelTemporaryBasal() {
+    public PumpEnactResult cancelTemporaryBasal() {
         if (!isInitialized()) {
             throw new IllegalStateException("Pod should be initialized first");
         }
@@ -186,7 +182,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
-    public PodCommResponse acknowledgeAlerts() {
+    public PumpEnactResult acknowledgeAlerts() {
         if (!isInitialized()) {
             throw new IllegalStateException("Pod should be initialized first");
         }

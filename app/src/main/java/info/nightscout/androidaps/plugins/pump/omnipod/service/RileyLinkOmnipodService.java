@@ -112,17 +112,21 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        PodSessionState podState = null;
-        if (SP.contains(OmnipodConst.Prefs.PodState)) {
-            try {
-                Gson gson = OmnipodUtil.getGsonInstance();
-                String storedPodState = SP.getString(OmnipodConst.Prefs.PodState, null);
-                podState = gson.fromJson(storedPodState, PodSessionState.class);
-            } catch (Exception ex) {
-                LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+        if(OmnipodManager.getInstance() == null) {
+            PodSessionState podState = null;
+            if (SP.contains(OmnipodConst.Prefs.PodState)) {
+                try {
+                    Gson gson = OmnipodUtil.getGsonInstance();
+                    String storedPodState = SP.getString(OmnipodConst.Prefs.PodState, null);
+                    podState = gson.fromJson(storedPodState, PodSessionState.class);
+                } catch (Exception ex) {
+                    LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                }
             }
+            omnipodCommunicationManager = new OmnipodManager(new OmnipodCommunicationService(rfspy), podState);
+        } else {
+            omnipodCommunicationManager = OmnipodManager.getInstance();
         }
-        omnipodCommunicationManager = new OmnipodManager(new OmnipodCommunicationService(rfspy), podState);
     }
 
 
