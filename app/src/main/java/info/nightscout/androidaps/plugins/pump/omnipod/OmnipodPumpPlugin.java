@@ -478,6 +478,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
                 long time = System.currentTimeMillis() + (bolusTime * 1000);
 
                 this.busyTimestamps.add(time);
+                result.bolusDelivered(detailedBolusInfo.insulin).carbsDelivered(detailedBolusInfo.carbs);
             }
 
             return result;

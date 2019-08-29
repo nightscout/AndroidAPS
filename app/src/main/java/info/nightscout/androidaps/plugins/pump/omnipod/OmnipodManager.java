@@ -83,7 +83,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -183,7 +183,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -227,7 +227,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -244,7 +244,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -260,7 +260,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             // TODO user friendly error messages (string resources)
             return new PumpEnactResult().success(false).enacted(false);
         }
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -278,7 +278,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -295,7 +295,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -313,7 +313,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -339,7 +339,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
             return new PumpEnactResult().success(false).enacted(false);
         }
 
-        return null; // TODO
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     public OmnipodCommunicationService getCommunicationService() {
