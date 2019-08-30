@@ -15,7 +15,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
@@ -25,6 +24,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
@@ -37,7 +37,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod_dash.comm.OmnipodDashComm
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
-public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements PumpInterface {
+public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodPumpPluginInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
@@ -192,7 +192,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements PumpInte
     }
 
 
-    void resetStatusState() {
+    public void resetStatusState() {
         firstRun = true;
         isRefresh = true;
     }

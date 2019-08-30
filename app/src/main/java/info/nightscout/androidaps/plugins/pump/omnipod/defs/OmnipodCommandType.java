@@ -12,7 +12,7 @@ public enum OmnipodCommandType {
     CancelBolus, //
     SetTemporaryBasal,
     CancelTemporaryBasal,
-    ResetPodStatus;
+    ResetPodStatus, AcknowledgeAlerts;
 
 
 }

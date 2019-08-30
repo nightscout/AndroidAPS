@@ -34,6 +34,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleMapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -59,7 +61,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         instance = this;
     }
 
-    @Override
+
     public PumpEnactResult insertCannula(Profile profile) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             // TODO use string resource
@@ -86,7 +88,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
+
     public PumpEnactResult pairAndPrime() {
         try {
             if (podState == null) {
@@ -127,6 +129,11 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         }
 
         return new PumpEnactResult().success(true).enacted(true);
+    }
+
+    @Override
+    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podIniReceiver) {
+        return null;
     }
 
     @Override
@@ -187,6 +194,17 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
     }
 
     @Override
+    public PumpEnactResult resetPodStatus() {
+        return null;
+    }
+
+    @Override
+    public PumpEnactResult setBolus(Double amount) {
+        return null;
+    }
+
+
+    // TODO rename back
     public PumpEnactResult resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
@@ -194,7 +212,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
+    // TODO rename back
     public PumpEnactResult bolus(Double units) {
         if (!isInitialized()) {
             return createNotInitializedResult();

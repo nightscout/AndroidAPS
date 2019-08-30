@@ -8,10 +8,11 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
@@ -56,7 +57,7 @@ public class OmnipodUITask {
 //            break;
 
             case InitPod:
-                returnData = communicationManager.initPod();
+                returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1]);
 // TODO                returnData = communicationManager.pairAndPrime();
                 break;
 
@@ -98,6 +99,9 @@ public class OmnipodUITask {
                 returnData = communicationManager.cancelTemporaryBasal();
                 break;
 
+            case AcknowledgeAlerts:
+                returnData = communicationManager.acknowledgeAlerts();
+                break;
 
             default: {
                 LOG.warn("This commandType is not supported (yet) - {}.", commandType);
@@ -133,7 +137,7 @@ public class OmnipodUITask {
 
 
     public <T> T getResult() {
-        return (T)returnData;
+        return (T) returnData;
     }
 
 

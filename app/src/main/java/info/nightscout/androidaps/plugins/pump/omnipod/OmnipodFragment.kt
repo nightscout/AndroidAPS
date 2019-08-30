@@ -22,9 +22,9 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
-
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
@@ -77,11 +77,11 @@ class OmnipodFragment : Fragment() {
         omnipod_pod_status.text = "{fa-bed}"
 
         omnipod_pod_mgmt.setOnClickListener {
-//            if (OmnipodUtil.getPumpStatus().verifyConfiguration()) {
-//                startActivity(Intent(context, MedtronicHistoryActivity::class.java))
-//            } else {
-//                OmnipodUtil.displayNotConfiguredDialog(context)
-//            }
+            if (OmnipodUtil.getPumpStatus().verifyConfiguration()) {
+                startActivity(Intent(context, PodManagementActivity::class.java))
+            } else {
+                OmnipodUtil.displayNotConfiguredDialog(context)
+            }
         }
 
         omnipod_refresh.setOnClickListener {
@@ -89,8 +89,8 @@ class OmnipodFragment : Fragment() {
                 OmnipodUtil.displayNotConfiguredDialog(context)
             } else {
                 omnipod_refresh.isEnabled = false
-                OmnipodUtil.getPlugin().resetStatusState()
-                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked refresh", object : Callback() {
+                OmnipodUtil.getPlugin().addPodStatusRequest(OmnipodStatusRequest.ResetState);
+                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked Refresh", object : Callback() {
                     override fun run() {
                         activity?.runOnUiThread { omnipod_refresh.isEnabled = true }
                     }
@@ -103,6 +103,16 @@ class OmnipodFragment : Fragment() {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
                 OmnipodUtil.displayNotConfiguredDialog(context)
+            }
+        }
+
+        omnipod_pod_active_alerts_ack.setOnClickListener {
+            if (!OmnipodUtil.getPumpStatus().verifyConfiguration()) {
+                OmnipodUtil.displayNotConfiguredDialog(context)
+            } else {
+                omnipod_pod_active_alerts_ack.isEnabled = false
+                OmnipodUtil.getPlugin().addPodStatusRequest(OmnipodStatusRequest.AcknowledgeAlerts);
+                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked Alert Ack", null)
             }
         }
 
@@ -130,7 +140,7 @@ class OmnipodFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
     }
-    
+
 
     override fun onPause() {
         super.onPause()
@@ -184,12 +194,12 @@ class OmnipodFragment : Fragment() {
                     MainApp.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
                 } ?: "-"
 
-        if (pumpStatus.podNumber==null) {
+        if (pumpStatus.podNumber == null) {
 
         }
 
 
-        if (pumpStatus.podSessionState==null) {
+        if (pumpStatus.podSessionState == null) {
             omnipod_pod_address.text = MainApp.gs(R.string.omnipod_pod_name_no_info)
             omnipod_pod_expiry.text = "-"
             omnipod_pod_status.text = "{fa-bed}   "
@@ -198,23 +208,23 @@ class OmnipodFragment : Fragment() {
             omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
             omnipod_pod_expiry.text = pumpStatus.podSessionState.expiryDateAsString
 
-           pumpStatus.podDeviceState = checkStatusSet(pumpStatus.podDeviceState,
-                OmnipodUtil.getPodDeviceState()) as PodDeviceState?
+            pumpStatus.podDeviceState = checkStatusSet(pumpStatus.podDeviceState,
+                    OmnipodUtil.getPodDeviceState()) as PodDeviceState?
 
             var podDeviceState = pumpStatus.podDeviceState
 
-        when (podDeviceState) {
-            null,
-            PumpDeviceState.Sleeping -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
-            PumpDeviceState.NeverContacted,
-            PumpDeviceState.WakingUp,
-            PumpDeviceState.PumpUnreachable,
-            PumpDeviceState.ErrorWhenCommunicating,
-            PumpDeviceState.TimeoutWhenCommunicating,
-            PumpDeviceState.InvalidConfiguration -> omnipod_pod_status.text = " " + MainApp.gs(podDeviceState.resourceId)
-            PumpDeviceState.Active -> {
+            when (podDeviceState) {
+                null,
+                PodDeviceState.Sleeping -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+                PodDeviceState.NeverContacted,
+                PodDeviceState.WakingUp,
+                PodDeviceState.PumpUnreachable,
+                PodDeviceState.ErrorWhenCommunicating,
+                PodDeviceState.TimeoutWhenCommunicating,
+                PodDeviceState.InvalidConfiguration -> omnipod_pod_status.text = " " + MainApp.gs(podDeviceState.resourceId)
+                PodDeviceState.Active -> {
 
-                omnipod_pod_status.text = "Active";
+                    omnipod_pod_status.text = "Active";
 //                val cmd = OmnipodUtil.getCurrentCommand()
 //                if (cmd == null)
 //                    omnipod_pod_status.text = " " + MainApp.gs(pumpStatus.pumpDeviceState.resourceId)
@@ -231,10 +241,9 @@ class OmnipodFragment : Fragment() {
 //                                ?: cmd.getCommandDescription())
 //                    }
 //                }
+                }
+                else -> log.warn("Unknown pump state: " + pumpStatus.podDeviceState)
             }
-            else -> log.warn("Unknown pump state: " + pumpStatus.podDeviceState)
-        }
-
 
 
         }

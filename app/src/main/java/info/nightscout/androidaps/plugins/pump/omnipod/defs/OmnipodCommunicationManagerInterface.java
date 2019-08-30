@@ -14,10 +14,10 @@ public interface OmnipodCommunicationManagerInterface {
     PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podIniReceiver);
 
     // TODO remove
-    PumpEnactResult pairAndPrime();
+    //PumpEnactResult pairAndPrime();
 
     // TODO remove
-    PumpEnactResult insertCannula(Profile basalProfile);
+    //PumpEnactResult insertCannula(Profile basalProfile);
 
 
     /**

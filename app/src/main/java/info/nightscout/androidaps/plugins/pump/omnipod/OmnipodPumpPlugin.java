@@ -31,9 +31,9 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
@@ -49,6 +49,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
@@ -64,7 +66,7 @@ import info.nightscout.androidaps.utils.SP;
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
-public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterface {
+public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
@@ -202,6 +204,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
                     clearBusyQueue();
                 }
 
+                if (!this.omnipodStatusRequestList.isEmpty()) {
+                    if (!ConfigBuilderPlugin.getPlugin().getCommandQueue().statusInQueue()) {
+                        ConfigBuilderPlugin.getPlugin().getCommandQueue()
+                                .readStatus("Status Refresh Requested", null);
+                    }
+                }
+
             } while (serviceRunning);
 
         }).start();
@@ -249,9 +258,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
                 clearBusyQueue();
 
-                if (busyTimestamps.size() > 0) {
-                    return true;
-                }
+                return (busyTimestamps.size() > 0);
             }
         }
 
@@ -307,12 +314,28 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
         if (firstRun) {
             initializePump(!isRefresh);
-        } else {
-            getPodPumpStatus();
+            triggerUIChange();
+        } else if (!omnipodStatusRequestList.isEmpty()) {
+
+            List<OmnipodStatusRequest> removeList = new ArrayList<>();
+
+            for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
+                // TODO when we get more commands this needs to be extended
+                omnipodUIComm.executeCommand(OmnipodCommandType.AcknowledgeAlerts);
+                removeList.add(omnipodStatusRequest);
+            }
+
+
+            //getPodPumpStatus();
         }
 
-        triggerUIChange();
     }
+
+
+    public void setIsBusy(boolean isBusy) {
+        this.isBusy = isBusy;
+    }
+
 
     private void getPodPumpStatus() {
         // TODO read pod status
@@ -321,8 +344,20 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         // we would probably need to read Basal Profile here too
     }
 
+    //OmnipodStatusRequest pumpStatusRequest = null;
 
-    void resetStatusState() {
+    List<OmnipodStatusRequest> omnipodStatusRequestList = new ArrayList<>();
+
+    public void addPodStatusRequest(OmnipodStatusRequest pumpStatusRequest) {
+        if (pumpStatusRequest == OmnipodStatusRequest.ResetState) {
+            resetStatusState();
+        } else {
+            omnipodStatusRequestList.add(pumpStatusRequest);
+        }
+    }
+
+
+    public void resetStatusState() {
         firstRun = true;
         isRefresh = true;
     }
