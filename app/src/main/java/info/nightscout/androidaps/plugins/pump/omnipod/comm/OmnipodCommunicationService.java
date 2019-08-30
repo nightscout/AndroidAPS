@@ -35,33 +35,30 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErro
  * Created by andy on 6/29/18.
  */
 
-public class OmnipodCommunicationService /*extends RileyLinkCommunicationManager*/ {
+public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(OmnipodCommunicationService.class);
-    //RFSpy rfspy = null;
-    OmnipodCommunicationManager communicationManager;
 
-    public OmnipodCommunicationService(OmnipodCommunicationManager communicationManager) {
-        //this.rfspy = rfspy;
-        this.communicationManager = communicationManager;
+    public OmnipodCommunicationService(RFSpy rfspy) {
+        super(rfspy);
     }
 
-//    @Override
-//    protected void configurePumpSpecificSettings() {
-//    }
-//
-//    @Override
-//    public boolean tryToConnectToDevice() {
-//        // TODO
-//        return false;
-//    }
-//
-//    @Override
-//    public byte[] createPumpMessageContent(RLMessageType type) {
-//        return new byte[0];
-//    }
+    @Override
+    protected void configurePumpSpecificSettings() {
+    }
 
-    //@Override
+    @Override
+    public boolean tryToConnectToDevice() {
+        // TODO
+        return false;
+    }
+
+    @Override
+    public byte[] createPumpMessageContent(RLMessageType type) {
+        return new byte[0];
+    }
+
+    @Override
     public <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz) {
         return (E) new OmnipodPacket(payload);
     }
@@ -199,7 +196,7 @@ public class OmnipodCommunicationService /*extends RileyLinkCommunicationManager
         OmnipodPacket ack = createAckPacket(podState, packetAddress, messageAddress);
         boolean quiet = false;
         while (!quiet) try {
-            this.communicationManager.sendAndListen(ack, 300, 1, 0, 40, OmnipodPacket.class);
+            sendAndListen(ack, 300, 1, 0, 40, OmnipodPacket.class);
         } catch (RileyLinkCommunicationException ex) {
             if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
                 quiet = true;
@@ -227,7 +224,7 @@ public class OmnipodCommunicationService /*extends RileyLinkCommunicationManager
         while (System.currentTimeMillis() < timeoutTime) {
             OmnipodPacket response = null;
             try {
-                response = this.communicationManager.sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
+                response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
             } catch (Exception ex) {
                 LOG.debug("Ignoring exception in exchangePackets: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
             }

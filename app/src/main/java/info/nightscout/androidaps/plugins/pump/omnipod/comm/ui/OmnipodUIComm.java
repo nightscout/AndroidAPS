@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;

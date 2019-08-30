@@ -43,7 +43,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
@@ -105,7 +104,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         displayConnectionMessages = false;
 
         if (omnipodCommunicationManager == null) {
-            omnipodCommunicationManager = OmnipodCommunicationManager.getInstance();
+            omnipodCommunicationManager = OmnipodManager.getInstance();
         }
 
         omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);
@@ -114,12 +113,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
         serviceConnection = new ServiceConnection() {
 
+            @Override
             public void onServiceDisconnected(ComponentName name) {
                 if (isLoggingEnabled())
                     LOG.debug("RileyLinkOmnipodService is disconnected");
                 omnipodService = null;
             }
 
+            @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 if (isLoggingEnabled())
                     LOG.debug("RileyLinkOmnipodService is connected");
@@ -144,11 +145,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         };
     }
 
-
     protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType) {
         super(pluginDescription, pumpType);
     }
-
 
     public static OmnipodPumpPlugin getPlugin() {
         if (plugin == null)
@@ -187,6 +186,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     }
 
 
+    @Override
     public void onStartCustomActions() {
 
         // check status every minute (if any status needs refresh we send readStatus command)
@@ -205,6 +205,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     }
 
 
+    @Override
     public Class getServiceClass() {
         return RileyLinkOmnipodService.class;
     }
@@ -436,11 +437,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
     }
 
 
+    @Override
     protected void triggerUIChange() {
         RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
     }
 
 
+    @Override
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
 
@@ -453,11 +456,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
             OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBolus,
                     detailedBolusInfo.insulin);
 
-            Boolean response = responseTask.wasCommandSuccessful();
+            PumpEnactResult result = responseTask.getResult();
 
             setRefreshButtonEnabled(true);
 
-            if (response) {
+            if (result.success) {
 
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
@@ -475,50 +478,36 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
                 long time = System.currentTimeMillis() + (bolusTime * 1000);
 
                 this.busyTimestamps.add(time);
-
-                return new PumpEnactResult().success(true) //
-                        .enacted(true) //
-                        .bolusDelivered(detailedBolusInfo.insulin) //
-                        .carbsDelivered(detailedBolusInfo.carbs);
-
-            } else {
-                return new PumpEnactResult() //
-                        .success(false) //
-                        .enacted(false) //
-                        .comment(MainApp.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered));
+                result.bolusDelivered(detailedBolusInfo.insulin).carbsDelivered(detailedBolusInfo.carbs);
             }
 
+            return result;
         } finally {
             finishAction("Bolus");
         }
     }
 
-
+    @Override
     public void stopBolusDelivering() {
-
         LOG.info(getLogPrefix() + "stopBolusDelivering");
 
         setRefreshButtonEnabled(false);
 
-        try {
+        OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.CancelBolus);
 
-            OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.CancelBolus);
+        PumpEnactResult result = responseTask.getResult();
 
-            Boolean response = responseTask.wasCommandSuccessful();
+        setRefreshButtonEnabled(true);
 
-            setRefreshButtonEnabled(true);
+        LOG.info(getLogPrefix() + "stopBolusDelivering - wasSuccess={}", result.success);
 
-            LOG.info(getLogPrefix() + "stopBolusDelivering - wasSuccess={}", response);
+        if (result.success) {
+            // TODO fix bolus record with cancel
 
-            if (response) {
-                // TODO fix bolus record with cancel
-
-                //TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
-            }
-
-        } finally {
-            finishAction("Bolus");
+            //TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
         }
+
+        finishAction("Bolus");
     }
 
 
@@ -552,7 +541,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         }
 
         if (tbrCurrent != null && !enforceNew) {
-
             if (OmnipodUtil.isSame(tbrCurrent.getInsulinRate(), absoluteRate)) {
                 if (isLoggingEnabled())
                     LOG.info(getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
@@ -569,10 +557,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
             // CANCEL
             OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
 
-            Boolean response = responseTask2.wasCommandSuccessful();
-            ;
+            PumpEnactResult result = responseTask2.getResult();
 
-            if (response) {
+            if (result.success) {
                 if (isLoggingEnabled())
                     LOG.info(getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
             } else {
@@ -581,8 +568,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
                 finishAction("TBR");
 
-                return new PumpEnactResult().success(false).enacted(false)
-                        .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr_stop_op));
+                return result;
             }
         }
 
@@ -590,12 +576,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTemporaryBasal,
                 absoluteRate, durationInMinutes);
 
-        Boolean response = responseTask.wasCommandSuccessful();
+        PumpEnactResult result = responseTask.getResult();
 
         if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + response);
+            LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
-        if (response) {
+        if (result.success) {
             pumpStatusLocal.tempBasalStart = System.currentTimeMillis();
             pumpStatusLocal.tempBasalAmount = absoluteRate;
             pumpStatusLocal.tempBasalLength = durationInMinutes;
@@ -610,19 +596,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
 
             incrementStatistics(OmnipodConst.Statistics.TBRsSet);
-
-            finishAction("TBR");
-
-            return new PumpEnactResult().success(true).enacted(true) //
-                    .absolute(absoluteRate).duration(durationInMinutes);
-
-        } else {
-            finishAction("TBR");
-
-            return new PumpEnactResult().success(false).enacted(false) //
-                    .comment(MainApp.gs(R.string.medtronic_cmd_tbr_could_not_be_delivered));
         }
 
+        finishAction("TBR");
+        return result;
     }
 
     protected TempBasalPair readTBR() {
@@ -683,11 +660,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
 
         OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
 
-        Boolean response = responseTask2.wasCommandSuccessful();
+        PumpEnactResult result = responseTask2.getResult();
 
         finishAction("TBR");
 
-        if (response) {
+        if (result.success) {
             if (isLoggingEnabled())
                 LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
 
@@ -697,17 +674,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
                     .source(Source.USER);
 
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-
-            return new PumpEnactResult().success(true).enacted(true) //
-                    .isTempCancel(true);
         } else {
             if (isLoggingEnabled())
                 LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
-
-            return new PumpEnactResult().success(response).enacted(response) //
-                    .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr));
         }
 
+        return result;
     }
 
     @Override
@@ -733,19 +705,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements PumpInterfa
         OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBasalProfile,
                 profile);
 
-        Boolean response = responseTask.wasCommandSuccessful();
+        PumpEnactResult result = responseTask.getResult();
 
         if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
+            LOG.info(getLogPrefix() + "Basal Profile was set: " + result.success);
 
-        if (response) {
+        if (result.success) {
             this.currentProfile = profile;
-            return new PumpEnactResult().success(true).enacted(true);
-        } else {
-            return new PumpEnactResult().success(response).enacted(response) //
-                    .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_could_not_be_set));
         }
 
+        return result;
     }
 
 

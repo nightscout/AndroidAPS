@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.google.gson.Gson;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +23,12 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
 
@@ -36,7 +42,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     private static RileyLinkOmnipodService instance;
 
-    OmnipodCommunicationManager omnipodCommunicationManager;
+    OmnipodCommunicationManagerInterface omnipodCommunicationManager;
     OmnipodPumpStatus pumpStatus = null;
     private IBinder mBinder = new LocalBinder();
 
@@ -101,7 +107,26 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
 
         // init rileyLinkCommunicationManager
-        omnipodCommunicationManager = new OmnipodCommunicationManager(context, rfspy);
+        initializeErosOmnipodManager();
+        // TODO Dash
+    }
+
+    private void initializeErosOmnipodManager() {
+        if(OmnipodManager.getInstance() == null) {
+            PodSessionState podState = null;
+            if (SP.contains(OmnipodConst.Prefs.PodState)) {
+                try {
+                    Gson gson = OmnipodUtil.getGsonInstance();
+                    String storedPodState = SP.getString(OmnipodConst.Prefs.PodState, null);
+                    podState = gson.fromJson(storedPodState, PodSessionState.class);
+                } catch (Exception ex) {
+                    LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                }
+            }
+            omnipodCommunicationManager = new OmnipodManager(new OmnipodCommunicationService(rfspy), podState);
+        } else {
+            omnipodCommunicationManager = OmnipodManager.getInstance();
+        }
     }
 
 
@@ -112,7 +137,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
-        return this.omnipodCommunicationManager;
+        if(omnipodCommunicationManager instanceof OmnipodManager) { // Eros
+            return ((OmnipodManager) omnipodCommunicationManager).getCommunicationService();
+        }
+        // FIXME is this correct for Dash?
+        return (RileyLinkCommunicationManager)omnipodCommunicationManager;
     }
 
 
