@@ -64,16 +64,6 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
 
-    // This are just skeleton methods, we need to see what we can get returned and act accordingly
-
-    public PumpEnactResult initPod() {
-        //omnipodManager.pairAndPrime();
-
-
-        return null;
-    }
-
-
     @Override
     public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver) {
         return null;

@@ -47,7 +47,7 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static RileyLinkOmnipodService omnipodService;
     private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
-    private static Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private static Gson gsonInstance = createGson();
     private static PodSessionState podSessionState;
     private static PodDeviceState podDeviceState;
     private static OmnipodPumpPlugin omnipodPumpPlugin;
@@ -102,8 +102,8 @@ public class OmnipodUtil extends RileyLinkUtil {
     }
 
 
-    public static OmnipodCommunicationManager getOmnipodCommunicationManager() {
-        return (OmnipodCommunicationManager) RileyLinkUtil.rileyLinkCommunicationManager;
+    public static OmnipodCommunicationManagerInterface getOmnipodCommunicationManager() {
+        return (OmnipodCommunicationManagerInterface) RileyLinkUtil.rileyLinkCommunicationManager;
     }
 
 

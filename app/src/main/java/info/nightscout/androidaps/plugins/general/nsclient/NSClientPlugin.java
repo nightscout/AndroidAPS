@@ -113,6 +113,7 @@ public class NSClientPlugin extends PluginBase {
         context.unbindService(mConnection);
 
         nsClientReceiverDelegate.unregisterReceivers();
+        super.onStop();
     }
 
     @Subscribe

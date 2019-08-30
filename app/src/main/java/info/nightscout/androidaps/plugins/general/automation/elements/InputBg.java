@@ -11,27 +11,10 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.utils.NumberPicker;
 
 public class InputBg extends Element {
-
-    final TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (units.equals(Constants.MMOL)) {
-                value = Math.max(value, 4d);
-                value = Math.min(value, 15d);
-            } else {
-                value = Math.max(value, 72d);
-                value = Math.min(value, 270d);
-            }
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-    };
+    static final int MMOL_MIN = 3;
+    static final int MMOL_MAX = 20;
+    static final int MGDL_MIN = 54;
+    static final int MGDL_MAX = 360;
 
     private String units = Constants.MGDL;
     private double value;
@@ -43,6 +26,10 @@ public class InputBg extends Element {
     public InputBg() {
         super();
         setUnits(ProfileFunctions.getInstance().getProfileUnits());
+        if (getUnits().equals(Constants.MMOL))
+            value = MMOL_MIN;
+        else
+            value = MGDL_MIN;
     }
 
     public InputBg(InputBg another) {
@@ -55,7 +42,7 @@ public class InputBg extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, textWatcher);
+        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);
     }
@@ -68,20 +55,17 @@ public class InputBg extends Element {
         // set default initial value
         if (units.equals(Constants.MMOL)) {
             // mmol
-            minValue = 2;
-            maxValue = 30;
+            minValue = MMOL_MIN;
+            maxValue = MMOL_MAX;
             step = 0.1;
             decimalFormat = new DecimalFormat("0.0");
         } else {
             // mg/dL
-            minValue = 40;
-            maxValue = 540;
+            minValue = MGDL_MIN;
+            maxValue = MGDL_MAX;
             step = 1;
             decimalFormat = new DecimalFormat("0");
         }
-
-        // make sure that value is in range
-        textWatcher.afterTextChanged(null);
 
         this.units = units;
         return this;

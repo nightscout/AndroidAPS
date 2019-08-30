@@ -1145,7 +1145,6 @@
     <string name="recovery_duration">恢复持续时间</string>
     <string name="timeout_during_handshake">握手时超时-重启蓝牙</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/h</string>
     <string name="profile_carbs_per_unit">克/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="dexcom_lognssensorchange_title">记录传感器更换至NS服务器</string>
@@ -1189,7 +1188,6 @@
     <string name="old_version">旧版本</string>
     <string name="very_old_version">非常旧版本</string>
     <string name="new_version_warning">至少可用 %1$d 天的新版本！60 天后返回 LGS，90 天后循环将被禁用</string>
-    <string name="scale_insulin_activity">图表显示活性胰岛素（U/分钟）</string>
     <string name="twohours">2小时</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">德康app（补丁版）</string>

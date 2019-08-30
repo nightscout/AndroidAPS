@@ -7,7 +7,7 @@
             android:enabled="true"
             android:summary=""
             android:title="RileyLink Configuration"
-            android:key="@string/pref_key_rileylink_mac_address">
+            android:key="@string/key_rileylink_mac_address">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
         </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
 

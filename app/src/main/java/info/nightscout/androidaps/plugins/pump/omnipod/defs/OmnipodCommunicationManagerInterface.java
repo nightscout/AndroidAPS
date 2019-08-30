@@ -13,9 +13,17 @@ public interface OmnipodCommunicationManagerInterface {
      */
     PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podIniReceiver);
 
+    // TODO remove
+    PumpEnactResult pairAndPrime();
+
+    // TODO remove
+    PumpEnactResult insertCannula(Profile basalProfile);
+
+
     /**
      * Get Pod Status (is pod running, battery left ?, reservoir, etc)
      */
+    // TODO we should probably return a (wrapped) StatusResponse instead of a PumpEnactResult
     PumpEnactResult getPodStatus();
 
     /**
@@ -26,7 +34,7 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Set Basal Profile
      */
-    PumpEnactResult setBasalProfile(Profile profile);
+    PumpEnactResult setBasalProfile(Profile basalProfile);
 
     /**
      * Reset Pod status (if we forget to disconnect Pod and want to init new pod, and want to forget current pod)
@@ -48,9 +56,9 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Set Temporary Basal
      *
-     * @param tbr TempBasalPair object containing amount and duration in minutes
+     * @param tempBasalPair TempBasalPair object containg amount and duration in minutes
      */
-    PumpEnactResult setTemporaryBasal(TempBasalPair tbr);
+    PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair);
 
     /**
      * Cancel Temporary Basal (if TB is already stopped, return acknowledgment)

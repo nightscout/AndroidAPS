@@ -98,6 +98,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     @Subscribe

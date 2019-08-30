@@ -72,6 +72,19 @@ public class JsonHelper {
         return result;
     }
 
+    public static double safeGetDouble(JSONObject json, String fieldName, double defaultValue) {
+        double result = defaultValue;
+
+        if (json != null && json.has(fieldName)) {
+            try {
+                result = json.getDouble(fieldName);
+            } catch (JSONException ignored) {
+            }
+        }
+
+        return result;
+    }
+
     public static int safeGetInt(JSONObject json, String fieldName) {
         int result = 0;
 

@@ -8,11 +8,10 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
@@ -57,7 +56,8 @@ public class OmnipodUITask {
 //            break;
 
             case InitPod:
-                returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1]);
+                returnData = communicationManager.initPod();
+// TODO                returnData = communicationManager.pairAndPrime();
                 break;
 
             case DeactivatePod:
@@ -66,6 +66,7 @@ public class OmnipodUITask {
 
             case ResetPodStatus:
                 returnData = communicationManager.resetPodStatus();
+// TODO                returnData = communicationManager.resetPodState();
                 break;
 
             case SetBasalProfile:
@@ -77,6 +78,7 @@ public class OmnipodUITask {
 
                 if (amount != null)
                     returnData = communicationManager.setBolus(amount);
+// TODO                    returnData = communicationManager.bolus(amount);
             }
             break;
 
@@ -130,8 +132,8 @@ public class OmnipodUITask {
     }
 
 
-    public Object getResult() {
-        return returnData;
+    public <T> T getResult() {
+        return (T)returnData;
     }
 
 
