@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 
 public interface OmnipodCommunicationManagerInterface {
 
@@ -11,56 +11,56 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Initialize Pod
      */
-    PodCommResponse initPod();
+    PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podIniReceiver);
 
     /**
      * Get Pod Status (is pod running, battery left ?, reservoir, etc)
      */
-    PodCommResponse getPodStatus();
+    PumpEnactResult getPodStatus();
 
     /**
      * Deactivate Pod
      */
-    PodCommResponse deactivatePod();
+    PumpEnactResult deactivatePod();
 
     /**
      * Set Basal Profile
      */
-    PodCommResponse setBasalProfile(Profile profile);
+    PumpEnactResult setBasalProfile(Profile profile);
 
     /**
      * Reset Pod status (if we forget to disconnect Pod and want to init new pod, and want to forget current pod)
      */
-    PodCommResponse resetPodStatus();
+    PumpEnactResult resetPodStatus();
 
     /**
      * Set Bolus
      *
      * @param amount amount of bolus in U
      */
-    PodCommResponse setBolus(Double amount);
+    PumpEnactResult setBolus(Double amount);
 
     /**
      * Cancel Bolus (if bolus is already stopped, return acknowledgment)
      */
-    PodCommResponse cancelBolus();
+    PumpEnactResult cancelBolus();
 
     /**
      * Set Temporary Basal
      *
-     * @param tbr TempBasalPair object containg amount and duration in minutes
+     * @param tbr TempBasalPair object containing amount and duration in minutes
      */
-    PodCommResponse setTemporaryBasal(TempBasalPair tbr);
+    PumpEnactResult setTemporaryBasal(TempBasalPair tbr);
 
     /**
      * Cancel Temporary Basal (if TB is already stopped, return acknowledgment)
      */
-    PodCommResponse cancelTemporaryBasal();
+    PumpEnactResult cancelTemporaryBasal();
 
     /**
      * Acknowledge alerts
      */
-    PodCommResponse acknowledgeAlerts();
+    PumpEnactResult acknowledgeAlerts();
 
 
 }

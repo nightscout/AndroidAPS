@@ -4,13 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
@@ -25,7 +27,7 @@ public class OmnipodUITask {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     public OmnipodCommandType commandType;
-    public PodCommResponse returnData;
+    public PumpEnactResult returnData;
     private String errorDescription;
     private Object[] parameters;
     private PodResponseType responseType;
@@ -55,7 +57,7 @@ public class OmnipodUITask {
 //            break;
 
             case InitPod:
-                returnData = communicationManager.initPod();
+                returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1]);
                 break;
 
             case DeactivatePod:
@@ -188,7 +190,7 @@ public class OmnipodUITask {
         if (returnData == null) {
             return false;
         }
-        return returnData.isAcknowledged();
+        return returnData.success;
     }
 
 

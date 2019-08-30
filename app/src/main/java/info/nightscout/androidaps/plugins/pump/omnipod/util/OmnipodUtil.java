@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistor
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
@@ -50,6 +51,7 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static PodSessionState podSessionState;
     private static PodDeviceState podDeviceState;
     private static OmnipodPumpPlugin omnipodPumpPlugin;
+    private static OmnipodPodType omnipodPodType;
 
     public static Gson getGsonInstance() {
         return gsonInstance;
@@ -191,4 +193,11 @@ public class OmnipodUtil extends RileyLinkUtil {
     }
 
 
+    public static void setOmnipodPodType(OmnipodPodType omnipodPodType) {
+        OmnipodUtil.omnipodPodType = omnipodPodType;
+    }
+
+    public static OmnipodPodType getOmnipodPodType() {
+        return omnipodPodType;
+    }
 }

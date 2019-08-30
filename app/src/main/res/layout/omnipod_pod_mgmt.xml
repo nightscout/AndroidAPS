@@ -1,0 +1,88 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".plugins.pump.omnipod.dialogs.PodManagementActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/initpod_buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_weight="0.5"
+                android:text="Pod Management" />
+
+            <info.nightscout.androidaps.utils.SingleClickButton
+                android:id="@+id/initpod_init_pod"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/icon_cp_pump_canula"
+                android:text="@string/careportal_profileswitch" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:text="&nbsp;" />
+
+            <info.nightscout.androidaps.utils.SingleClickButton
+                android:id="@+id/initpod_remove_pod"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/icon_actions_temptarget"
+                android:text="@string/careportal_temporarytarget" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:text="&nbsp;" />
+
+            <info.nightscout.androidaps.utils.SingleClickButton
+                android:id="@+id/initpod_reset_pod"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/icon_cp_pump_canula"
+                android:text="@string/primefill" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="0.5"
+                android:text="&nbsp;" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

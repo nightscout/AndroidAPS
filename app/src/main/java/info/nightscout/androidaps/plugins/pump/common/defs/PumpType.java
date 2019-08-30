@@ -13,7 +13,7 @@ import info.nightscout.androidaps.utils.Round;
 
 /**
  * Created by andy on 02/05/2018.
- *
+ * <p>
  * Most of this defintions is intended for VirtualPump only, but they can be used by other plugins.
  */
 
@@ -60,7 +60,7 @@ public enum PumpType {
             0.02d, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities), //
 
     // Animas
-    AnimasVibe("Animas Vibe",ManufacturerType.Animas, "Vibe", 0.05d, null, // AnimasBolus?
+    AnimasVibe("Animas Vibe", ManufacturerType.Animas, "Vibe", 0.05d, null, // AnimasBolus?
             new DoseSettings(0.05d, 30, 12 * 60, 0.05d), //
             PumpTempBasalType.Percent, //
             new DoseSettings(10, 30, 24 * 60, 0d, 300d), PumpCapability.BasalRate_Duration30minAllowed, //
@@ -91,7 +91,7 @@ public enum PumpType {
 
 
     // Insulet
-    Insulet_Omnipod("Insulet Omnipod", ManufacturerType.Insulet, "Omnipod", 0.05d, null, //
+    Insulet_Omnipod("Insulet Omnipod", ManufacturerType.Insulet, "Omnipod (Eros)", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // cannot exceed max basal rate 30u/hr
@@ -101,13 +101,13 @@ public enum PumpType {
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // cannot exceed max basal rate 30u/hr
-            0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities),
+            0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities), // TODO just copied OmniPod for now
 
     // Medtronic
     Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.1d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 24*60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
+            new DoseSettings(0.05d, 30, 24 * 60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
             0.05d, 0.05d, null, PumpCapability.MedtronicCapabilities), //
 
     Medtronic_515_715("Medtronic 515/715", "515/715", Medtronic_512_712),
@@ -116,7 +116,7 @@ public enum PumpType {
     Medtronic_523_723_Revel("Medtronic 523/723 (Revel)", ManufacturerType.Medtronic, "523/723 (Revel)", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 24*60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
+            new DoseSettings(0.05d, 30, 24 * 60, 0d, 35d), PumpCapability.BasalRate_Duration30minAllowed, //
             0.025d, 0.025d, DoseStepSize.MedtronicVeoBasal, PumpCapability.MedtronicCapabilities), //
 
     Medtronic_554_754_Veo("Medtronic 554/754 (Veo)", "554/754 (Veo)", Medtronic_523_723_Revel), // TODO
@@ -139,8 +139,7 @@ public enum PumpType {
     TandemTSlimX2("Tandem t:slim X2", "t:slim X2", TandemTSlim), //
 
     // MDI
-    MDI("MDI", ManufacturerType.AndroidAPS, "MDI")
-    ;
+    MDI("MDI", ManufacturerType.AndroidAPS, "MDI");
 
 
     private String description;
@@ -170,24 +169,21 @@ public enum PumpType {
     }
 
 
-    PumpType(String description, String model, PumpType parent)
-    {
+    PumpType(String description, String model, PumpType parent) {
         this.description = description;
         this.parent = parent;
         this.model = model;
     }
 
 
-    PumpType(String description, ManufacturerType manufacturer, String model)
-    {
+    PumpType(String description, ManufacturerType manufacturer, String model) {
         this.description = description;
         this.manufacturer = manufacturer;
         this.model = model;
     }
 
 
-    PumpType(String description, String model, PumpType parent, PumpCapability pumpCapability)
-    {
+    PumpType(String description, String model, PumpType parent, PumpCapability pumpCapability) {
         this.description = description;
         this.parent = parent;
         this.pumpCapability = pumpCapability;
@@ -196,9 +192,8 @@ public enum PumpType {
 
     PumpType(String description, ManufacturerType manufacturer, String model, double bolusSize, DoseStepSize specialBolusSize, //
              DoseSettings extendedBolusSettings, //
-             PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings,  PumpCapability specialBasalDurations, //
-             double baseBasalMinValue, double baseBasalStep, DoseStepSize baseBasalSpecialSteps, PumpCapability pumpCapability)
-    {
+             PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings, PumpCapability specialBasalDurations, //
+             double baseBasalMinValue, double baseBasalStep, DoseStepSize baseBasalSpecialSteps, PumpCapability pumpCapability) {
         this(description, manufacturer, model, bolusSize, specialBolusSize, extendedBolusSettings, pumpTempBasalType, tbrSettings, specialBasalDurations, baseBasalMinValue, null, baseBasalStep, baseBasalSpecialSteps, pumpCapability);
     }
 

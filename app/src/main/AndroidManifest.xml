@@ -124,7 +124,7 @@
         </receiver>
 
         <!-- NSClient -->
-         <receiver
+        <receiver
             android:name=".plugins.general.nsclient.receivers.DBAccessReceiver"
             android:enabled="true"
             android:exported="true">
@@ -155,7 +155,7 @@
         <service
             android:name=".services.DataService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.LocationService"
             android:exported="false" />
@@ -306,6 +306,8 @@
             android:enabled="true"
             android:exported="true" />
 
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodManagementActivity" />
+        <activity android:name=".plugins.pump.omnipod.dialogs.InitPodWizard" />
 
         <uses-library
             android:name="org.apache.http.legacy"

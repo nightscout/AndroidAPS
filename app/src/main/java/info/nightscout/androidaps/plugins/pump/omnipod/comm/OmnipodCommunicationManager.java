@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
@@ -14,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.data.PodCommResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -95,7 +95,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
 
     // This are just skeleton methods, we need to see what we can get returned and act accordingly
 
-    public PodCommResponse initPod() {
+    public PumpEnactResult initPod() {
         omnipodManager.pairAndPrime();
 
 
@@ -103,41 +103,41 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager i
     }
 
 
-    public PodCommResponse getPodStatus() {
+    public PumpEnactResult getPodStatus() {
         return null;
     }
 
 
-    public PodCommResponse deactivatePod() {
+    public PumpEnactResult deactivatePod() {
         return null;
     }
 
-    public PodCommResponse setBasalProfile(Profile profile) {
+    public PumpEnactResult setBasalProfile(Profile profile) {
         return null;
     }
 
-    public PodCommResponse resetPodStatus() {
+    public PumpEnactResult resetPodStatus() {
         return null;
     }
 
-    public PodCommResponse setBolus(Double parameter) {
+    public PumpEnactResult setBolus(Double parameter) {
         return null;
     }
 
-    public PodCommResponse cancelBolus() {
+    public PumpEnactResult cancelBolus() {
         return null;
     }
 
-    public PodCommResponse setTemporaryBasal(TempBasalPair tbr) {
+    public PumpEnactResult setTemporaryBasal(TempBasalPair tbr) {
         return null;
     }
 
-    public PodCommResponse cancelTemporaryBasal() {
+    public PumpEnactResult cancelTemporaryBasal() {
         return null;
     }
 
     @Override
-    public PodCommResponse acknowledgeAlerts() {
+    public PumpEnactResult acknowledgeAlerts() {
         return null;
     }
 
