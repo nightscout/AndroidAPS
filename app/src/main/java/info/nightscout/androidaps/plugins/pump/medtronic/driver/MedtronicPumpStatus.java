@@ -134,8 +134,8 @@ public class MedtronicPumpStatus extends PumpStatus {
         medtronicPumpMap.put("754", PumpType.Medtronic_554_754_Veo);
 
         frequencies = new String[2];
-        frequencies[0] = MainApp.gs(R.string.medtronic_pump_frequency_us_ca);
-        frequencies[1] = MainApp.gs(R.string.medtronic_pump_frequency_worldwide);
+        frequencies[0] = MainApp.gs(R.string.key_medtronic_pump_frequency_us_ca);
+        frequencies[1] = MainApp.gs(R.string.key_medtronic_pump_frequency_worldwide);
     }
 
 

@@ -106,6 +106,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
         serviceRunning = false;
 
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
 

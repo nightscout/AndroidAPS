@@ -13,19 +13,15 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.openapsama_fragment.*
 import org.slf4j.LoggerFactory
 
 class OpenAPSMAFragment : Fragment() {
     private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,9 +35,9 @@ class OpenAPSMAFragment : Fragment() {
             OpenAPSMAPlugin.getPlugin().invoke("OpenAPSMA button", false)
         }
 
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
 
@@ -61,14 +57,18 @@ class OpenAPSMAFragment : Fragment() {
                 }, {
                     FabricPrivacy.logException(it)
                 })
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
-    fun updateGUI() {
+    @Synchronized
+    private fun updateGUI() {
+        if (openapsma_result == null) return
         OpenAPSMAPlugin.getPlugin().lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
             openapsma_request.text = lastAPSResult.toSpanned()
@@ -85,7 +85,9 @@ class OpenAPSMAFragment : Fragment() {
         }
     }
 
+    @Synchronized
     private fun updateResultGUI(text: String) {
+        if (openapsma_result == null) return
         openapsma_result.text = text
         openapsma_glucosestatus.text = ""
         openapsma_currenttemp.text = ""

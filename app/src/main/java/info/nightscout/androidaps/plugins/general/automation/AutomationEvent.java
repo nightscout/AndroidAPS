@@ -16,6 +16,7 @@ public class AutomationEvent {
     private Trigger trigger = new TriggerConnector();
     private List<Action> actions = new ArrayList<>();
     private String title;
+    private boolean enabled = true;
 
     public void setTitle(String title) {
         this.title = title;
@@ -31,6 +32,14 @@ public class AutomationEvent {
 
     public List<Action> getActions() {
         return actions;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean newState) {
+        enabled = newState;
     }
 
     public TriggerConnector getPreconditions() {
@@ -55,6 +64,7 @@ public class AutomationEvent {
         try {
             // title
             o.put("title", title);
+            o.put("enabled", enabled);
             // trigger
             o.put("trigger", trigger.toJSON());
             // actions
@@ -72,11 +82,9 @@ public class AutomationEvent {
     public AutomationEvent fromJSON(String data) {
         try {
             JSONObject d = new JSONObject(data);
-            // title
             title = d.optString("title", "");
-            // trigger
+            enabled = d.optBoolean("enabled", true);
             trigger = Trigger.instantiate(d.getString("trigger"));
-            // actions
             JSONArray array = d.getJSONArray("actions");
             actions.clear();
             for (int i = 0; i < array.length(); i++) {

@@ -1143,7 +1143,6 @@
     <string name="recovery_duration">Atkūrimo trukmė</string>
     <string name="timeout_during_handshake">Ryšio užmezgimui skirtas laikas baigėsi - iš naujo nustatykite bluetooth</string>
     <string name="profile_total">== ∑  %1$s vv</string>
-    <string name="profile_ins_units_per_hout">vv/val</string>
     <string name="profile_carbs_per_unit">g/vv</string>
     <string name="profile_per_unit">/vv</string>
     <string name="dexcom_lognssensorchange_title">Registruoti sensoriaus keitimą NS</string>

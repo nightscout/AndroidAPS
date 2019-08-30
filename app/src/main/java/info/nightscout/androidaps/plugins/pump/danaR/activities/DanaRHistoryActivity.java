@@ -1,12 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +9,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.otto.Subscribe;
 
@@ -47,14 +46,11 @@ import info.nightscout.androidaps.utils.ToastUtils;
 public class DanaRHistoryActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
 
-    private Handler mHandler;
-
     static Profile profile = null;
 
     Spinner historyTypeSpinner;
     TextView statusView;
     Button reloadButton;
-    Button syncButton;
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -70,6 +66,7 @@ public class DanaRHistoryActivity extends NoSplashActivity {
             this.name = name;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return name;
@@ -78,9 +75,6 @@ public class DanaRHistoryActivity extends NoSplashActivity {
 
     public DanaRHistoryActivity() {
         super();
-        HandlerThread mHandlerThread = new HandlerThread(DanaRHistoryActivity.class.getSimpleName());
-        mHandlerThread.start();
-        this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
 
@@ -101,11 +95,10 @@ public class DanaRHistoryActivity extends NoSplashActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_historyactivity);
 
-        historyTypeSpinner = (Spinner) findViewById(R.id.danar_historytype);
-        statusView = (TextView) findViewById(R.id.danar_historystatus);
-        reloadButton = (Button) findViewById(R.id.danar_historyreload);
-        syncButton = (Button) findViewById(R.id.danar_historysync);
-        recyclerView = (RecyclerView) findViewById(R.id.danar_history_recyclerview);
+        historyTypeSpinner = findViewById(R.id.danar_historytype);
+        statusView = findViewById(R.id.danar_historystatus);
+        reloadButton = findViewById(R.id.danar_historyreload);
+        recyclerView = findViewById(R.id.danar_history_recyclerview);
 
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
@@ -145,7 +138,6 @@ public class DanaRHistoryActivity extends NoSplashActivity {
             final TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
             runOnUiThread(() -> {
                 reloadButton.setVisibility(View.GONE);
-                syncButton.setVisibility(View.GONE);
                 statusView.setVisibility(View.VISIBLE);
             });
             clearCardView();
@@ -155,36 +147,11 @@ public class DanaRHistoryActivity extends NoSplashActivity {
                     loadDataFromDB(selected.type);
                     runOnUiThread(() -> {
                         reloadButton.setVisibility(View.VISIBLE);
-                        syncButton.setVisibility(View.VISIBLE);
                         statusView.setVisibility(View.GONE);
                     });
                 }
             });
         });
-
-        syncButton.setOnClickListener(v -> mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reloadButton.setVisibility(View.GONE);
-                        syncButton.setVisibility(View.GONE);
-                        statusView.setVisibility(View.VISIBLE);
-                    }
-                });
-                DanaRNSHistorySync sync = new DanaRNSHistorySync(historyList);
-                sync.sync(DanaRNSHistorySync.SYNC_ALL);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reloadButton.setVisibility(View.VISIBLE);
-                        syncButton.setVisibility(View.VISIBLE);
-                        statusView.setVisibility(View.GONE);
-                    }
-                });
-            }
-        }));
 
         historyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -214,14 +181,15 @@ public class DanaRHistoryActivity extends NoSplashActivity {
             this.historyList = historyList;
         }
 
+        @NonNull
         @Override
-        public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.danar_history_item, viewGroup, false);
             return new HistoryViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(HistoryViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
             DanaRHistoryRecord record = historyList.get(position);
             holder.time.setText(DateUtil.dateAndTimeString(record.recordDate));
             holder.value.setText(DecimalFormatter.to2Decimal(record.recordValue));
@@ -306,7 +274,7 @@ public class DanaRHistoryActivity extends NoSplashActivity {
         }
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
@@ -324,16 +292,16 @@ public class DanaRHistoryActivity extends NoSplashActivity {
 
             HistoryViewHolder(View itemView) {
                 super(itemView);
-                cv = (CardView) itemView.findViewById(R.id.danar_history_cardview);
-                time = (TextView) itemView.findViewById(R.id.danar_history_time);
-                value = (TextView) itemView.findViewById(R.id.danar_history_value);
-                bolustype = (TextView) itemView.findViewById(R.id.danar_history_bolustype);
-                stringvalue = (TextView) itemView.findViewById(R.id.danar_history_stringvalue);
-                duration = (TextView) itemView.findViewById(R.id.danar_history_duration);
-                dailybasal = (TextView) itemView.findViewById(R.id.danar_history_dailybasal);
-                dailybolus = (TextView) itemView.findViewById(R.id.danar_history_dailybolus);
-                dailytotal = (TextView) itemView.findViewById(R.id.danar_history_dailytotal);
-                alarm = (TextView) itemView.findViewById(R.id.danar_history_alarm);
+                cv = itemView.findViewById(R.id.danar_history_cardview);
+                time = itemView.findViewById(R.id.danar_history_time);
+                value = itemView.findViewById(R.id.danar_history_value);
+                bolustype = itemView.findViewById(R.id.danar_history_bolustype);
+                stringvalue = itemView.findViewById(R.id.danar_history_stringvalue);
+                duration = itemView.findViewById(R.id.danar_history_duration);
+                dailybasal = itemView.findViewById(R.id.danar_history_dailybasal);
+                dailybolus = itemView.findViewById(R.id.danar_history_dailybolus);
+                dailytotal = itemView.findViewById(R.id.danar_history_dailytotal);
+                alarm = itemView.findViewById(R.id.danar_history_alarm);
             }
         }
     }

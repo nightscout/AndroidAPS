@@ -22,14 +22,14 @@ public class MedtronicConst {
 //        public static final String Encoding = PrefPrefix + "encoding";
 //        public static final String BatteryType = PrefPrefix + "battery_type";
 
-        public static final int PumpSerial = R.string.pref_key_medtronic_serial;
-        public static final int PumpType = R.string.pref_key_medtronic_pump_type;
-        public static final int PumpFrequency = R.string.pref_key_medtronic_frequency;
-        public static final int MaxBolus = R.string.pref_key_medtronic_max_bolus;
-        public static final int MaxBasal = R.string.pref_key_medtronic_max_basal;
-        public static final int BolusDelay = R.string.pref_key_medtronic_bolus_delay;
-        public static final int Encoding = R.string.pref_key_medtronic_encoding;
-        public static final int BatteryType = R.string.pref_key_medtronic_battery_type;
+        public static final int PumpSerial = R.string.key_medtronic_serial;
+        public static final int PumpType = R.string.key_medtronic_pump_type;
+        public static final int PumpFrequency = R.string.key_medtronic_frequency;
+        public static final int MaxBolus = R.string.key_medtronic_max_bolus;
+        public static final int MaxBasal = R.string.key_medtronic_max_basal;
+        public static final int BolusDelay = R.string.key_medtronic_bolus_delay;
+        public static final int Encoding = R.string.key_medtronic_encoding;
+        public static final int BatteryType = R.string.key_medtronic_battery_type;
     }
 
     public class Statistics {

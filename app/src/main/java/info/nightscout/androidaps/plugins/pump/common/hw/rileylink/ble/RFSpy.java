@@ -367,7 +367,7 @@ public class RFSpy {
         RileyLinkEncodingType encoding = RileyLinkEncodingType.FourByteSixByteLocal;
 
         if (RileyLinkFirmwareVersion.isSameVersion(this.firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
-            if (SP.getString(MedtronicConst.Prefs.Encoding, "None").equals(MainApp.gs(R.string.medtronic_pump_encoding_4b6b_rileylink))) {
+            if (SP.getString(MedtronicConst.Prefs.Encoding, "None").equals(MainApp.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;
             }
         }

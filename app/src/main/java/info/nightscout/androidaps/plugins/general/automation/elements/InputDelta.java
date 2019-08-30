@@ -21,19 +21,6 @@ import info.nightscout.androidaps.utils.NumberPicker;
 
 public class InputDelta extends Element {
     private Comparator.Compare compare = Comparator.Compare.IS_EQUAL;
-    final TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-    };
 
     public enum DeltaType {
         DELTA,
@@ -122,7 +109,7 @@ public class InputDelta extends Element {
         spinner.setSelection(this.deltaType.ordinal());
 //        root.addView(spinner);
         numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, textWatcher);
+        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         LinearLayout l = new LinearLayout(root.getContext());
         l.setOrientation(LinearLayout.VERTICAL);

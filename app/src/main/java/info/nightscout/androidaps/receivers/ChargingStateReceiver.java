@@ -36,7 +36,7 @@ public class ChargingStateReceiver extends BroadcastReceiver {
     }
 
     static public boolean isCharging() {
-        return lastEvent != null && lastEvent.isCharging;
+        return lastEvent != null && lastEvent.isCharging();
     }
 
     static public EventChargingState getLastEvent() {

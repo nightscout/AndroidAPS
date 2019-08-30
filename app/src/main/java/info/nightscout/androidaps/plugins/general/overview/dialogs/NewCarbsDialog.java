@@ -75,8 +75,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
     private boolean okClicked;
 
     public NewCarbsDialog() {
-        HandlerThread mHandlerThread = new HandlerThread(NewCarbsDialog.class.getSimpleName());
-        mHandlerThread.start();
     }
 
     final private TextWatcher textWatcher = new TextWatcher() {

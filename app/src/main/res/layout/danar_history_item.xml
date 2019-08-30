@@ -12,7 +12,6 @@
 
 
     <LinearLayout
-        android:id="@+id/tempbasals_datelinearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="true"

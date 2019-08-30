@@ -231,6 +231,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             boluscalcJSON.put("insulintrend", insulinFromTrend)
             boluscalcJSON.put("trend", trend)
             boluscalcJSON.put("ttused", useTT)
+            boluscalcJSON.put("percentageCorrection", percentageCorrection)
         } catch (e: JSONException) {
             log.error("Unhandled exception", e)
         }

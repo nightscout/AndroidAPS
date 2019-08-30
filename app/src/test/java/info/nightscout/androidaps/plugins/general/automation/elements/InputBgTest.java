@@ -17,26 +17,13 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 public class InputBgTest {
 
     @Test
-    public void textWatcherTest() {
-        InputBg t = new InputBg().setUnits(Constants.MMOL).setValue(1d);
-        t.textWatcher.beforeTextChanged(null, 0, 0, 0);
-        t.textWatcher.onTextChanged(null, 0, 0, 0);
-        t.textWatcher.afterTextChanged(null);
-        Assert.assertEquals(4d, t.getValue(), 0.01d);
-
-        t = new InputBg().setValue(300d).setUnits(Constants.MGDL);
-        t.textWatcher.afterTextChanged(null);
-        Assert.assertEquals(270d, t.getValue(), 0.01d);
-    }
-
-    @Test
     public void getSetValueTest() {
         InputBg i = new InputBg().setUnits(Constants.MMOL).setValue(5d);
         Assert.assertEquals(5d, i.getValue(), 0.01d);
-        Assert.assertEquals(2, i.minValue, 0.01d);
+        Assert.assertEquals(InputBg.MMOL_MIN, i.minValue, 0.01d);
         i = new InputBg().setValue(100d).setUnits(Constants.MGDL);
         Assert.assertEquals(100d, i.getValue(), 0.01d);
-        Assert.assertEquals(40, i.minValue, 0.01d);
+        Assert.assertEquals(InputBg.MGDL_MIN, i.minValue, 0.01d);
         Assert.assertEquals(Constants.MGDL, i.getUnits());
     }
 

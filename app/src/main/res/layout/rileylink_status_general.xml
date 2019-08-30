@@ -1,6 +1,5 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneral">
@@ -21,7 +20,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/rls_t1_tv01"
                     android:layout_width="wrap_content"
                     android:layout_height="25pt"
                     android:layout_marginLeft="10dp"
@@ -170,7 +168,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/rls_t1_tv06"
                     android:layout_width="wrap_content"
                     android:layout_height="25pt"
                     android:layout_marginLeft="10dp"
