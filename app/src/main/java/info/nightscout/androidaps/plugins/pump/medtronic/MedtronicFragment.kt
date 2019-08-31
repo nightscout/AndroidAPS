@@ -35,13 +35,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SetWarnColor
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.medtronic_fragment.*
 import org.slf4j.LoggerFactory
 
@@ -49,10 +45,6 @@ import org.slf4j.LoggerFactory
 class MedtronicFragment : Fragment() {
     private val log = LoggerFactory.getLogger(L.PUMP)
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
-        add(disposable)
-    }
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
@@ -94,7 +86,7 @@ class MedtronicFragment : Fragment() {
                 MedtronicPumpPlugin.getPlugin().resetStatusState()
                 ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked refresh", object : Callback() {
                     override fun run() {
-                        activity?.runOnUiThread { medtronic_refresh.isEnabled = true }
+                        activity?.runOnUiThread { medtronic_refresh?.isEnabled = true }
                     }
                 })
             }
@@ -107,10 +99,9 @@ class MedtronicFragment : Fragment() {
                 MedtronicUtil.displayNotConfiguredDialog(context)
             }
         }
-
-        updateGUI()
     }
 
+    @Synchronized
     override fun onResume() {
         super.onResume()
         MainApp.bus().register(this)
@@ -140,8 +131,11 @@ class MedtronicFragment : Fragment() {
                     MedtronicUtil.getPumpStatus().verifyConfiguration()
                     updateGUI()
                 }, { FabricPrivacy.logException(it) })
+
+        updateGUI()
     }
 
+    @Synchronized
     override fun onPause() {
         super.onPause()
         disposable.clear()
@@ -249,7 +243,9 @@ class MedtronicFragment : Fragment() {
     }
 
     // GUI functions
+    @Synchronized
     fun updateGUI() {
+        if (medtronic_rl_status == null) return
         val plugin = MedtronicPumpPlugin.getPlugin()
         val pumpStatus = MedtronicUtil.getPumpStatus()
 

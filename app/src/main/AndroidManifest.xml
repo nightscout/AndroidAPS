@@ -153,8 +153,7 @@
         <!-- Service processing incomming data -->
         <service
             android:name=".services.DataService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:exported="false" />
         <service
             android:name=".services.LocationService"
             android:exported="false" />
@@ -173,7 +172,7 @@
         <service
             android:name=".plugins.pump.danaRS.services.DanaRSService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -240,11 +239,11 @@
         <service
             android:name=".plugins.general.nsclient.services.NSClientService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".services.AlarmSoundService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".plugins.general.overview.notifications.DismissNotificationService"
             android:exported="false" />
@@ -285,7 +284,7 @@
         <service
             android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />

@@ -68,7 +68,6 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/profileview_datedelimiter"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_marginLeft="20dp"

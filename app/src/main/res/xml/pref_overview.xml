@@ -10,18 +10,6 @@
             android:title="@string/keep_screen_on_title"
             android:summary="@string/keep_screen_on_summary"/>
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
-            android:defaultValue="0.05"
-            android:inputType="numberDecimal"
-            android:key="@string/key_scale_insulin_activity"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/scale_insulin_activity"
-            validate:floatmaxNumber="10.0"
-            validate:floatminNumber="0.0"
-            validate:testType="floatNumericRange" />
-
         <PreferenceScreen android:title="@string/overview_buttons_selection">
 
             <SwitchPreference
@@ -154,6 +142,19 @@
         </Preference>
 
         <PreferenceScreen android:title="@string/advancedsettings_title" android:key="@string/key_advancedsettings">
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="100"
+                android:dialogMessage="@string/deliverpartofboluswizard"
+                android:inputType="number"
+                android:key="@string/key_boluswizard_percentage"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/partialboluswizard"
+                validate:maxNumber="100"
+                validate:minNumber="10"
+                validate:testType="numericRange" />
 
             <SwitchPreference
                 android:defaultValue="false"

@@ -155,7 +155,7 @@ public class LoopPlugin extends PluginBase {
      */
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (!(ev.cause instanceof EventNewBG)) {
+        if (!(ev.getCause() instanceof EventNewBG)) {
             // Autosens calculation not triggered by a new BG
             return;
         }
@@ -416,7 +416,7 @@ public class LoopPlugin extends PluginBase {
                             .setAutoCancel(true)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
-                            .setVisibility(Notification.VISIBILITY_PUBLIC);
+                            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
                     if (SP.getBoolean("wearcontrol", false)) {
                         builder.setLocalOnly(true);
                     }

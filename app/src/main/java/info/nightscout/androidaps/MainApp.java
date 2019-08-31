@@ -139,6 +139,8 @@ public class MainApp extends Application {
         sConstraintsChecker = new ConstraintChecker();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
+        Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> log.error("Uncaught exception crashing app", ex));
+
         try {
             if (FabricPrivacy.fabricEnabled()) {
                 Fabric.with(this, new Crashlytics());

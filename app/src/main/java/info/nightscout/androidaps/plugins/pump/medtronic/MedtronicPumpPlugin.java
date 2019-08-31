@@ -212,17 +212,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private void migrateSettings() {
 
         if ("US (916 MHz)".equals(SP.getString(MedtronicConst.Prefs.PumpFrequency, null))) {
-            SP.putString(MedtronicConst.Prefs.PumpFrequency, MainApp.gs(R.string.medtronic_pump_frequency_us_ca));
+            SP.putString(MedtronicConst.Prefs.PumpFrequency, MainApp.gs(R.string.key_medtronic_pump_frequency_us_ca));
         }
 
         String encoding = SP.getString(MedtronicConst.Prefs.Encoding, null);
 
         if ("RileyLink 4b6b Encoding".equals(encoding)) {
-            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.medtronic_pump_encoding_4b6b_rileylink));
+            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink));
         }
 
         if ("Local 4b6b Encoding".equals(encoding)) {
-            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.medtronic_pump_encoding_4b6b_local));
+            SP.putString(MedtronicConst.Prefs.Encoding, MainApp.gs(R.string.key_medtronic_pump_encoding_4b6b_local));
         }
     }
 
@@ -791,6 +791,17 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         setRefreshButtonEnabled(false);
 
+        MedtronicPumpStatus mdtPumpStatus = getMDTPumpStatus();
+
+        if (detailedBolusInfo.insulin > mdtPumpStatus.reservoirRemainingUnits) {
+            return new PumpEnactResult() //
+                    .success(false) //
+                    .enacted(false) //
+                    .comment(MainApp.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered_no_insulin,
+                            mdtPumpStatus.reservoirRemainingUnits,
+                            detailedBolusInfo.insulin));
+        }
+
         bolusDeliveryType = BolusDeliveryType.DeliveryPrepared;
 
         if (isPumpNotReachable()) {
@@ -1048,6 +1059,21 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .comment(MainApp.gs(R.string.medtronic_cmd_tbr_could_not_be_delivered));
         }
 
+    }
+
+
+    @Override
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
+                                               boolean enforceNew) {
+        if (percent==0) {
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+        } else {
+            double absoluteValue = profile.getBasal() * (percent /100.0d);
+            getMDTPumpStatus();
+            absoluteValue = pumpStatusLocal.pumpType.determineCorrectBasalSize(absoluteValue);
+            LOG.warn("setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (%d). This will start setTempBasalAbsolute, with calculated value (%.3f). Result might not be 100% correct.", percent, absoluteValue);
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+        }
     }
 
 

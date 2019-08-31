@@ -202,8 +202,6 @@ public class SWDefinition {
 
     private SWScreen screenAge = new SWScreen(R.string.patientage)
             .skippable(false)
-            .add(new SWInfotext()
-                    .label(R.string.patientage_summary))
             .add(new SWBreak())
             .add(new SWRadioButton()
                     .option(R.array.ageArray, R.array.ageValues)

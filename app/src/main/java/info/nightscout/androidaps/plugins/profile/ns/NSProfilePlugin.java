@@ -65,6 +65,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     public void handleNewData(Intent intent) {

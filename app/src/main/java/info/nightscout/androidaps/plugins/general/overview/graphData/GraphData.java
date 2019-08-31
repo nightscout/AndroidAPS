@@ -357,7 +357,8 @@ public class GraphData {
 
         double now = System.currentTimeMillis();
         Scale actScale = new Scale();
-        IobTotal total = null;
+        IobTotal total;
+        double maxIAValue = 0;
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             Profile profile = ProfileFunctions.getInstance().getProfile(time);
@@ -370,6 +371,7 @@ public class GraphData {
                 actArrayHist.add(new ScaledDataPoint(time, act, actScale));
             else
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
+            if (act > maxIAValue) maxIAValue = act;
         }
 
         ScaledDataPoint[] actData = new ScaledDataPoint[actArrayHist.size()];
@@ -392,7 +394,6 @@ public class GraphData {
         paint.setColor(MainApp.gc(R.color.activity));
         actSeriesPred.setCustomPaint(paint);
 
-        double maxIAValue = SP.getDouble(R.string.key_scale_insulin_activity, 0.05);
         if (useForScale) {
             maxY = maxIAValue;
             minY = -maxIAValue;
