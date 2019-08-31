@@ -7,6 +7,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
  * Created by geoff on 5/29/16.
@@ -132,7 +133,11 @@ public class PumpMessage implements RLMessage {
 
     public byte[] getRawContentOfFrame() {
         byte[] raw = messageBody.getTxData();
-        return ByteUtil.substring(raw, 1);
+
+        if (MedtronicUtil.getMedtronicPumpModel().isMedtronic_523orHigher())
+            return ByteUtil.substring(raw, 1, raw.length - 2);
+        else
+            return ByteUtil.substring(raw, 1);
     }
 
 
