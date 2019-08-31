@@ -33,7 +33,6 @@
     <string name="description_smb">Naujausias algoritmas patyrusiems vartotojams</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
-    <string name="description_profile_local">Nustato profilį, kuris veikia neprisijungus prie interneto.</string>
     <string name="description_profile_nightscout">Nustato profilį, kuris įvestas Nightscout puslapyje</string>
     <string name="description_profile_simple">Nustato profilį su vieninteliu laiko bloku.</string>
     <string name="description_pump_combo">Accu-Chek Combo pompos integracija, reikalinga Ruffy programėlė</string>
@@ -41,15 +40,12 @@
     <string name="description_pump_dana_r_korean">DANA Diabecare R pompos, skirtos vietinei P. Korėjos rinkai, integracija</string>
     <string name="description_pump_dana_r_v2">DANA Diabecare R pompos su atnaujinta programine-aparatine įranga integracija</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS pompos integracija</string>
-    <string name="description_pump_insight">Accu-Chek Insight pompos integracija, kuriai reikalinga SightRemote programėlė</string>
     <string name="description_pump_mdi">Integracija žmonėms, naudojantiems insulino injektorius</string>
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas Nustatymuose.</string>
     <string name="description_sensitivity_oref0">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 24 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui.</string>
     <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui. Įskiepis taip pat įskaičiuoja NM (neįrašytą maistą).</string>
     <string name="description_sensitivity_weighted_average">Jautrumas insulinui apskaičiuojamas kaip nuokrypių svertinis vidurkis. Naujausių nuokrypių svoris yra didesnis. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas iš maksimalaus angliavandenių įsisavinimo greičio, kuris nurodytas Nustatymuose. Šis algoritmas greičiausiai aptinka pasikeitusį jautrumą insulinui.</string>
-    <string name="description_source_dexcom_g5">Gauti kraujo gliukozės reikšmes iš modifikuotos Dexcom G5 programėlės.</string>
-    <string name="description_source_dexcom_g6">Gauti kraujo gliukozės reikšmes iš modifikuotos Dexcom G6 programėlės.</string>
     <string name="description_source_eversense">Gauti kraujo gliukozės vertes iš modifikuotos Eversense programėlės.</string>
     <string name="description_source_glimp">Gauti kraujo gliukozės vertes iš Glimp.</string>
     <string name="description_source_mm640g">Gauti kraujo gliukozės vertes iš 600SeriesAndroidUploader.</string>
@@ -73,7 +69,6 @@
     <string name="treatments_carbs_label_string">Angliavandeniai:</string>
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="sms_iob">AIO:</string>
-    <string name="treatments_activity_string">Aktyvumas:</string>
     <string name="treatments_iobtotal_label_string">Visas AIO:</string>
     <string name="treatments_iobactivitytotal_label_string">Bendro AIO aktyvumas:</string>
     <string name="tempbasals_realduration_label_string">Trukmė:</string>
@@ -724,8 +719,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Vienai sekundei išjungia telefono bluetooth, jei ryšys su pompa nutrūksta. Gali būti veiksminga kai kuriems telefonų modeliams, turintiems BT problemų.</string>
-    <string name="DexcomG5">Dexcom G5 programėlė (modifikuota)</string>
-    <string name="DexcomG6">Dexcom G6 programėlė (modifikuota)</string>
     <string name="eversense">Eversense programėlė (modifikuota)</string>
     <string name="dexcomg5_nsupload_title">Perduoti KG duomenis į NS</string>
     <string name="bgsource_upload">KG duomenų perdavimo nustatymai</string>
@@ -795,49 +788,7 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuare nepakanka insulino bolusui</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="insightpump">Insight pompa</string>
-    <string name="status_no_colon">Būsena</string>
-    <string name="changed">Pakeista</string>
-    <string name="pump_stopped_uppercase">POMPA SUSTABDYTA</string>
-    <string name="status_updated">Būsena atnaujinta</string>
     <string name="ago">prieš</string>
-    <string name="with">su</string>
-    <string name="insight_active_tbr">Aktyvi laikina bazė</string>
-    <string name="insight_min_left">liko minučių</string>
-    <string name="log_book">Žurnalas</string>
-    <string name="insight_last_completed_action">Paskutinis užbaigtas veiksmas</string>
-    <string name="insight_min">min.</string>
-    <string name="insight_remaining_over">liko virš</string>
-    <string name="insight_total_with">iš viso</string>
-    <string name="insight_upfront_with">iš anksto</string>
-    <string name="insight_stay_always_connected">Likti prisijungus visada</string>
-    <string name="insight_history_idle">NEVEIKLUMAS</string>
-    <string name="insight_history_syncing">SINCHRONIZAVIMAS</string>
-    <string name="insight_history_busy">UŽIMTA</string>
-    <string name="insight_history_synced">SINCHRONIZUOTA</string>
-    <string name="insight_startup_uppercase">PALEISTIS</string>
-    <string name="insight_needs">būtina</string>
-    <string name="insight_not_connected_to_companion_app">Nesate prisijungę prie lydinčios programėlės!</string>
-    <string name="insight_companion_app_not_installed">Lydinčioji programėlė neinstaliuota!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Nesuderinama lydinčioji programėlė, reikalinga versija</string>
-    <string name="insight_unknown">Nežinoma</string>
-    <string name="insight_waiting_for_code">Laukiama kodo patvirtinimo</string>
-    <string name="insight_code_rejected">Kodas atmestas</string>
-    <string name="insight_app_binding">Sujungiama su programa</string>
-    <string name="insight_not_authorized">Neautorizuota</string>
-    <string name="insight_incompatible">Nesuderinama</string>
-    <string name="second">sek.</string>
-    <string name="minute">min.</string>
-    <string name="hour">val.</string>
-    <string name="day">diena</string>
-    <string name="week">savaitė</string>
-    <string name="time_plural">sek.</string>
-    <string name="insight_keepalive_format_string">%1$ds baigiasi %2$s</string>
-    <string name="insight_keep_alive_status">Aktyvumo statusas</string>
-    <string name="statistics">Statistika</string>
-    <string name="connect_preemptively">Išankstinis sujungimas</string>
-    <string name="automatically_connect_when">Siekiant išvengti vėlavimo, automatiškai susijungti su pompa, kai AndroidAPS atidaroma, nelaukiant komandos pompai.</string>
-    <string name="not_recommended_due_to_battery_drain">Nerekomenduojama dėl greito akumuliatoriaus iškrovimo</string>
     <string name="enablesmbalways">Leisti SMB visada</string>
     <string name="enablesmbalways_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
     <string name="enablesmbaftercarbs">Leisti SMB po angliavandenių įvedimo</string>
@@ -938,8 +889,6 @@
     <string name="reset">atstatyti</string>
     <string name="waitingfortimesynchronization">Laukiama laiko sinchronizavimo (%1$d sek.)</string>
     <string name="loopdisconnectedfor">Nesujungta (%1$d min.)</string>
-    <string name="automatic_careportal_events">Automatiniai priežiūros įvykiai</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatiškai įkelti insulino, kanulės ir baterijos pakeitimus ir pompos aliarmus į Nightscout</string>
     <string name="openapssmb_maxiob_title">Maksimalus bendras AIO, kurio negali viršyti OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Ši vertė yra vadinama Maks AIO OpenAPS kontekste\nOpenAPS nepridės daugiau insulino, jei dabartinis AIO yra didesnis už šią vertę</string>
     <string name="pump_stopped">Pompa sustabdyta</string>
@@ -990,12 +939,10 @@
     <string name="adjustprofileinns">Pakeitimai turi būti daromi NS</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
-    <string name="enableobjectives">Aktyvuoti Tikslus</string>
     <string name="apssetup">Konfigūruoti DKS įskiepį</string>
     <string name="sensitivitysetup">Konfigūruoti Jautrumo nustatymo įskiepį</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSClient palaiko ryšį su Nightscout. Jūs galite praleisti šią dalį dabar, bet negalėsite pradėti mokymosi programos, kol nenustatysite ryšio su NS.</string>
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
     <string name="bgsourcesetup">Sukonfigūruoti KG šaltinį</string>
     <string name="setupwizard_profile_description">Prašome pasirinkti profilį. Jei pacientas yra vaikas, turite naudoti NS profilį. Jei niekas neseka jūsų Nightscout platformoje, tada geriau pasirinkti Vietinį profilį. Atminkite, kad čia Jūs tik pasirenkate profilio šaltinį. Norėdami jį aktyvuoti, turite atlikti Profilio keitimą</string>
@@ -1048,7 +995,6 @@
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
     <string name="maintenance_email">El. paštas</string>
-    <string name="invalid_email_message">Neteisingas el. pašto adresas</string>
     <string name="maintenance_amount">Siunčiamų įrašų skaičius</string>
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>
@@ -1109,7 +1055,6 @@
     <string name="manufacturing_date">Pagaminimo data</string>
     <string name="delete_pairing">Panaikinti sąsają</string>
     <string name="pairing_information">Sąsajos informacija</string>
-    <string name="refreh_status">Atnaujinti būseną</string>
     <string name="start_pump">Paleisti pompą</string>
     <string name="stop_pump">Sustabdyti pompą</string>
     <string name="operating_mode">Darbinis režimas</string>
@@ -1176,8 +1121,6 @@
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Parametrai</string>
     <string name="rileylink_settings_tab2">Istorija</string>
-    <string name="rileylink_settings_tab3">Prietaisas</string>
-    <string name="rileylink_settings_title">RileyLink parametrai</string>
     <string name="title_activity_rileylink_settings">RileyLink parametrai</string>
     <!-- RL State -->
     <!-- RL Errors -->

@@ -34,7 +34,7 @@
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
-    <string name="description_profile_local">Определить профиль, доступный автономно.</string>
+    <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
     <string name="description_profile_nightscout">Содержит профиль, заданный в Nightscout</string>
     <string name="description_profile_simple">Определите профиль только в одном блоке времени.</string>
     <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия установленного алгоритма</string>
@@ -42,15 +42,12 @@
     <string name="description_pump_dana_r_korean">Интеграция с отечественной помпой DANA Diabetcare R</string>
     <string name="description_pump_dana_r_v2">Интеграция с помпой Dana Diabetcare R с обновленной прошивкой</string>
     <string name="description_pump_dana_rs">Интеграция с помпой DANA Diabetcare RS</string>
-    <string name="description_pump_insight">Интеграция с помпой Accu-Chek Insight, требует наличия установленного SightRemote</string>
     <string name="description_pump_mdi">Интеграция с помпой для тех, кто делает многочисленные подколки для компенсации диабета</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
     <string name="description_sensitivity_oref0">Чувствительность рассчитывается на основе данных за прошедшие 24 часа и (неусвоенные) углеводы не учитываются после времени указанного в настройках.</string>
     <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
     <string name="description_sensitivity_weighted_average">Чувствительность рассчитывается как средневзвешенное от отклонений (deviations). Более поздние отклонения имеют больший вес. Минимальное усвоение углеводов рассчитывается на основе макс времени усвоения углеводов в настройках. Этот алгоритм быстрее всего отслеживает изменения чувствительности.</string>
-    <string name="description_source_dexcom_g5">Получать данные гликемии от пропатченного приложения Dexcom G5.</string>
-    <string name="description_source_dexcom_g6">Получать данные гликемии от пропатченного приложения Dexcom G6.</string>
     <string name="description_source_eversense">Получать данные гликемии от пропатченного приложения Eversense.</string>
     <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
     <string name="description_source_mm640g">Получать данные гликемии от 600SeriesAndroidUploader.</string>
@@ -74,7 +71,6 @@
     <string name="treatments_carbs_label_string">углеводы:</string>
     <string name="treatments_iob_label_string">IOB:   активн инс</string>
     <string name="sms_iob">IOB: активный инсулин</string>
-    <string name="treatments_activity_string">Нагрузка:</string>
     <string name="treatments_iobtotal_label_string">Общий IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Общая активность IOB:</string>
     <string name="tempbasals_realduration_label_string">длит:</string>
@@ -147,7 +143,6 @@
     <string name="openapsma_lastenact_label">Последнее предпринятое</string>
     <string name="ok">OK</string>
     <string name="cancel">Отменить</string>
-    <string name="close">Закрыть</string>
     <string name="noapsselected">APS не выбрана или не выдала результат</string>
     <string name="safety">безопасность</string>
     <string name="openapsma_disabled">модуль не активен</string>
@@ -728,8 +723,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Дежурный режим Watchdog</string>
     <string name="btwatchdog_summary">Выключает bluetooth телефона на одну секунду, если подключение к помпе невозможно. Это помогает на тех телефонах, где зависает модуль bluetooth.</string>
-    <string name="DexcomG5">Приложение Dexcom (пропатченное)</string>
-    <string name="DexcomG6">Приложение Dexcom G6 (пропатченное)</string>
     <string name="eversense">Приложение Eversense (пропатченное)</string>
     <string name="dexcomg5_nsupload_title">Загрузить данные СК в Nightscout</string>
     <string name="bgsource_upload">Параметры загрузки СК</string>
@@ -799,50 +792,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">В резервуаре недостаточно инсулина для болюса</string>
     <string name="extendedbolusdeliveryerror">Подача пролонгированного болюса не состоялась</string>
     <string name="insightpump_shortname">Поле обзора</string>
-    <string name="insightpump">Помпа Insight</string>
-    <string name="status_no_colon">Состояние</string>
-    <string name="changed">Изменено</string>
-    <string name="pump_stopped_uppercase">ПОМПА ОСТАНОВЛЕНА</string>
-    <string name="status_updated">Статус обновлён</string>
     <string name="ago">тому назад</string>
-    <string name="with">с</string>
-    <string name="insight_active_tbr">Активный временный базал TBR</string>
-    <string name="insight_min_left">остался минимум</string>
-    <string name="log_book">Лог (журнал событий)</string>
-    <string name="insight_last_completed_action">Последнее завершенное действие</string>
-    <string name="insight_min">мин</string>
-    <string name="insight_remaining_over">остающееся свыше</string>
-    <string name="insight_total_with">итого с</string>
-    <string name="insight_upfront_with">рисковать</string>
-    <string name="insight_stay_always_connected">Никогда не разъединяться</string>
-    <string name="insight_history_idle">БЕЗДЕЙСТВИЕ</string>
-    <string name="insight_history_syncing">СИНХРОНИЗАЦИЯ</string>
-    <string name="insight_history_busy">Не доступно</string>
-    <string name="insight_history_synced">СИНХРОНИЗИРОВАН</string>
-    <string name="insight_startup_uppercase">Пуск</string>
-    <string name="insight_needs">потребности</string>
-    <string name="insight_not_connected_to_companion_app">Нет подключения к сопутствующему приложению!</string>
-    <string name="insight_companion_app_not_installed">Сопутствующее приложение по-видимому не установлено!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Несовместимое сопутствующее приложение, нужна версия</string>
-    <string name="insight_unknown">Неизвестно</string>
-    <string name="insight_waiting_for_code">Ожидание подтверждения кода</string>
-    <string name="insight_code_rejected">Код отклонен</string>
-    <string name="insight_app_binding">Соединение с приложением</string>
-    <string name="insight_not_authorized">Не авторизована</string>
-    <string name="insight_incompatible">Несовместима</string>
-    <string name="second">сек.</string>
-    <string name="minute">мин.</string>
     <string name="format_hours">%1$.2f ч</string>
-    <string name="hour">ч.</string>
-    <string name="day">дн.</string>
-    <string name="week">нед.</string>
-    <string name="time_plural">с.</string>
-    <string name="insight_keepalive_format_string">%1$ds истекает %2$s</string>
-    <string name="insight_keep_alive_status">Статус активности</string>
-    <string name="statistics">Статистика</string>
-    <string name="connect_preemptively">Подключить досрочно</string>
-    <string name="automatically_connect_when">Автоматически подключаться при открытии экранов AndroidAPS, не дожидаясь запросов команд на помпу, для сокращения задержки связи</string>
-    <string name="not_recommended_due_to_battery_drain">Не рекомендуется из-за сильного расхода заряда батареи</string>
     <string name="enablesmbalways">Всегда включать супер микро болюс SMB</string>
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
@@ -946,8 +897,6 @@
     <string name="reset">сброс</string>
     <string name="waitingfortimesynchronization">Ожидание синхронизации времени (%1$d сек)</string>
     <string name="loopdisconnectedfor">Разъединен (%1$d м)</string>
-    <string name="automatic_careportal_events">Автоматические события портала назначений</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Автоматически загружать инсулин, изменения катетера, батареи и оповещения помпы в Nightscout</string>
     <string name="openapssmb_maxiob_title">Предел суммарного активного инсулина IOB для OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Эта величина называется Max IOB в OpenAPS context\nOpenAPS не будет добавлять инсулин если текущий активный инсулин ее превысит</string>
     <string name="pump_stopped">Помпа остановлена</string>
@@ -998,14 +947,13 @@
     <string name="adjustprofileinns">Изменения должны быть сделано в Nightscout</string>
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AndroidAPS мог предложить/внести изменения в базал</string>
-    <string name="enableobjectives">Включить Цели</string>
     <string name="apssetup">Настроить плагин APS</string>
     <string name="sensitivitysetup">Настроить плагин чувствительности Sensitivity</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB
  
 Context | Edit Context</string>
-    <string name="nsclientinfotext">NSClient обрабатывает подключения к Nightscout. Вы можете пропустить этот этап сейчас, но вы не преодолеете все Цели пока не настроите его.</string>
+    <string name="nsclientinfotext">NSClient обрабатывает подключения к Nightscout. Вы можете пропустить этот этап сейчас, но не преодолеете все Цели пока не настроите его.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="bgsourcesetup">Настройте источник СК</string>
     <string name="setupwizard_profile_description">Пожалуйста выберите источник профиля. Если пациент ребенок пользуйтесь профилем Nightscout. Если никто не отслеживает ваш СК на NS, вы вероятно предпочтете Локальный профиль. Напоминание - вы всего лишь выбираете профиль. Активируйте его \"Переключателем профиля\"</string>
@@ -1058,7 +1006,6 @@ Context | Edit Context</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>
-    <string name="invalid_email_message">Недопустимый e-mail</string>
     <string name="maintenance_amount">Количество логов для отправки</string>
     <string name="maintenance">Обслуживание</string>
     <string name="maintenance_shortname">ОБСЛУЖ</string>
@@ -1120,7 +1067,6 @@ Context | Edit Context</string>
     <string name="manufacturing_date">Дата изготовления</string>
     <string name="delete_pairing">Удалить сопряжение</string>
     <string name="pairing_information">Информация о сопряжении</string>
-    <string name="refreh_status">Обновить статус</string>
     <string name="start_pump">Запустить помпу</string>
     <string name="stop_pump">Остановить помпу</string>
     <string name="operating_mode">Режим работы</string>
@@ -1272,6 +1218,7 @@ Context | Edit Context</string>
     <string name="autosenslabel">Автосенс %</string>
     <string name="deltacompared">%3$s%1$s%2$s</string>
     <string name="deltalabel">Разница Гк</string>
+    <string name="deltalabel_u">Разница ГК [%1$s]</string>
     <string name="currentlocation">Текущее местоположение</string>
     <string name="location">Местоположение</string>
     <string name="latitude_short">Широта:</string>
@@ -1284,12 +1231,9 @@ Context | Edit Context</string>
     <string name="triggercoblabel">Активн углеводы</string>
     <string name="cobcompared">Активн углеводы %1$s %2$.0f</string>
     <string name="taskname">Название задачи</string>
-    <string name="eventname">Название события</string>
     <string name="edit_short">РЕДАКТ</string>
     <string name="please_choose_an_action_type">Выберите тип действия:</string>
     <string name="please_choose_a_trigger_type">Выберите тип триггера:</string>
-    <string name="if_label">Если:</string>
-    <string name="then_label">Тогда:</string>
     <string name="triggers">Триггеры:</string>
     <string name="remove_label">УДАЛИТЬ</string>
     <string name="preconditions">Предусловия:</string>
@@ -1310,7 +1254,6 @@ Context | Edit Context</string>
     <string name="medtronic_pump_frequency_worldwide">Глобальн (868 Мгц)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Программное 4b6b кодирование</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Аппаратное кодирование 4b6b</string>
-    <string name="rileylink_mac_address">MAC адрес RileyLink</string>
     <string name="medtronic_custom_action_wake_and_tune">Пробудить и настроить</string>
     <string name="medtronic_custom_action_clear_bolus_block">Очистить блок болюса</string>
     <string name="medtronic_custom_action_reset_rileylink">Сбросить конфигурацию RileyLink</string>
@@ -1322,9 +1265,7 @@ Context | Edit Context</string>
     <string name="rileylink_scanner_scan_scan">СКАН</string>
     <string name="rileylink_scanner_scan_stop">СТОП</string>
     <string name="rileylink_scanner_selected_device">Выбрано</string>
-    <string name="rileylink_scanner_scan">Сканирование</string>
     <string name="rileylink_scanner_title">Сканирование RileyLink</string>
-    <string name="rileylink_scanner_scan_menu">Искать RileyLink</string>
     <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy не поддерживается.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth не включен.</string>
     <string name="location_not_found_title">Геолокация не включена</string>
@@ -1337,10 +1278,8 @@ Context | Edit Context</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
-    <string name="rileylink_settings_tab3">Устройство</string>
     <string name="rileylink_status">Статус RileyLink</string>
     <string name="medtronic_pump_status">Статус помпы</string>
-    <string name="rileylink_settings_title">Настройки RileyLink</string>
     <string name="title_activity_rileylink_settings">Настройки RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_configured_address">Настроенный адрес</string>
@@ -1405,7 +1344,6 @@ Context | Edit Context</string>
     <string name="medtronic_pump_status_waking_up">Пробуждение</string>
     <string name="medtronic_pump_status_error_comm">Ошибка связи</string>
     <string name="medtronic_pump_status_timeout_comm">Таймаут связи</string>
-    <string name="medtronic_pump_status_problem_contacting">Проблема подключения к помпе</string>
     <string name="medtronic_pump_status_pump_unreachable">Помпа недоступна</string>
     <string name="medtronic_pump_status_invalid_config">Недопустимая конфигурация</string>
     <string name="medtronic_pump_status_active">Активно</string>
@@ -1423,7 +1361,6 @@ Context | Edit Context</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Базовый профиль идентичен, он не будет задан повторно.</string>
     <string name="medtronic_cmd_desc_get_history">Получить историю - страница %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Получить историю - страница %1$d</string>
-    <string name="medtronic_cmd_desc_get_history_base">Получить историю - страница %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Получить время с помпы</string>
     <string name="medtronic_cmd_desc_get_settings">Получить настройки</string>
     <string name="medtronic_cmd_desc_get_model">Получить модель помпы</string>
@@ -1432,13 +1369,14 @@ Context | Edit Context</string>
     <string name="medtronic_cmd_desc_get_tbr">Получить временный базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Установить временный базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Настроить болюс</string>
-    <string name="pump_no_connection_h">Нет соединения %1$d часа(ов) %2$d мин</string>
-    <string name="pump_no_connection_d">Нет соединения %1$d дней %2$d часов</string>
     <string name="insulinFromCob"><![CDATA[COB инсулин: <font color=\'%1$s\'>%2$.1fг %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Применено ограничение на болюс: %2$.2fед до %3$.2fед</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f/%2$d ед</string>
+    <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
+    <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подана только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
     <string name="loading">Загрузка...</string>
+    <string name="snooze">Отложить</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
     <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
     <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки или Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
     <string name="description_careportal">Въвеждане на разширени записи в логовете.</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
@@ -33,7 +34,6 @@
     <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
-    <string name="description_profile_local">Работа с профил, който е наличен само на този телефон (локален).</string>
     <string name="description_profile_nightscout">Работа с профила, които сте дефинирали в Nightscout</string>
     <string name="description_profile_simple">Работа с профил със само една стойност за всички часове.</string>
     <string name="description_pump_combo">Поддръжка за Accu-Chek Combo помпи, изискваща инсталиран ruffy</string>
@@ -41,15 +41,12 @@
     <string name="description_pump_dana_r_korean">Поддръжка за корейски Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_v2">Поддръжка за Dana Diabecare R помпи с обновен софтуер</string>
     <string name="description_pump_dana_rs">Поддръжка за Dana Diabecare RS помпи</string>
-    <string name="description_pump_insight">Поддръжка за Accu-Chek Insight pumps помпи, изискваща инсталиран SightRemote</string>
     <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
     <string name="description_sensitivity_oref0">Чувствителността се изчислява за 24 часа назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките.</string>
     <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 часа назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Също така се изчисляват и необявени хранения (UAM).</string>
     <string name="description_sensitivity_weighted_average">Чувствителността се изчислява като среднопретеглена стойност от отклоненията. По-новите отклонения имат по-високо тегло. Минималната абсорбция на въглехидрати се изчислява от Време за макс усвояване на въглехидрати от опциите. Този алгоритъм е най-бързият при проследяването на промени в чувствителността.</string>
-    <string name="description_source_dexcom_g5">Получава данни за КЗ от модифицираното приложение на Dexcom.</string>
-    <string name="description_source_dexcom_g6">Получавай данни за КЗ от модифицираното приложение на Dexcom.</string>
     <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
     <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
@@ -73,7 +70,6 @@
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="treatments_activity_string">Активен:</string>
     <string name="treatments_iobtotal_label_string">Общо IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Общо активен IOB:</string>
     <string name="tempbasals_realduration_label_string">Прод.:</string>
@@ -146,7 +142,6 @@
     <string name="openapsma_lastenact_label">Последно зададено</string>
     <string name="ok">ОК</string>
     <string name="cancel">Откажи</string>
-    <string name="close">Затвори</string>
     <string name="noapsselected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="safety">Сигурност</string>
     <string name="openapsma_disabled">Модула е изключен</string>
@@ -727,8 +722,6 @@
     <string name="bluetooth">Блутуут</string>
     <string name="btwatchdog_title">Блутуут ограничения</string>
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
-    <string name="DexcomG5">Dexcom G5 приложение (модифицирано)</string>
-    <string name="DexcomG6">Dexcom G6 приложение (модифицирано)</string>
     <string name="eversense">Eversense приложение(модифицирано)</string>
     <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
     <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
@@ -798,50 +791,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="insightpump">Помпа Insight</string>
-    <string name="status_no_colon">Статус</string>
-    <string name="changed">Променено</string>
-    <string name="pump_stopped_uppercase">ПОМПАТА Е СПРЯНА</string>
-    <string name="status_updated">Статуса е актуализиран</string>
     <string name="ago">преди</string>
-    <string name="with">с</string>
-    <string name="insight_active_tbr">Активен временен базал</string>
-    <string name="insight_min_left">мин. остават</string>
-    <string name="log_book">История</string>
-    <string name="insight_last_completed_action">Последно извършено действие</string>
-    <string name="insight_min">мин.</string>
-    <string name="insight_remaining_over">Останало</string>
-    <string name="insight_total_with">Общо с</string>
-    <string name="insight_upfront_with">Преди</string>
-    <string name="insight_stay_always_connected">Винаги свързано</string>
-    <string name="insight_history_idle">НЕЗАЕТ</string>
-    <string name="insight_history_syncing">СИНХР. НА</string>
-    <string name="insight_history_busy">ЗАЕТ</string>
-    <string name="insight_history_synced">СИНХР.</string>
-    <string name="insight_startup_uppercase">СТАРТИРАМ</string>
-    <string name="insight_needs">нужно е</string>
-    <string name="insight_not_connected_to_companion_app">Не е свързан към приложението!</string>
-    <string name="insight_companion_app_not_installed">Приложението изглежда не е инсталирано!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Несъвместимо приложение, нужна е версия</string>
-    <string name="insight_unknown">Неизвестно</string>
-    <string name="insight_waiting_for_code">Изчаква се потвърждение на кода</string>
-    <string name="insight_code_rejected">Кодът е отхвърлен</string>
-    <string name="insight_app_binding">Свързване с апликацията</string>
-    <string name="insight_not_authorized">Не е разрешено</string>
-    <string name="insight_incompatible">Несъвместимо</string>
-    <string name="second">секунда</string>
-    <string name="minute">минута</string>
     <string name="format_hours">%1$.2f ч</string>
-    <string name="hour">час</string>
-    <string name="day">ден</string>
-    <string name="week">седмица</string>
-    <string name="time_plural">с</string>
-    <string name="insight_keepalive_format_string">%1$ds изтича %2$s</string>
-    <string name="insight_keep_alive_status">Запазване на състоянието</string>
-    <string name="statistics">Статистика</string>
-    <string name="connect_preemptively">Предварително свързване</string>
-    <string name="automatically_connect_when">Автоматично свързване при отваряне на AndroidAPS, преди връзка с помпата за намаляване на първоначалното забавяне</string>
-    <string name="not_recommended_due_to_battery_drain">Не се препоръчва поради голяма консумация на батерия</string>
     <string name="enablesmbalways">Разреши SMB постоянно</string>
     <string name="enablesmbalways_summary">Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  </string>
     <string name="enablesmbaftercarbs">Разреши SMB след въглехидрати</string>
@@ -945,8 +896,6 @@
     <string name="reset">нулиране</string>
     <string name="waitingfortimesynchronization">Изчаква синхронизация на времето (%1$d сек)</string>
     <string name="loopdisconnectedfor">Разкачена помпа (%1$d мин)</string>
-    <string name="automatic_careportal_events">Автоматично careportal събитие</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Автоматично изпраща статус на резервоар, сет и аларми на помпата към Nightscout</string>
     <string name="openapssmb_maxiob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>
     <string name="openapssmb_maxiob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
     <string name="pump_stopped">Помпата е спряна</string>
@@ -997,12 +946,10 @@
     <string name="adjustprofileinns">Промени трябва да се направят и в NS</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_loop_description">Натиснете бутона по-долу за да позволите AndroidAPS да предлага/прави промени в базалните стойности</string>
-    <string name="enableobjectives">Разреши Цели</string>
     <string name="apssetup">Конфигуриране на APS модул</string>
     <string name="sensitivitysetup">Конфигуриране на модул за чувствителност</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато вие го настроите.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="bgsourcesetup">Конфигуриране на източник на КЗ</string>
     <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
@@ -1055,7 +1002,6 @@
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
     <string name="maintenance_settings">Настройки за поддръжка</string>
     <string name="maintenance_email">Имейл</string>
-    <string name="invalid_email_message">Невалиден e-mail</string>
     <string name="maintenance_amount">Брой логове за изпращане</string>
     <string name="maintenance">Поддръжка</string>
     <string name="maintenance_shortname">ПОДДР</string>
@@ -1117,7 +1063,6 @@
     <string name="manufacturing_date">Дата на производство</string>
     <string name="delete_pairing">Изтриване на сдвояване</string>
     <string name="pairing_information">Информация за сдвояването</string>
-    <string name="refreh_status">Обнови статус</string>
     <string name="start_pump">Стартирай помпа</string>
     <string name="stop_pump">Спри помпа</string>
     <string name="operating_mode">Работен режим</string>
@@ -1269,6 +1214,7 @@
     <string name="autosenslabel">Аутосенс %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Разлика в кръвната захар</string>
+    <string name="deltalabel_u">Разлика в кръвната захар [%1$s]</string>
     <string name="currentlocation">Текущото местоположение</string>
     <string name="location">Местоположение</string>
     <string name="latitude_short">Ширина:</string>
@@ -1281,12 +1227,9 @@
     <string name="triggercoblabel">Активни въглехидрати</string>
     <string name="cobcompared">Въгл %1$s %2$.0f</string>
     <string name="taskname">Име на правилото</string>
-    <string name="eventname">Име на събитие</string>
     <string name="edit_short">РЕД</string>
     <string name="please_choose_an_action_type">Моля изберете действие:</string>
     <string name="please_choose_a_trigger_type">Моля изберете условие:</string>
-    <string name="if_label">Ако:</string>
-    <string name="then_label">Тогава:</string>
     <string name="triggers">Активиращи условия:</string>
     <string name="remove_label">ИЗТРИИ</string>
     <string name="preconditions">Предварителни:</string>
@@ -1307,7 +1250,6 @@
     <string name="medtronic_pump_frequency_worldwide">Останалата част от света (868 Mhz)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Софтуерно 4b6b кодиране</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Хардуерно 4b6b кодиране</string>
-    <string name="rileylink_mac_address">RileyLink MAC адрес</string>
     <string name="medtronic_custom_action_wake_and_tune">Събуди и настрой</string>
     <string name="medtronic_custom_action_clear_bolus_block">Изчисти Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Изчисти RileyLink конфигурацията</string>
@@ -1319,9 +1261,7 @@
     <string name="rileylink_scanner_scan_scan">СКАНИРАЙ</string>
     <string name="rileylink_scanner_scan_stop">СТОП</string>
     <string name="rileylink_scanner_selected_device">Избрано</string>
-    <string name="rileylink_scanner_scan">Сканирай</string>
     <string name="rileylink_scanner_title">RileyLink скенер</string>
-    <string name="rileylink_scanner_scan_menu">Сканирай за RileyLink</string>
     <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth не е включен.</string>
     <string name="location_not_found_title">Локацията не е включена</string>
@@ -1334,10 +1274,8 @@
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Настройки</string>
     <string name="rileylink_settings_tab2">История</string>
-    <string name="rileylink_settings_tab3">Устройство</string>
     <string name="rileylink_status">RileyLink статус</string>
     <string name="medtronic_pump_status">Статус на помпата</string>
-    <string name="rileylink_settings_title">RileyLink настройки</string>
     <string name="title_activity_rileylink_settings">RileyLink настройки</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_configured_address">Конфигуриран адрес</string>
@@ -1402,7 +1340,6 @@
     <string name="medtronic_pump_status_waking_up">Събуждане</string>
     <string name="medtronic_pump_status_error_comm">Грешка в комуникацията</string>
     <string name="medtronic_pump_status_timeout_comm">Изтичане на времето за връзка</string>
-    <string name="medtronic_pump_status_problem_contacting">Проблем при връзка с помпата</string>
     <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
     <string name="medtronic_pump_status_invalid_config">Грешна конфигурация</string>
     <string name="medtronic_pump_status_active">Активна</string>
@@ -1420,7 +1357,6 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Профилът е идентичен.</string>
     <string name="medtronic_cmd_desc_get_history">Вземи история - стр %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Вземи история - стр %1$d</string>
-    <string name="medtronic_cmd_desc_get_history_base">Вземи история - стр %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Вземи времето на помпата</string>
     <string name="medtronic_cmd_desc_get_settings">Вземи настройките на помпата</string>
     <string name="medtronic_cmd_desc_get_model">Вземи модел на помпата</string>
@@ -1429,12 +1365,13 @@
     <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
-    <string name="pump_no_connection_h">Няма връзка от %1$d час(а) %2$d мин</string>
-    <string name="pump_no_connection_d">Няма връзка от %1$d дни %2$d часа</string>
     <string name="insulinFromCob"><![CDATA[Инсулин за въгл: <font color=\'%1$s\'>%2$.1fг %3$.2fЕ</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Ограничение на болуса: %2$.2fЕ на %3$.2fЕ</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може има голяма грешка !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
+    <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
+    <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
+    <string name="loading">Зареждане ...</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

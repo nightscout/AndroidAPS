@@ -34,7 +34,7 @@
     <string name="description_smb">Cel mai recent algoritm destinat utilizatorilor avansaţi</string>
     <string name="description_overview">Afişează starea curentă a buclei şi butoanele pentru cele mai folosite acţiuni</string>
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
-    <string name="description_profile_local">Defineşte un profil care este disponibil offline.</string>
+    <string name="description_profile_local">Definire profil care să fie valabil offline.</string>
     <string name="description_profile_nightscout">Foloseşte profilul predefinit deja în Nightscout</string>
     <string name="description_profile_simple">Definește un profil cu un singur bloc de timp.</string>
     <string name="description_pump_combo">Integrare cu pompele Accu-Chek, necesită aplicația Ruffy</string>
@@ -42,15 +42,12 @@
     <string name="description_pump_dana_r_korean">Integrare cu pompele DANA Diabcare R coreene</string>
     <string name="description_pump_dana_r_v2">Integrare cu pompele DANA Diabcare R cu firmware upgradat</string>
     <string name="description_pump_dana_rs">Integrare cu pompele DANA Diabcare RS</string>
-    <string name="description_pump_insight">Integrare cu pompele Accu-Chek Insight, necesită aplicația SightRemote</string>
     <string name="description_pump_mdi">Integrare cu pompă virtuală, pentru persoanele ce folosesc terapia cu pen</string>
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
     <string name="description_sensitivity_aaps">Sensibilitatea este calculată la fel ca în algoritmul Oref0, dar se poate specifica un interval de timp în trecut. Absorbția minimă de carbohidrați este calculată din parametrul echivalent, stabilit în preferințe.</string>
     <string name="description_sensitivity_oref0">Sensibilitatea este calcuată din datele disponibile în ultimele 24 de ore, iar carbohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe.</string>
     <string name="description_sensitivity_oref1">Sensibilitatea este calculată folosind datele din ultimele 8 ore, iar cabohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe. Se calculează, de asemenea, UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensibilitatea este calculată ca o medie ponderată a deviațiilor. Deviațiile noi au o importanță mai mare. Absorbția minimă de carbohidrați este calculată în funcție de parametrul absorbție maximă de carbohidrați, stabilit în preferințe. Acest algoritm este cel mai rapid atunci când sensibilitatea la insulină este fluctuantă.</string>
-    <string name="description_source_dexcom_g5">Primește valorile glicemiei din aplicația Dexcom G5 modificată.</string>
-    <string name="description_source_dexcom_g6">Primește valorile glicemiei din aplicația Dexcom G6 modificată.</string>
     <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
     <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
     <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
@@ -74,7 +71,6 @@
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="treatments_activity_string">Activitate:</string>
     <string name="treatments_iobtotal_label_string">IOB total:</string>
     <string name="treatments_iobactivitytotal_label_string">Activitate total IOB:</string>
     <string name="tempbasals_realduration_label_string">Durată:</string>
@@ -147,7 +143,6 @@
     <string name="openapsma_lastenact_label">Ultima acțiune executată</string>
     <string name="ok">OK</string>
     <string name="cancel">Renunță</string>
-    <string name="close">Închide</string>
     <string name="noapsselected">NU AȚI SELECTAT APS SAU NU EXISTĂ REZULTAT GENERAT</string>
     <string name="safety">Siguranță</string>
     <string name="openapsma_disabled">Modul inactiv</string>
@@ -728,8 +723,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Oprește bluetooth-ul telefonului pentru o secundă dacă nu se poate conecta la pompă. Aceasta poate ajuta în cazul telefoanelor cu bluetooth incompatitibil.</string>
-    <string name="DexcomG5">App DexcomG5 (cu patch)</string>
-    <string name="DexcomG6">Aplicația G6 (modificată)</string>
     <string name="eversense">Aplicația Eversense (modificată)</string>
     <string name="dexcomg5_nsupload_title">Încarcă date glicemie în NS</string>
     <string name="bgsource_upload">Setări înregistrare glicemie</string>
@@ -799,50 +792,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nu este suficientă insulină în rezervor</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
     <string name="insightpump_shortname">Obiectiv</string>
-    <string name="insightpump">Pompă Insight</string>
-    <string name="status_no_colon">Stare</string>
-    <string name="changed">Schimbat</string>
-    <string name="pump_stopped_uppercase">POMPĂ OPRITĂ</string>
-    <string name="status_updated">Stare actualizată</string>
     <string name="ago">în trecut</string>
-    <string name="with">cu</string>
-    <string name="insight_active_tbr">RBT activ</string>
-    <string name="insight_min_left">min. rămase</string>
-    <string name="log_book">Jurnal</string>
-    <string name="insight_last_completed_action">Ultima acțiune efectuată</string>
-    <string name="insight_min">min</string>
-    <string name="insight_remaining_over">rămase peste</string>
-    <string name="insight_total_with">total cu</string>
-    <string name="insight_upfront_with">față de</string>
-    <string name="insight_stay_always_connected">Rămâneți conectat permanent</string>
-    <string name="insight_history_idle">LIBER</string>
-    <string name="insight_history_syncing">SINCRONIZARE</string>
-    <string name="insight_history_busy">OCUPAT</string>
-    <string name="insight_history_synced">SINCRONIZAT</string>
-    <string name="insight_startup_uppercase">PORNIRE</string>
-    <string name="insight_needs">nevoi</string>
-    <string name="insight_not_connected_to_companion_app">Aplicația nu este conectată!</string>
-    <string name="insight_companion_app_not_installed">Aplicația pare să nu fie instalată!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Aplicație incompatibila, este necesară versiunea</string>
-    <string name="insight_unknown">Necunoscut</string>
-    <string name="insight_waiting_for_code">Se așteaptă confirmarea codului</string>
-    <string name="insight_code_rejected">Cod respins</string>
-    <string name="insight_app_binding">Conectare aplicație</string>
-    <string name="insight_not_authorized">Neautorizat</string>
-    <string name="insight_incompatible">Incompatibil</string>
-    <string name="second">secundă</string>
-    <string name="minute">minut</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="hour">oră</string>
-    <string name="day">zi</string>
-    <string name="week">săptămână</string>
-    <string name="time_plural">s</string>
-    <string name="insight_keepalive_format_string">%1$ds expiră %2$s</string>
-    <string name="insight_keep_alive_status">Stare de menținere</string>
-    <string name="statistics">Statistici</string>
-    <string name="connect_preemptively">Conectare preventivă</string>
-    <string name="automatically_connect_when">Conectare automată atunci când AndroidAPS este afișat pe ecran, înaintea cererii de efectuare a unei comenzi către pompă, pentru reducerea întârzierilor</string>
-    <string name="not_recommended_due_to_battery_drain">Nerecomandat datorită epuizării bateriei</string>
     <string name="enablesmbalways">Activează SMB întotdeauna</string>
     <string name="enablesmbalways_summary">Activează SMB întotdeauna independent de bolusuri. Este posibil doar în cazul unei surse de glicemii filtrate, cum ar fi G5</string>
     <string name="enablesmbaftercarbs">Activează SMB după carbohidrați</string>
@@ -946,8 +897,6 @@
     <string name="reset">resetare</string>
     <string name="waitingfortimesynchronization">Se așteaptă o sincronizare a timpului (%1$d s)</string>
     <string name="loopdisconnectedfor">Deconectat (%1$d min)</string>
-    <string name="automatic_careportal_events">Evenimente Careportal automate</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Încărcare automată a schimbărilor de insulină, rezervor, baterie și alarme de pompă în Nightscout</string>
     <string name="openapssmb_maxiob_title">Maximul total IOB peste care OpenAPS nu poate trece [U]</string>
     <string name="openapssmb_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS,\nOpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
     <string name="pump_stopped">Pompă oprită</string>
@@ -998,12 +947,11 @@
     <string name="adjustprofileinns">Schimbările trebuie făcute în NS</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
-    <string name="enableobjectives">Activați Obiectivele</string>
     <string name="apssetup">Configurați plugin APS</string>
     <string name="sensitivitysetup">Configurați pluginul pentru Sensibilitate</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSClient răspunde de conexiunea cu Nightscout. Puteți ignora această secțiune, dar nu veți putea completa obiectivele până nu îl configurați.</string>
+    <string name="nsclientinfotext">NSClient se ocupă de conectarea la Nightscout. Puteți sări peste această parte, dar nu se vor îndeplini anumite obiective dacă faceți acest lucru.</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="bgsourcesetup">Configurați sursa glicemiilor</string>
     <string name="setupwizard_profile_description">Selectați sursa sau profilul. Dacă pacientul este copil, ar fi bine să alegeți un profil NS. Dacă nu aveți profil NS, puteți alege profil local. De aici alegeți doar sursa profilului; pentru a utiliza acest profil, trebuie să îl activați prin executarea unei \"Schimbări de profil\"</string>
@@ -1056,7 +1004,6 @@
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="maintenance_settings">Setări de întreținere</string>
     <string name="maintenance_email">Email</string>
-    <string name="invalid_email_message">Email invalid</string>
     <string name="maintenance_amount">Nr de loguri de trimis</string>
     <string name="maintenance">Mentenanță</string>
     <string name="maintenance_shortname">MENTN</string>
@@ -1118,7 +1065,6 @@
     <string name="manufacturing_date">Data fabricării</string>
     <string name="delete_pairing">Șterge asocierea</string>
     <string name="pairing_information">Informații despre asociere</string>
-    <string name="refreh_status">Reîmprospătare stare</string>
     <string name="start_pump">Porniți pompa</string>
     <string name="stop_pump">Opriți pompa</string>
     <string name="operating_mode">Modul de funcționare</string>
@@ -1270,6 +1216,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Diferență glicemie</string>
+    <string name="deltalabel_u">Diferență glicemie [%1$s]</string>
     <string name="currentlocation">Localizarea curentă</string>
     <string name="location">Localizare</string>
     <string name="latitude_short">Lat:</string>
@@ -1282,12 +1229,9 @@
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Numele acțiunii</string>
-    <string name="eventname">Numele evenimentului</string>
     <string name="edit_short">EDITARE</string>
     <string name="please_choose_an_action_type">Trebuie să alegeți un tip de acțiune:</string>
     <string name="please_choose_a_trigger_type">Trebuie să alegeți un tip de declanșator:</string>
-    <string name="if_label">Dacă:</string>
-    <string name="then_label">Atunci:</string>
     <string name="triggers">Declanșatori:</string>
     <string name="remove_label">ȘTERGE</string>
     <string name="preconditions">Condiții pre-existente:</string>
@@ -1308,7 +1252,6 @@
     <string name="medtronic_pump_frequency_worldwide">Globală (868 Mhz)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Criptare software 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Criptare hardware 4b6b</string>
-    <string name="rileylink_mac_address">Adresă MAC RileyLink</string>
     <string name="medtronic_custom_action_wake_and_tune">Pornește și sincronizează</string>
     <string name="medtronic_custom_action_clear_bolus_block">Șterge blocajul de bolus</string>
     <string name="medtronic_custom_action_reset_rileylink">Resetează configurația RileyLink</string>
@@ -1320,9 +1263,7 @@
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
     <string name="rileylink_scanner_selected_device">Selectat</string>
-    <string name="rileylink_scanner_scan">Scanare</string>
     <string name="rileylink_scanner_title">Scanare RileyLink</string>
-    <string name="rileylink_scanner_scan_menu">Scanare pentru căutarea RileyLink</string>
     <string name="rileylink_scanner_ble_not_supported">BLE nu este suportat.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth-ul este dezactivat.</string>
     <string name="location_not_found_title">Localizarae este dezactivată</string>
@@ -1335,10 +1276,8 @@
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Setări</string>
     <string name="rileylink_settings_tab2">Istoric</string>
-    <string name="rileylink_settings_tab3">Dispozitiv</string>
     <string name="rileylink_status">Stare RileyLink</string>
     <string name="medtronic_pump_status">Stare pompă</string>
-    <string name="rileylink_settings_title">Setări RileyLink</string>
     <string name="title_activity_rileylink_settings">Setări RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_configured_address">Adresă configurate</string>
@@ -1403,7 +1342,6 @@
     <string name="medtronic_pump_status_waking_up">Se pornește</string>
     <string name="medtronic_pump_status_error_comm">Eroare de comunicație</string>
     <string name="medtronic_pump_status_timeout_comm">Comunicația nu a reușit la timp</string>
-    <string name="medtronic_pump_status_problem_contacting">Problemă în contactarea pompei</string>
     <string name="medtronic_pump_status_pump_unreachable">Pompă indisponibilă</string>
     <string name="medtronic_pump_status_invalid_config">Configurație invalidă</string>
     <string name="medtronic_pump_status_active">Activă</string>
@@ -1421,7 +1359,6 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Profilul bazal existent deja este existent, nu va fi reintrodus.</string>
     <string name="medtronic_cmd_desc_get_history">Preia istoricul - Pagina %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Preia istoricul - Pagina %1$d</string>
-    <string name="medtronic_cmd_desc_get_history_base">Preia istoricul - Pagina %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Preia timpul din pompă</string>
     <string name="medtronic_cmd_desc_get_settings">Preia setările</string>
     <string name="medtronic_cmd_desc_get_model">Preia modelul de pompă</string>
@@ -1430,12 +1367,14 @@
     <string name="medtronic_cmd_desc_get_tbr">Preia bazala temporară</string>
     <string name="medtronic_cmd_desc_set_tbr">Setează bazala temporară</string>
     <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
-    <string name="pump_no_connection_h">Fără conexiune de %1$d oră/ore și %2$d min</string>
-    <string name="pump_no_connection_d">Fără conexiune de %1$d zi/le și %2$d hours</string>
     <string name="insulinFromCob"><![CDATA[Insulină COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricție de bolus aplicată: %2$.2fU la %3$.2fU</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! S-a detectat o absorbție de carbohidrați încetinită: %2$d%% din timp. Reverificați calculele. COB poate fi foarte greșit afișat !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
+    <string name="deliverpartofboluswizard">Wizard bolus face un calcul, dar numai o parte din insulina calculată este și livrată. Este mai eficient când se folosește cu algoritmul SMB.</string>
+    <string name="loading">Se încarcă ...</string>
+    <string name="snooze">Amână</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zi</item>

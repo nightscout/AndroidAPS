@@ -34,7 +34,6 @@
     <string name="description_smb">Algoritmo più recente per gli utenti avanzati</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i pulsanti per le azioni più comuni</string>
     <string name="description_persistent_notification">Mostra una notifica con una breve panoramica di ciò che sta facendo il tuo loop</string>
-    <string name="description_profile_local">Definisci un profilo disponibile offline.</string>
     <string name="description_profile_nightscout">Fornisce il profilo definito in Nightscout</string>
     <string name="description_profile_simple">Imposta un profilo con un solo intervallo temporale.</string>
     <string name="description_pump_combo">Integrazione del microinfusore Accu-Chek Combo, è necessario avere Ruffy installato</string>
@@ -42,15 +41,12 @@
     <string name="description_pump_dana_r_korean">Integrazione del microinfusore DANA Diabecare R Korean</string>
     <string name="description_pump_dana_r_v2">Integrazione del microinfusore DANA Diabecare R con firmware aggiornato</string>
     <string name="description_pump_dana_rs">Integrazione del microinfusore DANA Diabecare RS</string>
-    <string name="description_pump_insight">Integrazione del microinfusore Accu-Chek Insight, è necessario avere installato SightRemote</string>
     <string name="description_pump_mdi">Per le persone in terapia multi-iniettiva</string>
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop Aperto)</string>
     <string name="description_sensitivity_aaps">La sensibilità è calcolata allo stesso modo di Oref0, ma è possibile specificare l\'intervallo di tempo al passato. Minimal carb absorption è calcolato da max carb absorption time nelle preferenze.</string>
     <string name="description_sensitivity_oref0">La sensibilità è calcolata dai dati delle ultime 24h e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze.</string>
     <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il Plugin calcola anche UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilità è calcolata come media ponderata dalle deviazioni. Le deviazioni più recenti hanno peso maggiore. Minimal carb absorption è calcolato da max carb absorption time nelle preferenze. Questo algoritmo è il più veloce nel seguire i cambiamenti di sensibilità.</string>
-    <string name="description_source_dexcom_g5">Ricevi valori Glicemia dall\'app Dexcom G5 modificata.</string>
-    <string name="description_source_dexcom_g6">Ricevi valori Glicemia dall\'app Dexcom G6 modificata.</string>
     <string name="description_source_eversense">Ricevi valori Glicemia dall\'app Eversense modificata.</string>
     <string name="description_source_glimp">Ricevi valori Glicemia da Glimp.</string>
     <string name="description_source_mm640g">Ricevi valori Glicemia da 600SeriesAndroidUploader.</string>
@@ -74,7 +70,6 @@
     <string name="treatments_carbs_label_string">Carboidrati:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="treatments_activity_string">Attività:</string>
     <string name="treatments_iobtotal_label_string">IOB Totale:</string>
     <string name="treatments_iobactivitytotal_label_string">Attività IOB Totale:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
@@ -147,7 +142,6 @@
     <string name="openapsma_lastenact_label">Ultimo attuato</string>
     <string name="ok">OK</string>
     <string name="cancel">Annulla</string>
-    <string name="close">Chiudi</string>
     <string name="noapsselected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
     <string name="safety">Sicurezza</string>
     <string name="openapsma_disabled">Plugin disabilitato</string>
@@ -728,8 +722,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Spegni il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
-    <string name="DexcomG5">DexcomG5 App (modificata)</string>
-    <string name="DexcomG6">DexcomG6 App (modificata)</string>
     <string name="eversense">Eversense App (modificata)</string>
     <string name="dexcomg5_nsupload_title">Carica dati Glicemia su NS</string>
     <string name="bgsource_upload">Impostazioni caricamento BG</string>
@@ -799,50 +791,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Insulina nel serbatoio insufficiente per erogare il bolo</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="insightpump">Micro Insight</string>
-    <string name="status_no_colon">Stato</string>
-    <string name="changed">Modificato</string>
-    <string name="pump_stopped_uppercase">MICRO FERMO</string>
-    <string name="status_updated">Stato Aggiornato</string>
     <string name="ago">fa</string>
-    <string name="with">con</string>
-    <string name="insight_active_tbr">TBR attivo</string>
-    <string name="insight_min_left">min mancanti</string>
-    <string name="log_book">Registro</string>
-    <string name="insight_last_completed_action">Ultima azione completata</string>
-    <string name="insight_min">min</string>
-    <string name="insight_remaining_over">rimanenti oltre</string>
-    <string name="insight_total_with">totale con</string>
-    <string name="insight_upfront_with">in anticipo con</string>
-    <string name="insight_stay_always_connected">Rimani sempre connesso</string>
-    <string name="insight_history_idle">INATTIVO</string>
-    <string name="insight_history_syncing">SINCRONIZZAZIONE</string>
-    <string name="insight_history_busy">OCCUPATO</string>
-    <string name="insight_history_synced">SINCRONIZZATO</string>
-    <string name="insight_startup_uppercase">AVVIO</string>
-    <string name="insight_needs">Bisogni</string>
-    <string name="insight_not_connected_to_companion_app">Non connesso alla companion app!</string>
-    <string name="insight_companion_app_not_installed">La companion app non sembra essere installata!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Companion app incompatibile</string>
-    <string name="insight_unknown">Sconosciuto</string>
-    <string name="insight_waiting_for_code">In attesa di conferma del codice</string>
-    <string name="insight_code_rejected">Codice rifiutato</string>
-    <string name="insight_app_binding">Associazione applicazione</string>
-    <string name="insight_not_authorized">Non autorizzato</string>
-    <string name="insight_incompatible">Incompatibile</string>
-    <string name="second">secondo</string>
-    <string name="minute">minuto</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="hour">ora</string>
-    <string name="day">giorno</string>
-    <string name="week">settimana</string>
-    <string name="time_plural">s</string>
-    <string name="insight_keepalive_format_string">%1$ds scade: %2$s</string>
-    <string name="insight_keep_alive_status">Stato di Keep-Alive</string>
-    <string name="statistics">Statistiche</string>
-    <string name="connect_preemptively">Connetti preventivamente</string>
-    <string name="automatically_connect_when">Connetti automaticamente quando vengono aperte le schermate AndroidAPS, prima che venga richiesto qualsiasi comando del micro, per ridurre il ritardo della connessione</string>
-    <string name="not_recommended_due_to_battery_drain">Non consigliato a causa del consumo della batteria</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
     <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemie con buon filtraggio dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i carboidrati</string>
@@ -946,8 +896,6 @@
     <string name="reset">reset</string>
     <string name="waitingfortimesynchronization">In attesa della sincronizzazione dell\'ora (%1$d sec)</string>
     <string name="loopdisconnectedfor">Disconnesso (%1$d m)</string>
-    <string name="automatic_careportal_events">Eventi careportal automatici</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Carica automaticamente su Nightscout i cambi di insulina, cannula e batteria e gli allarmi micro</string>
     <string name="openapssmb_maxiob_title">Max IOB totale oltre la quale OpenAPS non può andare [U]</string>
     <string name="openapssmb_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se IOB corrente è maggiore di questo valore</string>
     <string name="pump_stopped">Micro sospeso</string>
@@ -998,12 +946,10 @@
     <string name="adjustprofileinns">Le modifiche devono essere fatte in NS</string>
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_loop_description">Premere il pulsante in basso per permettere ad AndroidAPS di suggerire/fare modifiche alla basale</string>
-    <string name="enableobjectives">Abilita gli Obiettivi</string>
     <string name="apssetup">Configura il plugin APS</string>
     <string name="sensitivitysetup">Configura il plugin di Sensibilità</string>
     <string name="setupwizard_sensitivity_description">Il plugin di Sensibilità è utilizzato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSClient gestisce la connessione a Nightscout. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non ne porterai a termine la configurazione.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5 - 6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="bgsourcesetup">Configura sorgente Glicemie</string>
     <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino è necessario utilizzare il profilo di NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per utilizzarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio Profilo\"</string>
@@ -1056,7 +1002,6 @@
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
     <string name="maintenance_settings">Impostazioni Manutenzione</string>
     <string name="maintenance_email">Email</string>
-    <string name="invalid_email_message">Email non valida</string>
     <string name="maintenance_amount">Nessun log da inviare</string>
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1118,7 +1063,6 @@
     <string name="manufacturing_date">Data di produzione</string>
     <string name="delete_pairing">Elimina associazione</string>
     <string name="pairing_information">Informazioni associazione</string>
-    <string name="refreh_status">Aggiorna stato</string>
     <string name="start_pump">Avvia micro</string>
     <string name="stop_pump">Ferma micro</string>
     <string name="operating_mode">Modalità operativa</string>
@@ -1270,6 +1214,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Differenza Glicemia</string>
+    <string name="deltalabel_u">Differenza Glicemia [%1$s]</string>
     <string name="currentlocation">Posizione corrente</string>
     <string name="location">Posizione</string>
     <string name="latitude_short">Lat:</string>
@@ -1282,12 +1227,9 @@
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Nome Task</string>
-    <string name="eventname">Nome Evento</string>
     <string name="edit_short">MODIFICA</string>
     <string name="please_choose_an_action_type">Scegli un tipo di azione:</string>
     <string name="please_choose_a_trigger_type">Scegli un tipo di trigger:</string>
-    <string name="if_label">If:</string>
-    <string name="then_label">Then:</string>
     <string name="triggers">Trigger:</string>
     <string name="remove_label">RIMUOVI</string>
     <string name="preconditions">Presupposti:</string>
@@ -1308,7 +1250,6 @@
     <string name="medtronic_pump_frequency_worldwide">Globale (868 Mhz)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Codifica Software 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Codifica Hardware 4b6b</string>
-    <string name="rileylink_mac_address">RileyLink MAC Address</string>
     <string name="medtronic_custom_action_wake_and_tune">Risveglio e Sintonizzazione</string>
     <string name="medtronic_custom_action_clear_bolus_block">Cancella Blocco Bolo</string>
     <string name="medtronic_custom_action_reset_rileylink">Reset Configurazione RileyLink</string>
@@ -1320,9 +1261,7 @@
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
     <string name="rileylink_scanner_selected_device">Selezionato</string>
-    <string name="rileylink_scanner_scan">Scan</string>
     <string name="rileylink_scanner_title">Scansione RileyLink</string>
-    <string name="rileylink_scanner_scan_menu">Scan di RileyLink</string>
     <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy non supportato.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth disabilitato.</string>
     <string name="location_not_found_title">La posizione non è abilitata</string>
@@ -1335,10 +1274,8 @@
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Impostazioni</string>
     <string name="rileylink_settings_tab2">Storico</string>
-    <string name="rileylink_settings_tab3">Dispositivo</string>
     <string name="rileylink_status">Stato RileyLink</string>
     <string name="medtronic_pump_status">Stato micro</string>
-    <string name="rileylink_settings_title">Impostazioni RileyLink</string>
     <string name="title_activity_rileylink_settings">Impostazioni RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_configured_address">Indirizzo configurato</string>
@@ -1403,7 +1340,6 @@
     <string name="medtronic_pump_status_waking_up">Risveglio</string>
     <string name="medtronic_pump_status_error_comm">Errore nella comunicazione</string>
     <string name="medtronic_pump_status_timeout_comm">Timeout della comunicazione</string>
-    <string name="medtronic_pump_status_problem_contacting">Problema di connessione al micro</string>
     <string name="medtronic_pump_status_pump_unreachable">Micro irraggiungibile</string>
     <string name="medtronic_pump_status_invalid_config">Configurazione non valida</string>
     <string name="medtronic_pump_status_active">Attivo</string>
@@ -1421,7 +1357,6 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Il profilo basale è lo stesso, non sarà impostato di nuovo.</string>
     <string name="medtronic_cmd_desc_get_history">Ottieni Storico - Pagina %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Ottieni Storico - Pagina %1$d</string>
-    <string name="medtronic_cmd_desc_get_history_base">Ottieni Storico - Pagina %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Ottieni Orario Micro</string>
     <string name="medtronic_cmd_desc_get_settings">Ottieni Impostazioni</string>
     <string name="medtronic_cmd_desc_get_model">Ottieni Modello Micro</string>
@@ -1430,12 +1365,14 @@
     <string name="medtronic_cmd_desc_get_tbr">Ottieni Basale Temporanea</string>
     <string name="medtronic_cmd_desc_set_tbr">Imposta Basale Temporanea</string>
     <string name="medtronic_cmd_desc_set_bolus">Imposta Bolo</string>
-    <string name="pump_no_connection_h">Nessuna connessione per %1$d ora(e) e %2$d min</string>
-    <string name="pump_no_connection_d">Nessuna connessione per %1$d giorno(i) e %2$d ore</string>
     <string name="insulinFromCob"><![CDATA[Insulina COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Vincolo Bolo applicato: %2$.2fU a %3$.2fU</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB può essere davvero fuori !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="partialboluswizard">Eroga questa parte del risultato del bolus wizard [%]</string>
+    <string name="deliverpartofboluswizard">Bolus wizard esegue il calcolo, ma solo questa parte dell\'insulina calcolata è erogata. Utile con algoritmo SMB.</string>
+    <string name="loading">Caricamento ...</string>
+    <string name="snooze">Snooze</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

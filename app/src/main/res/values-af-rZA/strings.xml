@@ -33,7 +33,6 @@
     <string name="description_smb">Mees onlangse algoritme vir gevorderde gebruikers</string>
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
-    <string name="description_profile_local">Definieer \'n profiel wat van lyn af beskikbaar is.</string>
     <string name="description_profile_nightscout">Bied die profiel wat jy het beskryf het in Nightscout</string>
     <string name="description_profile_simple">Definieer \'n profiel met net een tydblok.</string>
     <string name="description_pump_combo">Pomp Integrasie met Accu-Chek Combo pompe, vereis dat ruffy geïnstalleer is</string>
@@ -41,15 +40,12 @@
     <string name="description_pump_dana_r_korean">Pomp integrasie vir Koreanse DANA Diabecare R pompe</string>
     <string name="description_pump_dana_r_v2">Pomp integrasie vir DANA Diabecare R pompe met opgegradeerde firmware</string>
     <string name="description_pump_dana_rs">Pomp integrasie vir DANA Diabecare RS pompe</string>
-    <string name="description_pump_insight">Pomp integrasie vir Accu-Chek Insight pompe, vereis dat SightRemote geïnstalleer is</string>
     <string name="description_pump_mdi">Pomp integrasie vir mense wat veelvoudige daaglikse inspuitings doen vir hul diabetes terapie/regime</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
     <string name="description_sensitivity_oref0">Sensitiwiteit word bereken vanaf 24h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure afgesny.</string>
     <string name="description_sensitivity_oref1">Sensitiwiteit word bereken uit 8h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure gesny. Plugin bereken ook UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
-    <string name="description_source_dexcom_g5">Ontvang BG waardes vanaf die gelapte Dexcom G5 app.</string>
-    <string name="description_source_dexcom_g6">Ontvang BG waardes vanaf die gelapte Dexcom G6 toep.</string>
     <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
     <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
@@ -73,7 +69,6 @@
     <string name="treatments_carbs_label_string">Karbs:</string>
     <string name="treatments_iob_label_string">IAB:</string>
     <string name="sms_iob">IAB:</string>
-    <string name="treatments_activity_string">Aktiwiteit:</string>
     <string name="treatments_iobtotal_label_string">Totale IAB:</string>
     <string name="treatments_iobactivitytotal_label_string">Totale IAB aktiwiteit:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
@@ -146,7 +141,6 @@
     <string name="openapsma_lastenact_label">Laaste per hand</string>
     <string name="ok">OK</string>
     <string name="cancel">Kanselleer</string>
-    <string name="close">Sluit</string>
     <string name="noapsselected">GEEN APS GEKIES OF UITSLAG VERSKAF</string>
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeaktiveer</string>
@@ -727,8 +721,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Skakel asb die foon se bluetooth af vir een sekonde Indien geen verbinding met die pomp moontlik is nie. Dit mag help vir sommige selfone waar die bluetooth stapel vries.</string>
-    <string name="DexcomG5">DexcomG5 App (gelapte)</string>
-    <string name="DexcomG6">DexcomG6 App (gelapte)</string>
     <string name="eversense">Eversense App (bygewerk)</string>
     <string name="dexcomg5_nsupload_title">BG data oplaai na NS</string>
     <string name="bgsource_upload">BG oplaai instellings</string>
@@ -798,50 +790,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Nie genoeg insulien vir bolus oor in reserwe</string>
     <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
     <string name="insightpump_shortname">Sig</string>
-    <string name="insightpump">Insight Pomp</string>
-    <string name="status_no_colon">Status</string>
-    <string name="changed">Verander</string>
-    <string name="pump_stopped_uppercase">POMP GESTOP</string>
-    <string name="status_updated">Status bygewerk</string>
     <string name="ago">terug</string>
-    <string name="with">met</string>
-    <string name="insight_active_tbr">Aktiveer TBR</string>
-    <string name="insight_min_left">min oor</string>
-    <string name="log_book">Log boek</string>
-    <string name="insight_last_completed_action">Laaste voltooide aksie</string>
-    <string name="insight_min">min</string>
-    <string name="insight_remaining_over">oorblywend</string>
-    <string name="insight_total_with">total with</string>
-    <string name="insight_upfront_with">upfront with</string>
-    <string name="insight_stay_always_connected">Bly altyd gekoppel</string>
-    <string name="insight_history_idle">LEDIG</string>
-    <string name="insight_history_syncing">SINKRONISEER TANS</string>
-    <string name="insight_history_busy">BESIG</string>
-    <string name="insight_history_synced">GESINKRONISEER</string>
-    <string name="insight_startup_uppercase">SELFLAAI</string>
-    <string name="insight_needs">benodig</string>
-    <string name="insight_not_connected_to_companion_app">Nie verbind aan tjommie toepassing!</string>
-    <string name="insight_companion_app_not_installed">Dit lyk asof metgesel applikasie nie geinstalleerd is!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Onversoenbare metgesel-toepassing, ons benodig weergawe</string>
-    <string name="insight_unknown">Onbekend</string>
-    <string name="insight_waiting_for_code">Wag vir kode bevestiging</string>
-    <string name="insight_code_rejected">Kode verwerp</string>
-    <string name="insight_app_binding">Toepassing bind</string>
-    <string name="insight_not_authorized">Nie bemagtig</string>
-    <string name="insight_incompatible">Onaanpasbaar</string>
-    <string name="second">sekonde</string>
-    <string name="minute">minuut</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="hour">uur</string>
-    <string name="day">dag</string>
-    <string name="week">week</string>
-    <string name="time_plural">s</string>
-    <string name="insight_keepalive_format_string">%1$ds staak %2$s</string>
-    <string name="insight_keep_alive_status">Lewendhou-status</string>
-    <string name="statistics">Statistiek</string>
-    <string name="connect_preemptively">Verbind as voorsorg</string>
-    <string name="automatically_connect_when">Koppel outomaties wanneer AndroidAPS skerms oopgemaak word, voordat enige pomp bevel versoek word, om verbindings-traagheid te verminder</string>
-    <string name="not_recommended_due_to_battery_drain">Nie aanbeveel nie agv battery drein</string>
     <string name="enablesmbalways">Aktiveer SMB altyd</string>
     <string name="enablesmbalways_summary">Aktiveer SMB altyd onafhanklik van boluse. Slegs moonlik met BG source met goeie filter van data soos G5</string>
     <string name="enablesmbaftercarbs">Aktiveer SMB na koolhidrate</string>
@@ -945,8 +895,6 @@
     <string name="reset">herstel</string>
     <string name="waitingfortimesynchronization">Wag vir tydsinkronisasie (%1$d sec)</string>
     <string name="loopdisconnectedfor">Ontkoppel (%1$d m)</string>
-    <string name="automatic_careportal_events">Outomatiese careportal gebeure</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Laai insulien, cannula en battery veranderings en pomp alarms na Nightscout op</string>
     <string name="openapssmb_maxiob_title">Maksimum totale IAB OpenAPS kan nie oor [U] gaan</string>
     <string name="openapssmb_maxiob_summary">Hierdie waarde is Maks IAB genoem in OpenAPS kontekst\nOpenAPS sal nie meer insulien byvoeg as huidige IAB is groter as hierdie waarde</string>
     <string name="pump_stopped">Pomp gestop</string>
@@ -997,12 +945,10 @@
     <string name="adjustprofileinns">Veranderinge moet gedoen word in NS</string>
     <string name="exitwizard">Slaan opstelling-Ghoeroe oor</string>
     <string name="setupwizard_loop_description">Druk die knoppie hieronder om AndroidAPS te aktiveer om voorstelle/of veranderings te maak aan basale</string>
-    <string name="enableobjectives">Aktiveer Doelwitte</string>
     <string name="apssetup">Konfigureer APS plugin</string>
     <string name="sensitivitysetup">Konfigureer Sensitiwiteits plugin</string>
     <string name="setupwizard_sensitivity_description">Sensitiwiteit plugin vir sensitiwiteit opsporing en KAB berekening. Vir meer inligting besoek:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSClient hanteer verbindings na Nightscout. Jy kan hierdie deel oorslaan nou maar jy sal nie doelwitte kan stel totdat jy dit opgestel het nie.</string>
     <string name="diawarning">Onthou asseblief: dat nuwe insulien profiele vereis DIA van minstens 5h. DIA 5 – 6h op nuwe profiel is gelyk aan DIA 3h op ou insulien profiele.</string>
     <string name="bgsourcesetup">Konfigureer BG bron</string>
     <string name="setupwizard_profile_description">Kies asseblief bron van profiel. As Pasiënt \'n kind is gebruik NS profiel. As niemand jou volg op Nightscout sal jy waarskynlik plaaslike profiel kies. Onthou asseblief dat jy net die bron kies van profiel. Om dit te gebruik moet jy dit aktiveer deur uitvoering \"Profiel skakelaar\"</string>
@@ -1055,7 +1001,6 @@
     <string name="error_adding_treatment_title">Behandeling data onvolledig</string>
     <string name="maintenance_settings">Onderhoud instellings</string>
     <string name="maintenance_email">E-pos</string>
-    <string name="invalid_email_message">Ongeldige E-pos</string>
     <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1117,7 +1062,6 @@
     <string name="manufacturing_date">Vervaardigings datum</string>
     <string name="delete_pairing">Verwyder maats</string>
     <string name="pairing_information">Maat inligting</string>
-    <string name="refreh_status">Verfris status</string>
     <string name="start_pump">Begin pomp</string>
     <string name="stop_pump">Stop pomp</string>
     <string name="operating_mode">Bedryf modus</string>
@@ -1281,12 +1225,9 @@
     <string name="triggercoblabel">KOB</string>
     <string name="cobcompared">KOB %1$s %2$.0f</string>
     <string name="taskname">Aksie naam</string>
-    <string name="eventname">Gebeurtenis naam</string>
     <string name="edit_short">WYSIG</string>
     <string name="please_choose_an_action_type">Kies asb \'n aksie tipe:</string>
     <string name="please_choose_a_trigger_type">Kies \'n sneller tipe:</string>
-    <string name="if_label">As:</string>
-    <string name="then_label">Dan:</string>
     <string name="triggers">Snellers:</string>
     <string name="remove_label">VERWYDER</string>
     <string name="preconditions">Vereistes:</string>
@@ -1307,7 +1248,6 @@
     <string name="medtronic_pump_frequency_worldwide">Wêreldwyd (868 Mhz)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Sagteware 4b6b Enkodeerding</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Hardeware 4b6b Enkodeerding</string>
-    <string name="rileylink_mac_address">RileyLink MAC Adres</string>
     <string name="medtronic_custom_action_wake_and_tune">Wek en stel in</string>
     <string name="medtronic_custom_action_clear_bolus_block">Vee Bolus Blok</string>
     <string name="medtronic_custom_action_reset_rileylink">Herstel RileyLink Konfig</string>
@@ -1319,9 +1259,7 @@
     <string name="rileylink_scanner_scan_scan">SKAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
     <string name="rileylink_scanner_selected_device">Verkose</string>
-    <string name="rileylink_scanner_scan">Skan</string>
     <string name="rileylink_scanner_title">RileyLink Skan</string>
-    <string name="rileylink_scanner_scan_menu">Soek RileyLink</string>
     <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy word nie ondersteun.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth nie aan.</string>
     <string name="location_not_found_title">Location nie aan</string>
@@ -1334,10 +1272,8 @@
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Instellings</string>
     <string name="rileylink_settings_tab2">Geskiedenis</string>
-    <string name="rileylink_settings_tab3">Toestel</string>
     <string name="rileylink_status">RileyLink Status</string>
     <string name="medtronic_pump_status">Pomp Status</string>
-    <string name="rileylink_settings_title">RileyLink Instellings</string>
     <string name="title_activity_rileylink_settings">RileyLink Instellings</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_configured_address">Adres opgestel</string>
@@ -1402,7 +1338,6 @@
     <string name="medtronic_pump_status_waking_up">Besig om te wek</string>
     <string name="medtronic_pump_status_error_comm">Fout met kommunikasie</string>
     <string name="medtronic_pump_status_timeout_comm">Te lank op kommunikasie gewag</string>
-    <string name="medtronic_pump_status_problem_contacting">Probleem om Pomp te kontak</string>
     <string name="medtronic_pump_status_pump_unreachable">Pomp onbeskikbaar</string>
     <string name="medtronic_pump_status_invalid_config">Ongeldige konfigirasie</string>
     <string name="medtronic_pump_status_active">Aktief</string>
@@ -1420,7 +1355,6 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Basal profiel is dieselfde, so dit is so gelos.</string>
     <string name="medtronic_cmd_desc_get_history">Verkry Geskiedenis - Bladsy %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Verkry Geskiedenis - Bladsy %1$d</string>
-    <string name="medtronic_cmd_desc_get_history_base">Verkry Geskiedenis - Bladsy %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Kry Pomp Tyd</string>
     <string name="medtronic_cmd_desc_get_settings">Verkry Instellings</string>
     <string name="medtronic_cmd_desc_get_model">Kry Pomp Model</string>
@@ -1429,11 +1363,8 @@
     <string name="medtronic_cmd_desc_get_tbr">Verkry Tydelike Basale</string>
     <string name="medtronic_cmd_desc_set_tbr">Stel Tydelike Basale</string>
     <string name="medtronic_cmd_desc_set_bolus">Stel Bolus</string>
-    <string name="pump_no_connection_h">Geen konneksie vir %1$d ure %2$d min</string>
-    <string name="pump_no_connection_d">Geen konneksie na %1$d dae %2$d ure</string>
     <string name="insulinFromCob"><![CDATA[KOB insulin: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus beperking aangewend: %2$.2fU to %3$.2fU</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Stadige Karbs gespeur: %2$d%% van die tyd Gaan u berekeninge na,. KOB Kan verkeerd wees !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dae</item>
