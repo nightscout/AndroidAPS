@@ -12,7 +12,7 @@ public class Objective1 extends Objective {
 
 
     public Objective1() {
-        super(ObjectivesPlugin.USAGE_OBJECTIVE, R.string.objectives_usage_objective, R.string.objectives_usage_gate);
+        super("usage", R.string.objectives_usage_objective, R.string.objectives_usage_gate);
     }
 
     @Override

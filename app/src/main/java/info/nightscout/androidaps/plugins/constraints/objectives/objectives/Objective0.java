@@ -19,7 +19,7 @@ import info.nightscout.androidaps.utils.SP;
 public class Objective0 extends Objective {
 
     public Objective0() {
-        super(ObjectivesPlugin.FIRST_OBJECTIVE, R.string.objectives_0_objective, R.string.objectives_0_gate);
+        super("config", R.string.objectives_0_objective, R.string.objectives_0_gate);
     }
 
     @Override

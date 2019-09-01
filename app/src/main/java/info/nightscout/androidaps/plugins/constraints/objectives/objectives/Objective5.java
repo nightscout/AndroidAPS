@@ -10,7 +10,7 @@ import info.nightscout.androidaps.utils.T;
 public class Objective5 extends Objective {
 
     public Objective5() {
-        super(ObjectivesPlugin.MAXIOB_OBJECTIVE, R.string.objectives_maxiob_objective, R.string.objectives_maxiob_gate);
+        super("maxiob", R.string.objectives_maxiob_objective, R.string.objectives_maxiob_gate);
     }
 
     @Override

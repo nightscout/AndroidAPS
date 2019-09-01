@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.T;
 
 public abstract class Objective {
 
-    private int number;
+    String spName;
     @StringRes
     private int objective;
     @StringRes
@@ -21,12 +21,12 @@ public abstract class Objective {
     private long accomplishedOn;
     private List<Task> tasks = new ArrayList<>();
 
-    public Objective(int number, @StringRes int objective, @StringRes int gate) {
-        this.number = number;
+    public Objective(String spName, @StringRes int objective, @StringRes int gate) {
+        this.spName = spName;
         this.objective = objective;
         this.gate = gate;
-        startedOn = SP.getLong("Objectives" + number + "started", 0L);
-        accomplishedOn = SP.getLong("Objectives" + number + "accomplished", 0L);
+        startedOn = SP.getLong("Objectives_" + spName + "_started", 0L);
+        accomplishedOn = SP.getLong("Objectives_" + spName + "_accomplished", 0L);
         setupTasks(tasks);
         for (Task task : tasks) task.objective = this;
     }
@@ -65,12 +65,12 @@ public abstract class Objective {
 
     public void setStartedOn(long startedOn) {
         this.startedOn = startedOn;
-        SP.putLong("Objectives" + number + "started", startedOn);
+        SP.putLong("Objectives_" + spName + "_started", startedOn);
     }
 
     public void setAccomplishedOn(long accomplishedOn) {
         this.accomplishedOn = accomplishedOn;
-        SP.putLong("Objectives" + number + "accomplished", accomplishedOn);
+        SP.putLong("Objectives_" + spName + "_accomplished", accomplishedOn);
     }
 
     public long getAccomplishedOn() {

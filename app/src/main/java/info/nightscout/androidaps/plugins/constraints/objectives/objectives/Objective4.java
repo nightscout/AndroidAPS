@@ -11,7 +11,7 @@ import info.nightscout.androidaps.utils.T;
 public class Objective4 extends Objective {
 
     public Objective4() {
-        super(ObjectivesPlugin.MAXIOB_ZERO_CL_OBJECTIVE, R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);
+        super("maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);
     }
 
     @Override

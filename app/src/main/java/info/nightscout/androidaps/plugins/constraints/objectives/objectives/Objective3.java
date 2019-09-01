@@ -6,6 +6,6 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugi
 public class Objective3 extends Objective {
 
     public Objective3() {
-        super(ObjectivesPlugin.MAXBASAL_OBJECTIVE, R.string.objectives_maxbasal_objective, R.string.objectives_maxbasal_gate);
+        super("maxbasal", R.string.objectives_maxbasal_objective, R.string.objectives_maxbasal_gate);
     }
 }

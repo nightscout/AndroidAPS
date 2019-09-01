@@ -12,7 +12,7 @@ public class Objective2 extends Objective {
     public final int MANUAL_ENACTS_NEEDED = 20;
 
     public Objective2() {
-        super(ObjectivesPlugin.OPENLOOP_OBJECTIVE, R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
+        super("openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
     }
 
     @Override

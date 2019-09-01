@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.T;
 public class Objective6 extends Objective {
 
     public Objective6() {
-        super(ObjectivesPlugin.AUTOSENS_OBJECTIVE, R.string.objectives_autosens_objective, R.string.objectives_autosens_gate);
+        super("autosens", R.string.objectives_autosens_objective, R.string.objectives_autosens_gate);
     }
 
     @Override

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.T;
 public class Objective7 extends Objective {
 
     public Objective7() {
-        super(ObjectivesPlugin.AMA_OBJECTIVE, R.string.objectives_ama_objective, 0);
+        super("ama", R.string.objectives_ama_objective, 0);
     }
 
     @Override

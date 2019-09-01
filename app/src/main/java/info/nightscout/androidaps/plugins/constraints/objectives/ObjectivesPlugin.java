@@ -70,6 +70,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
                 .shortName(R.string.objectives_shortname)
                 .description(R.string.description_objectives)
         );
+        convertSP();
         setupObjectives();
         loadProgress();
     }
@@ -78,6 +79,25 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     public boolean specialEnableCondition() {
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
+    }
+
+    // convert 2.3 SP  version
+    private void convertSP() {
+        doConvertSP(0, "config");
+        doConvertSP(1, "openloop");
+        doConvertSP(2, "maxbasal");
+        doConvertSP(3, "maxiobzero");
+        doConvertSP(4, "maxiob");
+        doConvertSP(5, "autosens");
+        doConvertSP(6, "ama");
+        doConvertSP(7, "smb");
+    }
+
+    private void doConvertSP(int number, String name) {
+        if (!SP.contains("Objectives_" + name + "_started")) {
+            SP.putLong("Objectives_" + name + "_started", SP.getLong("Objectives" + number + "accomplished", 0L));
+            SP.putLong("Objectives_" + name + "_accomplished", SP.getLong("Objectives" + number + "accomplished", 0L));
+        }
     }
 
     private void setupObjectives() {
