@@ -42,6 +42,13 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     public boolean pumpStatusIsAvailableInNS = false;
     public Integer manualEnacts = 0;
 
+    public static final int FIRST_OBJECTIVE = 0;
+    public static final int CLOSED_LOOP_OBJECTIVE = 3;
+    public static final int MAXIOB_ZERO_OBJECTIVE = 3;
+    public static final int AUTOSENS_OBJECTIVE = 5;
+    public static final int AMA_OBJECTIVE = 6;
+    public static final int SMB_OBJECTIVE = 7;
+
     public static ObjectivesPlugin getPlugin() {
         if (objectivesPlugin == null) {
             objectivesPlugin = new ObjectivesPlugin();
@@ -121,43 +128,43 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
      **/
     @Override
     public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
-        if (!objectives.get(0).isStarted())
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 1), this);
+        if (!objectives.get(FIRST_OBJECTIVE).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), FIRST_OBJECTIVE + 1), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        if (!objectives.get(3).isStarted())
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 4), this);
+        if (!objectives.get(CLOSED_LOOP_OBJECTIVE).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), CLOSED_LOOP_OBJECTIVE + 1), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
-        if (!objectives.get(5).isStarted())
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 6), this);
+        if (!objectives.get(AUTOSENS_OBJECTIVE).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), AUTOSENS_OBJECTIVE + 1), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isAMAModeEnabled(Constraint<Boolean> value) {
-        if (!objectives.get(6).isStarted())
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 7), this);
+        if (!objectives.get(AMA_OBJECTIVE).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), AMA_OBJECTIVE + 1), this);
         return value;
     }
 
     @Override
     public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
-        if (!objectives.get(7).isStarted())
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), 8), this);
+        if (!objectives.get(SMB_OBJECTIVE).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), SMB_OBJECTIVE + 1), this);
         return value;
     }
 
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
-        if (objectives.get(3).isStarted() && !objectives.get(3).isAccomplished())
-            maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), 4), this);
+        if (objectives.get(MAXIOB_ZERO_OBJECTIVE).isStarted() && !objectives.get(MAXIOB_ZERO_OBJECTIVE).isAccomplished())
+            maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), MAXIOB_ZERO_OBJECTIVE + 1), this);
         return maxIob;
     }
 

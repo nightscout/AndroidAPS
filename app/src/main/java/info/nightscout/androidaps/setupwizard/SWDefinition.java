@@ -425,8 +425,8 @@ public class SWDefinition {
             .add(new SWBreak())
             .add(new SWFragment(this)
                     .add(new ObjectivesFragment()))
-            .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(0).isStarted())
-            .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(0).isStarted() && Config.APS);
+            .validator(() -> ObjectivesPlugin.getPlugin().objectives.get(ObjectivesPlugin.FIRST_OBJECTIVE).isStarted())
+            .visibility(() -> !ObjectivesPlugin.getPlugin().objectives.get(ObjectivesPlugin.FIRST_OBJECTIVE).isStarted() && Config.APS);
 
     private void SWDefinitionFull() {
         // List all the screens here

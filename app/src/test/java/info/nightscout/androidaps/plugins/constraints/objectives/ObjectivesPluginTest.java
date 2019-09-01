@@ -28,18 +28,18 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjectivesShouldLimitLoopInvocation() throws Exception {
-        objectivesPlugin.objectives.get(0).setStartedOn(null);
+        objectivesPlugin.objectives.get(ObjectivesPlugin.FIRST_OBJECTIVE).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
-        objectivesPlugin.objectives.get(0).setStartedOn(new Date());
+        objectivesPlugin.objectives.get(ObjectivesPlugin.FIRST_OBJECTIVE).setStartedOn(new Date());
     }
 
     @Test
     public void notStartedObjective4ShouldLimitClosedLoop() throws Exception {
-        objectivesPlugin.objectives.get(3).setStartedOn(null);
+        objectivesPlugin.objectives.get(ObjectivesPlugin.CLOSED_LOOP_OBJECTIVE).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isClosedLoopAllowed(c);
@@ -49,7 +49,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective6ShouldLimitAutosensMode() throws Exception {
-        objectivesPlugin.objectives.get(5).setStartedOn(null);
+        objectivesPlugin.objectives.get(ObjectivesPlugin.AUTOSENS_OBJECTIVE).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isAutosensModeEnabled(c);
@@ -59,7 +59,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective7ShouldLimitAMAMode() throws Exception {
-        objectivesPlugin.objectives.get(6).setStartedOn(null);
+        objectivesPlugin.objectives.get(ObjectivesPlugin.AMA_OBJECTIVE).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isAMAModeEnabled(c);
@@ -69,7 +69,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective8ShouldLimitSMBMode() throws Exception {
-        objectivesPlugin.objectives.get(7).setStartedOn(null);
+        objectivesPlugin.objectives.get(ObjectivesPlugin.SMB_OBJECTIVE).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isSMBModeEnabled(c);
