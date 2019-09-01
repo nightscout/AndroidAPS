@@ -71,6 +71,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_back" />
+
+        <TextView
+            android:id="@+id/objective_accomplished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#FFFFFF"
+            tools:text="Accomplished" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

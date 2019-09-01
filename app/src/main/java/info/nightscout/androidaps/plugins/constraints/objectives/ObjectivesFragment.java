@@ -24,6 +24,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class ObjectivesFragment extends SubscriberFragment {
@@ -133,6 +134,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.gate.setTextColor(0xFFFFFFFF);
                 holder.verify.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.GONE);
+                holder.accomplished.setVisibility(View.GONE);
                 if (position == 0 || ObjectivesPlugin.getPlugin().getObjectives().get(position - 1).isAccomplished())
                     holder.start.setVisibility(View.VISIBLE);
                 else holder.start.setVisibility(View.GONE);
@@ -141,11 +143,13 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.verify.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.GONE);
                 holder.start.setVisibility(View.GONE);
+                holder.accomplished.setVisibility(View.VISIBLE);
             } else if (objective.isStarted()) {
                 holder.gate.setTextColor(0xFFFFFFFF);
                 holder.verify.setVisibility(View.VISIBLE);
                 holder.verify.setEnabled(objective.isCompleted() || enableFake.isChecked());
                 holder.start.setVisibility(View.GONE);
+                holder.accomplished.setVisibility(View.GONE);
                 if(objective.isRevertable()) {
                     holder.revert.setVisibility(View.VISIBLE);
                 }
@@ -161,6 +165,8 @@ public class ObjectivesFragment extends SubscriberFragment {
                     holder.progress.addView(textView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
             }
+            holder.accomplished.setText(MainApp.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.getAccomplishedOn())));
+            holder.accomplished.setTextColor(0xFFC1C1C1);
             holder.verify.setOnClickListener((view) -> {
                 objective.setAccomplishedOn(new Date());
                 notifyDataSetChanged();
@@ -198,6 +204,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             public TextView title;
             public TextView objective;
             public TextView gate;
+            public TextView accomplished;
             public LinearLayout progress;
             public Button verify;
             public Button start;
@@ -213,6 +220,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 verify = itemView.findViewById(R.id.objective_verify);
                 start = itemView.findViewById(R.id.objective_start);
                 revert = itemView.findViewById(R.id.objective_back);
+                accomplished = itemView.findViewById(R.id.objective_accomplished);
             }
         }
     }

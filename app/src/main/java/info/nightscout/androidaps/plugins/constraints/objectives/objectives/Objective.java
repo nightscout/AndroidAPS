@@ -76,6 +76,10 @@ public abstract class Objective {
         SP.putLong("Objectives" + number + "accomplished", accomplishedOn == null ? 0 : accomplishedOn.getTime());
     }
 
+    public Date getAccomplishedOn() {
+        return accomplishedOn;
+    }
+
     protected void setupTasks(List<Task> tasks) {
 
     }
