@@ -319,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Zamierzam dostarczyć %1$.2fU</string>
     <string name="objectives_0_objective">Konfiguracja wizualizacji i monitorowania, analiza dawek i wartości bazowych</string>
     <string name="objectives_0_gate">Sprawdź czy BG (pomiary cukru) są dostępne w Nightscout, i dane pompy insulinowej są ładowane</string>
-    <string name="objectives_1_objective">Uruchamiam otwartą pętle (OpenLoop)</string>
-    <string name="objectives_1_gate">Używaj Otwartą pętle (OpenLoop) przez kilka dni, i ręcznie wykonaj wiele dawek bazowych tymczasowych (np. podczas aktywności fizycznej lub leczenia hipoglikemii węglowodanami)</string>
-    <string name="objectives_2_objective">Zrozumienie działania otwartej pętli, wraz z jej rekomendacjami dawek tymczasowych</string>
-    <string name="objectives_2_gate">Na podstawie tych doświadczeń zdecyduj jaka maksymalna baza powinna być ustawiona, i wprowadź ją w pompie i w ustawieniach AAPS</string>
-    <string name="objectives_3_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>
-    <string name="objectives_3_gate">Używaj zamkniętej pętli (Closed Loop) z max IOB (maksymalną dawką aktywnej insuliny) = 0 bez zbyt wielu incydentów niedocukrzeń</string>
-    <string name="objectives_4_objective">Dostrajanie zamkniętej pętli, podniesienie wartości max IOB powyżej 0 i stopniowe obniżanie docelowego poziomu cukru (BG target)</string>
-    <string name="objectives_4_gate">Używaj pętli przez kilka dni i przynajmniej jedną noc bez żadnego alarmu niskiego poziomu, przed obniżeniem docelowego poziomu cukru (BG target)</string>
-    <string name="objectives_5_objective">Dostosuj bazę i wartości parametrów, i wtedy uruchom funkcję autosens</string>
-    <string name="objectives_5_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów (węglow.)</string>
-    <string name="objectives_6_objective">Uruchomienie do użytku dziennego dodatkowych funkcji, jak AMA (zaawansowany asystent posiłku)</string>
-    <string name="objectives_7_objective">Uruchomienie do użytku dziennego dodatkowych funkcji, jak SMB (Super Mikro Bolusy)</string>
-    <string name="objectives_7_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest max10 = średni bolus + 3 x maks. dzienna dawka bazowa</string>
+    <string name="objectives_openloop_objective">Uruchamiam otwartą pętle (OpenLoop)</string>
+    <string name="objectives_openloop_gate">Używaj Otwartą pętle (OpenLoop) przez kilka dni, i ręcznie wykonaj wiele dawek bazowych tymczasowych (np. podczas aktywności fizycznej lub leczenia hipoglikemii węglowodanami)</string>
+    <string name="objectives_maxbasal_objective">Zrozumienie działania otwartej pętli, wraz z jej rekomendacjami dawek tymczasowych</string>
+    <string name="objectives_maxbasal_gate">Na podstawie tych doświadczeń zdecyduj jaka maksymalna baza powinna być ustawiona, i wprowadź ją w pompie i w ustawieniach AAPS</string>
+    <string name="objectives_maxiobzero_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>
+    <string name="objectives_maxiobzero_gate">Używaj zamkniętej pętli (Closed Loop) z max IOB (maksymalną dawką aktywnej insuliny) = 0 bez zbyt wielu incydentów niedocukrzeń</string>
+    <string name="objectives_maxiob_objective">Dostrajanie zamkniętej pętli, podniesienie wartości max IOB powyżej 0 i stopniowe obniżanie docelowego poziomu cukru (BG target)</string>
+    <string name="objectives_maxiob_gate">Używaj pętli przez kilka dni i przynajmniej jedną noc bez żadnego alarmu niskiego poziomu, przed obniżeniem docelowego poziomu cukru (BG target)</string>
+    <string name="objectives_autosens_objective">Dostosuj bazę i wartości parametrów, i wtedy uruchom funkcję autosens</string>
+    <string name="objectives_autosens_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów (węglow.)</string>
+    <string name="objectives_ama_objective">Uruchomienie do użytku dziennego dodatkowych funkcji, jak AMA (zaawansowany asystent posiłku)</string>
+    <string name="objectives_smb_objective">Uruchomienie do użytku dziennego dodatkowych funkcji, jak SMB (Super Mikro Bolusy)</string>
+    <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest max10 = średni bolus + 3 x maks. dzienna dawka bazowa</string>
     <string name="youareonallowedlimit">Osiągnąłeś dozwolony limit</string>
     <string name="noprofileselected">Nie wybrano profilu</string>
     <string name="smscommunicator_loophasbeendisabled">Pętla (Loop) została wyłączona</string>

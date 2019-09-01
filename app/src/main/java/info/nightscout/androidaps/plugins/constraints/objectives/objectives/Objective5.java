@@ -4,12 +4,13 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.utils.T;
 
 public class Objective5 extends Objective {
 
     public Objective5() {
-        super(4, R.string.objectives_4_objective, R.string.objectives_4_gate);
+        super(ObjectivesPlugin.MAXIOB_OBJECTIVE, R.string.objectives_maxiob_objective, R.string.objectives_maxiob_gate);
     }
 
     @Override

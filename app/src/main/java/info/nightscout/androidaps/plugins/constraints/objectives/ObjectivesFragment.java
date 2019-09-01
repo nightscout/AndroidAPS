@@ -4,11 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +13,11 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Date;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.RecyclerView;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,11 +27,11 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 
 public class ObjectivesFragment extends SubscriberFragment {
-    RecyclerView recyclerView;
-    CheckBox enableFake;
-    TextView reset;
-    ObjectivesAdapter objectivesAdapter = new ObjectivesAdapter();
-    Handler handler = new Handler(Looper.getMainLooper());
+    private RecyclerView recyclerView;
+    private CheckBox enableFake;
+    private TextView reset;
+    private ObjectivesAdapter objectivesAdapter = new ObjectivesAdapter();
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     private Runnable objectiveUpdater = new Runnable() {
         @Override
@@ -43,7 +42,7 @@ public class ObjectivesFragment extends SubscriberFragment {
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         try {
             View view = inflater.inflate(R.layout.objectives_fragment, container, false);
@@ -80,7 +79,7 @@ public class ObjectivesFragment extends SubscriberFragment {
         handler.removeCallbacks(objectiveUpdater);
         for (Objective objective : ObjectivesPlugin.getPlugin().getObjectives()) {
             if (objective.isStarted() && !objective.isAccomplished()) {
-                long timeTillNextMinute = (System.currentTimeMillis() - objective.getStartedOn().getTime()) % (60 * 1000);
+                long timeTillNextMinute = (System.currentTimeMillis() - objective.getStartedOn()) % (60 * 1000);
                 handler.postDelayed(objectiveUpdater, timeTillNextMinute);
                 break;
             }
@@ -150,7 +149,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.verify.setEnabled(objective.isCompleted() || enableFake.isChecked());
                 holder.start.setVisibility(View.GONE);
                 holder.accomplished.setVisibility(View.GONE);
-                if(objective.isRevertable()) {
+                if (objective.isRevertable()) {
                     holder.revert.setVisibility(View.VISIBLE);
                 }
                 holder.progress.setVisibility(View.VISIBLE);
@@ -168,29 +167,28 @@ public class ObjectivesFragment extends SubscriberFragment {
             holder.accomplished.setText(MainApp.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.getAccomplishedOn())));
             holder.accomplished.setTextColor(0xFFC1C1C1);
             holder.verify.setOnClickListener((view) -> {
-                objective.setAccomplishedOn(new Date());
+                objective.setAccomplishedOn(DateUtil.now());
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
                 startUpdateTimer();
             });
             holder.start.setOnClickListener((view) -> {
-                objective.setStartedOn(new Date());
+                objective.setStartedOn(DateUtil.now());
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
                 startUpdateTimer();
             });
             holder.revert.setOnClickListener((view) -> {
-                objective.setAccomplishedOn(null);
-                objective.setStartedOn(null);
+                objective.setAccomplishedOn(0);
+                objective.setStartedOn(0);
                 if (position > 0) {
                     Objective prevObj = ObjectivesPlugin.getPlugin().getObjectives().get(position - 1);
-                    prevObj.setAccomplishedOn(null);
+                    prevObj.setAccomplishedOn(0);
                 }
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
             });
         }
-
 
 
         @Override
@@ -200,17 +198,17 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
-            public CardView cardView;
+            CardView cardView;
             public TextView title;
             public TextView objective;
-            public TextView gate;
-            public TextView accomplished;
+            TextView gate;
+            TextView accomplished;
             public LinearLayout progress;
-            public Button verify;
+            Button verify;
             public Button start;
-            public Button revert;
+            Button revert;
 
-            public ViewHolder(View itemView) {
+            ViewHolder(View itemView) {
                 super(itemView);
                 cardView = (CardView) itemView;
                 title = itemView.findViewById(R.id.objective_title);

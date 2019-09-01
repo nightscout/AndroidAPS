@@ -1,14 +1,10 @@
 package info.nightscout.androidaps;
 
 import android.app.Application;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
@@ -44,7 +40,7 @@ import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin;
-import info.nightscout.androidaps.plugins.general.actions.ActionsFragment;
+import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
@@ -70,8 +66,6 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
@@ -177,7 +171,7 @@ public class MainApp extends Application {
             // Register all tabs in app here
             pluginsList.add(OverviewPlugin.getPlugin());
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
-            if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
+            if (Config.ACTION) pluginsList.add(ActionsPlugin.INSTANCE);
             pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
             pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
             pluginsList.add(InsulinOrefFreePeakPlugin.getPlugin());
@@ -192,7 +186,8 @@ public class MainApp extends Application {
             if (Config.PUMPDRIVERS) pluginsList.add(LocalInsightPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
-            if (Config.PUMPDRIVERS && engineeringMode) pluginsList.add(MedtronicPumpPlugin.getPlugin());
+            if (Config.PUMPDRIVERS && engineeringMode)
+                pluginsList.add(MedtronicPumpPlugin.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(VirtualPumpPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
@@ -453,7 +448,7 @@ public class MainApp extends Application {
             unregisterReceiver(btReceiver);
         }
 
-        if (timeDateOrTZChangeReceiver!=null) {
+        if (timeDateOrTZChangeReceiver != null) {
             unregisterReceiver(timeDateOrTZChangeReceiver);
         }
 

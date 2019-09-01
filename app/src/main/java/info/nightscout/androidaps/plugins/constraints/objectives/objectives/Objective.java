@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 import androidx.annotation.StringRes;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -18,18 +17,16 @@ public abstract class Objective {
     private int objective;
     @StringRes
     private int gate;
-    private Date startedOn;
-    private Date accomplishedOn;
+    private long startedOn;
+    private long accomplishedOn;
     private List<Task> tasks = new ArrayList<>();
 
     public Objective(int number, @StringRes int objective, @StringRes int gate) {
         this.number = number;
         this.objective = objective;
         this.gate = gate;
-        startedOn = new Date(SP.getLong("Objectives" + number + "started", 0L));
-        if (startedOn.getTime() == 0L) startedOn = null;
-        accomplishedOn = new Date(SP.getLong("Objectives" + number + "accomplished", 0L));
-        if (accomplishedOn.getTime() == 0L) accomplishedOn = null;
+        startedOn = SP.getLong("Objectives" + number + "started", 0L);
+        accomplishedOn = SP.getLong("Objectives" + number + "accomplished", 0L);
         setupTasks(tasks);
         for (Task task : tasks) task.objective = this;
     }
@@ -47,14 +44,14 @@ public abstract class Objective {
     }
 
     public boolean isAccomplished() {
-        return accomplishedOn != null;
+        return accomplishedOn != 0;
     }
 
     public boolean isStarted() {
-        return startedOn != null;
+        return startedOn != 0;
     }
 
-    public Date getStartedOn() {
+    public long getStartedOn() {
         return startedOn;
     }
 
@@ -66,17 +63,17 @@ public abstract class Objective {
         return gate;
     }
 
-    public void setStartedOn(Date startedOn) {
+    public void setStartedOn(long startedOn) {
         this.startedOn = startedOn;
-        SP.putLong("Objectives" + number + "started", startedOn == null ? 0 : startedOn.getTime());
+        SP.putLong("Objectives" + number + "started", startedOn);
     }
 
-    public void setAccomplishedOn(Date accomplishedOn) {
+    public void setAccomplishedOn(long accomplishedOn) {
         this.accomplishedOn = accomplishedOn;
-        SP.putLong("Objectives" + number + "accomplished", accomplishedOn == null ? 0 : accomplishedOn.getTime());
+        SP.putLong("Objectives" + number + "accomplished", accomplishedOn);
     }
 
-    public Date getAccomplishedOn() {
+    public long getAccomplishedOn() {
         return accomplishedOn;
     }
 
@@ -127,12 +124,12 @@ public abstract class Objective {
 
         @Override
         public boolean isCompleted() {
-            return getObjective().isStarted() && System.currentTimeMillis() - getObjective().getStartedOn().getTime() >= minimumDuration;
+            return getObjective().isStarted() && System.currentTimeMillis() - getObjective().getStartedOn() >= minimumDuration;
         }
 
         @Override
         public String getProgress() {
-            return getDurationText(System.currentTimeMillis() - getObjective().getStartedOn().getTime())
+            return getDurationText(System.currentTimeMillis() - getObjective().getStartedOn())
                     + " / " + getDurationText(minimumDuration);
         }
 

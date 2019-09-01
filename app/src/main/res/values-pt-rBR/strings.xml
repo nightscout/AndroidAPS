@@ -318,19 +318,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Vão ser administradas %1$.2fU</string>
     <string name="objectives_0_objective">Configuração da visualização e monitoramento, e análise de rácios e basals</string>
     <string name="objectives_0_gate">Verificar se a BG está disponível no Nightscout, e se os dados de insulina da bomba estão a ser carregados</string>
-    <string name="objectives_1_objective">A iniciar um open loop</string>
-    <string name="objectives_1_gate">Execute no Modo de Loop aberto por alguns dias e execute manualmente muitos basais de temp. Configure e use alvos temporários e padrão (por exemplo, para atividades ou tratamento hipos com carboidratos)</string>
-    <string name="objectives_2_objective">Compreender o seu open loop, incluindo as suas recomendações de basais temporárias</string>
-    <string name="objectives_2_gate">Com base nessa experiência, decidir qual deve ser a basal máxima e configurá-la na bomba e nas preferências</string>
-    <string name="objectives_3_objective">Começar o close loop com Suspensão por Glicose Baixa.</string>
-    <string name="objectives_3_gate">Utilizar em close loop com IOB máx = 0 por alguns dias sem muitas situações de Suspensão por Baixa Glicose</string>
-    <string name="objectives_4_objective">Ajustar o close loop, levantar a IOB máxima acima de 0 e reduzir gradualmente os alvos de valor glicémico</string>
-    <string name="objectives_4_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de valores glicémicos baixos, antes de baixar os valores</string>
-    <string name="objectives_5_objective">Ajustar as basals e os rácios se necessário e em seguida habilitar o auto-sens</string>
-    <string name="objectives_5_gate">1 semana de looping durante o dia com sucesso com entrada de hidratos de carbono regular</string>
-    <string name="objectives_6_objective">Ativando recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
-    <string name="objectives_7_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
-    <string name="objectives_7_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB= média dos bolus + 3 x a basal máxima</string>
+    <string name="objectives_openloop_objective">A iniciar um open loop</string>
+    <string name="objectives_openloop_gate">Execute no Modo de Loop aberto por alguns dias e execute manualmente muitos basais de temp. Configure e use alvos temporários e padrão (por exemplo, para atividades ou tratamento hipos com carboidratos)</string>
+    <string name="objectives_maxbasal_objective">Compreender o seu open loop, incluindo as suas recomendações de basais temporárias</string>
+    <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máxima e configurá-la na bomba e nas preferências</string>
+    <string name="objectives_maxiobzero_objective">Começar o close loop com Suspensão por Glicose Baixa.</string>
+    <string name="objectives_maxiobzero_gate">Utilizar em close loop com IOB máx = 0 por alguns dias sem muitas situações de Suspensão por Baixa Glicose</string>
+    <string name="objectives_maxiob_objective">Ajustar o close loop, levantar a IOB máxima acima de 0 e reduzir gradualmente os alvos de valor glicémico</string>
+    <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de valores glicémicos baixos, antes de baixar os valores</string>
+    <string name="objectives_autosens_objective">Ajustar as basals e os rácios se necessário e em seguida habilitar o auto-sens</string>
+    <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada de hidratos de carbono regular</string>
+    <string name="objectives_ama_objective">Ativando recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
+    <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
+    <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB= média dos bolus + 3 x a basal máxima</string>
     <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="noprofileselected">Nenhum perfil selecionado</string>
     <string name="smscommunicator_loophasbeendisabled">Loop foi desativado</string>

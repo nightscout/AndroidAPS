@@ -319,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">%1$.2fU을 주입합니다</string>
     <string name="objectives_0_objective">표시설정과 모니터설정을 완료하고, Basal과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
-    <string name="objectives_1_objective">Open Loop를 시작한다.</string>
-    <string name="objectives_1_gate">Open Loop 모드에서 몇일간 사용하여보고, 임시Basal을 여러번 수동으로 주입해 본다. 임시목표와 기본임시목표(\'식사직전\', \'활동\',\'저혈당\' 임시목표)를 설정하고 사용해 본다.</string>
-    <string name="objectives_2_objective">임시Basal 추천기능을 포함해서, Open Loop에 대해 이해한다.</string>
-    <string name="objectives_2_gate">이 경험을 토대로, 최대 Basal을 결정하고 이를 펌프와 설정에 입력한다.</string>
-    <string name="objectives_3_objective">Closed Loop를 시작하고 저혈당인슐린 중지 기능을 사용해본다.</string>
-    <string name="objectives_3_gate">최대 IOB = 0 인 상태로 Closed Loop를 몇일동안 실행시켜 본다. 저혈당 인슐린일시중지가 많이 발생하지 않도록 한다.</string>
-    <string name="objectives_4_objective">Closed Loop를 조정하여 최대 IOB를 0 이상으로 올려서 서서히 혈당 목표치를 낮춘다.</string>
-    <string name="objectives_4_gate">혈당을 낮추기 전에 몇일간 사용해보되 최소한 하루는 저혈당 혈당 알람이 발생하지 않도록 해본다.</string>
-    <string name="objectives_5_objective">필요하면 Basal과 비율을 조절하고, auto-sens를 활성화한다.</string>
-    <string name="objectives_5_gate">평소의 탄수화물을 입력하면서 1주일동안 낮시간대에 loop를 성공적으로 사용해본다.</string>
-    <string name="objectives_6_objective">AMA(Advanced Meal Assist)같은 낮시간대를 위한 추가적인 기능들을 실행하여 본다.</string>
-    <string name="objectives_7_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해본다.</string>
-    <string name="objectives_7_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은다음 maxIOB를 올려주세요. maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 괜찮은 시작값입니다.</string>
+    <string name="objectives_openloop_objective">Open Loop를 시작한다.</string>
+    <string name="objectives_openloop_gate">Open Loop 모드에서 몇일간 사용하여보고, 임시Basal을 여러번 수동으로 주입해 본다. 임시목표와 기본임시목표(\'식사직전\', \'활동\',\'저혈당\' 임시목표)를 설정하고 사용해 본다.</string>
+    <string name="objectives_maxbasal_objective">임시Basal 추천기능을 포함해서, Open Loop에 대해 이해한다.</string>
+    <string name="objectives_maxbasal_gate">이 경험을 토대로, 최대 Basal을 결정하고 이를 펌프와 설정에 입력한다.</string>
+    <string name="objectives_maxiobzero_objective">Closed Loop를 시작하고 저혈당인슐린 중지 기능을 사용해본다.</string>
+    <string name="objectives_maxiobzero_gate">최대 IOB = 0 인 상태로 Closed Loop를 몇일동안 실행시켜 본다. 저혈당 인슐린일시중지가 많이 발생하지 않도록 한다.</string>
+    <string name="objectives_maxiob_objective">Closed Loop를 조정하여 최대 IOB를 0 이상으로 올려서 서서히 혈당 목표치를 낮춘다.</string>
+    <string name="objectives_maxiob_gate">혈당을 낮추기 전에 몇일간 사용해보되 최소한 하루는 저혈당 혈당 알람이 발생하지 않도록 해본다.</string>
+    <string name="objectives_autosens_objective">필요하면 Basal과 비율을 조절하고, auto-sens를 활성화한다.</string>
+    <string name="objectives_autosens_gate">평소의 탄수화물을 입력하면서 1주일동안 낮시간대에 loop를 성공적으로 사용해본다.</string>
+    <string name="objectives_ama_objective">AMA(Advanced Meal Assist)같은 낮시간대를 위한 추가적인 기능들을 실행하여 본다.</string>
+    <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해본다.</string>
+    <string name="objectives_smb_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은다음 maxIOB를 올려주세요. maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 괜찮은 시작값입니다.</string>
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective;
+import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective0;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective1;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective2;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective3;
@@ -43,11 +44,14 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     public Integer manualEnacts = 0;
 
     public static final int FIRST_OBJECTIVE = 0;
-    public static final int CLOSED_LOOP_OBJECTIVE = 3;
-    public static final int MAXIOB_ZERO_OBJECTIVE = 3;
-    public static final int AUTOSENS_OBJECTIVE = 5;
-    public static final int AMA_OBJECTIVE = 6;
-    public static final int SMB_OBJECTIVE = 7;
+    public static final int USAGE_OBJECTIVE = 1;
+    public static final int OPENLOOP_OBJECTIVE = 2;
+    public static final int MAXBASAL_OBJECTIVE = 3;
+    public static final int MAXIOB_ZERO_CL_OBJECTIVE = 4;
+    public static final int MAXIOB_OBJECTIVE = 5;
+    public static final int AUTOSENS_OBJECTIVE = 6;
+    public static final int AMA_OBJECTIVE = 7;
+    public static final int SMB_OBJECTIVE = 8;
 
     public static ObjectivesPlugin getPlugin() {
         if (objectivesPlugin == null) {
@@ -77,6 +81,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     }
 
     private void setupObjectives() {
+        objectives.add(new Objective0());
         objectives.add(new Objective1());
         objectives.add(new Objective2());
         objectives.add(new Objective3());
@@ -89,8 +94,8 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     public void reset() {
         for (Objective objective : objectives) {
-            objective.setStartedOn(null);
-            objective.setAccomplishedOn(null);
+            objective.setStartedOn(0);
+            objective.setAccomplishedOn(0);
         }
         bgIsAvailableInNS = false;
         pumpStatusIsAvailableInNS = false;
@@ -135,8 +140,8 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     @Override
     public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        if (!objectives.get(CLOSED_LOOP_OBJECTIVE).isStarted())
-            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), CLOSED_LOOP_OBJECTIVE + 1), this);
+        if (!objectives.get(MAXIOB_ZERO_CL_OBJECTIVE).isStarted())
+            value.set(false, String.format(MainApp.gs(R.string.objectivenotstarted), MAXIOB_ZERO_CL_OBJECTIVE + 1), this);
         return value;
     }
 
@@ -163,8 +168,8 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
-        if (objectives.get(MAXIOB_ZERO_OBJECTIVE).isStarted() && !objectives.get(MAXIOB_ZERO_OBJECTIVE).isAccomplished())
-            maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), MAXIOB_ZERO_OBJECTIVE + 1), this);
+        if (objectives.get(MAXIOB_ZERO_CL_OBJECTIVE).isStarted() && !objectives.get(MAXIOB_ZERO_CL_OBJECTIVE).isAccomplished())
+            maxIob.set(0d, String.format(MainApp.gs(R.string.objectivenotfinished), MAXIOB_ZERO_CL_OBJECTIVE + 1), this);
         return maxIob;
     }
 
