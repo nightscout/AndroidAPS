@@ -11,14 +11,7 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Initialize Pod
      */
-    PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podIniReceiver);
-
-    // TODO remove
-    //PumpEnactResult pairAndPrime();
-
-    // TODO remove
-    //PumpEnactResult insertCannula(Profile basalProfile);
-
+    PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver);
 
     /**
      * Get Pod Status (is pod running, battery left ?, reservoir, etc)
