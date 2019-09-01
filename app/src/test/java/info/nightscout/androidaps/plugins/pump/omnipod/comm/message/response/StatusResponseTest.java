@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response;
 import org.joda.time.Duration;
 import org.junit.Test;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -58,9 +58,9 @@ public class StatusResponseTest {
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertEquals(Duration.standardMinutes(8191).getMillis(), statusResponse.getTimeActive().getMillis());
-        assertEquals(Constants.POD_PULSE_SIZE * 1023, statusResponse.getInsulinNotDelivered(), 0.000001);
+        assertEquals(OmnipodConst.POD_PULSE_SIZE * 1023, statusResponse.getInsulinNotDelivered(), 0.000001);
         assertNull("Reservoir level should be null", statusResponse.getReservoirLevel());
-        assertEquals(Constants.POD_PULSE_SIZE * 8191, statusResponse.getInsulin(), 0.0000001);
+        assertEquals(OmnipodConst.POD_PULSE_SIZE * 8191, statusResponse.getInsulin(), 0.0000001);
         assertEquals(15, statusResponse.getPodMessageCounter());
         assertEquals(8, statusResponse.getAlerts().getAlertSlots().size());
     }

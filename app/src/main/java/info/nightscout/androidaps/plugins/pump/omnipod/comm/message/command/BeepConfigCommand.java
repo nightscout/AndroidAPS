@@ -4,11 +4,11 @@ import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 
 public class BeepConfigCommand extends MessageBlock {
-    private final BeepType beepType;
+    private final BeepConfigType beepType;
     private final boolean basalCompletionBeep;
     private final Duration basalIntervalBeep;
     private final boolean tempBasalCompletionBeep;
@@ -16,7 +16,7 @@ public class BeepConfigCommand extends MessageBlock {
     private final boolean bolusCompletionBeep;
     private final Duration bolusIntervalBeep;
 
-    public BeepConfigCommand(BeepType beepType, boolean basalCompletionBeep, Duration basalIntervalBeep,
+    public BeepConfigCommand(BeepConfigType beepType, boolean basalCompletionBeep, Duration basalIntervalBeep,
                              boolean tempBasalCompletionBeep, Duration tempBasalIntervalBeep,
                              boolean bolusCompletionBeep, Duration bolusIntervalBeep) {
         this.beepType = beepType;
@@ -30,7 +30,7 @@ public class BeepConfigCommand extends MessageBlock {
         encode();
     }
 
-    public BeepConfigCommand(BeepType beepType) {
+    public BeepConfigCommand(BeepConfigType beepType) {
         this(beepType, false, Duration.ZERO, false, Duration.ZERO, false, Duration.ZERO);
     }
 
