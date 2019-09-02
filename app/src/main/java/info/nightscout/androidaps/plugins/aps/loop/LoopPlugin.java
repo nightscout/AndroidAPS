@@ -291,7 +291,7 @@ public class LoopPlugin extends PluginBase {
 
             Profile profile = ProfileFunctions.getInstance().getProfile();
 
-            if (!ProfileFunctions.getInstance().isProfileValid("Loop")) {
+            if (profile == null || !ProfileFunctions.getInstance().isProfileValid("Loop")) {
                 if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.noprofileselected));
                 RxBus.INSTANCE.send(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
