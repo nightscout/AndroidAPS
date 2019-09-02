@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.T;
 
 public abstract class Objective {
 
-    String spName;
+    private String spName;
     @StringRes
     private int objective;
     @StringRes
@@ -20,6 +20,7 @@ public abstract class Objective {
     private long startedOn;
     private long accomplishedOn;
     private List<Task> tasks = new ArrayList<>();
+    public boolean hasSpecialInput = false;
 
     public Objective(String spName, @StringRes int objective, @StringRes int gate) {
         this.spName = spName;
@@ -85,6 +86,8 @@ public abstract class Objective {
         return tasks;
     }
 
+    public void specialAction(String input) {}
+
     public abstract class Task {
         @StringRes
         private int task;
@@ -117,7 +120,7 @@ public abstract class Objective {
 
         private long minimumDuration;
 
-        public MinimumDurationTask(long minimumDuration) {
+        MinimumDurationTask(long minimumDuration) {
             super(R.string.time_elapsed);
             this.minimumDuration = minimumDuration;
         }

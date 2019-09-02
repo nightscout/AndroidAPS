@@ -1,11 +1,15 @@
 package info.nightscout.androidaps.plugins.constraints.objectives;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,6 +32,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective6;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective7;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective8;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -146,6 +151,28 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
 
     public List<Objective> getObjectives() {
         return objectives;
+    }
+
+    public void completeObjectives(String request) {
+        String url = SP.getString(R.string.key_nsclientinternal_url, "").toLowerCase();
+        if (!url.endsWith("\"")) url = url + "\"";
+        String hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID, Charsets.UTF_8).toString();
+        if (request.equalsIgnoreCase(hashNS.substring(0, 9))) {
+            SP.putLong("Objectives_" + "openloop" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "openloop" + "_accomplished", DateUtil.now());
+            SP.putLong("Objectives_" + "maxbasal" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "maxbasal" + "_accomplished", DateUtil.now());
+            SP.putLong("Objectives_" + "maxiobzero" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "maxiobzero" + "_accomplished", DateUtil.now());
+            SP.putLong("Objectives_" + "maxiob" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "maxiob" + "_accomplished", DateUtil.now());
+            SP.putLong("Objectives_" + "autosens" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "autosens" + "_accomplished", DateUtil.now());
+            SP.putLong("Objectives_" + "ama" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "ama" + "_accomplished", DateUtil.now());
+            SP.putLong("Objectives_" + "smb" + "_started", DateUtil.now());
+            SP.putLong("Objectives_" + "smb" + "_accomplished", DateUtil.now());
+        }
     }
 
     /**

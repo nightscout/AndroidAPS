@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -188,6 +189,18 @@ public class ObjectivesFragment extends SubscriberFragment {
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
             });
+            if (objective.hasSpecialInput) {
+                holder.enterButton.setVisibility(View.VISIBLE);
+                holder.input.setVisibility(View.VISIBLE);
+                holder.enterButton.setOnClickListener((view) -> {
+                    String input = holder.input.getText().toString();
+                    objective.specialAction(input);
+                    notifyDataSetChanged();
+                });
+            } else {
+                holder.enterButton.setVisibility(View.GONE);
+                holder.input.setVisibility(View.GONE);
+            }
         }
 
 
@@ -207,6 +220,8 @@ public class ObjectivesFragment extends SubscriberFragment {
             Button verify;
             public Button start;
             Button revert;
+            EditText input;
+            Button enterButton;
 
             ViewHolder(View itemView) {
                 super(itemView);
@@ -219,6 +234,8 @@ public class ObjectivesFragment extends SubscriberFragment {
                 start = itemView.findViewById(R.id.objective_start);
                 revert = itemView.findViewById(R.id.objective_back);
                 accomplished = itemView.findViewById(R.id.objective_accomplished);
+                input = itemView.findViewById(R.id.objective_input);
+                enterButton = itemView.findViewById(R.id.objective_enterbutton);
             }
         }
     }

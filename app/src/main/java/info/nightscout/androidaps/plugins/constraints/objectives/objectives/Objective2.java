@@ -13,6 +13,7 @@ public class Objective2 extends Objective {
 
     public Objective2() {
         super("openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
+        hasSpecialInput = true;
     }
 
     @Override
@@ -32,5 +33,10 @@ public class Objective2 extends Objective {
                     return ObjectivesPlugin.getPlugin().manualEnacts + " / " + MANUAL_ENACTS_NEEDED;
             }
         });
+    }
+
+    @Override
+    public void specialAction(String input) {
+        ObjectivesPlugin.getPlugin().completeObjectives(input);
     }
 }

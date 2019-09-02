@@ -1622,6 +1622,9 @@
     <string name="objectives_useactions">In Config Builder enable Actions plugin, make it visible and display its content from top menu</string>
     <string name="objectives_useloop">Display content of Loop plugin</string>
     <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
+    <string name="objectives_button_enter">Enter</string>
+    <string name="orentercode">or enter code</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Enter code obtained from developers to bypass the rest of objectives</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
