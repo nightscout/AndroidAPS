@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
+import android.app.Activity;
+
 import androidx.annotation.StringRes;
 
 import java.util.ArrayList;
@@ -86,7 +88,7 @@ public abstract class Objective {
         return tasks;
     }
 
-    public void specialAction(String input) {}
+    public void specialAction(Activity activity, String input) {}
 
     public abstract class Task {
         @StringRes

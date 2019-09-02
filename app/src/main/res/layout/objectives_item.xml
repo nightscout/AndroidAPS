@@ -53,30 +53,6 @@
 
         </LinearLayout>
 
-         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-             <EditText
-                 android:id="@+id/objective_input"
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1"
-                 android:ems="10"
-                 android:hint="@string/enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives"
-                 android:inputType="text"
-                 android:text="@string/orentercode" />
-
-             <Button
-                android:id="@+id/objective_enterbutton"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/objectives_button_enter" />
-
-         </LinearLayout>
-
         <Button
             android:id="@+id/objective_verify"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
@@ -97,6 +73,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/objectives_button_back" />
+
+        <TextView
+            android:id="@+id/objective_inputhint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives" />
+
+        <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/objective_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="XXXXXXXXXX"
+                android:inputType="text" />
+
+            <Button
+               android:id="@+id/objective_enterbutton"
+               style="@style/Widget.AppCompat.Button.Borderless.Colored"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/objectives_button_enter" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/objective_accomplished"

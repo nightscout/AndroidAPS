@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
+import android.app.Activity;
+
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -36,7 +38,7 @@ public class Objective2 extends Objective {
     }
 
     @Override
-    public void specialAction(String input) {
-        ObjectivesPlugin.getPlugin().completeObjectives(input);
+    public void specialAction(Activity activity, String input) {
+        ObjectivesPlugin.getPlugin().completeObjectives(activity, input);
     }
 }

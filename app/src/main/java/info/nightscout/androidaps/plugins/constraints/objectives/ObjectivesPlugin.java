@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.objectives;
 
+import android.app.Activity;
+
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
@@ -33,6 +35,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective7;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective8;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -106,6 +109,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     }
 
     private void setupObjectives() {
+        objectives.clear();
         objectives.add(new Objective0());
         objectives.add(new Objective1());
         objectives.add(new Objective2());
@@ -153,11 +157,11 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         return objectives;
     }
 
-    public void completeObjectives(String request) {
+    public void completeObjectives(Activity activity, String request) {
         String url = SP.getString(R.string.key_nsclientinternal_url, "").toLowerCase();
-        if (!url.endsWith("\"")) url = url + "\"";
+        if (!url.endsWith("\"")) url = url + "/";
         String hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID, Charsets.UTF_8).toString();
-        if (request.equalsIgnoreCase(hashNS.substring(0, 9))) {
+        if (request.equalsIgnoreCase(hashNS.substring(0, 10))) {
             SP.putLong("Objectives_" + "openloop" + "_started", DateUtil.now());
             SP.putLong("Objectives_" + "openloop" + "_accomplished", DateUtil.now());
             SP.putLong("Objectives_" + "maxbasal" + "_started", DateUtil.now());
@@ -172,6 +176,10 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
             SP.putLong("Objectives_" + "ama" + "_accomplished", DateUtil.now());
             SP.putLong("Objectives_" + "smb" + "_started", DateUtil.now());
             SP.putLong("Objectives_" + "smb" + "_accomplished", DateUtil.now());
+            setupObjectives();
+            OKDialog.show(activity, "", MainApp.gs(R.string.codeaccepted), null);
+        } else {
+            OKDialog.show(activity, "", MainApp.gs(R.string.codeinvalid), null);
         }
     }
 

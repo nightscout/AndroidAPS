@@ -189,17 +189,19 @@ public class ObjectivesFragment extends SubscriberFragment {
                 notifyDataSetChanged();
                 scrollToCurrentObjective();
             });
-            if (objective.hasSpecialInput) {
+            if (objective.hasSpecialInput && !objective.isAccomplished()) {
                 holder.enterButton.setVisibility(View.VISIBLE);
                 holder.input.setVisibility(View.VISIBLE);
+                holder.inputHint.setVisibility(View.VISIBLE);
                 holder.enterButton.setOnClickListener((view) -> {
                     String input = holder.input.getText().toString();
-                    objective.specialAction(input);
+                    objective.specialAction(getActivity(), input);
                     notifyDataSetChanged();
                 });
             } else {
                 holder.enterButton.setVisibility(View.GONE);
                 holder.input.setVisibility(View.GONE);
+                holder.inputHint.setVisibility(View.GONE);
             }
         }
 
@@ -220,6 +222,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             Button verify;
             public Button start;
             Button revert;
+            TextView inputHint;
             EditText input;
             Button enterButton;
 
@@ -234,6 +237,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 start = itemView.findViewById(R.id.objective_start);
                 revert = itemView.findViewById(R.id.objective_back);
                 accomplished = itemView.findViewById(R.id.objective_accomplished);
+                inputHint = itemView.findViewById(R.id.objective_inputhint);
                 input = itemView.findViewById(R.id.objective_input);
                 enterButton = itemView.findViewById(R.id.objective_enterbutton);
             }
