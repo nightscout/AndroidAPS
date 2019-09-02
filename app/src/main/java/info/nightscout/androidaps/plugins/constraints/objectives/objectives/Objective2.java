@@ -40,6 +40,6 @@ public class Objective2 extends Objective {
 
     @Override
     public void specialAction(Activity activity, String input) {
-        ObjectivesPlugin.getPlugin().completeObjectives(activity, input);
+        ObjectivesPlugin.INSTANCE.completeObjectives(activity, input);
     }
 }

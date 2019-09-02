@@ -28,18 +28,18 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjectivesShouldLimitLoopInvocation() throws Exception {
-        objectivesPlugin.objectives.get(ObjectivesPlugin.FIRST_OBJECTIVE).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.Companion.getFIRST_OBJECTIVE()).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
-        objectivesPlugin.objectives.get(ObjectivesPlugin.FIRST_OBJECTIVE).setStartedOn(new Date());
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.Companion.getFIRST_OBJECTIVE()).setStartedOn(new Date());
     }
 
     @Test
     public void notStartedObjective4ShouldLimitClosedLoop() throws Exception {
-        objectivesPlugin.objectives.get(ObjectivesPlugin.CLOSED_LOOP_OBJECTIVE).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.CLOSED_LOOP_OBJECTIVE).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isClosedLoopAllowed(c);
@@ -49,7 +49,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective6ShouldLimitAutosensMode() throws Exception {
-        objectivesPlugin.objectives.get(ObjectivesPlugin.AUTOSENS_OBJECTIVE).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.Companion.getAUTOSENS_OBJECTIVE()).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isAutosensModeEnabled(c);
@@ -59,7 +59,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective7ShouldLimitAMAMode() throws Exception {
-        objectivesPlugin.objectives.get(ObjectivesPlugin.AMA_OBJECTIVE).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.Companion.getAMA_OBJECTIVE()).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isAMAModeEnabled(c);
@@ -69,7 +69,7 @@ public class ObjectivesPluginTest {
 
     @Test
     public void notStartedObjective8ShouldLimitSMBMode() throws Exception {
-        objectivesPlugin.objectives.get(ObjectivesPlugin.SMB_OBJECTIVE).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.Companion.getSMB_OBJECTIVE()).setStartedOn(null);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isSMBModeEnabled(c);
@@ -85,6 +85,6 @@ public class ObjectivesPluginTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
 
-        objectivesPlugin = ObjectivesPlugin.getPlugin();
+        objectivesPlugin = ObjectivesPlugin.Companion.getPlugin();
     }
 }

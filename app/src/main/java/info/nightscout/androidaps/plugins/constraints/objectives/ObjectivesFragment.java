@@ -55,7 +55,7 @@ public class ObjectivesFragment extends SubscriberFragment {
             reset = view.findViewById(R.id.objectives_reset);
             enableFake.setOnClickListener(v -> updateGUI());
             reset.setOnClickListener(v -> {
-                ObjectivesPlugin.getPlugin().reset();
+                ObjectivesPlugin.INSTANCE.reset();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 scrollToCurrentObjective();
             });
@@ -77,7 +77,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
     private void startUpdateTimer() {
         handler.removeCallbacks(objectiveUpdater);
-        for (Objective objective : ObjectivesPlugin.getPlugin().getObjectives()) {
+        for (Objective objective : ObjectivesPlugin.INSTANCE.getObjectives()) {
             if (objective.isStarted() && !objective.isAccomplished()) {
                 long timeTillNextMinute = (System.currentTimeMillis() - objective.getStartedOn()) % (60 * 1000);
                 handler.postDelayed(objectiveUpdater, timeTillNextMinute);
@@ -87,8 +87,8 @@ public class ObjectivesFragment extends SubscriberFragment {
     }
 
     private void scrollToCurrentObjective() {
-        for (int i = 0; i < ObjectivesPlugin.getPlugin().getObjectives().size(); i++) {
-            Objective objective = ObjectivesPlugin.getPlugin().getObjectives().get(i);
+        for (int i = 0; i < ObjectivesPlugin.INSTANCE.getObjectives().size(); i++) {
+            Objective objective = ObjectivesPlugin.INSTANCE.getObjectives().get(i);
             if (!objective.isStarted() || !objective.isAccomplished()) {
                 RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
                     @Override
@@ -118,7 +118,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Objective objective = ObjectivesPlugin.getPlugin().getObjectives().get(position);
+            Objective objective = ObjectivesPlugin.INSTANCE.getObjectives().get(position);
             holder.title.setText(MainApp.gs(R.string.nth_objective, position + 1));
             holder.revert.setVisibility(View.INVISIBLE);
             if (objective.getObjective() != 0) {
@@ -134,7 +134,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 holder.verify.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.GONE);
                 holder.accomplished.setVisibility(View.GONE);
-                if (position == 0 || ObjectivesPlugin.getPlugin().getObjectives().get(position - 1).isAccomplished())
+                if (position == 0 || ObjectivesPlugin.INSTANCE.getObjectives().get(position - 1).isAccomplished())
                     holder.start.setVisibility(View.VISIBLE);
                 else holder.start.setVisibility(View.GONE);
             } else if (objective.isAccomplished()) {
@@ -182,7 +182,7 @@ public class ObjectivesFragment extends SubscriberFragment {
                 objective.setAccomplishedOn(0);
                 objective.setStartedOn(0);
                 if (position > 0) {
-                    Objective prevObj = ObjectivesPlugin.getPlugin().getObjectives().get(position - 1);
+                    Objective prevObj = ObjectivesPlugin.INSTANCE.getObjectives().get(position - 1);
                     prevObj.setAccomplishedOn(0);
                 }
                 notifyDataSetChanged();
@@ -207,7 +207,7 @@ public class ObjectivesFragment extends SubscriberFragment {
 
         @Override
         public int getItemCount() {
-            return ObjectivesPlugin.getPlugin().getObjectives().size();
+            return ObjectivesPlugin.INSTANCE.getObjectives().size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
