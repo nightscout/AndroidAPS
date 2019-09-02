@@ -56,7 +56,6 @@ public class ObjectivesFragment extends SubscriberFragment {
             enableFake.setOnClickListener(v -> updateGUI());
             reset.setOnClickListener(v -> {
                 ObjectivesPlugin.getPlugin().reset();
-                ObjectivesPlugin.getPlugin().saveProgress();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 scrollToCurrentObjective();
             });

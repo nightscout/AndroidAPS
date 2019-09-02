@@ -1626,6 +1626,9 @@
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Enter code obtained from developers to bypass the rest of objectives</string>
     <string name="codeaccepted">Code accepted</string>
     <string name="codeinvalid">Code invalid</string>
+    <string name="key_ObjectivesbgIsAvailableInNS" translatable="false">ObjectivesbgIsAvailableInNS</string>
+    <string name="key_ObjectivespumpStatusIsAvailableInNS" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
+    <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

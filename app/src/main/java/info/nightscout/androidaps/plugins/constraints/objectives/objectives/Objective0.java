@@ -27,7 +27,7 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.objectives_bgavailableinns) {
             @Override
             public boolean isCompleted() {
-                return ObjectivesPlugin.getPlugin().bgIsAvailableInNS;
+                return SP.getBoolean(R.string.key_ObjectivesbgIsAvailableInNS, false);
             }
         });
         tasks.add(new Task(R.string.nsclienthaswritepermission) {
@@ -50,7 +50,7 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.objectives_pumpstatusavailableinns) {
             @Override
             public boolean isCompleted() {
-                return ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS;
+                return SP.getBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, false);
             }
         });
         tasks.add(new Task(R.string.hasbgdata) {

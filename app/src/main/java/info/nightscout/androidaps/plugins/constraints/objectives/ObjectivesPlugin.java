@@ -5,9 +5,6 @@ import android.app.Activity;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +18,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective0;
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective1;
@@ -42,14 +37,16 @@ import info.nightscout.androidaps.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
-
     private static ObjectivesPlugin objectivesPlugin;
 
+    public static ObjectivesPlugin getPlugin() {
+        if (objectivesPlugin == null) {
+            objectivesPlugin = new ObjectivesPlugin();
+        }
+        return objectivesPlugin;
+    }
+
     public List<Objective> objectives = new ArrayList<>();
-    public boolean bgIsAvailableInNS = false;
-    public boolean pumpStatusIsAvailableInNS = false;
-    public Integer manualEnacts = 0;
 
     public static final int FIRST_OBJECTIVE = 0;
     public static final int USAGE_OBJECTIVE = 1;
@@ -60,13 +57,6 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
     public static final int AUTOSENS_OBJECTIVE = 6;
     public static final int AMA_OBJECTIVE = 7;
     public static final int SMB_OBJECTIVE = 8;
-
-    public static ObjectivesPlugin getPlugin() {
-        if (objectivesPlugin == null) {
-            objectivesPlugin = new ObjectivesPlugin();
-        }
-        return objectivesPlugin;
-    }
 
     private ObjectivesPlugin() {
         super(new PluginDescription()
@@ -80,7 +70,6 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         );
         convertSP();
         setupObjectives();
-        loadProgress();
     }
 
     @Override
@@ -89,7 +78,7 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
-    // convert 2.3 SP  version
+    // convert 2.3 SP version
     private void convertSP() {
         doConvertSP(0, "config");
         doConvertSP(1, "openloop");
@@ -126,31 +115,9 @@ public class ObjectivesPlugin extends PluginBase implements ConstraintsInterface
             objective.setStartedOn(0);
             objective.setAccomplishedOn(0);
         }
-        bgIsAvailableInNS = false;
-        pumpStatusIsAvailableInNS = false;
-        manualEnacts = 0;
-        saveProgress();
-    }
-
-    public void saveProgress() {
-        SP.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
-        SP.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
-        SP.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
-        if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Objectives stored");
-        MainApp.bus().post(new EventObjectivesSaved());
-    }
-
-    private void loadProgress() {
-        bgIsAvailableInNS = SP.getBoolean("Objectives" + "bgIsAvailableInNS", false);
-        pumpStatusIsAvailableInNS = SP.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
-        try {
-            manualEnacts = SP.getInt("Objectives" + "manualEnacts", 0);
-        } catch (Exception e) {
-            log.error("Unhandled exception", e);
-        }
-        if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Objectives loaded");
+        SP.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, false);
+        SP.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, false);
+        SP.putInt(R.string.key_ObjectivesmanualEnacts, 0);
     }
 
     public List<Objective> getObjectives() {

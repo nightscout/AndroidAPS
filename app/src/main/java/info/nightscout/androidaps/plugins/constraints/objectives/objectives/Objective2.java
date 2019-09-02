@@ -7,6 +7,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
 public class Objective2 extends Objective {
@@ -24,15 +25,15 @@ public class Objective2 extends Objective {
         tasks.add(new Task(R.string.objectives_manualenacts) {
             @Override
             public boolean isCompleted() {
-                return ObjectivesPlugin.getPlugin().manualEnacts >= MANUAL_ENACTS_NEEDED;
+                return SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) >= MANUAL_ENACTS_NEEDED;
             }
 
             @Override
             public String getProgress() {
-                if (ObjectivesPlugin.getPlugin().manualEnacts >= MANUAL_ENACTS_NEEDED)
+                if (SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) >= MANUAL_ENACTS_NEEDED)
                     return MainApp.gs(R.string.completed_well_done);
                 else
-                    return ObjectivesPlugin.getPlugin().manualEnacts + " / " + MANUAL_ENACTS_NEEDED;
+                    return SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) + " / " + MANUAL_ENACTS_NEEDED;
             }
         });
     }
