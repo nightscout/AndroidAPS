@@ -20,7 +20,7 @@ import java.util.*
  */
 object ObjectivesPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
-        .fragmentClass(ObjectivesFragment::class.java.name)
+        .fragmentClass(ObjectivesFragment::class.qualifiedName)
         .alwaysEnabled(!Config.NSCLIENT)
         .showInList(!Config.NSCLIENT)
         .pluginName(R.string.objectives)
@@ -90,13 +90,13 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
         SP.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, false)
         SP.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, false)
         SP.putInt(R.string.key_ObjectivesmanualEnacts, 0)
-        SP.putBoolean(R.string.key_objectiveuseprofileswitch, false);
-        SP.putBoolean(R.string.key_objectiveusedisconnect, false);
-        SP.putBoolean(R.string.key_objectiveusereconnect, false);
-        SP.putBoolean(R.string.key_objectiveusetemptarget, false);
-        SP.putBoolean(R.string.key_objectiveuseactions, false);
-        SP.putBoolean(R.string.key_objectiveuseloop, false);
-        SP.putBoolean(R.string.key_objectiveusescale, false);
+        SP.putBoolean(R.string.key_objectiveuseprofileswitch, false)
+        SP.putBoolean(R.string.key_objectiveusedisconnect, false)
+        SP.putBoolean(R.string.key_objectiveusereconnect, false)
+        SP.putBoolean(R.string.key_objectiveusetemptarget, false)
+        SP.putBoolean(R.string.key_objectiveuseactions, false)
+        SP.putBoolean(R.string.key_objectiveuseloop, false)
+        SP.putBoolean(R.string.key_objectiveusescale, false)
     }
 
     fun completeObjectives(activity: Activity, request: String) {
