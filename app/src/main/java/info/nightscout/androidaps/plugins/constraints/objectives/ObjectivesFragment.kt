@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
+import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
+import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import kotlinx.android.synthetic.main.objectives_fragment.*
@@ -149,6 +152,13 @@ class ObjectivesFragment : Fragment() {
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    if (task is  ExamTask) {
+                        state.setOnClickListener {
+                            val dialog = ObjectivesExamDialog();
+                            ObjectivesExamDialog.objective = objective
+                            fragmentManager?.let { dialog.show(it, "ObjectivesFragment") }
+                        }
+                    }
                     val separator = View(holder.progress.context)
                     separator.setBackgroundColor(Color.DKGRAY)
                     holder.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)

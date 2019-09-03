@@ -1,6 +1,11 @@
 package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.text.util.Linkify;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
@@ -99,7 +104,7 @@ public abstract class Objective {
             this.task = task;
         }
 
-        public int getTask() {
+        public @StringRes int getTask() {
             return task;
         }
 
@@ -148,4 +153,102 @@ public abstract class Objective {
         }
     }
 
+    public class ExamTask extends Task {
+        @StringRes
+        int question;
+        List hints = new ArrayList<>();
+        List options = new ArrayList<>();
+        private String spIdentifier;
+        private boolean answered;
+
+        ExamTask(@StringRes int task, @StringRes int question, String spIdentifier) {
+            super(task);
+            this.question = question;
+            this.spIdentifier = spIdentifier;
+            answered = SP.getBoolean("ExamTask_" + spIdentifier, false);
+        }
+
+        public void setAnswered(boolean newState) {
+            answered = newState;
+            SP.putBoolean("ExamTask_" + spIdentifier, answered);
+        }
+
+        public boolean getAnswered() {
+            return answered;
+        }
+
+        ExamTask option(Option option) {
+            options.add(option);
+            return this;
+        }
+
+        ExamTask hint(Hint hint) {
+            hints.add(hint);
+            return this;
+        }
+
+        public @StringRes int getQuestion() {
+            return question;
+        }
+
+        public List getOptions() {
+            return options;
+        }
+
+        public List getHints() {
+            return hints;
+        }
+
+        @Override
+        public boolean isCompleted() {
+            return answered;
+        }
+    }
+
+    public class Option {
+        @StringRes int option;
+        boolean isCorrect;
+
+        CheckBox cb; // TODO: change it, this will block releasing memeory
+
+        Option(@StringRes int option, boolean isCorrect) {
+            this.option = option;
+            this.isCorrect = isCorrect;
+        }
+
+        public boolean isCorrect() {
+            return isCorrect;
+        }
+
+        public CheckBox generate(Context context) {
+            cb = new CheckBox(context);
+            cb.setText(option);
+            return cb;
+        }
+
+        public boolean evaluate() {
+            boolean selection = cb.isChecked();
+            if (selection && isCorrect) return true;
+            if (!selection && !isCorrect) return true;
+            return false;
+        }
+    }
+
+    public class Hint {
+        @StringRes int hint;
+
+        Hint(@StringRes int hint) {
+            this.hint = hint;
+        }
+
+        public TextView generate(Context context) {
+            TextView textView = new TextView(context);
+            textView.setText(hint);
+            textView.setAutoLinkMask(Linkify.WEB_URLS);
+            textView.setLinksClickable(true);
+            textView.setLinkTextColor(Color.YELLOW);
+            Linkify.addLinks(textView, Linkify.WEB_URLS);
+            return textView;
+        }
+    }
 }

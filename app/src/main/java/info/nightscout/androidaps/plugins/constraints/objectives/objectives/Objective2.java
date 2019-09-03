@@ -1,45 +1,27 @@
 package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
-import android.app.Activity;
-
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
 import info.nightscout.androidaps.utils.SP;
-import info.nightscout.androidaps.utils.T;
 
 public class Objective2 extends Objective {
 
-    public final int MANUAL_ENACTS_NEEDED = 20;
 
     public Objective2() {
-        super("openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
-        hasSpecialInput = true;
+        super("exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
     }
 
     @Override
     protected void setupTasks(List<Task> tasks) {
-        tasks.add(new MinimumDurationTask(T.days(7).msecs()));
-        tasks.add(new Task(R.string.objectives_manualenacts) {
-            @Override
-            public boolean isCompleted() {
-                return SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) >= MANUAL_ENACTS_NEEDED;
-            }
-
-            @Override
-            public String getProgress() {
-                if (SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) >= MANUAL_ENACTS_NEEDED)
-                    return MainApp.gs(R.string.completed_well_done);
-                else
-                    return SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) + " / " + MANUAL_ENACTS_NEEDED;
-            }
-        });
-    }
-
-    @Override
-    public void specialAction(Activity activity, String input) {
-        ObjectivesPlugin.INSTANCE.completeObjectives(activity, input);
-    }
+        tasks.add(new ExamTask(R.string.meaningofdia, R.string.whatmeansdia,"dia")
+                .option(new Option(R.string.minimumis3h, false))
+                .option(new Option(R.string.minimumis5h, true))
+                .option(new Option(R.string.meaningisequaltodiapump, false))
+                .option(new Option(R.string.valuemustbedetermined, true))
+                .hint(new Hint(R.string.diahint1))
+        );
+     }
 }

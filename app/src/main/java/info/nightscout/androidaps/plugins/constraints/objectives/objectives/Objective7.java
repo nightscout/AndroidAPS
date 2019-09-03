@@ -9,11 +9,11 @@ import info.nightscout.androidaps.utils.T;
 public class Objective7 extends Objective {
 
     public Objective7() {
-        super("ama", R.string.objectives_ama_objective, 0);
+        super("autosens", R.string.objectives_autosens_objective, R.string.objectives_autosens_gate);
     }
 
     @Override
     protected void setupTasks(List<Task> tasks) {
-        tasks.add(new MinimumDurationTask(T.days(28).msecs()));
+        tasks.add(new MinimumDurationTask(T.days(7).msecs()));
     }
 }

@@ -31,13 +31,14 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
 
     val FIRST_OBJECTIVE = 0
     val USAGE_OBJECTIVE = 1
-    val OPENLOOP_OBJECTIVE = 2
-    val MAXBASAL_OBJECTIVE = 3
-    val MAXIOB_ZERO_CL_OBJECTIVE = 4
-    val MAXIOB_OBJECTIVE = 5
-    val AUTOSENS_OBJECTIVE = 6
-    val AMA_OBJECTIVE = 7
-    val SMB_OBJECTIVE = 8
+    val EXAM_OBJECTIVE = 2
+    val OPENLOOP_OBJECTIVE = 3
+    val MAXBASAL_OBJECTIVE = 4
+    val MAXIOB_ZERO_CL_OBJECTIVE = 5
+    val MAXIOB_OBJECTIVE = 6
+    val AUTOSENS_OBJECTIVE = 7
+    val AMA_OBJECTIVE = 8
+    val SMB_OBJECTIVE = 9
 
     init {
         convertSP()
@@ -80,6 +81,7 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
         objectives.add(Objective6())
         objectives.add(Objective7())
         objectives.add(Objective8())
+        objectives.add(Objective9())
     }
 
     fun reset() {

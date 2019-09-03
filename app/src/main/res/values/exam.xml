@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="whatmeansdia">What is true about DIA?</string>
+    <string name="meaningofdia">Meaning of DIA</string>
+    <string name="minimumis3h">minimum is 3 hours</string>
+    <string name="minimumis5h">minimum is 5 hours</string>
+    <string name="diahint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/he/Configuration/Config-Builder.html?#insulin</string>
+    <string name="meaningisequaltodiapump">meaning is equal to DIA parameter used in pumps</string>
+    <string name="valuemustbedetermined">correct value must be determined</string>
+
+</resources>
