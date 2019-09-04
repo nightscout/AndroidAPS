@@ -51,10 +51,11 @@ public class TriggerDelta extends Trigger {
 
     private TriggerDelta(TriggerDelta triggerDelta) {
         super();
-        this.units = ProfileFunctions.getInstance().getProfileUnits();
-        initializer();
-        value = triggerDelta.value;
         lastRun = triggerDelta.lastRun;
+        this.units = triggerDelta.units;
+        deltaType = triggerDelta.deltaType;
+        value = new InputDelta(triggerDelta.value);
+        comparator = new Comparator(triggerDelta.comparator);
     }
 
     public double getValue() {

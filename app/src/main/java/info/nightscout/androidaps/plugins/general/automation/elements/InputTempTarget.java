@@ -19,7 +19,7 @@ public class InputTempTarget extends Element {
     private double step;
     private DecimalFormat decimalFormat;
 
-    final TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
             value = Math.max(minValue, value);
