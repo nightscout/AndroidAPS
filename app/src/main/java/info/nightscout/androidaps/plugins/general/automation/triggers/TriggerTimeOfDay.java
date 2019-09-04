@@ -32,13 +32,11 @@ import info.nightscout.androidaps.utils.T;
 
 
 // Trigger for time range ( Time of day actually )
-// Rumen: I dont like that minSinceMidnight is long
-// TODO: change it
 
 public class TriggerTimeOfDay extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
-    private long minSinceMidnight;
+    private int minSinceMidnight;
     private Comparator comparator = new Comparator();
 
 
@@ -54,7 +52,7 @@ public class TriggerTimeOfDay extends Trigger {
 
     @Override
     public boolean shouldRun() {
-        long currentMinSinceMidnight = getMinSinceMidnight(System.currentTimeMillis());
+        int currentMinSinceMidnight = getMinSinceMidnight(System.currentTimeMillis());
 
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
@@ -96,7 +94,7 @@ public class TriggerTimeOfDay extends Trigger {
         try {
             o = new JSONObject(data);
             lastRun = JsonHelper.safeGetLong(o, "lastRun");
-            minSinceMidnight = JsonHelper.safeGetLong(o, "minSinceMidnight");
+            minSinceMidnight = JsonHelper.safeGetInt(o, "minSinceMidnight");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(o, "comparator")));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -119,7 +117,7 @@ public class TriggerTimeOfDay extends Trigger {
         return Optional.of(R.drawable.ic_access_alarm_24dp);
     }
 
-    TriggerTimeOfDay minSinceMidnight(long minSinceMidnight) {
+    TriggerTimeOfDay minSinceMidnight(int minSinceMidnight) {
         this.minSinceMidnight = minSinceMidnight;
         return this;
     }
@@ -140,10 +138,10 @@ public class TriggerTimeOfDay extends Trigger {
         return (hours*60*60*1000)+(minutes*60*1000);
     }
 
-    long getMinSinceMidnight(long time) {
+    int getMinSinceMidnight(long time) {
         // if passed argument is smaller than 1440 ( 24 h * 60 min ) that value is already converted
         if (time < 1441)
-            return time;
+            return (int) time;
         Date date = new Date(time);
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
@@ -164,7 +162,7 @@ public class TriggerTimeOfDay extends Trigger {
                     (view12, hourOfDay, minute, second) -> {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
-                        minSinceMidnight = calendar.getTimeInMillis();
+                        minSinceMidnight = getMinSinceMidnight(calendar.getTimeInMillis());
                         timeButton.setText(DateUtil.timeString(minSinceMidnight));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
