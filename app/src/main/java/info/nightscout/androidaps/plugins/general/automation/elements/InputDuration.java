@@ -20,6 +20,11 @@ public class InputDuration extends Element {
         this.value = value;
     }
 
+    public InputDuration(InputDuration another) {
+        unit =  another.unit;
+        value = another.value;
+    }
+
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);

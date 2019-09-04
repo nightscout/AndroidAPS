@@ -25,8 +25,8 @@ public class InputDouble extends Element {
     };
 
     private double value;
-    double minValue;
-    double maxValue;
+    private double minValue;
+    private double maxValue;
     private double step;
     private DecimalFormat decimalFormat;
 

@@ -11,8 +11,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
@@ -28,9 +26,7 @@ import info.nightscout.androidaps.utils.T;
 
 public class TriggerBolusAgo extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-    private final double step = 1;
-    private DecimalFormat decimalFormat = new DecimalFormat("1");
-    public InputDuration minutesAgo = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
+    private InputDuration minutesAgo = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
     private Comparator comparator = new Comparator();
 
     public TriggerBolusAgo() {
@@ -39,7 +35,7 @@ public class TriggerBolusAgo extends Trigger {
 
     private TriggerBolusAgo(TriggerBolusAgo triggerBolusAgo) {
         super();
-        minutesAgo = new InputDuration(triggerBolusAgo.minutesAgo.getMinutes(), InputDuration.TimeUnit.MINUTES);
+        minutesAgo = new InputDuration(triggerBolusAgo.minutesAgo);
         lastRun = triggerBolusAgo.lastRun;
         comparator = new Comparator(triggerBolusAgo.comparator);
     }
