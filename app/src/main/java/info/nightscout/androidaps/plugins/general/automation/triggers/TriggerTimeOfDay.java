@@ -89,7 +89,7 @@ public class TriggerTimeOfDay extends Trigger {
     }
 
     @Override
-    Trigger fromJSON(String data) {
+    TriggerTimeOfDay fromJSON(String data) {
         JSONObject o;
         try {
             o = new JSONObject(data);
@@ -146,6 +146,10 @@ public class TriggerTimeOfDay extends Trigger {
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);
         return (calendar.get(Calendar.HOUR_OF_DAY) * 60) + calendar.get(Calendar.MINUTE);
+    }
+
+    int getMinSinceMidnight(){
+        return minSinceMidnight;
     }
 
     @Override
