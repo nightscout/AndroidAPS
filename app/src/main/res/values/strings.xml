@@ -623,8 +623,13 @@
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
     <string name="key_show_statuslights" translatable="false">key_show_statuslights</string>
+    <string name="key_show_statuslights_easy" translatable="false">key_show_statuslights_easy</string>
+    <string name="key_show_statuslights_extended" translatable="false">key_show_statuslights_extended</string>
     <string name="show_statuslights">Show status lights on home screen</string>
-    <string name="show_statuslights_summary">Enable status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
+    <string name="show_statuslights_easy">Show original status lights on home screen</string>
+    <string name="show_statuslights_easy_summary">Enable original status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
+    <string name="show_statuslights_extended">Show extended status lights on home screen</string>
+    <string name="show_statuslights_extended_summary">Enable extended status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
     <string name="key_statuslights_res_warning" translatable="false">key_statuslights_res_warning</string>
     <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
     <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
