@@ -18,16 +18,23 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
+import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.SP
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.objectives_fragment.*
 
 class ObjectivesFragment : Fragment() {
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
+
+    private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val objectiveUpdater = object : Runnable {
         override fun run() {
@@ -54,6 +61,26 @@ class ObjectivesFragment : Fragment() {
         }
         scrollToCurrentObjective()
         startUpdateTimer()
+    }
+
+    @Synchronized
+    override fun onResume() {
+        super.onResume()
+        disposable.add(RxBus
+                .toObservable(EventObjectivesUpdateGui::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    objectives_recyclerview.adapter?.notifyDataSetChanged()
+                }, {
+                    FabricPrivacy.logException(it)
+                })
+        )
+    }
+
+    @Synchronized
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
     }
 
     @Synchronized
@@ -152,9 +179,13 @@ class ObjectivesFragment : Fragment() {
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    if (task is  ExamTask) {
+                    if (task is ExamTask) {
                         state.setOnClickListener {
-                            val dialog = ObjectivesExamDialog();
+                            val dialog = ObjectivesExamDialog()
+                            val bundle = Bundle()
+                            val position = objective.tasks.indexOf(task)
+                            bundle.putInt("currentTask", position)
+                            dialog.arguments = bundle
                             ObjectivesExamDialog.objective = objective
                             fragmentManager?.let { dialog.show(it, "ObjectivesFragment") }
                         }
@@ -189,6 +220,11 @@ class ObjectivesFragment : Fragment() {
                 scrollToCurrentObjective()
             }
             if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted) {
+                // generate random request code if none exists
+                val request = SP.getString(R.string.key_objectives_request_code, String.format("%1$05d", (Math.random() * 99999).toInt()))
+                SP.putString(R.string.key_objectives_request_code, request)
+                holder.requestCode.text = MainApp.gs(R.string.requestcode, request)
+                holder.requestCode.visibility = View.VISIBLE
                 holder.enterButton.visibility = View.VISIBLE
                 holder.input.visibility = View.VISIBLE
                 holder.inputHint.visibility = View.VISIBLE
@@ -201,6 +237,7 @@ class ObjectivesFragment : Fragment() {
                 holder.enterButton.visibility = View.GONE
                 holder.input.visibility = View.GONE
                 holder.inputHint.visibility = View.GONE
+                holder.requestCode.visibility = View.GONE
             }
         }
 
@@ -221,6 +258,7 @@ class ObjectivesFragment : Fragment() {
             val inputHint: TextView = itemView.findViewById(R.id.objective_inputhint)
             val input: EditText = itemView.findViewById(R.id.objective_input)
             val enterButton: Button = itemView.findViewById(R.id.objective_enterbutton)
+            val requestCode: TextView = itemView.findViewById(R.id.objective_requestcode)
         }
     }
 

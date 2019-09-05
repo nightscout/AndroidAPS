@@ -51,10 +51,11 @@ public class TriggerDelta extends Trigger {
 
     private TriggerDelta(TriggerDelta triggerDelta) {
         super();
-        this.units = ProfileFunctions.getInstance().getProfileUnits();
-        initializer();
-        value = triggerDelta.value;
         lastRun = triggerDelta.lastRun;
+        this.units = triggerDelta.units;
+        deltaType = triggerDelta.deltaType;
+        value = new InputDelta(triggerDelta.value);
+        comparator = new Comparator(triggerDelta.comparator);
     }
 
     public double getValue() {
@@ -68,7 +69,7 @@ public class TriggerDelta extends Trigger {
         if (units.equals(Constants.MMOL))
             value = new InputDelta(0, -MMOL_MAX, MMOL_MAX, 0.1d, new DecimalFormat("0.1"), DeltaType.DELTA);
         else
-            value = new InputDelta(0, -MGDL_MAX, MGDL_MAX, 0.1d, new DecimalFormat("1"), DeltaType.DELTA);
+            value = new InputDelta(0, -MGDL_MAX, MGDL_MAX, 1d, new DecimalFormat("1"), DeltaType.DELTA);
     }
 
 

@@ -84,14 +84,13 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
         // enabled event
         holder.enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
             event.setEnabled(isChecked);
-            notifyDataSetChanged();
             RxBus.INSTANCE.send(new EventAutomationDataChanged());
         });
 
         // remove event
         holder.iconTrash.setOnClickListener(v -> {
             mEventList.remove(event);
-            notifyDataSetChanged();
+            RxBus.INSTANCE.send(new EventAutomationDataChanged());
         });
 
         // edit event

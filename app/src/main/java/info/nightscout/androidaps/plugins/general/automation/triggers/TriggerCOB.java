@@ -32,10 +32,8 @@ import info.nightscout.androidaps.utils.T;
 public class TriggerCOB extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
     private final int minValue = 0;
-    private final int maxValue = (int) (SP.getInt(R.string.key_treatmentssafety_maxcarbs, 48));
-    private final double step = 1;
-    private DecimalFormat decimalFormat = new DecimalFormat("1");
-    private InputDouble value = new InputDouble(0, (double) minValue, (double) maxValue, step, decimalFormat);
+    private final int maxValue = SP.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
+    private InputDouble value = new InputDouble(0, (double) minValue, (double) maxValue, 1, new DecimalFormat("1"));
     private Comparator comparator = new Comparator();
 
     public TriggerCOB() {
