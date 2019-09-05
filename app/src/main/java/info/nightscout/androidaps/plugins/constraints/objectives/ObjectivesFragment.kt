@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.objectives_fragment.*
@@ -219,6 +220,11 @@ class ObjectivesFragment : Fragment() {
                 scrollToCurrentObjective()
             }
             if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted) {
+                // generate random request code if none exists
+                val request = SP.getString(R.string.key_objectives_request_code, String.format("%1$05d", (Math.random() * 99999).toInt()))
+                SP.putString(R.string.key_objectives_request_code, request)
+                holder.requestCode.text = MainApp.gs(R.string.requestcode, request)
+                holder.requestCode.visibility = View.VISIBLE
                 holder.enterButton.visibility = View.VISIBLE
                 holder.input.visibility = View.VISIBLE
                 holder.inputHint.visibility = View.VISIBLE
@@ -231,6 +237,7 @@ class ObjectivesFragment : Fragment() {
                 holder.enterButton.visibility = View.GONE
                 holder.input.visibility = View.GONE
                 holder.inputHint.visibility = View.GONE
+                holder.requestCode.visibility = View.GONE
             }
         }
 
@@ -251,6 +258,7 @@ class ObjectivesFragment : Fragment() {
             val inputHint: TextView = itemView.findViewById(R.id.objective_inputhint)
             val input: EditText = itemView.findViewById(R.id.objective_input)
             val enterButton: Button = itemView.findViewById(R.id.objective_enterbutton)
+            val requestCode: TextView = itemView.findViewById(R.id.objective_requestcode)
         }
     }
 

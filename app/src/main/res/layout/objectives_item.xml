@@ -80,6 +80,12 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives" />
 
+        <TextView
+            android:id="@+id/objective_requestcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Request code: XXXXX" />
+
         <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent"

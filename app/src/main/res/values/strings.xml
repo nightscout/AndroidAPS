@@ -1635,6 +1635,8 @@
     <string name="wronganswer">Wrong answer!</string>
     <string name="unfinshed_button">Next unfinished</string>
     <string name="close">Close</string>
+    <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
+    <string name="requestcode">Request code: %1$s</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
