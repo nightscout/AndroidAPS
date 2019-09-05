@@ -18,16 +18,22 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
+import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.objectives_fragment.*
 
 class ObjectivesFragment : Fragment() {
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
+
+    private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val objectiveUpdater = object : Runnable {
         override fun run() {
@@ -54,6 +60,26 @@ class ObjectivesFragment : Fragment() {
         }
         scrollToCurrentObjective()
         startUpdateTimer()
+    }
+
+    @Synchronized
+    override fun onResume() {
+        super.onResume()
+        disposable.add(RxBus
+                .toObservable(EventObjectivesUpdateGui::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    objectives_recyclerview.adapter?.notifyDataSetChanged()
+                }, {
+                    FabricPrivacy.logException(it)
+                })
+        )
+    }
+
+    @Synchronized
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
     }
 
     @Synchronized
@@ -152,9 +178,13 @@ class ObjectivesFragment : Fragment() {
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    if (task is  ExamTask) {
+                    if (task is ExamTask) {
                         state.setOnClickListener {
-                            val dialog = ObjectivesExamDialog();
+                            val dialog = ObjectivesExamDialog()
+                            val bundle = Bundle()
+                            val position = objective.tasks.indexOf(task)
+                            bundle.putInt("currentTask", position)
+                            dialog.arguments = bundle
                             ObjectivesExamDialog.objective = objective
                             fragmentManager?.let { dialog.show(it, "ObjectivesFragment") }
                         }

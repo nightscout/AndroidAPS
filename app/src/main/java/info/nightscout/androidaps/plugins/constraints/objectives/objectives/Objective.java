@@ -14,6 +14,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
@@ -160,12 +161,27 @@ public abstract class Objective {
         List options = new ArrayList<>();
         private String spIdentifier;
         private boolean answered;
+        private long disabledTo;
 
         ExamTask(@StringRes int task, @StringRes int question, String spIdentifier) {
             super(task);
             this.question = question;
             this.spIdentifier = spIdentifier;
             answered = SP.getBoolean("ExamTask_" + spIdentifier, false);
+            disabledTo = SP.getLong("DisabledTo_" + spIdentifier, 0L);
+        }
+
+        public void setDisabledTo(long newState) {
+            disabledTo = newState;
+            SP.putLong("DisabledTo_" + spIdentifier, disabledTo);
+        }
+
+        public long getDisabledTo() {
+            return disabledTo;
+        }
+
+        public boolean isEnabledAnswer() {
+            return disabledTo < DateUtil.now();
         }
 
         public void setAnswered(boolean newState) {
