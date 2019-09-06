@@ -34,6 +34,7 @@
     <string name="description_smb">Algoritmo più recente per gli utenti avanzati</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i pulsanti per le azioni più comuni</string>
     <string name="description_persistent_notification">Mostra una notifica con una breve panoramica di ciò che sta facendo il tuo loop</string>
+    <string name="description_profile_local">Definisci un profilo disponibile offline.</string>
     <string name="description_profile_nightscout">Fornisce il profilo definito in Nightscout</string>
     <string name="description_profile_simple">Imposta un profilo con un solo intervallo temporale.</string>
     <string name="description_pump_combo">Integrazione del microinfusore Accu-Chek Combo, è necessario avere Ruffy installato</string>
@@ -950,6 +951,7 @@
     <string name="sensitivitysetup">Configura il plugin di Sensibilità</string>
     <string name="setupwizard_sensitivity_description">Il plugin di Sensibilità è utilizzato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSClient gestisce la connessione a Nightscout. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non ne porterai a termine la configurazione.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5 - 6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="bgsourcesetup">Configura sorgente Glicemie</string>
     <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino è necessario utilizzare il profilo di NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per utilizzarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio Profilo\"</string>
