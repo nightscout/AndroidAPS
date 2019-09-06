@@ -319,20 +319,20 @@
     <string name="overview_bolusprogress_goingtodeliver">Er worden %1$.2fE toegediend</string>
     <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyzeren van basaal en ratio\'s</string>
     <string name="objectives_0_gate">Controleren van beschikbaarheid BG en insuline pomp data op Nightscout</string>
-    <string name="objectives_1_objective">Starten met de Open Loop modus</string>
-    <string name="objectives_1_gate">In Open Loop modus werken voor enkele dagen en handmatig meermaals tijdelijke basaal instellen.
+    <string name="objectives_openloop_objective">Starten met de Open Loop modus</string>
+    <string name="objectives_openloop_gate">In Open Loop modus werken voor enkele dagen en handmatig meermaals tijdelijke basaal instellen.
 Stel in en gebruik tijdelijk en standaard tijdelijke streefdoelen (bv. bij sporten of koolhydraten inname bij hypo)</string>
-    <string name="objectives_2_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basaalstanden</string>
-    <string name="objectives_2_gate">Gebaseerd op deze ervaringen beslissen wat het maximale basaal mag zijn en dit in de pomp instellen</string>
-    <string name="objectives_3_objective">Starten met closed Loop met bescherming tegen lage BG</string>
-    <string name="objectives_3_gate">In closed Loop werken met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
-    <string name="objectives_4_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat gelijdelijk het streef BG dalen</string>
-    <string name="objectives_4_gate">Verhoog max. IOB en test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
-    <string name="objectives_5_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
-    <string name="objectives_5_gate">Gedurende 1 week succesvol closed loop met invoer van koolhydraten</string>
-    <string name="objectives_6_objective">Activeren van extra functies overdag zoals AMA</string>
-    <string name="objectives_7_objective">Activeren van extra functies overdag zoals SMB</string>
-    <string name="objectives_7_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
+    <string name="objectives_maxbasal_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basaalstanden</string>
+    <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen beslissen wat het maximale basaal mag zijn en dit in de pomp instellen</string>
+    <string name="objectives_maxiobzero_objective">Starten met closed Loop met bescherming tegen lage BG</string>
+    <string name="objectives_maxiobzero_gate">In closed Loop werken met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
+    <string name="objectives_maxiob_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat gelijdelijk het streef BG dalen</string>
+    <string name="objectives_maxiob_gate">Verhoog max. IOB en test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
+    <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
+    <string name="objectives_autosens_gate">Gedurende 1 week succesvol closed loop met invoer van koolhydraten</string>
+    <string name="objectives_ama_objective">Activeren van extra functies overdag zoals AMA</string>
+    <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB</string>
+    <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
     <string name="youareonallowedlimit">Limiet bereikt</string>
     <string name="noprofileselected">Geen profiel geselecteerd</string>
     <string name="smscommunicator_loophasbeendisabled">Loop was uitgeschakeld</string>

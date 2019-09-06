@@ -51,10 +51,11 @@ public class TriggerLocation extends Trigger {
 
     private TriggerLocation(TriggerLocation triggerLocation) {
         super();
-        latitude = new InputDouble(triggerLocation.latitude.getValue(), -90d, +90d, 0.00001d, new DecimalFormat("0.00000"));
-        longitude = new InputDouble(triggerLocation.longitude.getValue(), -180d, +180d, 0.00001d, new DecimalFormat("0.00000"));
-        distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
+        latitude = new InputDouble(triggerLocation.latitude);
+        longitude = new InputDouble(triggerLocation.longitude);
+        distance = new InputDouble(triggerLocation.distance);
         lastRun = triggerLocation.lastRun;
+        name = triggerLocation.name;
     }
 
     @Override

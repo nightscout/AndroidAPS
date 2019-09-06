@@ -319,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Werde %1$.2fU abgeben</string>
     <string name="objectives_0_objective">Konfiguriere die Anzeige und das Monitoring (Nightscout) und analysiere Basal-Raten und Faktoren</string>
     <string name="objectives_0_gate">Verifiziere, dass BZ- und Pumpen-Insulin-Daten erfolgreich zu Nightscout hochgeladen werden.</string>
-    <string name="objectives_1_objective">Starte den Open Loop Modus</string>
-    <string name="objectives_1_gate">Erprobe den Open Loop Modus für ein paar Tage und setze manuell temporäre Basal-Raten. Richte temporäre Ziele ein und nutze sie (z.B. für Bewegung, unterstützend zur Hypobehandlung).</string>
-    <string name="objectives_2_objective">Verstehe den Open Loop und die TBR-Empfehlungen</string>
-    <string name="objectives_2_gate">Entscheide anhand von dieser Erfahrung, wie hoch max Basal sein sollte, und übernehme den Wert in die Pumpen- und AAPS-Einstellungen.</string>
-    <string name="objectives_3_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
-    <string name="objectives_3_gate">Erprobe den Closed Loop Modus mit max IOB = 0 für ein paar Tage, ohne zu viele Unterzuckerungen zu haben.</string>
-    <string name="objectives_4_objective">Stelle den Closed Loop fein ein, erhöhe max IOB über 0 und setze den Zielbereich langsam herunter.</string>
-    <string name="objectives_4_gate">Verwende es ein paar Tage und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst.</string>
-    <string name="objectives_5_objective">Passe, falls notwendig, Basal und Faktoren an und aktiviere dann die Autosens-Funktion.</string>
-    <string name="objectives_5_gate">Loope eine Woche erfolgreich am Tag mit regelmäßiger Kohlenhydrat-Eingabe.</string>
-    <string name="objectives_6_objective">Aktiviere zusätzliche Funktionen wie z. B. den Mahlzeitenassistenten</string>
-    <string name="objectives_7_objective">Aktiviere zusätzliche Funktionen wie z. B. SMB</string>
-    <string name="objectives_7_gate">Lies das Wiki und hebe maxIOB an, damit SMB funktioniert. Ein guter Startwert ist
+    <string name="objectives_openloop_objective">Starte den Open Loop Modus</string>
+    <string name="objectives_openloop_gate">Erprobe den Open Loop Modus für ein paar Tage und setze manuell temporäre Basal-Raten. Richte temporäre Ziele ein und nutze sie (z.B. für Bewegung, unterstützend zur Hypobehandlung).</string>
+    <string name="objectives_maxbasal_objective">Verstehe den Open Loop und die TBR-Empfehlungen</string>
+    <string name="objectives_maxbasal_gate">Entscheide anhand von dieser Erfahrung, wie hoch max Basal sein sollte, und übernehme den Wert in die Pumpen- und AAPS-Einstellungen.</string>
+    <string name="objectives_maxiobzero_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
+    <string name="objectives_maxiobzero_gate">Erprobe den Closed Loop Modus mit max IOB = 0 für ein paar Tage, ohne zu viele Unterzuckerungen zu haben.</string>
+    <string name="objectives_maxiob_objective">Stelle den Closed Loop fein ein, erhöhe max IOB über 0 und setze den Zielbereich langsam herunter.</string>
+    <string name="objectives_maxiob_gate">Verwende es ein paar Tage und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst.</string>
+    <string name="objectives_autosens_objective">Passe, falls notwendig, Basal und Faktoren an und aktiviere dann die Autosens-Funktion.</string>
+    <string name="objectives_autosens_gate">Loope eine Woche erfolgreich am Tag mit regelmäßiger Kohlenhydrat-Eingabe.</string>
+    <string name="objectives_ama_objective">Aktiviere zusätzliche Funktionen wie z. B. den Mahlzeitenassistenten</string>
+    <string name="objectives_smb_objective">Aktiviere zusätzliche Funktionen wie z. B. SMB</string>
+    <string name="objectives_smb_gate">Lies das Wiki und hebe maxIOB an, damit SMB funktioniert. Ein guter Startwert ist
 maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="noprofileselected">Kein Profil ausgewählt</string>

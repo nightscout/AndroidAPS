@@ -34,6 +34,7 @@
     <string name="description_smb">Algoritmo più recente per gli utenti avanzati</string>
     <string name="description_overview">Visualizza lo stato corrente del tuo loop e i pulsanti per le azioni più comuni</string>
     <string name="description_persistent_notification">Mostra una notifica con una breve panoramica di ciò che sta facendo il tuo loop</string>
+    <string name="description_profile_local">Definisci un profilo disponibile offline.</string>
     <string name="description_profile_nightscout">Fornisce il profilo definito in Nightscout</string>
     <string name="description_profile_simple">Imposta un profilo con un solo intervallo temporale.</string>
     <string name="description_pump_combo">Integrazione del microinfusore Accu-Chek Combo, è necessario avere Ruffy installato</string>
@@ -318,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Sto per erogare %1$.2fU</string>
     <string name="objectives_0_objective">Configurazione della visualizzazione e del monitoraggio, analisi basali e rapporti</string>
     <string name="objectives_0_gate">Verificare che la Glicemia sia disponibile su Nightscout e che i dati sull\'insulina del micro siano in fase di caricamento</string>
-    <string name="objectives_1_objective">Partenza con Loop Aperto</string>
-    <string name="objectives_1_gate">Esegui l\'applicazione in modalità Loop Aperto per alcuni giorni e accetta manualmente le basali temporanee. Imposta e utilizza i target temporanei, anche quelli predefiniti (ad esempio, per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
-    <string name="objectives_2_objective">Comprendi il tuo Loop Aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
-    <string name="objectives_2_gate">Sulla base di tale esperienza, decidi quale deve essere il valore max della basale e impostalo sul microinfusore e nelle preferenze</string>
-    <string name="objectives_3_objective">Iniziare a chiudere il Loop con Low Glucose Suspend</string>
-    <string name="objectives_3_gate">Esegui l\'applicazione in Loop Chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>
-    <string name="objectives_4_objective">Regola il Loop Chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
-    <string name="objectives_4_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi glicemia, prima di abbassare il target glicemico</string>
-    <string name="objectives_5_objective">Regola le basali e i rapporti se necessario, quindi attiva auto-sens</string>
-    <string name="objectives_5_gate">1 settimana di looping diurno con dichiarazione regolare dei carboidrati, eseguito con successo</string>
-    <string name="objectives_6_objective">Abilita funzioni aggiuntive per l\'uso diurno, ad esempio AMA (advanced meal assist - assistenza avanzata del pasto)</string>
-    <string name="objectives_7_objective">Abilita funzioni aggiuntive per l\'uso diurno, come SMB</string>
-    <string name="objectives_7_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
+    <string name="objectives_openloop_objective">Partenza con Loop Aperto</string>
+    <string name="objectives_openloop_gate">Esegui l\'applicazione in modalità Loop Aperto per alcuni giorni e accetta manualmente le basali temporanee. Imposta e utilizza i target temporanei, anche quelli predefiniti (ad esempio, per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
+    <string name="objectives_maxbasal_objective">Comprendi il tuo Loop Aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
+    <string name="objectives_maxbasal_gate">Sulla base di tale esperienza, decidi quale deve essere il valore max della basale e impostalo sul microinfusore e nelle preferenze</string>
+    <string name="objectives_maxiobzero_objective">Iniziare a chiudere il Loop con Low Glucose Suspend</string>
+    <string name="objectives_maxiobzero_gate">Esegui l\'applicazione in Loop Chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>
+    <string name="objectives_maxiob_objective">Regola il Loop Chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
+    <string name="objectives_maxiob_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi glicemia, prima di abbassare il target glicemico</string>
+    <string name="objectives_autosens_objective">Regola le basali e i rapporti se necessario, quindi attiva auto-sens</string>
+    <string name="objectives_autosens_gate">1 settimana di looping diurno con dichiarazione regolare dei carboidrati, eseguito con successo</string>
+    <string name="objectives_ama_objective">Abilita funzioni aggiuntive per l\'uso diurno, ad esempio AMA (advanced meal assist - assistenza avanzata del pasto)</string>
+    <string name="objectives_smb_objective">Abilita funzioni aggiuntive per l\'uso diurno, come SMB</string>
+    <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
     <string name="youareonallowedlimit">Hai raggiunto il limite consentito</string>
     <string name="noprofileselected">Nessun profilo selezionato</string>
     <string name="smscommunicator_loophasbeendisabled">Disattivazione Loop corretta</string>
@@ -950,6 +951,7 @@
     <string name="sensitivitysetup">Configura il plugin di Sensibilità</string>
     <string name="setupwizard_sensitivity_description">Il plugin di Sensibilità è utilizzato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSClient gestisce la connessione a Nightscout. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non ne porterai a termine la configurazione.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5 - 6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="bgsourcesetup">Configura sorgente Glicemie</string>
     <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino è necessario utilizzare il profilo di NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per utilizzarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio Profilo\"</string>

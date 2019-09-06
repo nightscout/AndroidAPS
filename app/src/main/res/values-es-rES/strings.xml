@@ -317,19 +317,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Se van a infundir %1$.2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitorización, y análisis de basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
-    <string name="objectives_1_objective">Empezar con lazo abierto</string>
-    <string name="objectives_1_gate">Ejecutar en modo de lazo abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
-    <string name="objectives_2_objective">Entender el lazo abierto, incluidas las recomendaciones de basales temporales</string>
-    <string name="objectives_2_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
-    <string name="objectives_3_objective">Iniciando el lazo cerrado con suspensión con baja glucosa</string>
-    <string name="objectives_3_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
-    <string name="objectives_4_objective">Ajuste del lazo cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
-    <string name="objectives_4_gate">Funcionando unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
-    <string name="objectives_5_objective">Ajustar los basales y ratios, si es necesario, y luego activar auto-sens</string>
-    <string name="objectives_5_gate">Una semana con éxito en lazo cerrado durante el día con entrada regular de carbohidratos</string>
-    <string name="objectives_6_objective">Habilitar funciones adicionales para su uso durante el día, como asistente de comida avanzado</string>
-    <string name="objectives_7_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
-    <string name="objectives_7_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>
+    <string name="objectives_openloop_objective">Empezar con lazo abierto</string>
+    <string name="objectives_openloop_gate">Ejecutar en modo de lazo abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
+    <string name="objectives_maxbasal_objective">Entender el lazo abierto, incluidas las recomendaciones de basales temporales</string>
+    <string name="objectives_maxbasal_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
+    <string name="objectives_maxiobzero_objective">Iniciando el lazo cerrado con suspensión con baja glucosa</string>
+    <string name="objectives_maxiobzero_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
+    <string name="objectives_maxiob_objective">Ajuste del lazo cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
+    <string name="objectives_maxiob_gate">Funcionando unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
+    <string name="objectives_autosens_objective">Ajustar los basales y ratios, si es necesario, y luego activar auto-sens</string>
+    <string name="objectives_autosens_gate">Una semana con éxito en lazo cerrado durante el día con entrada regular de carbohidratos</string>
+    <string name="objectives_ama_objective">Habilitar funciones adicionales para su uso durante el día, como asistente de comida avanzado</string>
+    <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
+    <string name="objectives_smb_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>
     <string name="youareonallowedlimit">Alcanzado el límite permitido</string>
     <string name="noprofileselected">Sin perfil seleccionado</string>
     <string name="smscommunicator_loophasbeendisabled">Lazo se ha desactivado</string>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dia_whatmeansdia">What is true about DIA?</string>
+    <string name="dia_meaningofdia">Meaning of DIA</string>
+    <string name="dia_minimumis3h">minimum is 3 hours</string>
+    <string name="dia_minimumis5h">minimum is 5 hours</string>
+    <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_meaningisequaltodiapump">meaning is equal to DIA parameter used in pumps</string>
+    <string name="dia_valuemustbedetermined">correct value must be determined</string>
+    <string name="hypott">Hypo temp target</string>
+    <string name="hypott_whenhypott">When should you do a hypo TT?</string>
+    <string name="hypott_goinglow">you are going low</string>
+    <string name="hypott_havinglow">your already have a low bg</string>
+    <string name="hypott_notlowanymorebutrising">your not low anymore, but your BG is rising because of the (right!) amount of hypo treatments</string>
+    <string name="hypott_bgisrising">your bg is rising, has just reached the target BG but there is still too much IOB left</string>
+    <string name="hypott_havehadalowbg">you have had a low bg a while ago, but it got you in a hyper</string>
+    <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
+    <string name="offlineprofile_whatprofile">Which profile can be used and configured offline</string>
+    <string name="offlineprofile">Offline profile</string>
+    <string name="offlineprofile_nsprofile">NS Profile can be used but not configured</string>
+    <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect">Taking off pump</string>
+    <string name="pumpdisconnect_whattodo">What to do when taking the pump off</string>
+    <string name="pumpdisconnect_letknow">Let loop know that there is no insulin running to your body by clicking disconnect pump</string>
+    <string name="pumpdisconnect_dontchnage">don\'t change anything</string>
+    <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
+    <string name="objectives_howtosave">What is recommended?</string>
+    <string name="objectives_writetopaper">write every setting you did to paper and make a copy of it</string>
+    <string name="objectives_exportsettings">export settings from Maintenance</string>
+    <string name="objectives_storeelsewhere">store exported file to another place like email, Dropbox, Google drive …</string>
+    <string name="objectives_doexportonstart">do export right after you install AAPS</string>
+    <string name="objectives_doexportafterchange">do export after every change</string>
+    <string name="objectives_doexportafterfirtssettings">do export when you finish initial setting</string>
+    <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
+    <string name="noisycgm">Noisy CGM</string>
+    <string name="noisycgm_whattodo">What to do when you see CGM signal being too noisy</string>
+    <string name="nothing">nothing</string>
+    <string name="noisycgm_pause">pause closed loop mode</string>
+    <string name="noisycgm_replacesensor">replace sensor</string>
+    <string name="noisycgm_turnoffcgmreceiver">turn off CGM receiver</string>
+    <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="noisycgm_checksmoothing">check if input data is smoothed</string>
+
+</resources>

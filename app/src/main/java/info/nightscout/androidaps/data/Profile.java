@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -227,8 +228,10 @@ public class Profile {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
                     if (notify && secondsFromMidnight % 3600 != 0) {
-                        Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
-                        MainApp.bus().post(new EventNewNotification(notification));
+                        if (Config.APS) {
+                            Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
+                            MainApp.bus().post(new EventNewNotification(notification));
+                        }
                     }
                 }
             }

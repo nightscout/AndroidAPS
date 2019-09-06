@@ -26,7 +26,6 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesSaved;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
@@ -118,11 +117,6 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
 
     @Subscribe
     public void onEventProfileSwitchChange(EventProfileNeedsUpdate ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventObjectivesSaved(EventObjectivesSaved ignored) {
         updateButtons();
     }
 
