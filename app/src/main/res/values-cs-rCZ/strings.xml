@@ -319,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Podávání %1$.2fU inzulínu</string>
     <string name="objectives_0_objective">Nastavit vizualizaci a monitoring, analyzovat bazály a koeficienty</string>
     <string name="objectives_0_gate">Zkontrolovat, zda jsou glykémie a údaje z pumpy viditelné v Nightscoutu</string>
-    <string name="objectives_1_objective">Začít s otevřenou smyčkou</string>
-    <string name="objectives_1_gate">Provozovat několik dní otevřenou smyčku a ručně potvrzovat doporučené dočasné bazály. Nastavovat a používat dočasné cíle (např. pro sport nebo hypo)</string>
-    <string name="objectives_2_objective">Porozumět otevřené smyčce a doporučeným dočasným bazálům</string>
-    <string name="objectives_2_gate">Na základě předchozích zkušeností rozhodnout, jaký je třeba maximální bazál a nastavit ho v pumpě a v aplikaci</string>
-    <string name="objectives_3_objective">Začít uzavřenou smyčku pouze s hlídáním nízké glykémie</string>
-    <string name="objectives_3_gate">Spustit uzavřenou smyčku s max IOB = 0 na několik dní s minimem nutných korekcí na nízkou glykémii</string>
-    <string name="objectives_4_objective">Zapnout uzavřenou smyčku, zvyšovat max IOB nad 0 a snižovat cílovou glykémii</string>
-    <string name="objectives_4_gate">Provozovat smyčku několik dní s alespoň jednou nocí bez alarmů na nízkou glykémii</string>
-    <string name="objectives_5_objective">Upravit bazály a koeficienty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
-    <string name="objectives_5_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
-    <string name="objectives_6_objective">Povolit další funkce pro běžné používání jako AMA</string>
-    <string name="objectives_7_objective">Povolit další funkce pro běžné používání jako SMB</string>
-    <string name="objectives_7_gate">Přečíst si dokumentaci a zvýšit maximání IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
+    <string name="objectives_openloop_objective">Začít s otevřenou smyčkou</string>
+    <string name="objectives_openloop_gate">Provozovat několik dní otevřenou smyčku a ručně potvrzovat doporučené dočasné bazály. Nastavovat a používat dočasné cíle (např. pro sport nebo hypo)</string>
+    <string name="objectives_maxbasal_objective">Porozumět otevřené smyčce a doporučeným dočasným bazálům</string>
+    <string name="objectives_maxbasal_gate">Na základě předchozích zkušeností rozhodnout, jaký je třeba maximální bazál a nastavit ho v pumpě a v aplikaci</string>
+    <string name="objectives_maxiobzero_objective">Začít uzavřenou smyčku pouze s hlídáním nízké glykémie</string>
+    <string name="objectives_maxiobzero_gate">Spustit uzavřenou smyčku s max IOB = 0 na několik dní s minimem nutných korekcí na nízkou glykémii</string>
+    <string name="objectives_maxiob_objective">Zapnout uzavřenou smyčku, zvyšovat max IOB nad 0 a snižovat cílovou glykémii</string>
+    <string name="objectives_maxiob_gate">Provozovat smyčku několik dní s alespoň jednou nocí bez alarmů na nízkou glykémii</string>
+    <string name="objectives_autosens_objective">Upravit bazály a koeficienty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
+    <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
+    <string name="objectives_ama_objective">Povolit další funkce pro běžné používání jako AMA</string>
+    <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
+    <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximání IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
     <string name="youareonallowedlimit">Dosaženo limitu</string>
     <string name="noprofileselected">Není vybrán žádný profil</string>
     <string name="smscommunicator_loophasbeendisabled">Smyčka byla zakázána</string>

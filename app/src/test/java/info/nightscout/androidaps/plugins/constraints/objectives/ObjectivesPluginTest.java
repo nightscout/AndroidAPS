@@ -14,6 +14,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -27,53 +28,53 @@ public class ObjectivesPluginTest {
     ObjectivesPlugin objectivesPlugin;
 
     @Test
-    public void notStartedObjectivesShouldLimitLoopInvocation() throws Exception {
-        objectivesPlugin.objectives.get(0).setStartedOn(null);
+    public void notStartedObjectivesShouldLimitLoopInvocation() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getFIRST_OBJECTIVE()).setStartedOn(0);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isLoopInvocationAllowed(c);
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons());
         Assert.assertEquals(Boolean.FALSE, c.value());
-        objectivesPlugin.objectives.get(0).setStartedOn(new Date());
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getFIRST_OBJECTIVE()).setStartedOn(DateUtil.now());
     }
 
     @Test
-    public void notStartedObjective4ShouldLimitClosedLoop() throws Exception {
-        objectivesPlugin.objectives.get(3).setStartedOn(null);
+    public void notStartedObjective6ShouldLimitClosedLoop() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getMAXIOB_ZERO_CL_OBJECTIVE()).setStartedOn(0);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isClosedLoopAllowed(c);
-        Assert.assertEquals(true, c.getReasons().contains("Objective 4 not started"));
-        Assert.assertEquals(Boolean.FALSE, c.value());
-    }
-
-    @Test
-    public void notStartedObjective6ShouldLimitAutosensMode() throws Exception {
-        objectivesPlugin.objectives.get(5).setStartedOn(null);
-
-        Constraint<Boolean> c = new Constraint<>(true);
-        c = objectivesPlugin.isAutosensModeEnabled(c);
         Assert.assertEquals(true, c.getReasons().contains("Objective 6 not started"));
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
     @Test
-    public void notStartedObjective7ShouldLimitAMAMode() throws Exception {
-        objectivesPlugin.objectives.get(6).setStartedOn(null);
+    public void notStartedObjective8ShouldLimitAutosensMode() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getAUTOSENS_OBJECTIVE()).setStartedOn(0);
 
         Constraint<Boolean> c = new Constraint<>(true);
-        c = objectivesPlugin.isAMAModeEnabled(c);
-        Assert.assertEquals(true, c.getReasons().contains("Objective 7 not started"));
+        c = objectivesPlugin.isAutosensModeEnabled(c);
+        Assert.assertEquals(true, c.getReasons().contains("Objective 8 not started"));
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
     @Test
-    public void notStartedObjective8ShouldLimitSMBMode() throws Exception {
-        objectivesPlugin.objectives.get(7).setStartedOn(null);
+    public void notStartedObjective9ShouldLimitAMAMode() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getAMA_OBJECTIVE()).setStartedOn(0);
+
+        Constraint<Boolean> c = new Constraint<>(true);
+        c = objectivesPlugin.isAMAModeEnabled(c);
+        Assert.assertEquals(true, c.getReasons().contains("Objective 9 not started"));
+        Assert.assertEquals(Boolean.FALSE, c.value());
+    }
+
+    @Test
+    public void notStartedObjective10ShouldLimitSMBMode() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getSMB_OBJECTIVE()).setStartedOn(0);
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = objectivesPlugin.isSMBModeEnabled(c);
-        Assert.assertEquals(true, c.getReasons().contains("Objective 8 not started"));
+        Assert.assertEquals(true, c.getReasons().contains("Objective 10 not started"));
         Assert.assertEquals(Boolean.FALSE, c.value());
     }
 
@@ -85,6 +86,6 @@ public class ObjectivesPluginTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
 
-        objectivesPlugin = ObjectivesPlugin.getPlugin();
+        objectivesPlugin = ObjectivesPlugin.INSTANCE;
     }
 }

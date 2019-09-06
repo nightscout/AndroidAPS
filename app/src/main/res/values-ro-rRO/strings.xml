@@ -319,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Se va livra un bolus de %1$.2fU</string>
     <string name="objectives_0_objective">Se stabilesc vizualizările și monitorizarea și se analizează bazalele și valorile ratelor</string>
     <string name="objectives_0_gate">Verificați că vedeți glicemia în Nightscout și că datele despre insulină date de pompă sunt înregistrate în site</string>
-    <string name="objectives_1_objective">Pornire în mod buclă deschisă</string>
-    <string name="objectives_1_gate">Rulați în modul Buclă Deschisă pentru câteva zile și faceți manual bazalele temporare sugerate. Setează și folosește ținte temporare implicite (ex.: pentru activități sau carbohidrați de tratare a hipo)</string>
-    <string name="objectives_2_objective">Trebuie să fie înțeleasă modalitatea de funcționare a buclei deschise, inclusiv recomandările de bazală temporară</string>
-    <string name="objectives_2_gate">Pe baza acestei experiențe, decideți care va fi bazala maximă și setați această valoare în pompă și în preferințe</string>
-    <string name="objectives_3_objective">Se începe etapa de buclă închisă cu Suspendarea Insulinei la Valori Glicemie Mici (Low Glucose Suspend = LGS)</string>
-    <string name="objectives_3_gate">Folosiți sistemul în mod buclă închisă cu IOB maxim = 0 pentru câteva zile fără prea multe evenimente LGS</string>
-    <string name="objectives_4_objective">Acordați fin performanța buclei închise, prin mărirea valorii max IOB peste 0 și micșorarea graduală a țintelor glicemice</string>
-    <string name="objectives_4_gate">Folosiți pentru câteva zile și cel puțin o noapte fără a avea alarme de hipoglicemie, înainte de scăderea glicemiei</string>
-    <string name="objectives_5_objective">Ajustați bazalele și ratele dacă este cazul și apoi activați autosens</string>
-    <string name="objectives_5_gate">O săptămână de folosire cu succes a sistemului cu buclă închisă cu introducerea normală de carbohidrați</string>
-    <string name="objectives_6_objective">Folosirea instrumentelor adiționale pentru timpul zilei, cum ar fi asistența avansată pentru mese</string>
-    <string name="objectives_7_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
-    <string name="objectives_7_gate">Trebuie sa citiți wiki și măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
+    <string name="objectives_openloop_objective">Pornire în mod buclă deschisă</string>
+    <string name="objectives_openloop_gate">Rulați în modul Buclă Deschisă pentru câteva zile și faceți manual bazalele temporare sugerate. Setează și folosește ținte temporare implicite (ex.: pentru activități sau carbohidrați de tratare a hipo)</string>
+    <string name="objectives_maxbasal_objective">Trebuie să fie înțeleasă modalitatea de funcționare a buclei deschise, inclusiv recomandările de bazală temporară</string>
+    <string name="objectives_maxbasal_gate">Pe baza acestei experiențe, decideți care va fi bazala maximă și setați această valoare în pompă și în preferințe</string>
+    <string name="objectives_maxiobzero_objective">Se începe etapa de buclă închisă cu Suspendarea Insulinei la Valori Glicemie Mici (Low Glucose Suspend = LGS)</string>
+    <string name="objectives_maxiobzero_gate">Folosiți sistemul în mod buclă închisă cu IOB maxim = 0 pentru câteva zile fără prea multe evenimente LGS</string>
+    <string name="objectives_maxiob_objective">Acordați fin performanța buclei închise, prin mărirea valorii max IOB peste 0 și micșorarea graduală a țintelor glicemice</string>
+    <string name="objectives_maxiob_gate">Folosiți pentru câteva zile și cel puțin o noapte fără a avea alarme de hipoglicemie, înainte de scăderea glicemiei</string>
+    <string name="objectives_autosens_objective">Ajustați bazalele și ratele dacă este cazul și apoi activați autosens</string>
+    <string name="objectives_autosens_gate">O săptămână de folosire cu succes a sistemului cu buclă închisă cu introducerea normală de carbohidrați</string>
+    <string name="objectives_ama_objective">Folosirea instrumentelor adiționale pentru timpul zilei, cum ar fi asistența avansată pentru mese</string>
+    <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
+    <string name="objectives_smb_gate">Trebuie sa citiți wiki și măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
     <string name="youareonallowedlimit">Ați atins limita permisă</string>
     <string name="noprofileselected">Niciun profil selectat</string>
     <string name="smscommunicator_loophasbeendisabled">Bucla a fost dezactivată</string>

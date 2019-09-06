@@ -317,19 +317,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Gaan %1$.2fU lewer</string>
     <string name="objectives_0_objective">Opstel van visualisering en monitering, en ontleed basale en verhoudings</string>
     <string name="objectives_0_gate">Verifieer dat BG beskikbaar is in Nightscout, en dat pomp insulien data opgelaai word</string>
-    <string name="objectives_1_objective">Begin op \'n oop lus</string>
-    <string name="objectives_1_gate">Loop in oop lus modus vir \'n paar dae en boots met hand met baie tydelike basale. Stel tydelike gebruik en verstek tydelike teikens (bv. vir aktiwiteit of hipo behandeling koolhidrate)</string>
-    <string name="objectives_2_objective">Verstaan jou oop lus, insluitend sy tydelike basale aanbevelings</string>
-    <string name="objectives_2_gate">Gebaseer op daardie ervaring, besluit watter maks basale moet gebruik word, en stel dit op die pomp en voorkeure</string>
-    <string name="objectives_3_objective">Begin toe die lus met lae glukose opgeskort</string>
-    <string name="objectives_3_gate">Loop in geslote lus met max IAB = 0 vir \'n paar dae sonder te veel LGS gebeure</string>
-    <string name="objectives_4_objective">Verstel die geslote lus, verhoog maks IAB bo 0 en geleidelik verlaag BG doelwitte</string>
-    <string name="objectives_4_gate">Lus vir \'n paar dae, en ten minste een nag met geen lae BG alarms, voor BG val</string>
-    <string name="objectives_5_objective">Pas basale en verhoudings aan as nodig, en dan aktiveer auto-sens</string>
-    <string name="objectives_5_gate">1 week suksesvolle dagtyd lus met gereelde karb toevoegings</string>
-    <string name="objectives_6_objective">Skakel bykomende nutsfunskies aan vir bedagse gebruik, soos bv advanced meal assist</string>
-    <string name="objectives_7_objective">Skakel bykomende nutsfunskies aan vir bedags gebruik, soos bv. SMB</string>
-    <string name="objectives_7_gate">Jy moet asb die wiki lees en verhoog maksIAB om SMBs te laat werk! \'n Goeie begin is maksIAB = gemiddelde ete bolus + 3 x maks daaglikse basale</string>
+    <string name="objectives_openloop_objective">Begin op \'n oop lus</string>
+    <string name="objectives_openloop_gate">Loop in oop lus modus vir \'n paar dae en boots met hand met baie tydelike basale. Stel tydelike gebruik en verstek tydelike teikens (bv. vir aktiwiteit of hipo behandeling koolhidrate)</string>
+    <string name="objectives_maxbasal_objective">Verstaan jou oop lus, insluitend sy tydelike basale aanbevelings</string>
+    <string name="objectives_maxbasal_gate">Gebaseer op daardie ervaring, besluit watter maks basale moet gebruik word, en stel dit op die pomp en voorkeure</string>
+    <string name="objectives_maxiobzero_objective">Begin toe die lus met lae glukose opgeskort</string>
+    <string name="objectives_maxiobzero_gate">Loop in geslote lus met max IAB = 0 vir \'n paar dae sonder te veel LGS gebeure</string>
+    <string name="objectives_maxiob_objective">Verstel die geslote lus, verhoog maks IAB bo 0 en geleidelik verlaag BG doelwitte</string>
+    <string name="objectives_maxiob_gate">Lus vir \'n paar dae, en ten minste een nag met geen lae BG alarms, voor BG val</string>
+    <string name="objectives_autosens_objective">Pas basale en verhoudings aan as nodig, en dan aktiveer auto-sens</string>
+    <string name="objectives_autosens_gate">1 week suksesvolle dagtyd lus met gereelde karb toevoegings</string>
+    <string name="objectives_ama_objective">Skakel bykomende nutsfunskies aan vir bedagse gebruik, soos bv advanced meal assist</string>
+    <string name="objectives_smb_objective">Skakel bykomende nutsfunskies aan vir bedags gebruik, soos bv. SMB</string>
+    <string name="objectives_smb_gate">Jy moet asb die wiki lees en verhoog maksIAB om SMBs te laat werk! \'n Goeie begin is maksIAB = gemiddelde ete bolus + 3 x maks daaglikse basale</string>
     <string name="youareonallowedlimit">Die toegelate limiet is bereik</string>
     <string name="noprofileselected">Geen profiel gekies</string>
     <string name="smscommunicator_loophasbeendisabled">Loop is gedeaktiveer</string>
