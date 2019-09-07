@@ -110,6 +110,27 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.troubleshooting_hint2))
                 .hint(new Hint(R.string.troubleshooting_hint3))
         );
+        tasks.add(new ExamTask(R.string.insulin, R.string.insulin_ultrarapid,"insulin")
+                .option(new Option(R.string.insulin_fiasp, true))
+                .option(new Option(R.string.insulin_novorapid, false))
+                .option(new Option(R.string.insulin_humalog, false))
+                .option(new Option(R.string.insulin_actrapid, false))
+                .hint(new Hint(R.string.insulin_hint1))
+        );
+        tasks.add(new ExamTask(R.string.sensitivity, R.string.sensitivity_which,"sensitivity")
+                .option(new Option(R.string.sensitivityweightedaverage, true))
+                .option(new Option(R.string.sensitivityoref0, false))
+                .option(new Option(R.string.sensitivityoref1, false))
+                .option(new Option(R.string.sensitivityaaps, true))
+                .hint(new Hint(R.string.sensitivity_hint1))
+        );
+        tasks.add(new ExamTask(R.string.sensitivity, R.string.sensitivityuam_which,"sensitivityuam")
+                .option(new Option(R.string.sensitivityweightedaverage, false))
+                .option(new Option(R.string.sensitivityoref0, false))
+                .option(new Option(R.string.sensitivityoref1, true))
+                .option(new Option(R.string.sensitivityaaps, false))
+                .hint(new Hint(R.string.sensitivity_hint1))
+        );
 
         for (Task task : tasks)
             Collections.shuffle(((ExamTask)task).options);
