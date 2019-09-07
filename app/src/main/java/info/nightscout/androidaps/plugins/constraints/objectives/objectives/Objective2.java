@@ -21,11 +21,10 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.dia_valuemustbedetermined, true))
                 .hint(new Hint(R.string.dia_hint1))
         );
-        tasks.add(new ExamTask(R.string.hypott, R.string.hypott_whenhypott,"hypott")
-                .option(new Option(R.string.hypott_goinglow, true))
-                .option(new Option(R.string.hypott_havinglow, true))
-                .option(new Option(R.string.hypott_notlowanymorebutrising, false))
-                .option(new Option(R.string.hypott_havehadalowbg, false))
+        tasks.add(new ExamTask(R.string.hypott, R.string.hypott_whyhypott,"hypott")
+                .option(new Option(R.string.hypott_goinglow, false))
+                .option(new Option(R.string.hypott_havinglow, false))
+                .option(new Option(R.string.hypott_preventoversmb, true))
                 .hint(new Hint(R.string.hypott_hint1))
         );
         tasks.add(new ExamTask(R.string.offlineprofile, R.string.offlineprofile_whatprofile,"offlineprofile")

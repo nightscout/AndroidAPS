@@ -1637,6 +1637,7 @@
     <string name="close">Close</string>
     <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
     <string name="requestcode">Request code: %1$s</string>
+    <string name="hypott_preventoversmb">to prevent SMB after a hypo rise from fast carbs</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

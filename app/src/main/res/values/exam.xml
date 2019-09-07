@@ -8,12 +8,9 @@
     <string name="dia_meaningisequaltodiapump">meaning is equal to DIA parameter used in pumps</string>
     <string name="dia_valuemustbedetermined">correct value must be determined</string>
     <string name="hypott">Hypo temp target</string>
-    <string name="hypott_whenhypott">When should you do a hypo TT?</string>
+    <string name="hypott_whyhypott">Why should you do a hypo TT?</string>
     <string name="hypott_goinglow">you are going low</string>
     <string name="hypott_havinglow">your already have a low bg</string>
-    <string name="hypott_notlowanymorebutrising">your not low anymore, but your BG is rising because of the (right!) amount of hypo treatments</string>
-    <string name="hypott_bgisrising">your bg is rising, has just reached the target BG but there is still too much IOB left</string>
-    <string name="hypott_havehadalowbg">you have had a low bg a while ago, but it got you in a hyper</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Which profile can be used and configured offline</string>
     <string name="offlineprofile">Offline profile</string>
