@@ -167,10 +167,23 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.nsprofileview_ic_label, R.string.whatistrue,"ic")
                 .option(new Option(R.string.ic_increasingvalue, true))
-                .option(new Option(R.string.id_decreasingvalue, false))
+                .option(new Option(R.string.ic_decreasingvalue, false))
                 .option(new Option(R.string.ic_noeffect, false))
                 .option(new Option(R.string.ic_different, false))
                 .option(new Option(R.string.ic_meaning, false))
+                .hint(new Hint(R.string.ic_hint1))
+        );
+        tasks.add(new ExamTask(R.string.profileswitch, R.string.profileswitch_pctwillchange,"profileswitch")
+                .option(new Option(R.string.profileswitch_basalhigher, false))
+                .option(new Option(R.string.profileswitch_basallower, true))
+                .option(new Option(R.string.profileswitch_ichigher, true))
+                .option(new Option(R.string.profileswitch_iclower, false))
+                .option(new Option(R.string.profileswitch_isfhigher, true))
+                .option(new Option(R.string.profileswitch_isflower, false))
+                .option(new Option(R.string.profileswitch_overall, true))
+                .option(new Option(R.string.profileswitch_targethigher, false))
+                .option(new Option(R.string.profileswitch_targetlower, false))
+                .option(new Option(R.string.profileswitch_targetbottom, false))
                 .hint(new Hint(R.string.ic_hint1))
         );
 

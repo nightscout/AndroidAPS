@@ -124,7 +124,7 @@
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_increasingvalue">Increasing IC value will lead to giving less insulin for the same amount of carbs</string>
-    <string name="id_decreasingvalue">Decreasing IC value will lead to giving less insulin for the same amount of carbs</string>
+    <string name="ic_decreasingvalue">Decreasing IC value will lead to giving less insulin for the same amount of carbs</string>
     <string name="ic_noeffect">Assume you have no active carbs. Changing IC will lead to different amount of insuling to correct your glycemia</string>
     <string name="ic_different">IC will be different if you count bread unit as 10g or 12g</string>
     <string name="ic_meaning">IC meaning is: How much bread units is covered by 1U of insulin</string>
