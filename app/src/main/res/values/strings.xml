@@ -1630,7 +1630,7 @@
     <string name="key_ObjectivespumpStatusIsAvailableInNS" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
     <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
     <string name="objectives_exam_objective">Prove your knowledge</string>
-    <string name="objectives_exam_gate">Study and answer questions correctly (multiple choice)</string>
+    <string name="objectives_exam_gate">Study and answer questions correctly</string>
     <string name="answerdisabledto">Answering disabled to: %1$s</string>
     <string name="wronganswer">Wrong answer!</string>
     <string name="unfinshed_button">Next unfinished</string>
