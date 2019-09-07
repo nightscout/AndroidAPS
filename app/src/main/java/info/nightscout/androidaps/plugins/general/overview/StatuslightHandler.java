@@ -111,7 +111,7 @@ class StatuslightHandler {
     }
 
     void handleAge(String nsSettingPlugin, String eventName, TextView view, String text,
-                   int defaultWarnThreshold, int defaultUrgentThreshold) {
+                   int defaultUrgentThreshold, int defaultWarnThreshold) {
         NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
 
         if (view != null) {
