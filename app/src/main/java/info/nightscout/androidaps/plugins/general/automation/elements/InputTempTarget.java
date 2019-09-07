@@ -39,9 +39,9 @@ public class InputTempTarget extends Element {
         super();
         setUnits(ProfileFunctions.getInstance().getProfileUnits());
         if (getUnits().equals(Constants.MMOL))
-            value = Constants.MIN_TT_MMOL;
+            value = 6;
         else
-            value = Constants.MIN_TT_MGDL;
+            value = 110;
     }
 
     public InputTempTarget(InputTempTarget another) {
