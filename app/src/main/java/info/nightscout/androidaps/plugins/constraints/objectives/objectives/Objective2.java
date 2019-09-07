@@ -21,11 +21,10 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.dia_valuemustbedetermined, true))
                 .hint(new Hint(R.string.dia_hint1))
         );
-        tasks.add(new ExamTask(R.string.hypott, R.string.hypott_whenhypott,"hypott")
-                .option(new Option(R.string.hypott_goinglow, true))
-                .option(new Option(R.string.hypott_havinglow, true))
-                .option(new Option(R.string.hypott_notlowanymorebutrising, false))
-                .option(new Option(R.string.hypott_havehadalowbg, false))
+        tasks.add(new ExamTask(R.string.hypott, R.string.hypott_whyhypott,"hypott")
+                .option(new Option(R.string.hypott_goinglow, false))
+                .option(new Option(R.string.hypott_havinglow, false))
+                .option(new Option(R.string.hypott_preventoversmb, true))
                 .hint(new Hint(R.string.hypott_hint1))
         );
         tasks.add(new ExamTask(R.string.offlineprofile, R.string.offlineprofile_whatprofile,"offlineprofile")
@@ -56,6 +55,27 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.noisycgm_turnoffcgmreceiver, false))
                 .option(new Option(R.string.noisycgm_checksmoothing, true))
                 .hint(new Hint(R.string.noisycgm_hint1))
+        );
+        tasks.add(new ExamTask(R.string.exercise, R.string.exercise_whattodo,"exercise")
+                .option(new Option(R.string.nothing, false))
+                .option(new Option(R.string.exercise_setactivitytt, true))
+                .option(new Option(R.string.exercise_switchprofilebelow100, true))
+                .option(new Option(R.string.exercise_switchprofileabove100, false))
+                .option(new Option(R.string.exercise_stoploop, false))
+                .option(new Option(R.string.exercise_doitbeforestart, true))
+                .option(new Option(R.string.exercise_doitafterstart, false))
+                .hint(new Hint(R.string.exercise_hint1))
+        );
+       tasks.add(new ExamTask(R.string.suspendloop, R.string.suspendloop_doigetinsulin,"suspendloop")
+                .option(new Option(R.string.suspendloop_yes, true))
+                .option(new Option(R.string.no, false))
+                 .hint(new Hint(R.string.exercise_hint1))
+        );
+       tasks.add(new ExamTask(R.string.basaltest, R.string.basaltest_when,"basaltest")
+                .option(new Option(R.string.basaltest_beforeloop, true))
+                .option(new Option(R.string.basaltest_havingregularhypo, true))
+                .option(new Option(R.string.basaltest_havingregularhyper, true))
+                 .hint(new Hint(R.string.basaltest_hint1))
         );
 
         for (Task task : tasks)

@@ -40,5 +40,23 @@
     <string name="noisycgm_turnoffcgmreceiver">Turn off CGM receiver.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="noisycgm_checksmoothing">Check if your CGM app smoothes data.</string>
+    <string name="hypott_preventoversmb">to prevent SMB after a hypo rise from fast carbs</string>
+    <string name="exercise">Exercise</string>
+    <string name="exercise_whattodo">How to help the system deal with exercise</string>
+    <string name="exercise_setactivitytt">set activity temp target</string>
+    <string name="exercise_switchprofilebelow100">do a profile switch below 100%</string>
+    <string name="exercise_switchprofileabove100">do profile switch above 100%</string>
+    <string name="exercise_stoploop">stop loop</string>
+    <string name="exercise_doitbeforestart">do it before start exercise</string>
+    <string name="exercise_doitafterstart">do it after start exercise</string>
+    <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
+    <string name="suspendloop_doigetinsulin">Do I get insuling when loop is suspended?</string>
+    <string name="suspendloop_yes">Yes, common basal rate</string>
+    <string name="basaltest">Basal and ISF, IC testing</string>
+    <string name="basaltest_when">When should I test basals, ISF and IC?</string>
+    <string name="basaltest_beforeloop">before I start looping</string>
+    <string name="basaltest_havingregularhypo">when having regular hypos</string>
+    <string name="basaltest_havingregularhyper">when having regular hypers</string>
+    <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#androidaps-settings</string>
 
 </resources>
