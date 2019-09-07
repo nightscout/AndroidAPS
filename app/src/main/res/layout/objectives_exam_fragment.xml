@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/objectives_exam_question"
+            app:layout_constraintTop_toBottomOf="@+id/objectives_exam_hint"
             tools:layout_editor_absoluteX="3dp">
 
         </LinearLayout>
@@ -80,6 +80,15 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/objectives_exam_name" />
+
+        <TextView
+            android:id="@+id/objectives_exam_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/objectives_hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/objectives_exam_question" />
 
         <TextView
             android:id="@+id/objectives_exam_name"
