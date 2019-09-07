@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
 
-import androidx.arch.core.util.Function;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -60,7 +58,6 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.QuickWizardEntry;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
@@ -92,7 +89,6 @@ import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatm
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialog;
@@ -258,17 +254,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
 
-        iage = (TextView) view.findViewById(R.id.careportal_insulinage);
-        cage = (TextView) view.findViewById(R.id.careportal_canulaage);
-        sage = (TextView) view.findViewById(R.id.careportal_sensorage);
-        pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+        iage = view.findViewById(R.id.careportal_insulinage);
+        cage = view.findViewById(R.id.careportal_canulaage);
+        sage = view.findViewById(R.id.careportal_sensorage);
+        pbage = view.findViewById(R.id.careportal_pbage);
 
-        iageView = (TextView) view.findViewById(R.id.overview_insulinage);
-        cageView = (TextView) view.findViewById(R.id.overview_canulaage);
-        reservoirView = (TextView) view.findViewById(R.id.overview_reservoirlevel);
-        sageView = (TextView) view.findViewById(R.id.overview_sensorage);
-        batteryView = (TextView) view.findViewById(R.id.overview_batterylevel);
-        statuslightsLayout = (LinearLayout) view.findViewById(R.id.overview_statuslights);
+        iageView = view.findViewById(R.id.overview_insulinage);
+        cageView = view.findViewById(R.id.overview_canulaage);
+        reservoirView = view.findViewById(R.id.overview_reservoirlevel);
+        sageView = view.findViewById(R.id.overview_sensorage);
+        batteryView = view.findViewById(R.id.overview_batterylevel);
+        statuslightsLayout = view.findViewById(R.id.overview_statuslights);
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -1327,54 +1323,22 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        if (statuslightsLayout != null) {
-            if (SP.getBoolean(R.string.key_show_statuslights, false)) {
-                CareportalEvent careportalEvent;
-                NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
-                double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 96);
-                double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 72);
-                double cageUrgent = nsSettings.getExtendedWarnValue("cage", "urgent", 72);
-                double cageWarn = nsSettings.getExtendedWarnValue("cage", "warn", 48);
-                double sageUrgent = nsSettings.getExtendedWarnValue("sage", "urgent", 166);
-                double sageWarn = nsSettings.getExtendedWarnValue("sage", "warn", 164);
-                //double pbageUrgent = nsSettings.getExtendedWarnValue("pgage", "urgent", 360);
-                //double pbageWarn = nsSettings.getExtendedWarnValue("pgage", "warn", 240);
-                double batUrgent = SP.getDouble(R.string.key_statuslights_bat_critical, 5.0);
-                double batWarn = SP.getDouble(R.string.key_statuslights_bat_warning, 25.0);
-                double resUrgent = SP.getDouble(R.string.key_statuslights_res_critical, 10.0);
-                double resWarn = SP.getDouble(R.string.key_statuslights_res_warning, 80.0);
+        if (statuslightsLayout != null && SP.getBoolean(R.string.key_show_statuslights, false)) {
+            StatuslightHandler handler = new StatuslightHandler();
 
-                if (cageView != null) {
-                    careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
-                    double canAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
-                    applyStatuslight(cageView, "CAN", canAge, cageWarn, cageUrgent, Double.MAX_VALUE, true);
-                }
+            if (SP.getBoolean(R.string.key_show_statuslights_easy, false)) {
+                handler.statuslight(cageView, iageView, reservoirView, sageView, batteryView);
 
-                if (iageView != null) {
-                    careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
-                    double insulinAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
-                    applyStatuslight(iageView, "INS", insulinAge, iageWarn, iageUrgent, Double.MAX_VALUE, true);
-                }
+                statuslightsLayout.setVisibility(View.VISIBLE);
+            } else if (SP.getBoolean(R.string.key_show_statuslights_extended, false)) {
+                handler.extendedStatuslight(cageView, iageView, reservoirView, sageView, batteryView);
 
-                if (reservoirView != null) {
-                    double reservoirLevel = pump.isInitialized() ? pump.getReservoirLevel() : -1;
-                    applyStatuslight(reservoirView, "RES", reservoirLevel, resWarn, resUrgent, -1, false);
-                }
-
-                if (sageView != null) {
-                    careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
-                    double sensorAge = careportalEvent != null ? careportalEvent.getHoursFromStart() : Double.MAX_VALUE;
-                    applyStatuslight(sageView, "SEN", sensorAge, sageWarn, sageUrgent, Double.MAX_VALUE, true);
-                }
-
-                if (batteryView != null) {
-                    double batteryLevel = pump.isInitialized() ? pump.getBatteryLevel() : -1;
-                    applyStatuslight(batteryView, "BAT", batteryLevel, batWarn, batUrgent, -1, false);
-                }
                 statuslightsLayout.setVisibility(View.VISIBLE);
             } else {
                 statuslightsLayout.setVisibility(View.GONE);
             }
+        } else if (statuslightsLayout != null) {
+            statuslightsLayout.setVisibility(View.GONE);
         }
 
         boolean predictionsAvailable;
@@ -1562,21 +1526,5 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             Profiler.log(log, from, updateGUIStart);
     }
 
-    public static void applyStatuslight(TextView view, String text, double value, double warnThreshold, double urgentThreshold, double invalid, boolean checkAscending) {
-        Function<Double, Boolean> check = checkAscending ? (Double threshold) -> value >= threshold : (Double threshold) -> value <= threshold;
-        if (value != invalid) {
-            view.setText(text);
-            if (check.apply(urgentThreshold)) {
-                view.setTextColor(MainApp.gc(R.color.ribbonCritical));
-            } else if (check.apply(warnThreshold)) {
-                view.setTextColor(MainApp.gc(R.color.ribbonWarning));
-            } else {
-                view.setTextColor(MainApp.gc(R.color.ribbonDefault));
-            }
-            view.setVisibility(View.VISIBLE);
-        } else {
-            view.setVisibility(View.GONE);
-        }
 
-    }
 }

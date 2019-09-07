@@ -22,12 +22,16 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SetWarnColor;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CareportalFragment.class);
@@ -91,15 +95,15 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
             view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
             view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
 
-            iage = (TextView) view.findViewById(R.id.careportal_insulinage);
-            cage = (TextView) view.findViewById(R.id.careportal_canulaage);
-            sage = (TextView) view.findViewById(R.id.careportal_sensorage);
-            pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+            iage = view.findViewById(R.id.careportal_insulinage);
+            cage = view.findViewById(R.id.careportal_canulaage);
+            sage = view.findViewById(R.id.careportal_sensorage);
+            pbage = view.findViewById(R.id.careportal_pbage);
 
             statsLayout = view.findViewById(R.id.careportal_stats);
 
             noProfileView = view.findViewById(R.id.profileview_noprofile);
-            butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
+            butonsLayout = view.findViewById(R.id.careportal_buttons);
 
             ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null ? ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() : null;
             if (profileStore == null) {
@@ -249,13 +253,17 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     }
 
     private static TextView handleAge(final TextView age, String eventType, double warnThreshold, double urgentThreshold) {
-        String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.gs(R.string.notavailable);
+        return handleAge(age, "", eventType, warnThreshold, urgentThreshold, OverviewFragment.shorttextmode);
+    }
+
+    public static TextView handleAge(final TextView age, String prefix, String eventType, double warnThreshold, double urgentThreshold, boolean useShortText) {
+        String notavailable = useShortText ? "-" : MainApp.gs(R.string.notavailable);
 
         if (age != null) {
             CareportalEvent careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(eventType);
             if (careportalEvent != null) {
                 age.setTextColor(CareportalFragment.determineTextColor(careportalEvent, warnThreshold, urgentThreshold));
-                age.setText(careportalEvent.age());
+                age.setText(prefix + careportalEvent.age(useShortText));
             } else {
                 age.setText(notavailable);
             }
