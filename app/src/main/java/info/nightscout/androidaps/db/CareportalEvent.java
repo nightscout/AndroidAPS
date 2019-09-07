@@ -93,12 +93,22 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return (System.currentTimeMillis() - date) / (60 * 60 * 1000.0);
     }
 
-    public String age() {
+    public String age(boolean useShortText) {
         Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
-        if (OverviewFragment.shorttextmode)
-            return diff.get(TimeUnit.DAYS) + "d" + diff.get(TimeUnit.HOURS) + "h";
-        else
-            return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
+
+        String days = " " + MainApp.gs(R.string.days) + " ";
+        String hours = " " + MainApp.gs(R.string.hours) + " ";
+
+        if (useShortText) {
+            days = "d";
+            hours = "h";
+        }
+
+        return diff.get(TimeUnit.DAYS) + days + diff.get(TimeUnit.HOURS) + hours;
+    }
+
+    public String age() {
+        return age(OverviewFragment.shorttextmode);
     }
 
     public boolean isOlderThan(double hours) {
