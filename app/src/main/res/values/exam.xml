@@ -80,7 +80,7 @@
     <string name="update_askfriend">Ask your friend for new APK</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting">Troubleshooting</string>
-    <string name="troubleshooting_wheretoask">Where look for help?</string>
+    <string name="troubleshooting_wheretoask">Where to look for help?</string>
     <string name="troubleshooting_fb">Facebook group</string>
     <string name="troubleshooting_wiki">Wiki</string>
     <string name="troubleshooting_gitter">Gitter</string>
