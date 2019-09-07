@@ -10,6 +10,9 @@ public class Objective2 extends Objective {
 
     public Objective2() {
         super("exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
+        for (Task task : tasks) {
+            if (!task.isCompleted()) setAccomplishedOn(0);
+        }
     }
 
     @Override
@@ -46,6 +49,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.objectives_doexportafterchange, true))
                 .option(new Option(R.string.objectives_doexportafterfirtssettings, true))
                 .hint(new Hint(R.string.objectives_hint1))
+                .hint(new Hint(R.string.objectives_hint2))
         );
         tasks.add(new ExamTask(R.string.noisycgm, R.string.noisycgm_whattodo,"noisycgm")
                 .option(new Option(R.string.nothing, false))
@@ -130,6 +134,44 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.sensitivityoref1, true))
                 .option(new Option(R.string.sensitivityaaps, false))
                 .hint(new Hint(R.string.sensitivity_hint1))
+        );
+        tasks.add(new ExamTask(R.string.wrongcarbs, R.string.wrongcarbs_whattodo,"wrongcarbs")
+                .option(new Option(R.string.disableloop, false))
+                .option(new Option(R.string.wrongcarbs_treatmentstab, true))
+                .hint(new Hint(R.string.sensitivity_hint1))
+        );
+        tasks.add(new ExamTask(R.string.extendedcarbs, R.string.extendedcarbs_handling,"extendedcarbs")
+                .option(new Option(R.string.extendedcarbs_useextendedcarbs, true))
+                .option(new Option(R.string.extendedcarbs_add, false))
+                .option(new Option(R.string.extendedcarbs_useextendedbolus, false))
+                .hint(new Hint(R.string.sensitivity_hint1))
+        );
+        tasks.add(new ExamTask(R.string.nsclient_monitoring, R.string.nsclient_howcanyou,"nsclient")
+                .option(new Option(R.string.nightscout, true))
+                .option(new Option(R.string.nsclientinternal, true))
+                .option(new Option(R.string.dexcomfollow, true))
+                .option(new Option(R.string.dexcomfollowxdrip, false))
+                .option(new Option(R.string.xdripfollower, true))
+                .option(new Option(R.string.looponiphone, false))
+                .option(new Option(R.string.spikeiphone, true))
+                .hint(new Hint(R.string.sensitivity_hint1))
+        );
+        tasks.add(new ExamTask(R.string.nsprofileview_isf_label, R.string.whatistrue,"isf")
+                .option(new Option(R.string.isf_increasingvalue, true))
+                .option(new Option(R.string.isf_decreasingvalue, false))
+                .option(new Option(R.string.isf_noeffect, false))
+                .option(new Option(R.string.isf_preferences, false))
+                .option(new Option(R.string.isf_profile, false))
+                .hint(new Hint(R.string.isf_hint1))
+                .hint(new Hint(R.string.isf_hint2))
+        );
+        tasks.add(new ExamTask(R.string.nsprofileview_ic_label, R.string.whatistrue,"ic")
+                .option(new Option(R.string.ic_increasingvalue, true))
+                .option(new Option(R.string.id_decreasingvalue, false))
+                .option(new Option(R.string.ic_noeffect, false))
+                .option(new Option(R.string.ic_different, false))
+                .option(new Option(R.string.ic_meaning, false))
+                .hint(new Hint(R.string.ic_hint1))
         );
 
         for (Task task : tasks)

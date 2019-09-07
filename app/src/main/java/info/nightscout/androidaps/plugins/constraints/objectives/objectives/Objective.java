@@ -27,7 +27,7 @@ public abstract class Objective {
     private int gate;
     private long startedOn;
     private long accomplishedOn;
-    private List<Task> tasks = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
     public boolean hasSpecialInput = false;
 
     public Objective(String spName, @StringRes int objective, @StringRes int gate) {

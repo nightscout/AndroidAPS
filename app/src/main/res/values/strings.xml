@@ -1638,6 +1638,7 @@
     <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
     <string name="requestcode">Request code: %1$s</string>
     <string name="objectives_hint">(check all correct answers)</string>
+    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
