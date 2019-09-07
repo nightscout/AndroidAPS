@@ -184,7 +184,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.profileswitch_targethigher, false))
                 .option(new Option(R.string.profileswitch_targetlower, false))
                 .option(new Option(R.string.profileswitch_targetbottom, false))
-                .hint(new Hint(R.string.ic_hint1))
+                .hint(new Hint(R.string.profileswitch_hint1))
         );
 
         for (Task task : tasks)

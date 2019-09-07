@@ -129,5 +129,18 @@
     <string name="ic_different">IC will be different if you count bread unit as 10g or 12g</string>
     <string name="ic_meaning">IC meaning is: How much bread units is covered by 1U of insulin</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
+    <string name="profileswitch_pctwillchange">By specifying 90% in profile switch</string>
+    <string name="profileswitch_basalhigher">Basals will be 10% higher</string>
+    <string name="profileswitch_basallower">Basals will be 10% lower</string>
+    <string name="profileswitch_ichigher">IC value will be 10% higher</string>
+    <string name="profileswitch_iclower">IC value will be 10% lower</string>
+    <string name="profileswitch_isfhigher">ISF value will be 10% higher</string>
+    <string name="profileswitch_isflower">ISF value will be 10% lower</string>
+    <string name="profileswitch_overall">You will get 10% less insulin in total</string>
+    <string name="profileswitch_targethigher">Target wiil be 10% higher</string>
+    <string name="profileswitch_targetlower">Target will be 10% lower</string>
+    <string name="profileswitch_targetbottom">Only bottom target will be 10% lower</string>
+    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
 
 </resources>

@@ -1638,18 +1638,6 @@
     <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
     <string name="requestcode">Request code: %1$s</string>
     <string name="objectives_hint">(check all correct answers)</string>
-    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
-    <string name="profileswitch_pctwillchange">By specifying 90% in profile switch</string>
-    <string name="profileswitch_basalhigher">Basals will be 10% higher</string>
-    <string name="profileswitch_basallower">Basals will be 10% lower</string>
-    <string name="profileswitch_ichigher">IC value will be 10% higher</string>
-    <string name="profileswitch_iclower">IC value will be 10% lower</string>
-    <string name="profileswitch_isfhigher">ISF value will be 10% higher</string>
-    <string name="profileswitch_isflower">ISF value will be 10% lower</string>
-    <string name="profileswitch_overall">You will get 10% less insulin in total</string>
-    <string name="profileswitch_targethigher">Target wiil be 10% higher</string>
-    <string name="profileswitch_targetlower">Target will be 10% lower</string>
-    <string name="profileswitch_targetbottom">Only bottom target will be 10% lower</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>
