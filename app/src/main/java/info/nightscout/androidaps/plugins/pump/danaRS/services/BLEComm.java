@@ -643,6 +643,7 @@ public class BLEComm {
         //SystemClock.sleep(200);
         if (!message.isReceived()) {
             log.warn("Reply not received " + message.getFriendlyName());
+            message.handleMessageNotReceived();
         }
     }
 

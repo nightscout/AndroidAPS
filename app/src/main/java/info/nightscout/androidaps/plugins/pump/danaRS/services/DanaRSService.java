@@ -158,6 +158,14 @@ public class DanaRSService extends Service {
             bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
 
             long timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
+            if (danaRPump.pumpTime == 0) {
+                // initial handshake was not successfull
+                // deinitialize pump
+                danaRPump.lastConnection = 0;
+                RxBus.INSTANCE.send(new EventDanaRNewStatus());
+                MainApp.bus().post(new EventInitializationChanged());
+                return;
+            }
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump time difference: " + timeDiff + " seconds");
             if (Math.abs(timeDiff) > 3) {
