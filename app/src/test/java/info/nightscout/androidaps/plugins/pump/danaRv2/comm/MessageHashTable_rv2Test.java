@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, SP.class, L.class})
-public class MessageHashTable_v2Test {
+public class MessageHashTable_rv2Test {
     @Test
     public void runTest() {
         AAPSMocker.mockMainApp();
@@ -27,16 +27,16 @@ public class MessageHashTable_v2Test {
         AAPSMocker.mockL();
         AAPSMocker.mockBus();
 
-        MessageHashTable_v2 packet = new MessageHashTable_v2();
+        MessageHashTableRv2 hashTableRv2 = MessageHashTableRv2.INSTANCE;
 
         MessageBase forTesting = new MsgStatusAPS_v2();
-        MessageBase testPacket = MessageHashTable_v2.findMessage(forTesting.getCommand());
+        MessageBase testPacket = MessageHashTableRv2.INSTANCE.findMessage(forTesting.getCommand());
         assertEquals(0xE001, testPacket.getCommand());
         // try putting another command
         MessageBase testMessage = new MessageBase();
         testMessage.SetCommand(0xE005);
-        packet.put(testMessage);
-        assertEquals(0xE005, packet.findMessage(0xE005).getCommand());
+        hashTableRv2.put(testMessage);
+        assertEquals(0xE005, hashTableRv2.findMessage(0xE005).getCommand());
     }
 
     byte[] createArray(int length, byte fillWith){
