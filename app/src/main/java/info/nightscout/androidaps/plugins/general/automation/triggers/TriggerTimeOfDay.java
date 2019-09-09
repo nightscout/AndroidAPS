@@ -122,7 +122,7 @@ public class TriggerTimeOfDay extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.tod_value, DateUtil.timeString(toMilis(start)), R.string.and, " ", DateUtil.timeString(toMilis(end)));
+        return MainApp.gs(R.string.tod_value, DateUtil.timeString(toMilis(start)), DateUtil.timeString(toMilis(end)));
     }
 
     @Override
