@@ -319,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Начинается подача болюса %1$.2fед.</string>
     <string name="objectives_0_objective">настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
     <string name="objectives_0_gate">убедитесь что СК и данные помпы передаются в NS</string>
-    <string name="objectives_1_objective">старт незамкнутого цикла</string>
-    <string name="objectives_1_gate">Работа в режиме незамкнутого цикла и ручной подстройки величины временного базала. Установите и применяйте временные цели и временные цели по умолчанию (напр. углеводы при нагрузке или купировании гипо)</string>
-    <string name="objectives_2_objective">анализ вашего незамкнутого цикла включая рекомендации по врем базалу</string>
-    <string name="objectives_2_gate">на основе полученного опыта определите макс величину базала и введите ее в помпу и настройки</string>
-    <string name="objectives_3_objective">закольцовывание цикла с Low Glucose Suspend (приостановка на низких СК)</string>
-    <string name="objectives_3_gate">работа в замкнутом цикле с макс IOB = 0 несколько дней избегая событий типа Low Suspend</string>
-    <string name="objectives_4_objective">настройка замкнутого цикла с поднятием макс величины IOB выше 0 и постепенным понижением целевых СК</string>
-    <string name="objectives_4_gate">работа несколько дней и по кр мере одну ночь без срабатывания оповещений о низком СК</string>
-    <string name="objectives_5_objective">при необходимости настройка базала и коэффициентов с последующей активацией auto-sens</string>
-    <string name="objectives_5_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
-    <string name="objectives_6_objective">активация таких доп функций для дневного времени как калькулятор advanced meal assist</string>
-    <string name="objectives_7_objective">Активация таких доп функций для дневного времени как супер микро болюс SMB</string>
-    <string name="objectives_7_gate">Прочтите wiki и увеличьте maxIOB чтобы супер микро болюс SMB заработал как надо! Хорошее начало – maxIOB = средний болюс на еду + троекратный максимальный базал суток</string>
+    <string name="objectives_openloop_objective">старт незамкнутого цикла</string>
+    <string name="objectives_openloop_gate">Работа в режиме незамкнутого цикла и ручной подстройки величины временного базала. Установите и применяйте временные цели и временные цели по умолчанию (напр. углеводы при нагрузке или купировании гипо)</string>
+    <string name="objectives_maxbasal_objective">анализ вашего незамкнутого цикла включая рекомендации по врем базалу</string>
+    <string name="objectives_maxbasal_gate">на основе полученного опыта определите макс величину базала и введите ее в помпу и настройки</string>
+    <string name="objectives_maxiobzero_objective">закольцовывание цикла с Low Glucose Suspend (приостановка на низких СК)</string>
+    <string name="objectives_maxiobzero_gate">работа в замкнутом цикле с макс IOB = 0 несколько дней избегая событий типа Low Suspend</string>
+    <string name="objectives_maxiob_objective">настройка замкнутого цикла с поднятием макс величины IOB выше 0 и постепенным понижением целевых СК</string>
+    <string name="objectives_maxiob_gate">работа несколько дней и по кр мере одну ночь без срабатывания оповещений о низком СК</string>
+    <string name="objectives_autosens_objective">при необходимости настройка базала и коэффициентов с последующей активацией auto-sens</string>
+    <string name="objectives_autosens_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
+    <string name="objectives_ama_objective">активация таких доп функций для дневного времени как калькулятор advanced meal assist</string>
+    <string name="objectives_smb_objective">Активация таких доп функций для дневного времени как супер микро болюс SMB</string>
+    <string name="objectives_smb_gate">Прочтите wiki и увеличьте maxIOB чтобы супер микро болюс SMB заработал как надо! Хорошее начало – maxIOB = средний болюс на еду + троекратный максимальный базал суток</string>
     <string name="youareonallowedlimit">разрешенный предел достигнут</string>
     <string name="noprofileselected">профиль не выбран</string>
     <string name="smscommunicator_loophasbeendisabled">зцикл был деактивирован</string>

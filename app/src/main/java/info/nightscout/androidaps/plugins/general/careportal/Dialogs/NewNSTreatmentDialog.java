@@ -741,6 +741,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 }
                 TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
             }
+            if (duration == 10)
+                SP.putBoolean(R.string.key_objectiveusetemptarget, true);
         } else {
             if (JsonHelper.safeGetString(data, "eventType").equals(CareportalEvent.PROFILESWITCH)) {
                 ProfileSwitch profileSwitch = ProfileFunctions.prepareProfileSwitch(

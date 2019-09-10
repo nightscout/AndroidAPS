@@ -318,19 +318,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Podávanie %1$.2fJ inzulínu</string>
     <string name="objectives_0_objective">Nastavenie vizualizácie a monitoringu (Nightscout), analyzovať bazály a prevody</string>
     <string name="objectives_0_gate">Skontrolovať, či sú glykémie a údaje z pumpy viditeľné v Nightscoute</string>
-    <string name="objectives_1_objective">Začať s otvoreným okruhom</string>
-    <string name="objectives_1_gate">Niekoľko dní prevádzkovať otvorený okruh a ručne potvrdzovať doporučené dočasné bazály. Nastavovať a používať dočasné ciele (napr. pre šport, alebo hypo)</string>
-    <string name="objectives_2_objective">Porozumieť otvorenému okruhu a doporučeným dočasným bazálom</string>
-    <string name="objectives_2_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký vysoký má byť maximálny bazál a nastaviť ho v pumpe a v aplikácii</string>
-    <string name="objectives_3_objective">Začať s uzavretým okruhom iba s vypínaním pri nízkej glykémii</string>
-    <string name="objectives_3_gate">Spustiť uzavretý okruh s max IOB = 0 na niekoľko dní s minimom nutných korekcií na nízku glykémiu</string>
-    <string name="objectives_4_objective">Ladenie uzavretého okruhu, zvyšovať max IOB nad 0 a postupne znižovať cieľovú glykémiu</string>
-    <string name="objectives_4_gate">Používať niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu, predtým ako znížiš cieľovú glykémiu</string>
-    <string name="objectives_5_objective">Ak je to potrebné, prispôsob bazály a prevody a potom aktivuj automatickú detekciu citlivosti</string>
-    <string name="objectives_5_gate">Jeden týždeň úspešne používaj uzavretý okruh so zadávaním bežného príjmu sacharidov cez deň</string>
-    <string name="objectives_6_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. AMA (pokročilý asistent jedál)</string>
-    <string name="objectives_7_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. SMB (Super Micro Bolusy)</string>
-    <string name="objectives_7_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
+    <string name="objectives_openloop_objective">Začať s otvoreným okruhom</string>
+    <string name="objectives_openloop_gate">Niekoľko dní prevádzkovať otvorený okruh a ručne potvrdzovať doporučené dočasné bazály. Nastavovať a používať dočasné ciele (napr. pre šport, alebo hypo)</string>
+    <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu a doporučeným dočasným bazálom</string>
+    <string name="objectives_maxbasal_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký vysoký má byť maximálny bazál a nastaviť ho v pumpe a v aplikácii</string>
+    <string name="objectives_maxiobzero_objective">Začať s uzavretým okruhom iba s vypínaním pri nízkej glykémii</string>
+    <string name="objectives_maxiobzero_gate">Spustiť uzavretý okruh s max IOB = 0 na niekoľko dní s minimom nutných korekcií na nízku glykémiu</string>
+    <string name="objectives_maxiob_objective">Ladenie uzavretého okruhu, zvyšovať max IOB nad 0 a postupne znižovať cieľovú glykémiu</string>
+    <string name="objectives_maxiob_gate">Používať niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu, predtým ako znížiš cieľovú glykémiu</string>
+    <string name="objectives_autosens_objective">Ak je to potrebné, prispôsob bazály a prevody a potom aktivuj automatickú detekciu citlivosti</string>
+    <string name="objectives_autosens_gate">Jeden týždeň úspešne používaj uzavretý okruh so zadávaním bežného príjmu sacharidov cez deň</string>
+    <string name="objectives_ama_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. AMA (pokročilý asistent jedál)</string>
+    <string name="objectives_smb_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. SMB (Super Micro Bolusy)</string>
+    <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
     <string name="youareonallowedlimit">Dosiahnutý limit</string>
     <string name="noprofileselected">Nebol vybraný žiadny profil</string>
     <string name="smscommunicator_loophasbeendisabled">Uzavretý okruh bol deaktivovaný</string>
