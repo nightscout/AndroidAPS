@@ -19,69 +19,69 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.T;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, Bus.class, DateUtil.class, GregorianCalendar.class})
-public class TriggerTimeOfDayTest {
+public class TriggerTimeRangeTest {
 
     int now = 754;
-    String timeJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"minSinceMidnight\":753},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeOfDay\"}";
+    String timeJson = "{\"data\":{\"lastRun\":0,\"start\":753,\"end\":784},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeRange\"}";
 
     @Test
     public void shouldRunTest() {
 
         // scheduled 1 min before
-        TriggerTimeOfDay t = new TriggerTimeOfDay().minSinceMidnight(753);
+        TriggerTimeRange t;
 
         // scheduled 1 min in the future
-        t = new TriggerTimeOfDay().minSinceMidnight(now + 1);
+        t = new TriggerTimeRange().period(now + 1, now + 30);
         Assert.assertFalse(t.shouldRun());
 
         // already run
-        t = new TriggerTimeOfDay().minSinceMidnight(now - 1).lastRun(now - 1);
+        t = new TriggerTimeRange().period(now - 1, now + 30).lastRun(now - 1);
         Assert.assertFalse(t.shouldRun());
 
     }
 
     @Test
     public void toJSONTest() {
-        TriggerTimeOfDay t = new TriggerTimeOfDay().minSinceMidnight(now - 1);
+        TriggerTimeRange t = new TriggerTimeRange().period(now - 1, now + 30);
         Assert.assertEquals(timeJson, t.toJSON());
     }
 
     @Test
     public void fromJSONTest() throws JSONException {
-        TriggerTimeOfDay t = new TriggerTimeOfDay().minSinceMidnight(120);
+        TriggerTimeRange t = new TriggerTimeRange().period(120 , 180);
 
-        TriggerTimeOfDay t2 = (TriggerTimeOfDay) Trigger.instantiate(new JSONObject(t.toJSON()));
-        Assert.assertEquals(now - 1, t2.minSinceMidnight(753).getMinSinceMidnight());
+        TriggerTimeRange t2 = (TriggerTimeRange) Trigger.instantiate(new JSONObject(t.toJSON()));
+        Assert.assertEquals(now - 1, t2.period(753 , 360).getStart());
+        Assert.assertEquals(360, t2.period(753 , 360).getEnd());
     }
 
     @Test
     public void copyConstructorTest() {
-        TriggerTimeOfDay t = new TriggerTimeOfDay();
-        t.minSinceMidnight(now);
+        TriggerTimeRange t = new TriggerTimeRange();
+        t.period(now, now + 30);
 
-        TriggerTimeOfDay t1 = (TriggerTimeOfDay) t.duplicate();
+        TriggerTimeRange t1 = (TriggerTimeRange) t.duplicate();
 //        Assert.assertEquals(now, t1.getRunAt(), 0.01d);
     }
 
     @Test
     public void friendlyNameTest() {
-        Assert.assertEquals(R.string.time_of_day, new TriggerTimeOfDay().friendlyName());
+        Assert.assertEquals(R.string.time_range, new TriggerTimeRange().friendlyName());
     }
 
     @Test
     public void friendlyDescriptionTest() {
-        Assert.assertEquals(null, new TriggerTimeOfDay().friendlyDescription()); //not mocked    }
+        Assert.assertEquals(null, new TriggerTimeRange().friendlyDescription()); //not mocked    }
     }
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.ic_access_alarm_24dp), new TriggerTimeOfDay().icon());
+        Assert.assertEquals(Optional.of(R.drawable.ic_access_alarm_24dp), new TriggerTimeRange().icon());
 
     }
 

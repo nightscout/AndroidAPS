@@ -1605,9 +1605,9 @@
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="loading">Loading ...</string>
     <string name="snooze">Snooze</string>
-    <string name="time_of_day">Time range</string>
-    <string name="tod_value">Time is between %1$s and %2$s</string>
-    <string name="thanspecifiedtime">Between </string>
+    <string name="time_range">Time range</string>
+    <string name="timerange_value">Time is between %1$s and %2$s</string>
+    <string name="between">Between </string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

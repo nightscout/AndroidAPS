@@ -209,7 +209,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
         return listOf(
                 TriggerTime(),
                 TriggerRecurringTime(),
-                TriggerTimeOfDay(),
+                TriggerTimeRange(),
                 TriggerBg(),
                 TriggerDelta(),
                 TriggerIob(),

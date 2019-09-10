@@ -30,28 +30,28 @@ import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 
 
-// Trigger for time range ( Time of day actually )
+// Trigger for time range ( from 10:00AM till 13:00PM )
 
-public class TriggerTimeOfDay extends Trigger {
+public class TriggerTimeRange extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
     
-    // in minutes since midnight 6- means 1AM 
+    // in minutes since midnight 60 means 1AM
     private int start;
     private int end;
     private Comparator comparator = new Comparator();
 
 
-    public TriggerTimeOfDay() {
+    public TriggerTimeRange() {
         
         start = getMinSinceMidnight(DateUtil.now());
         end = getMinSinceMidnight(DateUtil.now());
     }
 
-    private TriggerTimeOfDay(TriggerTimeOfDay triggerTimeOfDay) {
+    private TriggerTimeRange(TriggerTimeRange triggerTimeRange) {
         super();
-        lastRun = triggerTimeOfDay.lastRun;
-        start = triggerTimeOfDay.start;
-        end = triggerTimeOfDay.end;
+        lastRun = triggerTimeRange.lastRun;
+        start = triggerTimeRange.start;
+        end = triggerTimeRange.end;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TriggerTimeOfDay extends Trigger {
             data.put("start", getMinSinceMidnight(start));
             data.put("end", getMinSinceMidnight(end));
             data.put("lastRun", lastRun);
-            object.put("type", TriggerTimeOfDay.class.getName());
+            object.put("type", TriggerTimeRange.class.getName());
             object.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class TriggerTimeOfDay extends Trigger {
     }
 
     @Override
-    TriggerTimeOfDay fromJSON(String data) {
+    TriggerTimeRange fromJSON(String data) {
         JSONObject o;
         try {
             o = new JSONObject(data);
@@ -117,12 +117,12 @@ public class TriggerTimeOfDay extends Trigger {
 
     @Override
     public int friendlyName() {
-        return R.string.time_of_day;
+        return R.string.time_range;
     }
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.tod_value, DateUtil.timeString(toMilis(start)), DateUtil.timeString(toMilis(end)));
+        return MainApp.gs(R.string.timerange_value, DateUtil.timeString(toMilis(start)), DateUtil.timeString(toMilis(end)));
     }
 
     @Override
@@ -130,19 +130,20 @@ public class TriggerTimeOfDay extends Trigger {
         return Optional.of(R.drawable.ic_access_alarm_24dp);
     }
 
-    TriggerTimeOfDay start(int start) {
+    TriggerTimeRange period(int start, int end) {
         this.start = start;
+        this.end = end;
         return this;
     }
 
-    TriggerTimeOfDay lastRun(long lastRun) {
+    TriggerTimeRange lastRun(long lastRun) {
         this.lastRun = lastRun;
         return this;
     }
 
     @Override
     public Trigger duplicate() {
-        return new TriggerTimeOfDay(this);
+        return new TriggerTimeRange(this);
     }
 
     long toMilis(long minutesSinceMidnight) {
@@ -220,7 +221,7 @@ public class TriggerTimeOfDay extends Trigger {
         });
 
         int px = MainApp.dpToPx(10);
-        label.setText(MainApp.gs(R.string.thanspecifiedtime));
+        label.setText(MainApp.gs(R.string.between));
         label.setTypeface(label.getTypeface(), Typeface.BOLD);
         startButton.setPadding(px, px, px, px);
         endButton.setPadding(px, px, px, px);
