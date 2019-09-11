@@ -24,7 +24,6 @@ import java.util.GregorianCalendar;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
@@ -38,8 +37,6 @@ public class TriggerTimeRange extends Trigger {
     // in minutes since midnight 60 means 1AM
     private int start;
     private int end;
-    private Comparator comparator = new Comparator();
-
 
     public TriggerTimeRange() {
         
@@ -147,9 +144,7 @@ public class TriggerTimeRange extends Trigger {
     }
 
     long toMilis(long minutesSinceMidnight) {
-        long hours =  minutesSinceMidnight / 60;//hours
-        long minutes = minutesSinceMidnight % 60;//hours
-        return (hours*60*60*1000)+(minutes*60*1000);
+        return minutesSinceMidnight*60*1000;
     }
 
     int getMinSinceMidnight(long time) {
