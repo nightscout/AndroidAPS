@@ -317,19 +317,6 @@
     <string name="overview_bolusprogress_goingtodeliver">Bus suleista %1$.2fvv</string>
     <string name="objectives_0_objective">Nustatymai vizualizacijai, monitoringui ir bazės verčių bei koeficientų analizei</string>
     <string name="objectives_0_gate">Įsitikinkite, kad gliukozės duomenys rodomi Nightscout, o pompos insulino duomenys yra įkelti</string>
-    <string name="objectives_openloop_objective">Aktyvuojamas atviras ciklas</string>
-    <string name="objectives_openloop_gate">Keletą dienų praleiskite atvirojo ciklo (Open Loop) režime, rankiniu būdu tvirtindami kuo daugiau siūlomų bazės pakeitimų. Nustatykite ir naudokite laikinus bei numatytuosiuos tikslus (pvz.: fiziniam aktyvumui ir hipo korekcijai angliavandeniais)</string>
-    <string name="objectives_maxbasal_objective">Perpraskite atvirojo ciklo veikimą bei laikinos bazės rekomendacijas</string>
-    <string name="objectives_maxbasal_gate">Remdamiesi šia patirtimi, nuspręskite, koks turėtų būti maksimalus bazės dydis bei įveskite jį pompoje ir programos Nustatymuose</string>
-    <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo (Closed Loop) režimą su pompos stabdymu esant žemai gliukozei</string>
-    <string name="objectives_maxiobzero_gate">Keletą dienų praleiskite uždaro ciklo režime su kuo mažiau hipoglikemijų, kai IK = 0</string>
-    <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks IK ir mažindami tikslinę gliukozės vertę</string>
-    <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>
-    <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją.</string>
-    <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius.</string>
-    <string name="objectives_ama_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip pažangioji maisto skaičiuoklė (AMA Advanced Meal Assist)</string>
-    <string name="objectives_smb_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip SMB (Super Mikro Bolusas).</string>
-    <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti max IK! Pradžiai patartina skaičiuoti taip: maxIK=(didžiausia valandinė bazė x 3) + vidutinis bolusas.</string>
     <string name="youareonallowedlimit">Pasiekėte leistiną ribą</string>
     <string name="noprofileselected">Nepasirinktas profilis</string>
     <string name="smscommunicator_loophasbeendisabled">Ciklas buvo išjungtas</string>
@@ -561,7 +548,6 @@
     <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
     <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
-    <string name="show_statuslights_summary">Pradžios ekrane rodyti spalvotus indikatorius adatos, insulino, sensoriaus naudojimo trukmei bei baterijos įkrovimo lygiui.</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%%]</string>

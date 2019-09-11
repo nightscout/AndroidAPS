@@ -306,19 +306,6 @@
     <string name="waitingforpump">Pompa bekleniyor</string>
     <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın ve bazal oranlarını ve faktörleri düzenleyin</string>
     <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
-    <string name="objectives_openloop_objective">Açık Döngü modu başlatılıyor</string>
-    <string name="objectives_openloop_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
-    <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngü anlamak</string>
-    <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
-    <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Kan Şekerinde Duraklatma modunda başlatılıyor</string>
-    <string name="objectives_maxiobzero_gate">Çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca maksimum IOB = 0 (Aktif insülin) Kapalı Döngü\'de deneyin</string>
-    <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maksimum (IOB) Aktif İnsülinin 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
-    <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
-    <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i etkinleştirin</string>
-    <string name="objectives_autosens_gate">Bir hafta boyunca düzenli Karbonhidrad girdileri yaparak gün boyunca Kapalı Döngüyü çalıştırın</string>
-    <string name="objectives_ama_objective">Gelişmiş yemek asistanı gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
-    <string name="objectives_smb_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
-    <string name="objectives_smb_gate">(Super Micro Bolus) SMB\'lerın iyi çalışabilmesi için wiki\'yi okumalısınız ve maxIOB\'u yükseltmelisiniz! İyi bir başlangıç için maxIOB = ortalama yemek bolusu + 3 x max günlük bazaldır</string>
     <string name="youareonallowedlimit">İzin verilen sınıra ulaştınız</string>
     <string name="noprofileselected">Profil seçilmedi</string>
     <string name="smscommunicator_loophasbeendisabled">Döngü devre dışı bırakıldı</string>

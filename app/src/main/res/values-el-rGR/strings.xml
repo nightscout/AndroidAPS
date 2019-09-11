@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
     <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
     <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nαλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_careportal">Εισάγετε καταχωρήσεις ημερολογίου.</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
@@ -33,6 +34,7 @@
     <string name="description_smb">Ο πιο πρόσφατος αλγόριθμος για προχωρημένους χρήστες</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
+    <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
     <string name="description_profile_nightscout">Παρέχει το προφίλ που έχετε ορίσει στο Nightscout</string>
     <string name="description_profile_simple">Ορίστε ένα προφίλ με μόνο μία χρονική περίοδο.</string>
     <string name="description_pump_combo">Η ολοκλήρωση της αντλίας, για τις αντλίες Accu-Check Combo, απαιτεί να έχετε εγκαταστήσει ruffy</string>
@@ -317,11 +319,11 @@
     <string name="overview_bolusprogress_goingtodeliver">Προς έγχυση %1$.2fU</string>
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της αντλίας φορτώθηκαν</string>
-    <string name="objectives_openloop_objective">Ξεκινήστε σε ανοιχτό κύκλωμα</string>
-    <string name="objectives_openloop_gate">Εκτελέστε σε ανοιχτό κύκλωμα για μερικές ημέρες και χειροκίνητα κάντε πολλές παρεμβάσεις με προσωρινό ρυθμό. Ρυθμίστε και χρησιμοποιήστε προσωρινούς στόχους (π.χ. για αθλήματα ή υπογλυκαιμία)</string>
+    <string name="objectives_openloop_objective">Ξεκινώντας ανοιχτό κύκλωμα</string>
+    <string name="objectives_openloop_gate">Τρέξτε σε ανοιχτό κύκλωμα μερικές ημέρες και χειροκίνητα κάντε πολλούς προσωρινούς ρυθμούς. Φτιάξτε και χρησιμοποιήστε προσωρινούς και στανταρντ προσωρινούς στόχους (π.χ. για άσκηση ή θεραπεία υπογλυκαιμίας)</string>
     <string name="objectives_maxbasal_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσωρινό ρυθμό</string>
     <string name="objectives_maxbasal_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
-    <string name="objectives_maxiobzero_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend) </string>
+    <string name="objectives_maxiobzero_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend)</string>
     <string name="objectives_maxiobzero_gate">Εκτελέστε σε κλειστό κύκλωμα με μέγιστο IOB = 0 για μερικές ημέρες χωρίς πολλά LGS - υπογλυκαιμίες</string>
     <string name="objectives_maxiob_objective">Ρυθμίζοντας το κλειστό κύκλωμα, αυξήστε το μέγιστο IOB πάνω από 0 και σταδιακά μειώστε τους στόχους BG</string>
     <string name="objectives_maxiob_gate">Τρέξτε το για λίγες ημέρες, και τουλάχιστον μία νύχτα χωρίς χαμηλό συναγερμό BG, πριν χαμηλώσετε τα όρια</string>
@@ -563,7 +565,10 @@
     <string name="enablesuperbolus">Ενεργοποίηση superbolus στον σύντομο οδηγό</string>
     <string name="enablesuperbolus_summary">Ενεργοποιήστε την λειτουργία superbolus στον σύντομο οδηγό. Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ!</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
-    <string name="show_statuslights_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπεταρίας στην αρχική οθόνη.</string>
+    <string name="show_statuslights_easy">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
+    <string name="show_statuslights_easy_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
+    <string name="show_statuslights_extended">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
+    <string name="show_statuslights_extended_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%%]</string>
@@ -949,6 +954,7 @@
     <string name="sensitivitysetup">Ρυθμίσετε την προσθήκη Ευαισθησία</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">Το NSClient χειρίζεται τη σύνδεση με το Nightscout. Μπορείτε να παραλείψετε αυτό τώρα αλλά δεν θα μπορείτε να ολοκληρώσετε τους Στόχους μέχρι να κάνετε τις ρυθμίσεις του.</string>
     <string name="diawarning">Προσοχή: Τα νέα προφίλ ινσουλίνης απαιτούν DIA τουλάχιστον 5 ωρών. Η DIA 5-6 ώρες στα νέα προφίλ είναι ισοδύναμα με DIA των 3 ωρών στα παλιά προφίλ ινσουλινών.</string>
     <string name="bgsourcesetup">Διαμόρφωση πηγής BG</string>
     <string name="setupwizard_profile_description">Επιλέξτε μια πηγή του προφίλ. Για ένα παιδί, χρησιμοποιήστε το προφίλ NS. Εάν κανείς δεν σας ακολουθεί μέσω NS, πιθανότατα προτιμάτε Τοπικό προφίλ. Σημειώστε ότι ορίζετε μόνο την πηγή προφίλ. Για να χρησιμοποιείται το προφίλ πρέπει να το ενεργοποιήσετε εκτελώντας το \"Προφίλ αλλαγής\"</string>
@@ -1213,6 +1219,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Διαφορά BG</string>
+    <string name="deltalabel_u">Διαφορά BG [%1$s]</string>
     <string name="currentlocation">Τρέχουσα θέση</string>
     <string name="location">Τοποθεσία</string>
     <string name="latitude_short">Lat:</string>
@@ -1365,7 +1372,34 @@
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
     <string name="insulinFromCob"><![CDATA[Ινσουλίνη COB: <font color=\'%1$s\'>%2$.1fg %3$.2f</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
+    <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
+    <string name="loading">Φόρτωση ...</string>
+    <string name="snooze">Αναβολή</string>
+    <string name="accomplished">Επιτεύχθηκε: %1$s</string>
+    <string name="objectives_usage_objective">Μάθε πως να ελέγχεις το AndroidAPS</string>
+    <string name="objectives_usage_gate">Κάντε διαφορετικές ενέργειες στο AndroidAPS</string>
+    <string name="objectives_useprofileswitch">Θέστε το προφίλ στο 90% για 10 λεπτά (Παρατεταμένο πάτημα του προφίλ στην Επισκόπηση)</string>
+    <string name="objectives_usedisconnectpump">Προσομοίωση ένδειξης. Αποσυνδέστε την αντλία για 1 ώρα (Παρατεταμένο στο Ανοιχτό Κύκλωμα)</string>
+    <string name="objectives_usereconnectpump">... και επανασυνδέστε με τον ίδιο τρόπο</string>
+    <string name="objectives_usetemptarget">Φτιάξτε προσωρινούς στόχους με διάρκεια 10 λεπτά (Παρατεταμένο πάτημα στον στόχο σας)</string>
+    <string name="objectives_useactions">Στην Διαμόρφωση ενεργοποιήστε την προσθήκη Ενέργειες, κάντε την ορατή ώστε να την βλέπετε από το δικό της tab</string>
+    <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
+    <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
+    <string name="objectives_button_enter">Εισαγωγή</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Εισαγάγετε τον κωδικό που λαμβάνετε από τους προγραμματιστές για να παρακάμψετε τους υπόλοιπους στόχους</string>
+    <string name="codeaccepted">Κωδικός αποδεκτός</string>
+    <string name="codeinvalid">Μη έγκυρος κωδικός</string>
+    <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
+    <string name="objectives_exam_gate">Διαβάστε και απαντήστε τις ερωτήσεις σωστά</string>
+    <string name="answerdisabledto">Οι απαντήσεις εμφανίζονται στο: %1$s</string>
+    <string name="wronganswer">Λάθος απάντηση!</string>
+    <string name="unfinshed_button">Επόμενο ημιτελές</string>
+    <string name="close">Κλείσιμο</string>
+    <string name="requestcode">Κωδικός αιτήματος: %1$s</string>
+    <string name="objectives_hint">(ελέγξτε όλες τις σωστές απαντήσεις)</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d ημέρα</item>
         <item quantity="other">%1$d ημέρες</item>

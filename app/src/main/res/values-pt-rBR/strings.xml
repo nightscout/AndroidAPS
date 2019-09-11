@@ -34,6 +34,7 @@
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
+    <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
     <string name="description_profile_nightscout">Fornece o perfil definido no Nightscout</string>
     <string name="description_profile_simple">Defina um perfil com apenas um bloco de cada vez.</string>
     <string name="description_pump_combo">Integração para bombas Accu-Chek Combo, requer ter o ruffy instalado</string>
@@ -318,19 +319,7 @@
     <string name="overview_bolusprogress_goingtodeliver">Vão ser administradas %1$.2fU</string>
     <string name="objectives_0_objective">Configuração da visualização e monitoramento, e análise de rácios e basals</string>
     <string name="objectives_0_gate">Verificar se a BG está disponível no Nightscout, e se os dados de insulina da bomba estão a ser carregados</string>
-    <string name="objectives_openloop_objective">A iniciar um open loop</string>
-    <string name="objectives_openloop_gate">Execute no Modo de Loop aberto por alguns dias e execute manualmente muitos basais de temp. Configure e use alvos temporários e padrão (por exemplo, para atividades ou tratamento hipos com carboidratos)</string>
-    <string name="objectives_maxbasal_objective">Compreender o seu open loop, incluindo as suas recomendações de basais temporárias</string>
-    <string name="objectives_maxbasal_gate">Com base nessa experiência, decidir qual deve ser a basal máxima e configurá-la na bomba e nas preferências</string>
-    <string name="objectives_maxiobzero_objective">Começar o close loop com Suspensão por Glicose Baixa.</string>
-    <string name="objectives_maxiobzero_gate">Utilizar em close loop com IOB máx = 0 por alguns dias sem muitas situações de Suspensão por Baixa Glicose</string>
-    <string name="objectives_maxiob_objective">Ajustar o close loop, levantar a IOB máxima acima de 0 e reduzir gradualmente os alvos de valor glicémico</string>
-    <string name="objectives_maxiob_gate">Utilizar por alguns dias e pelo menos uma noite sem alarmes de valores glicémicos baixos, antes de baixar os valores</string>
-    <string name="objectives_autosens_objective">Ajustar as basals e os rácios se necessário e em seguida habilitar o auto-sens</string>
-    <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada de hidratos de carbono regular</string>
-    <string name="objectives_ama_objective">Ativando recursos adicionais para uso durante o dia, como assistente avançado de refeição</string>
-    <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
-    <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB= média dos bolus + 3 x a basal máxima</string>
+    <string name="objectives_openloop_objective">A iniciar em Open Loop</string>
     <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="noprofileselected">Nenhum perfil selecionado</string>
     <string name="smscommunicator_loophasbeendisabled">Loop foi desativado</string>
@@ -564,7 +553,6 @@
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
     <string name="enablesuperbolus_summary">Habilite a funcionalidade de superbolus no assistente. Não habilite até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE USAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
-    <string name="show_statuslights_summary">Ativar as luzes de status para idade da cânula, idade da insulina, idade do sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
     <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
@@ -950,6 +938,7 @@
     <string name="sensitivitysetup">Configurar plugin Sensibilidade</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="bgsourcesetup">Configure a fonte das glicemias</string>
     <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
@@ -1373,6 +1362,21 @@
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
     <string name="loading">A carregar ...</string>
     <string name="snooze">Silenciar</string>
+    <string name="accomplished">Concluído: %1$s</string>
+    <string name="objectives_usage_objective">Aprenda a controlar o AndroidAPS</string>
+    <string name="objectives_usage_gate">Executar diferentes acções no AndroidAPS</string>
+    <string name="objectives_useloop">Exibir conteúdo do plugin do Loop</string>
+    <string name="objectives_button_enter">Inserir</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Digite o código obtido dos programadores para ignorar o resto dos objectivos</string>
+    <string name="codeaccepted">Código aceite</string>
+    <string name="codeinvalid">Código inválido</string>
+    <string name="objectives_exam_objective">Prove seu conhecimento</string>
+    <string name="answerdisabledto">Resposta desactivada para: %1$s</string>
+    <string name="wronganswer">Resposta errada!</string>
+    <string name="unfinshed_button">Próximo não concluído</string>
+    <string name="close">Fechar</string>
+    <string name="requestcode">Pedir código: %1$s</string>
+    <string name="objectives_hint">(seleccione todas as respostas correctas)</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
