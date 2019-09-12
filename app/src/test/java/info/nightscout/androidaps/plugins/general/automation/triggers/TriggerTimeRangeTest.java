@@ -32,12 +32,21 @@ public class TriggerTimeRangeTest {
     @Test
     public void shouldRunTest() {
 
-        // scheduled 1 min before
         TriggerTimeRange t;
+//        when(System.currentTimeMillis()).thenReturn((long) now*60000);
+        when(DateUtil.now()).thenReturn((long) now*60000);
 
-        // scheduled 1 min in the future
+        // range starts 1 min in the future
         t = new TriggerTimeRange().period(now + 1, now + 30);
-        Assert.assertFalse(t.shouldRun());
+        Assert.assertEquals(false, t.shouldRun());
+
+        // range starts 30 min back
+        t = new TriggerTimeRange().period((int) (System.currentTimeMillis() - 30*60000), now + 30);
+        Assert.assertEquals(true, t.shouldRun());
+
+        // Period is all day long
+        t = new TriggerTimeRange().period(1, 1440);
+        Assert.assertEquals(true, t.shouldRun());
 
         // already run
         t = new TriggerTimeRange().period(now - 1, now + 30).lastRun(now - 1);
