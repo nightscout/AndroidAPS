@@ -47,7 +47,7 @@
     <string name="exercise_doitbeforestart">Help before start exercise</string>
     <string name="exercise_doitafterstart">Help after start exercise</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Do I get insuling when loop is suspended?</string>
+    <string name="suspendloop_doigetinsulin">Do I get insulin when loop is suspended?</string>
     <string name="suspendloop_yes">Yes, common basal rate</string>
     <string name="suspendloop_no">No, delivering of insulin is stopped</string>
     <string name="basaltest">Basal and ISF, IC testing</string>
