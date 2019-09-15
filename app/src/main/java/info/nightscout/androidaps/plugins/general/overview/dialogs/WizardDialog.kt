@@ -107,6 +107,7 @@ class WizardDialog : DialogFragment() {
                 ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         initDialog()
 
+        treatments_wizard_percent_used.text = SP.getInt(R.string.key_boluswizard_percentage, 100).toString() + "%"
         // ok button
         ok.setOnClickListener {
             if (okClicked) {
