@@ -23,7 +23,6 @@
     <string name="pumpdisconnect_dontchnage">Don\'t change anything in loop, just take it off.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_howtosave">What are best practices to backup your settings?</string>
-    <string name="objectives_writetopaper">Write every setting you did to a paper and make a hardcopy of it.</string>
     <string name="objectives_exportsettings">Locally export them from Maintenance menu.</string>
     <string name="objectives_storeelsewhere">Store exported file to another place like email, Dropbox, Google drive …</string>
     <string name="objectives_doexportonstart">Export them right after installation of AAPS.</string>
@@ -36,11 +35,11 @@
     <string name="nothing">Nothing, the loop will deal with it.</string>
     <string name="noisycgm_pause">Pause closed loop mode to avoid overdosing.</string>
     <string name="noisycgm_replacesensor">Replace sensor</string>
-    <string name="noisycgm_turnoffcgmreceiver">Turn off CGM receiver.</string>
+    <string name="noisycgm_turnoffphone">Turn off the phone.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="noisycgm_checksmoothing">Check if your CGM app smoothes data.</string>
     <string name="exercise">Exercise</string>
-    <string name="exercise_whattodo">How to help the system deal with exercise</string>
+    <string name="exercise_whattodo">How is the best practice to help the system deal with exercise</string>
     <string name="exercise_setactivitytt">Set activity temp target</string>
     <string name="exercise_switchprofilebelow100">Do a profile switch below 100%</string>
     <string name="exercise_switchprofileabove100">Do profile switch above 100%</string>
@@ -104,6 +103,7 @@
     <string name="wrongcarbs">Wrong carbs</string>
     <string name="wrongcarbs_whattodo">You see you have entered wrong carbs. What should you do?</string>
     <string name="wrongcarbs_treatmentstab">Go to treatments, delete wrong carbs and enter new carbs</string>
+    <string name="wrongcarbs_addfakeinsulin">Add fake insulin by using Refill function</string>
     <string name="extendedcarbs">Food with fat and protein</string>
     <string name="extendedcarbs_handling">What to do if your food contains larger amount of fat or proteins?</string>
     <string name="extendedcarbs_useextendedcarbs">Recalculate fat and proteins to carbs and use \"Extended carbs\" feature to tell system about it</string>
@@ -138,7 +138,7 @@
     <string name="profileswitch_iclower">IC value will be 10% lower</string>
     <string name="profileswitch_isfhigher">ISF value will be 10% higher</string>
     <string name="profileswitch_isflower">ISF value will be 10% lower</string>
-    <string name="profileswitch_overall">You will get 10% less insulin in total</string>
+    <string name="profileswitch_overall">You will get around 10% less insulin in total</string>
     <string name="profileswitch_targethigher">Target wiil be 10% higher</string>
     <string name="profileswitch_targetlower">Target will be 10% lower</string>
     <string name="profileswitch_targetbottom">Only bottom target will be 10% lower</string>
