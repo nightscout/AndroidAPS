@@ -30,6 +30,7 @@
     <string name="objectives_doexportafterchange">Export them after every change of a setting.</string>
     <string name="objectives_doexportafterfirtssettings">Export them when you finish initial settings.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
+    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm">Noisy CGM</string>
     <string name="noisycgm_whattodo">What to do when you see CGM signals are too noisy?</string>
     <string name="nothing">Nothing, the loop will deal with it.</string>
@@ -108,6 +109,7 @@
     <string name="extendedcarbs_useextendedcarbs">Recalculate fat and proteins to carbs and use \"Extended carbs\" feature to tell system about it</string>
     <string name="extendedcarbs_add">Recalculate fat and proteins to carbs and add it to bolus calculation</string>
     <string name="extendedcarbs_useextendedbolus">Use extended bolus to cover fat and proteins</string>
+    <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_monitoring">Monitoring children</string>
     <string name="nsclient_howcanyou">How can you monitor AAPS of your child remotely?</string>
     <string name="nightscout">Nightscout</string>
@@ -140,7 +142,6 @@
     <string name="profileswitch_targethigher">Target wiil be 10% higher</string>
     <string name="profileswitch_targetlower">Target will be 10% lower</string>
     <string name="profileswitch_targetbottom">Only bottom target will be 10% lower</string>
-    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
 
 </resources>
