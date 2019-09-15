@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
@@ -40,13 +39,13 @@ class LocalProfileFragment : Fragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            LocalProfilePlugin.getPlugin().dia = SafeParse.stringToDouble(localprofile_dia.text.toString())
+            LocalProfilePlugin.dia = SafeParse.stringToDouble(localprofile_dia.text.toString())
             doEdit()
         }
     }
 
     private fun sumLabel(): String {
-        val profile = LocalProfilePlugin.getPlugin().createProfileStore().defaultProfile
+        val profile = LocalProfilePlugin.createProfileStore().defaultProfile
         val sum = profile?.baseBasalSum() ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + MainApp.gs(R.string.insulin_unit_shortname)
     }
@@ -60,30 +59,30 @@ class LocalProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
 
-        localprofile_dia.setParams(LocalProfilePlugin.getPlugin().dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
-        TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.getPlugin().ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
-        TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.getPlugin().isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
-        basalView = TimeListEdit(context, view, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), LocalProfilePlugin.getPlugin().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
-        TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.getPlugin().targetLow, LocalProfilePlugin.getPlugin().targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
+        localprofile_dia.setParams(LocalProfilePlugin.dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
+        TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
+        TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
+        basalView = TimeListEdit(context, view, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), LocalProfilePlugin.basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
+        TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.targetLow, LocalProfilePlugin.targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
 
 
         if (!pumpDescription.isTempBasalCapable) {
             localprofile_basal.visibility = View.GONE
         }
 
-        localprofile_mgdl.isChecked = LocalProfilePlugin.getPlugin().mgdl
-        localprofile_mmol.isChecked = LocalProfilePlugin.getPlugin().mmol
+        localprofile_mgdl.isChecked = LocalProfilePlugin.mgdl
+        localprofile_mmol.isChecked = LocalProfilePlugin.mmol
 
         localprofile_mgdl.setOnClickListener {
-            LocalProfilePlugin.getPlugin().mgdl = localprofile_mgdl.isChecked
-            LocalProfilePlugin.getPlugin().mmol = !LocalProfilePlugin.getPlugin().mgdl
-            localprofile_mmol.isChecked = LocalProfilePlugin.getPlugin().mmol
+            LocalProfilePlugin.mgdl = localprofile_mgdl.isChecked
+            LocalProfilePlugin.mmol = !LocalProfilePlugin.mgdl
+            localprofile_mmol.isChecked = LocalProfilePlugin.mmol
             doEdit()
         }
         localprofile_mmol.setOnClickListener {
-            LocalProfilePlugin.getPlugin().mmol = localprofile_mmol.isChecked
-            LocalProfilePlugin.getPlugin().mgdl = !LocalProfilePlugin.getPlugin().mmol
-            localprofile_mgdl.isChecked = LocalProfilePlugin.getPlugin().mgdl
+            LocalProfilePlugin.mmol = localprofile_mmol.isChecked
+            LocalProfilePlugin.mgdl = !LocalProfilePlugin.mmol
+            localprofile_mgdl.isChecked = LocalProfilePlugin.mgdl
             doEdit()
         }
 
@@ -96,22 +95,22 @@ class LocalProfileFragment : Fragment() {
         }
 
         localprofile_reset.setOnClickListener {
-            LocalProfilePlugin.getPlugin().loadSettings()
-            localprofile_mgdl.isChecked = LocalProfilePlugin.getPlugin().mgdl
-            localprofile_mmol.isChecked = LocalProfilePlugin.getPlugin().mmol
-            localprofile_dia.setParams(LocalProfilePlugin.getPlugin().dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
-            TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.getPlugin().ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.getPlugin().isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
-            basalView = TimeListEdit(context, view, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), LocalProfilePlugin.getPlugin().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
-            TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.getPlugin().targetLow, LocalProfilePlugin.getPlugin().targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
+            LocalProfilePlugin.loadSettings()
+            localprofile_mgdl.isChecked = LocalProfilePlugin.mgdl
+            localprofile_mmol.isChecked = LocalProfilePlugin.mmol
+            localprofile_dia.setParams(LocalProfilePlugin.dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
+            TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
+            basalView = TimeListEdit(context, view, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), LocalProfilePlugin.basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
+            TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.targetLow, LocalProfilePlugin.targetHigh, 3.0, 200.0, 0.1, DecimalFormat("0.0"), save)
             updateGUI()
         }
 
         localprofile_save.setOnClickListener {
-            if (!LocalProfilePlugin.getPlugin().isValidEditState) {
+            if (!LocalProfilePlugin.isValidEditState()) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
-            LocalProfilePlugin.getPlugin().storeSettings()
+            LocalProfilePlugin.storeSettings()
             updateGUI()
         }
         updateGUI()
@@ -134,14 +133,14 @@ class LocalProfileFragment : Fragment() {
     }
 
     fun doEdit() {
-        LocalProfilePlugin.getPlugin().isEdited = true
+        LocalProfilePlugin.isEdited = true
         updateGUI()
     }
 
     fun updateGUI() {
         if (invalidprofile == null) return
-        val isValid = LocalProfilePlugin.getPlugin().isValidEditState
-        val isEdited = LocalProfilePlugin.getPlugin().isEdited
+        val isValid = LocalProfilePlugin.isValidEditState()
+        val isEdited = LocalProfilePlugin.isEdited
         if (isValid) {
             invalidprofile.visibility = View.GONE //show invalid profile
 
@@ -159,7 +158,7 @@ class LocalProfileFragment : Fragment() {
             localprofile_save.visibility = View.GONE //don't save an invalid profile
         }
 
-        //Show reset button iff data was edited
+        //Show reset button if data was edited
         if (isEdited) {
             localprofile_reset.visibility = View.VISIBLE
         } else {

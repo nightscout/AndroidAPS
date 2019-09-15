@@ -271,8 +271,8 @@ public class SWDefinition {
             .skippable(false)
             .add(new SWFragment(this)
                     .add(new LocalProfileFragment()))
-            .validator(() -> LocalProfilePlugin.getPlugin().getProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
-            .visibility(() -> LocalProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE));
+            .validator(() -> LocalProfilePlugin.INSTANCE.getProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile().isValid("StartupWizard"))
+            .visibility(() -> LocalProfilePlugin.INSTANCE.isEnabled(PluginType.PROFILE));
 
     private SWScreen screenSimpleProfile = new SWScreen(R.string.simpleprofile)
             .skippable(false)
