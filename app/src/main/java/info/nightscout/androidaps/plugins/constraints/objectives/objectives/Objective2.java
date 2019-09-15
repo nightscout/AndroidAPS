@@ -183,6 +183,14 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.profileswitch_hint1))
         );
 
+        tasks.add(new ExamTask(R.string.profileswitch, R.string.profileswitchtime_iwant,"profileswitchtime")
+                .option(new Option(R.string.profileswitchtime_1, false))
+                .option(new Option(R.string.profileswitchtime__1, true))
+                .option(new Option(R.string.profileswitchtime_60, false))
+                .option(new Option(R.string.profileswitchtime__60, false))
+                .hint(new Hint(R.string.profileswitchtime_hint1))
+        );
+
         for (Task task : tasks)
             Collections.shuffle(((ExamTask)task).options);
     }

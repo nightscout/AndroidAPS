@@ -143,5 +143,11 @@
     <string name="profileswitch_targetlower">Target will be 10% lower</string>
     <string name="profileswitch_targetbottom">Only bottom target will be 10% lower</string>
     <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitchtime_iwant">I want to do a profile switch because I had to wake up 1h earlier than usually, so it makes more sense to announce the change by the time shift with a profile switch. What number should I use?</string>
+    <string name="profileswitchtime_1">1</string>
+    <string name="profileswitchtime__1">-1</string>
+    <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitchtime_60">60</string>
+    <string name="profileswitchtime__60">-60</string>
 
 </resources>
