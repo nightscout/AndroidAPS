@@ -722,7 +722,7 @@
     <string name="valuesnotstored">Values not stored!</string>
     <string name="combopump" translatable="false">Accu-Chek Combo</string>
     <string name="combopump_shortname" translatable="false">COMBO</string>
-    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
