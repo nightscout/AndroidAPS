@@ -35,7 +35,7 @@ class EditEventDialog : DialogFragment() {
             bundle.getString("event")?.let { event = AutomationEvent().fromJSON(it) }
         }
 
-        dialog.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.automation_dialog_event, container, false)
     }
 

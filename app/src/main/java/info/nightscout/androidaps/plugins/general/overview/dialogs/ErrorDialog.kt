@@ -24,7 +24,7 @@ class ErrorDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        dialog.setTitle(title)
+        dialog?.setTitle(title)
         isCancelable = false
 
         savedInstanceState?.let { bundle ->

@@ -36,8 +36,8 @@ class ObjectivesExamDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     override fun onResume() {
