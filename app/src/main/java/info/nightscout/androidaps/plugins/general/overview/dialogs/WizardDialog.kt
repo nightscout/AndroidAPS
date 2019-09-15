@@ -129,6 +129,7 @@ class WizardDialog : DialogFragment() {
         treatments_wizard_basaliobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
+        treatments_wizard_sbcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         // profile spinner
         treatments_wizard_profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
