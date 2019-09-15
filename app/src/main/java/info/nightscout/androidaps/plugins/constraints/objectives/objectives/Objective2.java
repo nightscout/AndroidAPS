@@ -152,7 +152,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.nsclient_looponiphone, false))
                 .option(new Option(R.string.nsclient_spikeiphone, true))
         );
-        tasks.add(new ExamTask(R.string.isf_label_isf_label, R.string.whatistrue,"isf")
+        tasks.add(new ExamTask(R.string.isf_label, R.string.whatistrue,"isf")
                 .option(new Option(R.string.isf_increasingvalue, true))
                 .option(new Option(R.string.isf_decreasingvalue, false))
                 .option(new Option(R.string.isf_noeffect, false))
