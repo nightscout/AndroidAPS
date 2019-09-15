@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
@@ -219,7 +220,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                     advancedFiltering.value()
             );
         } catch (JSONException e) {
-            log.error(e.getMessage());
+            FabricPrivacy.logException(e);
             return;
         }
 
@@ -228,24 +229,32 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
         if (L.isEnabled(L.APS))
             Profiler.log(log, "SMB calculation", start);
-        // TODO still needed with oref1?
-        // Fix bug determine basal
-        if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
-            determineBasalResultSMB.tempBasalRequested = false;
+        if (determineBasalResultSMB == null) {
+            if (L.isEnabled(L.APS))
+                log.error("SMB calculation returned null");
+            lastDetermineBasalAdapterSMBJS = null;
+            lastAPSResult = null;
+            lastAPSRun = 0;
+        } else {
+            // TODO still needed with oref1?
+            // Fix bug determine basal
+            if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
+                determineBasalResultSMB.tempBasalRequested = false;
 
-        determineBasalResultSMB.iob = iobArray[0];
+            determineBasalResultSMB.iob = iobArray[0];
 
-        try {
-            determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            try {
+                determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
+            } catch (JSONException e) {
+                log.error("Unhandled exception", e);
+            }
+
+            determineBasalResultSMB.inputConstraints = inputConstraints;
+
+            lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;
+            lastAPSResult = determineBasalResultSMB;
+            lastAPSRun = now;
         }
-
-        determineBasalResultSMB.inputConstraints = inputConstraints;
-
-        lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;
-        lastAPSResult = determineBasalResultSMB;
-        lastAPSRun = now;
         RxBus.INSTANCE.send(new EventOpenAPSUpdateGui());
 
         //deviceStatus.suggested = determineBasalResultAMA.json;

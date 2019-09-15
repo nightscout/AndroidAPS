@@ -23,7 +23,7 @@ class EditTriggerDialog : DialogFragment() {
             bundle.getString("trigger")?.let { trigger = Trigger.instantiate(it) }
         }
 
-        dialog.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.automation_dialog_edit_trigger, container, false)
     }
 

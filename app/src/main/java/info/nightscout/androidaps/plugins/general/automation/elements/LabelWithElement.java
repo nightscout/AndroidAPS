@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.elements;
 import android.graphics.Typeface;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import info.nightscout.androidaps.MainApp;
@@ -36,6 +37,10 @@ public class LabelWithElement extends Element {
         textViewPre.setPadding(px, px, px, px);
         textViewPre.setTypeface(textViewPre.getTypeface(), Typeface.BOLD);
         layout.addView(textViewPre);
+
+        TextView spacer = new TextView(root.getContext());
+        spacer.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        layout.addView(spacer);
 
         // add element to layout
         element.addToLayout(layout);

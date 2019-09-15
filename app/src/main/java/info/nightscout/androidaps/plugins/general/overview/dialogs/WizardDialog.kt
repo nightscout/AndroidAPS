@@ -53,7 +53,7 @@ class WizardDialog : DialogFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         this.parentContext = context
     }
@@ -78,10 +78,10 @@ class WizardDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
-        dialog.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(false)
 
         return inflater.inflate(R.layout.overview_wizard_dialog, container, false)
     }
@@ -107,6 +107,7 @@ class WizardDialog : DialogFragment() {
                 ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         initDialog()
 
+        treatments_wizard_percent_used.text = SP.getInt(R.string.key_boluswizard_percentage, 100).toString() + "%"
         // ok button
         ok.setOnClickListener {
             if (okClicked) {
@@ -128,6 +129,7 @@ class WizardDialog : DialogFragment() {
         treatments_wizard_basaliobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
+        treatments_wizard_sbcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         // profile spinner
         treatments_wizard_profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {

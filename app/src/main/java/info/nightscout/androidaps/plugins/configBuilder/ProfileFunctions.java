@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperAc
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
 
 public class ProfileFunctions {
     private static Logger log = LoggerFactory.getLogger(L.PROFILE);
@@ -101,7 +102,8 @@ public class ProfileFunctions {
     }
 
     public boolean isProfileValid(String from) {
-        return getProfile() != null && getProfile().isValid(from);
+        Profile profile = getProfile();
+        return profile != null && profile.isValid(from);
     }
 
     @Nullable
@@ -159,6 +161,8 @@ public class ProfileFunctions {
     public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
         ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, System.currentTimeMillis());
         TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
+        if (percentage == 90 && duration == 10)
+            SP.putBoolean(R.string.key_objectiveuseprofileswitch, true);
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {

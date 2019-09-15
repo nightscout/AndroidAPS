@@ -2,25 +2,32 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.utils.T;
 
 public class Objective5 extends Objective {
 
     public Objective5() {
-        super(4, R.string.objectives_4_objective, R.string.objectives_4_gate);
+        super("maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);
     }
 
     @Override
     protected void setupTasks(List<Task> tasks) {
-        tasks.add(new MinimumDurationTask(T.days(1).msecs()));
-        tasks.add(new Task(R.string.maxiobset) {
+        tasks.add(new MinimumDurationTask(T.days(5).msecs()));
+        tasks.add(new Task(R.string.closedmodeenabled) {
             @Override
             public boolean isCompleted() {
-                double maxIOB = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
-                return maxIOB > 0;
+                Constraint<Boolean> closedLoopEnabled = new Constraint<>(true);
+                SafetyPlugin.getPlugin().isClosedLoopAllowed(closedLoopEnabled);
+                return closedLoopEnabled.value();
             }
         });
+    }
+
+    @Override
+    public boolean isRevertable() {
+        return true;
     }
 }

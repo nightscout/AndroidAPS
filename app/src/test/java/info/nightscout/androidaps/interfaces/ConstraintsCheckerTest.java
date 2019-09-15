@@ -58,11 +58,11 @@ public class ConstraintsCheckerTest {
 
     boolean notificationSent = false;
 
-    public ConstraintsCheckerTest() throws JSONException {
+    public ConstraintsCheckerTest() {
     }
 
     @Test
-    public void isLoopInvokationAllowedTest() throws Exception {
+    public void isLoopInvokationAllowedTest() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true);
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
@@ -73,9 +73,9 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
-    public void isClosedLoopAllowedTest() throws Exception {
+    public void isClosedLoopAllowedTest()  {
         when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("closed");
-        objectivesPlugin.objectives.get(3).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getMAXIOB_ZERO_CL_OBJECTIVE()).setStartedOn(0);
 
         Constraint<Boolean> c = constraintChecker.isClosedLoopAllowed();
         Assert.assertEquals(true, c.getReasonList().size() == 2); // Safety & Objectives
@@ -90,8 +90,8 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
-    public void isAutosensModeEnabledTest() throws Exception {
-        objectivesPlugin.objectives.get(5).setStartedOn(null);
+    public void isAutosensModeEnabledTest() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getAUTOSENS_OBJECTIVE()).setStartedOn(0);
         when(SP.getBoolean(R.string.key_openapsama_useautosens, false)).thenReturn(false);
 
         Constraint<Boolean> c = constraintChecker.isAutosensModeEnabled();
@@ -101,8 +101,8 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
-    public void isAMAModeEnabledTest() throws Exception {
-        objectivesPlugin.objectives.get(6).setStartedOn(null);
+    public void isAMAModeEnabledTest() {
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getAMA_OBJECTIVE()).setStartedOn(0);
 
         Constraint<Boolean> c = constraintChecker.isAMAModeEnabled();
         Assert.assertEquals(true, c.getReasonList().size() == 1); // Objectives
@@ -111,7 +111,7 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
-    public void isAdvancedFilteringEnabledTest() throws Exception {
+    public void isAdvancedFilteringEnabledTest() {
         when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
 
         Constraint<Boolean> c = constraintChecker.isAdvancedFilteringEnabled();
@@ -130,7 +130,7 @@ public class ConstraintsCheckerTest {
 
     @Test
     public void isSMBModeEnabledTest() throws Exception {
-        objectivesPlugin.objectives.get(7).setStartedOn(null);
+        objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getSMB_OBJECTIVE()).setStartedOn(0);
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
         when(MainApp.getConstraintChecker().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
 
@@ -294,7 +294,7 @@ public class ConstraintsCheckerTest {
         constraintChecker = new ConstraintChecker();
 
         safetyPlugin = SafetyPlugin.getPlugin();
-        objectivesPlugin = ObjectivesPlugin.getPlugin();
+        objectivesPlugin = ObjectivesPlugin.INSTANCE;
         comboPlugin = ComboPlugin.getPlugin();
         danaRPlugin = DanaRPlugin.getPlugin();
         danaRSPlugin = DanaRSPlugin.getPlugin();

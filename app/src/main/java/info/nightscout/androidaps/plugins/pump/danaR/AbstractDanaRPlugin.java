@@ -481,7 +481,6 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";
         }
-        ret += "IOB: " + pump.iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + pump.batteryRemaining + "\n";
         return ret;

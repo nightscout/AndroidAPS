@@ -34,4 +34,10 @@ public class MsgSettingPumpTime extends MessageBase {
 
         DanaRPump.getInstance().pumpTime = time;
     }
+
+    @Override
+    public void handleMessageNotReceived() {
+        DanaRPump.getInstance().pumpTime = 0;
+    }
+
 }

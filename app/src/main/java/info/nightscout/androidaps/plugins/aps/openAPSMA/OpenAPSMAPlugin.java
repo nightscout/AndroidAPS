@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
@@ -170,7 +171,8 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         try {
             determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, ConfigBuilderPlugin.getPlugin().getActivePump().getBaseBasalRate(), iobTotal, glucoseStatus, mealData);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            FabricPrivacy.logException(e);
+            return;
         }
         if (L.isEnabled(L.APS))
             Profiler.log(log, "MA calculation", start);
@@ -179,21 +181,29 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         long now = System.currentTimeMillis();
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
-        // Fix bug determinef basal
-        if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
-            determineBasalResultMA.tempBasalRequested = false;
+        if (determineBasalResultMA == null) {
+            if (L.isEnabled(L.APS))
+                log.error("MA calculation returned null");
+            lastDetermineBasalAdapterMAJS = null;
+            lastAPSResult = null;
+            lastAPSRun = 0;
+        } else {
+            // Fix bug determinef basal
+            if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
+                determineBasalResultMA.tempBasalRequested = false;
 
-        determineBasalResultMA.iob = iobTotal;
+            determineBasalResultMA.iob = iobTotal;
 
-        try {
-            determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            try {
+                determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
+            } catch (JSONException e) {
+                log.error("Unhandled exception", e);
+            }
+
+            lastDetermineBasalAdapterMAJS = determineBasalAdapterMAJS;
+            lastAPSResult = determineBasalResultMA;
+            lastAPSRun = now;
         }
-
-        lastDetermineBasalAdapterMAJS = determineBasalAdapterMAJS;
-        lastAPSResult = determineBasalResultMA;
-        lastAPSRun = now;
         RxBus.INSTANCE.send(new EventOpenAPSUpdateGui());
     }
 

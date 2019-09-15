@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
+import javax.annotation.Nullable;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -69,6 +71,7 @@ public class DetermineBasalAdapterSMBJS {
     }
 
 
+    @Nullable
     public DetermineBasalResultSMB invoke() {
 
 

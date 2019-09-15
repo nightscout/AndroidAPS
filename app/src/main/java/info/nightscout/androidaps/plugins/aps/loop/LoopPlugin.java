@@ -51,7 +51,6 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotifi
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
@@ -291,7 +290,7 @@ public class LoopPlugin extends PluginBase {
 
             Profile profile = ProfileFunctions.getInstance().getProfile();
 
-            if (!ProfileFunctions.getInstance().isProfileValid("Loop")) {
+            if (profile == null || !ProfileFunctions.getInstance().isProfileValid("Loop")) {
                 if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.noprofileselected));
                 RxBus.INSTANCE.send(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
@@ -471,11 +470,7 @@ public class LoopPlugin extends PluginBase {
                     lastRun.lastEnact = new Date();
                     lastRun.lastOpenModeAccept = new Date();
                     NSUpload.uploadDeviceStatus();
-                    ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                    if (objectivesPlugin != null) {
-                        ObjectivesPlugin.getPlugin().manualEnacts++;
-                        ObjectivesPlugin.getPlugin().saveProgress();
-                    }
+                    SP.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
                 MainApp.bus().post(new EventAcceptOpenLoopChange());
             }
