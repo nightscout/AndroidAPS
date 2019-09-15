@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation.elements;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.LinearLayout;
 
 import java.text.DecimalFormat;
@@ -17,13 +19,29 @@ public class InputTempTarget extends Element {
     private double step;
     private DecimalFormat decimalFormat;
 
+    private final TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            value = Math.max(minValue, value);
+            value = Math.min(maxValue, value);
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    };
+
     public InputTempTarget() {
         super();
         setUnits(ProfileFunctions.getInstance().getProfileUnits());
         if (getUnits().equals(Constants.MMOL))
-            value = Constants.MIN_TT_MMOL;
+            value = 6;
         else
-            value = Constants.MIN_TT_MGDL;
+            value = 110;
     }
 
     public InputTempTarget(InputTempTarget another) {
@@ -36,7 +54,7 @@ public class InputTempTarget extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         NumberPicker numberPicker = new NumberPicker(root.getContext(), null);
-        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, null);
+        numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, true, null, textWatcher);
         numberPicker.setOnValueChangedListener(value -> this.value = value);
         root.addView(numberPicker);
     }

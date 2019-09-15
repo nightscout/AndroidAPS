@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
     <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
     <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nαλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_careportal">Εισάγετε καταχωρήσεις ημερολογίου.</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
@@ -33,7 +34,7 @@
     <string name="description_smb">Ο πιο πρόσφατος αλγόριθμος για προχωρημένους χρήστες</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
-    <string name="description_profile_local">Ορίστε ένα προφίλ το οποίο είναι διαθέσιμο εκτός σύνδεσης.</string>
+    <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
     <string name="description_profile_nightscout">Παρέχει το προφίλ που έχετε ορίσει στο Nightscout</string>
     <string name="description_profile_simple">Ορίστε ένα προφίλ με μόνο μία χρονική περίοδο.</string>
     <string name="description_pump_combo">Η ολοκλήρωση της αντλίας, για τις αντλίες Accu-Check Combo, απαιτεί να έχετε εγκαταστήσει ruffy</string>
@@ -41,15 +42,12 @@
     <string name="description_pump_dana_r_korean">Ολοκλήρωση αντλίας για τις εγχώριες αντλίες Dana Diabecare R</string>
     <string name="description_pump_dana_r_v2">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare R με αναβαθμισμένο λογισμικό</string>
     <string name="description_pump_dana_rs">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare RS</string>
-    <string name="description_pump_insight">Η ολοκλήρωση της αντλίας, για τις αντλίες Accu-Check Insight, απαιτεί να έχετε εγκαταστήσει το SightRemote</string>
     <string name="description_pump_mdi">Ολοκλήρωση αντλίας για ανθρώπους που κάνουν εντατικοποιημένο σχήμα ενέσεων για την θεραπεία τους</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
     <string name="description_sensitivity_oref0">Η ευαισθησία υπολογίζεται από 24h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές.</string>
     <string name="description_sensitivity_oref1">Η ευαισθησία υπολογίζεται από 8h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές. Η προσθήκη υπολογίζει ακόμα το UAM.</string>
     <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
-    <string name="description_source_dexcom_g5">Λάβετε τις τιμές BG από την εφαρμογή του Dexcom G5.</string>
-    <string name="description_source_dexcom_g6">Λάβετε τις τιμές BG από την εφαρμογή του Dexcom G6.</string>
     <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
     <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
@@ -73,7 +71,6 @@
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="treatments_activity_string">Δραστηριότητα:</string>
     <string name="treatments_iobtotal_label_string">Συνολική IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Συνολική δραστηριότητα IOB:</string>
     <string name="tempbasals_realduration_label_string">Διάρκεια:</string>
@@ -146,7 +143,6 @@
     <string name="openapsma_lastenact_label">Τελευταία εφαρμογή</string>
     <string name="ok">ΟΚ</string>
     <string name="cancel">Ακύρωση</string>
-    <string name="close">Κλείσιμο</string>
     <string name="noapsselected">ΔΕΝ ΕΠΙΛΕΧΘΗΚΕ APS Ή ΒΡΕΘΗΚΕ ΑΠΟΤΕΛΕΣΜΑ</string>
     <string name="safety">Ασφάλεια</string>
     <string name="openapsma_disabled">Προσθήκη απενεργοποιημένη</string>
@@ -323,19 +319,19 @@
     <string name="overview_bolusprogress_goingtodeliver">Προς έγχυση %1$.2fU</string>
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της αντλίας φορτώθηκαν</string>
-    <string name="objectives_1_objective">Ξεκινήστε σε ανοιχτό κύκλωμα</string>
-    <string name="objectives_1_gate">Εκτελέστε σε ανοιχτό κύκλωμα για μερικές ημέρες και χειροκίνητα κάντε πολλές παρεμβάσεις με προσωρινό ρυθμό. Ρυθμίστε και χρησιμοποιήστε προσωρινούς στόχους (π.χ. για αθλήματα ή υπογλυκαιμία)</string>
-    <string name="objectives_2_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσωρινό ρυθμό</string>
-    <string name="objectives_2_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
-    <string name="objectives_3_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend) </string>
-    <string name="objectives_3_gate">Εκτελέστε σε κλειστό κύκλωμα με μέγιστο IOB = 0 για μερικές ημέρες χωρίς πολλά LGS - υπογλυκαιμίες</string>
-    <string name="objectives_4_objective">Ρυθμίζοντας το κλειστό κύκλωμα, αυξήστε το μέγιστο IOB πάνω από 0 και σταδιακά μειώστε τους στόχους BG</string>
-    <string name="objectives_4_gate">Τρέξτε το για λίγες ημέρες, και τουλάχιστον μία νύχτα χωρίς χαμηλό συναγερμό BG, πριν χαμηλώσετε τα όρια</string>
-    <string name="objectives_5_objective">Ρυθμίστε τον βασικό ρυθμό και τις αναλογίες αν χρειάζεται, και μετά ενεργοποιήστε το auto-sens</string>
-    <string name="objectives_5_gate">1 επιτυχής εβδομάδα ημερήσιου κυκλώματος με κανονική εισαγωγή υδατανθράκων</string>
-    <string name="objectives_6_objective">Ενεργοποιώντας επιπρόσθετα χαρακτηριστικά για χρήση κατά την ημέρα, όπως τον Προχωρημένο Βοηθό Γεύματος</string>
-    <string name="objectives_7_objective">Ενεργοποιήστε άλλες λειτουργίες για χρήση κατά την ημέρα, όπως SMB</string>
-    <string name="objectives_7_gate">Πρέπει να διαβάσετε τον οδηγό wiki και να αυξήσετε το ανώτατο όριο του IOB για να μπορέσει να λειτουργήσει σωστά η SMB! Μια καλή αρχή είναι μέγιστο IOB= μέσο bolus γεύματος + 3 x το μέγιστο ημερήσιο βασικού ρυθμού</string>
+    <string name="objectives_openloop_objective">Ξεκινώντας ανοιχτό κύκλωμα</string>
+    <string name="objectives_openloop_gate">Τρέξτε σε ανοιχτό κύκλωμα μερικές ημέρες και χειροκίνητα κάντε πολλούς προσωρινούς ρυθμούς. Φτιάξτε και χρησιμοποιήστε προσωρινούς και στανταρντ προσωρινούς στόχους (π.χ. για άσκηση ή θεραπεία υπογλυκαιμίας)</string>
+    <string name="objectives_maxbasal_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσωρινό ρυθμό</string>
+    <string name="objectives_maxbasal_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
+    <string name="objectives_maxiobzero_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend)</string>
+    <string name="objectives_maxiobzero_gate">Εκτελέστε σε κλειστό κύκλωμα με μέγιστο IOB = 0 για μερικές ημέρες χωρίς πολλά LGS - υπογλυκαιμίες</string>
+    <string name="objectives_maxiob_objective">Ρυθμίζοντας το κλειστό κύκλωμα, αυξήστε το μέγιστο IOB πάνω από 0 και σταδιακά μειώστε τους στόχους BG</string>
+    <string name="objectives_maxiob_gate">Τρέξτε το για λίγες ημέρες, και τουλάχιστον μία νύχτα χωρίς χαμηλό συναγερμό BG, πριν χαμηλώσετε τα όρια</string>
+    <string name="objectives_autosens_objective">Ρυθμίστε τον βασικό ρυθμό και τις αναλογίες αν χρειάζεται, και μετά ενεργοποιήστε το auto-sens</string>
+    <string name="objectives_autosens_gate">1 επιτυχής εβδομάδα ημερήσιου κυκλώματος με κανονική εισαγωγή υδατανθράκων</string>
+    <string name="objectives_ama_objective">Ενεργοποιώντας επιπρόσθετα χαρακτηριστικά για χρήση κατά την ημέρα, όπως τον Προχωρημένο Βοηθό Γεύματος</string>
+    <string name="objectives_smb_objective">Ενεργοποιήστε άλλες λειτουργίες για χρήση κατά την ημέρα, όπως SMB</string>
+    <string name="objectives_smb_gate">Πρέπει να διαβάσετε τον οδηγό wiki και να αυξήσετε το ανώτατο όριο του IOB για να μπορέσει να λειτουργήσει σωστά η SMB! Μια καλή αρχή είναι μέγιστο IOB= μέσο bolus γεύματος + 3 x το μέγιστο ημερήσιο βασικού ρυθμού</string>
     <string name="youareonallowedlimit">Φτάσατε το επιτρεπτό όριο</string>
     <string name="noprofileselected">Δεν επηλέχθηκε προφίλ</string>
     <string name="smscommunicator_loophasbeendisabled">Το κύκλωμα απενεργοποιήθηκε</string>
@@ -569,7 +565,10 @@
     <string name="enablesuperbolus">Ενεργοποίηση superbolus στον σύντομο οδηγό</string>
     <string name="enablesuperbolus_summary">Ενεργοποιήστε την λειτουργία superbolus στον σύντομο οδηγό. Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ!</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
-    <string name="show_statuslights_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπεταρίας στην αρχική οθόνη.</string>
+    <string name="show_statuslights_easy">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
+    <string name="show_statuslights_easy_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
+    <string name="show_statuslights_extended">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
+    <string name="show_statuslights_extended_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%%]</string>
@@ -727,8 +726,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Απενεργοποιεί το bluetooth του τηλεφώνου για ένα δευτερόλεπτο αν δεν είναι δυνατή η σύνδεση με την αντλία. Αυτό μπορεί να βοηθήσει σε ορισμένα τηλέφωνα όπου το bluetooth παγώνει.</string>
-    <string name="DexcomG5">Εφαρμογή DexcomG5 (τροποποιημένη)</string>
-    <string name="DexcomG6">DexcomG6 App (τροποποιημένη)</string>
     <string name="eversense">Eversense App (τροποποιημένη)</string>
     <string name="dexcomg5_nsupload_title">Ανέβασμα δεδομένων BG στο NS</string>
     <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
@@ -798,50 +795,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Δεν υπάρχει αρκετή ινσουλίνη στην αμπούλα για το bolus</string>
     <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="insightpump">Αντλία Insight</string>
-    <string name="status_no_colon">Κατάσταση</string>
-    <string name="changed">Τροποποίηση</string>
-    <string name="pump_stopped_uppercase">Η ΑΝΤΛΙΑ ΣΤΑΜΑΤΗΣΕ</string>
-    <string name="status_updated">Ενημέρωση Κατάστασης</string>
     <string name="ago">πριν</string>
-    <string name="with">με</string>
-    <string name="insight_active_tbr">Ενεργό TBR</string>
-    <string name="insight_min_left">λεπτά απομένουν</string>
-    <string name="log_book">Βιβλίο καταγραφής</string>
-    <string name="insight_last_completed_action">Η τελευταία εντολή που εκτελέστηκε</string>
-    <string name="insight_min">min</string>
-    <string name="insight_remaining_over">παραμένει πάνω</string>
-    <string name="insight_total_with">συνολικά με</string>
-    <string name="insight_upfront_with">εκ των προτέρων με</string>
-    <string name="insight_stay_always_connected">Μείνετε συνδεδεμένοι</string>
-    <string name="insight_history_idle">IDLE</string>
-    <string name="insight_history_syncing">ΣΥΓΧΡΟΝΙΣΜΟΣ</string>
-    <string name="insight_history_busy">ΑPASXOLHMENH</string>
-    <string name="insight_history_synced">ΣΥΓΧΡΟΝΙΣΜΕΝΟ</string>
-    <string name="insight_startup_uppercase">ΕΚΚΊΝΗΣΗ</string>
-    <string name="insight_needs">ανάγκες</string>
-    <string name="insight_not_connected_to_companion_app">Δεν έχει συνδεθεί στην εφαρμογή υποστήριξης!</string>
-    <string name="insight_companion_app_not_installed">Η εφαρμογή υποστήριξης δεν φαίνεται να είναι εγκατεστημένη!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Μη συμβατή εφαρμογή υποστήριξης, απαιτείται η έκδοση</string>
-    <string name="insight_unknown">Άγνωστο</string>
-    <string name="insight_waiting_for_code">Αναμονή για επιβεβαίωση κωδικού</string>
-    <string name="insight_code_rejected">Κωδικός απορρίφθηκε</string>
-    <string name="insight_app_binding">Σύνδεση εφαρμογής</string>
-    <string name="insight_not_authorized">Μη εξουσιοδοτημένο</string>
-    <string name="insight_incompatible">Μη συμβατό</string>
-    <string name="second">δευτερόλεπτο</string>
-    <string name="minute">λεπτό</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="hour">ώρα</string>
-    <string name="day">ημέρα</string>
-    <string name="week">εβδομάδα</string>
-    <string name="time_plural">δευτ</string>
-    <string name="insight_keepalive_format_string">%1$ds λήγει σε %2$s</string>
-    <string name="insight_keep_alive_status">Διατηρήστε την κατάσταση ενεργή</string>
-    <string name="statistics">Στατιστικά</string>
-    <string name="connect_preemptively">Συνδέστε προληπτικά</string>
-    <string name="automatically_connect_when">Συνδεθείτε αυτόματα όταν ανοίγουν οι οθόνες AndroidAPS, πριν ζητηθεί η οποιαδήποτε εντολή αντλίας, για να μειωθεί η καθυστέρηση σύνδεσης</string>
-    <string name="not_recommended_due_to_battery_drain">Δεν συνιστάται λόγω εξάντλησης μπαταρίας</string>
     <string name="enablesmbalways">Πάντα ενεργό SMB</string>
     <string name="enablesmbalways_summary">Ενεργοποιήστε τις ΜΜΕ ανεξάρτητα από τα bolus. Πιθανόν μόνο με πηγές BG με καλό φιλτράρισμα δεδομένων, όπως το G5</string>
     <string name="enablesmbaftercarbs">Ενεργοποίηση SMB μετά από υδατάνθρακες</string>
@@ -945,8 +900,6 @@
     <string name="reset">επαναφορά</string>
     <string name="waitingfortimesynchronization">Αναμονή για συγχρονισμό ώρας (%1$d δευτ)</string>
     <string name="loopdisconnectedfor">Αποσυνδέθηκε (%1$d m)</string>
-    <string name="automatic_careportal_events">Αυτόματα συμβάντα careportal</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Αυτόματο ανέβασμα ινσουλίνης, κάνουλας και αλλαγή μπαταρίας και συναγερμούς αντλίας στο Nightscout</string>
     <string name="openapssmb_maxiob_title">Μέγιστη συνολική IOB το OpenAPS δεν μπορεί να πάει πάνω από [U]</string>
     <string name="openapssmb_maxiob_summary">Αυτή η τιμή ονομάζεται μέγιστη IOB στο OpenAPS\nTο OpenAPS δεν θα προσθέσει περισσότερη ινσουλίνη αν η τρέχουσα IOB είναι μεγαλύτερη από αυτή την τιμή</string>
     <string name="pump_stopped">Η αντλία σταμάτησε</string>
@@ -997,7 +950,6 @@
     <string name="adjustprofileinns">Αλλαγές πρέπει να γίνουν στο NS</string>
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
     <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να ενεργοποιήσετε το AndroidAPS για να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
-    <string name="enableobjectives">Ενεργοποιήσετε τους Στόχους</string>
     <string name="apssetup">Ρυθμίστε την προσθήκη APS</string>
     <string name="sensitivitysetup">Ρυθμίσετε την προσθήκη Ευαισθησία</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
@@ -1055,7 +1007,6 @@
     <string name="error_adding_treatment_title">Ελλιπή δεδομένα θεραπείας</string>
     <string name="maintenance_settings">Ρυθμίσεις συντήρησης</string>
     <string name="maintenance_email">E-mail</string>
-    <string name="invalid_email_message">Μη έγκυρο Email</string>
     <string name="maintenance_amount">Αριθμός αρχείων καταγραφής για αποστολή</string>
     <string name="maintenance">Συντήρηση</string>
     <string name="maintenance_shortname">ΣΥΝΤΗΡ</string>
@@ -1117,7 +1068,6 @@
     <string name="manufacturing_date">Ημερομηνία κατασκευής</string>
     <string name="delete_pairing">Διαγραφή σύζευξης</string>
     <string name="pairing_information">Πληροφορίεςσύζευξης</string>
-    <string name="refreh_status">Ανανέωση κατάστασης</string>
     <string name="start_pump">Έναρξη αντλίας</string>
     <string name="stop_pump">Διακοπή αντλίας</string>
     <string name="operating_mode">Κατάσταση λειτουργίας</string>
@@ -1269,6 +1219,7 @@
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Διαφορά BG</string>
+    <string name="deltalabel_u">Διαφορά BG [%1$s]</string>
     <string name="currentlocation">Τρέχουσα θέση</string>
     <string name="location">Τοποθεσία</string>
     <string name="latitude_short">Lat:</string>
@@ -1281,12 +1232,9 @@
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Όνομα εργασίας</string>
-    <string name="eventname">Όνομα συμβάντος</string>
     <string name="edit_short">Επεξεργασία</string>
     <string name="please_choose_an_action_type">Επιλέξτε έναν τύπο δράσης:</string>
     <string name="please_choose_a_trigger_type">Επιλέξτε έναν τύπο ενεργοποίησης:</string>
-    <string name="if_label">Αν:</string>
-    <string name="then_label">Έπειτα:</string>
     <string name="triggers">Ενεργοποιήσεις:</string>
     <string name="remove_label">ΜΕΤΑΚΙΝΗΣΗ</string>
     <string name="preconditions">Προϋποθέσεις:</string>
@@ -1307,7 +1255,6 @@
     <string name="medtronic_pump_frequency_worldwide">Παγκοσμίως (868 Mhz)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Κωδικοποίηση λογισμικού 4b6b</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Κωδικοποίηση hardware 4b6b</string>
-    <string name="rileylink_mac_address">Διεύθυνση RileyLink MAC</string>
     <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
     <string name="medtronic_custom_action_clear_bolus_block">Καθαρισμός Bolus Block</string>
     <string name="medtronic_custom_action_reset_rileylink">Επαναφορά Ρυθμίσεων RileyLink</string>
@@ -1319,9 +1266,7 @@
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
     <string name="rileylink_scanner_selected_device">Επιλεγμένο</string>
-    <string name="rileylink_scanner_scan">Scan</string>
     <string name="rileylink_scanner_title">RileyLink Scan</string>
-    <string name="rileylink_scanner_scan_menu">Scan για RileyLink</string>
     <string name="rileylink_scanner_ble_not_supported">Χαμηλή ενέργεια Bluetooth δεν υποστηρίζεται.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth μη ενεργοποιημένο.</string>
     <string name="location_not_found_title">Τοποθεσία μη ενεργοποιημένη</string>
@@ -1334,10 +1279,8 @@
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Ρυθμίσεις</string>
     <string name="rileylink_settings_tab2">Ιστορικό</string>
-    <string name="rileylink_settings_tab3">Συσκευή</string>
     <string name="rileylink_status">Κατάσταση RileyLink</string>
     <string name="medtronic_pump_status">Κατάσταση Αντλίας</string>
-    <string name="rileylink_settings_title">Ρυθμίσεις RileyLink</string>
     <string name="title_activity_rileylink_settings">Ρυθμίσεις RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_configured_address">Διαμορφωμένη Διεύθυνση</string>
@@ -1402,7 +1345,6 @@
     <string name="medtronic_pump_status_waking_up">Ξύπνημα</string>
     <string name="medtronic_pump_status_error_comm">Σφάλμα με επικοινωνία</string>
     <string name="medtronic_pump_status_timeout_comm">Λήξη χρόνου επικοινωνίας</string>
-    <string name="medtronic_pump_status_problem_contacting">Πρόβλημα επικοινωνίας με Αντλία</string>
     <string name="medtronic_pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
     <string name="medtronic_pump_status_invalid_config">Μη έγκυρη παραμετροποίηση</string>
     <string name="medtronic_pump_status_active">Ενεργή</string>
@@ -1420,7 +1362,6 @@
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Το Βασικό Προφίλ είναι ίδιο, οπότε δεν θα μπει ξανά.</string>
     <string name="medtronic_cmd_desc_get_history">Βλέπε Ιστορικό - Σελίδα %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Βλέπε Ιστορικό - Σελίδα %1$d</string>
-    <string name="medtronic_cmd_desc_get_history_base">Βλέπε Ιστορικό - Σελίδα %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Πάρτε Ώρα Αντλίας</string>
     <string name="medtronic_cmd_desc_get_settings">Λάβετε ρυθμίσεις</string>
     <string name="medtronic_cmd_desc_get_model">Λάβετε Μοντέλο Αντλίας</string>
@@ -1429,12 +1370,36 @@
     <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
-    <string name="pump_no_connection_h">Αποσυνδεδεμένο για %1$d ώρες %2$d λεπτά</string>
-    <string name="pump_no_connection_d">Αποσυνδεδεμένο για %1$d μέρες %2$d ώρες</string>
     <string name="insulinFromCob"><![CDATA[Ινσουλίνη COB: <font color=\'%1$s\'>%2$.1fg %3$.2f</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να είναι κλειστό</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
+    <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
+    <string name="loading">Φόρτωση ...</string>
+    <string name="snooze">Αναβολή</string>
+    <string name="accomplished">Επιτεύχθηκε: %1$s</string>
+    <string name="objectives_usage_objective">Μάθε πως να ελέγχεις το AndroidAPS</string>
+    <string name="objectives_usage_gate">Κάντε διαφορετικές ενέργειες στο AndroidAPS</string>
+    <string name="objectives_useprofileswitch">Θέστε το προφίλ στο 90% για 10 λεπτά (Παρατεταμένο πάτημα του προφίλ στην Επισκόπηση)</string>
+    <string name="objectives_usedisconnectpump">Προσομοίωση ένδειξης. Αποσυνδέστε την αντλία για 1 ώρα (Παρατεταμένο στο Ανοιχτό Κύκλωμα)</string>
+    <string name="objectives_usereconnectpump">... και επανασυνδέστε με τον ίδιο τρόπο</string>
+    <string name="objectives_usetemptarget">Φτιάξτε προσωρινούς στόχους με διάρκεια 10 λεπτά (Παρατεταμένο πάτημα στον στόχο σας)</string>
+    <string name="objectives_useactions">Στην Διαμόρφωση ενεργοποιήστε την προσθήκη Ενέργειες, κάντε την ορατή ώστε να την βλέπετε από το δικό της tab</string>
+    <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
+    <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
+    <string name="objectives_button_enter">Εισαγωγή</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Εισαγάγετε τον κωδικό που λαμβάνετε από τους προγραμματιστές για να παρακάμψετε τους υπόλοιπους στόχους</string>
+    <string name="codeaccepted">Κωδικός αποδεκτός</string>
+    <string name="codeinvalid">Μη έγκυρος κωδικός</string>
+    <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
+    <string name="objectives_exam_gate">Διαβάστε και απαντήστε τις ερωτήσεις σωστά</string>
+    <string name="answerdisabledto">Οι απαντήσεις εμφανίζονται στο: %1$s</string>
+    <string name="wronganswer">Λάθος απάντηση!</string>
+    <string name="unfinshed_button">Επόμενο ημιτελές</string>
+    <string name="close">Κλείσιμο</string>
+    <string name="requestcode">Κωδικός αιτήματος: %1$s</string>
+    <string name="objectives_hint">(ελέγξτε όλες τις σωστές απαντήσεις)</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d ημέρα</item>
         <item quantity="other">%1$d ημέρες</item>

@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
@@ -193,7 +194,8 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                     isTempTarget
             );
         } catch (JSONException e) {
-            log.error("Unable to set data: " + e.toString());
+            FabricPrivacy.logException(e);
+            return;
         }
 
 
@@ -201,22 +203,30 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         if (L.isEnabled(L.APS))
             Profiler.log(log, "AMA calculation", start);
         // Fix bug determine basal
-        if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
-            determineBasalResultAMA.tempBasalRequested = false;
+        if (determineBasalResultAMA == null) {
+            if (L.isEnabled(L.APS))
+                log.error("SMB calculation returned null");
+            lastDetermineBasalAdapterAMAJS = null;
+            lastAPSResult = null;
+            lastAPSRun = 0;
+        } else {
+            if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !TreatmentsPlugin.getPlugin().isTempBasalInProgress())
+                determineBasalResultAMA.tempBasalRequested = false;
 
-        determineBasalResultAMA.iob = iobArray[0];
+            determineBasalResultAMA.iob = iobArray[0];
 
-        long now = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
 
-        try {
-            determineBasalResultAMA.json.put("timestamp", DateUtil.toISOString(now));
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            try {
+                determineBasalResultAMA.json.put("timestamp", DateUtil.toISOString(now));
+            } catch (JSONException e) {
+                log.error("Unhandled exception", e);
+            }
+
+            lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS;
+            lastAPSResult = determineBasalResultAMA;
+            lastAPSRun = now;
         }
-
-        lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS;
-        lastAPSResult = determineBasalResultAMA;
-        lastAPSRun = now;
         RxBus.INSTANCE.send(new EventOpenAPSUpdateGui());
 
         //deviceStatus.suggested = determineBasalResultAMA.json;

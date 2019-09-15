@@ -182,6 +182,7 @@ public class MedtronicPumpStatus extends PumpStatus {
                 } else {
                     this.pumpType = medtronicPumpMap.get(pumpTypePart);
                     this.medtronicDeviceType = medtronicDeviceTypeMap.get(pumpTypePart);
+                    this.pumpDescription.setPumpDescription(this.pumpType);
 
                     if (pumpTypePart.startsWith("7"))
                         this.reservoirFullUnits = 300;

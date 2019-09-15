@@ -165,8 +165,14 @@
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_show_statuslights"
-                android:summary="@string/show_statuslights_summary"
                 android:title="@string/show_statuslights" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:dependency="@string/key_show_statuslights"
+                android:key="@string/key_show_statuslights_extended"
+                android:summary="@string/show_statuslights_extended_summary"
+                android:title="@string/show_statuslights_extended" />
 
             <com.andreabaccega.widget.ValidatingEditTextPreference
                 android:defaultValue="80"

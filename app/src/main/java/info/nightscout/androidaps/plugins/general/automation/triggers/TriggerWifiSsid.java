@@ -65,7 +65,7 @@ public class TriggerWifiSsid extends Trigger {
             return true;
         }
 
-        boolean doRun = eventNetworkChange.wifiConnected && comparator.getValue().check(eventNetworkChange.ssid, getValue());
+        boolean doRun = eventNetworkChange.wifiConnected && comparator.getValue().check(eventNetworkChange.getSsid(), getValue());
         if (doRun) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
