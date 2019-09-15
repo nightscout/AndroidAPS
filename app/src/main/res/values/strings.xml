@@ -1516,7 +1516,7 @@
     <string name="rileylink_state_not_started">Not Started</string>
     <string name="rileylink_state_rl_init">RileyLink Initialization…</string>
     <string name="rileylink_state_rl_error">RileyLink Error</string>
-    <string name="rileylink_state_pc_tune_up">Tunning up RileyLink and Pump</string>
+    <string name="rileylink_state_pc_tune_up">Tuning up RileyLink and Pump</string>
     <string name="rileylink_state_pc_error">Problem connecting to Pump</string>
     <string name="rileylink_state_connected">Connected</string>
 
