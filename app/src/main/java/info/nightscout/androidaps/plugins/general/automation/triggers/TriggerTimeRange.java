@@ -53,7 +53,7 @@ public class TriggerTimeRange extends Trigger {
 
     @Override
     public boolean shouldRun() {
-        int currentMinSinceMidnight = getMinSinceMidnight(System.currentTimeMillis());
+        int currentMinSinceMidnight = getMinSinceMidnight(DateUtil.now());
 
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
@@ -147,7 +147,7 @@ public class TriggerTimeRange extends Trigger {
         return minutesSinceMidnight*60*1000;
     }
 
-    int getMinSinceMidnight(long time) {
+    public int getMinSinceMidnight(long time) {
         // if passed argument is smaller than 1440 ( 24 h * 60 min ) that value is already converted
         if (time < 1441)
             return (int) time;
@@ -182,7 +182,7 @@ public class TriggerTimeRange extends Trigger {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         start = getMinSinceMidnight(calendar.getTimeInMillis());
-                        startButton.setText(DateUtil.timeString(start));
+                        startButton.setText(DateUtil.timeString(toMilis(start)));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
@@ -202,7 +202,7 @@ public class TriggerTimeRange extends Trigger {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         end = getMinSinceMidnight(calendar.getTimeInMillis());
-                        endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(end));
+                        endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end)));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
