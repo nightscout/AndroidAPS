@@ -37,6 +37,7 @@ public class TriggerTimeRange extends Trigger {
     // in minutes since midnight 60 means 1AM
     private int start;
     private int end;
+    long timeZoneOffset = DateUtil.getTimeZoneOffsetMs();
 
     public TriggerTimeRange() {
         
@@ -128,8 +129,8 @@ public class TriggerTimeRange extends Trigger {
     }
 
     TriggerTimeRange period(int start, int end) {
-        this.start = start;
-        this.end = end;
+        this.start = getMinSinceMidnight(start*60000);
+        this.end = getMinSinceMidnight(end*60000);
         return this;
     }
 
@@ -152,7 +153,7 @@ public class TriggerTimeRange extends Trigger {
         if (time < 1441)
             return (int) time;
         Date date = new Date(time);
-        Calendar calendar = GregorianCalendar.getInstance();
+        Calendar calendar = DateUtil.gregorianCalendar();
         calendar.setTime(date);
         return (calendar.get(Calendar.HOUR_OF_DAY) * 60) + calendar.get(Calendar.MINUTE);
     }

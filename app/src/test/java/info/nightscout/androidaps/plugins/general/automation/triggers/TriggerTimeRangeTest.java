@@ -19,6 +19,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -27,21 +28,21 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class TriggerTimeRangeTest {
 
     int now = 754;
-    String timeJson = "{\"data\":{\"lastRun\":0,\"start\":753,\"end\":784},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeRange\"}";
+    int timeZoneOffset = (int) (DateUtil.getTimeZoneOffsetMs() / 60000);
+
+    String timeJson = "{\"data\":{\"lastRun\":0,\"start\":873,\"end\":904},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeRange\"}";
 
     @Test
     public void shouldRunTest() {
 
         TriggerTimeRange t;
-//        when(System.currentTimeMillis()).thenReturn((long) now*60000);
-        when(DateUtil.now()).thenReturn((long) now*60000);
-
+        now = now + timeZoneOffset;
         // range starts 1 min in the future
-        t = new TriggerTimeRange().period(now + 1, now + 30);
+        t = new TriggerTimeRange().period(now + 1 - timeZoneOffset, now + 30 - timeZoneOffset);
         Assert.assertEquals(false, t.shouldRun());
 
         // range starts 30 min back
-        t = new TriggerTimeRange().period((int) (System.currentTimeMillis() - 30*60000), now + 30);
+        t = new TriggerTimeRange().period(now - 30 - timeZoneOffset, now + 30 - timeZoneOffset);
         Assert.assertEquals(true, t.shouldRun());
 
         // Period is all day long
@@ -65,8 +66,8 @@ public class TriggerTimeRangeTest {
         TriggerTimeRange t = new TriggerTimeRange().period(120 , 180);
 
         TriggerTimeRange t2 = (TriggerTimeRange) Trigger.instantiate(new JSONObject(t.toJSON()));
-        Assert.assertEquals(now - 1, t2.period(753 , 360).getStart());
-        Assert.assertEquals(360, t2.period(753 , 360).getEnd());
+        Assert.assertEquals(timeZoneOffset + now - 1, t2.period(753 , 360).getStart());
+        Assert.assertEquals(timeZoneOffset + 360, t2.period(753 , 360).getEnd());
     }
 
     @Test
@@ -100,10 +101,10 @@ public class TriggerTimeRangeTest {
         AAPSMocker.mockBus();
 
         PowerMockito.mockStatic(DateUtil.class);
-        when(DateUtil.now()).thenReturn((long) now*60*60*10000);
+        when(DateUtil.now()).thenReturn((long) now * 60000);
 
         GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(now);
+        calendar.setTimeInMillis((long) now * 60000);
         when(DateUtil.gregorianCalendar()).thenReturn(calendar);
     }
 }
