@@ -19,19 +19,98 @@
             android:textColor="@android:color/holo_red_light"
             android:textStyle="bold" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/linearBlockBackground"
-            android:layout_marginStart="10dp"
-            android:text="@string/units"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/selected_profile"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/localprofile_profile_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:src="@drawable/add"
+                android:contentDescription="@string/addnew" />
+
+            <ImageView
+                android:id="@+id/localprofile_profile_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:src="@drawable/remove"
+                android:contentDescription="@string/remove_label"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:gravity="start"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/profile_name"
+                android:labelFor="@+id/localprofile_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/localprofile_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="text"
+                android:importantForAutofill="no" />
+
+        </LinearLayout>
+
+       <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="10dp"
+               android:layout_marginBottom="20dp"
+               android:text="@string/units"
+               android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <RadioButton
                 android:id="@+id/localprofile_mgdl"
@@ -43,62 +122,45 @@
                 android:id="@+id/localprofile_mmol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:text="@string/mmol" />
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/linearBlockBackground"
-            android:layout_marginStart="10dp"
-            android:text="@string/dia"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="start"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:textAppearance="?android:attr/textAppearanceSmall">
+            android:paddingTop="5dp">
 
-            <!-- dummy to align with TimeListEdits added dynamically -->
-            <Spinner
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:minWidth="80dp"
-                android:visibility="invisible"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="@string/dia"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <info.nightscout.androidaps.utils.NumberPicker
                 android:id="@+id/localprofile_dia"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp" />
 
-            <!-- dummy to align with TimeListEdits added dynamically -->
-            <ImageView
-                android:id="@+id/timelistedit_add"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:src="@drawable/add"
-                android:visibility="invisible"/>
+                android:text="@string/hours"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-            <!-- dummy to align with TimeListEdits added dynamically -->
-            <ImageView
-                android:id="@+id/timelistedit_remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:src="@drawable/remove"
-                android:visibility="invisible"/>
         </LinearLayout>
 
 
@@ -136,7 +198,7 @@
             android:id="@+id/localprofile_profileswitch"
             style="?android:attr/buttonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"
