@@ -145,8 +145,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (!Config.NSCLIENT) {
                     addPreferencesFromResource(R.xml.pref_password);
                 }
+                addPreferencesFromResource(R.xml.pref_general);
                 addPreferencesFromResource(R.xml.pref_age);
-                addPreferencesFromResource(R.xml.pref_language);
 
                 addPreferencesFromResource(R.xml.pref_overview);
 

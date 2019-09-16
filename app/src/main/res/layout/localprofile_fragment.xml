@@ -35,32 +35,29 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/localprofile_spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
-                android:scaleX="2"
-                android:scaleY="2"
                 android:src="@drawable/add"
                 android:contentDescription="@string/addnew" />
 
             <ImageView
                 android:id="@+id/localprofile_profile_remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="10dp"
-                android:scaleX="2"
-                android:scaleY="2"
                 android:src="@drawable/remove"
                 android:contentDescription="@string/remove_label"/>
 
