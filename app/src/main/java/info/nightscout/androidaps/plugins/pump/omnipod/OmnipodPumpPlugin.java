@@ -109,7 +109,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
 
         if (omnipodCommunicationManager == null) {
-            omnipodCommunicationManager = OmnipodManager.getInstance();
+            omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }
 
         omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);

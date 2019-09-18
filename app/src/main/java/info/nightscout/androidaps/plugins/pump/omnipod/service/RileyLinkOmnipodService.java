@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
@@ -112,7 +112,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        if(OmnipodManager.getInstance() == null) {
+        if(AapsOmnipodManager.getInstance() == null) {
             PodSessionState podState = null;
             if (SP.contains(OmnipodConst.Prefs.PodState)) {
                 try {
@@ -123,9 +123,9 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                     LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
                 }
             }
-            omnipodCommunicationManager = new OmnipodManager(new OmnipodCommunicationService(rfspy), podState);
+            omnipodCommunicationManager = new AapsOmnipodManager(new OmnipodCommunicationService(rfspy), podState);
         } else {
-            omnipodCommunicationManager = OmnipodManager.getInstance();
+            omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }
     }
 
@@ -137,8 +137,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
-        if(omnipodCommunicationManager instanceof OmnipodManager) { // Eros
-            return ((OmnipodManager) omnipodCommunicationManager).getCommunicationService();
+        if(omnipodCommunicationManager instanceof AapsOmnipodManager) { // Eros
+            return ((AapsOmnipodManager) omnipodCommunicationManager).getCommunicationService();
         }
         // FIXME is this correct for Dash?
         return (RileyLinkCommunicationManager)omnipodCommunicationManager;

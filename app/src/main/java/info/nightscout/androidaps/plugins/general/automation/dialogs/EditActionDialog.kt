@@ -26,7 +26,7 @@ class EditActionDialog : DialogFragment() {
             bundle.getString("action")?.let { action = Action.instantiate(JSONObject(it)) }
         }
 
-        dialog.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.automation_dialog_action, container, false)
     }
 

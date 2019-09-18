@@ -26,7 +26,7 @@ class ChooseActionDialog : DialogFragment() {
             checkedIndex = bundle.getInt("checkedIndex")
         }
 
-        dialog.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.automation_dialog_choose_action, container, false)
     }
 

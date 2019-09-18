@@ -7,12 +7,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSetupState;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -47,7 +47,7 @@ public class PairServiceTest {
         VersionResponse versionResponse = new PairService().executeAssignAddressCommand(communicationService, setupState);
 
         // verify
-        verify(communicationService).exchangeMessages(eq(VersionResponse.class), eq(setupState), messageCaptor.capture(), eq(Constants.DEFAULT_ADDRESS), eq(0x1f173217));
+        verify(communicationService).exchangeMessages(eq(VersionResponse.class), eq(setupState), messageCaptor.capture(), eq(OmnipodConst.DEFAULT_ADDRESS), eq(0x1f173217));
         verifyNoMoreInteractions(communicationService);
         verifyZeroInteractions(response);
 

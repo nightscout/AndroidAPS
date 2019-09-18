@@ -32,25 +32,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTe
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleMapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
 
-public class OmnipodManager implements OmnipodCommunicationManagerInterface {
+public class OmnipodManager {
     private final OmnipodCommunicationService communicationService;
     private PodSessionState podState;
-    private static OmnipodManager instance;
-
-    // FIXME this is dirty
-    public static OmnipodManager getInstance() {
-        return instance;
-    }
 
     public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState) {
         if (communicationService == null) {
@@ -58,9 +49,7 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         }
         this.communicationService = communicationService;
         this.podState = podState;
-        instance = this;
     }
-
 
     public PumpEnactResult insertCannula(Profile profile) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
@@ -88,7 +77,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-
     public PumpEnactResult pairAndPrime() {
         try {
             if (podState == null) {
@@ -114,7 +102,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult cancelBolus() {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -131,12 +118,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
-    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podIniReceiver) {
-        return null;
-    }
-
-    @Override
     public PumpEnactResult getPodStatus() {
         if (podState == null) {
             // TODO use string resource
@@ -155,7 +136,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult deactivatePod() {
         if (podState == null) {
             // TODO use string resource
@@ -174,7 +154,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -193,18 +172,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
-    public PumpEnactResult resetPodStatus() {
-        return null;
-    }
-
-    @Override
-    public PumpEnactResult setBolus(Double amount) {
-        return null;
-    }
-
-
-    // TODO rename back
     public PumpEnactResult resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
@@ -212,7 +179,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    // TODO rename back
     public PumpEnactResult bolus(Double units) {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -229,7 +195,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -248,7 +213,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult cancelTemporaryBasal() {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -265,7 +229,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    @Override
     public PumpEnactResult acknowledgeAlerts() {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -299,7 +262,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult suspendDelivery() {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -316,7 +278,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult resumeDelivery() {
         if (!isInitialized()) {
             return createNotInitializedResult();
@@ -334,7 +295,6 @@ public class OmnipodManager implements OmnipodCommunicationManagerInterface {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult setTime() {
         if (!isInitialized()) {
             return createNotInitializedResult();
