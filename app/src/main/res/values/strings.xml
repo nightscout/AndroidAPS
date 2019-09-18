@@ -4,20 +4,20 @@
     <string name="af_lang" translatable="false">Afrikaans</string>
     <string name="bg_lang" translatable="false">Bulgarian</string>
     <string name="nl_lang" translatable="false">Dutch</string>
-<!--    <string name="fi_lang" translatable="false">Finnish</string> -->
+    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <string name="fr_lang" translatable="false">French</string>
     <string name="de_lang" translatable="false">German</string>
     <string name="el_lang" translatable="false">Greek</string>
-<!--   <string name="he_lang" translatable="false">Hebrew</string> -->
+    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <string name="zh_lang" translatable="false">Chinese</string>
-<!--    <string name="ga_lang" translatable="false">Irish</string> -->
+    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <string name="it_lang" translatable="false">Italian</string>
-<!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="ko_lang" translatable="false">Korean</string>
     <string name="lt_lang" translatable="false">Lithuanian</string>
     <string name="pl_lang" translatable="false">Polish</string>
     <string name="pt_lang" translatable="false">Portuguese</string>
-<!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
+    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="ro_lang" translatable="false">Romanian</string>
     <string name="ru_lang" translatable="false">Russian</string>
     <string name="sk_lang" translatable="false">Slovak</string>
@@ -1662,6 +1662,7 @@
 
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">Operation is not possible.\n\n You need to wait few minutes, until AAPS tries to set profile for first time.</string>
 
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_cmd_init_pod">Init Pod</string>
@@ -1680,7 +1681,6 @@
     <string name="omnipod_dash_name" translatable="false">Omnipod Dash</string>
     <string name="omnipod_dash_name_short" translatable="false">DASH</string>
     <string name="description_pump_omnipod_dash">Pump integration for Omnipod Dash.</string>
-
 
 
     <plurals name="objective_days">

@@ -61,6 +61,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.LogReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -421,7 +422,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isThisProfileSet(Profile profile) {
 
         // TODO status was not yet read from pod
+        // TODO maybe not possible, need to see how we will handle that
         if (currentProfile == null) {
+            this.currentProfile = profile;
             return true;
         }
 
@@ -815,7 +818,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             break;
 
             case FillCanulaSetBasalProfile: {
-                omnipodUIComm.executeCommand(OmnipodCommandType.FillCanulaAndSetBasalProfile, PodInitActionType.FillCannulaSetBasalProfileWizardStep, this.currentProfile, logReceiver);
+                if (this.currentProfile != null) {
+                    omnipodUIComm.executeCommand(OmnipodCommandType.FillCanulaAndSetBasalProfile, PodInitActionType.FillCannulaSetBasalProfileWizardStep, logReceiver, this.currentProfile);
+                } else {
+                    OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.combo_warning),
+                            MainApp.gs(R.string.omnipod_error_operation_not_possible_no_profile), null);
+                }
             }
             break;
 
