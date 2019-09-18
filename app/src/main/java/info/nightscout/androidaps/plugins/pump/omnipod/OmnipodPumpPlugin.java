@@ -51,11 +51,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionT
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.LogReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -763,8 +765,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private CustomAction customActionResetRLConfig = new CustomAction(
             R.string.medtronic_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
 
-    protected CustomAction customActionInitPod = new CustomAction(
-            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.InitPod, true);
+    protected CustomAction customActionPairAndPrime = new CustomAction(
+            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.PairAndPrime, true);
+
+    protected CustomAction customActionFillCanullaSetBasalProfile = new CustomAction(
+            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
 
     protected CustomAction customActionDeactivatePod = new CustomAction(
             R.string.omnipod_cmd_deactivate_pod, OmnipodCustomActionType.DeactivatePod, false);
@@ -779,13 +784,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (customActions == null) {
             this.customActions = Arrays.asList(
                     customActionResetRLConfig, //
-                    customActionInitPod, //
+                    customActionPairAndPrime, //
+                    customActionFillCanullaSetBasalProfile, //
                     customActionDeactivatePod, //
                     customActionResetPod);
         }
 
         return this.customActions;
     }
+
+
+    LogReceiver logReceiver = new LogReceiver();
 
     // TODO we need to brainstorm how we want to do this -- Andy
     @Override
@@ -800,8 +809,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             }
             break;
 
-            case InitPod: {
-                omnipodUIComm.executeCommand(OmnipodCommandType.InitPod);
+            case PairAndPrime: {
+                omnipodUIComm.executeCommand(OmnipodCommandType.PairAndPrimePod, PodInitActionType.PairAndPrimeWizardStep, logReceiver);
+            }
+            break;
+
+            case FillCanulaSetBasalProfile: {
+                omnipodUIComm.executeCommand(OmnipodCommandType.FillCanulaAndSetBasalProfile, PodInitActionType.FillCannulaSetBasalProfileWizardStep, this.currentProfile, logReceiver);
             }
             break;
 
@@ -835,10 +849,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         switch (customAction) {
 
-            case InitPod: {
-                this.customActionInitPod.setEnabled(isEnabled);
+            case PairAndPrime: {
+                this.customActionPairAndPrime.setEnabled(isEnabled);
             }
             break;
+
+            case FillCanulaSetBasalProfile: {
+                this.customActionFillCanullaSetBasalProfile.setEnabled(isEnabled);
+            }
+            break;
+
 
             case DeactivatePod: {
                 this.customActionDeactivatePod.setEnabled(isEnabled);

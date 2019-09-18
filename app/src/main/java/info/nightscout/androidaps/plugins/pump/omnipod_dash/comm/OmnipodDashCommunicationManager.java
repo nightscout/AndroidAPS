@@ -65,7 +65,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
 
     @Override
-    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver) {
+    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
         return null;
     }
 

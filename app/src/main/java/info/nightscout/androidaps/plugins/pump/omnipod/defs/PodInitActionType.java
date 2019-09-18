@@ -10,9 +10,9 @@ public enum PodInitActionType {
     PairPod(PairAndPrimeWizardStep), //
     PrimePod(PairAndPrimeWizardStep), //
 
-    FillCannulaWizardStep,
-    FillCannula(FillCannulaWizardStep),
-    SetBasalProfile(FillCannulaWizardStep);
+    FillCannulaSetBasalProfileWizardStep,
+    FillCannula(FillCannulaSetBasalProfileWizardStep),
+    SetBasalProfile(FillCannulaSetBasalProfileWizardStep);
 
 
     private PodInitActionType[] parent;
@@ -41,7 +41,7 @@ public enum PodInitActionType {
 
         if (podType == OmnipodPodType.Eros) {
             outList.add(PodInitActionType.PairAndPrimeWizardStep);
-            outList.add(PodInitActionType.FillCannulaWizardStep);
+            outList.add(PodInitActionType.FillCannulaSetBasalProfileWizardStep);
         } else {
             // TODO we might have different wizard steps, with different handling for Dash
         }

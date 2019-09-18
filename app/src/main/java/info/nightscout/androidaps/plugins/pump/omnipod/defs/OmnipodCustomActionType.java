@@ -9,7 +9,9 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 public enum OmnipodCustomActionType implements CustomActionType {
 
     ResetRileyLinkConfiguration(), //
-    InitPod(), //
+    PairAndPrime(), //
+    FillCanulaSetBasalProfile(), //
+    //InitPod(), //
     DeactivatePod(), //
     ResetPodStatus(), //
     ;
