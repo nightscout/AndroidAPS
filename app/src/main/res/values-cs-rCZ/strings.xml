@@ -565,8 +565,6 @@
     <string name="enablesuperbolus">Povolit superbolus</string>
     <string name="enablesuperbolus_summary">Povolení superbolusu v kalkulátoru. Nepovolujte, dokud se nenaučíte, co to opravdu dělá. MŮŽE ZPŮSOBIT PŘEDÁVKOVÁNÍ INZULÍNEM PŘI NESPRÁVNÉM POUŽITÍ!</string>
     <string name="show_statuslights">Zobrazit stavové indikátory na domovské obrazovce</string>
-    <string name="show_statuslights_easy">Zobrazit originální stavové indikátory na domovské obrazovce</string>
-    <string name="show_statuslights_easy_summary">Povolí originální stavové indikátory pro stáří kanyly, inzulínu, senzoru, zásobníku a baterie na domovské obrazovce.</string>
     <string name="show_statuslights_extended">Zobrazit rozšířené stavové indikátory na domovské obrazovce</string>
     <string name="show_statuslights_extended_summary">Povolí rozšířené stavové indikátory pro stáří kanyly, inzulínu, senzoru, zásobníku a baterie na domovské obrazovce.</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
@@ -642,7 +640,7 @@
     <string name="mdtp_cancel">Zrušit</string>
     <string name="notloadedplugins">Všechny profily nenačteny!</string>
     <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
-    <string name="ns_localbroadcasts">Povolit odesílání do ostatních aplikací (jako xDrip)</string>
+    <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo NSClient!</string>
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="careportal_activity_label">AKTIVITA &amp; ZPĚTNÁ VAZBA</string>
     <string name="careportal_carbsandbolus_label">SACHARIDY &amp; BOLUSY</string>
@@ -1268,9 +1266,9 @@
     <string name="rileylink_scanner_selected_device">Vybráno</string>
     <string name="rileylink_scanner_title">Vyhledávání RileyLinku</string>
     <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy nepodporováno.</string>
-    <string name="rileylink_scanner_ble_not_enabled">Bluetooth není povolen.</string>
+    <string name="rileylink_scanner_ble_not_enabled">Bluetooth není povoleno.</string>
     <string name="location_not_found_title">Zjišťování místa není povoleno</string>
-    <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS Vás nesleduje a po provedení párování to může být opět zakázáno.</string>
+    <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS vás nesleduje a po provedení párování můžete tuto volbu opět zakázat.</string>
     <string name="location_yes">Povolit</string>
     <string name="location_no">Ne</string>
     <string name="rileylink_scanner_scanning">Vyhledávání</string>
@@ -1331,7 +1329,7 @@
     <string name="medtronic_error_pump_wrong_max_bolus_set">Chybný max. bolus na pumpě (musí být %1$.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Chybný max. bazál na pumpě (musí být %1$.2f).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Operace není možná.\n\nNejdříve je nutné nakonfigurovat pumpu, než bude možné tuto funkci použít.</string>
-    <string name="medtronic_error_pump_24h_time_change_requested">Požadována změna času větší než 24h.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Požadována změna času větší než 24 h.</string>
     <!-- MDT History -->
     <string name="medtronic_history_group_basal">Bazály</string>
     <string name="medtronic_history_group_configuration">Konfigurace</string>
@@ -1370,9 +1368,9 @@
     <string name="medtronic_cmd_desc_get_tbr">Načítání dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_tbr">Nastavování dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_bolus">Nastavování bolusu</string>
-    <string name="insulinFromCob"><![CDATA[Inzulín z COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Aplikováno omezení bolusu: %2$.2fU na %3$.2fU</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekována pomalá absorbce sacharidů: %2$d%% času. Překontrolujte kalkulaci. COB může nadhodnocené a proto může být počítáno více inzulínu !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekována pomalá absorbce sacharidů: %2$d% % času. Překontrolujte kalkulaci. COB může být nadhodnocené, a proto může být počítáno více inzulínu !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="partialboluswizard">Podat tuto část z výsledku kalkulace [%]</string>
     <string name="deliverpartofboluswizard">Kalkulátor provede výpočet, ale dodána je pouze tato část inzulínu. Výhodné při používání SMB algoritmu.</string>

@@ -625,7 +625,6 @@
     <string name="mdtp_cancel">취소</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
-    <string name="ns_localbroadcasts">(xDrip 같은) 다른 앱으로의 브로드캐스트를 활성화합니다.</string>
     <string name="ns_localbroadcasts_title">Local Broadcasts 활성화하기</string>
     <string name="careportal_activity_label">활동 &amp; 피드백</string>
     <string name="careportal_carbsandbolus_label">탄수화물 &amp; Bolus</string>
@@ -1283,7 +1282,6 @@
     <string name="rileylink_state_not_started">시작되지 않았습니다.</string>
     <string name="rileylink_state_rl_init">RileyLink 초기화…</string>
     <string name="rileylink_state_rl_error">RileyLink 에러</string>
-    <string name="rileylink_state_pc_tune_up">RileyLink 와 펌프 튜닝</string>
     <string name="rileylink_state_pc_error">펌프 연결 문제</string>
     <string name="rileylink_state_connected">연결됨</string>
     <!-- RL Errors -->
@@ -1353,7 +1351,6 @@
     <string name="medtronic_cmd_desc_get_tbr">임시 Basal 받기</string>
     <string name="medtronic_cmd_desc_set_tbr">임시 Basal 설정</string>
     <string name="medtronic_cmd_desc_set_bolus">Bolus 설정</string>
-    <string name="insulinFromCob"><![CDATA[COB 인슐린: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus 제약 적용: %2$.2fU 에서 %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

@@ -565,8 +565,6 @@
     <string name="enablesuperbolus">Ενεργοποίηση superbolus στον σύντομο οδηγό</string>
     <string name="enablesuperbolus_summary">Ενεργοποιήστε την λειτουργία superbolus στον σύντομο οδηγό. Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ!</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
-    <string name="show_statuslights_easy">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
-    <string name="show_statuslights_easy_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="show_statuslights_extended">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="show_statuslights_extended_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
@@ -642,7 +640,6 @@
     <string name="mdtp_cancel">Ακύρωση</string>
     <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ!</string>
     <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
-    <string name="ns_localbroadcasts">Ενεργοποιήστε την αποστολή σε άλλες εφαρμογές (όπως xDrip).</string>
     <string name="ns_localbroadcasts_title">Ενεργοποιήστε τις τοπικές αποστολές.</string>
     <string name="careportal_activity_label">ΔΡΑΣΤΗΡΙΟΤΗΤΑ &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">ΥΔΑΤΑΝΘΡΑΚΕΣ &amp; BOLUS</string>
@@ -1300,7 +1297,6 @@
     <string name="rileylink_state_not_started">Δεν ξεκίνησε</string>
     <string name="rileylink_state_rl_init">Αρχικοποίηση του RileyLink…</string>
     <string name="rileylink_state_rl_error">RileyLink Σφάλμα</string>
-    <string name="rileylink_state_pc_tune_up">Ρύθμιση του RileyLink και της αντλίας</string>
     <string name="rileylink_state_pc_error">Πρόβλημα σύνδεσης με την Αντλία</string>
     <string name="rileylink_state_connected">Συνδέθηκε</string>
     <!-- RL Errors -->
@@ -1370,7 +1366,6 @@
     <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
-    <string name="insulinFromCob"><![CDATA[Ινσουλίνη COB: <font color=\'%1$s\'>%2$.1fg %3$.2f</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

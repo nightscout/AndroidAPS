@@ -621,7 +621,6 @@
     <string name="mdtp_cancel">取消</string>
     <string name="notloadedplugins">配置文件加载不完整</string>
     <string name="valuesnotstored">值没有被存储</string>
-    <string name="ns_localbroadcasts">启用广播到其他应用程序（如xDrip）.</string>
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="careportal_activity_label">活动 &amp; 反馈</string>
     <string name="careportal_carbsandbolus_label">碳水化合物 &amp; 大剂量</string>
