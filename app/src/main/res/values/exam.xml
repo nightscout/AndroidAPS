@@ -155,5 +155,11 @@
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="profileswitchtime_60">60</string>
     <string name="profileswitchtime__60">-60</string>
+    <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
+    <string name="basalhelp_label">Topic: Help with basal rates</string>
+    <string name="basalhelp_where">Where to go for help with basalrate etc.</string>
+    <string name="basalhelp_diabetesteam">Your diabetes team</string>
+    <string name="basalhelp_google">Google</string>
+    <string name="basalhelp_facebook">Facebook</string>
 
 </resources>
