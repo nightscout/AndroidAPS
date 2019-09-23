@@ -105,9 +105,9 @@ public enum MedtronicDeviceType {
     }
 
 
-    public static boolean isLargerFormat(MedtronicDeviceType model) {
-        return isSameDevice(model, Medtronic_523andHigher);
-    }
+//    public static boolean isLargerFormat(MedtronicDeviceType model) {
+//        return isSameDevice(model, Medtronic_523andHigher);
+//    }
 
 
     public boolean isFamily() {
@@ -120,13 +120,17 @@ public enum MedtronicDeviceType {
     }
 
 
-    public boolean isLargerFormat() {
+//    public boolean isLargerFormat() {
+//        return isSameDevice(this, Medtronic_523andHigher);
+//    }
+
+    public boolean isMedtronic_523orHigher() {
         return isSameDevice(this, Medtronic_523andHigher);
     }
 
 
     public int getBolusStrokes() {
-        return (isLargerFormat(this)) ? 40 : 10;
+        return (isMedtronic_523orHigher()) ? 40 : 10;
     }
 
 
