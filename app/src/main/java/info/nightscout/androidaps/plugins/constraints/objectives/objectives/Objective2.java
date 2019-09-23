@@ -151,6 +151,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.nsclient_xdripfollower, true))
                 .option(new Option(R.string.nsclient_looponiphone, false))
                 .option(new Option(R.string.nsclient_spikeiphone, true))
+                .hint(new Hint(R.string.nsclient_hint1))
         );
         tasks.add(new ExamTask(R.string.isf_label, R.string.whatistrue,"isf")
                 .option(new Option(R.string.isf_increasingvalue, true))

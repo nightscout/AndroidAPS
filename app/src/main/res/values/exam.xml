@@ -120,6 +120,7 @@
     <string name="nsclient_xdripfollower">xDrip running in follower mode.</string>
     <string name="nsclient_looponiphone">Loop app on iPhone.</string>
     <string name="nsclient_spikeiphone">Spike app on iPhone.</string>
+    <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label">Topic: Insulin Sensitivity Factor</string>
     <string name="isf_increasingvalue">Increasing ISF number will lead to less insulin delivery if you are trying to lower your BG with the bolus wizard.</string>
     <string name="isf_decreasingvalue">Decreasing ISF number will lead to less insulin delivery if you are trying to lower your BG with the bolus wizard.</string>
