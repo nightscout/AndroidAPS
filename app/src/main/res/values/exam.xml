@@ -10,7 +10,6 @@
     <string name="hypott_label">Topic: Hypo Temp-Target</string>
     <string name="hypott_whenhypott">Why is it useful to set a hypo TT?</string>
     <string name="hypott_goinglow">Prevent BG from going low.</string>
-    <string name="hypott_havinglow">To help recovering from a low BG.</string>
     <string name="hypott_preventoversmb">To prevent SMB enactment after a hypo rise from fast carbs.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Which profile can be used and configured offline?</string>
@@ -46,7 +45,6 @@
     <string name="exercise_switchprofileabove100">Do a profile switch above 100%.</string>
     <string name="exercise_stoploop">Stop the loop.</string>
     <string name="exercise_doitbeforestart">Set activity temp-target before the start of exercise.</string>
-    <string name="exercise_doitafterstart">Set activity temp-target after the start of exercise.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_label">Topic: Suspended Loop</string>
     <string name="suspendloop_doigetinsulin">Do I get insulin when loop is suspended?</string>
@@ -115,7 +113,7 @@
     <string name="nsclient_label">Topic: Monitoring Children</string>
     <string name="nsclient_howcanyou">How can you monitor AAPS of your child remotely?</string>
     <string name="nsclient_nightscout">Using a Nightscout site.</string>
-    <string name="nsclient_dexcomfollow">Dexcom Follow app if you are using the original Dexcom app.</string>
+    <string name="nsclient_dexcomfollow">Dexcom Follow app if you are using the original Dexcom app (BG only).</string>
     <string name="nsclient_dexcomfollowxdrip">Dexcom Follow if you are using the xDrip app.</string>
     <string name="nsclient_xdripfollower">xDrip running in follower mode.</string>
     <string name="nsclient_looponiphone">Loop app on iPhone.</string>

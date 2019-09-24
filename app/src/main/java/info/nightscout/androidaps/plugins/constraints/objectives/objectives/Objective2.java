@@ -26,7 +26,6 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.hypott_label, R.string.hypott_whenhypott,"hypott")
                 .option(new Option(R.string.hypott_goinglow, false))
-                .option(new Option(R.string.hypott_havinglow, false))
                 .option(new Option(R.string.hypott_preventoversmb, true))
                 .hint(new Hint(R.string.hypott_hint1))
         );
@@ -66,7 +65,6 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.exercise_switchprofileabove100, false))
                 .option(new Option(R.string.exercise_stoploop, false))
                 .option(new Option(R.string.exercise_doitbeforestart, true))
-                .option(new Option(R.string.exercise_doitafterstart, false))
                 .hint(new Hint(R.string.exercise_hint1))
         );
        tasks.add(new ExamTask(R.string.suspendloop_label, R.string.suspendloop_doigetinsulin,"suspendloop")
