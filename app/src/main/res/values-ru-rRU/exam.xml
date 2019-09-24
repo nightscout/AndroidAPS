@@ -123,6 +123,7 @@ Context | Edit Context</string>
     <string name="nsclient_xdripfollower">xDrip в режиме follower.</string>
     <string name="nsclient_looponiphone">Приложения Loop на iPhone.</string>
     <string name="nsclient_spikeiphone">Приложения Spike на iPhone.</string>
+    <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label">Тема: Коэффициент чувствительности к инсулину</string>
     <string name="isf_increasingvalue">Повышение значения ISF приведет к снижению подачи инсулина, если пытаться снизить ГК при помощи мастера болюса.</string>
     <string name="isf_decreasingvalue">Понижение значения ISF приведет к снижению подачи инсулина, если пытаться снизить ГК при помощи мастера болюса.</string>

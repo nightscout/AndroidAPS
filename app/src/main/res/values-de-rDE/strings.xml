@@ -1370,6 +1370,7 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_cmd_desc_get_tbr">Hole Temporäre Basalraten</string>
     <string name="medtronic_cmd_desc_set_tbr">Setze Temporäre Basalrate</string>
     <string name="medtronic_cmd_desc_set_bolus">Setze Bolus</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus-Einschränkung angewendet: %2$.2fIE zu %3$.2fIE</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
