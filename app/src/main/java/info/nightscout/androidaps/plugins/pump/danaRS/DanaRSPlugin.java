@@ -794,7 +794,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";
         }
-        ret += "IOB: " + pump.iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + pump.batteryRemaining + "\n";
         return ret;

@@ -703,7 +703,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 // create message
                 PumpMessage msg;
 
-                // if (bodyData == null)
                 msg = makePumpMessage(commandType);
 
                 // send and wait for response
@@ -718,8 +717,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 byte[] data = null;
 
-                int runs = 1;
-
                 if (check == null) {
 
                     data = response.getRawContentOfFrame();
@@ -728,24 +725,21 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                     while (checkIfWeHaveMoreData(commandType, response, data)) {
 
-                        runs++;
-
-                        PumpMessage response2 = sendAndListen(ackMsg, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
+                        response = sendAndListen(ackMsg, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
 
 //                        LOG.debug("{} Response: {}", runs, HexDump.toHexStringDisplayable(response2.getRawContent()));
 //                        LOG.debug("{} Response: {}", runs,
 //                            HexDump.toHexStringDisplayable(response2.getMessageBody().getTxData()));
 
-                        String check2 = checkResponseContent(response2, commandType.commandDescription, 1);
+                        String check2 = checkResponseContent(response, commandType.commandDescription, 1);
 
                         if (check2 == null) {
 
-                            data = ByteUtil.concat(data, response2.getRawContentOfFrame());
+                            data = ByteUtil.concat(data, response.getRawContentOfFrame());
 
                         } else {
                             this.errorMessage = check2;
-                            if (isLogEnabled())
-                                LOG.debug("Error message: " + check2);
+                            LOG.error("Error with response got GetProfile: " + check2);
                         }
                     }
 
@@ -784,12 +778,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (commandType == MedtronicCommandType.GetBasalProfileSTD || //
                 commandType == MedtronicCommandType.GetBasalProfileA || //
                 commandType == MedtronicCommandType.GetBasalProfileB) {
-            byte[] responseRaw = response.getRawContent();
+            byte[] responseRaw = response.getRawContentOfFrame();
 
             int last = responseRaw.length - 1;
 
-            if (isLogEnabled())
-                LOG.debug("Length: " + data.length);
+            LOG.debug("Length: " + data.length);
 
             if (data.length >= BasalProfile.MAX_RAW_DATA_SIZE) {
                 return false;
@@ -954,7 +947,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 LOG.warn("Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
 
-            if (responseMessage!=null)
+            if (responseMessage != null)
                 LOG.warn("Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent()));
             else
                 LOG.warn("Set Basal Profile: Null response.");

@@ -319,19 +319,6 @@
     <string name="overview_bolusprogress_goingtodeliver">%1$.2fU을 주입합니다</string>
     <string name="objectives_0_objective">표시설정과 모니터설정을 완료하고, Basal과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
-    <string name="objectives_openloop_objective">Open Loop를 시작한다.</string>
-    <string name="objectives_openloop_gate">Open Loop 모드에서 몇일간 사용하여보고, 임시Basal을 여러번 수동으로 주입해 본다. 임시목표와 기본임시목표(\'식사직전\', \'활동\',\'저혈당\' 임시목표)를 설정하고 사용해 본다.</string>
-    <string name="objectives_maxbasal_objective">임시Basal 추천기능을 포함해서, Open Loop에 대해 이해한다.</string>
-    <string name="objectives_maxbasal_gate">이 경험을 토대로, 최대 Basal을 결정하고 이를 펌프와 설정에 입력한다.</string>
-    <string name="objectives_maxiobzero_objective">Closed Loop를 시작하고 저혈당인슐린 중지 기능을 사용해본다.</string>
-    <string name="objectives_maxiobzero_gate">최대 IOB = 0 인 상태로 Closed Loop를 몇일동안 실행시켜 본다. 저혈당 인슐린일시중지가 많이 발생하지 않도록 한다.</string>
-    <string name="objectives_maxiob_objective">Closed Loop를 조정하여 최대 IOB를 0 이상으로 올려서 서서히 혈당 목표치를 낮춘다.</string>
-    <string name="objectives_maxiob_gate">혈당을 낮추기 전에 몇일간 사용해보되 최소한 하루는 저혈당 혈당 알람이 발생하지 않도록 해본다.</string>
-    <string name="objectives_autosens_objective">필요하면 Basal과 비율을 조절하고, auto-sens를 활성화한다.</string>
-    <string name="objectives_autosens_gate">평소의 탄수화물을 입력하면서 1주일동안 낮시간대에 loop를 성공적으로 사용해본다.</string>
-    <string name="objectives_ama_objective">AMA(Advanced Meal Assist)같은 낮시간대를 위한 추가적인 기능들을 실행하여 본다.</string>
-    <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해본다.</string>
-    <string name="objectives_smb_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은다음 maxIOB를 올려주세요. maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 괜찮은 시작값입니다.</string>
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>
@@ -565,7 +552,6 @@
     <string name="enablesuperbolus">마법사에서 Superbolus 활성화하기</string>
     <string name="enablesuperbolus_summary">마법사에서 Superbolus 기능을 활성화합니다. 어떤 기능인지 확실히 알기전까지 활성화 하지 마세요. 제대로 알지 못하고 사용하면 일슐린이 과다 주입될 수 있습니다!</string>
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
-    <string name="show_statuslights_summary">홈화면에 캐뉼라 사용기간, 인슐린 사용기간, 센서 사용기간, 펌프용 주사기와 배터리 남은 양의 표시등을 활성화합니다.</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
     <string name="statuslights_bat_warning">배터리량 경고 기준값[%%]</string>
@@ -639,7 +625,6 @@
     <string name="mdtp_cancel">취소</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
-    <string name="ns_localbroadcasts">(xDrip 같은) 다른 앱으로의 브로드캐스트를 활성화합니다.</string>
     <string name="ns_localbroadcasts_title">Local Broadcasts 활성화하기</string>
     <string name="careportal_activity_label">활동 &amp; 피드백</string>
     <string name="careportal_carbsandbolus_label">탄수화물 &amp; Bolus</string>
@@ -1297,7 +1282,6 @@
     <string name="rileylink_state_not_started">시작되지 않았습니다.</string>
     <string name="rileylink_state_rl_init">RileyLink 초기화…</string>
     <string name="rileylink_state_rl_error">RileyLink 에러</string>
-    <string name="rileylink_state_pc_tune_up">RileyLink 와 펌프 튜닝</string>
     <string name="rileylink_state_pc_error">펌프 연결 문제</string>
     <string name="rileylink_state_connected">연결됨</string>
     <!-- RL Errors -->
@@ -1367,7 +1351,6 @@
     <string name="medtronic_cmd_desc_get_tbr">임시 Basal 받기</string>
     <string name="medtronic_cmd_desc_set_tbr">임시 Basal 설정</string>
     <string name="medtronic_cmd_desc_set_bolus">Bolus 설정</string>
-    <string name="insulinFromCob"><![CDATA[COB 인슐린: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus 제약 적용: %2$.2fU 에서 %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

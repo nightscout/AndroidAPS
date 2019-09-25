@@ -199,7 +199,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
             } else {
                 try { // activity may be destroyed
                     setupTabs();
-                    setupViews(true);
+                    setupViews(false);
                 } catch (IllegalStateException e) {
                     log.error("Unhandled exception", e);
                 }

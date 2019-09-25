@@ -100,6 +100,7 @@ public abstract class Objective {
         @StringRes
         private int task;
         private Objective objective;
+        ArrayList<Hint> hints = new ArrayList<>();
 
         public Task(@StringRes int task) {
             this.task = task;
@@ -117,6 +118,15 @@ public abstract class Objective {
 
         public String getProgress() {
             return MainApp.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
+        }
+
+        Task hint(Hint hint) {
+            hints.add(hint);
+            return this;
+        }
+
+        public ArrayList<Hint> getHints() {
+            return hints;
         }
 
         public boolean shouldBeIgnored() {
@@ -157,8 +167,7 @@ public abstract class Objective {
     public class ExamTask extends Task {
         @StringRes
         int question;
-        List hints = new ArrayList<>();
-        List options = new ArrayList<>();
+        ArrayList<Option> options = new ArrayList<>();
         private String spIdentifier;
         private boolean answered;
         private long disabledTo;
@@ -198,21 +207,12 @@ public abstract class Objective {
             return this;
         }
 
-        ExamTask hint(Hint hint) {
-            hints.add(hint);
-            return this;
-        }
-
         public @StringRes int getQuestion() {
             return question;
         }
 
         public List getOptions() {
             return options;
-        }
-
-        public List getHints() {
-            return hints;
         }
 
         @Override

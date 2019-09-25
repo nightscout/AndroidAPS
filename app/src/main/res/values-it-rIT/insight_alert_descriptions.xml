@@ -7,7 +7,7 @@
     <string name="alert_w33_description">Imposta ora/data.</string>
     <string name="alert_w34_description">Contatta il supporto Accu-Chek.</string>
     <string name="alert_w36_description"><![CDATA[Quantità: <b>%1$d%%</b><br/>Durata: <b>%2$s h</b>]]></string>
-    <string name="alert_w38_description"><![CDATA[Programmato: <b>%1$s U</b><br/>Consegnato: <b>%2$s U</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Programmato: <b>%1$s U</b><br/>Erogato: <b>%2$s U</b>]]></string>
     <string name="alert_m20_description">Inserisci cartuccia.</string>
     <string name="alert_m21_description">Cambia cartuccia.</string>
     <string name="alert_m22_description">Cambia la batteria.</string>

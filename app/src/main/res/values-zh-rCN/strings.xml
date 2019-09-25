@@ -317,19 +317,6 @@
     <string name="overview_bolusprogress_goingtodeliver">将要输注 %1$.2fU</string>
     <string name="objectives_0_objective">设置可视化和监视, 并分析基础率和比率</string>
     <string name="objectives_0_gate">验证 Nightscout 中的血糖是否可用, 并且正在上传泵的胰岛素数据</string>
-    <string name="objectives_openloop_objective">开始开环</string>
-    <string name="objectives_openloop_gate">在开环模式下运行几天，并在手机上手动制定很多次临时基础率。设置和使用临时目标和默认的临时目标 (例如, 用于活动或处理碳水化合物)</string>
-    <string name="objectives_maxbasal_objective">了解你的开环，包括它的临时基础率建议</string>
-    <string name="objectives_maxbasal_gate">基于以上的经验，决定适合自己的最大基础率，在泵和本软件的参数选项上设置</string>
-    <string name="objectives_maxiobzero_objective">开始闭环模式，低血糖自动暂停</string>
-    <string name="objectives_maxiobzero_gate">在闭环模式下运行，设置最大IOB = 0 运行几天确保没有太多的低血糖事件</string>
-    <string name="objectives_maxiob_objective">优化闭环，逐渐增加最大IOB，并逐渐降低目标血糖值</string>
-    <string name="objectives_maxiob_gate">运行几天，至少一个晚上没有低血糖报警，然后才可以继续调低目标血糖</string>
-    <string name="objectives_autosens_objective">如果需要的话，调整基础率和比值，然后再启用auto-sense</string>
-    <string name="objectives_autosens_gate">一个星期成功的白天闭环，常规的碳水化合物摄入</string>
-    <string name="objectives_ama_objective">启用额外的功能以供白天使用，例如用餐助手(meal assist)</string>
-    <string name="objectives_smb_objective">启用额外的功能以供白天使用, 例如微型大剂量 SMB</string>
-    <string name="objectives_smb_gate">为了让微型大剂量工作的更好，你必须读指南，提高最大IOB的值。 建议是最大IOB值=餐时大剂量的平均值+3倍 的每日基础率中的最大值</string>
     <string name="youareonallowedlimit">你达到了允许的极限</string>
     <string name="noprofileselected">没有选定配置文件</string>
     <string name="smscommunicator_loophasbeendisabled">闭环已经被禁用</string>
@@ -561,7 +548,6 @@
     <string name="enablesuperbolus">在向导中启用超级大剂量</string>
     <string name="enablesuperbolus_summary">在向导中启用 superbolus超级大剂量 功能。不要启用, 直到你了解它真正的用法。如果盲目使用, 可能会导致胰岛素过量!</string>
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
-    <string name="show_statuslights_summary">在主屏幕上启用cage(碳水时间)、iage(胰岛素时间)、sage(探头使用时间)、储药器和电池电量的状态指示灯。</string>
     <string name="statuslights_res_warning">储药器药量低于阈值[U] 警告</string>
     <string name="statuslights_res_critical">储药器药量低于阈值[U] 严重警告</string>
     <string name="statuslights_bat_warning">电池电量低于阈值[%%] 警告</string>
@@ -635,7 +621,6 @@
     <string name="mdtp_cancel">取消</string>
     <string name="notloadedplugins">配置文件加载不完整</string>
     <string name="valuesnotstored">值没有被存储</string>
-    <string name="ns_localbroadcasts">启用广播到其他应用程序（如xDrip）.</string>
     <string name="ns_localbroadcasts_title">启用本地广播。</string>
     <string name="careportal_activity_label">活动 &amp; 反馈</string>
     <string name="careportal_carbsandbolus_label">碳水化合物 &amp; 大剂量</string>

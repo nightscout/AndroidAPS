@@ -34,6 +34,7 @@
     <string name="description_smb">Den senaste algoritmen för avancerade användare</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
+    <string name="description_profile_local">Definiera en profil som är tillgänglig offline.</string>
     <string name="description_profile_nightscout">Använder profiler från Nightscout</string>
     <string name="description_profile_simple">Definiera en insulinprofil som bara har ett enda tidsblock.</string>
     <string name="description_pump_combo">Pumpintegration för Accu-Chek Combo. Kräver att Ruffy är installerat</string>
@@ -319,14 +320,14 @@ Eversense-appen.</string>
     <string name="overview_bolusprogress_goingtodeliver">Kommer att leverera %1$.2f enheter</string>
     <string name="objectives_0_objective">Ställer in utseende och övervakning för att sedan kunna analysera basaler och kvoter</string>
     <string name="objectives_0_gate">Kontrollera att BG syns i Nightscout och att insulindata från pumpen laddas upp</string>
-    <string name="objectives_openloop_objective">Starta med open loop</string>
-    <string name="objectives_openloop_gate">Starta med open loop och använd det några dagar. Försök att ge många föreslagna temp basaler. Sätt upp och använd standardmålvärden (Träning, Äta snart och Hypo)</string>
+    <string name="objectives_openloop_objective">Startar med open loop</string>
+    <string name="objectives_openloop_gate">Kör i Open Loop-läge i några dagar och sätt ett antal temp-basaler manuellt. Konfigurera och använd temporära och förinställda temporära mål (t.ex. Träning eller Hypo)</string>
     <string name="objectives_maxbasal_objective">Förstå din open loop och hur den föreslår temp basaler</string>
-    <string name="objectives_maxbasal_gate">Utifrån vad du nu lärt dig, besluta vilken max basal du vill ha. Ställ in det både i inställningarna i APS och i din pump</string>
+    <string name="objectives_maxbasal_gate">Utifrån vad du nu lärt dig, besluta vilken max basal du vill ha. Ställ in det både i inställningarna i appen och i din pump</string>
     <string name="objectives_maxiobzero_objective">Börja använda closed loop med aktiverad funktion att stänga av vid lågt BG</string>
     <string name="objectives_maxiobzero_gate">Aktivera closed loop med max IOB=0 i några dagar till dess systemet inte stänger av pga lågt BG för många gånger</string>
-    <string name="objectives_maxiob_objective">Finjustering av closed loop, gradvis ökande IOB och minskande målvärde för BG</string>
-    <string name="objectives_maxiob_gate">Kör några dagar och åtminstone en natt utan larm för lågt BG innan du sänker målvärdet för BG.</string>
+    <string name="objectives_maxiob_objective">Finjustering av closed loop, med gradvis ökande max IOB och minskande målvärde för BG</string>
+    <string name="objectives_maxiob_gate">Kör några dagar och åtminstone en natt utan larm för lågt BG innan du sänker målvärdet för BG</string>
     <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
     <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
     <string name="objectives_ama_objective">Aktiverar extra funktioner som kan användas dagtid, såsom avancerad måltidsassistans, AMA</string>
@@ -565,7 +566,8 @@ Eversense-appen.</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
     <string name="enablesuperbolus_summary">Aktiverar superbolusfunktionen i kalkylatorn. Aktivera inte innan du förstått hur den fungerar. DEN KAN ORSAKA ÖVERDOSERING AV INSULIN OM INSIKT SAKNAS OM FUNKTIONEN!</string>
     <string name="show_statuslights">Visa statusindikationer på hemskärmen</string>
-    <string name="show_statuslights_summary">Aktivera statusindikationerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
+    <string name="show_statuslights_extended">Visa statusindikatorer på hemskärmen</string>
+    <string name="show_statuslights_extended_summary">Aktivera statusindikatorerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
     <string name="statuslights_bat_warning">Varningsnivå för batteri [%%]</string>
@@ -639,7 +641,7 @@ Eversense-appen.</string>
     <string name="mdtp_cancel">Avbryt</string>
     <string name="notloadedplugins">Alla profiler laddades inte!</string>
     <string name="valuesnotstored">Alla värden sparades inte!</string>
-    <string name="ns_localbroadcasts">Slå på sändning av data till alla appar i telefonen (ex xDrip).</string>
+    <string name="ns_localbroadcasts">Aktivera sändning till andra appar (som xDrip). Aktivera inte detta om du har fler än en förekomst av AAPS eller NSClient installerad.</string>
     <string name="ns_localbroadcasts_title">Aktivera lokala broadcasts</string>
     <string name="careportal_activity_label">TRÄNING &amp; BG-MÅL</string>
     <string name="careportal_carbsandbolus_label">KOLHYDRATER &amp; BOLUS</string>
@@ -951,6 +953,7 @@ Eversense-appen.</string>
     <string name="sensitivitysetup">Konfigurera insticksprogram för känslighet</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSClient hanterar anslutningen till Nightscout. Du kan hoppa över denna del nu, men du kommer inte att kunna passera vissa mål tills du har satt upp det.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="bgsourcesetup">Konfigurera BG-källa</string>
     <string name="setupwizard_profile_description">Vänligen välj källa för profil. Om patienten är ett barn bör du använda NS profil. Om ingen följer dig på Nightscout kommer du förmodligen föredra lokal profil. Kom ihåg att du endast väljer profilkälla här. För att använda den måste du aktivera den genom att köra ”Byt Profil”</string>
@@ -1366,11 +1369,36 @@ Eversense-appen.</string>
     <string name="medtronic_cmd_desc_get_tbr">Hämta temp basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Sätt temp basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Leverera bolus</string>
-    <string name="insulinFromCob"><![CDATA[COB insulin: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolusbegränsning: %2$.2fU till %3$.2fU</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="partialboluswizard">Direkt bolus [%]</string>
+    <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
     <string name="loading">Laddar...</string>
     <string name="snooze">Snooze</string>
+    <string name="accomplished">Utfört: %1$s</string>
+    <string name="objectives_usage_objective">Lär dig hur du kontrollerar AndroidAPS</string>
+    <string name="objectives_usage_gate">Utföra olika åtgärder i AndroidAPS</string>
+    <string name="objectives_useprofileswitch">Ställ in profilen 90% för 10 minuter (Tryck och håll in profilens namn i Översikten)</string>
+    <string name="objectives_usedisconnectpump">Simulera dusch. Koppla från pump i 1 timme (Tryck och håll in på Open Loop i Översikten)</string>
+    <string name="objectives_usereconnectpump">... och återanslut på samma sätt</string>
+    <string name="objectives_usetemptarget">Skapa ett anpassat tillfälligt mål med 10 min varaktighet (Tryck och håll in på nuvarande BG-mål i Översikten)</string>
+    <string name="objectives_useactions">I Konfigurationsverktyget, aktivera insticksprogrammet Åtgärder, gör det synligt och visa dess innehåll från övre menyn</string>
+    <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
+    <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
+    <string name="objectives_button_enter">Enter</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ange kod som erhållits från utvecklare för att kringgå resten av målen</string>
+    <string name="codeaccepted">Koden godkänd</string>
+    <string name="codeinvalid">Koden är felaktig</string>
+    <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
+    <string name="objectives_exam_gate">Studera och besvara frågor på rätt sätt</string>
+    <string name="answerdisabledto">Svarsfunktionen inaktiverad till: %1$s</string>
+    <string name="wronganswer">Fel svar!</string>
+    <string name="unfinshed_button">Nästa icke slutförda</string>
+    <string name="close">Stäng</string>
+    <string name="requestcode">Begärd kod: %1$s</string>
+    <string name="objectives_hint">(kontrollera alla korrekta svar)</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

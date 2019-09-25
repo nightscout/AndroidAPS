@@ -1323,23 +1323,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        if (statuslightsLayout != null && SP.getBoolean(R.string.key_show_statuslights, false)) {
-            StatuslightHandler handler = new StatuslightHandler();
-
-            if (SP.getBoolean(R.string.key_show_statuslights_easy, false)) {
-                handler.statuslight(cageView, iageView, reservoirView, sageView, batteryView);
-
-                statuslightsLayout.setVisibility(View.VISIBLE);
-            } else if (SP.getBoolean(R.string.key_show_statuslights_extended, false)) {
-                handler.extendedStatuslight(cageView, iageView, reservoirView, sageView, batteryView);
-
-                statuslightsLayout.setVisibility(View.VISIBLE);
+        if (statuslightsLayout != null)
+            if (SP.getBoolean(R.string.key_show_statuslights, false)) {
+                StatuslightHandler handler = new StatuslightHandler();
+                if (SP.getBoolean(R.string.key_show_statuslights_extended, false)) {
+                    handler.extendedStatuslight(cageView, iageView, reservoirView, sageView, batteryView);
+                    statuslightsLayout.setVisibility(View.VISIBLE);
+                } else {
+                    handler.statuslight(cageView, iageView, reservoirView, sageView, batteryView);
+                    statuslightsLayout.setVisibility(View.VISIBLE);
+                }
             } else {
                 statuslightsLayout.setVisibility(View.GONE);
             }
-        } else if (statuslightsLayout != null) {
-            statuslightsLayout.setVisibility(View.GONE);
-        }
 
         boolean predictionsAvailable;
         if (Config.APS)
