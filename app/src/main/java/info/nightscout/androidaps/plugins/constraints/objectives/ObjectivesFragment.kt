@@ -168,10 +168,17 @@ class ObjectivesFragment : Fragment() {
                 holder.progress.removeAllViews()
                 for (task in objective.tasks) {
                     if (task.shouldBeIgnored()) continue
+                    // name
                     val name = TextView(holder.progress.context)
                     name.text = MainApp.gs(task.task) + ":"
                     name.setTextColor(-0x1)
                     holder.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    // hint
+                    task.hints.forEach { h ->
+                        if (!task.isCompleted)
+                            holder.progress.addView(h.generate(context))
+                    }
+                    // state
                     val state = TextView(holder.progress.context)
                     state.setTextColor(-0x1)
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
@@ -183,13 +190,14 @@ class ObjectivesFragment : Fragment() {
                         state.setOnClickListener {
                             val dialog = ObjectivesExamDialog()
                             val bundle = Bundle()
-                            val position = objective.tasks.indexOf(task)
-                            bundle.putInt("currentTask", position)
+                            val taskPosition = objective.tasks.indexOf(task)
+                            bundle.putInt("currentTask", taskPosition)
                             dialog.arguments = bundle
                             ObjectivesExamDialog.objective = objective
                             fragmentManager?.let { dialog.show(it, "ObjectivesFragment") }
                         }
                     }
+                    // horizontal line
                     val separator = View(holder.progress.context)
                     separator.setBackgroundColor(Color.DKGRAY)
                     holder.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
