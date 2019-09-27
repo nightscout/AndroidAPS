@@ -57,6 +57,7 @@ public class TriggerTimeRangeTest {
 
     @Test
     public void toJSONTest() {
+        now = 754;
         TriggerTimeRange t = new TriggerTimeRange().period(now - 1, now + 30);
         Assert.assertEquals(timeJson, t.toJSON());
     }

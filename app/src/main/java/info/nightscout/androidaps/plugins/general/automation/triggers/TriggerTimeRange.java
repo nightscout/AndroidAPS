@@ -120,7 +120,7 @@ public class TriggerTimeRange extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.timerange_value, DateUtil.timeString(toMilis(start)), DateUtil.timeString(toMilis(end)));
+        return MainApp.gs(R.string.timerange_value, DateUtil.timeString(toMilis(start) - timeZoneOffset), DateUtil.timeString(toMilis(end) - timeZoneOffset));
     }
 
     @Override
@@ -150,11 +150,10 @@ public class TriggerTimeRange extends Trigger {
 
     public int getMinSinceMidnight(long time) {
         // if passed argument is smaller than 1440 ( 24 h * 60 min ) that value is already converted
-        if (time < 1441)
+        if (0 < time && time < 1441)
             return (int) time;
-        Date date = new Date(time);
         Calendar calendar = DateUtil.gregorianCalendar();
-        calendar.setTime(date);
+        calendar.setTimeInMillis(time);
         return (calendar.get(Calendar.HOUR_OF_DAY) * 60) + calendar.get(Calendar.MINUTE);
     }
 
@@ -171,19 +170,23 @@ public class TriggerTimeRange extends Trigger {
         TextView label = new TextView(root.getContext());
         TextView startButton = new TextView(root.getContext());
         TextView endButton = new TextView(root.getContext());
-
-        startButton.setText(DateUtil.timeString(toMilis(start)));
-        endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end)));
+        log.debug("Start is: " + start );
+        log.debug("End is: " + end );
+        startButton.setText(DateUtil.timeString(toMilis(start) - timeZoneOffset));
+        endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end) - timeZoneOffset));
 
         startButton.setOnClickListener(view -> {
             GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTimeInMillis(toMilis(start));
+            //setTimeInMillis sets time in milliseconds after
+            //     * January 1, 1970, 0:00:00 GMT., but our time contains timezone offsset
+            calendar.setTimeInMillis(toMilis(start) - timeZoneOffset);
             TimePickerDialog tpd = TimePickerDialog.newInstance(
                     (view12, hourOfDay, minute, second) -> {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         start = getMinSinceMidnight(calendar.getTimeInMillis());
-                        startButton.setText(DateUtil.timeString(toMilis(start)));
+                        log.debug("Start is set to: " + start );
+                        startButton.setText(DateUtil.timeString(toMilis(start) - timeZoneOffset));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
@@ -197,13 +200,14 @@ public class TriggerTimeRange extends Trigger {
         });
         endButton.setOnClickListener(view -> {
             GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTimeInMillis(toMilis(end));
+            calendar.setTimeInMillis(toMilis(end) - timeZoneOffset);
             TimePickerDialog tpd = TimePickerDialog.newInstance(
                     (view12, hourOfDay, minute, second) -> {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         end = getMinSinceMidnight(calendar.getTimeInMillis());
-                        endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end)));
+                        log.debug("End is set to: " + end );
+                        endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end) - timeZoneOffset));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
