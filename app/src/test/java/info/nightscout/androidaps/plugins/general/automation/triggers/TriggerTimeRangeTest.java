@@ -50,7 +50,7 @@ public class TriggerTimeRangeTest {
         Assert.assertEquals(true, t.shouldRun());
 
         // already run
-        t = new TriggerTimeRange().period(now - 1, now + 30).lastRun(now - 1);
+        t = new TriggerTimeRange().lastRun((long) (now  - 1)*60000);
         Assert.assertFalse(t.shouldRun());
 
     }
