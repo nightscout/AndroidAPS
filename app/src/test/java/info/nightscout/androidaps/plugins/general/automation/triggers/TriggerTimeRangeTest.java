@@ -30,7 +30,7 @@ public class TriggerTimeRangeTest {
     int now = 754;
     int timeZoneOffset = (int) (DateUtil.getTimeZoneOffsetMs() / 60000);
 
-    String timeJson = "{\"data\":{\"lastRun\":0,\"start\":873,\"end\":904},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeRange\"}";
+    String timeJson = "{\"data\":{\"lastRun\":0,\"start\":753,\"end\":784},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTimeRange\"}";
 
     @Test
     public void shouldRunTest() {
@@ -57,8 +57,7 @@ public class TriggerTimeRangeTest {
 
     @Test
     public void toJSONTest() {
-        now = 754;
-        TriggerTimeRange t = new TriggerTimeRange().period(now - 1, now + 30);
+        TriggerTimeRange t = new TriggerTimeRange().period(now - 1 - timeZoneOffset , now + 30 - timeZoneOffset);
         Assert.assertEquals(timeJson, t.toJSON());
     }
 
