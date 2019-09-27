@@ -185,7 +185,6 @@ public class TriggerTimeRange extends Trigger {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         start = getMinSinceMidnight(calendar.getTimeInMillis());
-                        log.debug("Start is set to: " + start );
                         startButton.setText(DateUtil.timeString(toMilis(start) - timeZoneOffset));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
@@ -206,7 +205,6 @@ public class TriggerTimeRange extends Trigger {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         end = getMinSinceMidnight(calendar.getTimeInMillis());
-                        log.debug("End is set to: " + end );
                         endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end) - timeZoneOffset));
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
