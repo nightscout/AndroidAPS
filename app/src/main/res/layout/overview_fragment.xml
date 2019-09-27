@@ -192,7 +192,8 @@
                         android:id="@+id/overview_canulaage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginHorizontal="3dp"
                         android:gravity="center"
                         android:text=""
                         android:textSize="14sp" />
@@ -201,7 +202,8 @@
                         android:id="@+id/overview_insulinage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginHorizontal="3dp"
                         android:gravity="center"
                         android:text=""
                         android:textSize="14sp" />
@@ -210,7 +212,8 @@
                         android:id="@+id/overview_reservoirlevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginHorizontal="3dp"
                         android:gravity="center"
                         android:text=""
                         android:textSize="14sp" />
@@ -219,7 +222,8 @@
                         android:id="@+id/overview_sensorage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginHorizontal="3dp"
                         android:gravity="center"
                         android:text=""
                         android:textSize="14sp" />
@@ -228,7 +232,8 @@
                         android:id="@+id/overview_batterylevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginHorizontal="3dp"
                         android:gravity="center"
                         android:text=""
                         android:textSize="14sp" />
