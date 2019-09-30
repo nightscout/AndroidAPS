@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -24,7 +25,7 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
-        if (data.length <5){
+        if (data.length < 5) {
             failed = true;
             return;
         }
@@ -49,7 +50,7 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
         }
 
         if (pump.productCode < 2) {
-            MainApp.bus().post(new EventNewNotification(new Notification(Notification.UNSUPPORTED_FIRMWARE, MainApp.gs(R.string.unsupportedfirmware), Notification.URGENT)));
+            RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.UNSUPPORTED_FIRMWARE, MainApp.gs(R.string.unsupportedfirmware), Notification.URGENT)));
         }
     }
 

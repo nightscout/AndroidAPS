@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -66,6 +67,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.SP;
+
 /**
  * Created by mike on 05.08.2016.
  */
@@ -231,15 +233,15 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             // issues a READSTATE when starting to issue commands which initializes the pump
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.pumpNotInitializedProfileNotSet));
         }
 
         BasalProfile requestedBasalProfile = convertProfileToComboProfile(profile);
         if (pump.basalProfile.equals(requestedBasalProfile)) {
             //dismiss previously "FAILED" overview notifications
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             return new PumpEnactResult().success(true).enacted(false);
         }
 
@@ -252,18 +254,18 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.failedupdatebasalprofile));
         }
 
         pump.basalProfile = requestedBasalProfile;
 
         //dismiss previously "FAILED" overview notifications
-        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-        MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+        RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+        RxBus.INSTANCE.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
         //issue success notification
         Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
         return new PumpEnactResult().success(true).enacted(true);
     }
 
@@ -339,7 +341,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         // trigger a connect, which will update state and check history
         CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
         if (stateResult.invalidSetup) {
-            MainApp.bus().post(new EventNewNotification(
+            RxBus.INSTANCE.send(new EventNewNotification(
                     new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_invalid_setup), Notification.URGENT)));
             return;
         }
@@ -360,7 +362,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                     MainApp.gs(R.string.combo_force_disabled_notification),
                     Notification.URGENT);
             n.soundId = R.raw.alarm;
-            MainApp.bus().post(new EventNewNotification(n));
+            RxBus.INSTANCE.send(new EventNewNotification(n));
             return;
         }
 
@@ -382,7 +384,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             long now = System.currentTimeMillis();
             if (lastBolusTimestamp < now - 24 * 60 * 60 * 1000 || lastBolusTimestamp > now + 5 * 60 * 1000) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_check_date), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             }
         }
 
@@ -600,7 +602,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             long now = System.currentTimeMillis();
             if (lastPumpBolus.timestamp < now - 10 * 60 * 1000 || lastPumpBolus.timestamp > now + 10 * 60 * 1000) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_suspious_bolus_time), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             }
 
             // update `recentBoluses` so the bolus was just delivered won't be detected as a new
@@ -627,7 +629,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         } finally {
             pump.activity = null;
             MainApp.bus().post(new EventComboPumpUpdateGUI());
-            MainApp.bus().post(new EventRefreshOverview("Bolus"));
+            RxBus.INSTANCE.send(new EventRefreshOverview("Bolus"));
             cancelBolus = false;
         }
     }
@@ -648,7 +650,9 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         }
     }
 
-    /** Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus. */
+    /**
+     * Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus.
+     */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo dbi = detailedBolusInfo.copy();
         dbi.date = calculateFakeBolusDate(lastPumpBolus);
@@ -661,7 +665,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             log.error("Adding treatment record failed", e);
             if (dbi.isSMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             }
             return false;
         }
@@ -880,7 +884,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                             MainApp.gs(R.string.combo_force_disabled_notification),
                             Notification.URGENT);
                     n.soundId = R.raw.alarm;
-                    MainApp.bus().post(new EventNewNotification(n));
+                    RxBus.INSTANCE.send(new EventNewNotification(n));
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
                 }
                 updateLocalData(commandResult);
@@ -926,7 +930,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 notification.id = Notification.COMBO_PUMP_ALARM;
                 notification.level = Notification.URGENT;
                 notification.text = MainApp.gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
         }
@@ -989,10 +993,10 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             if (readBasalResult.success) {
                 pump.basalProfile = readBasalResult.basalProfile;
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_warning_pump_basal_rate_changed), Notification.NORMAL);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_failure_reading_changed_basal_rate), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             }
         }
     }
@@ -1008,12 +1012,12 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             if (L.isEnabled(L.PUMP))
                 log.debug("Pump clock needs update, pump time: " + state.pumpTime + " (" + new Date(state.pumpTime) + ")");
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_notification_check_time_date), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else if (Math.abs(state.pumpTime - System.currentTimeMillis()) >= 3 * 60 * 1000) {
             if (L.isEnabled(L.PUMP))
                 log.debug("Pump clock needs update, pump time: " + state.pumpTime + " (" + new Date(state.pumpTime) + ")");
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_notification_check_time_date), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         }
     }
 
@@ -1035,7 +1039,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         } else if (activeAlert.warningCode == PumpWarningCodes.TBR_CANCELLED) {
             notification.text = MainApp.gs(R.string.combo_pump_tbr_cancelled_warrning);
         }
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
     }
 
     private void checkForUnsafeUsage(CommandResult commandResult) {
@@ -1058,7 +1062,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                         MainApp.gs(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
                 n.soundId = R.raw.alarm;
-                MainApp.bus().post(new EventNewNotification(n));
+                RxBus.INSTANCE.send(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
                 ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
             }
@@ -1132,7 +1136,9 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return historyResult.success;
     }
 
-    /** Return value indicates whether a new record was created. */
+    /**
+     * Return value indicates whether a new record was created.
+     */
     private boolean updateDbFromPumpHistory(@NonNull PumpHistory history) {
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
@@ -1216,7 +1222,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 log.debug("Bolus with same amount within the same minute imported. Only one will make it to the DB.");
             Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.
                     combo_error_multiple_boluses_with_identical_timestamp), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         }
 
         pumpHistoryChanged = updateDbFromPumpHistory(historyResult.history);

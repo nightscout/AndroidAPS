@@ -32,7 +32,7 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
     private static Logger log = LoggerFactory.getLogger(EditQuickWizardDialog.class);
 
     QuickWizardEntry entry = new QuickWizard().newEmptyItem();
-    QuickWizard quickWizard = MainApp.getSpecificPlugin(OverviewPlugin.class).quickWizard;
+    QuickWizard quickWizard = MainApp.getSpecificPlugin(OverviewPlugin.class).getQuickWizard();
 
     EditText buttonEdit;
     EditText carbsEdit;

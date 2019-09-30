@@ -93,7 +93,7 @@ public class QueueThread extends Thread {
                         SystemClock.sleep(1000);
                         //start over again once after watchdog barked
                         //Notification notification = new Notification(Notification.OLD_NSCLIENT, "Watchdog", Notification.URGENT);
-                        //MainApp.bus().post(new EventNewNotification(notification));
+                        //RxBus.INSTANCE.send(new EventNewNotification(notification));
                         connectionStartTime = lastCommandTime = System.currentTimeMillis();
                         pump.connect("watchdog");
                     } else {

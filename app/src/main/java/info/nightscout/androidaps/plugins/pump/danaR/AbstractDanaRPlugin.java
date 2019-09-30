@@ -29,6 +29,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -107,22 +108,22 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.pumpNotInitializedProfileNotSet);
             return result;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.failedupdatebasalprofile);
             return result;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";

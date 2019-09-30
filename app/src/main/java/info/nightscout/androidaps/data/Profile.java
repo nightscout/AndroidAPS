@@ -17,6 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -230,7 +231,7 @@ public class Profile {
                     if (notify && secondsFromMidnight % 3600 != 0) {
                         if (Config.APS) {
                             Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
-                            MainApp.bus().post(new EventNewNotification(notification));
+                            RxBus.INSTANCE.send(new EventNewNotification(notification));
                         }
                     }
                 }
@@ -262,11 +263,11 @@ public class Profile {
     }
 
     protected void sendBelowMinimumNotification(String from) {
-        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+        RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     protected void sendAboveMaximumNotification(String from) {
-        MainApp.bus().post(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
+        RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     private void validate(LongSparseArray array) {

@@ -16,6 +16,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -68,7 +69,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         if (!MainApp.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 Notification n = new Notification(Notification.TOAST_ALARM, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
-                MainApp.bus().post(new EventNewNotification(n));
+                RxBus.INSTANCE.send(new EventNewNotification(n));
             }
             value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }

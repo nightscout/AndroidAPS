@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -105,10 +106,10 @@ public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
 
         if (!pump.isExtendedBolusEnabled) {
             Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.gs(R.string.danar_enableextendedbolus), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             failed = true;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
 
         if (L.isEnabled(L.PUMPCOMM)) {

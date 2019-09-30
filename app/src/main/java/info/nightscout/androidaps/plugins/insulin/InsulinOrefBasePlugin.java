@@ -1,19 +1,18 @@
 package info.nightscout.androidaps.plugins.insulin;
 
-import com.squareup.otto.Bus;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 
 /**
  * Created by adrian on 13.08.2017.
@@ -35,10 +34,6 @@ public abstract class InsulinOrefBasePlugin extends PluginBase implements Insuli
         );
     }
 
-    public Bus getBus() {
-        return MainApp.bus();
-    }
-
     @Override
     public double getDia() {
         double dia = getUserDefinedDia();
@@ -54,7 +49,7 @@ public abstract class InsulinOrefBasePlugin extends PluginBase implements Insuli
         if ((System.currentTimeMillis() - lastWarned) > 60 * 1000) {
             lastWarned = System.currentTimeMillis();
             Notification notification = new Notification(Notification.SHORT_DIA, String.format(this.getNotificationPattern(), dia, MIN_DIA), Notification.URGENT);
-            this.getBus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         }
     }
 

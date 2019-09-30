@@ -10,9 +10,10 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -43,13 +44,13 @@ public class LocalAlertUtils {
             Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.gs(R.string.pump_unreachable), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
-            MainApp.bus().post(new EventNewNotification(n));
+            RxBus.INSTANCE.send(new EventNewNotification(n));
             if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
                 NSUpload.uploadError(n.text);
             }
         }
         if (!isStatusOutdated && !alarmTimeoutExpired)
-            MainApp.bus().post(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
     }
 
     /*Presnoozes the alarms with 5 minutes if no snooze exists.
@@ -97,7 +98,7 @@ public class LocalAlertUtils {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.gs(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
-            MainApp.bus().post(new EventNewNotification(n));
+            RxBus.INSTANCE.send(new EventNewNotification(n));
             if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
                 NSUpload.uploadError(n.text);
             }

@@ -827,7 +827,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final String profileName = ProfileFunctions.getInstance().getProfileName();
         final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-        final QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
+        final QuickWizardEntry quickWizardEntry = OverviewPlugin.INSTANCE.getQuickWizard().getActive();
         if (quickWizardEntry != null && actualBg != null && profile != null && pump != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true);
@@ -1008,7 +1008,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             timeView.setText(DateUtil.timeString(new Date()));
         }
 
-        OverviewPlugin.getPlugin().notificationStore.updateNotifications(notificationsView);
+        OverviewPlugin.INSTANCE.getNotificationStore().updateNotifications(notificationsView);
 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.GONE);
@@ -1030,8 +1030,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final String profileName = ProfileFunctions.getInstance().getProfileName();
 
         final String units = profile.getUnits();
-        final double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
-        final double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
+        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
+        final double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -1221,7 +1221,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // QuickWizard button
-        QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
+        QuickWizardEntry quickWizardEntry = OverviewPlugin.INSTANCE.getQuickWizard().getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";

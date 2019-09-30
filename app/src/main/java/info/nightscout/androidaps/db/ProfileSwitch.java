@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.db;
 
 import android.graphics.Color;
+
 import androidx.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -18,6 +19,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -78,12 +80,12 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return this;
     }
 
-   public ProfileSwitch source(int source) {
+    public ProfileSwitch source(int source) {
         this.source = source;
         return this;
     }
 
-   public ProfileSwitch duration(int duration) {
+    public ProfileSwitch duration(int duration) {
         this.durationInMinutes = duration;
         return this;
     }
@@ -107,7 +109,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
      */
     public String getCustomizedName() {
         String name = profileName;
-        if(LocalProfilePlugin.LOCAL_PROFILE.equals(name)){
+        if (LocalProfilePlugin.LOCAL_PROFILE.equals(name)) {
             name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
         }
         if (isCPP) {
@@ -221,7 +223,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     public void createNotificationInvalidProfile(String detail) {
         Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, String.format(MainApp.gs(R.string.zerovalueinprofile), detail), Notification.LOW, 5);
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
     }
 
     public static boolean isEvent5minBack(List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {

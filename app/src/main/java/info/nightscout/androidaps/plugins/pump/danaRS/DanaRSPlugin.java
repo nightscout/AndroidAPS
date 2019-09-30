@@ -38,6 +38,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -305,22 +306,22 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.pumpNotInitializedProfileNotSet);
             return result;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!danaRSService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.failedupdatebasalprofile);
             return result;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
@@ -361,10 +362,14 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public double getReservoirLevel() { return DanaRPump.getInstance().reservoirRemainingUnits; }
+    public double getReservoirLevel() {
+        return DanaRPump.getInstance().reservoirRemainingUnits;
+    }
 
     @Override
-    public int getBatteryLevel() { return DanaRPump.getInstance().batteryRemaining; }
+    public int getBatteryLevel() {
+        return DanaRPump.getInstance().batteryRemaining;
+    }
 
     @Override
     public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {

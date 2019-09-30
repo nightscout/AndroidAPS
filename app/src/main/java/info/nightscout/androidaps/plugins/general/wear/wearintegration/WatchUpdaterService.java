@@ -316,11 +316,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         }
 
         if (lowLine < 1) {
-            lowLine = OverviewPlugin.bgTargetLow;
+            lowLine = OverviewPlugin.INSTANCE.getBgTargetLow();
         }
 
         if (highLine < 1) {
-            highLine = OverviewPlugin.bgTargetHigh;
+            highLine = OverviewPlugin.INSTANCE.getBgTargetHigh();
         }
 
         long sgvLevel = 0l;

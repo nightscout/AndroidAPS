@@ -220,7 +220,7 @@ public class DanaRSService extends Service {
                     log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(reportFail));
+                    RxBus.INSTANCE.send(new EventNewNotification(reportFail));
                     NSUpload.uploadError(MainApp.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
