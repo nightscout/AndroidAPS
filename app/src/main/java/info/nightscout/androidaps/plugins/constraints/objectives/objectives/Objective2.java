@@ -200,9 +200,4 @@ public class Objective2 extends Objective {
             Collections.shuffle(((ExamTask)task).options);
     }
 
-    @Override
-    public boolean isRevertable() {
-        return true;
-    }
-
 }

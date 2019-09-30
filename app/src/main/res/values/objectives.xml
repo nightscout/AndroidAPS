@@ -61,6 +61,9 @@
     <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
     <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">Not connected to the internet</string>
+    <string name="failedretrievetime">Failed retrieve time</string>
+    <string name="requirementnotmet">Objective requirements not met</string>
 
     <plurals name="objective_days">
         <item quantity="one">%1$d day</item>

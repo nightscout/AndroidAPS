@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.util.Linkify;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -47,6 +48,14 @@ public abstract class Objective {
     public boolean isCompleted() {
         for (Task task : tasks) {
             if (!task.shouldBeIgnored() && !task.isCompleted())
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isCompleted(long trueTime) {
+        for (Task task : tasks) {
+            if (!task.shouldBeIgnored() && !task.isCompleted(trueTime))
                 return false;
         }
         return true;
@@ -119,6 +128,7 @@ public abstract class Objective {
         }
 
         public abstract boolean isCompleted();
+        public boolean isCompleted(long trueTime) { return isCompleted(); };
 
         public String getProgress() {
             return MainApp.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
@@ -150,6 +160,11 @@ public abstract class Objective {
         @Override
         public boolean isCompleted() {
             return getObjective().isStarted() && System.currentTimeMillis() - getObjective().getStartedOn() >= minimumDuration;
+        }
+
+        @Override
+        public boolean isCompleted(long trueTime) {
+            return getObjective().isStarted() && trueTime - getObjective().getStartedOn() >= minimumDuration;
         }
 
         @Override

@@ -18,19 +18,20 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.objectives_fragment.*
+import org.slf4j.LoggerFactory
 
 class ObjectivesFragment : Fragment() {
+    private val log = LoggerFactory.getLogger(L.CONSTRAINTS)
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
 
@@ -206,16 +207,50 @@ class ObjectivesFragment : Fragment() {
             holder.accomplished.text = MainApp.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.accomplishedOn))
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
-                objective.accomplishedOn = DateUtil.now()
-                notifyDataSetChanged()
-                scrollToCurrentObjective()
-                startUpdateTimer()
+                holder.verify.visibility = View.INVISIBLE
+                SntpClient.ntpTime(object : SntpClient.Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread {
+                            holder.verify.visibility = View.VISIBLE
+                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                            if (!networkConnected) {
+                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                            } else if (success) {
+                                if (objective.isCompleted(time)) {
+                                    objective.accomplishedOn = time
+                                    notifyDataSetChanged()
+                                    scrollToCurrentObjective()
+                                    startUpdateTimer()
+                                } else {
+                                    ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                }
+                            } else {
+                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                            }
+                        }
+                    }
+                }, NetworkChangeReceiver.isConnected())
             }
             holder.start.setOnClickListener {
-                objective.startedOn = DateUtil.now()
-                notifyDataSetChanged()
-                scrollToCurrentObjective()
-                startUpdateTimer()
+                holder.start.visibility = View.INVISIBLE
+                SntpClient.ntpTime(object : SntpClient.Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread {
+                            holder.start.visibility = View.VISIBLE
+                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                            if (!networkConnected) {
+                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                            } else if (success) {
+                                objective.startedOn = time
+                                notifyDataSetChanged()
+                                scrollToCurrentObjective()
+                                startUpdateTimer()
+                            } else {
+                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                            }
+                        }
+                    }
+                }, NetworkChangeReceiver.isConnected())
             }
             holder.revert.setOnClickListener {
                 objective.accomplishedOn = 0
