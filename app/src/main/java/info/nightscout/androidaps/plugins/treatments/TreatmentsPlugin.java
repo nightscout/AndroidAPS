@@ -726,6 +726,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
+    @Nullable
     public ProfileSwitch getProfileSwitchFromHistory(long time) {
         synchronized (profiles) {
             return (ProfileSwitch) profiles.getValueToTime(time);

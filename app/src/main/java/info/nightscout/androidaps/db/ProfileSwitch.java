@@ -2,6 +2,7 @@ package info.nightscout.androidaps.db;
 
 import android.graphics.Color;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -25,6 +26,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataP
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.T;
@@ -158,7 +160,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     // -------- Interval interface ---------
 
-    Long cuttedEnd = null;
+    private Long cuttedEnd = null;
 
     public long durationInMsec() {
         return durationInMinutes * 60 * 1000L;
@@ -214,14 +216,15 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @Override
     public boolean isValid() {
-
         boolean isValid = getProfileObject() != null && getProfileObject().isValid(DateUtil.dateAndTimeString(date));
-        if (!isValid)
+        ProfileSwitch active = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now());
+        long activeProfileSwitchDate = active != null ? active.date : -1L;
+        if (!isValid && date == activeProfileSwitchDate)
             createNotificationInvalidProfile(DateUtil.dateAndTimeString(date));
         return isValid;
     }
 
-    public void createNotificationInvalidProfile(String detail) {
+    private void createNotificationInvalidProfile(String detail) {
         Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, String.format(MainApp.gs(R.string.zerovalueinprofile), detail), Notification.LOW, 5);
         RxBus.INSTANCE.send(new EventNewNotification(notification));
     }
@@ -292,6 +295,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return Color.CYAN;
     }
 
+    @NonNull
     public String toString() {
         return "ProfileSwitch{" +
                 "date=" + date +
