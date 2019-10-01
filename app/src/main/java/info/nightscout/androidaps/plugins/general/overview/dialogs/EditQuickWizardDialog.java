@@ -31,8 +31,7 @@ import info.nightscout.androidaps.utils.SafeParse;
 public class EditQuickWizardDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(EditQuickWizardDialog.class);
 
-    QuickWizardEntry entry = new QuickWizard().newEmptyItem();
-    QuickWizard quickWizard = MainApp.getSpecificPlugin(OverviewPlugin.class).getQuickWizard();
+    QuickWizardEntry entry = QuickWizard.INSTANCE.newEmptyItem();
 
     EditText buttonEdit;
     EditText carbsEdit;
@@ -151,7 +150,7 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
                 } catch (JSONException e) {
                     log.error("Unhandled exception", e);
                 }
-                quickWizard.addOrUpdate(entry);
+                QuickWizard.INSTANCE.addOrUpdate(entry);
                 dismiss();
                 MainApp.bus().post(new EventQuickWizardChange());
                 break;

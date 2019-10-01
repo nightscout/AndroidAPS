@@ -56,6 +56,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.data.QuickWizardEntry;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
@@ -827,7 +828,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final String profileName = ProfileFunctions.getInstance().getProfileName();
         final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-        final QuickWizardEntry quickWizardEntry = OverviewPlugin.INSTANCE.getQuickWizard().getActive();
+        final QuickWizardEntry quickWizardEntry = QuickWizard.INSTANCE.getActive();
         if (quickWizardEntry != null && actualBg != null && profile != null && pump != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true);
@@ -1221,7 +1222,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // QuickWizard button
-        QuickWizardEntry quickWizardEntry = OverviewPlugin.INSTANCE.getQuickWizard().getActive();
+        QuickWizardEntry quickWizardEntry = QuickWizard.INSTANCE.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";

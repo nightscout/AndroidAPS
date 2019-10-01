@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.overview
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.QuickWizard
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -19,8 +18,6 @@ import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.json.JSONArray
-import org.json.JSONException
 import org.slf4j.LoggerFactory
 
 object OverviewPlugin : PluginBase(PluginDescription()
@@ -39,18 +36,7 @@ object OverviewPlugin : PluginBase(PluginDescription()
     var bgTargetLow = 80.0
     var bgTargetHigh = 180.0
 
-    var quickWizard = QuickWizard()
-
     var notificationStore = NotificationStore()
-
-    init {
-        val storedData = SP.getString("QuickWizard", "[]")
-        try {
-            quickWizard.setData(JSONArray(storedData))
-        } catch (e: JSONException) {
-            log.error("Unhandled exception", e)
-        }
-    }
 
     override fun onStart() {
         super.onStart()

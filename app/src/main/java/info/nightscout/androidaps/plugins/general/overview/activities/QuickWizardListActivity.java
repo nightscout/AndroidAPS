@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,7 +20,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.QuickWizard;
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -42,6 +42,7 @@ public class QuickWizardListActivity extends NoSplashAppCompatActivity implement
             this.fragmentManager = fragmentManager;
         }
 
+        @NonNull
         @Override
         public QuickWizardEntryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.overview_quickwizardlist_item, viewGroup, false);
@@ -63,7 +64,7 @@ public class QuickWizardListActivity extends NoSplashAppCompatActivity implement
         }
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
@@ -80,13 +81,13 @@ public class QuickWizardListActivity extends NoSplashAppCompatActivity implement
 
             QuickWizardEntryViewHolder(View itemView, FragmentManager fragmentManager, QuickWizard qvData) {
                 super(itemView);
-                cv = (CardView) itemView.findViewById(R.id.overview_quickwizard_cardview);
-                buttonText = (TextView) itemView.findViewById(R.id.overview_quickwizard_item_buttonText);
-                carbs = (TextView) itemView.findViewById(R.id.overview_quickwizard_item_carbs);
-                from = (TextView) itemView.findViewById(R.id.overview_quickwizard_item_from);
-                to = (TextView) itemView.findViewById(R.id.overview_quickwizard_item_to);
-                editButton = (Button) itemView.findViewById(R.id.overview_quickwizard_item_edit_button);
-                removeButton = (Button) itemView.findViewById(R.id.overview_quickwizard_item_remove_button);
+                cv = itemView.findViewById(R.id.overview_quickwizard_cardview);
+                buttonText = itemView.findViewById(R.id.overview_quickwizard_item_buttonText);
+                carbs = itemView.findViewById(R.id.overview_quickwizard_item_carbs);
+                from = itemView.findViewById(R.id.overview_quickwizard_item_from);
+                to = itemView.findViewById(R.id.overview_quickwizard_item_to);
+                editButton = itemView.findViewById(R.id.overview_quickwizard_item_edit_button);
+                removeButton = itemView.findViewById(R.id.overview_quickwizard_item_remove_button);
                 editButton.setOnClickListener(this);
                 removeButton.setOnClickListener(this);
                 this.fragmentManager = fragmentManager;
@@ -118,15 +119,15 @@ public class QuickWizardListActivity extends NoSplashAppCompatActivity implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview_quickwizardlist_activity);
 
-        recyclerView = (RecyclerView) findViewById(R.id.overview_quickwizardactivity_recyclerview);
+        recyclerView = findViewById(R.id.overview_quickwizardactivity_recyclerview);
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(OverviewPlugin.INSTANCE.getQuickWizard(), getSupportFragmentManager());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(QuickWizard.INSTANCE, getSupportFragmentManager());
         recyclerView.setAdapter(adapter);
 
-        adButton = (Button) findViewById(R.id.overview_quickwizardactivity_add_button);
+        adButton = findViewById(R.id.overview_quickwizardactivity_add_button);
         adButton.setOnClickListener(this);
     }
 
@@ -144,12 +145,10 @@ public class QuickWizardListActivity extends NoSplashAppCompatActivity implement
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.overview_quickwizardactivity_add_button:
-                FragmentManager manager = getSupportFragmentManager();
-                EditQuickWizardDialog editQuickWizardDialog = new EditQuickWizardDialog();
-                editQuickWizardDialog.show(manager, "EditQuickWizardDialog");
-                break;
+        if (v.getId() == R.id.overview_quickwizardactivity_add_button) {
+            FragmentManager manager = getSupportFragmentManager();
+            EditQuickWizardDialog editQuickWizardDialog = new EditQuickWizardDialog();
+            editQuickWizardDialog.show(manager, "EditQuickWizardDialog");
         }
     }
 
@@ -161,12 +160,9 @@ public class QuickWizardListActivity extends NoSplashAppCompatActivity implement
     public void updateGUI() {
         Activity activity = this;
         if (activity != null && recyclerView != null) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getSpecificPlugin(OverviewPlugin.class).getQuickWizard(), getSupportFragmentManager());
-                    recyclerView.swapAdapter(adapter, false);
-                }
+            activity.runOnUiThread(() -> {
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(QuickWizard.INSTANCE, getSupportFragmentManager());
+                recyclerView.swapAdapter(adapter, false);
             });
         }
     }
