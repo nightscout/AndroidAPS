@@ -54,7 +54,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
                 editButton.setOnClickListener {
                     val manager = fragmentManager
                     val editQuickWizardDialog = EditQuickWizardDialog()
-                    editQuickWizardDialog.setData(QuickWizard[adapterPosition])
+                    editQuickWizardDialog.entry = QuickWizard[adapterPosition]
                     editQuickWizardDialog.show(manager, "EditQuickWizardDialog")
                 }
                 removeButton.setOnClickListener {
