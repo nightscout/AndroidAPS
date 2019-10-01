@@ -126,6 +126,10 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         if (Config.APS) {
             double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+            if (maxBasal < profile.getMaxDailyBasal()) {
+                maxBasal = profile.getMaxDailyBasal();
+                absoluteRate.addReason(MainApp.gs(R.string.increasingmaxbasal), this);
+            }
             absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
             // Check percentRate but absolute rate too, because we know real current basal in pump

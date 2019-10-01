@@ -1584,5 +1584,6 @@
     <string name="loading">Loading ...</string>
     <string name="snooze">Snooze</string>
     <string name="close">Close</string>
+    <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
 
 </resources>
