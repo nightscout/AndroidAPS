@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import androidx.fragment.app.DialogFragment;
 
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.QuickWizard;
 import info.nightscout.androidaps.data.QuickWizardEntry;
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -152,7 +153,7 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
                 }
                 QuickWizard.INSTANCE.addOrUpdate(entry);
                 dismiss();
-                MainApp.bus().post(new EventQuickWizardChange());
+                RxBus.INSTANCE.send(new EventQuickWizardChange());
                 break;
             case R.id.cancel:
                 dismiss();
