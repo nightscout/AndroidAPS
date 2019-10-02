@@ -26,7 +26,6 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.hypott_label, R.string.hypott_whenhypott,"hypott")
                 .option(new Option(R.string.hypott_goinglow, false))
-                .option(new Option(R.string.hypott_havinglow, false))
                 .option(new Option(R.string.hypott_preventoversmb, true))
                 .hint(new Hint(R.string.hypott_hint1))
         );
@@ -66,7 +65,6 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.exercise_switchprofileabove100, false))
                 .option(new Option(R.string.exercise_stoploop, false))
                 .option(new Option(R.string.exercise_doitbeforestart, true))
-                .option(new Option(R.string.exercise_doitafterstart, false))
                 .hint(new Hint(R.string.exercise_hint1))
         );
        tasks.add(new ExamTask(R.string.suspendloop_label, R.string.suspendloop_doigetinsulin,"suspendloop")
@@ -78,6 +76,12 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.basaltest_havingregularhypo, true))
                 .option(new Option(R.string.basaltest_havingregularhyper, true))
                  .hint(new Hint(R.string.basaltest_hint1))
+        );
+       tasks.add(new ExamTask(R.string.basalhelp_label, R.string.basalhelp_where,"basalhelp")
+                .option(new Option(R.string.basalhelp_diabetesteam, true))
+                .option(new Option(R.string.basalhelp_google, false))
+                .option(new Option(R.string.basalhelp_facebook, false))
+                 .hint(new Hint(R.string.basalhelp_hint1))
         );
        tasks.add(new ExamTask(R.string.prerequisites_label, R.string.prerequisites_what, "prerequisites")
                 .option(new Option(R.string.prerequisites_determinedcorrectprofile, true))
@@ -151,6 +155,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.nsclient_xdripfollower, true))
                 .option(new Option(R.string.nsclient_looponiphone, false))
                 .option(new Option(R.string.nsclient_spikeiphone, true))
+                .hint(new Hint(R.string.nsclient_hint1))
         );
         tasks.add(new ExamTask(R.string.isf_label, R.string.whatistrue,"isf")
                 .option(new Option(R.string.isf_increasingvalue, true))
@@ -193,11 +198,6 @@ public class Objective2 extends Objective {
 
         for (Task task : tasks)
             Collections.shuffle(((ExamTask)task).options);
-    }
-
-    @Override
-    public boolean isRevertable() {
-        return true;
     }
 
 }

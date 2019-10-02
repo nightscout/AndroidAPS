@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.wear;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.os.HandlerThread;
+
 import androidx.annotation.NonNull;
 
 import java.text.DateFormat;
@@ -31,15 +31,15 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
@@ -214,7 +214,7 @@ public class ActionStringHandler {
             }
 
             CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard wear");
-            if (useCOB && (cobInfo == null ||  cobInfo.displayCob == null)) {
+            if (useCOB && (cobInfo == null || cobInfo.displayCob == null)) {
                 sendError("Unknown COB! BG reading missing or recent app restart?");
                 return;
             }
@@ -244,7 +244,8 @@ public class ActionStringHandler {
             rMessage += "\nFrom Carbs: " + format.format(bolusWizard.getInsulinFromCarbs()) + "U";
             if (useCOB)
                 rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.getInsulinFromCOB()) + "U";
-            if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.getInsulinFromBG()) + "U";
+            if (useBG)
+                rMessage += "\nFrom BG: " + format.format(bolusWizard.getInsulinFromBG()) + "U";
             if (useBolusIOB)
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.getInsulinFromBolusIOB()) + "U";
             if (useBasalIOB)
@@ -327,17 +328,17 @@ public class ActionStringHandler {
             int carbs = SafeParse.stringToInt(act[1]);
             int starttime = SafeParse.stringToInt(act[2]);
             int duration = SafeParse.stringToInt(act[3]);
-            long starttimestamp = System.currentTimeMillis() + starttime*60*1000;
+            long starttimestamp = System.currentTimeMillis() + starttime * 60 * 1000;
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
             rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-            rMessage += "\n" + MainApp.gs(R.string.time) + ": " +  DateUtil.timeString(starttimestamp);
+            rMessage += "\n" + MainApp.gs(R.string.time) + ": " + DateUtil.timeString(starttimestamp);
             rMessage += "\n" + MainApp.gs(R.string.duration) + ": " + duration + "h";
 
 
-            if ( (carbsAfterConstraints - carbs != 0)) {
+            if ((carbsAfterConstraints - carbs != 0)) {
                 rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
             }
-            if(carbsAfterConstraints <= 0){
+            if (carbsAfterConstraints <= 0) {
                 sendError("Carbs = 0! No action taken!");
                 return;
             }
@@ -627,14 +628,14 @@ public class ActionStringHandler {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
             setCPP(timeshift, percentage);
-        }  else if ("ecarbs".equals(act[0])) {
+        } else if ("ecarbs".equals(act[0])) {
             int carbs = SafeParse.stringToInt(act[1]);
             long starttime = SafeParse.stringToLong(act[2]);
             int duration = SafeParse.stringToInt(act[3]);
 
             doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
-            MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
+            RxBus.INSTANCE.send(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         } else if ("changeRequest".equals(act[0])) {
             LoopPlugin.getPlugin().acceptChangeRequest();
             NotificationManager notificationManager =

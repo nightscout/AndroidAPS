@@ -201,7 +201,8 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 ActionStartTempTarget(),
                 ActionStopTempTarget(),
                 ActionNotification(),
-                ActionProfileSwitchPercent()
+                ActionProfileSwitchPercent(),
+                ActionProfileSwitch()
         )
     }
 
@@ -209,6 +210,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
         return listOf(
                 TriggerTime(),
                 TriggerRecurringTime(),
+                TriggerTimeRange(),
                 TriggerBg(),
                 TriggerDelta(),
                 TriggerIob(),

@@ -18,6 +18,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth įrenginys</string>
     <string name="ns_sync_use_absolute_title">Visada naudoti bazės absoliučias vertes</string>
     <string name="alert_dialog_storage_permission_text">Prašome iš naujo paleisti telefoną arba sistemos nustatymuose iš naujo paleisti AndroidAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti ar algoritmai veikia tinkamai)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
     <string name="description_careportal">Papildomų įrašų žurnalas.</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
@@ -33,6 +34,7 @@
     <string name="description_smb">Naujausias algoritmas patyrusiems vartotojams</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
+    <string name="description_profile_local">Nustatykite vietinį profilį.</string>
     <string name="description_profile_nightscout">Nustato profilį, kuris įvestas Nightscout puslapyje</string>
     <string name="description_profile_simple">Nustato profilį su vieninteliu laiko bloku.</string>
     <string name="description_pump_combo">Accu-Chek Combo pompos integracija, reikalinga Ruffy programėlė</string>
@@ -621,7 +623,6 @@
     <string name="mdtp_cancel">Atšaukti</string>
     <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
     <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
-    <string name="ns_localbroadcasts">Įgalinti duomenų perdavimą kitoms programėlėms (kaip xDrip).</string>
     <string name="ns_localbroadcasts_title">Įgalinti lokalų duomenų perdavimą.</string>
     <string name="careportal_activity_label">AKTYVUMAS &amp; ATGALINIS RYŠYS</string>
     <string name="careportal_carbsandbolus_label">ANGLIAVANDENIAI &amp; BOLUSAS</string>
@@ -1006,6 +1007,7 @@
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
     <string name="loop_openmode_min_change">Minimalaus pokyčio užklausa [%]</string>
+    <string name="loop_openmode_min_change_summary">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <string name="pairfirst">Atnaujinkite pompos ir telefono ryšį!</string>
     <string name="searching_for_devices">Ieškoma įrenginių…</string>
     <string name="please_wait">Palaukite…</string>

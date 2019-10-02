@@ -565,8 +565,6 @@
     <string name="enablesuperbolus">Zezwalaj na superbolus w kalkulatorze</string>
     <string name="enablesuperbolus_summary">Włącz funkcję Superbolus w kalkulatorze. Nie uruchamiaj, dopóki nie nauczysz się jak ta funkcja działa. MOŻESZ DOPROWADZIĆ DO PRZEDAWKOWANIA INSULINY JEŻELI UŻYJESZ TEJ FUNKCJI NIE POSIADAJĄC ODPOWIEDNIEJ WIEDZY!</string>
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
-    <string name="show_statuslights_easy">Pokaż diody stanu na ekranie głównym</string>
-    <string name="show_statuslights_easy_summary">Włącz diody stanu dla cage, iage, sage, rezerwuar i poziom baterii na ekranie głównym.</string>
     <string name="show_statuslights_extended">Pokaż diody stanu na ekranie głównym</string>
     <string name="show_statuslights_extended_summary">Włącz diody stanu dla cage, iage, sage, rezerwuar i poziom baterii na ekranie głównym.</string>
     <string name="statuslights_res_warning">Próg ostrzeżenia o poziomie zbiornika [U]</string>
@@ -643,7 +641,6 @@
     <string name="mdtp_cancel">Anuluj</string>
     <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
     <string name="valuesnotstored">Wartości nie są przechowywane!</string>
-    <string name="ns_localbroadcasts">Włącz transmisje do innych aplikacji (jak xDrip).</string>
     <string name="ns_localbroadcasts_title">Włącz transmisję lokalnie.</string>
     <string name="careportal_activity_label">AKTYWNOŚĆ &amp; REAKCJA</string>
     <string name="careportal_carbsandbolus_label">WĘGLOW. &amp; BOLUS</string>
@@ -1301,7 +1298,6 @@
     <string name="rileylink_state_not_started">Nie rozpoczęto</string>
     <string name="rileylink_state_rl_init">Uruchamianie RileyLink…</string>
     <string name="rileylink_state_rl_error">Błąd RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">Strojenie RileyLink i pompy</string>
     <string name="rileylink_state_pc_error">Problem z połączeniem z pompą</string>
     <string name="rileylink_state_connected">Połączono</string>
     <!-- RL Errors -->
@@ -1371,7 +1367,6 @@
     <string name="medtronic_cmd_desc_get_tbr">Pobierz tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_tbr">Ustaw tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_bolus">Ustaw bolus</string>
-    <string name="insulinFromCob"><![CDATA[Insulina COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Wprowadzono ograniczenie bolusa: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

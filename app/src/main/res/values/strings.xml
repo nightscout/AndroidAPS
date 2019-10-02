@@ -79,9 +79,6 @@
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
-    <string name="objectives_button_back">Back</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -205,9 +202,6 @@
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
-    <string name="objectives_bgavailableinns">BG available in NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
-    <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
@@ -348,21 +342,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="overview_bolusprogress_goingtodeliver">Going to deliver %1$.2fU</string>
-    <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
-    <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
-    <string name="objectives_openloop_objective">Starting on an open loop</string>
-    <string name="objectives_openloop_gate">Run in Open Loop mode for a few days and manually enact lots of temp basals. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
-    <string name="objectives_maxbasal_objective">Understanding your open loop, including its temp basal recommendations</string>
-    <string name="objectives_maxbasal_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences</string>
-    <string name="objectives_maxiobzero_objective">Starting to close the loop with Low Glucose Suspend</string>
-    <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events</string>
-    <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
-    <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
-    <string name="objectives_autosens_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
-    <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry</string>
-    <string name="objectives_ama_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
-    <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
-    <string name="objectives_smb_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -993,8 +972,6 @@
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="combo_bolus_count">Bolus count</string>
     <string name="combo_tbr_count">TBR count</string>
-    <string name="objectivenotstarted">Objective %1$d not started</string>
-    <string name="objectivenotfinished">Objective %1$d not finished</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
@@ -1142,7 +1119,6 @@
     <string name="completed_well_done">Completed, well done!</string>
     <string name="not_completed_yet">Not completed yet</string>
     <string name="time_elapsed">Time elapsed</string>
-    <string name="nth_objective">%1$d. Objective</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
@@ -1596,9 +1572,11 @@
     <string name="medtronic_cmd_desc_get_tbr">Get Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Set Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
+    <string name="profilename">Change profile to</string>
+    <string name="changengetoprofilename">Change profile to %1$s</string>
 
 
-    <string name="insulinFromCob"><![CDATA[COB insulin: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -1607,39 +1585,12 @@
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="loading">Loading ...</string>
     <string name="snooze">Snooze</string>
-    <string name="accomplished">Accomplished: %1$s</string>
-    <string name="objectives_usage_objective">Learn how to control AndroidAPS</string>
-    <string name="objectives_usage_gate">Perform different actions in AndroidAPS</string>
-    <string name="objectives_useprofileswitch">Set profile 90% for 10 min (Long-press profile name on Overview)</string>
-    <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
-    <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
-    <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
-    <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
-    <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
-    <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
-    <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
-    <string name="objectives_usedisconnectpump">Simulate shower. Disconnect pump for 1h (Long-press on Open Loop)</string>
-    <string name="objectives_usereconnectpump">... and reconnect back the same way</string>
-    <string name="objectives_usetemptarget">Create custom temporary target with 10 min duration (Long-press on your current target)</string>
-    <string name="objectives_useactions">In Config Builder enable Actions plugin, make it visible and display its content from top menu</string>
-    <string name="objectives_useloop">Display content of Loop plugin</string>
-    <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
-    <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Enter code obtained from developers to bypass the rest of objectives</string>
-    <string name="codeaccepted">Code accepted</string>
-    <string name="codeinvalid">Code invalid</string>
-    <string name="key_ObjectivesbgIsAvailableInNS" translatable="false">ObjectivesbgIsAvailableInNS</string>
-    <string name="key_ObjectivespumpStatusIsAvailableInNS" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
-    <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
-    <string name="objectives_exam_objective">Prove your knowledge</string>
-    <string name="objectives_exam_gate">Study and answer questions correctly</string>
-    <string name="answerdisabledto">Answering disabled to: %1$s</string>
-    <string name="wronganswer">Wrong answer!</string>
-    <string name="unfinshed_button">Next unfinished</string>
+    <string name="time_range">Time range</string>
+    <string name="timerange_value">Time is between %1$s and %2$s</string>
+    <string name="between">Between </string>
+
     <string name="close">Close</string>
-    <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
-    <string name="requestcode">Request code: %1$s</string>
-    <string name="objectives_hint">(check all correct answers)</string>
+    <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
 
     <!-- Omnipod -->
 
@@ -1682,17 +1633,4 @@
     <string name="omnipod_dash_name_short" translatable="false">DASH</string>
     <string name="description_pump_omnipod_dash">Pump integration for Omnipod Dash.</string>
 
-
-    <plurals name="objective_days">
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d hours</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d minutes</item>
-    </plurals>
 </resources>

@@ -199,7 +199,7 @@ public class IobCobThread extends Thread {
                                             log.debug(bucketed_data.toString());
                                             log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
                                             Notification notification = new Notification(Notification.SENDLOGFILES, MainApp.gs(R.string.sendlogfiles), Notification.LOW);
-                                            MainApp.bus().post(new EventNewNotification(notification));
+                                            RxBus.INSTANCE.send(new EventNewNotification(notification));
                                             SP.putBoolean("log_AUTOSENS", true);
                                             break;
                                         }
@@ -225,7 +225,7 @@ public class IobCobThread extends Thread {
                                 log.debug(bucketed_data.toString());
                                 log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
                                 Notification notification = new Notification(Notification.SENDLOGFILES, MainApp.gs(R.string.sendlogfiles), Notification.LOW);
-                                MainApp.bus().post(new EventNewNotification(notification));
+                                RxBus.INSTANCE.send(new EventNewNotification(notification));
                                 SP.putBoolean("log_AUTOSENS", true);
                                 break;
                             }

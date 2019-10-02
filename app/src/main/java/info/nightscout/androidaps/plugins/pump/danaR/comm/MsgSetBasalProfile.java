@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 
@@ -37,12 +38,12 @@ public class MsgSetBasalProfile extends MessageBase {
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Set basal profile result: " + result + " FAILED!!!");
             Notification reportFail = new Notification(Notification.PROFILE_SET_FAILED, MainApp.gs(R.string.profile_set_failed), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(reportFail));
+            RxBus.INSTANCE.send(new EventNewNotification(reportFail));
         } else {
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Set basal profile result: " + result);
             Notification reportOK = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            MainApp.bus().post(new EventNewNotification(reportOK));
+            RxBus.INSTANCE.send(new EventNewNotification(reportOK));
         }
     }
 

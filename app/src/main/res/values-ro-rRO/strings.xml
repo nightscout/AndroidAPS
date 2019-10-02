@@ -565,8 +565,6 @@
     <string name="enablesuperbolus">Activează superbolus în asistent</string>
     <string name="enablesuperbolus_summary">Activează funcționalitatea de superbolus în asistentul de buclă. Nu activați până nu înțelegeți ce face cu adevărat. DACĂ ESTE FOLOSIT ÎN NECUNOȘTINȚĂ DE CAUZĂ POATE DUCE LA SUPRADOZĂ DE INSULINĂ!</string>
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
-    <string name="show_statuslights_easy">Afișați indicatorii luminoși de pe pompă pe ecranul de start</string>
-    <string name="show_statuslights_easy_summary">Activați indicatori pentru CAGE, IAGE, SAGE, nivel baterie și rezervor pe ecranul principal.</string>
     <string name="show_statuslights_extended">Afișați indicatorii luminoși referitori la starea detaliată a pompei pe ecranul principal</string>
     <string name="show_statuslights_extended_summary">Activați indicatori pentru CAGE, IAGE, SAGE, nivel baterie și rezervor pe ecranul principal.</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
@@ -642,7 +640,7 @@
     <string name="mdtp_cancel">Renunță</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
-    <string name="ns_localbroadcasts">Permite anunțarea altor aplicații (ca xDrip).</string>
+    <string name="ns_localbroadcasts">Activează mesajele pentru alte aplicații (cum ar fi xDrip). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalată!</string>
     <string name="ns_localbroadcasts_title">Permite anunțuri locale.</string>
     <string name="careportal_activity_label">ACTIVITATE ȘI VERIFICĂRI</string>
     <string name="careportal_carbsandbolus_label">CARBO ȘI BOLUS</string>
@@ -1300,7 +1298,6 @@
     <string name="rileylink_state_not_started">Nepornit</string>
     <string name="rileylink_state_rl_init">Se inițializează RileyLink…</string>
     <string name="rileylink_state_rl_error">Eroare RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">Sincronizare cu RileyLink și pompă</string>
     <string name="rileylink_state_pc_error">Probleme la conectarea cu pompa</string>
     <string name="rileylink_state_connected">Conectat</string>
     <!-- RL Errors -->
@@ -1370,7 +1367,6 @@
     <string name="medtronic_cmd_desc_get_tbr">Preia bazala temporară</string>
     <string name="medtronic_cmd_desc_set_tbr">Setează bazala temporară</string>
     <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
-    <string name="insulinFromCob"><![CDATA[Insulină COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricție de bolus aplicată: %2$.2fU la %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

@@ -15,7 +15,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/please_choose_an_action_type" />
+            android:text="@string/please_choose_an_action_type"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <RadioGroup
             android:id="@+id/automation_radioGroup"

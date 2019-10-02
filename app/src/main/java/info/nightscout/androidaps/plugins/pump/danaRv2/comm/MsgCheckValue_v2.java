@@ -8,6 +8,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -43,7 +44,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         if (pump.model != DanaRPump.EXPORT_MODEL) {
             pump.lastConnection = 0;
             Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to Korean DanaR");
             MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setPluginEnabled(PluginType.PUMP, true);
@@ -68,7 +69,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         if (pump.protocol != 2) {
             pump.lastConnection = 0;
             Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to non APS DanaR");
             (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setPluginEnabled(PluginType.PUMP, false);

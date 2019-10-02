@@ -64,7 +64,7 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
 
     private fun doConvertSP(number: Int, name: String) {
         if (!SP.contains("Objectives_" + name + "_started")) {
-            SP.putLong("Objectives_" + name + "_started", SP.getLong("Objectives" + number + "accomplished", 0L))
+            SP.putLong("Objectives_" + name + "_started", SP.getLong("Objectives" + number + "started", 0L))
             SP.putLong("Objectives_" + name + "_accomplished", SP.getLong("Objectives" + number + "accomplished", 0L))
         }
         // TODO: we can remove Objectives1accomplished sometimes later

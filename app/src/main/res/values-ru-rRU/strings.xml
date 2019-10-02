@@ -565,8 +565,6 @@
     <string name="enablesuperbolus">активировать суперболюс</string>
     <string name="enablesuperbolus_summary">активировать возможность суперболюса в мастере. не активируйте если не знаете что это. МОЖЕТ ВЫЗВАТЬ ПЕРЕДОЗИРОВКУ ИНСУЛИНА ЕСЛИ ИСПОЛЬЗУЕТСЯ ВСЛЕПУЮ</string>
     <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>
-    <string name="show_statuslights_easy">Показывать индикаторы состояния на главном экране</string>
-    <string name="show_statuslights_easy_summary">Включить на главном экране индикаторы отработанного времени для канюли помпы, инсулина, сенсора, резервуара, а также показать уровень аккумулятора.</string>
     <string name="show_statuslights_extended">Показывать подробные индикаторы состояния на главном экране</string>
     <string name="show_statuslights_extended_summary">Включить на главном экране подробные индикаторы отработанного времени для канюли помпы, инсулина, сенсора, резервуара, а также уровня заряда батареи.</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
@@ -642,7 +640,7 @@
     <string name="mdtp_cancel">отмена</string>
     <string name="notloadedplugins">не все профили загружены!</string>
     <string name="valuesnotstored">Данные не сохранены!</string>
-    <string name="ns_localbroadcasts">Активировать передачу на другие приложения (напр. xDrip)</string>
+    <string name="ns_localbroadcasts">Включить трансляцию для других приложений (например, xDrip). Не включайте, если установлено несколько экземпляров приложений AAPS или NSClient!</string>
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="careportal_activity_label">АКТИВНОСТЬ</string>
     <string name="careportal_carbsandbolus_label">УГЛЕВОДЫ ; БОЛЮС</string>
@@ -1372,7 +1370,7 @@ Context | Edit Context</string>
     <string name="medtronic_cmd_desc_get_tbr">Получить временный базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Установить временный базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Настроить болюс</string>
-    <string name="insulinFromCob"><![CDATA[COB инсулин: <font color=\'%1$s\'>%2$.1fг %3$.2fU</font>]]></string>
+    <string name="insulinFromCob"><![CDATA[Активные углеводы COB в сопоставлении с Активным инсулином IOB: <font color=\'%1$s\'>%2$+.2fед</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Применено ограничение на болюс: %2$.2fед до %3$.2fед</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f/%2$d ед</string>

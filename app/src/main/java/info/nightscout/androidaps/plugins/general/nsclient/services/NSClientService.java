@@ -35,6 +35,7 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
@@ -177,7 +178,7 @@ public class NSClientService extends Service {
         if (ev.isChanged(R.string.key_nsclientinternal_url) ||
                 ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
                 ev.isChanged(R.string.key_nsclientinternal_paused)
-                ) {
+        ) {
             latestDateInReceivedData = 0;
             destroy();
             initialize();
@@ -269,7 +270,7 @@ public class NSClientService extends Service {
             MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAXCONNECTIONS));
             if (reconnections.size() >= WATCHDOG_MAXCONNECTIONS) {
                 Notification n = new Notification(Notification.NSMALFUNCTION, MainApp.gs(R.string.nsmalfunction), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(n));
+                RxBus.INSTANCE.send(new EventNewNotification(n));
                 MainApp.bus().post(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
                 NSClientPlugin.getPlugin().pause(true);
                 MainApp.bus().post(new EventNSClientUpdateGUI());
@@ -347,9 +348,9 @@ public class NSClientService extends Service {
         }
         if (!hasWriteAuth) {
             Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.gs(R.string.nowritepermission), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(noperm));
+            RxBus.INSTANCE.send(new EventNewNotification(noperm));
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
         }
     }
 
@@ -686,7 +687,7 @@ public class NSClientService extends Service {
                                 if ((System.currentTimeMillis() - latestDateInReceivedData) / (60 * 1000L) < 15L)
                                     lessThan15MinAgo = true;
                                 if (Notification.isAlarmForStaleData() && lessThan15MinAgo) {
-                                    MainApp.bus().post(new EventDismissNotification(Notification.NSALARM));
+                                    RxBus.INSTANCE.send(new EventDismissNotification(Notification.NSALARM));
                                 }
                                 BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
                             }

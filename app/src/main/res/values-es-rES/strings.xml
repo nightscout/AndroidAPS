@@ -565,8 +565,6 @@
     <string name="enablesuperbolus">Activar superbolo en asistente</string>
     <string name="enablesuperbolus_summary">Activar función superbolo en asistente. No lo actives hasta que hayas aprendido lo que realmente hace. ¡PUEDE CAUSAR SOBREDOSIS DE INSULINA usándolo sin precaución!</string>
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
-    <string name="show_statuslights_easy">Mostrar luces de estado originales en la pantalla de inicio</string>
-    <string name="show_statuslights_easy_summary">Habilitar el estado para tiempo de la cánula, tiempo de la insulina, tiempo del sensor y nivel de batería en la pantalla de inicio.</string>
     <string name="show_statuslights_extended">Mostrar luces de estado extendidas en pantalla de inicio</string>
     <string name="show_statuslights_extended_summary">Habilita luces de estado extendidas para tiempo de cánula, tiempo de insulina, tiempo del sensor, reservorio y nivel de batería en pantalla de inicio.</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
@@ -642,7 +640,6 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>
-    <string name="ns_localbroadcasts">Permitir emisión de mensajes a otras aplicaciones (como xDrip).</string>
     <string name="ns_localbroadcasts_title">Permitir emisión de mensajes localmente.</string>
     <string name="careportal_activity_label">ACTIVIDAD Y FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">CARBS Y BOLUS</string>
@@ -1300,7 +1297,6 @@
     <string name="rileylink_state_not_started">No iniciado</string>
     <string name="rileylink_state_rl_init">Inicialización de RileyLink…</string>
     <string name="rileylink_state_rl_error">Error de RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">Configurando RileyLink y la bomba</string>
     <string name="rileylink_state_pc_error">Problema al conectar con la infusora</string>
     <string name="rileylink_state_connected">Conectado</string>
     <!-- RL Errors -->
@@ -1370,7 +1366,6 @@
     <string name="medtronic_cmd_desc_get_tbr">Obtener la basal temporal</string>
     <string name="medtronic_cmd_desc_set_tbr">Establecer la basal temporal</string>
     <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
-    <string name="insulinFromCob"><![CDATA[Insulina de COB: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricción de bolo aplicada: %2$.2fU a %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[¡<font color=\'%1$s\'>! Se ha detectado una absorción lenta de hidratos de carbono: %2$d% de tiempo. Compruebe de nuevo su calculo. Los COB se pueden sobrestimar, por lo que ¡se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="reservoirvalue">%1$.0f/%2$dU</string>

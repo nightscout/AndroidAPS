@@ -16,7 +16,7 @@
     <string name="alert_m20_title">Cartuccia non inserita</string>
     <string name="alert_m21_title">Cartuccia vuota</string>
     <string name="alert_m22_title">Batteria scarica</string>
-    <string name="alert_m23_title">Spegnimento automatico - micro in stop</string>
+    <string name="alert_m23_title">Spegnimento automatico - micro stoppato</string>
     <string name="alert_m24_title">Occlusione</string>
     <string name="alert_m25_title">Prestito terminato - fine operatività</string>
     <string name="alert_m26_title">Cambio cartuccia non completato</string>

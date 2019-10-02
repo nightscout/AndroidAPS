@@ -231,7 +231,7 @@ public class MedtronicUtil extends RileyLinkUtil {
                 notificationType.getNotificationType(), //
                 MainApp.gs(notificationType.getResourceId()), //
                 notificationType.getNotificationUrgency());
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
     }
 
 
@@ -240,12 +240,12 @@ public class MedtronicUtil extends RileyLinkUtil {
                 notificationType.getNotificationType(), //
                 MainApp.gs(notificationType.getResourceId(), parameters), //
                 notificationType.getNotificationUrgency());
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
     }
 
 
     public static void dismissNotification(MedtronicNotificationType notificationType) {
-        MainApp.bus().post(new EventDismissNotification(notificationType.getNotificationType()));
+        RxBus.INSTANCE.send(new EventDismissNotification(notificationType.getNotificationType()));
     }
 
 

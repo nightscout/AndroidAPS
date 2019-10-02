@@ -209,6 +209,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
                     scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights_extended)));
                 }
             }
 

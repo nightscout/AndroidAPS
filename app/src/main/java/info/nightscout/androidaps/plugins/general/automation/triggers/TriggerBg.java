@@ -63,16 +63,22 @@ public class TriggerBg extends Trigger {
     public synchronized boolean shouldRun() {
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if (lastRun > DateUtil.now() - T.mins(5).msecs())
+        if (lastRun > DateUtil.now() - T.mins(5).msecs()) {
+            if (L.isEnabled(L.AUTOMATION))
+                log.debug("NOT ready for execution: " + friendlyDescription());
             return false;
+        }
 
         if (glucoseStatus == null && comparator.getValue().equals(Comparator.Compare.IS_NOT_AVAILABLE)) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
             return true;
         }
-        if (glucoseStatus == null)
+        if (glucoseStatus == null) {
+            if (L.isEnabled(L.AUTOMATION))
+                log.debug("NOT ready for execution: " + friendlyDescription());
             return false;
+        }
 
         boolean doRun = comparator.getValue().check(glucoseStatus.glucose, Profile.toMgdl(bg.getValue(), bg.getUnits()));
         if (doRun) {
@@ -80,6 +86,9 @@ public class TriggerBg extends Trigger {
                 log.debug("Ready for execution: " + friendlyDescription());
             return true;
         }
+
+        if (L.isEnabled(L.AUTOMATION))
+            log.debug("NOT ready for execution: " + friendlyDescription());
         return false;
     }
 

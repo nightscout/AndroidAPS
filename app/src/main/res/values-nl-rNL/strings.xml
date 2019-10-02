@@ -625,7 +625,6 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
-    <string name="ns_localbroadcasts">Activeer delen met andere apps (zoals xDrip).</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="careportal_activity_label">ACTIVITEIT &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
@@ -1283,7 +1282,6 @@
     <string name="rileylink_state_not_started">Niet gestart</string>
     <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
     <string name="rileylink_state_rl_error">RileyLink fout</string>
-    <string name="rileylink_state_pc_tune_up">RileyLink en Pomp status opvragen</string>
     <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
     <string name="rileylink_state_connected">Verbonden</string>
     <!-- RL Errors -->
@@ -1353,7 +1351,6 @@
     <string name="medtronic_cmd_desc_get_tbr">Ophalen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_tbr">Instellen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
-    <string name="insulinFromCob"><![CDATA[COB insuline: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus limiet bereikt: %2$.2fU naar %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>

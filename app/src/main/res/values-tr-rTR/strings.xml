@@ -588,7 +588,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="mdtp_cancel">Vazgeç</string>
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler saklanmadı!</string>
-    <string name="ns_localbroadcasts">Yayınları (xDrip gibi) diğer uygulamalar için etkinleştirin.</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="careportal_activity_label">AKTIVITE &amp; GERİBİLDİRİM</string>
     <string name="careportal_carbsandbolus_label">KARBONHİDRATLAR &amp; BOLUS</string>
