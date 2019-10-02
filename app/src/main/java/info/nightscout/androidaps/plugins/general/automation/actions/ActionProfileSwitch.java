@@ -61,7 +61,8 @@ public class ActionProfileSwitch extends Action {
         ProfileStore profileStore = activeProfile.getProfile();
         if (profileStore == null) return;
         if(profileStore.getSpecificProfile(profileName) == null) {
-            log.error("Selected profile does not exist! - "+ profileName);
+            if (L.isEnabled(L.AUTOMATION))
+                log.error("Selected profile does not exist! - "+ profileName);
             return;
         }
 
