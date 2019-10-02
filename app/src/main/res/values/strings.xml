@@ -1583,6 +1583,10 @@
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="loading">Loading ...</string>
     <string name="snooze">Snooze</string>
+    <string name="time_range">Time range</string>
+    <string name="timerange_value">Time is between %1$s and %2$s</string>
+    <string name="between">Between </string>
+
     <string name="close">Close</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
 
