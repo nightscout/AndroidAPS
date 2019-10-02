@@ -20,16 +20,13 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionProfileSwitch extends Action {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-    public InputProfileName inputProfileName = new InputProfileName("-");
+    public InputProfileName inputProfileName = new InputProfileName(ProfileFunctions.getInstance().getProfileName());
     String profileName = "";
-    String profileStoreName;
-    String profileInterfaceString;
 
     public ActionProfileSwitch() {
         // Prevent action if active profile is already active
@@ -50,25 +47,19 @@ public class ActionProfileSwitch extends Action {
 
     @Override
     public void doAction(Callback callback) {
-        String activeProfileName = ProfileFunctions.getInstance().getProfileName();
 
-        /*log.debug("Current profile is: " + activeProfileName);
-        log.debug("Wanted profile is: " + profileName);
-        log.debug("Do they match: " + (profileName.equals(activeProfileName)));
-*/
+        String activeProfileName = ProfileFunctions.getInstance().getProfileName();
+        //Check for uninitialized profileName
+        if ( profileName.equals("")){ profileName = activeProfileName; }
+
         if (profileName.equals(activeProfileName)) {
             // Profile is already switched
             return;
         }
-        ProfileInterface profileInterface = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
-        profileInterfaceString = profileInterface.toString();
-        ProfileStore profileStore = NSProfilePlugin.getPlugin().getProfile();
-        log.debug("NS profileStore is: " +profileStore.toString());
-        if (profileStore == null) {
-                log.error("ProfileStore is null");
-                return;
-        }
-        profileStoreName = profileStore.toString();
+        ProfileInterface activeProfile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+        if (activeProfile == null) return;
+        ProfileStore profileStore = activeProfile.getProfile();
+        if (profileStore == null) return;
         if(profileStore.getSpecificProfile(profileName) == null) {
             log.error("Selected profile does not exist! - "+ profileName);
             return;

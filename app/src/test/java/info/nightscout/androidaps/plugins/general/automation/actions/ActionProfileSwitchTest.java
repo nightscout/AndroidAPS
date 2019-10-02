@@ -18,7 +18,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -30,11 +29,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, SP.class, TreatmentsPlugin.class, ProfileFunctions.class, ConfigBuilderPlugin.class})
+@PrepareForTest({MainApp.class, SP.class, TreatmentsPlugin.class, ProfileFunctions.class, ConfigBuilderPlugin.class, NSProfilePlugin.class})
 public class ActionProfileSwitchTest {
     TreatmentsPlugin treatmentsPlugin;
     ProfileSwitch profileAdded;
-    private ActionProfileSwitch actionProfileSwitch = new ActionProfileSwitch();
+    private ActionProfileSwitch actionProfileSwitch;
     private  String stringJson = "{\"data\":{\"profileToSwitchTo\":\"Test\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitch\"}";
 
     @Before
@@ -48,6 +47,7 @@ public class ActionProfileSwitchTest {
         AAPSMocker.mockTreatmentService();
         AAPSMocker.mockBus();
         AAPSMocker.mockDatabaseHelper();
+        AAPSMocker.mockProfileFunctions();
 
         treatmentsPlugin = AAPSMocker.mockTreatmentPlugin();
         NSProfilePlugin profilePlugin = NSProfilePlugin.getPlugin();
@@ -62,6 +62,7 @@ public class ActionProfileSwitchTest {
 
     @Test
     public void friendlyName() {
+        actionProfileSwitch = new ActionProfileSwitch();
         Assert.assertEquals(R.string.profilename, actionProfileSwitch.friendlyName());
     }
 
@@ -75,25 +76,24 @@ public class ActionProfileSwitchTest {
 
     @Test
     public void doAction() {
-/*        actionProfileSwitch = new ActionProfileSwitch();
-        actionProfileSwitch.inputProfileName.setValue("Test");
-        actionProfileSwitch.profileName = "Test";
-        SP.putString("profile", AAPSMocker.getValidProfileStore().getData().toString());
+        PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn("Test");
 
-        when(NSProfilePlugin.getPlugin().getProfile()).thenReturn(AAPSMocker.getValidProfileStore());
-//        Assert.assertEquals("", actionProfileSwitch.profileStoreName);
-        Assert.assertEquals("", actionProfileSwitch.profileInterfaceString);
-//        when(NSProfilePlugin.getPlugin().getProfile()).thenReturn(AAPSMocker.getValidProfileStore());
+        actionProfileSwitch = new ActionProfileSwitch();
+        actionProfileSwitch.inputProfileName.setValue("someOtherProfile");
+        actionProfileSwitch.profileName = "someProfile";
+
         actionProfileSwitch.doAction(new Callback() {
             @Override
             public void run() {
+                Assert.assertTrue(result.success);
             }
         });
-        Assert.assertNotEquals(null, profileAdded);*/
+
     }
 
     @Test
     public void hasDialogTest() {
+        actionProfileSwitch = new ActionProfileSwitch();
         Assert.assertTrue(actionProfileSwitch.hasDialog());
     }
 
@@ -114,6 +114,7 @@ public class ActionProfileSwitchTest {
 
     @Test
     public void iconTest() {
+        actionProfileSwitch = new ActionProfileSwitch();
         Assert.assertEquals(Optional.of(R.drawable.icon_actions_profileswitch), actionProfileSwitch.icon());
     }
 }
