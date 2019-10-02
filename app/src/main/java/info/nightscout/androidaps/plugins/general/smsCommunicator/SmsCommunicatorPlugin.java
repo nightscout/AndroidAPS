@@ -107,9 +107,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
         if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
             String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 
-            String pattern = ";";
-
-            String[] substrings = settings.split(pattern);
+            allowedNumbers.clear();
+            String[] substrings = settings.split(";");
             for (String number : substrings) {
                 String cleaned = number.replaceAll("\\s+", "");
                 allowedNumbers.add(cleaned);
