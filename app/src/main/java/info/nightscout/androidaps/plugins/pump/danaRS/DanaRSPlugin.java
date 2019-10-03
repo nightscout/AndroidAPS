@@ -40,7 +40,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -399,7 +399,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             if (carbTime == 0) carbTime--; // better set 1 min back to prevents clash with insulin
             detailedBolusInfo.carbTime = 0;
 
-            DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
+            DetailedBolusInfoStorage.INSTANCE.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;
