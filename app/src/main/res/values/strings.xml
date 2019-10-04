@@ -1574,6 +1574,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
     <string name="profilename">Change profile to</string>
     <string name="changengetoprofilename">Change profile to %1$s</string>
+    <string name="sendsmsactionlabel">Send SMS</string>
+    <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
+    <string name="sendsmsactiontext">Send SMS with text</string>
 
 
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
