@@ -33,11 +33,12 @@ public class Notification {
     public static final int OLD_NSCLIENT = 8;
     public static final int OLD_NS = 9;
     public static final int INVALID_PHONE_NUMBER = 10;
-    public static final int APPROACHING_DAILY_LIMIT = 11;
-    public static final int NSCLIENT_NO_WRITE_PERMISSION = 12;
-    public static final int MISSING_SMS_PERMISSION = 13;
-    public static final int PUMPERROR = 14;
-    public static final int WRONGSERIALNUMBER = 15;
+    public static final int INVALID_MESSAGE_BODY = 11;
+    public static final int APPROACHING_DAILY_LIMIT = 12;
+    public static final int NSCLIENT_NO_WRITE_PERMISSION = 13;
+    public static final int MISSING_SMS_PERMISSION = 14;
+    public static final int PUMPERROR = 15;
+    public static final int WRONGSERIALNUMBER = 16;
 
     public static final int NSANNOUNCEMENT = 18;
     public static final int NSALARM = 19;

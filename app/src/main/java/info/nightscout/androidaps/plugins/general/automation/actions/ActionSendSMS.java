@@ -31,14 +31,14 @@ public class ActionSendSMS extends Action {
 
     @Override
     public String shortDescription() {
-        return MainApp.gs(R.string.sendsmsactionlabel);
+        return MainApp.gs(R.string.sendsmsactionlabel, text.getValue());
     }
 
     @Override
     public void doAction(Callback callback) {
-        SmsCommunicatorPlugin.getPlugin().sendNotificationToAllNumbers(text.getValue());
+        boolean result = SmsCommunicatorPlugin.getPlugin().sendNotificationToAllNumbers(text.getValue());
         if (callback != null)
-            callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
+            callback.result(new PumpEnactResult().success(result).comment(result ? R.string.ok : R.string.danar_error)).run();
 
     }
 
