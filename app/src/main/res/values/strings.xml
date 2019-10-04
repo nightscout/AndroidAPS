@@ -1578,6 +1578,9 @@
     <string name="automation_trigger_pump_disconnected_label">Last connection to pump</string>
     <string name="automation_trigger_pump_disconnected_description">Last connection to pump [minutes ago]</string>
     <string name="automation_trigger_pump_disconnected_compared">Last connection to pump %1$s %2$s min ago</string>
+    <string name="sendsmsactionlabel">Send SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
+    <string name="sendsmsactiontext">Send SMS with text</string>
 
 
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
@@ -1595,5 +1598,6 @@
 
     <string name="close">Close</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
+    <string name="smscommunicator_messagebody">Invalid message body</string>
 
 </resources>
