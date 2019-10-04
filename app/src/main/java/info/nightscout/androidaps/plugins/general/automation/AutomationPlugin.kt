@@ -220,7 +220,8 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 TriggerWifiSsid(),
                 TriggerLocation(),
                 TriggerAutosensValue(),
-                TriggerBolusAgo()
+                TriggerBolusAgo(),
+                TriggerPumpDisconnected()
         )
     }
 
