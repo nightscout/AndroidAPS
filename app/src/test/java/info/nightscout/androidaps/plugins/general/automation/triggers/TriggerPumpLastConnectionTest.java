@@ -27,7 +27,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, TreatmentsPlugin.class, ConfigBuilderPlugin.class, System.class})
-public class TriggerPumpDisconnectedTest {
+public class TriggerPumpLastConnectionTest {
 
     long now = 1514766900000L;
 
@@ -38,64 +38,64 @@ public class TriggerPumpDisconnectedTest {
         VirtualPumpPlugin virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
         Assert.assertEquals(0L, virtualPumpPlugin.lastDataTime());
-        TriggerPumpDisconnected t = new TriggerPumpDisconnected().setValue(110).comparator(Comparator.Compare.IS_EQUAL).lastRun(now - 1);
+        TriggerPumpLastConnection t = new TriggerPumpLastConnection().setValue(110).comparator(Comparator.Compare.IS_EQUAL).lastRun(now - 1);
         Assert.assertFalse(t.shouldRun());
         when(DateUtil.now()).thenReturn(now + (10*60*1000)); // set current time to now + 10 min
-        t = new TriggerPumpDisconnected().setValue(110).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerPumpLastConnection().setValue(110).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertEquals(110, t.getValue(), 0.01d);
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t.getComparator().getValue());
         Assert.assertFalse(t.shouldRun());
-        t = new TriggerPumpDisconnected().setValue(10).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerPumpLastConnection().setValue(10).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertEquals(10, t.getValue(), 0.01d);
         Assert.assertFalse(t.shouldRun()); // 0 == 10 -> FALSE
-        t = new TriggerPumpDisconnected().setValue(5).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
+        t = new TriggerPumpLastConnection().setValue(5).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER);
         Assert.assertTrue(t.shouldRun()); // 5 => 0 -> TRUE
-        t = new TriggerPumpDisconnected().setValue(310).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        t = new TriggerPumpLastConnection().setValue(310).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         Assert.assertFalse(t.shouldRun()); // 310 <= 0 -> FALSE
-        t = new TriggerPumpDisconnected().setValue(420).comparator(Comparator.Compare.IS_EQUAL);
+        t = new TriggerPumpLastConnection().setValue(420).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertFalse(t.shouldRun()); // 420 == 0 -> FALSE
     }
 
     @Test
     public void copyConstructorTest() {
-        TriggerPumpDisconnected t = new TriggerPumpDisconnected().setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
-        TriggerPumpDisconnected t1 = (TriggerPumpDisconnected) t.duplicate();
+        TriggerPumpLastConnection t = new TriggerPumpLastConnection().setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        TriggerPumpLastConnection t1 = (TriggerPumpLastConnection) t.duplicate();
         Assert.assertEquals(213, t1.getValue(), 0.01d);
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.getComparator().getValue());
     }
 
     @Test
     public void executeTest() {
-        TriggerPumpDisconnected t = new TriggerPumpDisconnected().setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
+        TriggerPumpLastConnection t = new TriggerPumpLastConnection().setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
         t.executed(1);
         Assert.assertEquals(1l, t.getLastRun());
     }
 
-    String LBJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"minutesAgo\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerPumpDisconnected\"}";
+    String LBJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"minutesAgo\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerPumpLastConnection\"}";
 
     @Test
     public void toJSONTest() {
-        TriggerPumpDisconnected t = new TriggerPumpDisconnected().setValue(410).comparator(Comparator.Compare.IS_EQUAL);
+        TriggerPumpLastConnection t = new TriggerPumpLastConnection().setValue(410).comparator(Comparator.Compare.IS_EQUAL);
         Assert.assertEquals(LBJson, t.toJSON());
     }
 
     @Test
     public void fromJSONTest() throws JSONException {
-        TriggerPumpDisconnected t = new TriggerPumpDisconnected().setValue(410).comparator(Comparator.Compare.IS_EQUAL);
+        TriggerPumpLastConnection t = new TriggerPumpLastConnection().setValue(410).comparator(Comparator.Compare.IS_EQUAL);
 
-        TriggerPumpDisconnected t2 = (TriggerPumpDisconnected) Trigger.instantiate(new JSONObject(t.toJSON()));
+        TriggerPumpLastConnection t2 = (TriggerPumpLastConnection) Trigger.instantiate(new JSONObject(t.toJSON()));
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t2.getComparator().getValue());
         Assert.assertEquals(410, t2.getValue(), 0.01d);
     }
 
     @Test
     public void iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerPumpDisconnected().icon());
+        Assert.assertEquals(Optional.of(R.drawable.remove), new TriggerPumpLastConnection().icon());
     }
 
     @Test
     public void friendlyNameTest() {
-        Assert.assertEquals(R.string.automation_trigger_pump_disconnected_label, new TriggerPumpDisconnected().friendlyName());
+        Assert.assertEquals(R.string.automation_trigger_pump_last_connection_compared, new TriggerPumpLastConnection().friendlyName());
     }
 
 

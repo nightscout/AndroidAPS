@@ -24,20 +24,20 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 
-public class TriggerPumpDisconnected extends Trigger {
+public class TriggerPumpLastConnection extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
     private InputDuration minutesAgo = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
     private Comparator comparator = new Comparator();
 
-    public TriggerPumpDisconnected() {
+    public TriggerPumpLastConnection() {
         super();
     }
 
-    private TriggerPumpDisconnected(TriggerPumpDisconnected triggerPumpDisconnected) {
+    private TriggerPumpLastConnection(TriggerPumpLastConnection triggerPumpLastConnection) {
         super();
-        minutesAgo = new InputDuration(triggerPumpDisconnected.minutesAgo);
-        lastRun = triggerPumpDisconnected.lastRun;
-        comparator = new Comparator(triggerPumpDisconnected.comparator);
+        minutesAgo = new InputDuration(triggerPumpLastConnection.minutesAgo);
+        lastRun = triggerPumpLastConnection.lastRun;
+        comparator = new Comparator(triggerPumpLastConnection.comparator);
     }
 
     public double getValue() {
@@ -75,7 +75,7 @@ public class TriggerPumpDisconnected extends Trigger {
     public synchronized String toJSON() {
         JSONObject o = new JSONObject();
         try {
-            o.put("type", TriggerPumpDisconnected.class.getName());
+            o.put("type", TriggerPumpLastConnection.class.getName());
             JSONObject data = new JSONObject();
             data.put("minutesAgo", getValue());
             data.put("lastRun", lastRun);
@@ -102,12 +102,12 @@ public class TriggerPumpDisconnected extends Trigger {
 
     @Override
     public int friendlyName() {
-        return R.string.automation_trigger_pump_disconnected_label;
+        return R.string.automation_trigger_pump_last_connection_label;
     }
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.automation_trigger_pump_disconnected_compared, MainApp.gs(comparator.getValue().getStringRes()), (int) getValue());
+        return MainApp.gs(R.string.automation_trigger_pump_last_connection_compared, MainApp.gs(comparator.getValue().getStringRes()), (int) getValue());
     }
 
     @Override
@@ -117,20 +117,20 @@ public class TriggerPumpDisconnected extends Trigger {
 
     @Override
     public Trigger duplicate() {
-        return new TriggerPumpDisconnected(this);
+        return new TriggerPumpLastConnection(this);
     }
 
-    TriggerPumpDisconnected setValue(int requestedValue) {
+    TriggerPumpLastConnection setValue(int requestedValue) {
         this.minutesAgo.setMinutes(requestedValue);
         return this;
     }
 
-    TriggerPumpDisconnected lastRun(long lastRun) {
+    TriggerPumpLastConnection lastRun(long lastRun) {
         this.lastRun = lastRun;
         return this;
     }
 
-    TriggerPumpDisconnected comparator(Comparator.Compare compare) {
+    TriggerPumpLastConnection comparator(Comparator.Compare compare) {
         this.comparator = new Comparator().setValue(compare);
         return this;
     }
@@ -138,9 +138,9 @@ public class TriggerPumpDisconnected extends Trigger {
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         new LayoutBuilder()
-                .add(new StaticLabel(R.string.automation_trigger_pump_disconnected_label))
+                .add(new StaticLabel(R.string.automation_trigger_pump_last_connection_label))
                 .add(comparator)
-                .add(new LabelWithElement(MainApp.gs(R.string.automation_trigger_pump_disconnected_description) + ": ", "", minutesAgo))
+                .add(new LabelWithElement(MainApp.gs(R.string.automation_trigger_pump_last_connection_description) + ": ", "", minutesAgo))
                 .build(root);
     }
 }

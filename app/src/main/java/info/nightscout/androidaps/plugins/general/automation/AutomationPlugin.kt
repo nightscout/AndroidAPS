@@ -222,7 +222,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 TriggerLocation(),
                 TriggerAutosensValue(),
                 TriggerBolusAgo(),
-                TriggerPumpDisconnected()
+                TriggerPumpLastConnection()
         )
     }
 
