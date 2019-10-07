@@ -95,7 +95,7 @@ public class TriggerPumpLastConnectionTest {
 
     @Test
     public void friendlyNameTest() {
-        Assert.assertEquals(R.string.automation_trigger_pump_last_connection_compared, new TriggerPumpLastConnection().friendlyName());
+        Assert.assertEquals(R.string.automation_trigger_pump_last_connection_label, new TriggerPumpLastConnection().friendlyName());
     }
 
 
