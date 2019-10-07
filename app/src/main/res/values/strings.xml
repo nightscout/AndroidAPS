@@ -1575,9 +1575,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
     <string name="profilename">Change profile to</string>
     <string name="changengetoprofilename">Change profile to %1$s</string>
-    <string name="automation_trigger_pump_disconnected_label">Last connection to pump</string>
-    <string name="automation_trigger_pump_disconnected_description">Last connection to pump [minutes ago]</string>
-    <string name="automation_trigger_pump_disconnected_compared">Last connection to pump %1$s %2$s min ago</string>
+    <string name="automation_trigger_pump_last_connection_label">Last connection to pump</string>
+    <string name="automation_trigger_pump_last_connection_description">Last connection to pump [minutes ago]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
     <string name="sendsmsactiontext">Send SMS with text</string>
