@@ -1346,6 +1346,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Imposta bolo</string>
     <string name="profilename">Cambia profilo in</string>
     <string name="changengetoprofilename">Cambia profilo in %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Ultima connessione al micro</string>
+    <string name="automation_trigger_pump_last_connection_description">Ultima connessione al micro [minuti fa]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Ultima connessione al micro %1$s %2$s min fa</string>
     <string name="sendsmsactionlabel">Invia SMS: %1$s</string>
     <string name="sendsmsactiondescription">Invia SMS a tutti i numeri nelle preferenze</string>
     <string name="sendsmsactiontext">Invia SMS con testo</string>

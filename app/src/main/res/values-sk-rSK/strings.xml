@@ -1346,6 +1346,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Nastavovanie bolusu</string>
     <string name="profilename">Zmeniť profil na</string>
     <string name="changengetoprofilename">Zmena profilu na %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Posledné spojenie s pumpou</string>
+    <string name="automation_trigger_pump_last_connection_description">Posledné spojenie s pumpou [pred X minútami]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Posledné spojenie s pumpou pred %1$s %2$s minútami</string>
     <string name="sendsmsactionlabel">Poslať SMS: %1$s</string>
     <string name="sendsmsactiondescription">Odoslať SMS na všetky predvolené čísla</string>
     <string name="sendsmsactiontext">Odoslať SMS s textom</string>

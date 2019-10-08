@@ -1347,6 +1347,9 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_cmd_desc_set_bolus">Setze Bolus</string>
     <string name="profilename">Profil wechseln zu</string>
     <string name="changengetoprofilename">Profil wechseln zu %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Letzte Verbindung zur Pumpe</string>
+    <string name="automation_trigger_pump_last_connection_description">Letzte Verbindung zur Pumpe [vor X Minuten]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Letzte Verbindung zur Pumpe vor %1$s %2$s Minuten</string>
     <string name="sendsmsactionlabel">SMS senden: %1$s</string>
     <string name="sendsmsactiondescription">SMS an alle vorgegebenen Nummern senden</string>
     <string name="sendsmsactiontext">SMS mit Text senden</string>
