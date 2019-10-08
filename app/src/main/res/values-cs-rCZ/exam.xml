@@ -11,7 +11,6 @@
     <string name="hypott_label">Téma: Dočasný cíl Hypoglykémie</string>
     <string name="hypott_whenhypott">Proč je užitečné nastavit dočasný cíl pro hypoglykémii?</string>
     <string name="hypott_goinglow">Prevence nízké glykémie.</string>
-    <string name="hypott_havinglow">Pomoci zotavit se z nízké glykémie.</string>
     <string name="hypott_preventoversmb">Aby se po vzestupu glykémie z rychlých sacharidů po řešení hypoglykémie zabránilo vydávání SMB.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Který profil lze použít a konfigurovat offline?</string>
@@ -47,7 +46,6 @@
     <string name="exercise_switchprofileabove100">Přepnout na profil nad 100 %.</string>
     <string name="exercise_stoploop">Zastavit smyčku.</string>
     <string name="exercise_doitbeforestart">Nastavit dočasný cíl aktivity před zahájením cvičení.</string>
-    <string name="exercise_doitafterstart">Nastavit dočasný cíl aktivity po začátku cvičení.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>
     <string name="suspendloop_label">Téma: Pozastavená smyčka</string>
     <string name="suspendloop_doigetinsulin">Dostávám inzulín, když je smyčka pozastavena?</string>
@@ -78,7 +76,7 @@
     <string name="whatistrue">Co je pravda?</string>
     <string name="update_git">Musíte mít nainstalován Git.</string>
     <string name="update_asap">Aktualizovat ihned po uvolnění nové verze.</string>
-    <string name="update_keys">Můžete použít stejné podpisové klíče.</string>
+    <string name="update_keys">Měli byste používat stejné podpisové klíče.</string>
     <string name="update_neverupdate">Nikdy neaktualizujte, pokud systém funguje dobře.</string>
     <string name="update_askfriend">Požádejte kamaráda o novou verzi APK.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Installing-AndroidAPS/Update-to-new-version.html</string>
@@ -116,7 +114,7 @@
     <string name="nsclient_label">Téma: Monitorování dětí</string>
     <string name="nsclient_howcanyou">Jak můžete na dálku monitorovat AAPS svého dítěte?</string>
     <string name="nsclient_nightscout">Pomocí stránky Nightscout.</string>
-    <string name="nsclient_dexcomfollow">Aplikace Dexcom Follow, pokud používáte originální aplikaci Dexcom.</string>
+    <string name="nsclient_dexcomfollow">Dexcom follow, pokud používáte originální aplikaci Dexcom (pouze hodnoty glykémie).</string>
     <string name="nsclient_dexcomfollowxdrip">Aplikace Dexcom Follow, pokud používáte aplikaci xDrip.</string>
     <string name="nsclient_xdripfollower">Aplikace xDrip v režimu sledování.</string>
     <string name="nsclient_looponiphone">Aplikace Loop na iPhone.</string>
@@ -145,7 +143,7 @@
     <string name="profileswitch_iclower">Hodnota inzulino-sacharidového poměru bude o 10 % nižší.</string>
     <string name="profileswitch_isfhigher">Hodnota citlivosti bude o 10 % vyšší.</string>
     <string name="profileswitch_isflower">Hodnota citlivosti bude o 10 % nižší.</string>
-    <string name="profileswitch_overall">Celkově dostanete o 10 % inzulinu méně.</string>
+    <string name="profileswitch_overall">Celkově dostanete o cca 10 % inzulinu méně.</string>
     <string name="profileswitch_targethigher">Cíl bude o 10 % vyšší.</string>
     <string name="profileswitch_targetlower">Cíl bude o 10 % nižší.</string>
     <string name="profileswitch_targetbottom">Pouze dolní cíl bude o 10 % nižší.</string>

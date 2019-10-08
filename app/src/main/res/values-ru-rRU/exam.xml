@@ -11,7 +11,6 @@
     <string name="hypott_label">Тема: Временная цель Hypo</string>
     <string name="hypott_whenhypott">Почему полезно установить временную цель hypo TT?</string>
     <string name="hypott_goinglow">Предотвратить падение ГК.</string>
-    <string name="hypott_havinglow">Помочь восстановиться после низкой ГК.</string>
     <string name="hypott_preventoversmb">Предотвратить введение микроболюса SMB после подъёма ГК от быстрых углеводов.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Какой профиль можно применить и настроить в автономном режиме?</string>
@@ -47,7 +46,6 @@
     <string name="exercise_switchprofileabove100">Задать профиль выше 100%.</string>
     <string name="exercise_stoploop">Остановить цикл.</string>
     <string name="exercise_doitbeforestart">Задать временную цель Нагрузка перед началом активности.</string>
-    <string name="exercise_doitafterstart">Задайте временную цель Нагрузка после начала активности.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_label">Тема: Приостановка замкнутого цикла</string>
     <string name="suspendloop_doigetinsulin">Получаю ли я инсулин, когда цикл приостановлен?</string>
@@ -78,7 +76,7 @@
     <string name="whatistrue">Что верно?</string>
     <string name="update_git">Вы должны иметь установленный Git.</string>
     <string name="update_asap">Обновлять, как только выходит новая версия.</string>
-    <string name="update_keys">Можно использовать те же ключи подписи.</string>
+    <string name="update_keys">Следует использовать те же ключи подписи.</string>
     <string name="update_neverupdate">Никогда не обновлять, если система работает хорошо.</string>
     <string name="update_askfriend">Попросить новую версию APK у друга.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
@@ -118,7 +116,7 @@ Context | Edit Context</string>
     <string name="nsclient_label">Тема: Детский мониторинг</string>
     <string name="nsclient_howcanyou">Как можно дистанционно отслеживать AAPS вашего ребенка?</string>
     <string name="nsclient_nightscout">С помощью сайта Nightscout.</string>
-    <string name="nsclient_dexcomfollow">Приложение Dexcom Follow, если вы используете оригинальное приложение Dexcom.</string>
+    <string name="nsclient_dexcomfollow">Приложение Dexcom Follow, если вы используете оригинальное приложение Dexcom (только ГК).</string>
     <string name="nsclient_dexcomfollowxdrip">Dexcom Follow, если вы используете приложение xDrip.</string>
     <string name="nsclient_xdripfollower">xDrip в режиме follower.</string>
     <string name="nsclient_looponiphone">Приложения Loop на iPhone.</string>

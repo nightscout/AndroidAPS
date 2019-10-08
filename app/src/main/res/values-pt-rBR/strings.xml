@@ -57,9 +57,6 @@
     <string name="description_wear">Monitore e controle AndroidAPS usando seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
     <string name="description_sms_communicator">Controlar remotamente o AndroidAPS usando comandos SMS.</string>
-    <string name="objectives_button_back">Voltar</string>
-    <string name="objectives_button_start">Iniciar</string>
-    <string name="objectives_button_verify">Verificar</string>
     <string name="nsprofileview_units_label">Unidades</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Versão não suportada do NSClient</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
     <string name="nsclientnotinstalled">NSClient não instalado. Registro perdido!</string>
-    <string name="objectives_bgavailableinns">BG disponível no NS</string>
-    <string name="objectives_pumpstatusavailableinns">Status da Bomba está disponível no NS</string>
-    <string name="objectives_manualenacts">Execução manual</string>
     <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="bolusconstraintapplied">Restrição de bólus aplicada</string>
@@ -317,9 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP PRESSIONADO</string>
     <string name="waitingforpump">Aguardando a bomba</string>
     <string name="overview_bolusprogress_goingtodeliver">Vão ser administradas %1$.2fU</string>
-    <string name="objectives_0_objective">Configuração da visualização e monitoramento, e análise de rácios e basals</string>
-    <string name="objectives_0_gate">Verificar se a BG está disponível no Nightscout, e se os dados de insulina da bomba estão a ser carregados</string>
-    <string name="objectives_openloop_objective">A iniciar em Open Loop</string>
     <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="noprofileselected">Nenhum perfil selecionado</string>
     <string name="smscommunicator_loophasbeendisabled">Loop foi desativado</string>
@@ -849,8 +840,6 @@
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em PerfilLocal.</string>
     <string name="combo_bolus_count">Contagem Bólus</string>
     <string name="combo_tbr_count">Contagem TBR</string>
-    <string name="objectivenotstarted">Objetivo %1$d não iniciado</string>
-    <string name="objectivenotfinished">Objetivo %1$d não concluido</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
     <string name="novalidbasalrate">Nenhum valor de basal temporaria valido foi lido da bomba</string>
     <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
@@ -972,7 +961,6 @@
     <string name="completed_well_done">Terminado, parabéns!</string>
     <string name="not_completed_yet">Incompleto</string>
     <string name="time_elapsed">Tempo decorrido</string>
-    <string name="nth_objective">%1$d. Objectivo</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
     <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
@@ -1283,6 +1271,7 @@
     <string name="rileylink_state_not_started">Não Iniciado</string>
     <string name="rileylink_state_rl_init">Inicialização do RileyLink…</string>
     <string name="rileylink_state_rl_error">Erro no RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">A ajustar RileyLink e a Bomba</string>
     <string name="rileylink_state_pc_error">Problema ao ligar à Bomba</string>
     <string name="rileylink_state_connected">Ligado</string>
     <!-- RL Errors -->
@@ -1352,6 +1341,7 @@
     <string name="medtronic_cmd_desc_get_tbr">Obter Basal temporário</string>
     <string name="medtronic_cmd_desc_set_tbr">Definir Basal temporário</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -1359,31 +1349,5 @@
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
     <string name="loading">A carregar ...</string>
     <string name="snooze">Silenciar</string>
-    <string name="accomplished">Concluído: %1$s</string>
-    <string name="objectives_usage_objective">Aprenda a controlar o AndroidAPS</string>
-    <string name="objectives_usage_gate">Executar diferentes acções no AndroidAPS</string>
-    <string name="objectives_useloop">Exibir conteúdo do plugin do Loop</string>
-    <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Digite o código obtido dos programadores para ignorar o resto dos objectivos</string>
-    <string name="codeaccepted">Código aceite</string>
-    <string name="codeinvalid">Código inválido</string>
-    <string name="objectives_exam_objective">Prove seu conhecimento</string>
-    <string name="answerdisabledto">Resposta desactivada para: %1$s</string>
-    <string name="wronganswer">Resposta errada!</string>
-    <string name="unfinshed_button">Próximo não concluído</string>
     <string name="close">Fechar</string>
-    <string name="requestcode">Pedir código: %1$s</string>
-    <string name="objectives_hint">(seleccione todas as respostas correctas)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dia</item>
-        <item quantity="other">%1$d dias</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hora</item>
-        <item quantity="other">%1$d hora</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minutos</item>
-    </plurals>
 </resources>

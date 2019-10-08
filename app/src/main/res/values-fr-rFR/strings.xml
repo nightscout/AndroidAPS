@@ -46,7 +46,7 @@
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La Sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la periode concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
     <string name="description_sensitivity_oref0">Sensibilité est calculée à partir des données sur les dernières 24h et les glucides (non absorbés) ne sont plus pris en compte après l’heure spécifiée dans les préférences.</string>
-    <string name="description_sensitivity_oref1">Sensibilité est calculée à partir des données des dernières 8 heures et des glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Plugin calcule également UAM.</string>
+    <string name="description_sensitivity_oref1">Sensibilité est calculée à partir des données des dernières 8 heures et des glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Plugin calcule également RNS (UAM).</string>
     <string name="description_sensitivity_weighted_average">Sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
     <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
@@ -57,12 +57,9 @@
     <string name="description_wear">Surveillez et contrôlez AndroidAPS en utilisant votre montre WearOS.</string>
     <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
     <string name="description_sms_communicator">Commander à distance AndroidAPS en utilisant les commandes SMS.</string>
-    <string name="objectives_button_back">Retour</string>
-    <string name="objectives_button_start">Démarrer</string>
-    <string name="objectives_button_verify">Vérifier</string>
     <string name="nsprofileview_units_label">Unités</string>
     <string name="nsprofileview_dia_label">DAI</string>
-    <string name="nsprofileview_ic_label">I:G (Ratio Insuline/Glucides)</string>
+    <string name="nsprofileview_ic_label">G:I (Ratio Glucides/Insuline, g/U)</string>
     <string name="nsprofileview_isf_label">SI Sensibilité Insuline</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_target_label">Cible</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Version incompatible du NSClient</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
     <string name="nsclientnotinstalled">NSClient non installé. Enregistrement perdu !</string>
-    <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
-    <string name="objectives_pumpstatusavailableinns">Statut pompe disponible sur NS</string>
-    <string name="objectives_manualenacts">Activation manuelle</string>
     <string name="loopdisabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
     <string name="bolusconstraintapplied">Restriction du Bolus appliquée</string>
@@ -190,8 +184,8 @@
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
     <string name="careportal_pumpsitechange">Changement Zone D\'insertion</string>
-    <string name="careportal_cgmsensorinsert">Insertion Capteur MCG</string>
-    <string name="careportal_cgmsensorstart">Début Capteur MCG</string>
+    <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
+    <string name="careportal_cgmsensorstart">Début Capteur MGC</string>
     <string name="careportal_insulincartridgechange">Changement du Réservoir</string>
     <string name="careportal_profileswitch">Changement profil</string>
     <string name="careportal_snackbolus">Bolus Goûter</string>
@@ -208,7 +202,7 @@
     <string name="careportal_newnstreatment_sensor">Capteur</string>
     <string name="careportal_newnstreatment_carbs_label">Glucides</string>
     <string name="careportal_newnstreatment_insulin_label">Insuline</string>
-    <string name="careportal_newnstreatment_carbtime_label">Durée glucides</string>
+    <string name="careportal_newnstreatment_carbtime_label">Heure glucides</string>
     <string name="careportal_newnstreatment_split_label">Diviser</string>
     <string name="careportal_newnstreatment_duration_label">Durée</string>
     <string name="careportal_newnstreatment_percent_label">Pour cent</string>
@@ -318,8 +312,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_bolusprogress_stoppressed">BOUTON ARRÊT ACTIVÉ</string>
     <string name="waitingforpump">Attente connection pompe</string>
     <string name="overview_bolusprogress_goingtodeliver">%1$.2fU vont être injectées</string>
-    <string name="objectives_0_objective">Paramétrer la visualisation et la surveillance des données, analyser les débits de basal et les ratios</string>
-    <string name="objectives_0_gate">Vérifiez que la Glycémie est disponible sur Nightscout et que les données d’insuline ont été téléchargées de la pompe</string>
     <string name="youareonallowedlimit">Vous avez atteint la limite maximale</string>
     <string name="noprofileselected">Aucun profil séléctionné</string>
     <string name="smscommunicator_loophasbeendisabled">La Boucle été désactivée</string>
@@ -553,6 +545,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
     <string name="enablesuperbolus_summary">Activer la fonctionnalité SuperBolus dans l’Assistant. Ne pas l’activer avant de bien comprendre comment cela fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT !</string>
     <string name="show_statuslights">Afficher les lumières d\'état sur l\'écran d\'accueil</string>
+    <string name="show_statuslights_extended">Afficher les lumières d\'état prolongées sur l\'écran d\'accueil</string>
+    <string name="show_statuslights_extended_summary">Activer les lumières d\'état prolongées pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
     <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
     <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%%]</string>
@@ -626,10 +620,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="mdtp_cancel">Annuler</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
+    <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip). Ne pas activer si plusieurs instances d\'AAPS ou de NSClient sont installées !</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales.</string>
     <string name="careportal_activity_label">ACTIVITÉ et FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">GLUCIDES et BOLUS</string>
-    <string name="careportal_cgm_label">MCG et OPENAPS</string>
+    <string name="careportal_cgm_label">MGC et OPENAPS</string>
     <string name="careportal_pump_label">POMPE</string>
     <string name="overview_newtempbasal_basalabsolute">Valeur Basal [U/h] </string>
     <string name="careportal_newnstreatment_duration_min_label">Durée [min]</string>
@@ -799,8 +794,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_cgm_button_summary">Ouvre xDrip+, le bouton de retour renverra vers AAPS</string>
     <string name="carb_increment_button_message">Nombre de glucides à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
-    <string name="error_starting_cgm">Impossible d’exécuter l’application de MCG. Assurez-vous de que celle-ci est installée.</string>
-    <string name="overview_cgm">MCG</string>
+    <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
+    <string name="overview_cgm">MGC</string>
     <string name="nav_historybrowser">Historique</string>
     <string name="wear_notifysmb_title">Notifier en SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
@@ -849,15 +844,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
     <string name="combo_bolus_count">Nombre de bolus</string>
     <string name="combo_tbr_count">Nombre de TBR</string>
-    <string name="objectivenotstarted">Objectif %1$d non démarré</string>
-    <string name="objectivenotfinished">Objectif %1$d non terminé</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
     <string name="novalidbasalrate">Aucun taux basal valide provenant de la pompe</string>
     <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
     <string name="autosensdisabledinpreferences">Autosens désactivé dans les préférences</string>
     <string name="smbdisabledinpreferences">SMB désactivée dans les préférences</string>
-    <string name="uamdisabledinpreferences">Repas Non Prévu (UAM) désactivé dans les préférences</string>
-    <string name="uamdisabledoref1notselected">Repas Non Prévu (UAM) désactivé car il utilise le plugin Sensibilité de Oref1</string>
+    <string name="uamdisabledinpreferences">Repas Non Signalé (UAM) désactivé dans les préférences</string>
+    <string name="uamdisabledoref1notselected">Repas Non Signalé (UAM) désactivé car il utilise le plugin Sensibilité de Oref1</string>
     <string name="limitingbasalratio">Limiter le taux basal max à %1$.2f U/h en raison de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
     <string name="itmustbepositivevalue">la valeur doit être positive</string>
@@ -904,7 +897,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="firstcarbsincrement">Premier incrément de glucides</string>
     <string name="secondcarbsincrement">Deuxième incrément de glucides</string>
     <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
-    <string name="cgm">MCG</string>
+    <string name="cgm">MGC</string>
     <string name="ns_wifionly">Utilisez uniquement connexion Wi-fi</string>
     <string name="ns_wifi_ssids">Wi-fi SSID</string>
     <string name="ns_chargingonly">Wi-fi uniquement pendant la charge</string>
@@ -972,7 +965,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
     <string name="time_elapsed">Temps écoulé</string>
-    <string name="nth_objective">%1$d. Objectif</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Recevoir les glycémies depuis l\'app Poctech</string>
     <string name="description_source_tomato">Recevoir les valeurs de glycémie de l\'application Tomato (appareil MiaoMiao)</string>
@@ -1283,6 +1275,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="rileylink_state_not_started">Non démarré</string>
     <string name="rileylink_state_rl_init">Initialisation du RileyLink…</string>
     <string name="rileylink_state_rl_error">Erreur RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Association du RileyLink et de la Pompe</string>
     <string name="rileylink_state_pc_error">Problème communication avec la pompe</string>
     <string name="rileylink_state_connected">Connecté</string>
     <!-- RL Errors -->
@@ -1352,6 +1345,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="medtronic_cmd_desc_get_tbr">Obtenir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_tbr">Définir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_bolus">Définir le Bolus</string>
+    <string name="profilename">Remplacer le profil par</string>
+    <string name="changengetoprofilename">Remplacer le profil par %1$s</string>
+    <string name="sendsmsactionlabel">Envoyer SMS : %1$s</string>
+    <string name="sendsmsactiondescription">Envoyer SMS à tous les numéros dans les préférences</string>
+    <string name="sendsmsactiontext">Envoyer SMS avec du texte</string>
+    <string name="insulinFromCob"><![CDATA[Glucides Actifs (GA) vs Insuline Active (IA) : <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Contraintes de Bolus appliquées : %2$.2fU à %3$.2f</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -1359,16 +1358,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="deliverpartofboluswizard">L\'assistant Bolus effectue le calcul mais seulement cette partie de l\'insuline calculée est délivrée. Utile avec l\'algorithme SMB.</string>
     <string name="loading">Chargement ...</string>
     <string name="snooze">Report alarme</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d jour</item>
-        <item quantity="other">%1$d jours</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d heure</item>
-        <item quantity="other">%1$d heures</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d minutes</item>
-    </plurals>
+    <string name="time_range">Plage horaire</string>
+    <string name="timerange_value">L\'heure est comprise entre %1$s et %2$s</string>
+    <string name="between">Entre </string>
+    <string name="close">Fermer</string>
+    <string name="increasingmaxbasal">Augmentation de la valeur du débit Basal max parce que ce paramètre est inférieur au débit Basal max de votre profil</string>
+    <string name="smscommunicator_messagebody">Message invalide</string>
 </resources>

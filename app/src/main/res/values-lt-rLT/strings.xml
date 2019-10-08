@@ -57,9 +57,6 @@
     <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="description_xdrip_status_line">Rodyti Ciklo informaciją laikrodyje, xDrip+ pradžios ekrane.</string>
     <string name="description_sms_communicator">Nuotolinis AndroidAPS valdymas naudojant SMS komandas.</string>
-    <string name="objectives_button_back">Atgal</string>
-    <string name="objectives_button_start">Pradėti</string>
-    <string name="objectives_button_verify">Patikrinti</string>
     <string name="nsprofileview_units_label">Vienetai</string>
     <string name="nsprofileview_dia_label">IVT (Insulino Veikimo Trukmė)</string>
     <string name="nsprofileview_ic_label">IA (insulino/angliavandenių santykis)</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Nepalaikoma NSClient versija</string>
     <string name="unsupportednsversion">Nepalaikoma Nightscout versija</string>
     <string name="nsclientnotinstalled">Neįdiegtas NSClient. Įrašai prarasti!</string>
-    <string name="objectives_bgavailableinns">KG matoma NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pompos statusas matomas NS</string>
-    <string name="objectives_manualenacts">Įvesti rankiniu būdu</string>
     <string name="loopdisabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="bolusconstraintapplied">Pritaikytas boluso apribojimas</string>
@@ -317,8 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">Paspausta STOP</string>
     <string name="waitingforpump">Laukiama ryšio su pompa</string>
     <string name="overview_bolusprogress_goingtodeliver">Bus suleista %1$.2fvv</string>
-    <string name="objectives_0_objective">Nustatymai vizualizacijai, monitoringui ir bazės verčių bei koeficientų analizei</string>
-    <string name="objectives_0_gate">Įsitikinkite, kad gliukozės duomenys rodomi Nightscout, o pompos insulino duomenys yra įkelti</string>
     <string name="youareonallowedlimit">Pasiekėte leistiną ribą</string>
     <string name="noprofileselected">Nepasirinktas profilis</string>
     <string name="smscommunicator_loophasbeendisabled">Ciklas buvo išjungtas</string>
@@ -842,8 +834,6 @@
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="combo_bolus_count">Bolusų skaičius</string>
     <string name="combo_tbr_count">LBD skaičius</string>
-    <string name="objectivenotstarted">%1$d tikslas nepradėtas</string>
-    <string name="objectivenotfinished">%1$d tikslas nepasiektas</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="novalidbasalrate">Jokio tinkamo bazės kiekio nenuskaityta iš pompos</string>
     <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
@@ -964,7 +954,6 @@
     <string name="completed_well_done">Užbaigta, puiku!</string>
     <string name="not_completed_yet">Dar nebaigta</string>
     <string name="time_elapsed">Praėjo laiko</string>
-    <string name="nth_objective">%1$d. tikslas </string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Gauti KG vertes iš Poctech programėlės</string>
     <string name="description_source_tomato">Gauti KG vertes iš Tomato programėlės (MiaoMiao)</string>
@@ -1118,22 +1107,4 @@
     <!-- MDT Pump Status -->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_desc_get_settings">Gauti parametrus</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d diena</item>
-        <item quantity="few">%1$d diena</item>
-        <item quantity="many">%1$d dienų</item>
-        <item quantity="other">%1$d dienos(-ų)</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d valanda</item>
-        <item quantity="few">%1$d valandos</item>
-        <item quantity="many">%1$d valandų</item>
-        <item quantity="other">%1$d valandų</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minutė</item>
-        <item quantity="few">%1$d minutė(s)</item>
-        <item quantity="many">%1$d minučių</item>
-        <item quantity="other">%1$d minutės(-čių)</item>
-    </plurals>
 </resources>

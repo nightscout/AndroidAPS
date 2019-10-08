@@ -57,9 +57,6 @@
     <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
     <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
     <string name="description_sms_communicator">Дистанционно управление AndroidAPS чрез използване на SMS команди.</string>
-    <string name="objectives_button_back">Назад</string>
-    <string name="objectives_button_start">Стартирай</string>
-    <string name="objectives_button_verify">Провери</string>
     <string name="nsprofileview_units_label">Единици</string>
     <string name="nsprofileview_dia_label">DIA (Време на действие на инсулина):</string>
     <string name="nsprofileview_ic_label">IC (Инсулин/въглехидр.):</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Несъвместима версия на NSClient</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="nsclientnotinstalled">NSClient не е открит. Записът е загубен!</string>
-    <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
-    <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
-    <string name="objectives_manualenacts">Ръчно приложени</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
     <string name="bolusconstraintapplied">Приложено ограничение на болус</string>
@@ -317,21 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">Натиснат е СТОП!</string>
     <string name="waitingforpump">Очаква помпата</string>
     <string name="overview_bolusprogress_goingtodeliver">Ще стартира %1$.2fЕ болус</string>
-    <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
-    <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
-    <string name="objectives_openloop_objective">Стартиране в режим Отворен кръг (Open loop)</string>
-    <string name="objectives_openloop_gate">Работа в режим \"Отворен кръг\" за няколко дни и ръчно въвеждане на много временни базали. Настройте и използвайте временни и стандартни временни цели (напр. за активни въглехидрати или такива при хипо)</string>
-    <string name="objectives_maxbasal_objective">Опитайте се да разбирате по-добре вашият APS в режим \"Отворен кръг\", включително препоръчваните временни базали</string>
-    <string name="objectives_maxbasal_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
-    <string name="objectives_maxiobzero_objective">Стартиране на \"Затворен кръг\" с изключване на базал при ниска КЗ</string>
-    <string name="objectives_maxiobzero_gate">Стартиране на \"Затворен кръг\" с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
-    <string name="objectives_maxiob_objective">Настройване на \"Затворен кръг\" чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
-    <string name="objectives_maxiob_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ</string>
-    <string name="objectives_autosens_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
-    <string name="objectives_autosens_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
-    <string name="objectives_ama_objective">Активиране на допълнителни функции за дневно използване, включително и advanced meal assist (АМА)</string>
-    <string name="objectives_smb_objective">Добавяне на допълнителни функции за използване през деня, като SMB</string>
-    <string name="objectives_smb_gate">Трябва да прочетете wiki и увеличите maxIOB за да може SMB да работи добре! Добро начало е maxIOB = средния болус за хранене + 3 x най-големия базал от профила</string>
     <string name="youareonallowedlimit">Достигнахте лимита</string>
     <string name="noprofileselected">Няма избран профил</string>
     <string name="smscommunicator_loophasbeendisabled">APS е деактивиран</string>
@@ -864,8 +843,6 @@
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="combo_bolus_count">Брой болуси</string>
     <string name="combo_tbr_count">Брой TBR</string>
-    <string name="objectivenotstarted">ЦЕЛ %1$d не е стартирана</string>
-    <string name="objectivenotfinished">ЦЕЛ %1$d не е завършена</string>
     <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
     <string name="novalidbasalrate">Няма валиден базал в помпата</string>
     <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
@@ -987,7 +964,6 @@
     <string name="completed_well_done">Приключихме, Браво!</string>
     <string name="not_completed_yet">Все още не сме неприключили</string>
     <string name="time_elapsed">Изминало време</string>
-    <string name="nth_objective">%1$d. Цел</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
     <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
@@ -1368,6 +1344,10 @@
     <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
+    <string name="sendsmsactionlabel">Изпращане на SMS с текст %1$s</string>
+    <string name="sendsmsactiondescription">Изпрати SMS до всички телефони от настройките</string>
+    <string name="sendsmsactiontext">Изпрати SMS с текст</string>
+    <string name="insulinFromCob"><![CDATA[Въгл срещу АИ: <font color=\'%1$s\'>%2$+.2fг Е</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Ограничение на болуса: %2$.2fЕ на %3$.2fЕ</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
@@ -1375,38 +1355,10 @@
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
     <string name="loading">Зареждане ...</string>
     <string name="snooze">Отложи</string>
-    <string name="accomplished">Изпълнено: %1$s</string>
-    <string name="objectives_usage_objective">Научете се да управлявате AndroidAPS</string>
-    <string name="objectives_usage_gate">Извършете различни действия в AndroidAPS</string>
-    <string name="objectives_useprofileswitch">Настройте профила на 90% за 10 минути (задръжте върху името на профила в таб Общ)</string>
-    <string name="objectives_usedisconnectpump">Симулирайте душ. Изключете помпата за 1 час (задръжте върху Отворен кръг)</string>
-    <string name="objectives_usereconnectpump">... и отново я свържете по същия начин</string>
-    <string name="objectives_usetemptarget">Създаване на различна временна цел с продължителност 10 мин. (задръжте върху сегашната си цел)</string>
-    <string name="objectives_useactions">В Конфигурация включете плъгин Действия и го направете видим, след което го изберете от списъка с табове.</string>
-    <string name="objectives_useloop">Отворете съдържанието на Цикъл плъгина.</string>
-    <string name="objectives_usescale">Използвайте функцията за удължаване на периода на графиката, като задържите върху нея.</string>
-    <string name="objectives_button_enter">Въведи</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Въведете кода, получен от разработчиците да прескочите останалите цели</string>
-    <string name="codeaccepted">Код приет!</string>
-    <string name="codeinvalid">Неправилен код</string>
-    <string name="objectives_exam_objective">Докажете знанията си</string>
-    <string name="objectives_exam_gate">Отговорете правилно на въпросите</string>
-    <string name="answerdisabledto">Изключено до: %1$s</string>
-    <string name="wronganswer">Грешен отговор!</string>
-    <string name="unfinshed_button">Следващия неотговорен</string>
+    <string name="time_range">Времеви диапазон</string>
+    <string name="timerange_value">Часът е между %1$s и %2$s</string>
+    <string name="between">Между </string>
     <string name="close">Затвори</string>
-    <string name="requestcode">Код (request code): %1$s</string>
-    <string name="objectives_hint">(отбележете всички правилни отговори)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d дeн</item>
-        <item quantity="other">%1$d дни</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d часа</item>
-        <item quantity="other">%1$d часа</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d минута</item>
-        <item quantity="other">%1$d минутa</item>
-    </plurals>
+    <string name="increasingmaxbasal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
+    <string name="smscommunicator_messagebody">Невалиден текст на съобщение</string>
 </resources>

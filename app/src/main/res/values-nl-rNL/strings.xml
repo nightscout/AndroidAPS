@@ -57,9 +57,6 @@
     <string name="description_wear">AndroidAPS controleren en bedienen met behulp van uw WearOS-horloge.</string>
     <string name="description_xdrip_status_line">Toon informatie over de Loop op jouw xDrip+ wijzerplaat.</string>
     <string name="description_sms_communicator">Bedien AndroidAPS op afstand met SMS commando\'s.</string>
-    <string name="objectives_button_back">Terug</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Controleer</string>
     <string name="nsprofileview_units_label">Eénheden</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">KH ratio</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Niet ondersteunde versie van NSClient</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
     <string name="nsclientnotinstalled">NSClient niet geïnstalleerd. Gegevens verloren!</string>
-    <string name="objectives_bgavailableinns">BG beschikbaar op NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar op NS</string>
-    <string name="objectives_manualenacts">Manuele correcties</string>
     <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
@@ -317,8 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="overview_bolusprogress_goingtodeliver">Er worden %1$.2fE toegediend</string>
-    <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyzeren van basaal en ratio\'s</string>
-    <string name="objectives_0_gate">Controleren van beschikbaarheid BG en insuline pomp data op Nightscout</string>
     <string name="youareonallowedlimit">Limiet bereikt</string>
     <string name="noprofileselected">Geen profiel geselecteerd</string>
     <string name="smscommunicator_loophasbeendisabled">Loop was uitgeschakeld</string>
@@ -848,8 +840,6 @@
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="combo_bolus_count">Aantal bolussen</string>
     <string name="combo_tbr_count">Aantal TBR</string>
-    <string name="objectivenotstarted">Doel %1$d niet gestart</string>
-    <string name="objectivenotfinished">Doel %1$d niet gereed</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="novalidbasalrate">Geen correcte basale snelheid van pomp kunnen lezen</string>
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
@@ -971,7 +961,6 @@
     <string name="completed_well_done">Voltooid, goed gedaan!</string>
     <string name="not_completed_yet">Nog niet voltooid</string>
     <string name="time_elapsed">Verstreken tijd</string>
-    <string name="nth_objective">%1$d. Doel</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
     <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
@@ -1358,16 +1347,4 @@
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="loading">Bezig met laden...</string>
     <string name="snooze">Sluimeren</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dag</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uur</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuut</item>
-        <item quantity="other">%1$d minuut</item>
-    </plurals>
 </resources>

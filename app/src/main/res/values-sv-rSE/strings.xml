@@ -58,9 +58,6 @@ Eversense-appen.</string>
     <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka</string>
     <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip-urtavla</string>
     <string name="description_sms_communicator">Fjärrstyr AndroidAPS med SMS-kommandon.</string>
-    <string name="objectives_button_back">Backa</string>
-    <string name="objectives_button_start">Starta</string>
-    <string name="objectives_button_verify">Godkänn</string>
     <string name="nsprofileview_units_label">Enheter</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -178,9 +175,6 @@ Eversense-appen.</string>
     <string name="unsupportedclientver">Versionen av NSClient stöds inte</string>
     <string name="unsupportednsversion">Versionen av Nightscout stöds inte</string>
     <string name="nsclientnotinstalled">NSClient är inte installerad. Data förlorad!</string>
-    <string name="objectives_bgavailableinns">BG är tillängligt i Nightscout</string>
-    <string name="objectives_pumpstatusavailableinns">Pumpstatus tillgängligt i Nightscout</string>
-    <string name="objectives_manualenacts">Manuella justeringar</string>
     <string name="loopdisabled">LOOP STOPPAD PGA BEGRÄNSNINGAR</string>
     <string name="treatments_wizard_basaliob_label">IOB från basal</string>
     <string name="bolusconstraintapplied">Bolusspärr aktiverad</string>
@@ -318,21 +312,6 @@ Eversense-appen.</string>
     <string name="overview_bolusprogress_stoppressed">Stopp nedtryckt</string>
     <string name="waitingforpump">Väntar på pump</string>
     <string name="overview_bolusprogress_goingtodeliver">Kommer att leverera %1$.2f enheter</string>
-    <string name="objectives_0_objective">Ställer in utseende och övervakning för att sedan kunna analysera basaler och kvoter</string>
-    <string name="objectives_0_gate">Kontrollera att BG syns i Nightscout och att insulindata från pumpen laddas upp</string>
-    <string name="objectives_openloop_objective">Startar med open loop</string>
-    <string name="objectives_openloop_gate">Kör i Open Loop-läge i några dagar och sätt ett antal temp-basaler manuellt. Konfigurera och använd temporära och förinställda temporära mål (t.ex. Träning eller Hypo)</string>
-    <string name="objectives_maxbasal_objective">Förstå din open loop och hur den föreslår temp basaler</string>
-    <string name="objectives_maxbasal_gate">Utifrån vad du nu lärt dig, besluta vilken max basal du vill ha. Ställ in det både i inställningarna i appen och i din pump</string>
-    <string name="objectives_maxiobzero_objective">Börja använda closed loop med aktiverad funktion att stänga av vid lågt BG</string>
-    <string name="objectives_maxiobzero_gate">Aktivera closed loop med max IOB=0 i några dagar till dess systemet inte stänger av pga lågt BG för många gånger</string>
-    <string name="objectives_maxiob_objective">Finjustering av closed loop, med gradvis ökande max IOB och minskande målvärde för BG</string>
-    <string name="objectives_maxiob_gate">Kör några dagar och åtminstone en natt utan larm för lågt BG innan du sänker målvärdet för BG</string>
-    <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
-    <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
-    <string name="objectives_ama_objective">Aktiverar extra funktioner som kan användas dagtid, såsom avancerad måltidsassistans, AMA</string>
-    <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
-    <string name="objectives_smb_gate">Du måste läsa på wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>
     <string name="youareonallowedlimit">Du har nått din tillåtna gräns</string>
     <string name="noprofileselected">Ingen profil vald</string>
     <string name="smscommunicator_loophasbeendisabled">Loop stängdes av</string>
@@ -865,8 +844,6 @@ Eversense-appen.</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="combo_bolus_count">Antal bolus</string>
     <string name="combo_tbr_count">Antal temp basaler</string>
-    <string name="objectivenotstarted">Mål %1$d inte startat</string>
-    <string name="objectivenotfinished">Mål %1$d inte uppnått</string>
     <string name="pumpisnottempbasalcapable">Pumpen kan inte hantera temp basaler</string>
     <string name="novalidbasalrate">Ingen giltig data om temp basaler fanns i pumpen</string>
     <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
@@ -988,7 +965,6 @@ Eversense-appen.</string>
     <string name="completed_well_done">Klart. Bra jobbat!</string>
     <string name="not_completed_yet">Inte slutfört ännu</string>
     <string name="time_elapsed">Förfluten tid</string>
-    <string name="nth_objective">%1$d. Mål</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
     <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
@@ -1377,38 +1353,5 @@ Eversense-appen.</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
     <string name="loading">Laddar...</string>
     <string name="snooze">Snooze</string>
-    <string name="accomplished">Utfört: %1$s</string>
-    <string name="objectives_usage_objective">Lär dig hur du kontrollerar AndroidAPS</string>
-    <string name="objectives_usage_gate">Utföra olika åtgärder i AndroidAPS</string>
-    <string name="objectives_useprofileswitch">Ställ in profilen 90% för 10 minuter (Tryck och håll in profilens namn i Översikten)</string>
-    <string name="objectives_usedisconnectpump">Simulera dusch. Koppla från pump i 1 timme (Tryck och håll in på Open Loop i Översikten)</string>
-    <string name="objectives_usereconnectpump">... och återanslut på samma sätt</string>
-    <string name="objectives_usetemptarget">Skapa ett anpassat tillfälligt mål med 10 min varaktighet (Tryck och håll in på nuvarande BG-mål i Översikten)</string>
-    <string name="objectives_useactions">I Konfigurationsverktyget, aktivera insticksprogrammet Åtgärder, gör det synligt och visa dess innehåll från övre menyn</string>
-    <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
-    <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
-    <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ange kod som erhållits från utvecklare för att kringgå resten av målen</string>
-    <string name="codeaccepted">Koden godkänd</string>
-    <string name="codeinvalid">Koden är felaktig</string>
-    <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
-    <string name="objectives_exam_gate">Studera och besvara frågor på rätt sätt</string>
-    <string name="answerdisabledto">Svarsfunktionen inaktiverad till: %1$s</string>
-    <string name="wronganswer">Fel svar!</string>
-    <string name="unfinshed_button">Nästa icke slutförda</string>
     <string name="close">Stäng</string>
-    <string name="requestcode">Begärd kod: %1$s</string>
-    <string name="objectives_hint">(kontrollera alla korrekta svar)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagar</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d timme</item>
-        <item quantity="other">%1$d timmar</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d min</item>
-        <item quantity="other">%1$d min</item>
-    </plurals>
 </resources>
