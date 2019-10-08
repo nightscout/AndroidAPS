@@ -109,7 +109,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.4-dev-g"
+        version "2.4-dev-h"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
