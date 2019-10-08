@@ -101,16 +101,20 @@ public class CommandQueue {
     }
 
     private synchronized void removeAll(Command.CommandType type) {
-        for (int i = queue.size() - 1; i >= 0; i--) {
-            if (queue.get(i).commandType == type) {
-                queue.remove(i);
+        synchronized (queue) {
+            for (int i = queue.size() - 1; i >= 0; i--) {
+                if (queue.get(i).commandType == type) {
+                    queue.remove(i);
+                }
             }
         }
     }
 
     private synchronized boolean isLastScheduled(Command.CommandType type) {
-        if (queue.size() > 0 && queue.get(queue.size() - 1).commandType == type) {
-            return true;
+        synchronized (queue) {
+            if (queue.size() > 0 && queue.get(queue.size() - 1).commandType == type) {
+                return true;
+            }
         }
         return false;
     }
@@ -119,26 +123,33 @@ public class CommandQueue {
         // inject as a first command
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
-        queue.addFirst(command);
+        synchronized (queue) {
+            queue.addFirst(command);
+        }
     }
 
     private synchronized void add(Command command) {
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Adding: " + command.getClass().getSimpleName() + " - " + command.status());
-        queue.add(command);
+        synchronized (queue) {
+            queue.add(command);
+        }
     }
 
     synchronized void pickup() {
-        performing = queue.poll();
+        synchronized (queue) {
+            performing = queue.poll();
+        }
     }
 
     synchronized void clear() {
         performing = null;
-        for (int i = 0; i < queue.size(); i++) {
-            queue.get(i).cancel();
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                queue.get(i).cancel();
+            }
+            queue.clear();
         }
-
-        queue.clear();
     }
 
     public int size() {
@@ -181,9 +192,11 @@ public class CommandQueue {
 
     public synchronized boolean bolusInQueue() {
         if (isRunning(Command.CommandType.BOLUS)) return true;
-        for (int i = 0; i < queue.size(); i++) {
-            if (queue.get(i).commandType == Command.CommandType.BOLUS) {
-                return true;
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                if (queue.get(i).commandType == Command.CommandType.BOLUS) {
+                    return true;
+                }
             }
         }
         return false;
@@ -440,9 +453,11 @@ public class CommandQueue {
     public synchronized boolean statusInQueue() {
         if (isRunning(Command.CommandType.READSTATUS))
             return true;
-        for (int i = 0; i < queue.size(); i++) {
-            if (queue.get(i).commandType == Command.CommandType.READSTATUS) {
-                return true;
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                if (queue.get(i).commandType == Command.CommandType.READSTATUS) {
+                    return true;
+                }
             }
         }
         return false;
@@ -528,15 +543,18 @@ public class CommandQueue {
     public Spanned spannedStatus() {
         String s = "";
         int line = 0;
-        if (performing != null) {
-            s += "<b>" + performing.status() + "</b>";
+        Command perf = performing;
+        if (perf != null) {
+            s += "<b>" + perf.status() + "</b>";
             line++;
         }
-        for (int i = 0; i < queue.size(); i++) {
-            if (line != 0)
-                s += "<br>";
-            s += queue.get(i).status();
-            line++;
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                if (line != 0)
+                    s += "<br>";
+                s += queue.get(i).status();
+                line++;
+            }
         }
         return Html.fromHtml(s);
     }
