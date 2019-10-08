@@ -58,6 +58,9 @@ public class DanaRS_Packet {
     public void handleMessage(byte[] data) {
     }
 
+    public void handleMessageNotReceived() {
+    }
+
     public String getFriendlyName() {
         return "UNKNOWN_PACKET";
     }

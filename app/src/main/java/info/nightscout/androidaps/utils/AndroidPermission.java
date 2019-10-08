@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -56,7 +57,7 @@ public class AndroidPermission {
             } catch (ActivityNotFoundException e) {
                 permission_battery_optimization_failed = true;
                 OKDialog.show(activity, MainApp.gs(R.string.permission), MainApp.gs(R.string.alert_dialog_permission_battery_optimization_failed), activity::recreate);
-             }
+            }
         }
     }
 
@@ -84,18 +85,18 @@ public class AndroidPermission {
                 notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.SEND_SMS,
                         Manifest.permission.RECEIVE_MMS}, AndroidPermission.CASE_SMS));
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else
-                MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_SMS));
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_SMS));
             // Following is a bug in Android 8
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
                 if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
                     NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_PHONESTATE, MainApp.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT);
                     notification.action(R.string.request, () ->
                             AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, AndroidPermission.CASE_PHONE_STATE));
-                    MainApp.bus().post(new EventNewNotification(notification));
+                    RxBus.INSTANCE.send(new EventNewNotification(notification));
                 } else
-                    MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_PHONESTATE));
+                    RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_PHONESTATE));
             }
         }
     }
@@ -104,9 +105,9 @@ public class AndroidPermission {
         if (permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
             NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_BATTERY, String.format(MainApp.gs(R.string.needwhitelisting), MainApp.gs(R.string.app_name)), Notification.URGENT);
             notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, AndroidPermission.CASE_BATTERY));
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else
-            MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_BATTERY));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_BATTERY));
     }
 
     public static synchronized void notifyForStoragePermission(Activity activity) {
@@ -114,17 +115,17 @@ public class AndroidPermission {
             NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_STORAGE, MainApp.gs(R.string.needstoragepermission), Notification.URGENT);
             notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, AndroidPermission.CASE_STORAGE));
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else
-            MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_STORAGE));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_STORAGE));
     }
 
     public static synchronized void notifyForLocationPermissions(Activity activity) {
         if (permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
             NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_LOCATION, MainApp.gs(R.string.needlocationpermission), Notification.URGENT);
             notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AndroidPermission.CASE_LOCATION));
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else
-            MainApp.bus().post(new EventDismissNotification(Notification.PERMISSION_LOCATION));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_LOCATION));
     }
 }

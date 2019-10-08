@@ -6,6 +6,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.SP
@@ -82,7 +83,7 @@ fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
     if (now > SP.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
         log.debug("Version ${currentVersion} outdated. Found $newVersion")
         val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
-        MainApp.bus().post(EventNewNotification(notification))
+        RxBus.send(EventNewNotification(notification))
         SP.putLong(R.string.key_last_versionchecker_warning, now)
     }
 }

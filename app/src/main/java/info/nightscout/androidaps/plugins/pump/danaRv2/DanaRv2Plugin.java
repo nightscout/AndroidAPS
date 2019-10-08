@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
 
 import com.squareup.otto.Subscribe;
 
@@ -19,11 +17,8 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
-
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
-import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStartWithSpeed;
@@ -156,7 +151,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (carbTime == 0) carbTime--; // better set 1 man back to prevent clash with insulin
             detailedBolusInfo.carbTime = 0;
 
-            DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
+            DetailedBolusInfoStorage.INSTANCE.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;

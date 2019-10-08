@@ -17,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -56,9 +57,9 @@ public class StorageConstraintPlugin extends PluginBase implements ConstraintsIn
         if (diskfree < Constants.MINIMUM_FREE_SPACE) {
             value.set(false, MainApp.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), this);
             Notification notification = new Notification(Notification.DISKFULL, MainApp.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.DISKFULL));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.DISKFULL));
         }
 
         return value;

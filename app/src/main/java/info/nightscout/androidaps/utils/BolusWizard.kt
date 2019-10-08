@@ -241,8 +241,10 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     private fun confirmMessageAfterConstraints(pump: PumpInterface): String {
 
         var confirmMessage = MainApp.gs(R.string.entertreatmentquestion)
-        if (insulinAfterConstraints > 0)
-            confirmMessage += "<br/>" + MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>"
+        if (insulinAfterConstraints > 0) {
+            val pct = if (percentageCorrection != 100.0) " (" + percentageCorrection.toInt() + "%)" else ""
+            confirmMessage += "<br/>" + MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + pct + "</font>"
+        }
         if (carbs > 0) {
             var timeShift = ""
             if (carbTime > 0) {
@@ -253,7 +255,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             confirmMessage += "<br/>" + MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + carbs + "g" + timeShift + "</font>"
         }
         if (insulinFromCOB > 0) {
-            confirmMessage += "<br/>" + MainApp.gs(R.string.insulinFromCob, MainApp.gc(R.color.cobAlert), cob, insulinFromCOB)
+            confirmMessage += "<br/>" + MainApp.gs(R.string.insulinFromCob, MainApp.gc(R.color.cobAlert), insulinFromBolusIOB + insulinFromBasalsIOB + insulinFromCOB + insulinFromBG)
             val absorptionRate = IobCobCalculatorPlugin.getPlugin().slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 confirmMessage += "<br/>" + MainApp.gs(R.string.slowabsorptiondetected, MainApp.gc(R.color.cobAlert), (absorptionRate * 100).toInt())

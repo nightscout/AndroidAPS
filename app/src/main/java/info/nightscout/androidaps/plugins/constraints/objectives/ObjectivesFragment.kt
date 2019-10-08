@@ -18,19 +18,20 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.objectives_fragment.*
+import org.slf4j.LoggerFactory
 
 class ObjectivesFragment : Fragment() {
+    private val log = LoggerFactory.getLogger(L.CONSTRAINTS)
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
 
@@ -168,10 +169,17 @@ class ObjectivesFragment : Fragment() {
                 holder.progress.removeAllViews()
                 for (task in objective.tasks) {
                     if (task.shouldBeIgnored()) continue
+                    // name
                     val name = TextView(holder.progress.context)
                     name.text = MainApp.gs(task.task) + ":"
                     name.setTextColor(-0x1)
                     holder.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    // hint
+                    task.hints.forEach { h ->
+                        if (!task.isCompleted)
+                            holder.progress.addView(h.generate(context))
+                    }
+                    // state
                     val state = TextView(holder.progress.context)
                     state.setTextColor(-0x1)
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
@@ -183,13 +191,14 @@ class ObjectivesFragment : Fragment() {
                         state.setOnClickListener {
                             val dialog = ObjectivesExamDialog()
                             val bundle = Bundle()
-                            val position = objective.tasks.indexOf(task)
-                            bundle.putInt("currentTask", position)
+                            val taskPosition = objective.tasks.indexOf(task)
+                            bundle.putInt("currentTask", taskPosition)
                             dialog.arguments = bundle
                             ObjectivesExamDialog.objective = objective
                             fragmentManager?.let { dialog.show(it, "ObjectivesFragment") }
                         }
                     }
+                    // horizontal line
                     val separator = View(holder.progress.context)
                     separator.setBackgroundColor(Color.DKGRAY)
                     holder.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
@@ -198,16 +207,50 @@ class ObjectivesFragment : Fragment() {
             holder.accomplished.text = MainApp.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.accomplishedOn))
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
-                objective.accomplishedOn = DateUtil.now()
-                notifyDataSetChanged()
-                scrollToCurrentObjective()
-                startUpdateTimer()
+                holder.verify.visibility = View.INVISIBLE
+                SntpClient.ntpTime(object : SntpClient.Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread {
+                            holder.verify.visibility = View.VISIBLE
+                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                            if (!networkConnected) {
+                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                            } else if (success) {
+                                if (objective.isCompleted(time)) {
+                                    objective.accomplishedOn = time
+                                    notifyDataSetChanged()
+                                    scrollToCurrentObjective()
+                                    startUpdateTimer()
+                                } else {
+                                    ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                }
+                            } else {
+                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                            }
+                        }
+                    }
+                }, NetworkChangeReceiver.isConnected())
             }
             holder.start.setOnClickListener {
-                objective.startedOn = DateUtil.now()
-                notifyDataSetChanged()
-                scrollToCurrentObjective()
-                startUpdateTimer()
+                holder.start.visibility = View.INVISIBLE
+                SntpClient.ntpTime(object : SntpClient.Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread {
+                            holder.start.visibility = View.VISIBLE
+                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                            if (!networkConnected) {
+                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                            } else if (success) {
+                                objective.startedOn = time
+                                notifyDataSetChanged()
+                                scrollToCurrentObjective()
+                                startUpdateTimer()
+                            } else {
+                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                            }
+                        }
+                    }
+                }, NetworkChangeReceiver.isConnected())
             }
             holder.revert.setOnClickListener {
                 objective.accomplishedOn = 0

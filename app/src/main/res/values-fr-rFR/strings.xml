@@ -320,19 +320,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_bolusprogress_goingtodeliver">%1$.2fU vont être injectées</string>
     <string name="objectives_0_objective">Paramétrer la visualisation et la surveillance des données, analyser les débits de basal et les ratios</string>
     <string name="objectives_0_gate">Vérifiez que la Glycémie est disponible sur Nightscout et que les données d’insuline ont été téléchargées de la pompe</string>
-    <string name="objectives_openloop_objective">Commencez par la configuration Boucle Ouverte</string>
-    <string name="objectives_openloop_gate">Utiliser le système Boucle Ouverte pour quelques jours, et activer manuellement de nombreux débits de basal temporaires. Définir et utiliser des objectifs temporaires (ex : activités ou utilisation de glucides pour traiter des hypos)</string>
-    <string name="objectives_maxbasal_objective">Comprendre votre système Boucle Ouverte, y compris ses recommandations de débit de Basal temporaire</string>
-    <string name="objectives_maxbasal_gate">Partant de ce constat, décidez quel est le débit de base maximum à choisir, et entrez le dans la pompe et les préférences </string>
-    <string name="objectives_maxiobzero_objective">Commencez par utiliser la Boucle Fermée avec le système Arrêt Glycémie Basse</string>
-    <string name="objectives_maxiobzero_gate">Utiliser la Boucle Fermée avec max IA = 0 pour quelques jours sans avoir trop d’événements AGB Arrêt Glycémie Basse (LGS Low Glucose Suspend)</string>
-    <string name="objectives_maxiob_objective">Ajustez votre système Boucle Fermée, augmentez la fonction « max IOB » au delà de 0 et diminuez progressivement vos cibles glycémiques</string>
-    <string name="objectives_maxiob_gate">Utiliser pendant quelques jours, et au moins une nuit sans les alarmes d’hypoglycémie, avant la baisse de G</string>
-    <string name="objectives_autosens_objective">Ajustez si besoin les débits de base et les ratios, activez ensuite « Autosens »</string>
-    <string name="objectives_autosens_gate">Une semaine réussie avec des journées en Boucle Fermée, avec des entrées normales des glucides</string>
-    <string name="objectives_ama_objective">Activer d’autres fonctionnalités pour l’utilisation dans la journée, tel que Assistance Repas Avancée (AMA Advanced Meal Assist)</string>
-    <string name="objectives_smb_objective">Activer des fonctionnalités supplémentaires pour l\'utilisation dans la journée, telles que la fonction SMB</string>
-    <string name="objectives_smb_gate">Vous devez lire le wiki et augmenter les max IA pour faire fonctionner SMB ! Un bon début est max IA = moyenne bolus repas + 3 fois max daily basal</string>
     <string name="youareonallowedlimit">Vous avez atteint la limite maximale</string>
     <string name="noprofileselected">Aucun profil séléctionné</string>
     <string name="smscommunicator_loophasbeendisabled">La Boucle été désactivée</string>
@@ -566,7 +553,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
     <string name="enablesuperbolus_summary">Activer la fonctionnalité SuperBolus dans l’Assistant. Ne pas l’activer avant de bien comprendre comment cela fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT !</string>
     <string name="show_statuslights">Afficher les lumières d\'état sur l\'écran d\'accueil</string>
-    <string name="show_statuslights_summary">Activer les lumières d\'état pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
     <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
     <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%%]</string>
@@ -640,7 +626,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="mdtp_cancel">Annuler</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
-    <string name="ns_localbroadcasts">Activer les transmissions de données sur d\'autres app. (ex. xDrip).</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales.</string>
     <string name="careportal_activity_label">ACTIVITÉ et FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">GLUCIDES et BOLUS</string>
@@ -1298,7 +1283,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="rileylink_state_not_started">Non démarré</string>
     <string name="rileylink_state_rl_init">Initialisation du RileyLink…</string>
     <string name="rileylink_state_rl_error">Erreur RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">Préparation RileyLink et pompe</string>
     <string name="rileylink_state_pc_error">Problème communication avec la pompe</string>
     <string name="rileylink_state_connected">Connecté</string>
     <!-- RL Errors -->
@@ -1368,7 +1352,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="medtronic_cmd_desc_get_tbr">Obtenir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_tbr">Définir le Basal Temporaire</string>
     <string name="medtronic_cmd_desc_set_bolus">Définir le Bolus</string>
-    <string name="insulinFromCob"><![CDATA[Insuline pour Gluc Actif GA: <font color=\'%1$s\'>%2$.1fg %3$.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Contraintes de Bolus appliquées : %2$.2fU à %3$.2f</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

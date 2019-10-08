@@ -13,7 +13,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -110,7 +110,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 status = "EXTENDEDSTOP " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.BOLUS:
-                DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(datetime);
+                DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(datetime, param1 / 100d);
                 if (detailedBolusInfo == null) {
                     detailedBolusInfo = new DetailedBolusInfo();
                 }
@@ -125,7 +125,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 status = "BOLUS " + DateUtil.timeString(datetime);
                 break;
             case DanaRPump.DUALBOLUS:
-                detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(datetime);
+                detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(datetime, param1 / 100d);
                 if (detailedBolusInfo == null) {
                     detailedBolusInfo = new DetailedBolusInfo();
                 }

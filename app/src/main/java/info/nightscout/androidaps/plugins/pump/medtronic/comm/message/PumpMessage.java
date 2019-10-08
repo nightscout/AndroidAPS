@@ -22,6 +22,8 @@ public class PumpMessage implements RLMessage {
     public MessageBody messageBody = new MessageBody();
     public String error = null;
 
+    public static final int FRAME_DATA_LENGTH = 64;
+
 
     public PumpMessage(String error) {
         this.error = error;
@@ -129,9 +131,10 @@ public class PumpMessage implements RLMessage {
         return arrayOut;
     }
 
+
     public byte[] getRawContentOfFrame() {
-        byte[] raw = getRawContent();
-        return ByteUtil.substring(raw, 0, raw.length - 1);
+        byte[] raw = messageBody.getTxData();
+        return ByteUtil.substring(raw, 1, Math.min(FRAME_DATA_LENGTH, raw.length - 1));
     }
 
 

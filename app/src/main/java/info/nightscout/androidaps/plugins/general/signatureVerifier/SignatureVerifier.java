@@ -32,6 +32,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.utils.SP;
@@ -103,7 +104,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
 
     private void showNotification() {
         Notification notification = new Notification(Notification.INVALID_VERSION, MainApp.gs(R.string.running_invalid_version), Notification.URGENT);
-        MainApp.bus().post(new EventNewNotification(notification));
+        RxBus.INSTANCE.send(new EventNewNotification(notification));
     }
 
     private boolean hasIllegalSignature() {
@@ -147,7 +148,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
     private void loadLocalRevokedCerts() {
         try {
             String revokedCerts = readCachedDownloadedRevokedCerts();
-            if (revokedCerts == null) revokedCerts  = readRevokedCertsInAssets();
+            if (revokedCerts == null) revokedCerts = readRevokedCertsInAssets();
             synchronized ($lock) {
                 this.revokedCerts = parseRevokedCertsFile(revokedCerts);
             }

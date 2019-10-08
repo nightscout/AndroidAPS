@@ -42,6 +42,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -725,6 +726,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
+    @Nullable
     public ProfileSwitch getProfileSwitchFromHistory(long time) {
         synchronized (profiles) {
             return (ProfileSwitch) profiles.getValueToTime(time);
@@ -741,7 +743,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
-        MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
+        RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }

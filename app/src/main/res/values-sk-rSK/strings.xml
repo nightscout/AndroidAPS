@@ -34,6 +34,7 @@
     <string name="description_smb">Najnovší algoritmus pre pokročilých užívateľov</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
+    <string name="description_profile_local">Definujte profil, ktorý je dostupný offline.</string>
     <string name="description_profile_nightscout">Použitie profilu, ktorý je definovaný v Nightscoute</string>
     <string name="description_profile_simple">Definuj profil s iba jedným časovým pásmom.</string>
     <string name="description_pump_combo">Ovládač pumpy pre Accu-Check Combo, vyžaduje nainštalovanú aplikáciu Ruffy</string>
@@ -320,16 +321,16 @@
     <string name="objectives_0_gate">Skontrolovať, či sú glykémie a údaje z pumpy viditeľné v Nightscoute</string>
     <string name="objectives_openloop_objective">Začať s otvoreným okruhom</string>
     <string name="objectives_openloop_gate">Niekoľko dní prevádzkovať otvorený okruh a ručne potvrdzovať doporučené dočasné bazály. Nastavovať a používať dočasné ciele (napr. pre šport, alebo hypo)</string>
-    <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu a doporučeným dočasným bazálom</string>
+    <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu, vrátane doporučeniam ohľadne dočasných bazálov</string>
     <string name="objectives_maxbasal_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký vysoký má byť maximálny bazál a nastaviť ho v pumpe a v aplikácii</string>
     <string name="objectives_maxiobzero_objective">Začať s uzavretým okruhom iba s vypínaním pri nízkej glykémii</string>
     <string name="objectives_maxiobzero_gate">Spustiť uzavretý okruh s max IOB = 0 na niekoľko dní s minimom nutných korekcií na nízku glykémiu</string>
     <string name="objectives_maxiob_objective">Ladenie uzavretého okruhu, zvyšovať max IOB nad 0 a postupne znižovať cieľovú glykémiu</string>
-    <string name="objectives_maxiob_gate">Používať niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu, predtým ako znížiš cieľovú glykémiu</string>
-    <string name="objectives_autosens_objective">Ak je to potrebné, prispôsob bazály a prevody a potom aktivuj automatickú detekciu citlivosti</string>
+    <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu, predtým ako znížiš cieľovú glykémiu</string>
+    <string name="objectives_autosens_objective">Ak je to potrebné, uprav bazály a prevody a potom aktivuj automatickú detekciu citlivosti</string>
     <string name="objectives_autosens_gate">Jeden týždeň úspešne používaj uzavretý okruh so zadávaním bežného príjmu sacharidov cez deň</string>
     <string name="objectives_ama_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. AMA (pokročilý asistent jedál)</string>
-    <string name="objectives_smb_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. SMB (Super Micro Bolusy)</string>
+    <string name="objectives_smb_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. SMB</string>
     <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
     <string name="youareonallowedlimit">Dosiahnutý limit</string>
     <string name="noprofileselected">Nebol vybraný žiadny profil</string>
@@ -564,7 +565,8 @@
     <string name="enablesuperbolus">Povoliť superbolus</string>
     <string name="enablesuperbolus_summary">Povolenie superbolusu v kalkulátore. Nepovoľujte, pokiaľ se nenaučíte, čo to v skutočnosti robí. MÔŽE SPÔSOBIŤ PREDÁVKOVANIE INZULÍNOM PRI NESPRÁVNOM POUŽITÍ!</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
-    <string name="show_statuslights_summary">Povoliť indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
+    <string name="show_statuslights_extended">Zobraziť rozšírené indikátory stavu na domovskej obrazovke</string>
+    <string name="show_statuslights_extended_summary">Povoliť rozšírené indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [JI]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%%]</string>
@@ -638,7 +640,7 @@
     <string name="mdtp_cancel">Zrušiť</string>
     <string name="notloadedplugins">Nenačítané všetky profily!</string>
     <string name="valuesnotstored">Hodnoty nie sú uložené!</string>
-    <string name="ns_localbroadcasts">Povoliť odosielanie do ostatných aplikácií (napr. xDrip).</string>
+    <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="careportal_activity_label">AKTIVITA &amp; SPÄTNÁ VÄZBA</string>
     <string name="careportal_carbsandbolus_label">SACHARIDY &amp; BOLUSY</string>
@@ -950,6 +952,7 @@
     <string name="sensitivitysetup">Nastavenie citlivosti</string>
     <string name="setupwizard_sensitivity_description">Modul citlivosť slúži k detekcii zmien v citlivosti a k počítaniu COB. Viac informácií tu:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSClient slúži na spojenie s Nightscoutom. Nastavenia môžete teraz preskočiť, ale nebudete schopný dokončiť ciele, pokiaľ neurobíte nastavenia.</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="bgsourcesetup">Konfigurácia zdroja glykémií</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilov. Pokiaľ ide o dieťa, využijete pravdepodobne NS profil. Pokiaľ Vás nikto cez NS nesleduje, budete pravdepodobne preferovať lokálny profil. Uvedomte si, že nastavujete iba zdroj profilov. Na to aby se naozaj profil začal používať, je potrebné vykonať aktiváciu profilu použitím funkcie \"Prepnutie profilu\"</string>
@@ -1365,13 +1368,35 @@
     <string name="medtronic_cmd_desc_get_tbr">Načítanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_tbr">Nastavovanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_bolus">Nastavovanie bolusu</string>
-    <string name="insulinFromCob"><![CDATA[Inzulín z COB: <font color=\'%1$s\'>%2$.1fg %3$.2fJI</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Aplikované obmedzenie bolusu: %2$.2fJI na %3$.2fJI</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d JI</string>
     <string name="partialboluswizard">Podaj túto časť z výsledku kalkulácie [%]</string>
     <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
     <string name="loading">Načítavanie...</string>
+    <string name="snooze">Stíšiť</string>
+    <string name="accomplished">Splnené: %1$s</string>
+    <string name="objectives_usage_objective">Naučte sa, ako ovládať AndroidAPS</string>
+    <string name="objectives_usage_gate">Vykonávajte v AndroidAPS rôzne akcie</string>
+    <string name="objectives_useprofileswitch">Nastavte profil na 90 % na 10 min (Dlhé stlačenie názvu profilu na obrazovke Prehľad)</string>
+    <string name="objectives_usedisconnectpump">Predstierajte, že se idete sprchovať. Odpojte pumpu na 1 h (Dlhšie pridržte tlačítko Otvorený okruh)</string>
+    <string name="objectives_usereconnectpump">...a rovnakým spôsobom ju znovu pripojte</string>
+    <string name="objectives_usetemptarget">Vytvorte vlastný dočasný cieľ s trvaním 10 min (Dlhšie pridržte aktuálny cieľ)</string>
+    <string name="objectives_useactions">V Konfigurácii povoľte modul Akcie, aktivujte jeho zobrazenie a zobrazte jeho obsah z hornej ponuky</string>
+    <string name="objectives_useloop">Zobrazte obsah modulu uzavretý okruh</string>
+    <string name="objectives_usescale">Prepnite režim zobrazenia dlhým stlačením grafu glykémie</string>
+    <string name="objectives_button_enter">Zadať</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Zadajte kód, ktorý ste získali od vývojárov, aby ste obišli zostávajúce ciele</string>
+    <string name="codeaccepted">Kód akceptovaný</string>
+    <string name="codeinvalid">Neplatný kód</string>
+    <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
+    <string name="objectives_exam_gate">Preštudujte a správne odpovedajte na otázky</string>
+    <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
+    <string name="wronganswer">Nesprávna odpoveď!</string>
+    <string name="unfinshed_button">Ďalšia nedokončená</string>
+    <string name="close">Zavrieť</string>
+    <string name="requestcode">Kód žiadosti: %1$s</string>
+    <string name="objectives_hint">(zaškrtnite všetky správne odpovede)</string>
     <plurals name="objective_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

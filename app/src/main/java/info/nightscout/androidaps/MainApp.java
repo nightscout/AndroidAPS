@@ -54,7 +54,6 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.signatureVerifier.SignatureVerifier;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
 import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
@@ -169,7 +168,7 @@ public class MainApp extends Application {
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
-            pluginsList.add(OverviewPlugin.getPlugin());
+            pluginsList.add(OverviewPlugin.INSTANCE);
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsPlugin.INSTANCE);
             pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());

@@ -35,6 +35,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -106,9 +107,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
         if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
             String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 
-            String pattern = ";";
-
-            String[] substrings = settings.split(pattern);
+            allowedNumbers.clear();
+            String[] substrings = settings.split(";");
             for (String number : substrings) {
                 String cleaned = number.replaceAll("\\s+", "");
                 allowedNumbers.add(cleaned);
@@ -737,11 +737,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
             sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
     }
 
-    public void sendNotificationToAllNumbers(String text) {
+    public boolean sendNotificationToAllNumbers(String text) {
+        boolean result = true;
         for (int i = 0; i < allowedNumbers.size(); i++) {
             Sms sms = new Sms(allowedNumbers.get(i), text);
-            sendSMS(sms);
+            result = result && sendSMS(sms);
         }
+        return result;
     }
 
     private void sendSMSToAllNumbers(Sms sms) {
@@ -751,7 +753,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
     }
 
-    void sendSMS(Sms sms) {
+    boolean sendSMS(Sms sms) {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
 
@@ -768,13 +770,22 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
             messages.add(sms);
         } catch (IllegalArgumentException e) {
-            Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.gs(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            if (e.getMessage().equals("Invalid message body")) {
+                Notification notification = new Notification(Notification.INVALID_MESSAGE_BODY, MainApp.gs(R.string.smscommunicator_messagebody), Notification.NORMAL);
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                return false;
+            } else {
+                Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.gs(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                return false;
+            }
         } catch (java.lang.SecurityException e) {
             Notification notification = new Notification(Notification.MISSING_SMS_PERMISSION, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            return false;
         }
         MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+        return true;
     }
 
     private String generatePasscode() {

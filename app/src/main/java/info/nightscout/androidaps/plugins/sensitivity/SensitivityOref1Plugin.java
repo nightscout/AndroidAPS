@@ -156,7 +156,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             log.debug("Records: " + index + "   " + pastSensitivity);
 
         Arrays.sort(deviations);
-
+        /* Not used in calculation
         for (double i = 0.9; i > 0.1; i = i - 0.01) {
             if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.01)) >= 0 && IobCobCalculatorPlugin.percentile(deviations, i) < 0) {
                 if (L.isEnabled(L.AUTOSENS))
@@ -164,9 +164,10 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             }
             if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.01)) > 0 && IobCobCalculatorPlugin.percentile(deviations, i) <= 0) {
                 if (L.isEnabled(L.AUTOSENS))
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (>50% = resistance)");
+                    log.debug(Math.round(100 * i) + "% of non-meal deviations positive (>50% = resistance)");
             }
         }
+        */
         double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
         double pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50);
 

@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageHashTableR;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusProgress;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStartWithSpeed;
@@ -124,7 +125,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 if (mSerialIOThread != null) {
                     mSerialIOThread.disconnect("Recreate SerialIOThread");
                 }
-                mSerialIOThread = new SerialIOThread(mRfcommSocket);
+                mSerialIOThread = new SerialIOThread(mRfcommSocket, MessageHashTableR.INSTANCE);
                 mHandshakeInProgress = true;
                 MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.HANDSHAKING, 0));
             }
@@ -186,6 +187,15 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingUserOptions());
                 MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
+                if (danaRPump.pumpTime == 0) {
+                    // initial handshake was not successfull
+                    // deinitialize pump
+                    danaRPump.lastConnection = 0;
+                    danaRPump.lastSettingsRead = 0;
+                    RxBus.INSTANCE.send(new EventDanaRNewStatus());
+                    MainApp.bus().post(new EventInitializationChanged());
+                    return;
+                }
                 long timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                 if (L.isEnabled(L.PUMP))
                     log.debug("Pump time difference: " + timeDiff + " seconds");
@@ -207,7 +217,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.gs(R.string.approachingdailylimit), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(reportFail));
+                    RxBus.INSTANCE.send(new EventNewNotification(reportFail));
                     NSUpload.uploadError(MainApp.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }

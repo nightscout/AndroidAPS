@@ -77,7 +77,7 @@ class AutomationFragment : Fragment() {
         if (eventListAdapter == null) return
         eventListAdapter?.notifyDataSetChanged()
         val sb = StringBuilder()
-        for (l in AutomationPlugin.executionLog) {
+        for (l in AutomationPlugin.executionLog.reversed()) {
             sb.append(l)
             sb.append("\n")
         }

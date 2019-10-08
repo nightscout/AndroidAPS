@@ -35,7 +35,7 @@ class EditEventDialog : DialogFragment() {
             bundle.getString("event")?.let { event = AutomationEvent().fromJSON(it) }
         }
 
-        dialog.setCanceledOnTouchOutside(false)
+        dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.automation_dialog_event, container, false)
     }
 
@@ -135,6 +135,11 @@ class EditEventDialog : DialogFragment() {
                     FabricPrivacy.logException(it)
                 })
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onDestroyView() {

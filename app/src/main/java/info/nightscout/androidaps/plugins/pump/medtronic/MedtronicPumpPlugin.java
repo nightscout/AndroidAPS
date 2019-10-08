@@ -766,7 +766,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 if (clock.timeDifference == 0) {
                     Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, MainApp.gs(R.string.pump_time_updated), Notification.INFO, 60);
-                    MainApp.bus().post(new EventNewNotification(notification));
+                    RxBus.INSTANCE.send(new EventNewNotification(notification));
                 }
             } else {
                 if ((clock.localDeviceTime.getYear() > 2015)) {

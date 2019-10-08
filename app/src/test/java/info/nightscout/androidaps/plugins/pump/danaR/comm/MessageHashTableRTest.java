@@ -18,14 +18,14 @@ import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({MainApp.class, SP.class, L.class})
-public class MessageHashTableTest {
+public class MessageHashTableRTest {
 
     @Test
     public void runTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        MessageHashTable messageHashTable = new MessageHashTable();
+        MessageHashTableR messageHashTable = MessageHashTableR.INSTANCE;
         MessageBase testMessage = messageHashTable.findMessage(0x41f2);
         assertEquals("CMD_HISTORY_ALL", testMessage.getMessageName());
 

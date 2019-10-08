@@ -26,6 +26,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -35,7 +37,6 @@ import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTabl
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -454,7 +455,7 @@ public class BLEComm {
                                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumperror)));
                                         NSUpload.uploadError(MainApp.gs(R.string.pumperror));
                                         Notification n = new Notification(Notification.PUMPERROR, MainApp.gs(R.string.pumperror), Notification.URGENT);
-                                        MainApp.bus().post(new EventNewNotification(n));
+                                        RxBus.INSTANCE.send(new EventNewNotification(n));
                                     } else if (inputBuffer.length == 6 && inputBuffer[2] == 'B' && inputBuffer[3] == 'U' && inputBuffer[4] == 'S' && inputBuffer[5] == 'Y') {
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
@@ -468,7 +469,7 @@ public class BLEComm {
                                         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
                                         SP.remove(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName);
                                         Notification n = new Notification(Notification.WRONGSERIALNUMBER, MainApp.gs(R.string.wrongpassword), Notification.URGENT);
-                                        MainApp.bus().post(new EventNewNotification(n));
+                                        RxBus.INSTANCE.send(new EventNewNotification(n));
                                     }
                                     break;
                                 // 2nd packet, pairing key
@@ -643,6 +644,7 @@ public class BLEComm {
         //SystemClock.sleep(200);
         if (!message.isReceived()) {
             log.warn("Reply not received " + message.getFriendlyName());
+            message.handleMessageNotReceived();
         }
     }
 
@@ -663,9 +665,9 @@ public class BLEComm {
     private void SendPumpCheck() {
         // 1st message sent to pump after connect
         String devicename = getConnectDeviceName();
-        if(devicename == null || devicename.equals("")){
+        if (devicename == null || devicename.equals("")) {
             Notification n = new Notification(Notification.DEVICENOTPAIRED, MainApp.gs(R.string.pairfirst), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(n));
+            RxBus.INSTANCE.send(new EventNewNotification(n));
             return;
         }
         byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, devicename);

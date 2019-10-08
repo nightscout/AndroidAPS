@@ -102,7 +102,8 @@ public class ProfileFunctions {
     }
 
     public boolean isProfileValid(String from) {
-        return getProfile() != null && getProfile().isValid(from);
+        Profile profile = getProfile();
+        return profile != null && profile.isValid(from);
     }
 
     @Nullable

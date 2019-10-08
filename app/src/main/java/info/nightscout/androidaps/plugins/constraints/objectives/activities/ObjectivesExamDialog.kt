@@ -36,8 +36,8 @@ class ObjectivesExamDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog?.setCanceledOnTouchOutside(false)
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     override fun onResume() {
@@ -70,8 +70,7 @@ class ObjectivesExamDialog : DialogFragment() {
             // Hints
             objectives_exam_hints.removeAllViews()
             for (h in task.hints) {
-                val hint: Hint = h as Hint;
-                objectives_exam_hints.addView(hint.generate(context))
+                objectives_exam_hints.addView(h.generate(context))
             }
             // Disabled to
             objectives_exam_disabledto.text = MainApp.gs(R.string.answerdisabledto, DateUtil.timeString(task.disabledTo))

@@ -84,7 +84,7 @@ class ProfileViewerDialog : DialogFragment() {
     }
 
     override fun onResume() {
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         super.onResume()
     }
 

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.versionChecker
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.SP
@@ -46,7 +47,7 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
             //notify
             val message = MainApp.gs(R.string.new_version_warning, Math.round((now - SP.getLong(R.string.key_last_time_this_version_detected, now)) / TimeUnit.DAYS.toMillis(1).toDouble()))
             val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
-            MainApp.bus().post(EventNewNotification(notification))
+            RxBus.send(EventNewNotification(notification))
         }
     }
 
