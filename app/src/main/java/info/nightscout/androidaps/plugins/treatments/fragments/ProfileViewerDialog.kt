@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
@@ -14,16 +15,21 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import kotlinx.android.synthetic.main.close.*
 import kotlinx.android.synthetic.main.profileviewer_fragment.*
+import org.json.JSONObject
 
 class ProfileViewerDialog : DialogFragment() {
     private var time: Long = 0
 
     enum class Mode(val i: Int) {
         RUNNING_PROFILE(1),
-        PUMP_PROFILE(2)
+        PUMP_PROFILE(2),
+        CUSTOM_PROFILE(3)
     }
 
-    private var mode: Mode = Mode.RUNNING_PROFILE;
+    private var mode: Mode = Mode.RUNNING_PROFILE
+    private var customProfileJson: String = ""
+    private var customProfileName: String = ""
+    private var customProfileUnits: String = Constants.MGDL
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -31,6 +37,9 @@ class ProfileViewerDialog : DialogFragment() {
         (savedInstanceState ?: arguments)?.let { bundle ->
             time = bundle.getLong("time", 0)
             mode = Mode.values()[bundle.getInt("mode", Mode.RUNNING_PROFILE.ordinal)]
+            customProfileJson = bundle.getString("customProfile", "")
+            customProfileUnits = bundle.getString("customProfileUnits", Constants.MGDL)
+            customProfileName = bundle.getString("customProfileName", "")
         }
 
         return inflater.inflate(R.layout.profileviewer_fragment, container, false)
@@ -64,6 +73,13 @@ class ProfileViewerDialog : DialogFragment() {
                 profileview_reload.visibility = View.VISIBLE
                 profileview_datelayout.visibility = View.GONE
             }
+            Mode.CUSTOM_PROFILE -> {
+                profile = Profile(JSONObject(customProfileJson), customProfileUnits)
+                profileName = customProfileName
+                date = ""
+                profileview_reload.visibility = View.GONE
+                profileview_datelayout.visibility = View.GONE
+            }
         }
         profileview_noprofile.visibility = View.VISIBLE
 
@@ -92,6 +108,9 @@ class ProfileViewerDialog : DialogFragment() {
         super.onSaveInstanceState(bundle)
         bundle.putLong("time", time)
         bundle.putInt("mode", mode.ordinal)
+        bundle.putString("customProfile", customProfileJson)
+        bundle.putString("customProfileName", customProfileName)
+        bundle.putString("customProfileUnits", customProfileUnits)
     }
 
 }

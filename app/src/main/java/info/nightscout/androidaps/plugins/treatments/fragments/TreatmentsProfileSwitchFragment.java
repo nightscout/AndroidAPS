@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 13/01/17.
@@ -183,7 +184,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false));
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false));
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.profileswitch_refreshfromnightscout);
@@ -230,7 +231,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(),false)), false);
                 }
             });
     }

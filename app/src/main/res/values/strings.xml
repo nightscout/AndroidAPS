@@ -1595,5 +1595,17 @@
     <string name="close">Close</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="smscommunicator_messagebody">Invalid message body</string>
+    <string name="age">Age:</string>
+    <string name="weight">Weight:</string>
+    <string name="id">ID:</string>
+    <string name="submit">Submit</string>
+    <string name="mostcommonprofile">Most common profile:</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AndroidAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+    <string name="nav_survey">Survey</string>
+    <string name="invalidage">Invalid age entry</string>
+    <string name="invalidweight">Invalid weight entry</string>
+    <string name="tddformat">Total: %1$.2f Bolus: %2$.2f Basal: %3$.2f</string>
+    <string name="average">Average</string>
+    <string name="tdd">TDD</string>
 
 </resources>

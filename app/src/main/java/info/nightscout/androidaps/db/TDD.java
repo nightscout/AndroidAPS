@@ -6,6 +6,8 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
@@ -55,5 +57,9 @@ public class TDD {
                 ", basal=" + basal +
                 ", total=" + total +
                 ']';
+    }
+
+    public String toText() {
+        return MainApp.gs(R.string.tddformat, total, bolus, basal);
     }
 }
