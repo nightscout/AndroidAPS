@@ -8,8 +8,8 @@
     <string name="dia_meaningisequaltodiapump">It is equal to the DIA parameter used in your pump.</string>
     <string name="dia_valuemustbedetermined">You have to determine your individual value (but not less than 5 hours).</string>
     <string name="hypott_label">Topic: Hypo Temp-Target</string>
-    <string name="hypott_whenhypott">Why is it useful to set a hypo TT?</string>
-    <string name="hypott_goinglow">Prevent BG from going low.</string>
+    <string name="hypott_whenhypott">What is primary reason to set a hypo TT?</string>
+    <string name="hypott_goinglow">Prevent BG from going low if there is already zero temp running.</string>
     <string name="hypott_preventoversmb">To prevent SMB enactment after a hypo rise from fast carbs.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Which profile can be used and configured offline?</string>
