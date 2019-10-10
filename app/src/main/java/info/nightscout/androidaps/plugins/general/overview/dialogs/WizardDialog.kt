@@ -6,7 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.AdapterView
-import android.widget.AdapterView.*
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.fragment.app.DialogFragment
@@ -14,6 +14,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.events.EventFeatureRunning
 import info.nightscout.androidaps.interfaces.Constraint
@@ -26,7 +27,6 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.overview_wizard_dialog.*
 import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
@@ -56,6 +56,11 @@ class WizardDialog : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         this.parentContext = context
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onDetach() {
@@ -130,6 +135,15 @@ class WizardDialog : DialogFragment() {
         treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_sbcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
+
+        treatments_wizard_delimiter.visibility = View.GONE
+        treatments_wizard_resulttable.visibility = View.GONE
+        treatments_wizard_calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
+            run {
+                treatments_wizard_delimiter.visibility = if (isChecked) View.VISIBLE else View.GONE
+                treatments_wizard_resulttable.visibility = if (isChecked) View.VISIBLE else View.GONE
+            }
+        }
         // profile spinner
         treatments_wizard_profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -297,10 +311,10 @@ class WizardDialog : DialogFragment() {
                 treatment_wizard_notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            treatments_wizard_bg.text = c_bg.toString() + " ISF: " + DecimalFormatter.to1Decimal(wizard.sens)
+            treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(c_bg, specificProfile.units)).valueToUnitsToString(specificProfile.units), wizard.sens)
             treatments_wizard_bginsulin.text = StringUtils.formatInsulin(wizard.insulinFromBG)
 
-            treatments_wizard_carbs.text = DecimalFormatter.to0Decimal(c_carbs.toDouble()) + "g IC: " + DecimalFormatter.to1Decimal(wizard.ic)
+            treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), c_carbs.toDouble(), wizard.ic)
             treatments_wizard_carbsinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCarbs)
 
             treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromBolusIOB)
@@ -324,7 +338,7 @@ class WizardDialog : DialogFragment() {
 
             // COB
             if (treatments_wizard_cobcheckbox.isChecked) {
-                treatments_wizard_cob.text = DecimalFormatter.to2Decimal(c_cob) + "g IC: " + DecimalFormatter.to1Decimal(wizard.ic)
+                treatments_wizard_cob.text = String.format(MainApp.gs(R.string.format_cob_ic), c_cob, wizard.ic)
                 treatments_wizard_cobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCOB)
             } else {
                 treatments_wizard_cob.text = ""
