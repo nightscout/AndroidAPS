@@ -271,15 +271,7 @@ class WizardDialog : DialogFragment() {
         // Entered values
         var c_bg = SafeParse.stringToDouble(treatments_wizard_bginput.text)
         val c_carbs = SafeParse.stringToInt(treatments_wizard_carbsinput.text)
-        var c_correction = SafeParse.stringToDouble(treatments_wizard_correctioninput.text)
-        val corrAfterConstraint = c_correction
-        if (c_correction > 0)
-            c_correction = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(c_correction)).value()
-        if (Math.abs(c_correction - corrAfterConstraint) > 0.01) { // c_correction != corrAfterConstraint doesn't work
-            treatments_wizard_correctioninput.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.bolusconstraintapplied))
-            return
-        }
+        val c_correction = SafeParse.stringToDouble(treatments_wizard_correctioninput.text)
         val carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(c_carbs)).value()
         if (Math.abs(c_carbs - carbsAfterConstraint) > 0.01) {
             treatments_wizard_carbsinput.value = 0.0
@@ -299,7 +291,7 @@ class WizardDialog : DialogFragment() {
 
         val carbTime = SafeParse.stringToInt(treatments_wizard_carbtimeinput.text)
 
-        wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint,
+        wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, c_correction,
                 SP.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
                 treatments_wizard_bgcheckbox.isChecked,
                 treatments_wizard_cobcheckbox.isChecked,
