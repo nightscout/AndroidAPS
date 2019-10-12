@@ -42,7 +42,7 @@
     <string name="noisycgm_checksmoothing">Verify that your CGM app smoothes BG data.</string>
     <string name="exercise_label">Topic: Exercise</string>
     <string name="exercise_whattodo">How can you help the system deal with exercise?</string>
-    <string name="exercise_setactivitytt">Use temp-target feature.</string>
+    <string name="exercise_setactivitytt">Using of temp-target feature.</string>
     <string name="exercise_switchprofilebelow100">Do a profile switch below 100%.</string>
     <string name="exercise_switchprofileabove100">Do a profile switch above 100%.</string>
     <string name="exercise_stoploop">Stop the loop.</string>
