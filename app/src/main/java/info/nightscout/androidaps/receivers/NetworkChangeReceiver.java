@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+
 import androidx.annotation.Nullable;
 
 import org.slf4j.Logger;
@@ -22,6 +23,17 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     private static EventNetworkChange lastEvent = null;
+
+    public static final NetworkChangeReceiver instance = new NetworkChangeReceiver();
+
+    // TODO: Split NSClient into network state component that can be used by several plugins and logic for plugin
+    public static void fetch() {
+            NetworkChangeReceiver.instance.grabNetworkStatus(MainApp.instance().getApplicationContext());
+    }
+
+    private NetworkChangeReceiver() {
+        super();
+    }
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -71,7 +83,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         return lastEvent != null && lastEvent.wifiConnected;
     }
 
-   public static boolean isConnected() {
+    public static boolean isConnected() {
         return lastEvent != null && (lastEvent.wifiConnected || lastEvent.mobileConnected);
     }
 
