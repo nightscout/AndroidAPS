@@ -285,7 +285,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         SystemClock.sleep(1000);
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
-        MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        RxBus.INSTANCE.send(new EventVirtualPumpUpdateGui());
         lastDataTime = System.currentTimeMillis();
         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
         return result;
@@ -313,7 +313,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Setting temp basal absolute: " + result);
-        MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        RxBus.INSTANCE.send(new EventVirtualPumpUpdateGui());
         lastDataTime = System.currentTimeMillis();
         return result;
     }
@@ -336,7 +336,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Settings temp basal percent: " + result);
-        MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        RxBus.INSTANCE.send(new EventVirtualPumpUpdateGui());
         lastDataTime = System.currentTimeMillis();
         return result;
     }
@@ -361,7 +361,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Setting extended bolus: " + result);
-        MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        RxBus.INSTANCE.send(new EventVirtualPumpUpdateGui());
         lastDataTime = System.currentTimeMillis();
         return result;
     }
@@ -379,7 +379,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
             //tempBasal = null;
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Canceling temp basal: " + result);
-            MainApp.bus().post(new EventVirtualPumpUpdateGui());
+            RxBus.INSTANCE.send(new EventVirtualPumpUpdateGui());
         }
         lastDataTime = System.currentTimeMillis();
         return result;
@@ -399,7 +399,7 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Canceling extended bolus: " + result);
-        MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        RxBus.INSTANCE.send(new EventVirtualPumpUpdateGui());
         lastDataTime = System.currentTimeMillis();
         return result;
     }

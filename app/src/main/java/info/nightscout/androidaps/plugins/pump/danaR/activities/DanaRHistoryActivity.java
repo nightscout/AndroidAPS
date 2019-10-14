@@ -15,8 +15,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,18 +84,25 @@ public class DanaRHistoryActivity extends NoSplashActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSyncStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("EventDanaRSyncStatus: " + event.getMessage());
+                    statusView.setText(event.getMessage());
+                }, FabricPrivacy::logException)
         );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
         disposable.clear();
     }
 
@@ -327,13 +332,4 @@ public class DanaRHistoryActivity extends NoSplashActivity {
         historyList = new ArrayList<>();
         runOnUiThread(() -> recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false));
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSyncStatus s) {
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventDanaRSyncStatus: " + s.message);
-        runOnUiThread(
-                () -> statusView.setText(s.message));
-    }
-
 }

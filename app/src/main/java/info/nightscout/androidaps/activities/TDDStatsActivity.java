@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.activities;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -18,7 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TDD;
-import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -85,6 +82,14 @@ public class TDDStatsActivity extends NoSplashActivity {
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSyncStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    log.debug("EventDanaRSyncStatus: " + event.getMessage());
+                    statusView.setText(event.getMessage());
+                }, FabricPrivacy::logException)
         );
     }
 
@@ -251,7 +256,7 @@ public class TDDStatsActivity extends NoSplashActivity {
                         statsMessage.setText(MainApp.gs(R.string.danar_stats_warning_Message));
                     }
                 });
-                ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs( new Callback() {
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs(new Callback() {
                     @Override
                     public void run() {
                         loadDataFromDB();
@@ -411,7 +416,7 @@ public class TDDStatsActivity extends NoSplashActivity {
 
                 //cumulative TDDs
                 for (TDD record : historyList) {
-                    if(!historyList.isEmpty() && df.format(new Date(record.date)).equals(df.format(new Date()))) {
+                    if (!historyList.isEmpty() && df.format(new Date(record.date)).equals(df.format(new Date()))) {
                         //Today should not be included
                         continue;
                     }
@@ -460,7 +465,7 @@ public class TDDStatsActivity extends NoSplashActivity {
                     tl.setBackgroundColor(Color.TRANSPARENT);
                 }
 
-                if(!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
+                if (!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
                     //Today should not be included
                     historyList.remove(0);
                 }
@@ -531,19 +536,6 @@ public class TDDStatsActivity extends NoSplashActivity {
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSyncStatus s) {
-        log.debug("EventDanaRSyncStatus: " + s.message);
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(s.message);
-                    }
-                });
-    }
-
-
     public static boolean isOldData(List<TDD> historyList) {
         Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
         PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
@@ -555,6 +547,6 @@ public class TDDStatsActivity extends NoSplashActivity {
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday?1000 * 60 * 60 * 24:0))))));
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday ? 1000 * 60 * 60 * 24 : 0))))));
     }
 }
