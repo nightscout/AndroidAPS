@@ -172,7 +172,7 @@ public class NotificationStore {
         removeExpired();
         unSnooze();
         if (store.size() > 0) {
-            NotificationRecyclerViewAdapter adapter = new NotificationRecyclerViewAdapter(store);
+            NotificationRecyclerViewAdapter adapter = new NotificationRecyclerViewAdapter(cloneStore());
             notificationsView.setAdapter(adapter);
             notificationsView.setVisibility(View.VISIBLE);
         } else {
@@ -180,4 +180,9 @@ public class NotificationStore {
         }
     }
 
+    private synchronized List<Notification> cloneStore() {
+        List<Notification> clone = new ArrayList<>(store.size());
+        clone.addAll(store);
+        return clone;
+    }
 }
