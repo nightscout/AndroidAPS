@@ -334,9 +334,9 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             }
             SystemClock.sleep(300);
 
-            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.t = t;
-            bolusingEvent.percent = 99;
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+            bolusingEvent.setT(t);
+            bolusingEvent.setPercent(99);
 
             mBolusingTreatment = null;
 
@@ -360,8 +360,8 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
                 while (System.currentTimeMillis() < expectedEnd) {
                     long waitTime = expectedEnd - System.currentTimeMillis();
-                    bolusingEvent.status = String.format(MainApp.gs(R.string.waitingforestimatedbolusend), waitTime / 1000);
-                    MainApp.bus().post(bolusingEvent);
+                    bolusingEvent.setStatus(String.format(MainApp.gs(R.string.waitingforestimatedbolusend), waitTime / 1000));
+                    RxBus.INSTANCE.send(bolusingEvent);
                     SystemClock.sleep(1000);
                 }
 

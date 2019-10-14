@@ -275,7 +275,7 @@ public class CommandQueue {
 
     public synchronized void cancelAllBoluses() {
         if (!isRunning(Command.CommandType.BOLUS)) {
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
+            RxBus.INSTANCE.send(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);

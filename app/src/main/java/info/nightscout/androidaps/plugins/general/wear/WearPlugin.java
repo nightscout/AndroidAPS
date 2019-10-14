@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.general.wear;
 import android.content.Context;
 import android.content.Intent;
 
-import com.squareup.otto.Subscribe;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventBolusRequested;
@@ -70,7 +68,6 @@ public class WearPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         if (watchUS != null) {
             watchUS.setSettings();
         }
@@ -141,12 +138,40 @@ public class WearPlugin extends PluginBase {
                             ctx.startService(intent);
                         }, FabricPrivacy::logException
                 ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDismissBolusprogressIfRunning.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (event.getResult() == null) return;
+                            String status;
+                            if (event.getResult().success) {
+                                status = MainApp.gs(R.string.success);
+                            } else {
+                                status = MainApp.gs(R.string.nosuccess);
+                            }
+                            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+                            intent.putExtra("progresspercent", 100);
+                            intent.putExtra("progressstatus", status);
+                            ctx.startService(intent);
+                        }, FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventOverviewBolusProgress.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (!event.isSMB() || SP.getBoolean("wear_notifySMB", true)) {
+                                Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+                                intent.putExtra("progresspercent", event.getPercent());
+                                intent.putExtra("progressstatus", event.getStatus());
+                                ctx.startService(intent);
+                            }
+                        }, FabricPrivacy::logException
+                ));
     }
 
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
         disposable.clear();
         super.onStop();
     }
@@ -187,33 +212,6 @@ public class WearPlugin extends PluginBase {
         Intent intent = new Intent(ctx, WatchUpdaterService.class)
                 .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
         intent.putExtra("actionstring", actionstring);
-        ctx.startService(intent);
-    }
-
-
-    @Subscribe
-    public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        if (!ev.isSMB() || SP.getBoolean("wear_notifySMB", true)) {
-            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-            intent.putExtra("progresspercent", ev.percent);
-            intent.putExtra("progressstatus", ev.status);
-            ctx.startService(intent);
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
-        if (ev.result == null) return;
-
-        String status;
-        if (ev.result.success) {
-            status = MainApp.gs(R.string.success);
-        } else {
-            status = MainApp.gs(R.string.nosuccess);
-        }
-        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-        intent.putExtra("progresspercent", 100);
-        intent.putExtra("progressstatus", status);
         ctx.startService(intent);
     }
 

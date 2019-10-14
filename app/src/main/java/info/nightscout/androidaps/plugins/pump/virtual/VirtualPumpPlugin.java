@@ -271,17 +271,17 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
 
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200);
-            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), delivering);
-            bolusingEvent.percent = Math.min((int) (delivering / detailedBolusInfo.insulin * 100), 100);
-            MainApp.bus().post(bolusingEvent);
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+            bolusingEvent.setStatus(String.format(MainApp.gs(R.string.bolusdelivering), delivering));
+            bolusingEvent.setPercent(Math.min((int) (delivering / detailedBolusInfo.insulin * 100), 100));
+            RxBus.INSTANCE.send(bolusingEvent);
             delivering += 0.1d;
         }
         SystemClock.sleep(200);
-        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivered), detailedBolusInfo.insulin);
-        bolusingEvent.percent = 100;
-        MainApp.bus().post(bolusingEvent);
+        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+        bolusingEvent.setStatus(String.format(MainApp.gs(R.string.bolusdelivered), detailedBolusInfo.insulin));
+        bolusingEvent.setPercent(100);
+        RxBus.INSTANCE.send(bolusingEvent);
         SystemClock.sleep(1000);
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);

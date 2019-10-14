@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 
@@ -35,15 +36,15 @@ public class MsgBolusStop extends MessageBase {
     public void handleMessage(byte[] bytes) {
         if (L.isEnabled(L.PUMPCOMM))
             log.debug("Messsage received");
-        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
         stopped = true;
         if (!forced) {
             t.insulin = amount;
-            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_delivered);
-            bolusingEvent.percent = 100;
+            bolusingEvent.setStatus(MainApp.gs(R.string.overview_bolusprogress_delivered));
+            bolusingEvent.setPercent(100);
         } else {
-            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_stoped);
+            bolusingEvent.setStatus(MainApp.gs(R.string.overview_bolusprogress_stoped));
         }
-        MainApp.bus().post(bolusingEvent);
+        RxBus.INSTANCE.send(bolusingEvent);
     }
 }

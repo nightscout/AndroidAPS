@@ -403,9 +403,9 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             }
         }
 
-        final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.t = t;
-        bolusingEvent.percent = 99;
+        final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+        bolusingEvent.setT(t);
+        bolusingEvent.setPercent(99);
 
         mBolusingTreatment = null;
         int speed = 12;
@@ -424,8 +424,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         long expectedEnd = bolusStart + bolusDurationInMSec + 2000;
         while (System.currentTimeMillis() < expectedEnd) {
             long waitTime = expectedEnd - System.currentTimeMillis();
-            bolusingEvent.status = String.format(MainApp.gs(R.string.waitingforestimatedbolusend), waitTime / 1000);
-            MainApp.bus().post(bolusingEvent);
+            bolusingEvent.setStatus(String.format(MainApp.gs(R.string.waitingforestimatedbolusend), waitTime / 1000));
+            RxBus.INSTANCE.send(bolusingEvent);
             SystemClock.sleep(1000);
         }
         // do not call loadEvents() directly, reconnection may be needed
@@ -435,7 +435,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 // load last bolus status
                 RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingbolusstatus)));
                 mSerialIOThread.sendMessage(new MsgStatus());
-                bolusingEvent.percent = 100;
+                bolusingEvent.setPercent(100);
                 RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.disconnecting)));
             }
         });

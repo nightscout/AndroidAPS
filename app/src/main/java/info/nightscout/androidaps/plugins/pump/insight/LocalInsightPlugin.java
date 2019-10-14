@@ -555,11 +555,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 result.enacted = true;
                 Treatment t = new Treatment();
                 t.isSMB = detailedBolusInfo.isSMB;
-                final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                bolusingEvent.t = t;
-                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, insulin);
-                bolusingEvent.percent = 0;
-                MainApp.bus().post(bolusingEvent);
+                final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+                bolusingEvent.setT(t);
+                bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, 0d, insulin));
+                bolusingEvent.setPercent(0);
+                RxBus.INSTANCE.send(bolusingEvent);
                 int trials = 0;
                 InsightBolusID insightBolusID = new InsightBolusID();
                 insightBolusID.bolusID = bolusID;
@@ -586,18 +586,18 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     }
                     if (activeBolus != null) {
                         trials = -1;
-                        int percentBefore = bolusingEvent.percent;
-                        bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount()));
-                        bolusingEvent.status = MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount());
-                        if (percentBefore != bolusingEvent.percent)
-                            MainApp.bus().post(bolusingEvent);
+                        int percentBefore = bolusingEvent.getPercent();
+                        bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
+                        bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
+                        if (percentBefore != bolusingEvent.getPercent())
+                            RxBus.INSTANCE.send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, insulin, insulin);
-                                    bolusingEvent.percent = 100;
-                                    MainApp.bus().post(bolusingEvent);
+                                    bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, insulin, insulin));
+                                    bolusingEvent.setPercent(100);
+                                    RxBus.INSTANCE.send(bolusingEvent);
                                 }
                                 break;
                             }

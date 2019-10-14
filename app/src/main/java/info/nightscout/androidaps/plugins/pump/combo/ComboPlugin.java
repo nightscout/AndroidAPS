@@ -433,26 +433,26 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     }
 
     private static BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
-        EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
+        EventOverviewBolusProgress event = EventOverviewBolusProgress.INSTANCE;
         switch (state) {
             case PROGRAMMING:
-                event.status = MainApp.gs(R.string.combo_programming_bolus);
+                event.setStatus(MainApp.gs(R.string.combo_programming_bolus));
                 break;
             case DELIVERING:
-                event.status = MainApp.gs(R.string.bolusdelivering, delivered);
+                event.setStatus(MainApp.gs(R.string.bolusdelivering, delivered));
                 break;
             case DELIVERED:
-                event.status = MainApp.gs(R.string.bolusdelivered, delivered);
+                event.setStatus(MainApp.gs(R.string.bolusdelivered, delivered));
                 break;
             case STOPPING:
-                event.status = MainApp.gs(R.string.bolusstopping);
+                event.setStatus(MainApp.gs(R.string.bolusstopping));
                 break;
             case STOPPED:
-                event.status = MainApp.gs(R.string.bolusstopped);
+                event.setStatus(MainApp.gs(R.string.bolusstopped));
                 break;
         }
-        event.percent = percent;
-        MainApp.bus().post(event);
+        event.setPercent(percent);
+        RxBus.INSTANCE.send(event);
     };
 
     /**
@@ -474,11 +474,11 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 // no bolus required, carb only treatment
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                bolusingEvent.t = new Treatment();
-                bolusingEvent.t.isSMB = detailedBolusInfo.isSMB;
-                bolusingEvent.percent = 100;
-                MainApp.bus().post(bolusingEvent);
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+                bolusingEvent.setT(new Treatment());
+                bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
+                bolusingEvent.setPercent(100);
+                RxBus.INSTANCE.send(bolusingEvent);
 
                 return new PumpEnactResult().success(true).enacted(true)
                         .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
@@ -558,7 +558,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
             Treatment treatment = new Treatment();
             treatment.isSMB = detailedBolusInfo.isSMB;
-            EventOverviewBolusProgress.getInstance().t = treatment;
+            EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
             scripterIsBolusing = true;

@@ -14,8 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,7 +100,29 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
         );
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDismissBolusprogressIfRunning.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.UI)) log.debug("EventDismissBolusprogressIfRunning");
+                    if (BolusProgressDialog.running) dismiss();
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventOverviewBolusProgress.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.UI))
+                        log.debug("Status: " + event.getStatus() + " Percent: " + event.getPercent());
+                    statusView.setText(event.getStatus());
+                    progressBar.setProgress(event.getPercent());
+                    if (event.getPercent() == 100) {
+                        stopButton.setVisibility(View.INVISIBLE);
+                        scheduleDismiss();
+                    }
+                    state = event.getStatus();
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -128,7 +148,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             log.debug("onPause");
         running = false;
         super.onPause();
-        MainApp.bus().unregister(this);
         disposable.clear();
     }
 
@@ -150,33 +169,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 stopButton.setVisibility(View.INVISIBLE);
                 ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelAllBoluses();
                 break;
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        Activity activity = getActivity();
-        if (activity != null) {
-            activity.runOnUiThread(() -> {
-                if (L.isEnabled(L.UI))
-                    log.debug("Status: " + ev.status + " Percent: " + ev.percent);
-                statusView.setText(ev.status);
-                progressBar.setProgress(ev.percent);
-                if (ev.percent == 100) {
-                    stopButton.setVisibility(View.INVISIBLE);
-                    scheduleDismiss();
-                }
-            });
-        }
-        state = ev.status;
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
-        if (L.isEnabled(L.UI))
-            log.debug("EventDismissBolusprogressIfRunning");
-        if (BolusProgressDialog.running) {
-            dismiss();
         }
     }
 
