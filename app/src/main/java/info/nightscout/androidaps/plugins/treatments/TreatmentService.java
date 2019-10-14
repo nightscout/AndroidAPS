@@ -35,13 +35,17 @@ import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -50,6 +54,7 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     private static Logger log = LoggerFactory.getLogger(L.DATATREATMENTS);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTreatmentEventPost = null;
@@ -57,7 +62,20 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public TreatmentService() {
         onCreate();
         dbInitialize();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNsTreatment.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    int mode = event.getMode();
+                    JSONObject payload = event.getPayload();
+
+                    if (mode == EventNsTreatment.Companion.getADD() || mode == EventNsTreatment.Companion.getUPDATE()) {
+                        this.createTreatmentFromJsonIfNotExists(payload);
+                    } else { // EventNsTreatment.REMOVE
+                        this.deleteNS(payload);
+                    }
+                }, FabricPrivacy::logException)
+        );
     }
 
     /**
@@ -86,19 +104,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         }
 
         return null;
-    }
-
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void handleNsEvent(EventNsTreatment event) {
-        int mode = event.getMode();
-        JSONObject payload = event.getPayload();
-
-        if (mode == EventNsTreatment.ADD || mode == EventNsTreatment.UPDATE) {
-            this.createTreatmentFromJsonIfNotExists(payload);
-        } else { // EventNsTreatment.REMOVE
-            this.deleteNS(payload);
-        }
     }
 
     @Override
