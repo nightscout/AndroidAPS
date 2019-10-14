@@ -23,12 +23,18 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class BolusProgressDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(L.UI);
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     Button stopButton;
     TextView statusView;
     TextView stopPressedView;
@@ -91,11 +97,12 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             if (L.isEnabled(L.UI))
                 log.debug("onResume running");
         }
-        try {
-            MainApp.bus().register(this);
-        } catch (IllegalArgumentException e) {
-            log.error("Already registered");
-        }
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        MainApp.bus().register(this);
     }
 
     @Override
@@ -121,11 +128,8 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             log.debug("onPause");
         running = false;
         super.onPause();
-        try {
-            MainApp.bus().unregister(this);
-        } catch (IllegalArgumentException e) {
-            log.error("Already unregistered");
-        }
+        MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
@@ -173,16 +177,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             log.debug("EventDismissBolusprogressIfRunning");
         if (BolusProgressDialog.running) {
             dismiss();
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged c) {
-        if (L.isEnabled(L.UI))
-            log.debug("EventPumpStatusChanged");
-        Activity activity = getActivity();
-        if (activity != null) {
-            activity.runOnUiThread(() -> statusView.setText(c.textStatus()));
         }
     }
 

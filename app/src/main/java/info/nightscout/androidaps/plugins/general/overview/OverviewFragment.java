@@ -83,8 +83,11 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
@@ -113,17 +116,23 @@ import info.nightscout.androidaps.utils.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SingleClickButton;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView timeView;
     TextView bgView;
@@ -850,6 +859,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
+        disposable.clear();
         sLoopHandler.removeCallbacksAndMessages(null);
         unregisterForContextMenu(apsModeView);
         unregisterForContextMenu(activeProfileView);
@@ -860,6 +870,42 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eventOpenAPSUpdateGui -> scheduleUpdateGUI(eventOpenAPSUpdateGui.getFrom()),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventExtendedBolusChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventExtendedBolusChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventTempBasalChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventTreatmentChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempTargetChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventTempTargetChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updatePumpStatus(event.getStatus()),
+                        FabricPrivacy::logException
+                ));
         sRefreshLoop = () -> {
             scheduleUpdateGUI("refreshLoop");
             sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
@@ -882,33 +928,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshOverview ev) {
-        scheduleUpdateGUI(ev.from);
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         scheduleUpdateGUI("EventAutosensCalculationFinished");
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        scheduleUpdateGUI("EventTreatmentChange");
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventCareportalEventChange ev) {
         scheduleUpdateGUI("EventCareportalEventChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        scheduleUpdateGUI("EventTempBasalChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
-        scheduleUpdateGUI("EventExtendedBolusChange");
     }
 
     @Subscribe
@@ -922,20 +948,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTempTargetChange ev) {
-        scheduleUpdateGUI("EventTempTargetChange");
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventProfileNeedsUpdate ev) {
         scheduleUpdateGUI("EventProfileNeedsUpdate");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged s) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> updatePumpStatus(s.textStatus()));
     }
 
     @Subscribe

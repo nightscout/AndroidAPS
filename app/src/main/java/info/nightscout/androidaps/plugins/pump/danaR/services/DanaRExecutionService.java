@@ -127,7 +127,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 }
                 mSerialIOThread = new SerialIOThread(mRfcommSocket, MessageHashTableR.INSTANCE);
                 mHandshakeInProgress = true;
-                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.HANDSHAKING, 0));
+                RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, 0));
             }
 
             mConnectionInProgress = false;
@@ -137,7 +137,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     public void getPumpStatus() {
         DanaRPump danaRPump = DanaRPump.getInstance();
         try {
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpstatus)));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpstatus)));
             MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
@@ -153,11 +153,11 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingtempbasalstatus)));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingtempbasalstatus)));
             mSerialIOThread.sendMessage(tempStatusMsg);
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingextendedbolusstatus)));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingextendedbolusstatus)));
             mSerialIOThread.sendMessage(exStatusMsg);
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingbolusstatus)));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingbolusstatus)));
 
             long now = System.currentTimeMillis();
             danaRPump.lastConnection = now;
@@ -165,15 +165,15 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             Profile profile = ProfileFunctions.getInstance().getProfile();
             PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
-                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
+                RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
                 if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
-                    MainApp.bus().post(new EventProfileNeedsUpdate());
+                    RxBus.INSTANCE.send(new EventProfileNeedsUpdate());
                 }
             }
 
             if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
-                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
+                RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
@@ -185,7 +185,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
                 mSerialIOThread.sendMessage(new MsgSettingUserOptions());
-                MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
+                RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 if (danaRPump.pumpTime == 0) {
                     // initial handshake was not successfull
@@ -194,6 +194,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     danaRPump.lastSettingsRead = 0;
                     RxBus.INSTANCE.send(new EventDanaRNewStatus());
                     MainApp.bus().post(new EventInitializationChanged());
+                    RxBus.INSTANCE.send(new EventInitializationChanged());
                     return;
                 }
                 long timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
@@ -211,6 +212,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
             RxBus.INSTANCE.send(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
+            RxBus.INSTANCE.send(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
             if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 if (L.isEnabled(L.PUMP))
@@ -231,41 +233,41 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         DanaRPump danaRPump = DanaRPump.getInstance();
         if (!isConnected()) return false;
         if (danaRPump.isTempBasalInProgress) {
-            MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
             mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
             SystemClock.sleep(500);
         }
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.settingtempbasal)));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 
     public boolean tempBasalStop() {
         if (!isConnected()) return false;
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 
     public boolean extendedBolus(double insulin, int durationInHalfHours) {
         if (!isConnected()) return false;
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.settingextendedbolus)));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 
     public boolean extendedBolusStop() {
         if (!isConnected()) return false;
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingextendedbolus)));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 
@@ -395,7 +397,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     public boolean updateBasalsInPump(final Profile profile) {
         DanaRPump danaRPump = DanaRPump.getInstance();
         if (!isConnected()) return false;
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.gs(R.string.updatingbasalrates)));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.updatingbasalrates)));
         double[] basal = DanaRPump.getInstance().buildDanaRProfileRecord(profile);
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);
@@ -403,7 +405,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         mSerialIOThread.sendMessage(msgActivate);
         danaRPump.lastSettingsRead = 0; // force read full settings
         getPumpStatus();
-        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 

@@ -309,7 +309,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                         @Override
                         public void run() {
-                            MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
+                            RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_STOP"));
                             String reply = MainApp.gs(R.string.smscommunicator_loophasbeendisabled) + " " +
                                     MainApp.gs(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply));
@@ -326,7 +326,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 if (loopPlugin != null && !loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, true);
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loophasbeenenabled));
-                    MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_START"));
+                    RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_START"));
                 } else {
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopisenabled));
                 }
@@ -349,7 +349,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 break;
             case "RESUME":
                 LoopPlugin.getPlugin().suspendTo(0);
-                MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_RESUME"));
+                RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_RESUME"));
                 NSUpload.uploadOpenAPSOffline(0);
                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopresumed));
                 break;
@@ -376,7 +376,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                     if (result.success) {
                                         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger * 60L * 1000);
                                         NSUpload.uploadOpenAPSOffline(anInteger * 60);
-                                        MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
+                                        RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                                         String reply = MainApp.gs(R.string.smscommunicator_loopsuspended) + " " +
                                                 MainApp.gs(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
                                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));

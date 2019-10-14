@@ -37,8 +37,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TDD;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
@@ -49,11 +51,15 @@ import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class TDDStatsActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
@@ -75,12 +81,18 @@ public class TDDStatsActivity extends NoSplashActivity {
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
@@ -529,18 +541,6 @@ public class TDDStatsActivity extends NoSplashActivity {
                         statusView.setText(s.message);
                     }
                 });
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged c) {
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(c.textStatus());
-                    }
-                }
-        );
     }
 
 

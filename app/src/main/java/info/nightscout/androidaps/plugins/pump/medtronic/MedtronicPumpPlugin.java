@@ -1080,7 +1080,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private void finishAction(String overviewKey) {
 
         if (overviewKey != null)
-            MainApp.bus().post(new EventRefreshOverview(overviewKey));
+            RxBus.INSTANCE.send(new EventRefreshOverview(overviewKey));
 
         triggerUIChange();
 
@@ -1603,7 +1603,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     private void refreshCustomActionsList() {
-        MainApp.bus().post(new EventCustomActionsChanged());
+        RxBus.INSTANCE.send(new EventCustomActionsChanged());
     }
 
 

@@ -243,7 +243,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        MainApp.bus().post(new EventRefreshOverview("resetDatabases"));
+                        RxBus.INSTANCE.send(new EventRefreshOverview("resetDatabases"));
                     }
                 },
                 3000
@@ -738,7 +738,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventTempTargetChange");
-                MainApp.bus().post(new EventTempTargetChange());
+                RxBus.INSTANCE.send(new EventTempTargetChange());
                 scheduledTemTargetPost = null;
             }
         }
@@ -1035,8 +1035,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventTempBasalChange");
-                MainApp.bus().post(new EventReloadTempBasalData());
-                MainApp.bus().post(new EventTempBasalChange());
+                RxBus.INSTANCE.send(new EventReloadTempBasalData());
+                RxBus.INSTANCE.send(new EventTempBasalChange());
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
@@ -1371,7 +1371,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventExtendedBolusChange");
-                MainApp.bus().post(new EventReloadTreatmentData(new EventExtendedBolusChange()));
+                RxBus.INSTANCE.send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
@@ -1720,7 +1720,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventProfileNeedsUpdate");
-                MainApp.bus().post(new EventReloadProfileSwitchData());
+                RxBus.INSTANCE.send(new EventReloadProfileSwitchData());
                 MainApp.bus().post(new EventProfileNeedsUpdate());
                 scheduledProfileSwitchEventPost = null;
             }

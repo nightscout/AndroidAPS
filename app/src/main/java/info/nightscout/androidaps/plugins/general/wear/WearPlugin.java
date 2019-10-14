@@ -82,7 +82,34 @@ public class WearPlugin extends PluginBase {
                 .toObservable(EventOpenAPSUpdateGui.class)
                 .observeOn(Schedulers.io())
                 .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
-                        error -> FabricPrivacy.logException(error)
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventExtendedBolusChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
+                                sendDataToWatch(true, false, false);
+                        },
+                        FabricPrivacy::logException
                 ));
     }
 
@@ -143,21 +170,6 @@ public class WearPlugin extends PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         sendDataToWatch(true, true, true);
     }
@@ -166,14 +178,6 @@ public class WearPlugin extends PluginBase {
     public void onStatusEvent(final EventNewBasalProfile ev) {
         sendDataToWatch(false, true, false);
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventRefreshOverview ev) {
-        if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))) {
-            sendDataToWatch(true, false, false);
-        }
-    }
-
 
     @Subscribe
     public void onStatusEvent(final EventOverviewBolusProgress ev) {

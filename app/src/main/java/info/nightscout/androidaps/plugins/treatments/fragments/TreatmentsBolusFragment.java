@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +29,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
@@ -39,11 +40,16 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.treatments.dialogs.WizardInfoDialog;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
-public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
+public class TreatmentsBolusFragment extends Fragment implements View.OnClickListener {
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -162,7 +168,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                                     }
                                     TreatmentsPlugin.getPlugin().getService().delete(treatment);
                                 }
-                                updateGUI();
+                                updateGui();
                             }
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
@@ -213,7 +219,6 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
 
         context = getContext();
 
-        updateGUI();
         return view;
     }
 
@@ -248,7 +253,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                         }
                         TreatmentsPlugin.getPlugin().getService().delete(treatment);
                     }
-                    updateGUI();
+                    updateGui();
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
@@ -256,18 +261,29 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        updateGUI();
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
+        updateGui();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        updateGUI();
+        updateGui();
     }
 
-    @Override
-    protected void updateGUI() {
+    private void updateGui() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {

@@ -208,19 +208,19 @@ public class NSClientService extends Service {
         if (!nsAPISecret.equals(""))
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
-        MainApp.bus().post(new EventNSClientStatus("Initializing"));
+        RxBus.INSTANCE.send(new EventNSClientStatus("Initializing"));
         if (!MainApp.getSpecificPlugin(NSClientPlugin.class).isAllowed()) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "not allowed"));
-            MainApp.bus().post(new EventNSClientStatus("Not allowed"));
+            RxBus.INSTANCE.send(new EventNSClientStatus("Not allowed"));
         } else if (MainApp.getSpecificPlugin(NSClientPlugin.class).paused) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "paused"));
-            MainApp.bus().post(new EventNSClientStatus("Paused"));
+            RxBus.INSTANCE.send(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disabled"));
-            MainApp.bus().post(new EventNSClientStatus("Disabled"));
+            RxBus.INSTANCE.send(new EventNSClientStatus("Disabled"));
         } else if (!nsURL.equals("")) {
             try {
-                MainApp.bus().post(new EventNSClientStatus("Connecting ..."));
+                RxBus.INSTANCE.send(new EventNSClientStatus("Connecting ..."));
                 IO.Options opt = new IO.Options();
                 opt.forceNew = true;
                 opt.reconnection = true;
@@ -237,11 +237,11 @@ public class NSClientService extends Service {
                 mSocket.on("clear_alarm", onClearAlarm);
             } catch (URISyntaxException | RuntimeException e) {
                 MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "Wrong URL syntax"));
-                MainApp.bus().post(new EventNSClientStatus("Wrong URL syntax"));
+                RxBus.INSTANCE.send(new EventNSClientStatus("Wrong URL syntax"));
             }
         } else {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "No NS URL specified"));
-            MainApp.bus().post(new EventNSClientStatus("Not configured"));
+            RxBus.INSTANCE.send(new EventNSClientStatus("Not configured"));
         }
     }
 
@@ -338,7 +338,7 @@ public class NSClientService extends Service {
         connectionStatus += ')';
         isConnected = true;
         hasWriteAuth = ack.write && ack.write_treatment;
-        MainApp.bus().post(new EventNSClientStatus(connectionStatus));
+        RxBus.INSTANCE.send(new EventNSClientStatus(connectionStatus));
         MainApp.bus().post(new EventNSClientNewLog("AUTH", connectionStatus));
         if (!ack.write) {
             MainApp.bus().post(new EventNSClientNewLog("ERROR", "Write permission not granted !!!!"));

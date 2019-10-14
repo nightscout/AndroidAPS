@@ -17,8 +17,6 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.squareup.otto.Subscribe;
 
-import javax.annotation.Nonnull;
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -37,6 +35,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
@@ -44,12 +43,17 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by adrian on 23/12/16.
  */
 
 public class PersistentNotificationPlugin extends PluginBase {
+
+    private CompositeDisposable disposable  = new CompositeDisposable();
 
     private static PersistentNotificationPlugin plugin;
     private Notification notification;
@@ -92,6 +96,30 @@ public class PersistentNotificationPlugin extends PluginBase {
         super.onStart();
         createNotificationChannel(); // make sure channels exist before triggering updates through the bus
         MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> triggerNotificationUpdate(false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventExtendedBolusChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> triggerNotificationUpdate(false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> triggerNotificationUpdate(false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> triggerNotificationUpdate(false),
+                        FabricPrivacy::logException
+                ));
         triggerNotificationUpdate(true);
     }
 
@@ -110,6 +138,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     @Override
     protected void onStop() {
         MainApp.bus().unregister(this);
+        disposable.clear();
         MainApp.instance().stopService(new Intent(MainApp.instance(), DummyService.class));
         super.onStop();
     }
@@ -293,21 +322,6 @@ public class PersistentNotificationPlugin extends PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        triggerNotificationUpdate(false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        triggerNotificationUpdate(false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
-        triggerNotificationUpdate(false);
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         triggerNotificationUpdate(false);
     }
@@ -319,11 +333,6 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
-        triggerNotificationUpdate(false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventRefreshOverview ev) {
         triggerNotificationUpdate(false);
     }
 

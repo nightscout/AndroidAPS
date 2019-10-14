@@ -17,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
@@ -284,7 +285,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
                             val loopPlugin = LoopPlugin.getPlugin()
                             if (loopPlugin.isEnabled(PluginType.LOOP)) {
                                 loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
-                                MainApp.bus().post(EventRefreshOverview("WizardDialog"))
+                                RxBus.send(EventRefreshOverview("WizardDialog"))
                             }
 
                             val pump1 = ConfigBuilderPlugin.getPlugin().activePump

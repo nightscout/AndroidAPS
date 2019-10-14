@@ -35,11 +35,15 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientN
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class NSClientPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     static NSClientPlugin nsClientPlugin;
 
@@ -104,6 +108,14 @@ public class NSClientPlugin extends PluginBase {
         super.onStart();
 
         nsClientReceiverDelegate.registerReceivers();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNSClientStatus.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    status = event.getStatus();
+                    MainApp.bus().post(new EventNSClientUpdateGUI());
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -113,6 +125,7 @@ public class NSClientPlugin extends PluginBase {
         context.unbindService(mConnection);
 
         nsClientReceiverDelegate.unregisterReceivers();
+        disposable.clear();
         super.onStop();
     }
 
@@ -162,12 +175,6 @@ public class NSClientPlugin extends PluginBase {
         addToLog(ev);
         if (L.isEnabled(L.NSCLIENT))
             log.debug(ev.action + " " + ev.logText);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNSClientStatus ev) {
-        status = ev.status;
-        MainApp.bus().post(new EventNSClientUpdateGUI());
     }
 
     synchronized void clearLog() {

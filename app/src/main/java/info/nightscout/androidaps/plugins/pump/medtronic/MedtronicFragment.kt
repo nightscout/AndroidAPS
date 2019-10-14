@@ -123,6 +123,14 @@ class MedtronicFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
+                .toObservable(EventExtendedBolusChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventTempBasalChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
                 .toObservable(EventMedtronicPumpConfigurationChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -131,6 +139,10 @@ class MedtronicFragment : Fragment() {
                     MedtronicUtil.getPumpStatus().verifyConfiguration()
                     updateGUI()
                 }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventPumpStatusChanged::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
 
         updateGUI()
     }
@@ -141,21 +153,6 @@ class MedtronicFragment : Fragment() {
         disposable.clear()
         MainApp.bus().unregister(this)
         loopHandler.removeCallbacks(refreshLoop)
-    }
-
-    @Subscribe
-    fun onStatusEvent(c: EventPumpStatusChanged) {
-        activity?.runOnUiThread { updateGUI() }
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventTempBasalChange) {
-        activity?.runOnUiThread { updateGUI() }
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventExtendedBolusChange) {
-        activity?.runOnUiThread { updateGUI() }
     }
 
     @Subscribe

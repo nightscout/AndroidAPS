@@ -62,12 +62,15 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class LoopPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(L.APS);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final String CHANNEL_ID = "AndroidAPS-Openloop";
 
@@ -119,6 +122,13 @@ public class LoopPlugin extends PluginBase {
         MainApp.bus().register(this);
         createNotificationChannel();
         super.onStart();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempTargetChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    invoke("EventTempTargetChange", true);
+                }, FabricPrivacy::logException)
+        );
     }
 
     private void createNotificationChannel() {
@@ -135,8 +145,9 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     protected void onStop() {
-        super.onStop();
         MainApp.bus().unregister(this);
+        disposable.clear();
+        super.onStop();
     }
 
     @Override
@@ -175,12 +186,6 @@ public class LoopPlugin extends PluginBase {
     public long suspendedTo() {
         return loopSuspendedTill;
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempTargetChange ev) {
-        new Thread(() -> invoke("EventTempTargetChange", true)).start();
-    }
-
 
     public void suspendTo(long endTime) {
         loopSuspendedTill = endTime;

@@ -147,8 +147,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             } else if (binder instanceof InsightAlertService.LocalBinder) {
                 alertService = ((InsightAlertService.LocalBinder) binder).getService();
             }
-            if (connectionService != null && alertService != null)
+            if (connectionService != null && alertService != null) {
                 MainApp.bus().post(new EventInitializationChanged());
+                RxBus.INSTANCE.send(new EventInitializationChanged());
+            }
         }
 
         @Override
@@ -424,7 +426,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         lastUpdated = System.currentTimeMillis();
         new Handler(Looper.getMainLooper()).post(() -> {
             MainApp.bus().post(new EventLocalInsightUpdateGUI());
-            MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
+            RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
         });
     }
 
@@ -1164,7 +1166,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         } catch (Exception e) {
             log.error("Exception while reading history", e);
         }
-        new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
@@ -1599,7 +1601,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             activeTBR = null;
             activeBoluses = null;
             tbrOverNotificationBlock = null;
-            new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
+            new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
         }
         new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventLocalInsightUpdateGUI()));
     }

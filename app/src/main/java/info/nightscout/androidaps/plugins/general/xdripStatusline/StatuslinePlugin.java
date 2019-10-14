@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 
 import com.squareup.otto.Subscribe;
@@ -26,18 +27,24 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by adrian on 17/11/16.
  */
 
 public class StatuslinePlugin extends PluginBase {
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static StatuslinePlugin statuslinePlugin;
 
@@ -80,14 +87,42 @@ public class StatuslinePlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
+        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if ((lastLoopStatus != LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
+                                sendStatus();
+                        },
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventExtendedBolusChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendStatus(),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendStatus(),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendStatus(),
+                        FabricPrivacy::logException
+                ));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         MainApp.bus().unregister(this);
+        disposable.clear();
         sendStatus();
     }
 
@@ -167,21 +202,6 @@ public class StatuslinePlugin extends PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        sendStatus();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        sendStatus();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
-        sendStatus();
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         sendStatus();
     }
@@ -194,14 +214,6 @@ public class StatuslinePlugin extends PluginBase {
     @Subscribe
     public void onStatusEvent(final EventConfigBuilderChange ev) {
         sendStatus();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventRefreshOverview ev) {
-        //Filter events where loop is (de)activated
-        if ((lastLoopStatus != LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))) {
-            sendStatus();
-        }
     }
 
 }

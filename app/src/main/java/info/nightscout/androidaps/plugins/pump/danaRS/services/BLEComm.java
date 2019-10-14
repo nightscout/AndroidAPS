@@ -339,7 +339,7 @@ public class BLEComm {
             close();
             isConnected = false;
             isConnecting = false;
-            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
             if (L.isEnabled(L.PUMPBTCOMM))
                 log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
         }
@@ -452,7 +452,7 @@ public class BLEComm {
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumperror)));
+                                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, MainApp.gs(R.string.pumperror)));
                                         NSUpload.uploadError(MainApp.gs(R.string.pumperror));
                                         Notification n = new Notification(Notification.PUMPERROR, MainApp.gs(R.string.pumperror), Notification.URGENT);
                                         RxBus.INSTANCE.send(new EventNewNotification(n));
@@ -460,13 +460,13 @@ public class BLEComm {
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
+                                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
                                     } else {
                                         // ERROR in response, wrong serial number
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
+                                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
                                         SP.remove(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName);
                                         Notification n = new Notification(Notification.WRONGSERIALNUMBER, MainApp.gs(R.string.wrongpassword), Notification.URGENT);
                                         RxBus.INSTANCE.send(new EventNewNotification(n));
@@ -515,7 +515,7 @@ public class BLEComm {
                                     if (L.isEnabled(L.PUMPBTCOMM))
                                         log.debug("Pump user password: " + Integer.toHexString(pass));
 
-                                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
+                                    RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
                                     isConnected = true;
                                     isConnecting = false;
                                     if (L.isEnabled(L.PUMPBTCOMM))

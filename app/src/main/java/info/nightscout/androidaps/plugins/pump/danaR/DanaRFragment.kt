@@ -87,6 +87,30 @@ class DanaRFragment : Fragment() {
                 .toObservable(EventDanaRNewStatus::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventExtendedBolusChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventTempBasalChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventPumpStatusChanged::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when {
+                        it.sStatus == EventPumpStatusChanged.Status.CONNECTING -> danar_btconnection?.text = "{fa-bluetooth-b spin} " + it.sSecondsElapsed + "s"
+                        it.sStatus == EventPumpStatusChanged.Status.CONNECTED -> danar_btconnection?.text = "{fa-bluetooth}"
+                        it.sStatus == EventPumpStatusChanged.Status.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
+                    }
+                    if (it.getStatus() != "") {
+                        dana_pumpstatus?.text = it.getStatus()
+                        dana_pumpstatuslayout?.visibility = View.VISIBLE
+                    } else {
+                        dana_pumpstatuslayout?.visibility = View.GONE
+                    }
+                }, { FabricPrivacy.logException(it) })
         updateGUI()
     }
 
@@ -97,33 +121,6 @@ class DanaRFragment : Fragment() {
         MainApp.bus().unregister(this)
         loopHandler.removeCallbacks(refreshLoop)
     }
-
-    @Subscribe
-    fun onStatusEvent(c: EventPumpStatusChanged) {
-        activity?.runOnUiThread {
-            when {
-                c.sStatus == EventPumpStatusChanged.CONNECTING -> danar_btconnection?.text = "{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s"
-                c.sStatus == EventPumpStatusChanged.CONNECTED -> danar_btconnection?.text = "{fa-bluetooth}"
-                c.sStatus == EventPumpStatusChanged.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
-            }
-            if (c.textStatus() != "") {
-                dana_pumpstatus?.text = c.textStatus()
-                dana_pumpstatuslayout?.visibility = View.VISIBLE
-            } else {
-                dana_pumpstatuslayout?.visibility = View.GONE
-            }
-        }
-
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventTempBasalChange) =
-            activity?.runOnUiThread { updateGUI() }
-
-
-    @Subscribe
-    fun onStatusEvent(s: EventExtendedBolusChange) =
-            activity?.runOnUiThread { updateGUI() }
 
     @Subscribe
     fun onStatusEvent(s: EventQueueChanged) =

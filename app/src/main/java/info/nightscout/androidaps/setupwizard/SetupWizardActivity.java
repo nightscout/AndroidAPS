@@ -26,17 +26,22 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.AndroidPermission;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class SetupWizardActivity extends NoSplashAppCompatActivity {
     //logging
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     ScrollView scrollView;
 
@@ -84,6 +89,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     public void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
@@ -91,22 +97,22 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
         super.onResume();
         MainApp.bus().register(this);
         swDefinition.setActivity(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNSClientStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
     }
 
     @Subscribe
     public void onContentUpdate(EventSWUpdate ev) {
         if (ev.redraw)
             generateLayout();
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventNSClientStatus(EventNSClientStatus ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventPumpStatusChanged(EventPumpStatusChanged ignored) {
         updateButtons();
     }
 

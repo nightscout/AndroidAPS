@@ -186,15 +186,9 @@ public class SWDefinition {
                     .label(R.string.nsclientinternal_secret_dialogtitle)
                     .comment(R.string.nsclientinternal_secret_dialogmessage))
             .add(new SWBreak())
-            .add(new SWEventListener(this)
+            .add(new SWEventListener(this, EventNSClientStatus.class)
                     .label(R.string.status)
                     .initialStatus(NSClientPlugin.getPlugin().status)
-                    .listener(new Object() {
-                        @Subscribe
-                        public void onEventNSClientStatus(EventNSClientStatus event) {
-                            MainApp.bus().post(new EventSWLabel(event.status));
-                        }
-                    })
             )
             .add(new SWBreak())
             .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth)
@@ -328,14 +322,7 @@ public class SWDefinition {
                     .text(R.string.readstatus)
                     .action(() -> ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked connect to pump", null))
                     .visibility(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null))
-            .add(new SWEventListener(this)
-                    .listener(new Object() {
-                        @Subscribe
-                        public void onEventPumpStatusChanged(EventPumpStatusChanged event) {
-                            MainApp.bus().post(new EventSWLabel(event.textStatus()));
-                        }
-                    })
-            )
+            .add(new SWEventListener(this, EventPumpStatusChanged.class))
             .validator(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null && ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized());
 
     private SWScreen screenAps = new SWScreen(R.string.configbuilder_aps)

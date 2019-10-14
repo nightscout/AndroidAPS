@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.otto.Subscribe;
 
@@ -25,7 +27,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
@@ -33,9 +35,14 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 
-public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
+public class TreatmentsTemporaryBasalsFragment extends Fragment {
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -199,22 +206,32 @@ public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
 
         context = getContext();
 
-        updateGUI();
         return view;
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ignored) {
-        updateGUI();
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
+        updateGui();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ignored) {
-        updateGUI();
+        updateGui();
     }
 
-    @Override
-    protected void updateGUI() {
+    private void updateGui() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {

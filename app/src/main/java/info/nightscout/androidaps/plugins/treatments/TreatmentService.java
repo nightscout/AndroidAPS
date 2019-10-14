@@ -38,6 +38,7 @@ import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -181,6 +182,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("Firing EventReloadTreatmentData");
                 MainApp.bus().post(event);
+                RxBus.INSTANCE.send(event);
                 if (DatabaseHelper.earliestDataChange != null) {
                     if (L.isEnabled(L.DATATREATMENTS))
                         log.debug("Firing EventNewHistoryData");
