@@ -477,7 +477,7 @@ public class LoopPlugin extends PluginBase {
                     NSUpload.uploadDeviceStatus();
                     SP.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
-                MainApp.bus().post(new EventAcceptOpenLoopChange());
+                RxBus.INSTANCE.send(new EventAcceptOpenLoopChange());
             }
         });
         FabricPrivacy.getInstance().logCustom("AcceptTemp");

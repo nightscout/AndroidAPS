@@ -194,7 +194,6 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                     danaRPump.lastConnection = 0;
                     danaRPump.lastSettingsRead = 0;
                     RxBus.INSTANCE.send(new EventDanaRNewStatus());
-                    MainApp.bus().post(new EventInitializationChanged());
                     RxBus.INSTANCE.send(new EventInitializationChanged());
                     return;
                 }
@@ -214,7 +213,6 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             }
 
             RxBus.INSTANCE.send(new EventDanaRNewStatus());
-            MainApp.bus().post(new EventInitializationChanged());
             RxBus.INSTANCE.send(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
             if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {

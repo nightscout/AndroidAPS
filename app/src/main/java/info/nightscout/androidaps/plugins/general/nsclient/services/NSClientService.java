@@ -69,12 +69,15 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class NSClientService extends Service {
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new NSClientService.LocalBinder();
@@ -114,6 +117,17 @@ public class NSClientService extends Service {
 
     public NSClientService() {
         registerBus();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventConfigBuilderChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (nsEnabled != NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)) {
+                        latestDateInReceivedData = 0;
+                        destroy();
+                        initialize();
+                    }
+                }, FabricPrivacy::logException)
+        );
         if (handler == null) {
             HandlerThread handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
             handlerThread.start();
@@ -179,15 +193,6 @@ public class NSClientService extends Service {
                 ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
                 ev.isChanged(R.string.key_nsclientinternal_paused)
         ) {
-            latestDateInReceivedData = 0;
-            destroy();
-            initialize();
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventConfigBuilderChange ev) {
-        if (nsEnabled != MainApp.getSpecificPlugin(NSClientPlugin.class).isEnabled(PluginType.GENERAL)) {
             latestDateInReceivedData = 0;
             destroy();
             initialize();

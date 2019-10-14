@@ -375,7 +375,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         setValidBasalRateProfileSelectedOnPump(true);
 
         pump.initialized = true;
-        MainApp.bus().post(new EventInitializationChanged());
         RxBus.INSTANCE.send(new EventInitializationChanged());
 
         // show notification to check pump date if last bolus is older than 24 hours

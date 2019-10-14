@@ -46,7 +46,7 @@ class NsClientReceiverDelegate {
 
         EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(context);
         if (event != null)
-            bus.post(event);
+            RxBus.INSTANCE.send(event);
 
         context.registerReceiver(chargingStateReceiver,
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -69,7 +69,7 @@ class NsClientReceiverDelegate {
                 ) {
             EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
             if (event != null)
-                bus.post(event);
+                RxBus.INSTANCE.send(event);
         } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
             EventChargingState event = chargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
             if (event != null)
@@ -123,13 +123,13 @@ class NsClientReceiverDelegate {
 
         boolean newAllowedState = true;
 
-        if (ev.wifiConnected) {
+        if (ev.getWifiConnected()) {
             if (!allowedSSIDs.trim().isEmpty() &&
-                    (!allowedSSIDs.contains(ev.getSsid()) && !allowedSSIDs.contains(ev.ssid))) {
+                    (!allowedSSIDs.contains(ev.connectedSsid()) && !allowedSSIDs.contains(ev.getSsid()))) {
                 newAllowedState = false;
             }
         } else {
-            if ((!allowRoaming && ev.roaming) || wifiOnly) {
+            if ((!allowRoaming && ev.getRoaming()) || wifiOnly) {
                 newAllowedState = false;
             }
         }

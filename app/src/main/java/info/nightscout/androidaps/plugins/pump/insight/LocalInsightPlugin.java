@@ -148,7 +148,6 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 alertService = ((InsightAlertService.LocalBinder) binder).getService();
             }
             if (connectionService != null && alertService != null) {
-                MainApp.bus().post(new EventInitializationChanged());
                 RxBus.INSTANCE.send(new EventInitializationChanged());
             }
         }

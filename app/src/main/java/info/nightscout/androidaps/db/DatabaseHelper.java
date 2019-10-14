@@ -1577,7 +1577,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing scheduleCareportalEventChange");
-                MainApp.bus().post(new EventCareportalEventChange());
+                RxBus.INSTANCE.send(new EventCareportalEventChange());
                 scheduledCareportalEventPost = null;
             }
         }

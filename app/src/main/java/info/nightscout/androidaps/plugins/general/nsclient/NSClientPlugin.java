@@ -116,6 +116,11 @@ public class NSClientPlugin extends PluginBase {
                     MainApp.bus().post(new EventNSClientUpdateGUI());
                 }, FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNetworkChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -138,12 +143,6 @@ public class NSClientPlugin extends PluginBase {
     public void onStatusEvent(final EventChargingState ev) {
         nsClientReceiverDelegate.onStatusEvent(ev);
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventNetworkChange ev) {
-        nsClientReceiverDelegate.onStatusEvent(ev);
-    }
-
 
     private ServiceConnection mConnection = new ServiceConnection() {
 

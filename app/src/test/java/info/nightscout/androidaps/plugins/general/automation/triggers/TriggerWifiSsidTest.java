@@ -36,22 +36,22 @@ public class TriggerWifiSsidTest {
 
         TriggerWifiSsid t = new TriggerWifiSsid().setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL);
 
-        e.wifiConnected = false;
+        e.setWifiConnected(false);
         Assert.assertFalse(t.shouldRun());
 
-        e.wifiConnected = true;
-        e.ssid = "otherSSID";
+        e.setWifiConnected(true);
+        e.setSsid("otherSSID");
         Assert.assertFalse(t.shouldRun());
 
-        e.wifiConnected = true;
-        e.ssid = "aSSID";
+        e.setWifiConnected(true);
+        e.setSsid("aSSID");
         Assert.assertTrue(t.shouldRun());
 
         t.lastRun(now - 1);
         Assert.assertFalse(t.shouldRun());
 
         t = new TriggerWifiSsid().setValue("aSSID").comparator(Comparator.Compare.IS_NOT_AVAILABLE);
-        e.wifiConnected = false;
+        e.setWifiConnected(false);
         Assert.assertTrue(t.shouldRun());
 
         // no network data

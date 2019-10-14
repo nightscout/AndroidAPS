@@ -202,7 +202,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 danaRPump.lastConnection = 0;
                 danaRPump.lastSettingsRead = 0;
                 RxBus.INSTANCE.send(new EventDanaRNewStatus());
-                MainApp.bus().post(new EventInitializationChanged());
                 RxBus.INSTANCE.send(new EventInitializationChanged());
                 return;
             }
@@ -224,7 +223,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                     //deinitialize pump
                     danaRPump.lastConnection = 0;
                     RxBus.INSTANCE.send(new EventDanaRNewStatus());
-                    MainApp.bus().post(new EventInitializationChanged());
                     RxBus.INSTANCE.send(new EventInitializationChanged());
                     return;
                 } else {
@@ -258,7 +256,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             loadEvents();
 
             RxBus.INSTANCE.send(new EventDanaRNewStatus());
-            MainApp.bus().post(new EventInitializationChanged());
             RxBus.INSTANCE.send(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
             if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {

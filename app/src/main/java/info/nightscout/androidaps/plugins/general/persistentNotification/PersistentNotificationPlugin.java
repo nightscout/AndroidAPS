@@ -120,6 +120,12 @@ public class PersistentNotificationPlugin extends PluginBase {
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventInitializationChanged.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> triggerNotificationUpdate(false),
+                        FabricPrivacy::logException
+                ));
         triggerNotificationUpdate(true);
     }
 
@@ -328,11 +334,6 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
-        triggerNotificationUpdate(false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventInitializationChanged ev) {
         triggerNotificationUpdate(false);
     }
 

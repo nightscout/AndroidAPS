@@ -19,6 +19,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment;
@@ -170,7 +171,7 @@ public class SWDefinition {
                         NSClientPlugin.getPlugin().setFragmentVisible(PluginType.GENERAL, true);
                         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-                        MainApp.bus().post(new EventConfigBuilderChange());
+                        RxBus.INSTANCE.send(new EventConfigBuilderChange());
                         MainApp.bus().post(new EventSWUpdate(true));
                     })
                     .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
@@ -372,7 +373,7 @@ public class SWDefinition {
                         LoopPlugin.getPlugin().setFragmentVisible(PluginType.LOOP, true);
                         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-                        MainApp.bus().post(new EventConfigBuilderChange());
+                        RxBus.INSTANCE.send(new EventConfigBuilderChange());
                         MainApp.bus().post(new EventSWUpdate(true));
                     })
                     .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))

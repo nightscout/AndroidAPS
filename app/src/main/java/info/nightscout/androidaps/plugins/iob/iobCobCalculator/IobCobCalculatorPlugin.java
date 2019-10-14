@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 
 import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LongSparseArray;
@@ -31,16 +32,20 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
@@ -50,6 +55,7 @@ import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class IobCobCalculatorPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.AUTOSENS);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static IobCobCalculatorPlugin plugin = null;
 
@@ -83,14 +89,34 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
+        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventConfigBuilderChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    stopCalculation("onEventConfigBuilderChange");
+                    synchronized (dataLock) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                        iobTable = new LongSparseArray<>();
+                        autosensDataTable = new LongSparseArray<>();
+                    }
+                    runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, event);
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
+        disposable.clear();
         MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     public LongSparseArray<AutosensData> getAutosensDataTable() {
@@ -529,7 +555,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 count++;
             }
         }
-        return sum /count;
+        return sum / count;
     }
 
     @Nullable
@@ -712,7 +738,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 ev.isChanged(R.string.key_absorption_cutoff) ||
                 ev.isChanged(R.string.key_openapsama_autosens_max) ||
                 ev.isChanged(R.string.key_openapsama_autosens_min)
-                ) {
+        ) {
             stopCalculation("onEventPreferenceChange");
             synchronized (dataLock) {
                 if (L.isEnabled(L.AUTOSENS))
@@ -723,23 +749,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
             }
             runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, ev);
         }
-    }
-
-    @Subscribe
-    public void onEventConfigBuilderChange(EventConfigBuilderChange ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        stopCalculation("onEventConfigBuilderChange");
-        synchronized (dataLock) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
-            iobTable = new LongSparseArray<>();
-            autosensDataTable = new LongSparseArray<>();
-        }
-        runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, ev);
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
