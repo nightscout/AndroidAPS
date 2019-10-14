@@ -16,7 +16,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.DatabaseHelper
-import info.nightscout.androidaps.events.EventFeatureRunning
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -66,11 +65,6 @@ class WizardDialog : DialogFragment() {
     override fun onDetach() {
         super.onDetach()
         this.parentContext = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        MainApp.bus().post(EventFeatureRunning(EventFeatureRunning.Feature.WIZARD))
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {

@@ -120,8 +120,7 @@ public class WearPlugin extends PluginBase {
                             resendDataToWatch();
                             // status may be formated differently
                             sendDataToWatch(true, false, false);
-                        },
-                        FabricPrivacy::logException
+                        }, FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventRefreshOverview.class)
@@ -129,8 +128,18 @@ public class WearPlugin extends PluginBase {
                 .subscribe(event -> {
                             if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
                                 sendDataToWatch(true, false, false);
-                        },
-                        FabricPrivacy::logException
+                        }, FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventBolusRequested.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            String status = String.format(MainApp.gs(R.string.bolusrequested), event.getAmount());
+                            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+                            intent.putExtra("progresspercent", 0);
+                            intent.putExtra("progressstatus", status);
+                            ctx.startService(intent);
+                        }, FabricPrivacy::logException
                 ));
     }
 
@@ -190,16 +199,6 @@ public class WearPlugin extends PluginBase {
             intent.putExtra("progressstatus", ev.status);
             ctx.startService(intent);
         }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventBolusRequested ev) {
-        String status = String.format(MainApp.gs(R.string.bolusrequested), ev.getAmount());
-        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-        intent.putExtra("progresspercent", 0);
-        intent.putExtra("progressstatus", status);
-        ctx.startService(intent);
-
     }
 
     @Subscribe

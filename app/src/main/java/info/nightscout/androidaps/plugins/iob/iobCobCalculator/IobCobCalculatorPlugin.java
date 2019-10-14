@@ -135,7 +135,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         basalDataTable = new LongSparseArray<>();
                     }
                     runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
-                 }, FabricPrivacy::logException)
+                }, FabricPrivacy::logException)
         );
         // EventNewBG
         disposable.add(RxBus.INSTANCE
@@ -149,9 +149,9 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     }
                     stopCalculation("onEventNewBG");
                     runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
-                  }, FabricPrivacy::logException)
+                }, FabricPrivacy::logException)
         );
-       // EventPreferenceChange
+        // EventPreferenceChange
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
@@ -179,7 +179,20 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         }
                         runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, event);
                     }
-                  }, FabricPrivacy::logException)
+                }, FabricPrivacy::logException)
+        );
+        // EventAppInitialized
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppInitialized.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event);
+                }, FabricPrivacy::logException)
         );
     }
 
@@ -724,18 +737,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return array;
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onEventAppInitialized(EventAppInitialized ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, ev);
-    }
-
-     public void stopCalculation(String from) {
+    public void stopCalculation(String from) {
         if (thread != null && thread.getState() != Thread.State.TERMINATED) {
             stopCalculationTrigger = true;
             if (L.isEnabled(L.AUTOSENS))

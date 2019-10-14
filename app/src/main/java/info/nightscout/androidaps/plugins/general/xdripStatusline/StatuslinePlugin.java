@@ -8,8 +8,6 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
-import com.squareup.otto.Subscribe;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -88,7 +86,6 @@ public class StatuslinePlugin extends PluginBase {
     @Override
     protected void onStart() {
         super.onStart();
-        MainApp.bus().register(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(Schedulers.io())
@@ -134,12 +131,17 @@ public class StatuslinePlugin extends PluginBase {
                 .subscribe(event -> sendStatus(),
                         FabricPrivacy::logException
                 ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppInitialized.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendStatus(),
+                        FabricPrivacy::logException
+                ));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        MainApp.bus().unregister(this);
         disposable.clear();
         sendStatus();
     }
@@ -211,11 +213,4 @@ public class StatuslinePlugin extends PluginBase {
 
         return status;
     }
-
-
-    @Subscribe
-    public void onStatusEvent(final EventAppInitialized ev) {
-        sendStatus();
-    }
-
 }
