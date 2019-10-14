@@ -107,22 +107,22 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateButtons(), FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileStoreChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
     }
 
     @Subscribe
     public void onContentUpdate(EventSWUpdate ev) {
         if (ev.redraw)
             generateLayout();
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventProfileStoreChanged(EventProfileStoreChanged ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventProfileSwitchChange(EventProfileNeedsUpdate ignored) {
         updateButtons();
     }
 

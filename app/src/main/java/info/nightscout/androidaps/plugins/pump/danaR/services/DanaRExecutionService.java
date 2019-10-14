@@ -67,36 +67,57 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DanaRExecutionService extends AbstractDanaRExecutionService {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public DanaRExecutionService() {
         mBinder = new LocalBinder();
 
-        registerBus();
         MainApp.instance().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (mSerialIOThread != null)
+                        mSerialIOThread.disconnect("EventPreferenceChange");
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("EventAppExit received");
+
+                    if (mSerialIOThread != null)
+                        mSerialIOThread.disconnect("Application exit");
+                    MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
+                    stopSelf();
+                }, FabricPrivacy::logException)
+        );
+    }
+
+    @Override
+    public void onDestroy() {
+        disposable.clear();
+        super.onDestroy();
     }
 
     public class LocalBinder extends Binder {
         public DanaRExecutionService getServiceInstance() {
             return DanaRExecutionService.this;
         }
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange pch) {
-        if (mSerialIOThread != null)
-            mSerialIOThread.disconnect("EventPreferenceChange");
     }
 
     public void connect() {
@@ -405,19 +426,6 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         getPumpStatus();
         RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventAppExit event) {
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventAppExit received");
-
-        if (mSerialIOThread != null)
-            mSerialIOThread.disconnect("Application exit");
-
-        MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
-
-        stopSelf();
     }
 
     public PumpEnactResult setUserOptions() {

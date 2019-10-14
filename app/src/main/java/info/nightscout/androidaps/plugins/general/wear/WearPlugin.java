@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.wear;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 
@@ -28,7 +27,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -115,6 +113,17 @@ public class WearPlugin extends PluginBase {
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            // possibly new high or low mark
+                            resendDataToWatch();
+                            // status may be formated differently
+                            sendDataToWatch(true, false, false);
+                        },
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -172,14 +181,6 @@ public class WearPlugin extends PluginBase {
         ctx.startService(intent);
     }
 
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-        // possibly new high or low mark
-        resendDataToWatch();
-        // status may be formated differently
-        sendDataToWatch(true, false, false);
-    }
 
     @Subscribe
     public void onStatusEvent(final EventOverviewBolusProgress ev) {

@@ -117,17 +117,6 @@ public class NSClientService extends Service {
 
     public NSClientService() {
         registerBus();
-        disposable.add(RxBus.INSTANCE
-                .toObservable(EventConfigBuilderChange.class)
-                .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    if (nsEnabled != NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)) {
-                        latestDateInReceivedData = 0;
-                        destroy();
-                        initialize();
-                    }
-                }, FabricPrivacy::logException)
-        );
         if (handler == null) {
             HandlerThread handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
             handlerThread.start();
@@ -143,11 +132,47 @@ public class NSClientService extends Service {
     public void onCreate() {
         super.onCreate();
         mWakeLock.acquire();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventConfigBuilderChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (nsEnabled != NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)) {
+                        latestDateInReceivedData = 0;
+                        destroy();
+                        initialize();
+                    }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (event.isChanged(R.string.key_nsclientinternal_url) ||
+                            event.isChanged(R.string.key_nsclientinternal_api_secret) ||
+                            event.isChanged(R.string.key_nsclientinternal_paused)
+                    ) {
+                        latestDateInReceivedData = 0;
+                        destroy();
+                        initialize();
+                    }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.NSCLIENT))
+                        log.debug("EventAppExit received");
+                    destroy();
+                    stopSelf();
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        disposable.clear();
         if (mWakeLock.isHeld()) mWakeLock.release();
     }
 
@@ -175,28 +200,6 @@ public class NSClientService extends Service {
             // Ignore
         }
         MainApp.bus().register(this);
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventAppExit event) {
-        if (L.isEnabled(L.NSCLIENT))
-            log.debug("EventAppExit received");
-
-        destroy();
-
-        stopSelf();
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_nsclientinternal_url) ||
-                ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
-                ev.isChanged(R.string.key_nsclientinternal_paused)
-        ) {
-            latestDateInReceivedData = 0;
-            destroy();
-            initialize();
-        }
     }
 
     @Subscribe

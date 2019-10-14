@@ -99,7 +99,6 @@ class NsClientReceiverDelegate {
         boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
-            bus.post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
             RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
         }
     }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -39,14 +41,18 @@ import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by mike on 13/01/17.
  */
 
-public class TreatmentsProfileSwitchFragment extends SubscriberFragment implements View.OnClickListener {
+public class TreatmentsProfileSwitchFragment extends Fragment implements View.OnClickListener {
     private Logger log = LoggerFactory.getLogger(L.UI);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -195,8 +201,24 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
 
-        updateGUI();
         return view;
+    }
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGUI(), FabricPrivacy::logException)
+        );
+        updateGUI();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     @Override
@@ -218,20 +240,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventProfileNeedsUpdate ev) {
-        updateGUI();
-    }
-
-    @Override
     protected void updateGUI() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
-                }
-            });
+        recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
     }
 }

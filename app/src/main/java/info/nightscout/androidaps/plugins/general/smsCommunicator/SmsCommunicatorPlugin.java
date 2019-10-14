@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -50,15 +51,19 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.XdripCalibrations;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SmsCommunicatorPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(L.SMS);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static SmsCommunicatorPlugin smsCommunicatorPlugin;
 
@@ -92,18 +97,23 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    processSettings(event);
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
-    @Subscribe
-    public void processSettings(final EventPreferenceChange ev) {
+    private void processSettings(final EventPreferenceChange ev) {
         if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
             String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 

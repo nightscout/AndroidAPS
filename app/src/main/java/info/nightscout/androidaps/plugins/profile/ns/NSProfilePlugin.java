@@ -78,7 +78,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             profile = new ProfileStore(new JSONObject(profileString));
             storeNSProfile();
             if (isEnabled(PluginType.PROFILE)) {
-                MainApp.bus().post(new EventProfileStoreChanged());
+                RxBus.INSTANCE.send(new EventProfileStoreChanged());
                 RxBus.INSTANCE.send(new EventNSProfileUpdateGUI());
             }
             if (L.isEnabled(L.PROFILE))

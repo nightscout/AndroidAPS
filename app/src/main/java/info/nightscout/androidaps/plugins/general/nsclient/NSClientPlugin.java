@@ -22,7 +22,6 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
@@ -31,6 +30,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
@@ -121,6 +121,21 @@ public class NSClientPlugin extends PluginBase {
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (nsClientService != null) {
+                        MainApp.instance().getApplicationContext().unbindService(mConnection);
+                        nsClientReceiverDelegate.unregisterReceivers();
+                    }
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -132,11 +147,6 @@ public class NSClientPlugin extends PluginBase {
         nsClientReceiverDelegate.unregisterReceivers();
         disposable.clear();
         super.onStop();
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventPreferenceChange ev) {
-        nsClientReceiverDelegate.onStatusEvent(ev);
     }
 
     @Subscribe
@@ -160,14 +170,6 @@ public class NSClientPlugin extends PluginBase {
                 nsClientService = mLocalBinder.getServiceInstance();
         }
     };
-
-    @Subscribe
-    public void onStatusEvent(final EventAppExit ignored) {
-        if (nsClientService != null) {
-            MainApp.instance().getApplicationContext().unbindService(mConnection);
-            nsClientReceiverDelegate.unregisterReceivers();
-        }
-    }
 
     @Subscribe
     public void onStatusEvent(final EventNSClientNewLog ev) {
@@ -220,7 +222,6 @@ public class NSClientPlugin extends PluginBase {
     public void pause(boolean newState) {
         SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
-        MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
         RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
     }
 

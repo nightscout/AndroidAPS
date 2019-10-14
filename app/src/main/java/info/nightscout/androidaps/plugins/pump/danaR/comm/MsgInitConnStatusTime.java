@@ -47,7 +47,7 @@ public class MsgInitConnStatusTime extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaDriver");
-            MainApp.bus().post(new EventRefreshGui());
+            RxBus.INSTANCE.send(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             failed = false;
             return;

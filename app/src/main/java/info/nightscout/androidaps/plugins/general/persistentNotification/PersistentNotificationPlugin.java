@@ -15,8 +15,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.RemoteInput;
 import androidx.core.app.TaskStackBuilder;
 
-import com.squareup.otto.Subscribe;
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -95,7 +93,6 @@ public class PersistentNotificationPlugin extends PluginBase {
     protected void onStart() {
         super.onStart();
         createNotificationChannel(); // make sure channels exist before triggering updates through the bus
-        MainApp.bus().register(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(Schedulers.io())
@@ -138,6 +135,12 @@ public class PersistentNotificationPlugin extends PluginBase {
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> triggerNotificationUpdate(false),
+                        FabricPrivacy::logException
+                ));
         triggerNotificationUpdate(true);
     }
 
@@ -155,7 +158,6 @@ public class PersistentNotificationPlugin extends PluginBase {
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
         disposable.clear();
         MainApp.instance().stopService(new Intent(MainApp.instance(), DummyService.class));
         super.onStop();
@@ -332,11 +334,4 @@ public class PersistentNotificationPlugin extends PluginBase {
             throw new IllegalStateException("Notification is null");
         }
     }
-
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-        triggerNotificationUpdate(false);
-    }
-
 }

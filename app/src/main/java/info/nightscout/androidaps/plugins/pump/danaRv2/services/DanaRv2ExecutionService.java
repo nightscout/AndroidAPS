@@ -6,8 +6,6 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.SystemClock;
 
-import com.squareup.otto.Subscribe;
-
 import java.io.IOException;
 import java.util.Date;
 
@@ -74,17 +72,20 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private long lastHistoryFetched = 0;
 
     public DanaRv2ExecutionService() {
         mBinder = new LocalBinder();
 
-        registerBus();
         MainApp.instance().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
     }
 
@@ -94,32 +95,36 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         }
     }
 
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (mSerialIOThread != null)
+                        mSerialIOThread.disconnect("EventPreferenceChange");
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("EventAppExit received");
+
+                    if (mSerialIOThread != null)
+                        mSerialIOThread.disconnect("Application exit");
+                    MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
+                    stopSelf();
+                }, FabricPrivacy::logException)
+        );
     }
 
-    @Subscribe
-    public void onStatusEvent(EventAppExit event) {
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventAppExit received");
-
-        if (mSerialIOThread != null)
-            mSerialIOThread.disconnect("Application exit");
-
-        MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
-
-        stopSelf();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange pch) {
-        if (mSerialIOThread != null)
-            mSerialIOThread.disconnect("EventPreferenceChange");
+    @Override
+    public void onDestroy() {
+        disposable.clear();
+        super.onDestroy();
     }
 
     public void connect() {
@@ -190,7 +195,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
                 if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
-                    MainApp.bus().post(new EventProfileNeedsUpdate());
+                    RxBus.INSTANCE.send(new EventProfileNeedsUpdate());
                 }
             }
 

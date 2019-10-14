@@ -49,7 +49,7 @@ public class MsgInitConnStatusTime_k extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingKoreanDanaDriver");
-            MainApp.bus().post(new EventRefreshGui());
+            RxBus.INSTANCE.send(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }

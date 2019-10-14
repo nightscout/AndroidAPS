@@ -81,7 +81,7 @@ public abstract class PluginBase {
         setFragmentVisible(type, enabled);
         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(this, getType());
         ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
-        MainApp.bus().post(new EventRefreshGui());
+        RxBus.INSTANCE.send(new EventRefreshGui());
         MainApp.bus().post(new EventConfigBuilderChange());
         RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
         ConfigBuilderPlugin.getPlugin().logPluginStatus();

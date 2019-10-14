@@ -11,23 +11,24 @@ import android.os.IBinder;
 
 import androidx.core.app.ActivityCompat;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventLocationChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LocationService extends Service {
     private static Logger log = LoggerFactory.getLogger(L.LOCATION);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private LocationManager mLocationManager = null;
     private static final float LOCATION_DISTANCE = 10f;
@@ -125,7 +126,14 @@ public class LocationService extends Service {
         } catch (IllegalArgumentException ex) {
             log.error("network provider does not exist, " + ex.getMessage());
         }
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.CORE)) log.debug("EventAppExit received");
+                    stopSelf();
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -143,15 +151,7 @@ public class LocationService extends Service {
                 log.error("fail to remove location listener, ignore", ex);
             }
         }
-        MainApp.bus().unregister(this);
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventAppExit event) {
-        if (L.isEnabled(L.CORE))
-            log.debug("EventAppExit received");
-
-        stopSelf();
+        disposable.clear();
     }
 
     private void initializeLocationManager() {

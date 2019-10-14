@@ -59,9 +59,12 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 03.09.2017.
@@ -69,6 +72,8 @@ import info.nightscout.androidaps.utils.T;
 
 public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     private static DanaRSPlugin plugin = null;
 
     public static DanaRSPlugin getPlugin() {
@@ -114,6 +119,13 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(mConnection);
+                }, FabricPrivacy::logException)
+        );
         onStatusEvent(new EventDanaRSDeviceChange()); // load device name
         super.onStart();
     }
@@ -124,6 +136,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         context.unbindService(mConnection);
 
         MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -147,12 +160,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             danaRSService = mLocalBinder.getServiceInstance();
         }
     };
-
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
 
     @Subscribe
     public void onStatusEvent(final EventDanaRSDeviceChange e) {

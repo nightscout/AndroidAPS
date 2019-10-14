@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.virtual;
 
 import android.os.SystemClock;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -41,8 +39,11 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -50,6 +51,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     Integer batteryPercent = 50;
     Integer reservoirInUnits = 50;
@@ -122,20 +124,21 @@ public class VirtualPumpPlugin extends PluginBase implements PumpInterface {
     @Override
     protected void onStart() {
         super.onStart();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (event.isChanged(R.string.key_virtualpump_type))
+                        refreshConfiguration();
+                }, FabricPrivacy::logException)
+        );
         refreshConfiguration();
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange s) {
-        if (s.isChanged(R.string.key_virtualpump_type))
-            refreshConfiguration();
     }
 
     @Override

@@ -1720,7 +1720,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventProfileNeedsUpdate");
                 RxBus.INSTANCE.send(new EventReloadProfileSwitchData());
-                MainApp.bus().post(new EventProfileNeedsUpdate());
+                RxBus.INSTANCE.send(new EventProfileNeedsUpdate());
                 scheduledProfileSwitchEventPost = null;
             }
         }

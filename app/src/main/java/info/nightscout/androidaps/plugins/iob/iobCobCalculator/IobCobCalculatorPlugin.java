@@ -151,6 +151,36 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
                   }, FabricPrivacy::logException)
         );
+       // EventPreferenceChange
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    if (event.isChanged(R.string.key_openapsama_autosens_period) ||
+                            event.isChanged(R.string.key_age) ||
+                            event.isChanged(R.string.key_absorption_maxtime) ||
+                            event.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
+                            event.isChanged(R.string.key_absorption_cutoff) ||
+                            event.isChanged(R.string.key_openapsama_autosens_max) ||
+                            event.isChanged(R.string.key_openapsama_autosens_min)
+                    ) {
+                        stopCalculation("onEventPreferenceChange");
+                        synchronized (dataLock) {
+                            if (L.isEnabled(L.AUTOSENS))
+                                log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records" + " BasalData: " + basalDataTable.size() + " records");
+                            iobTable = new LongSparseArray<>();
+                            autosensDataTable = new LongSparseArray<>();
+                            basalDataTable = new LongSparseArray<>();
+                        }
+                        runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, event);
+                    }
+                  }, FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -727,33 +757,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
             else
                 thread = new IobCobThread(this, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             thread.start();
-        }
-    }
-
-    @Subscribe
-    public void onEventPreferenceChange(EventPreferenceChange ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
-                ev.isChanged(R.string.key_age) ||
-                ev.isChanged(R.string.key_absorption_maxtime) ||
-                ev.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
-                ev.isChanged(R.string.key_absorption_cutoff) ||
-                ev.isChanged(R.string.key_openapsama_autosens_max) ||
-                ev.isChanged(R.string.key_openapsama_autosens_min)
-        ) {
-            stopCalculation("onEventPreferenceChange");
-            synchronized (dataLock) {
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records" + " BasalData: " + basalDataTable.size() + " records");
-                iobTable = new LongSparseArray<>();
-                autosensDataTable = new LongSparseArray<>();
-                basalDataTable = new LongSparseArray<>();
-            }
-            runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, ev);
         }
     }
 

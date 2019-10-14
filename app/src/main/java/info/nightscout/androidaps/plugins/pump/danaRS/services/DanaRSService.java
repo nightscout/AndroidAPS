@@ -6,8 +6,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +25,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -80,12 +79,15 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DanaRSService extends Service {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private BLEComm bleComm = BLEComm.getInstance(this);
 
@@ -103,6 +105,25 @@ public class DanaRSService extends Service {
             // Ignore
         }
         MainApp.bus().register(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PUMP)) log.debug("EventAppExit received");
+                    stopSelf();
+                }, FabricPrivacy::logException)
+        );
+    }
+
+    @Override
+    public void onDestroy() {
+        disposable.clear();
+        super.onDestroy();
     }
 
     public boolean isConnected() {
@@ -150,7 +171,7 @@ public class DanaRSService extends Service {
                 RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
                 if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
-                    MainApp.bus().post(new EventProfileNeedsUpdate());
+                    RxBus.INSTANCE.send(new EventProfileNeedsUpdate());
                 }
             }
 
@@ -250,7 +271,7 @@ public class DanaRSService extends Service {
         } else {
             msg = new DanaRS_Packet_APS_History_Events(lastHistoryFetched);
             if (L.isEnabled(L.PUMPCOMM))
-                log.debug("Loading event history from: " +DateUtil.dateAndTimeFullString(lastHistoryFetched));
+                log.debug("Loading event history from: " + DateUtil.dateAndTimeFullString(lastHistoryFetched));
         }
         bleComm.sendMessage(msg);
         while (!msg.done && bleComm.isConnected()) {
@@ -527,14 +548,6 @@ public class DanaRSService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
-    }
-
-    @Subscribe
-    public void onStatusEvent(EventAppExit event) {
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventAppExit received");
-
-        stopSelf();
     }
 
     void waitForWholeMinute() {

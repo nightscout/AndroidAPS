@@ -925,6 +925,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventProfileNeedsUpdate"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventPreferenceChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updatePumpStatus(event.getStatus()),
@@ -942,18 +954,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-        scheduleUpdateGUI("EventPreferenceChange");
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
         scheduleUpdateGUI("EventNewOpenLoopNotification");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventProfileNeedsUpdate ev) {
-        scheduleUpdateGUI("EventProfileNeedsUpdate");
     }
 
     @Subscribe
