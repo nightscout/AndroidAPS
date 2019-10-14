@@ -387,7 +387,7 @@ public class IobCobOref1Thread extends Thread {
             }
             new Thread(() -> {
                 SystemClock.sleep(1000);
-                MainApp.bus().post(new EventAutosensCalculationFinished(cause));
+                RxBus.INSTANCE.send(new EventAutosensCalculationFinished(cause));
             }).start();
         } finally {
             if (mWakeLock != null)

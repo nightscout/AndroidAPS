@@ -129,6 +129,30 @@ public class LoopPlugin extends PluginBase {
                     invoke("EventTempTargetChange", true);
                 }, FabricPrivacy::logException)
         );
+        /**
+         * This method is triggered once autosens calculation has completed, so the LoopPlugin
+         * has current data to work with. However, autosens calculation can be triggered by multiple
+         * sources and currently only a new BG should trigger a loop run. Hence we return early if
+         * the event causing the calculation is not EventNewBg.
+         * <p>
+         */
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    // Autosens calculation not triggered by a new BG
+                    if (!(event.getCause() instanceof EventNewBG)) return;
+
+                    BgReading bgReading = DatabaseHelper.actualBg();
+                    // BG outdated
+                    if (bgReading == null) return;
+                    // already looped with that value
+                    if (bgReading.date <= lastBgTriggeredRun) return;
+
+                    lastBgTriggeredRun = bgReading.date;
+                    invoke("AutosenseCalculation for " + bgReading, true);
+                }, FabricPrivacy::logException)
+        );
     }
 
     private void createNotificationChannel() {
@@ -154,33 +178,6 @@ public class LoopPlugin extends PluginBase {
     public boolean specialEnableCondition() {
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
-    }
-
-    /**
-     * This method is triggered once autosens calculation has completed, so the LoopPlugin
-     * has current data to work with. However, autosens calculation can be triggered by multiple
-     * sources and currently only a new BG should trigger a loop run. Hence we return early if
-     * the event causing the calculation is not EventNewBg.
-     * <p>
-     */
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        if (!(ev.getCause() instanceof EventNewBG)) {
-            // Autosens calculation not triggered by a new BG
-            return;
-        }
-        BgReading bgReading = DatabaseHelper.actualBg();
-        if (bgReading == null) {
-            // BG outdated
-            return;
-        }
-        if (bgReading.date <= lastBgTriggeredRun) {
-            // already looped with that value
-            return;
-        }
-
-        lastBgTriggeredRun = bgReading.date;
-        invoke("AutosenseCalculation for " + bgReading, true);
     }
 
     public long suspendedTo() {

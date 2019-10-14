@@ -412,7 +412,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventNewBg");
-                MainApp.bus().post(new EventNewBG(bgReading));
                 RxBus.INSTANCE.send(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }

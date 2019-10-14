@@ -23,6 +23,7 @@ import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -64,7 +65,7 @@ public class ProfileFunctions {
                     MainApp.instance().startActivity(i);
                 }
                 if (result.enacted)
-                    MainApp.bus().post(new EventNewBasalProfile());
+                    RxBus.INSTANCE.send(new EventNewBasalProfile());
             }
         });
     }

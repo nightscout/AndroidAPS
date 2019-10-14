@@ -191,6 +191,11 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
         updateGui();
     }
 
@@ -200,15 +205,8 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
         disposable.clear();
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        updateGui();
-    }
-
     private void updateGui() {
-        Activity activity = getActivity();
-        if (activity != null && recyclerView != null)
-            activity.runOnUiThread(() -> recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory()), false));
+        recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory()), false);
     }
 
 }

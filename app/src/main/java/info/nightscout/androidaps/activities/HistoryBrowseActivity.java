@@ -30,6 +30,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCustomCalculationFinished;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
@@ -39,12 +40,15 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class HistoryBrowseActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);
-
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     ImageButton chartButton;
 
@@ -166,6 +170,7 @@ public class HistoryBrowseActivity extends NoSplashActivity {
     public void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
+        disposable.clear();
         iobCobCalculatorPlugin.stopCalculation("onPause");
     }
 
@@ -173,6 +178,18 @@ public class HistoryBrowseActivity extends NoSplashActivity {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (event.getCause() == eventCustomCalculationFinished) {
+                        log.debug("EventAutosensCalculationFinished");
+                        synchronized (HistoryBrowseActivity.this) {
+                            updateGUI("EventAutosensCalculationFinished");
+                        }
+                    }
+                }, FabricPrivacy::logException)
+        );
         // set start of current day
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -191,18 +208,6 @@ public class HistoryBrowseActivity extends NoSplashActivity {
         iobCobCalculatorPlugin.stopCalculation(from);
         iobCobCalculatorPlugin.clearCache();
         iobCobCalculatorPlugin.runCalculation(from, end, true, false, eventCustomCalculationFinished);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished e) {
-        if (e.getCause() == eventCustomCalculationFinished) {
-            log.debug("EventAutosensCalculationFinished");
-            runOnUiThread(() -> {
-                synchronized (HistoryBrowseActivity.this) {
-                    updateGUI("EventAutosensCalculationFinished");
-                }
-            });
-        }
     }
 
     @Subscribe

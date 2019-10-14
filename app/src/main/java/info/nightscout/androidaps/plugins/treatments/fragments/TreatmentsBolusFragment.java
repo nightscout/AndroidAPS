@@ -269,6 +269,11 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
         updateGui();
     }
 
@@ -278,26 +283,17 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
         disposable.clear();
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        updateGui();
-    }
-
     private void updateGui() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> {
-                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
-                if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
-                    iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " " + MainApp.gs(R.string.insulin_unit_shortname));
-                    activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " " + MainApp.gs(R.string.insulin_unit_shortname));
-                }
-                if (!TreatmentsPlugin.getPlugin().getService().getTreatmentDataFromTime(now() + 1000, true).isEmpty()) {
-                    deleteFutureTreatments.setVisibility(View.VISIBLE);
-                } else {
-                    deleteFutureTreatments.setVisibility(View.GONE);
-                }
-            });
+        recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
+        if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
+            iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " " + MainApp.gs(R.string.insulin_unit_shortname));
+            activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " " + MainApp.gs(R.string.insulin_unit_shortname));
+        }
+        if (!TreatmentsPlugin.getPlugin().getService().getTreatmentDataFromTime(now() + 1000, true).isEmpty()) {
+            deleteFutureTreatments.setVisibility(View.VISIBLE);
+        } else {
+            deleteFutureTreatments.setVisibility(View.GONE);
+        }
     }
 
 }

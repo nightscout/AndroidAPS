@@ -122,6 +122,12 @@ public class StatuslinePlugin extends PluginBase {
                 .subscribe(event -> sendStatus(),
                         FabricPrivacy::logException
                 ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendStatus(),
+                        FabricPrivacy::logException
+                ));
     }
 
     @Override
@@ -204,11 +210,6 @@ public class StatuslinePlugin extends PluginBase {
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
         // status may be formated differently
-        sendStatus();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         sendStatus();
     }
 

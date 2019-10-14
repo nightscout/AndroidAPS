@@ -81,25 +81,37 @@ public class WearPlugin extends PluginBase {
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventOpenAPSUpdateGui.class)
                 .observeOn(Schedulers.io())
-                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventExtendedBolusChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(eventOpenAPSUpdateGui -> sendDataToWatch(true, true, false),
+                .subscribe(event -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewBasalProfile.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(false, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(true, true, true),
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
@@ -167,16 +179,6 @@ public class WearPlugin extends PluginBase {
         resendDataToWatch();
         // status may be formated differently
         sendDataToWatch(true, false, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        sendDataToWatch(true, true, true);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewBasalProfile ev) {
-        sendDataToWatch(false, true, false);
     }
 
     @Subscribe

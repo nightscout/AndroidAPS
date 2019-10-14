@@ -91,6 +91,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     protected void onStart() {
         super.onStart();
         MainApp.bus().register(this);
+        // EventConfigBuilderChange
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
@@ -109,6 +110,46 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     }
                     runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, event);
                 }, FabricPrivacy::logException)
+        );
+        // EventNewBasalProfile
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewBasalProfile.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    if (ConfigBuilderPlugin.getPlugin() == null)
+                        return; // app still initializing
+                    if (event == null) { // on init no need of reset
+                        return;
+                    }
+                    stopCalculation("onNewProfile");
+                    synchronized (dataLock) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                        iobTable = new LongSparseArray<>();
+                        autosensDataTable = new LongSparseArray<>();
+                        basalDataTable = new LongSparseArray<>();
+                    }
+                    runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
+                 }, FabricPrivacy::logException)
+        );
+        // EventNewBG
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewBG.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    stopCalculation("onEventNewBG");
+                    runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
+                  }, FabricPrivacy::logException)
         );
     }
 
@@ -664,19 +705,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, ev);
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onEventNewBG(EventNewBG ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        stopCalculation("onEventNewBG");
-        runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, ev);
-    }
-
-    public void stopCalculation(String from) {
+     public void stopCalculation(String from) {
         if (thread != null && thread.getState() != Thread.State.TERMINATED) {
             stopCalculationTrigger = true;
             if (L.isEnabled(L.AUTOSENS))
@@ -699,29 +728,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 thread = new IobCobThread(this, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             thread.start();
         }
-    }
-
-    @Subscribe
-    public void onNewProfile(EventNewBasalProfile ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        if (ConfigBuilderPlugin.getPlugin() == null)
-            return; // app still initializing
-        if (ev == null) { // on init no need of reset
-            return;
-        }
-        stopCalculation("onNewProfile");
-        synchronized (dataLock) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
-            iobTable = new LongSparseArray<>();
-            autosensDataTable = new LongSparseArray<>();
-            basalDataTable = new LongSparseArray<>();
-        }
-        runCalculation("onNewProfile", System.currentTimeMillis(), false, true, ev);
     }
 
     @Subscribe

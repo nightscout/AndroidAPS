@@ -217,6 +217,11 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
         updateGui();
     }
 
@@ -226,20 +231,11 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         disposable.clear();
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ignored) {
-        updateGui();
-    }
-
     private void updateGui() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> {
-                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory()), false);
-                IobTotal tempBasalsCalculation = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals();
-                if (tempBasalsCalculation != null)
-                    tempBasalTotalView.setText(DecimalFormatter.to2Decimal(tempBasalsCalculation.basaliob, " U"));
-            });
+        recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory()), false);
+        IobTotal tempBasalsCalculation = TreatmentsPlugin.getPlugin().getLastCalculationTempBasals();
+        if (tempBasalsCalculation != null)
+            tempBasalTotalView.setText(DecimalFormatter.to2Decimal(tempBasalsCalculation.basaliob, " U"));
     }
 
 }
