@@ -13,7 +13,6 @@ import android.os.SystemClock;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.j256.ormlite.dao.CloseableIterator;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -116,7 +115,6 @@ public class NSClientService extends Service {
     private int WATCHDOG_MAXCONNECTIONS = 5;
 
     public NSClientService() {
-        registerBus();
         if (handler == null) {
             HandlerThread handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
             handlerThread.start();
@@ -175,6 +173,21 @@ public class NSClientService extends Service {
                     restart();
                 }, FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(NSAuthAck.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> processAuthAck(event), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(NSUpdateAck.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> processUpdateAck(event), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(NSAddAck.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> processAddAck(event), FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -182,6 +195,48 @@ public class NSClientService extends Service {
         super.onDestroy();
         disposable.clear();
         if (mWakeLock.isHeld()) mWakeLock.release();
+    }
+
+    public void processAddAck(NSAddAck ack) {
+        if (ack.nsClientID != null) {
+            uploadQueue.removeID(ack.json);
+            RxBus.INSTANCE.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
+        } else {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "DBADD Unknown response"));
+        }
+    }
+
+    public void processUpdateAck(NSUpdateAck ack) {
+        if (ack.result) {
+            uploadQueue.removeID(ack.action, ack._id);
+            RxBus.INSTANCE.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
+        } else {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
+        }
+    }
+
+    public void processAuthAck(NSAuthAck ack) {
+        String connectionStatus = "Authenticated (";
+        if (ack.read) connectionStatus += "R";
+        if (ack.write) connectionStatus += "W";
+        if (ack.write_treatment) connectionStatus += "T";
+        connectionStatus += ')';
+        isConnected = true;
+        hasWriteAuth = ack.write && ack.write_treatment;
+        RxBus.INSTANCE.send(new EventNSClientStatus(connectionStatus));
+        RxBus.INSTANCE.send(new EventNSClientNewLog("AUTH", connectionStatus));
+        if (!ack.write) {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "Write permission not granted !!!!"));
+        }
+        if (!ack.write_treatment) {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "Write treatment permission not granted !!!!"));
+        }
+        if (!hasWriteAuth) {
+            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.gs(R.string.nowritepermission), Notification.URGENT);
+            RxBus.INSTANCE.send(new EventNewNotification(noperm));
+        } else {
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
+        }
     }
 
     public class LocalBinder extends Binder {
@@ -199,15 +254,6 @@ public class NSClientService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         return START_STICKY;
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     public void initialize() {
@@ -337,31 +383,6 @@ public class NSClientService extends Service {
         RxBus.INSTANCE.send(new EventNSClientNewLog("AUTH", "requesting auth"));
         if (mSocket != null)
             mSocket.emit("authorize", authMessage, ack);
-    }
-
-    @Subscribe
-    public void onStatusEvent(NSAuthAck ack) {
-        String connectionStatus = "Authenticated (";
-        if (ack.read) connectionStatus += "R";
-        if (ack.write) connectionStatus += "W";
-        if (ack.write_treatment) connectionStatus += "T";
-        connectionStatus += ')';
-        isConnected = true;
-        hasWriteAuth = ack.write && ack.write_treatment;
-        RxBus.INSTANCE.send(new EventNSClientStatus(connectionStatus));
-        RxBus.INSTANCE.send(new EventNSClientNewLog("AUTH", connectionStatus));
-        if (!ack.write) {
-            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "Write permission not granted !!!!"));
-        }
-        if (!ack.write_treatment) {
-            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "Write treatment permission not granted !!!!"));
-        }
-        if (!hasWriteAuth) {
-            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.gs(R.string.nowritepermission), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(noperm));
-        } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
-        }
     }
 
     public void readPreferences() {
@@ -756,16 +777,6 @@ public class NSClientService extends Service {
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(NSUpdateAck ack) {
-        if (ack.result) {
-            uploadQueue.removeID(ack.action, ack._id);
-            RxBus.INSTANCE.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
-        } else {
-            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
-        }
-    }
-
     public void dbAdd(DbRequest dbr, NSAddAck ack) {
         try {
             if (!isConnected || !hasWriteAuth) return;
@@ -783,16 +794,6 @@ public class NSClientService extends Service {
         if (!isConnected || !hasWriteAuth) return;
         mSocket.emit("ack", alarmAck.level, alarmAck.group, alarmAck.silenceTime);
         RxBus.INSTANCE.send(new EventNSClientNewLog("ALARMACK ", alarmAck.level + " " + alarmAck.group + " " + alarmAck.silenceTime));
-    }
-
-    @Subscribe
-    public void onStatusEvent(NSAddAck ack) {
-        if (ack.nsClientID != null) {
-            uploadQueue.removeID(ack.json);
-            RxBus.INSTANCE.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
-        } else {
-            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", "DBADD Unknown response"));
-        }
     }
 
     public void resend(final String reason) {

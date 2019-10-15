@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -34,7 +33,7 @@ public class NSAddAck extends Event implements Ack {
                     nsClientID = response.getString("NSCLIENT_ID");
                 }
             }
-            MainApp.bus().post(this);
+            RxBus.INSTANCE.send(this);
             return;
         } catch (Exception e) {
             log.error("Unhandled exception", e);

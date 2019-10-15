@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
-import com.squareup.otto.Subscribe;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -176,7 +173,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             log.debug("Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed");
             receivedSms.ignored = true;
             messages.add(receivedSms);
-            MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+            RxBus.INSTANCE.send(new EventSmsCommunicatorUpdateGui());
             return;
         }
 
@@ -268,7 +265,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             }
         }
 
-        MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+        RxBus.INSTANCE.send(new EventSmsCommunicatorUpdateGui());
     }
 
     @SuppressWarnings("unused")
@@ -794,7 +791,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             RxBus.INSTANCE.send(new EventNewNotification(notification));
             return false;
         }
-        MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+        RxBus.INSTANCE.send(new EventSmsCommunicatorUpdateGui());
         return true;
     }
 

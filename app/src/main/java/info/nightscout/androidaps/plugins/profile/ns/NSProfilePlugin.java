@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
@@ -58,13 +57,11 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
         super.onStop();
     }
 

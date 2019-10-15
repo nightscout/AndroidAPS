@@ -29,7 +29,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
@@ -185,7 +184,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             public void run() {
                 if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("Firing EventReloadTreatmentData");
-                MainApp.bus().post(event);
                 RxBus.INSTANCE.send(event);
                 if (DatabaseHelper.earliestDataChange != null) {
                     if (L.isEnabled(L.DATATREATMENTS))

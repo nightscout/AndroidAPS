@@ -102,7 +102,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         initializeTempBasalData();
         initializeTreatmentData();
         initializeExtendedBolusData();
@@ -149,7 +148,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     protected void onStop() {
-        MainApp.bus().register(this);
         disposable.clear();
         super.onStop();
     }

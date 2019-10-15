@@ -14,8 +14,6 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +117,6 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         createNotificationChannel();
         super.onStart();
         disposable.add(RxBus.INSTANCE
@@ -169,7 +166,6 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
         disposable.clear();
         super.onStop();
     }
@@ -441,7 +437,7 @@ public class LoopPlugin extends PluginBase {
                             (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
-                    MainApp.bus().post(new EventNewOpenLoopNotification());
+                    RxBus.INSTANCE.send(new EventNewOpenLoopNotification());
 
                     // Send to Wear
                     ActionStringHandler.handleInitiate("changeRequest");

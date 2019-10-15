@@ -143,7 +143,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventRefreshGui.class)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -205,7 +204,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
         disposable.clear();
     }
 

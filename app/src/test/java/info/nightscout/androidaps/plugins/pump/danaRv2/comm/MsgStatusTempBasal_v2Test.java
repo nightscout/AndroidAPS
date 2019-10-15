@@ -27,7 +27,6 @@ public class MsgStatusTempBasal_v2Test {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
         AAPSMocker.mockDanaRPlugin();
 
         MsgStatusTempBasal_v2 packet = new MsgStatusTempBasal_v2();

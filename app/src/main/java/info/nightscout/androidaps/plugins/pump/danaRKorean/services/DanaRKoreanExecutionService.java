@@ -5,8 +5,6 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.SystemClock;
 
-import com.squareup.otto.Subscribe;
-
 import java.io.IOException;
 import java.util.Date;
 

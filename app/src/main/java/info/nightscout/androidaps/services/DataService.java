@@ -45,7 +45,6 @@ public class DataService extends IntentService {
 
     public DataService() {
         super("DataService");
-        registerBus();
     }
 
     @Override
@@ -115,16 +114,6 @@ public class DataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainApp.bus().unregister(this);
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     private void handleNewDataFromNSClient(Intent intent) {

@@ -10,8 +10,6 @@ import android.os.IBinder;
 import android.text.Html;
 import android.text.Spanned;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +89,7 @@ public class NSClientPlugin extends PluginBase {
         }
 
         nsClientReceiverDelegate =
-                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext(), MainApp.bus());
+                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext());
     }
 
     public boolean isAllowed() {
@@ -101,7 +99,6 @@ public class NSClientPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -145,22 +142,19 @@ public class NSClientPlugin extends PluginBase {
                         log.debug(event.getAction() + " " + event.getLogText());
                 }, FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventChargingState.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
-        Context context = MainApp.instance().getApplicationContext();
-        context.unbindService(mConnection);
-
+        MainApp.instance().getApplicationContext().unbindService(mConnection);
         nsClientReceiverDelegate.unregisterReceivers();
         disposable.clear();
         super.onStop();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventChargingState ev) {
-        nsClientReceiverDelegate.onStatusEvent(ev);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {

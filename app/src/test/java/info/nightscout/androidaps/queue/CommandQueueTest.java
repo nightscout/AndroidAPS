@@ -2,9 +2,6 @@ package info.nightscout.androidaps.queue;
 
 import android.content.Context;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
-
 import junit.framework.Assert;
 
 import org.json.JSONException;
@@ -26,8 +23,8 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.ToastUtils;
 
@@ -140,9 +137,6 @@ public class CommandQueueTest extends CommandQueue {
         String message = null;
         PowerMockito.doNothing().when(ToastUtils.class, "showToastInUiThread", context, message);
 
-        Bus bus = new Bus(ThreadEnforcer.ANY);
-
-        when(MainApp.bus()).thenReturn(bus);
         when(MainApp.gs(0)).thenReturn("");
 
         PowerMockito.mockStatic(TreatmentsPlugin.class);

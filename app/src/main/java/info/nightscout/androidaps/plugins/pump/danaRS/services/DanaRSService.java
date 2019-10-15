@@ -99,12 +99,6 @@ public class DanaRSService extends Service {
     private long lastApproachingDailyLimit = 0;
 
     public DanaRSService() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     @Override

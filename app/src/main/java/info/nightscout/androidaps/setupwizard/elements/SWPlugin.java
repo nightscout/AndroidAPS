@@ -89,7 +89,7 @@ public class SWPlugin extends SWItem {
             ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(plugin, pType);
             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
             RxBus.INSTANCE.send(new EventConfigBuilderChange());
-            MainApp.bus().post(new EventSWUpdate());
+            RxBus.INSTANCE.send(new EventSWUpdate(false));
         });
         layout.addView(radioGroup);
         super.generateDialog(layout);

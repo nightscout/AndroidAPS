@@ -45,7 +45,6 @@ public class ActionProfileSwitchTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockStrings();
         AAPSMocker.mockTreatmentService();
-        AAPSMocker.mockBus();
         AAPSMocker.mockDatabaseHelper();
         AAPSMocker.mockProfileFunctions();
 

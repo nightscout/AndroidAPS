@@ -118,6 +118,7 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.PumpTime;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
+import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
@@ -424,7 +425,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
         lastUpdated = System.currentTimeMillis();
         new Handler(Looper.getMainLooper()).post(() -> {
-            MainApp.bus().post(new EventLocalInsightUpdateGUI());
+            RxBus.INSTANCE.send(new EventLocalInsightUpdateGUI());
             RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
         });
     }
@@ -1602,7 +1603,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             tbrOverNotificationBlock = null;
             new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
         }
-        new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventLocalInsightUpdateGUI()));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventLocalInsightUpdateGUI()));
     }
 
     @Override

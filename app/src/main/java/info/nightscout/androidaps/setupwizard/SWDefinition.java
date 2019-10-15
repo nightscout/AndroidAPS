@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +44,6 @@ import info.nightscout.androidaps.setupwizard.elements.SWHtmlLink;
 import info.nightscout.androidaps.setupwizard.elements.SWInfotext;
 import info.nightscout.androidaps.setupwizard.elements.SWPlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton;
-import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.LocaleHelper;
@@ -109,7 +106,7 @@ public class SWDefinition {
                     .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
                     .action(() -> {
                         SP.putBoolean(R.string.key_i_understand, true);
-                        MainApp.bus().post(new EventSWUpdate(false));
+                        RxBus.INSTANCE.send(new EventSWUpdate(false));
                     }))
             .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
             .validator(() -> SP.getBoolean(R.string.key_i_understand, false));
@@ -172,7 +169,7 @@ public class SWDefinition {
                         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                         RxBus.INSTANCE.send(new EventConfigBuilderChange());
-                        MainApp.bus().post(new EventSWUpdate(true));
+                        RxBus.INSTANCE.send(new EventSWUpdate(true));
                     })
                     .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
             .add(new SWEditUrl()
@@ -374,7 +371,7 @@ public class SWDefinition {
                         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
                         RxBus.INSTANCE.send(new EventConfigBuilderChange());
-                        MainApp.bus().post(new EventSWUpdate(true));
+                        RxBus.INSTANCE.send(new EventSWUpdate(true));
                     })
                     .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
             .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))

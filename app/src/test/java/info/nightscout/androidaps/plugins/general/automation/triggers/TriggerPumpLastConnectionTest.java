@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +25,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, TreatmentsPlugin.class, ConfigBuilderPlugin.class, System.class})
+@PrepareForTest({MainApp.class, ProfileFunctions.class, DateUtil.class, TreatmentsPlugin.class, ConfigBuilderPlugin.class, System.class})
 public class TriggerPumpLastConnectionTest {
 
     long now = 1514766900000L;
@@ -103,7 +102,6 @@ public class TriggerPumpLastConnectionTest {
     public void mock() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockBus();
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(now);
 

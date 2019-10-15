@@ -12,8 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +74,8 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentWizardPage == 0) OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        if (currentWizardPage == 0)
+            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
         else showPreviousPage(null);
     }
 
@@ -88,14 +87,12 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
         disposable.clear();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
         swDefinition.setActivity(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventPumpStatusChanged.class)
@@ -117,13 +114,14 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateButtons(), FabricPrivacy::logException)
         );
-    }
-
-    @Subscribe
-    public void onContentUpdate(EventSWUpdate ev) {
-        if (ev.redraw)
-            generateLayout();
-        updateButtons();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventSWUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (event.getRedraw()) generateLayout();
+                    updateButtons();
+                }, FabricPrivacy::logException)
+        );
     }
 
     private void generateLayout() {
@@ -133,7 +131,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
             SWItem currentItem = currentScreen.items.get(i);
             currentItem.generateDialog(layout);
         }
-        scrollView.smoothScrollTo(0,0);
+        scrollView.smoothScrollTo(0, 0);
     }
 
     private void updateButtons() {

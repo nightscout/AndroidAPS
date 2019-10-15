@@ -77,7 +77,6 @@ public class TDDStatsActivity extends NoSplashActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -96,7 +95,6 @@ public class TDDStatsActivity extends NoSplashActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
         disposable.clear();
     }
 

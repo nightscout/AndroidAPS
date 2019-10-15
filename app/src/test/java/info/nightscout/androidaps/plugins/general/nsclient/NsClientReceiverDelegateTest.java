@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
 import android.content.Context;
-import com.squareup.otto.Bus;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +33,9 @@ public class NsClientReceiverDelegateTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
 
-        Bus bus = MainApp.bus();
         Context context = MainApp.instance().getApplicationContext();
 
-        sut = new NsClientReceiverDelegate(context, bus);
+        sut = new NsClientReceiverDelegate(context);
     }
 
     @Test

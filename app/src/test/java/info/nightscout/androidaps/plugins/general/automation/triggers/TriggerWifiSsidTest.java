@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +23,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, NetworkChangeReceiver.class, DateUtil.class})
+@PrepareForTest({MainApp.class, NetworkChangeReceiver.class, DateUtil.class})
 public class TriggerWifiSsidTest {
 
     long now = 1514766900000L;
@@ -102,7 +101,6 @@ public class TriggerWifiSsidTest {
     @Before
     public void mock() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
 
         PowerMockito.mockStatic(NetworkChangeReceiver.class);
 

@@ -13,9 +13,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.squareup.otto.Bus;
-import com.squareup.otto.LoggingBus;
-import com.squareup.otto.ThreadEnforcer;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -101,7 +98,6 @@ public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
     private static KeepAliveReceiver keepAliveReceiver;
 
-    private static Bus sBus;
     private static MainApp sInstance;
     public static Resources sResources;
 
@@ -156,8 +152,6 @@ public class MainApp extends Application {
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
         devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(".*[a-zA-Z]+.*");
-
-        sBus = L.isEnabled(L.EVENTS) && devBranch ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         registerLocalBroadcastReceiver();
 
@@ -283,10 +277,6 @@ public class MainApp extends Application {
     public void stopKeepAliveService() {
         if (keepAliveReceiver != null)
             KeepAliveReceiver.cancelAlarm(this);
-    }
-
-    public static Bus bus() {
-        return sBus;
     }
 
     public static String gs(int id) {

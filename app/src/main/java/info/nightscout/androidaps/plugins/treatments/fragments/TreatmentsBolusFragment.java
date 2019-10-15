@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.treatments.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
@@ -18,8 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 

@@ -5,8 +5,6 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.SystemClock;
 
-import com.squareup.otto.Subscribe;
-
 import java.io.IOException;
 import java.util.Date;
 
@@ -69,7 +67,6 @@ import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
