@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -80,7 +80,7 @@ public abstract class PluginBase {
         setFragmentVisible(type, enabled);
         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(this, getType());
         ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
-        RxBus.INSTANCE.send(new EventRefreshGui());
+        RxBus.INSTANCE.send(new EventRebuildTabs());
         RxBus.INSTANCE.send(new EventConfigBuilderChange());
         RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
         ConfigBuilderPlugin.getPlugin().logPluginStatus();
