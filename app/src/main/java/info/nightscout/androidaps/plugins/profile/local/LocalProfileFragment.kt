@@ -132,6 +132,7 @@ class LocalProfileFragment : Fragment() {
         localprofile_mmol.isEnabled = false
 
         localprofile_profileswitch.setOnClickListener {
+            // TODO: select in dialog LocalProfilePlugin.currentProfileIndex
             val newDialog = NewNSTreatmentDialog()
             val profileSwitch = CareportalFragment.PROFILESWITCHDIRECT
             profileSwitch.executeProfileSwitch = true
