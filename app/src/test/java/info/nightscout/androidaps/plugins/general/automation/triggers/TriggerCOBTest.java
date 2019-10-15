@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +15,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
@@ -27,12 +24,10 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, IobCobCalculatorPlugin.class, SP.class, L.class})
+@PrepareForTest({MainApp.class, ProfileFunctions.class, DateUtil.class, IobCobCalculatorPlugin.class, SP.class, L.class})
 public class TriggerCOBTest {
 
     long now = 1514766900000L;
@@ -104,7 +99,6 @@ public class TriggerCOBTest {
     @Before
     public void mock() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
         iobCobCalculatorPlugin = AAPSMocker.mockIobCobCalculatorPlugin();
         AAPSMocker.mockProfileFunctions();
         AAPSMocker.mockSP();

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
+
 import androidx.collection.LongSparseArray;
 
 import org.slf4j.Logger;
@@ -117,7 +118,7 @@ public class IobCobThread extends Thread {
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
                     String progress = i + (MainApp.isDev() ? " (" + from + ")" : "");
-                    MainApp.bus().post(new EventIobCalculationProgress(progress));
+                    RxBus.INSTANCE.send(new EventIobCalculationProgress(progress));
 
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                         iobCobCalculatorPlugin.stopCalculationTrigger = false;
@@ -312,13 +313,12 @@ public class IobCobThread extends Thread {
             }
             new Thread(() -> {
                 SystemClock.sleep(1000);
-                MainApp.bus().post(new EventAutosensCalculationFinished(cause));
                 RxBus.INSTANCE.send(new EventAutosensCalculationFinished(cause));
             }).start();
         } finally {
             if (mWakeLock != null)
                 mWakeLock.release();
-            MainApp.bus().post(new EventIobCalculationProgress(""));
+            RxBus.INSTANCE.send(new EventIobCalculationProgress(""));
             if (L.isEnabled(L.AUTOSENS)) {
                 log.debug("AUTOSENSDATA thread ended: " + from);
                 log.debug("Midnights: " + MidnightTime.log());

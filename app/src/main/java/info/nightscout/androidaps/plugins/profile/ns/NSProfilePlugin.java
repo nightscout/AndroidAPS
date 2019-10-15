@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
@@ -58,13 +57,11 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
         super.onStop();
     }
 
@@ -78,7 +75,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             profile = new ProfileStore(new JSONObject(profileString));
             storeNSProfile();
             if (isEnabled(PluginType.PROFILE)) {
-                MainApp.bus().post(new EventProfileStoreChanged());
+                RxBus.INSTANCE.send(new EventProfileStoreChanged());
                 RxBus.INSTANCE.send(new EventNSProfileUpdateGUI());
             }
             if (L.isEnabled(L.PROFILE))
@@ -111,7 +108,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             if (L.isEnabled(L.PROFILE))
                 log.debug("Stored profile not found");
             // force restart of nsclient to fetch profile
-            MainApp.bus().post(new EventNSClientRestart());
+            RxBus.INSTANCE.send(new EventNSClientRestart());
         }
     }
 

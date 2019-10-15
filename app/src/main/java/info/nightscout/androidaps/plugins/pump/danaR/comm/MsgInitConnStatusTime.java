@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -47,7 +47,7 @@ public class MsgInitConnStatusTime extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaDriver");
-            MainApp.bus().post(new EventRefreshGui());
+            RxBus.INSTANCE.send(new EventRebuildTabs());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             failed = false;
             return;

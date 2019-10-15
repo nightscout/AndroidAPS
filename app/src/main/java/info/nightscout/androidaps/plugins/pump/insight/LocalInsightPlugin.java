@@ -78,6 +78,7 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.BRProfile1Block;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.BRProfileBlock;
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.FactoryMinBasalAmountBlock;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.FactoryMinBolusAmountBlock;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.MaxBasalAmountBlock;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.MaxBolusAmountBlock;
@@ -118,6 +119,7 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.OperatingMode;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.PumpTime;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
+import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
@@ -147,8 +149,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             } else if (binder instanceof InsightAlertService.LocalBinder) {
                 alertService = ((InsightAlertService.LocalBinder) binder).getService();
             }
-            if (connectionService != null && alertService != null)
-                MainApp.bus().post(new EventInitializationChanged());
+            if (connectionService != null && alertService != null) {
+                RxBus.INSTANCE.send(new EventInitializationChanged());
+            }
         }
 
         @Override
@@ -423,8 +426,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
         lastUpdated = System.currentTimeMillis();
         new Handler(Looper.getMainLooper()).post(() -> {
-            MainApp.bus().post(new EventLocalInsightUpdateGUI());
-            MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
+            RxBus.INSTANCE.send(new EventLocalInsightUpdateGUI());
+            RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
         });
     }
 
@@ -432,7 +435,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         maximumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBolusAmountBlock.class).getAmountLimitation();
         maximumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBasalAmountBlock.class).getAmountLimitation();
         minimumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBolusAmountBlock.class).getAmountLimitation();
-        minimumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBolusAmountBlock.class).getAmountLimitation();
+        minimumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBasalAmountBlock.class).getAmountLimitation();
         this.pumpDescription.basalMaximumRate = maximumBasalAmount;
         this.pumpDescription.basalMinimumRate = minimumBasalAmount;
         limitsFetched = true;
@@ -554,11 +557,11 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 result.enacted = true;
                 Treatment t = new Treatment();
                 t.isSMB = detailedBolusInfo.isSMB;
-                final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                bolusingEvent.t = t;
-                bolusingEvent.status = MainApp.gs(R.string.insight_delivered, 0d, insulin);
-                bolusingEvent.percent = 0;
-                MainApp.bus().post(bolusingEvent);
+                final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+                bolusingEvent.setT(t);
+                bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, 0d, insulin));
+                bolusingEvent.setPercent(0);
+                RxBus.INSTANCE.send(bolusingEvent);
                 int trials = 0;
                 InsightBolusID insightBolusID = new InsightBolusID();
                 insightBolusID.bolusID = bolusID;
@@ -585,18 +588,18 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     }
                     if (activeBolus != null) {
                         trials = -1;
-                        int percentBefore = bolusingEvent.percent;
-                        bolusingEvent.percent = (int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount()));
-                        bolusingEvent.status = MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount());
-                        if (percentBefore != bolusingEvent.percent)
-                            MainApp.bus().post(bolusingEvent);
+                        int percentBefore = bolusingEvent.getPercent();
+                        bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
+                        bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
+                        if (percentBefore != bolusingEvent.getPercent())
+                            RxBus.INSTANCE.send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.status = MainApp.gs(R.string.insight_delivered, insulin, insulin);
-                                    bolusingEvent.percent = 100;
-                                    MainApp.bus().post(bolusingEvent);
+                                    bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, insulin, insulin));
+                                    bolusingEvent.setPercent(100);
+                                    RxBus.INSTANCE.send(bolusingEvent);
                                 }
                                 break;
                             }
@@ -1164,7 +1167,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         } catch (Exception e) {
             log.error("Exception while reading history", e);
         }
-        new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
@@ -1599,9 +1602,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             activeTBR = null;
             activeBoluses = null;
             tbrOverNotificationBlock = null;
-            new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
+            new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
         }
-        new Handler(Looper.getMainLooper()).post(() -> MainApp.bus().post(new EventLocalInsightUpdateGUI()));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventLocalInsightUpdateGUI()));
     }
 
     @Override

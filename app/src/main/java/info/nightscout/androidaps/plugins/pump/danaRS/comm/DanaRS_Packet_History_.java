@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -109,7 +110,6 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
                 log.debug("History packet: " + recordCode + " Date: " + datetimewihtsec.toLocaleString() + " Code: " + historyCode + " Value: " + value);
 
 
-            EventDanaRSyncStatus ev = new EventDanaRSyncStatus();
             DanaRHistoryRecord danaRHistoryRecord = new DanaRHistoryRecord();
 
             danaRHistoryRecord.setBytes(data);
@@ -224,9 +224,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
 
             MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord);
 
-            ev.message = DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate);
-            ev.message += " " + messageType;
-            MainApp.bus().post(ev);
+            RxBus.INSTANCE.send(new EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType));
 
         }
     }

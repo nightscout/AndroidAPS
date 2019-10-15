@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.versionChecker
 
-import com.squareup.otto.Bus
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
@@ -63,7 +62,7 @@ class VersionCheckerUtilsKtTest {
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update1`() {
-        val bus = prepareBus()
+        prepareMainApp()
 
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
 
@@ -80,7 +79,7 @@ class VersionCheckerUtilsKtTest {
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update2`() {
-        val bus = prepareBus()
+        prepareMainApp()
 
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
 
@@ -96,7 +95,7 @@ class VersionCheckerUtilsKtTest {
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update3`() {
-        val bus = prepareBus()
+        prepareMainApp()
 
         compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
 
@@ -112,7 +111,7 @@ class VersionCheckerUtilsKtTest {
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update4`() {
-        val bus = prepareBus()
+        prepareMainApp()
 
         compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
 
@@ -128,7 +127,7 @@ class VersionCheckerUtilsKtTest {
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update5`() {
-        val bus = prepareBus()
+        prepareMainApp()
         compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
 
         //verify(bus, times(1)).post(any())
@@ -143,7 +142,7 @@ class VersionCheckerUtilsKtTest {
     @Test
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update6`() {
-        val bus = prepareBus()
+        prepareMainApp()
         compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
 
         //verify(bus, times(1)).post(any())
@@ -165,10 +164,10 @@ class VersionCheckerUtilsKtTest {
             |   version = "2.2.2"
             |   appName = "Aaoeu"
         """.trimMargin()
-        val bus = prepareBus()
+        prepareMainApp()
         compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
 
-        verify(bus, times(0)).post(any())
+        //verify(bus, times(0)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.putLong(eq(R.string.key_last_time_this_version_detected), ArgumentMatchers.anyLong())
@@ -185,10 +184,8 @@ class VersionCheckerUtilsKtTest {
             |   version = "3.0"
             |   appName = "Aaoeu"
         """.trimMargin()
-        val bus = prepareBus()
+        prepareMainApp()
         compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
-
-        //verify(bus, times(1)).post(any())
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -207,15 +204,12 @@ class VersionCheckerUtilsKtTest {
         assertEquals(100L, System.currentTimeMillis())
     }
 
-    private fun prepareBus(): Bus {
+    private fun prepareMainApp() {
         PowerMockito.mockStatic(MainApp::class.java)
         val mainApp = mock<MainApp>(MainApp::class.java)
         `when`(MainApp.instance()).thenReturn(mainApp)
-        val bus = mock(Bus::class.java)
-        `when`(MainApp.bus()).thenReturn(bus)
         `when`(MainApp.gs(ArgumentMatchers.anyInt())).thenReturn("some dummy string")
         prepareSP()
-        return bus
     }
 
     private fun prepareSP() {

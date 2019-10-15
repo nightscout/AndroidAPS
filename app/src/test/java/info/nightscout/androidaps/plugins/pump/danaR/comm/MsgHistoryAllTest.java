@@ -11,7 +11,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.utils.SP;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Rumen Georgiev on 8/30/2018.
@@ -26,7 +26,6 @@ public class MsgHistoryAllTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
         AAPSMocker.mockDatabaseHelper();
         MsgHistoryAll packet = new MsgHistoryAll();
 

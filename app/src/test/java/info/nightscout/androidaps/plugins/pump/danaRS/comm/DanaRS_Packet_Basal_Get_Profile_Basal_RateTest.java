@@ -26,7 +26,6 @@ public class DanaRS_Packet_Basal_Get_Profile_Basal_RateTest extends DanaRS_Packe
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
-        AAPSMocker.mockBus();
         AAPSMocker.mockL();
 
         // test if pumpRofile array is set right

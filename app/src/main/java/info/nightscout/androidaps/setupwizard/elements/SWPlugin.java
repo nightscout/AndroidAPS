@@ -17,7 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 
@@ -88,8 +88,8 @@ public class SWPlugin extends SWItem {
             plugin.setFragmentVisible(pType, rb.isChecked() && makeVisible);
             ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(plugin, pType);
             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-            MainApp.bus().post(new EventConfigBuilderChange());
-            MainApp.bus().post(new EventSWUpdate());
+            RxBus.INSTANCE.send(new EventConfigBuilderChange());
+            RxBus.INSTANCE.send(new EventSWUpdate(false));
         });
         layout.addView(radioGroup);
         super.generateDialog(layout);

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.actions;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +19,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.SP;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, SP.class, Bus.class, ProfileFunctions.class})
+@PrepareForTest({MainApp.class, SP.class, ProfileFunctions.class})
 public class ActionProfileSwitchPercentTest {
     private ActionProfileSwitchPercent actionProfileSwitchPercent;
 
@@ -77,7 +76,6 @@ public class ActionProfileSwitchPercentTest {
     public void prepareTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockSP();
-        AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
         AAPSMocker.mockProfileFunctions();
 

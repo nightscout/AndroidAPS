@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -134,7 +133,7 @@ public class ProfileTest {
 
         // Test hour alignment
         ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
-        ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
+        //((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
         p = new Profile(new JSONObject(notAllignedBasalValidProfile), 100, 0);
         p.isValid("Test");
         //Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
@@ -145,7 +144,6 @@ public class ProfileTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockStrings();
-        AAPSMocker.prepareMockedBus();
 
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 

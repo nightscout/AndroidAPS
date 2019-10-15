@@ -9,8 +9,6 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -40,7 +38,6 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -48,6 +45,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -59,9 +57,12 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 03.09.2017.
@@ -69,6 +70,8 @@ import info.nightscout.androidaps.utils.T;
 
 public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     private static DanaRSPlugin plugin = null;
 
     public static DanaRSPlugin getPlugin() {
@@ -113,8 +116,21 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         Intent intent = new Intent(context, DanaRSService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-        MainApp.bus().register(this);
-        onStatusEvent(new EventDanaRSDeviceChange()); // load device name
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(mConnection);
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSDeviceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    loadAddress();
+                }, FabricPrivacy::logException)
+        );
+        loadAddress(); // load device name
         super.onStart();
     }
 
@@ -123,7 +139,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
 
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -148,14 +164,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         }
     };
 
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSDeviceChange e) {
+    private void loadAddress() {
         mDeviceAddress = SP.getString(R.string.key_danars_address, "");
         mDeviceName = SP.getString(R.string.key_danars_name, "");
     }

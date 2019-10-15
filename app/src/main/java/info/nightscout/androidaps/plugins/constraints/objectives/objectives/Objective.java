@@ -37,9 +37,9 @@ public abstract class Objective {
         this.gate = gate;
         startedOn = SP.getLong("Objectives_" + spName + "_started", 0L);
         accomplishedOn = SP.getLong("Objectives_" + spName + "_accomplished", 0L);
-        if ((accomplishedOn - DateUtil.now()) > T.days(1).msecs()) { // more than 1 day in the future
-            setStartedOn(0);
-            setAccomplishedOn(0);
+        if ((accomplishedOn - DateUtil.now()) > T.hours(3).msecs() || (startedOn - DateUtil.now()) > T.hours(3).msecs()) { // more than 3 hours in the future
+            startedOn = 0;
+            accomplishedOn = 0;
         }
         setupTasks(tasks);
         for (Task task : tasks) task.objective = this;

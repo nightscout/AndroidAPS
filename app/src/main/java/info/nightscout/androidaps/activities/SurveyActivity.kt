@@ -33,7 +33,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         val tdds = TddCalculator.calculate(7)
         val averageTdd = TddCalculator.averageTDD(tdds)
-        survey_tdds.text = MainApp.gs(R.string.tdd) + ":\n" + TddCalculator.toText(tdds) + MainApp.gs(R.string.average) + ":\n" + TddCalculator.toText(averageTdd)
+        survey_tdds.text = MainApp.gs(R.string.tdd) + ":\n" + TddCalculator.toText(tdds) + MainApp.gs(R.string.average) + ":\n" + averageTdd.toText()
 
         survey_profile.setOnClickListener {
             val age = SafeParse.stringToDouble(survey_age.text.toString())

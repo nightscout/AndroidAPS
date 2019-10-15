@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.treatments.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
@@ -14,11 +13,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
@@ -39,11 +37,16 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.treatments.dialogs.WizardInfoDialog;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
-public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
+public class TreatmentsBolusFragment extends Fragment implements View.OnClickListener {
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -162,7 +165,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                                     }
                                     TreatmentsPlugin.getPlugin().getService().delete(treatment);
                                 }
-                                updateGUI();
+                                updateGui();
                             }
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
@@ -213,7 +216,6 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
 
         context = getContext();
 
-        updateGUI();
         return view;
     }
 
@@ -227,7 +229,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?");
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     TreatmentsPlugin.getPlugin().getService().resetTreatments();
-                    MainApp.bus().post(new EventNSClientRestart());
+                    RxBus.INSTANCE.send(new EventNSClientRestart());
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
@@ -248,7 +250,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                         }
                         TreatmentsPlugin.getPlugin().getService().delete(treatment);
                     }
-                    updateGUI();
+                    updateGui();
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();
@@ -256,32 +258,39 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        updateGUI();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        updateGUI();
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
+        updateGui();
     }
 
     @Override
-    protected void updateGUI() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> {
-                recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
-                if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
-                    iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " " + MainApp.gs(R.string.insulin_unit_shortname));
-                    activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " " + MainApp.gs(R.string.insulin_unit_shortname));
-                }
-                if (!TreatmentsPlugin.getPlugin().getService().getTreatmentDataFromTime(now() + 1000, true).isEmpty()) {
-                    deleteFutureTreatments.setVisibility(View.VISIBLE);
-                } else {
-                    deleteFutureTreatments.setVisibility(View.GONE);
-                }
-            });
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
+    }
+
+    private void updateGui() {
+        recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTreatmentsFromHistory()), false);
+        if (TreatmentsPlugin.getPlugin().getLastCalculationTreatments() != null) {
+            iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().iob) + " " + MainApp.gs(R.string.insulin_unit_shortname));
+            activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.getPlugin().getLastCalculationTreatments().activity) + " " + MainApp.gs(R.string.insulin_unit_shortname));
+        }
+        if (!TreatmentsPlugin.getPlugin().getService().getTreatmentDataFromTime(now() + 1000, true).isEmpty()) {
+            deleteFutureTreatments.setVisibility(View.VISIBLE);
+        } else {
+            deleteFutureTreatments.setVisibility(View.GONE);
+        }
     }
 
 }

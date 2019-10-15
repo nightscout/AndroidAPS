@@ -1404,6 +1404,7 @@
     <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
 
+
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
@@ -1574,6 +1575,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
     <string name="profilename">Change profile to</string>
     <string name="changengetoprofilename">Change profile to %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Last connection to pump</string>
+    <string name="automation_trigger_pump_last_connection_description">Last connection to pump [minutes ago]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
     <string name="sendsmsactiontext">Send SMS with text</string>
@@ -1595,6 +1599,12 @@
     <string name="close">Close</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="smscommunicator_messagebody">Invalid message body</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Bolus wizard</string>
+    <string name="unit_minute_short">min</string>
+
     <string name="age">Age:</string>
     <string name="weight">Weight:</string>
     <string name="id">ID:</string>

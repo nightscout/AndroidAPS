@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
@@ -27,7 +28,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         EventNetworkChange event = grabNetworkStatus(context);
         if (event != null)
-            MainApp.bus().post(event);
+            RxBus.INSTANCE.send(event);
     }
 
     @Nullable
@@ -40,23 +41,23 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         if (activeNetwork != null) {
             if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && activeNetwork.isConnected()) {
-                event.wifiConnected = true;
+                event.setWifiConnected(true);
                 WifiManager wifiManager = (WifiManager) MainApp.instance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 if (wifiManager != null) {
                     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-                        event.ssid = wifiInfo.getSSID();
+                        event.setSsid(wifiInfo.getSSID());
                     }
                     if (L.isEnabled(L.CORE))
-                        log.debug("NETCHANGE: Wifi connected. SSID: " + event.ssid);
+                        log.debug("NETCHANGE: Wifi connected. SSID: " + event.connectedSsid());
                 }
             }
 
             if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                event.mobileConnected = true;
-                event.roaming = activeNetwork.isRoaming();
+                event.setMobileConnected(true);
+                event.setRoaming(activeNetwork.isRoaming());
                 if (L.isEnabled(L.CORE))
-                    log.debug("NETCHANGE: Mobile connected. Roaming: " + event.roaming);
+                    log.debug("NETCHANGE: Mobile connected. Roaming: " + event.getRoaming());
             }
         } else {
             if (L.isEnabled(L.CORE))
@@ -68,11 +69,11 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
     public static boolean isWifiConnected() {
-        return lastEvent != null && lastEvent.wifiConnected;
+        return lastEvent != null && lastEvent.getWifiConnected();
     }
 
    public static boolean isConnected() {
-        return lastEvent != null && (lastEvent.wifiConnected || lastEvent.mobileConnected);
+        return lastEvent != null && (lastEvent.getWifiConnected() || lastEvent.getMobileConnected());
     }
 
     public static EventNetworkChange getLastEvent() {

@@ -4,6 +4,6 @@ import android.util.LongSparseArray
 
 object TirCalculator {
     fun calculate(days: Long): LongSparseArray<TIR> {
-
+        return LongSparseArray()
     }
 }

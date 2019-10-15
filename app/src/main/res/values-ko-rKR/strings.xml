@@ -57,9 +57,6 @@
     <string name="description_wear">WearOS 워치를 이용하여 AndroidAPS를 모니터하고 제어합니다.</string>
     <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
     <string name="description_sms_communicator">SMS 전송을 이용하여 AndroidAPS를 원격 제어합니다.</string>
-    <string name="objectives_button_back">뒤로</string>
-    <string name="objectives_button_start">시작</string>
-    <string name="objectives_button_verify">확인</string>
     <string name="nsprofileview_units_label">단위</string>
     <string name="nsprofileview_dia_label">인슐린활동시간(DIA):</string>
     <string name="nsprofileview_ic_label">인슐린 대 탄수화물 비율(IC):</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">지원하지 않는 NSClient 버전입니다</string>
     <string name="unsupportednsversion">지원하지 않는 Nightscout 버전입니다</string>
     <string name="nsclientnotinstalled">NSClient 가 설치되지 않았습니다. 기록이 삭제됩니다!</string>
-    <string name="objectives_bgavailableinns">NS에서 혈당데이터가 확인 가능합니다.</string>
-    <string name="objectives_pumpstatusavailableinns">NS에서 펌프상태가 확인 가능합니다.</string>
-    <string name="objectives_manualenacts">수동 주입</string>
     <string name="loopdisabled">제한으로 인해 LOOP가 사용불가합니다.</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus 제한이 적용되었습니다</string>
@@ -317,8 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
     <string name="overview_bolusprogress_goingtodeliver">%1$.2fU을 주입합니다</string>
-    <string name="objectives_0_objective">표시설정과 모니터설정을 완료하고, Basal과 비율을 분석한다.</string>
-    <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>
@@ -848,8 +840,6 @@
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="combo_bolus_count">Bolus 수</string>
     <string name="combo_tbr_count">임시기초주입 수</string>
-    <string name="objectivenotstarted">목표%1$d이 시작되지 않았습니다.</string>
-    <string name="objectivenotfinished">목표%1$d이 완료되지 않았습니다.</string>
     <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
     <string name="novalidbasalrate">펌프에서 유효한 Basal양을 읽을 수 없습니다.</string>
     <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
@@ -971,7 +961,6 @@
     <string name="completed_well_done">훌륭합니다. 완료되었습니다!</string>
     <string name="not_completed_yet">아직 완료되지 않았습니다.</string>
     <string name="time_elapsed">경과 시간</string>
-    <string name="nth_objective">%1$d. 목표</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
     <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
@@ -1358,13 +1347,4 @@
     <string name="deliverpartofboluswizard">Bolus 마법사는 계산을 수행하지만 계산된 인슐린의 이 부분만 주입됩니다. SMB 알고리즘에 유용합니다.</string>
     <string name="loading">불러오는 중…</string>
     <string name="snooze">스누즈</string>
-    <plurals name="objective_days">
-        <item quantity="other">%1$d 일</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="other">%1$d 시간</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="other">%1$d 분</item>
-    </plurals>
 </resources>
