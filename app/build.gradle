@@ -284,9 +284,6 @@ dependencies {
     testImplementation("com.google.truth:truth:0.39") {
         exclude group: "com.google.guava", module: "guava"
     }
-    testImplementation("org.robolectric:robolectric:4.2.1") {
-        exclude group: "com.google.guava", module: "guava"
-    }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
 /*
