@@ -65,7 +65,7 @@ class LocalProfileFragment : Fragment() {
 
     fun build() {
         val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
-        val units = ProfileFunctions.getSystemUnits()
+        val units = if (LocalProfilePlugin.currentProfile().mgdl) Constants.MGDL else Constants.MMOL
 
         localprofile_name.setText(LocalProfilePlugin.currentProfile().name)
         localprofile_dia.setParams(LocalProfilePlugin.currentProfile().dia, HardLimits.MINDIA, HardLimits.MAXDIA, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
@@ -94,11 +94,13 @@ class LocalProfileFragment : Fragment() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (LocalProfilePlugin.isEdited) {
-                    context?.let { context ->
-                        OKDialog.show(context, MainApp.gs(R.string.confirmation), MainApp.gs(R.string.doyouwantswitchprofile)) {
+                    activity?.let { activity ->
+                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.doyouwantswitchprofile), {
                             LocalProfilePlugin.currentProfileIndex = position
                             build()
-                        }
+                        }, {
+                            spinner?.setSelection(LocalProfilePlugin.currentProfileIndex)
+                        })
                     }
                 } else {
                     LocalProfilePlugin.currentProfileIndex = position
@@ -113,8 +115,12 @@ class LocalProfileFragment : Fragment() {
         }
 
         localprofile_profile_remove.setOnClickListener {
-            LocalProfilePlugin.removeCurrentProfile()
-            build()
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.doyouwantswitchprofile), {
+                    LocalProfilePlugin.removeCurrentProfile()
+                    build()
+                }, null)
+            }
         }
 
         // this is probably not possible because it leads to invalid profile
