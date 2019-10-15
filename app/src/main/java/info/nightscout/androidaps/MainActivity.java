@@ -33,7 +33,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,13 +44,13 @@ import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.events.EventFeatureRunning;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt;
@@ -63,9 +62,12 @@ import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     protected PowerManager.WakeLock mWakeLock;
 
@@ -99,7 +101,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
         doMigrations();
 
-        registerBus();
         setupTabs();
         setupViews(false);
 
@@ -142,6 +143,35 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshGui.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    String lang = SP.getString(R.string.key_language, "en");
+                    LocaleHelper.setLocale(getApplicationContext(), lang);
+                    if (event.getRecreate()) {
+                        recreate();
+                    } else {
+                        try { // activity may be destroyed
+                            setupTabs();
+                            setupViews(false);
+                        } catch (IllegalStateException e) {
+                            log.error("Unhandled exception", e);
+                        }
+                    }
+
+                    boolean keepScreenOn = Config.NSCLIENT && SP.getBoolean(R.string.key_keep_screen_on, false);
+                    if (keepScreenOn)
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    else
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> onEventPreferenceChange(event), FabricPrivacy::logException)
+        );
 
         if (L.isEnabled(L.CORE))
             log.debug("onResume");
@@ -159,9 +189,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
             AndroidPermission.notifyForLocationPermissions(this);
             AndroidPermission.notifyForSMSPermissions(this);
         }
-
-        MainApp.bus().post(new EventFeatureRunning(EventFeatureRunning.Feature.MAIN));
-    }
+     }
 
     @Override
     public void onDestroy() {
@@ -173,7 +201,12 @@ public class MainActivity extends NoSplashAppCompatActivity {
         super.onDestroy();
     }
 
-    @Subscribe
+    @Override
+    public void onPause() {
+        super.onPause();
+        disposable.clear();
+    }
+
     public void onEventPreferenceChange(final EventPreferenceChange ev) {
         if (ev.isChanged(R.string.key_keep_screen_on)) {
             boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
@@ -187,30 +220,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
                     mWakeLock.release();
             }
         }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
-        String lang = SP.getString(R.string.key_language, "en");
-        LocaleHelper.setLocale(getApplicationContext(), lang);
-        runOnUiThread(() -> {
-            if (ev.recreate) {
-                recreate();
-            } else {
-                try { // activity may be destroyed
-                    setupTabs();
-                    setupViews(false);
-                } catch (IllegalStateException e) {
-                    log.error("Unhandled exception", e);
-                }
-            }
-
-            boolean keepScreenOn = Config.NSCLIENT && SP.getBoolean(R.string.key_keep_screen_on, false);
-            if (keepScreenOn)
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            else
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        });
     }
 
     private void setupViews(boolean switchToLast) {
@@ -262,15 +271,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
                         TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics())));
             }
         }
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     private void checkEula() {
@@ -405,7 +405,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
             case R.id.nav_exit:
                 log.debug("Exiting");
                 MainApp.instance().stopKeepAliveService();
-                MainApp.bus().post(new EventAppExit());
+                RxBus.INSTANCE.send(new EventAppExit());
                 MainApp.closeDbHelper();
                 finish();
                 System.runFinalization();

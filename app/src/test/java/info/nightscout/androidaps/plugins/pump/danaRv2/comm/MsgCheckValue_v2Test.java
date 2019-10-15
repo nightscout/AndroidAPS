@@ -28,7 +28,6 @@ public class MsgCheckValue_v2Test {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
         AAPSMocker.mockDanaRPlugin();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();

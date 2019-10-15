@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.utils.SP;
 
@@ -62,7 +63,7 @@ public class SWEditUrl extends SWItem {
                 if (Patterns.WEB_URL.matcher(s).matches())
                     save(s.toString(), updateDelay);
                 else
-                    MainApp.bus().post(new EventSWLabel(MainApp.gs(R.string.error_url_not_valid)));
+                    RxBus.INSTANCE.send(new EventSWLabel(MainApp.gs(R.string.error_url_not_valid)));
             }
 
             @Override

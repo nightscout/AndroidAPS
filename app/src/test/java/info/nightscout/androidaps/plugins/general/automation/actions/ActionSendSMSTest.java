@@ -76,7 +76,6 @@ public class ActionSendSMSTest {
     @Before
     public void prepareTest() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         mockStatic(SmsManager.class);
         SmsManager smsManager = mock(SmsManager.class);

@@ -249,7 +249,7 @@ public class CommandQueue {
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
                 // Notify Wear about upcoming bolus
-                MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+                RxBus.INSTANCE.send(new EventBolusRequested(detailedBolusInfo.insulin));
             }
         }
 
@@ -275,7 +275,7 @@ public class CommandQueue {
 
     public synchronized void cancelAllBoluses() {
         if (!isRunning(Command.CommandType.BOLUS)) {
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
+            RxBus.INSTANCE.send(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);

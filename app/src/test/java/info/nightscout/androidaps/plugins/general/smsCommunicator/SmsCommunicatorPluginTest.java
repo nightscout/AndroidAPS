@@ -718,7 +718,6 @@ public class SmsCommunicatorPluginTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         AAPSMocker.mockProfileFunctions();
         AAPSMocker.mockTreatmentPlugin();
         AAPSMocker.mockTreatmentService();

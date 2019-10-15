@@ -26,7 +26,6 @@ public class MsgSetHistoryEntry_v2Test {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
         AAPSMocker.mockDanaRPlugin();
 
         MsgSetHistoryEntry_v2 initializerTest = new MsgSetHistoryEntry_v2((byte) 1, System.currentTimeMillis(), 1, 0);

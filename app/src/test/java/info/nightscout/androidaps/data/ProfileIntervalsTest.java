@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.data;
 
-import com.squareup.otto.Bus;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +24,7 @@ import info.nightscout.androidaps.utils.T;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, ConfigBuilderPlugin.class, TreatmentsPlugin.class, TreatmentService.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, TreatmentsPlugin.class, TreatmentService.class})
 public class ProfileIntervalsTest {
     private final long startDate = DateUtil.now();
     ProfileIntervals<ProfileSwitch> list = new ProfileIntervals<>();
@@ -91,7 +89,6 @@ public class ProfileIntervalsTest {
     public void prepareMock() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockTreatmentPlugin();
     }

@@ -35,7 +35,6 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet;
-import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess;
 import info.nightscout.androidaps.utils.SP;
 
@@ -339,7 +338,7 @@ public class BLEComm {
             close();
             isConnected = false;
             isConnecting = false;
-            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+            RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
             if (L.isEnabled(L.PUMPBTCOMM))
                 log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
         }
@@ -452,7 +451,7 @@ public class BLEComm {
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumperror)));
+                                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, MainApp.gs(R.string.pumperror)));
                                         NSUpload.uploadError(MainApp.gs(R.string.pumperror));
                                         Notification n = new Notification(Notification.PUMPERROR, MainApp.gs(R.string.pumperror), Notification.URGENT);
                                         RxBus.INSTANCE.send(new EventNewNotification(n));
@@ -460,13 +459,13 @@ public class BLEComm {
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
+                                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, MainApp.gs(R.string.pumpbusy)));
                                     } else {
                                         // ERROR in response, wrong serial number
                                         if (L.isEnabled(L.PUMPBTCOMM))
                                             log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         mSendQueue.clear();
-                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
+                                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, MainApp.gs(R.string.connectionerror)));
                                         SP.remove(MainApp.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName);
                                         Notification n = new Notification(Notification.WRONGSERIALNUMBER, MainApp.gs(R.string.wrongpassword), Notification.URGENT);
                                         RxBus.INSTANCE.send(new EventNewNotification(n));
@@ -496,7 +495,7 @@ public class BLEComm {
                                     if (L.isEnabled(L.PUMPBTCOMM))
                                         log.debug("<<<<< " + "ENCRYPTION__PASSKEY_RETURN " + DanaRS_Packet.toHexString(inputBuffer));
                                     // Paring is successfull, sending time info
-                                    MainApp.bus().post(new EventDanaRSPairingSuccess());
+                                    RxBus.INSTANCE.send(new EventDanaRSPairingSuccess());
                                     SendTimeInfo();
                                     byte[] pairingKey = {inputBuffer[2], inputBuffer[3]};
                                     // store pairing key to preferences
@@ -515,7 +514,7 @@ public class BLEComm {
                                     if (L.isEnabled(L.PUMPBTCOMM))
                                         log.debug("Pump user password: " + Integer.toHexString(pass));
 
-                                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
+                                    RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
                                     isConnected = true;
                                     isConnecting = false;
                                     if (L.isEnabled(L.PUMPBTCOMM))
@@ -546,7 +545,6 @@ public class BLEComm {
                                     // notify to sendMessage
                                     message.notify();
                                 }
-                                MainApp.bus().post(new EventDanaRSPacket(message));
                             } else {
                                 log.error("Unknown message received " + DanaRS_Packet.toHexString(inputBuffer));
                             }

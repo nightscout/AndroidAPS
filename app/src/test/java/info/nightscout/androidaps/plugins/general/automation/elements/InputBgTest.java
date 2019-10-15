@@ -31,7 +31,6 @@ public class InputBgTest {
     @Before
     public void prepare() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
         AAPSMocker.mockProfileFunctions();
     }

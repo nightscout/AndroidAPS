@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +58,16 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
     private Logger log = LoggerFactory.getLogger(L.DATATREATMENTS);
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static TreatmentsPlugin treatmentsPlugin;
 
@@ -99,18 +102,53 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         initializeTempBasalData();
         initializeTreatmentData();
         initializeExtendedBolusData();
         initializeTempTargetData();
         initializeProfileSwitchData();
         super.onStart();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventReloadTreatmentData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (L.isEnabled(L.DATATREATMENTS))
+                                log.debug("EventReloadTreatmentData");
+                            initializeTreatmentData();
+                            initializeExtendedBolusData();
+                            updateTotalIOBTreatments();
+                            RxBus.INSTANCE.send(event.getNext());
+                        },
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventReloadProfileSwitchData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> initializeProfileSwitchData(),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempTargetChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> initializeTempTargetData(),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventReloadTempBasalData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (L.isEnabled(L.DATATREATMENTS))
+                                log.debug("EventReloadTempBasalData");
+                            initializeTempBasalData();
+                            updateTotalIOBTempBasals();
+                        },
+                        FabricPrivacy::logException
+                ));
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().register(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -385,25 +423,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public boolean isInHistoryExtendedBoluslInProgress() {
         return getExtendedBolusFromHistory(System.currentTimeMillis()) != null; //TODO:  crosscheck here
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventReloadTreatmentData ev) {
-        if (L.isEnabled(L.DATATREATMENTS))
-            log.debug("EventReloadTreatmentData");
-        initializeTreatmentData();
-        initializeExtendedBolusData();
-        updateTotalIOBTreatments();
-        MainApp.bus().post(ev.next);
-    }
-
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onStatusEvent(final EventReloadTempBasalData ev) {
-        if (L.isEnabled(L.DATATREATMENTS))
-            log.debug("EventReloadTempBasalData");
-        initializeTempBasalData();
-        updateTotalIOBTempBasals();
     }
 
     @Override
@@ -681,13 +700,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         return oldestTime;
     }
 
-    // TempTargets
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onStatusEvent(final EventTempTargetChange ev) {
-        initializeTempTargetData();
-    }
-
     @Nullable
     @Override
     public TempTarget getTempTargetFromHistory() {
@@ -716,13 +728,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         MainApp.getDbHelper().createOrUpdate(tempTarget);
         NSUpload.uploadTempTarget(tempTarget);
-    }
-
-    // Profile Switch
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onStatusEvent(final EventReloadProfileSwitchData ev) {
-        initializeProfileSwitchData();
     }
 
     @Override

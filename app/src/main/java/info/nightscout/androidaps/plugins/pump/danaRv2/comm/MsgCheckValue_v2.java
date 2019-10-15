@@ -61,7 +61,7 @@ public class MsgCheckValue_v2 extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaRv2Driver");
-            MainApp.bus().post(new EventRefreshGui());
+            RxBus.INSTANCE.send(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }
@@ -84,7 +84,7 @@ public class MsgCheckValue_v2 extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaRv2Driver");
-            MainApp.bus().post(new EventRefreshGui());
+            RxBus.INSTANCE.send(new EventRefreshGui());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }

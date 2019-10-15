@@ -65,7 +65,6 @@ public class ActionLoopEnableTest {
     public void prepareTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();

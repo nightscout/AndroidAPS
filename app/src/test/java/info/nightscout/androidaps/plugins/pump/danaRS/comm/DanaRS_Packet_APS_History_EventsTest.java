@@ -93,7 +93,6 @@ public class DanaRS_Packet_APS_History_EventsTest extends DanaRS_Packet_APS_Hist
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
-        AAPSMocker.mockBus();
         SPMocker.prepareMock();
         SP.putString("profile", AAPSMocker.getValidProfileStore().getData().toString());
         AAPSMocker.mockConfigBuilder();
