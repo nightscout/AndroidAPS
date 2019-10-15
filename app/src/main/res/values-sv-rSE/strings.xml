@@ -69,13 +69,13 @@ Eversense-appen.</string>
     <string name="treatments_carbs_label_string">KH:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Total IOB (bolus):</string>
-    <string name="treatments_iobactivitytotal_label_string">Total aktivitet (5m):</string>
+    <string name="treatments_iobtotal_label_string">IOB fr bolus:</string>
+    <string name="treatments_iobactivitytotal_label_string">Insulinaktivitet (5m):</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Tot:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB (basal):</string>
+    <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
     <string name="treatments_newtreatment_carbsamount_label">KH</string>
     <string name="treatments_wizard_bg_label">BG</string>
@@ -84,7 +84,7 @@ Eversense-appen.</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="insulin_unit_shortname">E</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
-    <string name="openapsma_run">Beräkna nu</string>
+    <string name="openapsma_run">Utför nu</string>
     <string name="vitualpump_label">Virtuell pump</string>
     <string name="pump_basebasalrate_label">Profilens basaldos</string>
     <string name="pump_tempbasal_label">Temp basal</string>
@@ -392,7 +392,7 @@ Eversense-appen.</string>
     <string name="MM640g">Minimed 640G</string>
     <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
     <string name="old_data">Aktuellt BG saknas!</string>
-    <string name="minago">%1$d min sedan</string>
+    <string name="minago">%1$d&#160;min sedan</string>
     <string name="sms_minago">%1$d min sedan</string>
     <string name="localprofile">Lokal profil</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -607,7 +607,7 @@ Eversense-appen.</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_canulaage_label_short">CAGE</string>
-    <string name="careportal_pbage_label_short">PBAGE</string>
+    <string name="careportal_pbage_label_short">BAGE</string>
     <string name="openaps_short">APS</string>
     <string name="uploader_short">Upld batt</string>
     <string name="basal_short">BAS</string>
@@ -817,7 +817,7 @@ Eversense-appen.</string>
     <string name="bolusrecordedonly">Bolusen sparas bara i loggboken</string>
     <string name="ns_autobackfill_summary">Hämta saknad BG-data från Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB satt i pump</string>
-    <string name="overview_show_activity">Aktivitet</string>
+    <string name="overview_show_activity">Insulinaktivitet (5m)</string>
     <string name="overview_show_sensitivity">Känslighet (Sens)</string>
     <string name="overview_show_deviations">Avvikelser (Dev)</string>
     <string name="overview_show_cob">Aktiva KH (COB)</string>
@@ -876,7 +876,7 @@ Eversense-appen.</string>
     <string name="reset">Återställ</string>
     <string name="waitingfortimesynchronization">Väntar på tidssynkronisering (%1$d sek)</string>
     <string name="loopdisconnectedfor">Frånkopplad (%1$d min)</string>
-    <string name="openapssmb_maxiob_title">Max IOB som OpenAPS inte kan överstiga [E]</string>
+    <string name="openapssmb_maxiob_title">Max IOB som OpenAPS inte kan överstiga [U]</string>
     <string name="openapssmb_maxiob_summary">Det här värdet kallas Max IOB av OpenAPS. Om denna mängd insulin on board (IOB) nås, kan inte OpenAPS lägga till mer.</string>
     <string name="pump_stopped">Pump stoppad</string>
     <string name="pump_started">Pump startad</string>
@@ -1175,7 +1175,7 @@ Eversense-appen.</string>
     <string name="very_old_version">väldigt gammal version</string>
     <string name="new_version_warning">Ny version tillgänglig sedan %1$d dagar! Systemet kommer att byta läge till \"stopp innan lågt\" efter 60 dagar och sluta loopa helt efter 90 dagar</string>
     <string name="twohours">2 tim</string>
-    <string name="formatinsulinunits">%1$.2f enheter</string>
+    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Ta emot BG-data från den modifierade Dexcom-appen.</string>
@@ -1345,6 +1345,14 @@ Eversense-appen.</string>
     <string name="medtronic_cmd_desc_get_tbr">Hämta temp basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Sätt temp basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Leverera bolus</string>
+    <string name="profilename">Byt profil till</string>
+    <string name="changengetoprofilename">Byt profil till %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Senaste anslutning till pump</string>
+    <string name="automation_trigger_pump_last_connection_description">Senaste anslutning till pump [min sedan]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Senaste anslutning till pump %1$s %2$s min sedan</string>
+    <string name="sendsmsactionlabel">Skicka SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Skicka SMS till alla nummer i inställningar</string>
+    <string name="sendsmsactiontext">Skicka SMS med text</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolusbegränsning: %2$.2fU till %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
@@ -1353,5 +1361,15 @@ Eversense-appen.</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
     <string name="loading">Laddar...</string>
     <string name="snooze">Snooze</string>
+    <string name="time_range">Tidsintervall</string>
+    <string name="timerange_value">Klockan är mellan %1$s och %2$s</string>
+    <string name="between">Mellan </string>
     <string name="close">Stäng</string>
+    <string name="increasingmaxbasal">Ökar maximalt basaldos eftersom inställningen är lägre än din maximala basal i profilen</string>
+    <string name="smscommunicator_messagebody">Ogiltigt innehåll i meddelande</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Kalkylator</string>
+    <string name="unit_minute_short">min</string>
 </resources>

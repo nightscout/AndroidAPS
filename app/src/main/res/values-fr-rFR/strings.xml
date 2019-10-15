@@ -530,7 +530,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_wrongduration">Durée incorrecte</string>
     <string name="smscommunicator_loopsuspended">Boucle suspendue</string>
     <string name="smscommunicator_loopresumed">Boucle relancée</string>
-    <string name="treatments_wizard_bgtrend_label">Tendance 15 min</string>
+    <string name="treatments_wizard_bgtrend_label">Delta 15 min</string>
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Démarrage de l\'app journaux vers NS</string>
@@ -1060,7 +1060,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="multiwave_bolus">Bolus mixte</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
     <string name="enable_tbr_over_notification">Activer la notification de la fin DBT\n(réglage de pompe)</string>
-    <string name="disable_tbr_over_notification">Activer la notification de la fin de DBT\n(réglage de pompe)</string>
+    <string name="disable_tbr_over_notification">Désactiver la notification de la fin de DBT\n(réglage de pompe)</string>
     <string name="refresh">Actualiser</string>
     <string name="description_pump_insight_local">Intégration des pompes Accu-Chek Insight</string>
     <string name="not_inserted">Non inséré</string>
@@ -1347,6 +1347,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="medtronic_cmd_desc_set_bolus">Définir le Bolus</string>
     <string name="profilename">Remplacer le profil par</string>
     <string name="changengetoprofilename">Remplacer le profil par %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Dernière connexion à la pompe</string>
+    <string name="automation_trigger_pump_last_connection_description">Dernière connexion de pompe [minutes]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Dernière connexion à la pompe %1$s il y a %2$s min</string>
     <string name="sendsmsactionlabel">Envoyer SMS : %1$s</string>
     <string name="sendsmsactiondescription">Envoyer SMS à tous les numéros dans les préférences</string>
     <string name="sendsmsactiontext">Envoyer SMS avec du texte</string>
@@ -1364,4 +1367,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="close">Fermer</string>
     <string name="increasingmaxbasal">Augmentation de la valeur du débit Basal max parce que ce paramètre est inférieur au débit Basal max de votre profil</string>
     <string name="smscommunicator_messagebody">Message invalide</string>
+    <string name="format_bg_isf">%1$s SI: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
+    <string name="boluswizard">Assistant Bolus</string>
+    <string name="unit_minute_short">min</string>
 </resources>

@@ -619,6 +619,7 @@
     <string name="mdtp_cancel">Ακύρωση</string>
     <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ!</string>
     <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
+    <string name="ns_localbroadcasts">Ενεργοποιήστε εκπομπές σε άλλες εφαρμογές (όπως το xDrip). Μην το ενεργοποιήσετε εάν έχετε περισσότερες από μία εγκατεστημένες εφαρμογές του AAPS ή NSClient!</string>
     <string name="ns_localbroadcasts_title">Ενεργοποιήστε τις τοπικές αποστολές.</string>
     <string name="careportal_activity_label">ΔΡΑΣΤΗΡΙΟΤΗΤΑ &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">ΥΔΑΤΑΝΘΡΑΚΕΣ &amp; BOLUS</string>
@@ -1273,6 +1274,7 @@
     <string name="rileylink_state_not_started">Δεν ξεκίνησε</string>
     <string name="rileylink_state_rl_init">Αρχικοποίηση του RileyLink…</string>
     <string name="rileylink_state_rl_error">RileyLink Σφάλμα</string>
+    <string name="rileylink_state_pc_tune_up">Συντονισμός RileyLink και Αντλίας</string>
     <string name="rileylink_state_pc_error">Πρόβλημα σύνδεσης με την Αντλία</string>
     <string name="rileylink_state_connected">Συνδέθηκε</string>
     <!-- RL Errors -->
@@ -1342,6 +1344,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
+    <string name="profilename">Αλλαγή προφίλ σε</string>
+    <string name="changengetoprofilename">Αλλαγή προφίλ σε %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Τελευταία σύνδεση με αντλία</string>
+    <string name="automation_trigger_pump_last_connection_description">Τελευταία σύνδεση με αντλία [λεπτά πριν]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Τελευταία σύνδεση με αντλία %1$s %2$s λεπτά πριν</string>
+    <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Στείλτε SMS προς όλους τους αριθμούς στις Επιλογές</string>
+    <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -1349,5 +1360,15 @@
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
     <string name="loading">Φόρτωση ...</string>
     <string name="snooze">Αναβολή</string>
+    <string name="time_range">Εύρος χρόνου</string>
+    <string name="timerange_value">Ο χρόνος είναι μεταξύ %1$s και %2$s</string>
+    <string name="between">Ανάμεσα </string>
     <string name="close">Κλείσιμο</string>
+    <string name="increasingmaxbasal">Αυξείστε την μέγιστη βασική τιμή, επειδή η ρύθμιση είναι χαμηλότερη από τη μέγιστη βασική στο προφίλ σας</string>
+    <string name="smscommunicator_messagebody">Μη έγκυρο μήνυμα</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Οδηγός Bolus</string>
+    <string name="unit_minute_short">min</string>
 </resources>

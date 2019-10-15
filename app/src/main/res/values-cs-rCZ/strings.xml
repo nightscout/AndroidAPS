@@ -1346,6 +1346,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Nastavování bolusu</string>
     <string name="profilename">Změna profilu na</string>
     <string name="changengetoprofilename">Změna profilu na %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Poslední připojení k pumpě</string>
+    <string name="automation_trigger_pump_last_connection_description">Poslední připojení k pumpě před [minutami]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Poslední připojení k pumpě %1$s před %2$s minutami</string>
     <string name="sendsmsactionlabel">Poslat SMS: %1$s</string>
     <string name="sendsmsactiondescription">Odeslat SMS na všechna čísla v předvolbách</string>
     <string name="sendsmsactiontext">Odeslat SMS s textem</string>
@@ -1363,4 +1366,9 @@
     <string name="close">Zavřít</string>
     <string name="increasingmaxbasal">Zvýšena hodnota maximálního bazálu, protože nastavení je nižší než Vaše maximální hodnota bazální profilu</string>
     <string name="smscommunicator_messagebody">Neplatné tělo zprávy</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Bolusová kalkulačka</string>
+    <string name="unit_minute_short">min</string>
 </resources>

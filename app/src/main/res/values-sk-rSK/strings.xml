@@ -1366,4 +1366,9 @@
     <string name="close">Zavrieť</string>
     <string name="increasingmaxbasal">Zvýšenie maximálnej hodnoty bazálu, pretože nastavenie je nižšie, než je vaša maximálna hodnota bazálu v profile</string>
     <string name="smscommunicator_messagebody">Neplatný obsah správy</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Bolusová kalkulačka</string>
+    <string name="unit_minute_short">min</string>
 </resources>

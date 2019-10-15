@@ -1367,4 +1367,9 @@ Unerwartetes Verhalten.</string>
     <string name="close">Schließen</string>
     <string name="increasingmaxbasal">Der Wert max basal wird erhöht, weil Du ihn niedriger eingestellt hast als die höchste Basalrate in Deinem Profil.</string>
     <string name="smscommunicator_messagebody">Ungültiger Inhalt</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Bolus-Rechner</string>
+    <string name="unit_minute_short">Min.</string>
 </resources>

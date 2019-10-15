@@ -544,6 +544,8 @@
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
     <string name="enablesuperbolus_summary">Habilite a funcionalidade de superbolus no assistente. Não habilite até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE USAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
+    <string name="show_statuslights_extended">Mostrar luzes de estado estendido no ecrã principal</string>
+    <string name="show_statuslights_extended_summary">Ativar as luzes de status estendida para idade da cânula, insulina, sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
     <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
@@ -617,6 +619,7 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
+    <string name="ns_localbroadcasts">Ative as transmissões para outros apps (como xDrip). Não ative se você tiver mais de uma instância de AAPS ou NSClient instalada!</string>
     <string name="ns_localbroadcasts_title">Activar partilha local.</string>
     <string name="careportal_activity_label">ATIVIDADE &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">CARBOS &amp; BOLUS</string>
@@ -624,7 +627,7 @@
     <string name="careportal_pump_label">BOMBA</string>
     <string name="overview_newtempbasal_basalabsolute">Valor da Basal [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duração [min]</string>
-    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openapssmb">SMB OpenAPS</string>
     <string name="smb_shortname">SMB</string>
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
@@ -1271,7 +1274,7 @@
     <string name="rileylink_state_not_started">Não Iniciado</string>
     <string name="rileylink_state_rl_init">Inicialização do RileyLink…</string>
     <string name="rileylink_state_rl_error">Erro no RileyLink</string>
-    <string name="rileylink_state_pc_tune_up">A ajustar RileyLink e a Bomba</string>
+    <string name="rileylink_state_pc_tune_up">Configurando RileyLink e a Bomba</string>
     <string name="rileylink_state_pc_error">Problema ao ligar à Bomba</string>
     <string name="rileylink_state_connected">Ligado</string>
     <!-- RL Errors -->
@@ -1341,6 +1344,13 @@
     <string name="medtronic_cmd_desc_get_tbr">Obter Basal temporário</string>
     <string name="medtronic_cmd_desc_set_tbr">Definir Basal temporário</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="profilename">Alterar perfil para</string>
+    <string name="changengetoprofilename">Alterar perfil para %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Última ligação à bomba</string>
+    <string name="automation_trigger_pump_last_connection_description">Última ligação à bomba [minutos atrás]</string>
+    <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Enviar SMS para todos os números nas preferências</string>
+    <string name="sendsmsactiontext">Enviar SMS com texto</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
@@ -1349,5 +1359,15 @@
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
     <string name="loading">A carregar ...</string>
     <string name="snooze">Silenciar</string>
+    <string name="time_range">Intervalo de tempo</string>
+    <string name="timerange_value">O tempo está entre %1$s e %2$s</string>
+    <string name="between">Entre </string>
     <string name="close">Fechar</string>
+    <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
+    <string name="smscommunicator_messagebody">Corpo da mensagem inválido</string>
+    <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Assistente de Bólus</string>
+    <string name="unit_minute_short">min</string>
 </resources>

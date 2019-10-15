@@ -14,20 +14,20 @@
     <string name="objectives_maxbasal_objective">Compréhension de la Boucle Ouverte, y compris les propositions de débits Basal temporaires</string>
     <string name="objectives_maxbasal_gate">Partant de ce constat, décidez quel doit être le débit de base maximum, et entrez le dans la pompe et les préférences</string>
     <string name="objectives_maxiobzero_objective">Démarrage de la boucle fermée avec le système AGB ( Arrêt pour Glycémie Basse )</string>
-    <string name="objectives_maxiobzero_gate">Utilisation en Boucle Fermée avec la paramètre max IOB = 0 pendant plusieurs jours sans avoir un trop grand nombre d\'AGB (Arrêt pour Glycémie Basse)</string>
+    <string name="objectives_maxiobzero_gate">Activez la boucle fermée avec le paramètre max IOB = 0 pendant plusieurs jours sans avoir un trop grand nombre d\'AGB (Arrêt pour Glycémie Basse)</string>
     <string name="objectives_maxiob_objective">Réglage de la Boucle Fermée, augmentation de l\'IA (Insuline Active) maximale au dessus de 0 et abaissement progressif des cibles glycémiques</string>
-    <string name="objectives_maxiob_gate">Utilisation pendant plusieurs jours, et au moins une nuit sans alarme d’hypoglycémie, avant d\'abaisser les cibles glycémiques</string>
+    <string name="objectives_maxiob_gate">Utilisez pendant plusieurs jours, et au moins une nuit sans alarme d’hypoglycémie, avant d\'abaisser les cibles glycémiques</string>
     <string name="objectives_autosens_objective">Ajustement des débits Basal et des ratios si nécessaire, puis activation de la fonction auto-sens</string>
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>
     <string name="objectives_ama_objective">Activation de fonctionnalités supplémentaires en journée, comme l\'Aide au Repas Améliorée ARA (AMA)</string>
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
-    <string name="objectives_smb_gate">Vous devez lire le wiki et augmenter le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxAI = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
+    <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
     <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
     <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
     <string name="objectives_manualenacts">Activation manuelle</string>
     <string name="accomplished">Accompli : %1$s</string>
     <string name="objectives_usage_objective">Apprendre comment contrôler AndroidAPS</string>
-    <string name="objectives_usage_gate">Exécution de différentes actions dans AndroidAPS</string>
+    <string name="objectives_usage_gate">Exécutez différentes actions dans AndroidAPS</string>
     <string name="objectives_useprofileswitch">Sélection du profil à 90% pendant 10 min (appui long sur le nom du profil à l\'Accueil)</string>
     <string name="objectives_usedisconnectpump">Simulation d\'une douche. Déconnectez la pompe pendant 1h (Appui long sur Boucle Ouverte)</string>
     <string name="objectives_usereconnectpump">... et reconnectez la pompe de la même façon</string>
@@ -39,7 +39,7 @@
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Entrez le code obtenu auprès des développeurs pour contourner le reste des objectifs</string>
     <string name="codeaccepted">Code accepté</string>
     <string name="codeinvalid">Code invalide</string>
-    <string name="objectives_exam_objective">Prouvez vos connaissances</string>
+    <string name="objectives_exam_objective">Prouver ses connaissances</string>
     <string name="objectives_exam_gate">Étudiez et répondez correctement aux questions</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>

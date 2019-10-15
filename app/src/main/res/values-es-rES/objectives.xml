@@ -53,4 +53,8 @@
     <string name="notconnected">Sin conexión a Internet</string>
     <string name="failedretrievetime">Fallo tiempo de recuperación</string>
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>
+    <plurals name="objective_hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
 </resources>

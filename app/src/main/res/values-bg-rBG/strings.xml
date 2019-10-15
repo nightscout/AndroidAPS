@@ -1344,6 +1344,10 @@
     <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
+    <string name="profilename">Смени профила на</string>
+    <string name="changengetoprofilename">Смени профила на %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Последно свързване към помпа</string>
+    <string name="automation_trigger_pump_last_connection_compared">Последна връзка с помпата е %1$s %2$s минути преди</string>
     <string name="sendsmsactionlabel">Изпращане на SMS с текст %1$s</string>
     <string name="sendsmsactiondescription">Изпрати SMS до всички телефони от настройките</string>
     <string name="sendsmsactiontext">Изпрати SMS с текст</string>
@@ -1361,4 +1365,9 @@
     <string name="close">Затвори</string>
     <string name="increasingmaxbasal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
     <string name="smscommunicator_messagebody">Невалиден текст на съобщение</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
+    <string name="boluswizard">Болус калкулатор</string>
+    <string name="unit_minute_short">мин</string>
 </resources>

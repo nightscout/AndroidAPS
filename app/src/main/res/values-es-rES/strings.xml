@@ -6,10 +6,8 @@
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
-    <string name="treatmentssafety_title">Seguridad de tratamientos</string>
-    <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
+    <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
-    <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde NS</string>
     <string name="nav_resetdb">Restablecer las bases de datos</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
@@ -1346,6 +1344,9 @@
     <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
     <string name="profilename">Cambiar perfil a</string>
     <string name="changengetoprofilename">Cambiar perfil a %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Última conexión con la bomba</string>
+    <string name="automation_trigger_pump_last_connection_description">Última conexión con la bomba [ minutos atrás]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Última conexión con la bomba hace %1$s %2$s min</string>
     <string name="sendsmsactionlabel">Enviar a %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS a todos los números en las preferencias</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
