@@ -411,7 +411,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
     private void processTREATMENTS(String[] splitted, Sms receivedSms) {
         if (splitted[1].toUpperCase().equals("REFRESH")) {
             TreatmentsPlugin.getPlugin().getService().resetTreatments();
-            MainApp.bus().post(new EventNSClientRestart());
+            RxBus.INSTANCE.send(new EventNSClientRestart());
             sendSMS(new Sms(receivedSms.phoneNumber, "TREATMENTS REFRESH SENT"));
             receivedSms.processed = true;
         } else
@@ -420,7 +420,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processNSCLIENT(String[] splitted, Sms receivedSms) {
         if (splitted[1].toUpperCase().equals("RESTART")) {
-            MainApp.bus().post(new EventNSClientRestart());
+            RxBus.INSTANCE.send(new EventNSClientRestart());
             sendSMS(new Sms(receivedSms.phoneNumber, "NSCLIENT RESTART SENT"));
             receivedSms.processed = true;
         } else

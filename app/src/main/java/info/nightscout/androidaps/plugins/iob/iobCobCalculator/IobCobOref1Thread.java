@@ -119,7 +119,7 @@ public class IobCobOref1Thread extends Thread {
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
                     String progress = i + (MainApp.isDev() ? " (" + from + ")" : "");
-                    MainApp.bus().post(new EventIobCalculationProgress(progress));
+                    RxBus.INSTANCE.send(new EventIobCalculationProgress(progress));
 
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                         iobCobCalculatorPlugin.stopCalculationTrigger = false;
@@ -392,7 +392,7 @@ public class IobCobOref1Thread extends Thread {
         } finally {
             if (mWakeLock != null)
                 mWakeLock.release();
-            MainApp.bus().post(new EventIobCalculationProgress(""));
+            RxBus.INSTANCE.send(new EventIobCalculationProgress(""));
             if (L.isEnabled(L.AUTOSENS)) {
                 log.debug("AUTOSENSDATA thread ended: " + from);
                 log.debug("Midnights: " + MidnightTime.log());

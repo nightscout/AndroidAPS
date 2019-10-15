@@ -217,7 +217,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                 builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetTempTargets();
-                        MainApp.bus().post(new EventNSClientRestart());
+                        RxBus.INSTANCE.send(new EventNSClientRestart());
                     }
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);

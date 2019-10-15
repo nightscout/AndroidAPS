@@ -390,7 +390,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
         // ComboFragment updates state fully only after the pump has initialized,
         // so force an update after initialization completed
-        MainApp.bus().post(new EventComboPumpUpdateGUI());
+        RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
     }
 
     /**
@@ -406,7 +406,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         if (result.state.menu != null) {
             pump.state = result.state;
         }
-        MainApp.bus().post(new EventComboPumpUpdateGUI());
+        RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
     }
 
     @Override
@@ -485,7 +485,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                         .comment(MainApp.gs(R.string.virtualpump_resultok));
             }
         } finally {
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
+            RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
         }
     }
 
@@ -493,7 +493,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         try {
             pump.activity = MainApp.gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
+            RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
 
             // check pump is ready and all pump bolus records are known
             CommandResult stateResult = runCommand(null, 2, () -> ruffyScripter.readQuickInfo(1));
@@ -628,7 +628,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                     .carbsDelivered(detailedBolusInfo.carbs);
         } finally {
             pump.activity = null;
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
+            RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
             RxBus.INSTANCE.send(new EventRefreshOverview("Bolus"));
             cancelBolus = false;
         }
@@ -760,7 +760,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                     .source(Source.USER);
             TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
 
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
+            RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
         }
 
         incrementTbrCount();
@@ -848,7 +848,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             if (!ruffyScripter.isConnected()) {
                 String originalActivity = pump.activity;
                 pump.activity = MainApp.gs(R.string.combo_activity_checking_pump_state);
-                MainApp.bus().post(new EventComboPumpUpdateGUI());
+                RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
                 CommandResult preCheckError = runOnConnectChecks();
                 pump.activity = originalActivity;
                 if (preCheckError != null) {
@@ -859,7 +859,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
             if (activity != null) {
                 pump.activity = activity;
-                MainApp.bus().post(new EventComboPumpUpdateGUI());
+                RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
             }
 
             commandResult = commandExecution.execute();
@@ -892,7 +892,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         } finally {
             if (activity != null) {
                 pump.activity = null;
-                MainApp.bus().post(new EventComboPumpUpdateGUI());
+                RxBus.INSTANCE.send(new EventComboPumpUpdateGUI());
             }
         }
 

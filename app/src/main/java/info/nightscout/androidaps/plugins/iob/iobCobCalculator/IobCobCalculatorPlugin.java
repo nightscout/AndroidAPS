@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LongSparseArray;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +88,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
     @Override
     protected void onStart() {
         super.onStart();
-        MainApp.bus().register(this);
         // EventConfigBuilderChange
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventConfigBuilderChange.class)
@@ -194,12 +191,17 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event);
                 }, FabricPrivacy::logException)
         );
+        // EventNewHistoryData
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewHistoryData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> newHistoryData(event), FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
         disposable.clear();
-        MainApp.bus().unregister(this);
         super.onStop();
     }
 
@@ -763,8 +765,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
-    @Subscribe
-    public void onEventNewHistoryData(EventNewHistoryData ev) {
+    public void newHistoryData(EventNewHistoryData ev) {
         if (this != getPlugin()) {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Ignoring event for non default instance");
@@ -774,7 +775,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         stopCalculation("onEventNewHistoryData");
         synchronized (dataLock) {
             // clear up 5 min back for proper COB calculation
-            long time = ev.time - 5 * 60 * 1000L;
+            long time = ev.getTime() - 5 * 60 * 1000L;
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Invalidating cached data to: " + DateUtil.dateAndTimeFullString(time));
             for (int index = iobTable.size() - 1; index >= 0; index--) {

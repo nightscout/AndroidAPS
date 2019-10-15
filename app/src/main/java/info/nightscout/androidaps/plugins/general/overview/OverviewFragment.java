@@ -942,6 +942,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 .subscribe(event -> updatePumpStatus(event.getStatus()),
                         FabricPrivacy::logException
                 ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventIobCalculationProgress.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                            if (iobCalculationProgressView != null)
+                                iobCalculationProgressView.setText(event.getProgress());
+                        },
+                        FabricPrivacy::logException
+                ));
         sRefreshLoop = () -> {
             scheduleUpdateGUI("refreshLoop");
             sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
@@ -956,16 +965,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
         scheduleUpdateGUI("EventNewOpenLoopNotification");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventIobCalculationProgress e) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> {
-                if (iobCalculationProgressView != null)
-                    iobCalculationProgressView.setText(e.progress);
-            });
     }
 
     private void hideTempRecommendation() {

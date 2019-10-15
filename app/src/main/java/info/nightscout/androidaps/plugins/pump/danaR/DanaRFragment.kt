@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.squareup.otto.Subscribe
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.TDDStatsActivity
@@ -81,7 +80,6 @@ class DanaRFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        MainApp.bus().register(this)
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += RxBus
                 .toObservable(EventDanaRNewStatus::class.java)
@@ -93,6 +91,10 @@ class DanaRFragment : Fragment() {
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
                 .toObservable(EventTempBasalChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventQueueChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
@@ -118,13 +120,8 @@ class DanaRFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        MainApp.bus().unregister(this)
         loopHandler.removeCallbacks(refreshLoop)
     }
-
-    @Subscribe
-    fun onStatusEvent(s: EventQueueChanged) =
-            activity?.runOnUiThread { updateGUI() }
 
     // GUI functions
     @Synchronized

@@ -113,7 +113,7 @@ public class NSClientPlugin extends PluginBase {
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     status = event.getStatus();
-                    MainApp.bus().post(new EventNSClientUpdateGUI());
+                    RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
                 }, FabricPrivacy::logException)
         );
         disposable.add(RxBus.INSTANCE
@@ -134,6 +134,15 @@ public class NSClientPlugin extends PluginBase {
                         MainApp.instance().getApplicationContext().unbindService(mConnection);
                         nsClientReceiverDelegate.unregisterReceivers();
                     }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNSClientNewLog.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    addToLog(event);
+                    if (L.isEnabled(L.NSCLIENT))
+                        log.debug(event.getAction() + " " + event.getLogText());
                 }, FabricPrivacy::logException)
         );
     }
@@ -171,19 +180,12 @@ public class NSClientPlugin extends PluginBase {
         }
     };
 
-    @Subscribe
-    public void onStatusEvent(final EventNSClientNewLog ev) {
-        addToLog(ev);
-        if (L.isEnabled(L.NSCLIENT))
-            log.debug(ev.action + " " + ev.logText);
-    }
-
     synchronized void clearLog() {
         handler.post(() -> {
             synchronized (listLog) {
                 listLog.clear();
             }
-            MainApp.bus().post(new EventNSClientUpdateGUI());
+            RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -196,7 +198,7 @@ public class NSClientPlugin extends PluginBase {
                     listLog.remove(0);
                 }
             }
-            MainApp.bus().post(new EventNSClientUpdateGUI());
+            RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
         });
     }
 

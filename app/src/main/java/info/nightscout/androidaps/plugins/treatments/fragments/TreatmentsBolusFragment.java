@@ -232,7 +232,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                 builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?");
                 builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
                     TreatmentsPlugin.getPlugin().getService().resetTreatments();
-                    MainApp.bus().post(new EventNSClientRestart());
+                    RxBus.INSTANCE.send(new EventNSClientRestart());
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
                 builder.show();

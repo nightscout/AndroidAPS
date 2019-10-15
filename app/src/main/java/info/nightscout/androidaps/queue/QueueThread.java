@@ -51,7 +51,7 @@ public class QueueThread extends Thread {
     public final void run() {
         if (mWakeLock != null)
             mWakeLock.acquire(T.mins(10).msecs());
-        MainApp.bus().post(new EventQueueChanged());
+        RxBus.INSTANCE.send(new EventQueueChanged());
         long lastCommandTime;
         long connectionStartTime = lastCommandTime = System.currentTimeMillis();
 
@@ -145,10 +145,10 @@ public class QueueThread extends Thread {
                         if (queue.performing() != null) {
                             if (L.isEnabled(L.PUMPQUEUE))
                                 log.debug("performing " + queue.performing().status());
-                            MainApp.bus().post(new EventQueueChanged());
+                            RxBus.INSTANCE.send(new EventQueueChanged());
                             queue.performing().execute();
                             queue.resetPerforming();
-                            MainApp.bus().post(new EventQueueChanged());
+                            RxBus.INSTANCE.send(new EventQueueChanged());
                             lastCommandTime = System.currentTimeMillis();
                             SystemClock.sleep(100);
                             continue;

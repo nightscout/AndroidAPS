@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import io.socket.client.Ack;
 
@@ -44,7 +45,7 @@ public class NSAddAck extends Event implements Ack {
             if (response.has("result")) {
                 _id = null;
                 if (response.getString("result").contains("Not")) {
-                    MainApp.bus().post(new EventNSClientRestart());
+                    RxBus.INSTANCE.send(new EventNSClientRestart());
                     return;
                 }
                 if (L.isEnabled(L.NSCLIENT))

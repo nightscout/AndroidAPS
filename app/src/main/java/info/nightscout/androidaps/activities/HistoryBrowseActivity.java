@@ -16,7 +16,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.jjoe64.graphview.GraphView;
-import com.squareup.otto.Subscribe;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.slf4j.Logger;
@@ -169,7 +168,6 @@ public class HistoryBrowseActivity extends NoSplashActivity {
     @Override
     public void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
         disposable.clear();
         iobCobCalculatorPlugin.stopCalculation("onPause");
     }
@@ -177,7 +175,6 @@ public class HistoryBrowseActivity extends NoSplashActivity {
     @Override
     public void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -188,6 +185,14 @@ public class HistoryBrowseActivity extends NoSplashActivity {
                             updateGUI("EventAutosensCalculationFinished");
                         }
                     }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventIobCalculationProgress.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (iobCalculationProgressView != null)
+                        iobCalculationProgressView.setText(event.getProgress());
                 }, FabricPrivacy::logException)
         );
         // set start of current day
@@ -208,14 +213,6 @@ public class HistoryBrowseActivity extends NoSplashActivity {
         iobCobCalculatorPlugin.stopCalculation(from);
         iobCobCalculatorPlugin.clearCache();
         iobCobCalculatorPlugin.runCalculation(from, end, true, false, eventCustomCalculationFinished);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventIobCalculationProgress e) {
-        runOnUiThread(() -> {
-            if (iobCalculationProgressView != null)
-                iobCalculationProgressView.setText(e.progress);
-        });
     }
 
     void updateGUI(String from) {

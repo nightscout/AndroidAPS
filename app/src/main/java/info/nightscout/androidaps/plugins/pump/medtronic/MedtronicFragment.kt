@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.squareup.otto.Subscribe
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
@@ -104,7 +103,6 @@ class MedtronicFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        MainApp.bus().register(this)
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += RxBus
                 .toObservable(EventRefreshButtonState::class.java)
@@ -143,6 +141,10 @@ class MedtronicFragment : Fragment() {
                 .toObservable(EventPumpStatusChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventQueueChanged::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
 
         updateGUI()
     }
@@ -151,13 +153,7 @@ class MedtronicFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        MainApp.bus().unregister(this)
         loopHandler.removeCallbacks(refreshLoop)
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventQueueChanged) {
-        activity?.runOnUiThread { updateGUI() }
     }
 
     @Synchronized

@@ -111,7 +111,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             if (L.isEnabled(L.PROFILE))
                 log.debug("Stored profile not found");
             // force restart of nsclient to fetch profile
-            MainApp.bus().post(new EventNSClientRestart());
+            RxBus.INSTANCE.send(new EventNSClientRestart());
         }
     }
 

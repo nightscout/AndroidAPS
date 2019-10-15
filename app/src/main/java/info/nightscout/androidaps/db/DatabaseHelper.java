@@ -1037,7 +1037,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 RxBus.INSTANCE.send(new EventReloadTempBasalData());
                 RxBus.INSTANCE.send(new EventTempBasalChange());
                 if (earliestDataChange != null)
-                    MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
+                    RxBus.INSTANCE.send(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
                 scheduledTemBasalsPost = null;
             }
@@ -1372,7 +1372,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     log.debug("Firing EventExtendedBolusChange");
                 RxBus.INSTANCE.send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
-                    MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
+                    RxBus.INSTANCE.send(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
                 scheduledExtendedBolusPost = null;
             }

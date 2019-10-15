@@ -231,7 +231,7 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
                 builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetProfileSwitch();
-                        MainApp.bus().post(new EventNSClientRestart());
+                        RxBus.INSTANCE.send(new EventNSClientRestart());
                     }
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
