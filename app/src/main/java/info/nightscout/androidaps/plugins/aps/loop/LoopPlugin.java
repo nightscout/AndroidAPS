@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
@@ -645,7 +646,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("status", result.comment);
+                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainApp.instance().startActivity(i);
                     }
                 }
             });
@@ -654,7 +660,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("status", result.comment);
+                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainApp.instance().startActivity(i);
                     }
                 }
             });
@@ -665,7 +676,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.extendedbolusdeliveryerror));
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("status", result.comment);
+                        i.putExtra("title", MainApp.gs(R.string.extendedbolusdeliveryerror));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainApp.instance().startActivity(i);
                     }
                 }
             });
@@ -679,7 +695,12 @@ public class LoopPlugin extends PluginBase {
             @Override
             public void run() {
                 if (!result.success) {
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.tempbasaldeliveryerror));
+                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                    i.putExtra("soundid", R.raw.boluserror);
+                    i.putExtra("status", result.comment);
+                    i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror));
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    MainApp.instance().startActivity(i);
                 }
             }
         });
