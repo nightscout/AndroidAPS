@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.timeSpent
+package info.nightscout.androidaps.utils
 
 import android.app.Activity
 import android.app.Application
@@ -6,7 +6,7 @@ import android.os.Bundle
 import info.nightscout.androidaps.logging.L
 import org.slf4j.LoggerFactory
 
-object TS : Application.ActivityLifecycleCallbacks {
+object ActivityMonitor : Application.ActivityLifecycleCallbacks {
     private val log = LoggerFactory.getLogger(L.CORE)
     override fun onActivityPaused(activity: Activity?) {
         log.debug("onActivityPaused " + activity?.localClassName)
