@@ -59,7 +59,7 @@
     <string name="description_sms_communicator">Commander à distance AndroidAPS en utilisant les commandes SMS.</string>
     <string name="nsprofileview_units_label">Unités</string>
     <string name="nsprofileview_dia_label">DAI</string>
-    <string name="nsprofileview_ic_label">G:I (Ratio Glucides/Insuline, g/U)</string>
+    <string name="nsprofileview_ic_label">G/I (g/U)</string>
     <string name="nsprofileview_isf_label">SI Sensibilité Insuline</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_target_label">Cible</string>

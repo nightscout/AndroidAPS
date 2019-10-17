@@ -544,6 +544,8 @@
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSIS IS MOGELIJK BIJ BLINDELINGS GEBRUIK!</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
+    <string name="show_statuslights_extended">Toon uitgebreide statusindicatoren op overzicht scherm</string>
+    <string name="show_statuslights_extended_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het overzicht scherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
     <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%%]</string>
@@ -617,6 +619,7 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="ns_localbroadcasts">Schakel broadcasts in naar andere apps (zoals xDrip). Schakel niet in als je NSClient of meer dan één installatie van AAPS hebt geïnstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="careportal_activity_label">ACTIVITEIT &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
@@ -1271,6 +1274,7 @@
     <string name="rileylink_state_not_started">Niet gestart</string>
     <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
     <string name="rileylink_state_rl_error">RileyLink fout</string>
+    <string name="rileylink_state_pc_tune_up">Tuning van RileyLink en Pomp</string>
     <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
     <string name="rileylink_state_connected">Verbonden</string>
     <!-- RL Errors -->
@@ -1340,6 +1344,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Ophalen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_tbr">Instellen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
+    <string name="profilename">Wijzig profiel naar</string>
+    <string name="changengetoprofilename">Wijzig profiel in %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Laatste verbinding met pomp</string>
+    <string name="automation_trigger_pump_last_connection_description">Laatste verbinding met pomp [minuten geleden]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Laatste verbinding met pomp %1$s %2$s min geleden</string>
+    <string name="sendsmsactionlabel">Stuur SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Stuur SMS naar alle nummers in voorkeuren</string>
+    <string name="sendsmsactiontext">Stuur SMS met tekst</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus limiet bereikt: %2$.2fU naar %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -1347,4 +1360,15 @@
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="loading">Bezig met laden...</string>
     <string name="snooze">Sluimeren</string>
+    <string name="time_range">Tijdsinterval</string>
+    <string name="timerange_value">Tijd ligt tussen %1$s en %2$s</string>
+    <string name="between">Tussen </string>
+    <string name="close">Sluiten</string>
+    <string name="increasingmaxbasal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
+    <string name="smscommunicator_messagebody">Ongeldige inhoud van het bericht</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg KH ratio: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg KH ratio: %2$.1f</string>
+    <string name="boluswizard">Bolus wizard</string>
+    <string name="unit_minute_short">min</string>
 </resources>

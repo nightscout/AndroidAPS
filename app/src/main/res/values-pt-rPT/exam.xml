@@ -86,6 +86,8 @@
     <string name="nsclient_spikeiphone">App Spike no iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label">Tópico: Factor de Sensibilidade de Insulina</string>
+    <string name="isf_preferences">É necessário inserir FSI nas Preferências.</string>
+    <string name="isf_profile">A alteração do valor do FSI no seu perfil é suficiente para aplicar a mudança.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_label">Tópico: Rácio IC</string>
@@ -99,10 +101,16 @@
     <string name="profileswitch_isflower">O valor FSI será 10% mais baixo.</string>
     <string name="profileswitch_targethigher">Alvo será 10% superior.</string>
     <string name="profileswitch_targetlower">Alvo será 10% inferior.</string>
+    <string name="profileswitch_targetbottom">Só alvo inferior será 10% menor.</string>
     <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitchtime_1">Iniciar uma mudança de perfil com uma alteração de turno de 1</string>
+    <string name="profileswitchtime__1">Iniciar uma mudança de perfil com uma alteração de turno de -1</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitchtime_60">Iniciar uma mudança de perfil com uma alteração de turno de 60</string>
+    <string name="profileswitchtime__60">Iniciar uma mudança de perfil com uma alteração de turno de -60</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Tópico: Ajuda com taxas de basal</string>
+    <string name="basalhelp_where">Onde ir para obter ajuda com rácios da basal, etc.</string>
     <string name="basalhelp_diabetesteam">A sua equipa da diabetes</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
