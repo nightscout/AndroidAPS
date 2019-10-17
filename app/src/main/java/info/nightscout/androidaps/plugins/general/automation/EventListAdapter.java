@@ -82,8 +82,8 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
         }
 
         // enabled event
-        holder.enabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            event.setEnabled(isChecked);
+        holder.enabled.setOnClickListener(v -> {
+            event.setEnabled((holder.enabled.isChecked()));
             RxBus.INSTANCE.send(new EventAutomationDataChanged());
         });
 
