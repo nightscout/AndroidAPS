@@ -2,8 +2,10 @@ package info.nightscout.androidaps;
 
 import android.app.Application;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.os.PowerManager;
 import android.os.SystemClock;
 
 import androidx.annotation.Nullable;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -32,6 +35,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
@@ -89,13 +93,20 @@ import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
 
 
 public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private CompositeDisposable disposable = new CompositeDisposable();
+
+    private PowerManager.WakeLock mWakeLock;
+
     private static KeepAliveReceiver keepAliveReceiver;
 
     private static MainApp sInstance;
@@ -233,6 +244,15 @@ public class MainApp extends Application {
                 startKeepAliveService();
             }).start();
         }
+
+        // initialize screen wake lock
+        processPreferenceChange(new EventPreferenceChange(R.string.key_keep_screen_on));
+
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
+        );
     }
 
     private void registerLocalBroadcastReceiver() {
@@ -316,6 +336,21 @@ public class MainApp extends Application {
 
     public static ConstraintChecker getConstraintChecker() {
         return sConstraintsChecker;
+    }
+
+    public void processPreferenceChange(final EventPreferenceChange ev) {
+        if (ev.isChanged(R.string.key_keep_screen_on)) {
+            boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (keepScreenOn) {
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AndroidAPS:MainApp_processPreferenceChange");
+                if (!mWakeLock.isHeld())
+                    mWakeLock.acquire();
+            } else {
+                if (mWakeLock != null && mWakeLock.isHeld())
+                    mWakeLock.release();
+            }
+        }
     }
 
     public static ArrayList<PluginBase> getPluginsList() {
@@ -439,6 +474,8 @@ public class MainApp extends Application {
             unregisterReceiver(timeDateOrTZChangeReceiver);
         }
 
+        if (mWakeLock != null && mWakeLock.isHeld())
+            mWakeLock.release();
     }
 
     public static int dpToPx(int dp) {
