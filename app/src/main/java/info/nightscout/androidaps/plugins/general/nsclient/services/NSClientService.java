@@ -265,10 +265,10 @@ public class NSClientService extends Service {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         RxBus.INSTANCE.send(new EventNSClientStatus("Initializing"));
-        if (!MainApp.getSpecificPlugin(NSClientPlugin.class).isAllowed()) {
+        if (!NSClientPlugin.getPlugin().isAllowed()) {
             RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "not allowed"));
             RxBus.INSTANCE.send(new EventNSClientStatus("Not allowed"));
-        } else if (MainApp.getSpecificPlugin(NSClientPlugin.class).paused) {
+        } else if (NSClientPlugin.getPlugin().paused) {
             RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "paused"));
             RxBus.INSTANCE.send(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
@@ -386,7 +386,7 @@ public class NSClientService extends Service {
     }
 
     public void readPreferences() {
-        nsEnabled = MainApp.getSpecificPlugin(NSClientPlugin.class).isEnabled(PluginType.GENERAL);
+        nsEnabled = NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL);
         nsURL = SP.getString(R.string.key_nsclientinternal_url, "");
         nsAPISecret = SP.getString(R.string.key_nsclientinternal_api_secret, "");
         nsDevice = SP.getString("careportal_enteredby", "");

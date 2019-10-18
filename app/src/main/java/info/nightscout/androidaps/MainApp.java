@@ -415,19 +415,6 @@ public class MainApp extends Application {
         return newList;
     }
 
-    @Nullable
-    public static <T extends PluginBase> T getSpecificPlugin(Class<T> pluginClass) {
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (pluginClass.isAssignableFrom(p.getClass()))
-                    return (T) p;
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return null;
-    }
-
     public static boolean isEngineeringModeOrRelease() {
         if (!Config.APS)
             return true;
