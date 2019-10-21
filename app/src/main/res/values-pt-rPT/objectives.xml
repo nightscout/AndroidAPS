@@ -17,7 +17,9 @@
     <string name="objectives_useprofileswitch">Definir perfil de 90% por 10 min (pressione longo no nome de perfil na Visão Geral)</string>
     <string name="objectives_usedisconnectpump">Simular chuveiro. Desligar a bomba de 1h (Pressione longo em Open Loop)</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
+    <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
     <string name="objectives_button_enter">Inserir</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Insira o código obtido dos programadores para ignorar o resto dos objectivos</string>
     <string name="codeaccepted">Código aceite</string>
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
