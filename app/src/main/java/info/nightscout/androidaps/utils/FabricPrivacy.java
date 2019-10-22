@@ -129,7 +129,7 @@ public class FabricPrivacy {
         MainApp.getFirebaseAnalytics().setUserProperty("HEAD", BuildConfig.HEAD);
         MainApp.getFirebaseAnalytics().setUserProperty("Remote", remote);
         List<String> hashes = SignatureVerifier.getPlugin().shortHashes();
-        if (hashes.size() > 1)
+        if (hashes.size() >= 1)
             MainApp.getFirebaseAnalytics().setUserProperty("Hash", hashes.get(0));
 
         if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
