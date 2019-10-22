@@ -49,9 +49,9 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.AckAlarmRec
 import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessReceiver;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
-import info.nightscout.androidaps.plugins.general.signatureVerifier.SignatureVerifier;
+import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifier;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerPlugin;
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
@@ -91,7 +91,7 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.fabric.sdk.android.Fabric;
 
-import static info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
+import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
 
 
 public class MainApp extends Application {

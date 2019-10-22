@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.signatureVerifier;
+package info.nightscout.androidaps.plugins.constraints.signatureVerifier;
 
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -124,12 +124,49 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
                     }
                 }
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            log.error("Error in SignatureVerifier", e);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
             log.error("Error in SignatureVerifier", e);
         }
         return false;
+    }
+
+    public List<String> shortHashes() {
+        List<String> hashes = new ArrayList<>();
+        try {
+            Signature[] signatures = MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), PackageManager.GET_SIGNATURES).signatures;
+            if (signatures != null) {
+                for (Signature signature : signatures) {
+                    MessageDigest digest = MessageDigest.getInstance("SHA256");
+                    byte[] fingerprint = digest.digest(signature.toByteArray());
+                    String hash = Hex.toHexString(fingerprint);
+                    log.debug("Found signature: " + hash);
+                    log.debug("Found signature (short): " + singleCharMap(fingerprint));
+                    hashes.add(singleCharMap(fingerprint));
+                }
+            }
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            log.error("Error in SignatureVerifier", e);
+        }
+        return hashes;
+    }
+
+    String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?,.-;:_<>|°^`´\\@€*'#+~{}[]¿¡áéíóúàèìòùöäü`ÁÉÍÓÚÀÈÌÒÙÖÄÜßÆÇÊËÎÏÔŒÛŸæçêëîïôœûÿĆČĐŠŽćđšžñΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ\u03A2ΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρςστυφχψωϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗ";
+
+    private String singleCharMap(byte[] array) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : array) {
+            sb.append(map.charAt(b & 0xFF));
+        }
+        return sb.toString();
+    }
+
+    private String singleCharUnMap(String shortHash) {
+        byte[] array = new byte[shortHash.length()];
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            sb.append(String.format("%02x",(int) map.charAt(map.indexOf(shortHash.charAt(i)))));
+        }
+        return sb.toString();
     }
 
     private boolean shouldDownloadCerts() {
