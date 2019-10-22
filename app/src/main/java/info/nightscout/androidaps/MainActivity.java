@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,6 +44,7 @@ import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -50,8 +52,8 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
@@ -88,6 +90,9 @@ public class MainActivity extends NoSplashAppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_navigation, R.string.close_navigation);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+
+        // initialize screen wake lock
+        processPreferenceChange(new EventPreferenceChange(R.string.key_keep_screen_on));
 
         doMigrations();
 
@@ -146,8 +151,15 @@ public class MainActivity extends NoSplashAppCompatActivity {
                         setupTabs();
                         setupViews();
                     }
+                    setWakeLock();
                 }, FabricPrivacy::logException)
         );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
+        );
+
         if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
@@ -167,6 +179,19 @@ public class MainActivity extends NoSplashAppCompatActivity {
     public void onPause() {
         super.onPause();
         disposable.clear();
+    }
+
+    private void setWakeLock() {
+        boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
+        if (keepScreenOn)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    public void processPreferenceChange(final EventPreferenceChange ev) {
+        if (ev.isChanged(R.string.key_keep_screen_on))
+            setWakeLock();
     }
 
     private void setupViews() {
