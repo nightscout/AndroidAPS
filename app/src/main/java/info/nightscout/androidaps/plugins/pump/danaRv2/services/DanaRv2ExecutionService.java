@@ -471,7 +471,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public PumpEnactResult loadEvents() {
         DanaRPump danaRPump = DanaRPump.getInstance();
 
-        if (!MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
+        if (!DanaRv2Plugin.getPlugin().isInitialized()) {
             PumpEnactResult result = new PumpEnactResult().success(false);
             result.comment = "pump not initialized";
             return result;

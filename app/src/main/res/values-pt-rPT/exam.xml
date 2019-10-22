@@ -6,6 +6,7 @@
     <string name="dia_minimumis3h">O valor mínimo é de 3 horas.</string>
     <string name="dia_minimumis5h">O valor mínimo é de 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_meaningisequaltodiapump">O significado é igual ao parâmetro DIA usado na bomba.</string>
     <string name="hypott_label">Tópico: Alvo-Temp. Hipo</string>
     <string name="hypott_whenhypott">O que é a razão principal para definir TT hipoglicemia?</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
@@ -16,14 +17,23 @@
     <string name="pumpdisconnect_letknow">Clique em \'Desligar bomba\' para que o AAPS saiba que nenhuma insulina está a ser entregue.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Tópico: Definições do AndroidAPS</string>
+    <string name="objectives_howtosave">Quais são as práticas recomendadas para fazer cópia de segurança das configurações?</string>
+    <string name="objectives_exportsettings">Exportá-las localmente a partir do menu Manutenção.</string>
+    <string name="objectives_storeelsewhere">Armazenar ficheiro exportado para outro local como e-mail, Dropbox, Google drive…</string>
+    <string name="objectives_doexportonstart">Exportá-los logo após a instalação do AAPS.</string>
+    <string name="objectives_doexportafterchange">Exportá-los depois de fazer alterações de configuração.</string>
+    <string name="objectives_doexportafterobjective">Exportá-los depois de completar um objectivo.</string>
+    <string name="objectives_doexportafterfirtssettings">Exportá-los quando terminar as configurações iniciais.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Tópico: Leituras Irregulares CGM</string>
     <string name="noisycgm_whattodo">O que deve ser feito se os dados do CGM são irregulares?</string>
     <string name="nothing">Nada, AAPS vai lidar com isso.</string>
+    <string name="noisycgm_pause">Desactivar o loop para evitar sobredosagem.</string>
     <string name="noisycgm_replacesensor">Substituir o sensor CGM.</string>
     <string name="noisycgm_turnoffphone">Desligue o telefone.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="noisycgm_checksmoothing">Verifique que a app do CGM suaviza os dados da Glicose.</string>
     <string name="exercise_label">Tópico: Exercício</string>
     <string name="exercise_setactivitytt">Usando o recurso de alvo-temp.</string>
     <string name="exercise_switchprofilebelow100">Fazer uma mudança de perfil inferior a 100%.</string>
@@ -86,6 +96,8 @@
     <string name="nsclient_spikeiphone">App Spike no iPhone.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
     <string name="isf_label">Tópico: Factor de Sensibilidade de Insulina</string>
+    <string name="isf_preferences">É necessário inserir FSI nas Preferências.</string>
+    <string name="isf_profile">A alteração do valor do FSI no seu perfil é suficiente para aplicar a mudança.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_label">Tópico: Rácio IC</string>
@@ -99,10 +111,16 @@
     <string name="profileswitch_isflower">O valor FSI será 10% mais baixo.</string>
     <string name="profileswitch_targethigher">Alvo será 10% superior.</string>
     <string name="profileswitch_targetlower">Alvo será 10% inferior.</string>
+    <string name="profileswitch_targetbottom">Só alvo inferior será 10% menor.</string>
     <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitchtime_1">Iniciar uma mudança de perfil com uma alteração de turno de 1</string>
+    <string name="profileswitchtime__1">Iniciar uma mudança de perfil com uma alteração de turno de -1</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitchtime_60">Iniciar uma mudança de perfil com uma alteração de turno de 60</string>
+    <string name="profileswitchtime__60">Iniciar uma mudança de perfil com uma alteração de turno de -60</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Tópico: Ajuda com taxas de basal</string>
+    <string name="basalhelp_where">Onde ir para obter ajuda com rácios da basal, etc.</string>
     <string name="basalhelp_diabetesteam">A sua equipa da diabetes</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>

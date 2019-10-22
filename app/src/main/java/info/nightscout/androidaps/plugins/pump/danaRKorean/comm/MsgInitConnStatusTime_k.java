@@ -35,17 +35,17 @@ public class MsgInitConnStatusTime_k extends MessageBase {
             RxBus.INSTANCE.send(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to export DanaR");
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setPluginEnabled(PluginType.PUMP, false);
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginType.PUMP, false);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setPluginEnabled(PluginType.PUMP, true);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginType.PUMP, true);
+            DanaRKoreanPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, false);
+            DanaRKoreanPlugin.getPlugin().setFragmentVisible(PluginType.PUMP, false);
+            DanaRPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
+            DanaRPlugin.getPlugin().setFragmentVisible(PluginType.PUMP, true);
 
             DanaRPump.reset(); // mark not initialized
 
             //If profile coming from pump, switch it as well
-            if (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginType.PROFILE)) {
-                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setPluginEnabled(PluginType.PROFILE, false);
-                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginType.PROFILE, true);
+            if (DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
+                (DanaRKoreanPlugin.getPlugin()).setPluginEnabled(PluginType.PROFILE, false);
+                (DanaRPlugin.getPlugin()).setPluginEnabled(PluginType.PROFILE, true);
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingKoreanDanaDriver");

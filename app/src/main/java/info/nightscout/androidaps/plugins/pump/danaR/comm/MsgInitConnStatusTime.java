@@ -31,19 +31,19 @@ public class MsgInitConnStatusTime extends MessageBase {
         if (bytes.length - 10 > 7) {
             Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
             RxBus.INSTANCE.send(new EventNewNotification(notification));
-            MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
+            DanaRPlugin.getPlugin().disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to Korean DanaR");
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setPluginEnabled(PluginType.PUMP, true);
-            MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).setFragmentVisible(PluginType.PUMP, true);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setPluginEnabled(PluginType.PUMP, false);
-            MainApp.getSpecificPlugin(DanaRPlugin.class).setFragmentVisible(PluginType.PUMP, false);
+            DanaRKoreanPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
+            DanaRKoreanPlugin.getPlugin().setFragmentVisible(PluginType.PUMP, true);
+            DanaRPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, false);
+            DanaRPlugin.getPlugin().setFragmentVisible(PluginType.PUMP, false);
 
             DanaRPump.reset(); // mark not initialized
 
             //If profile coming from pump, switch it as well
-            if (MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PROFILE)) {
-                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setPluginEnabled(PluginType.PROFILE, false);
-                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setPluginEnabled(PluginType.PROFILE, true);
+            if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
+                (DanaRPlugin.getPlugin()).setPluginEnabled(PluginType.PROFILE, false);
+                (DanaRKoreanPlugin.getPlugin()).setPluginEnabled(PluginType.PROFILE, true);
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaDriver");

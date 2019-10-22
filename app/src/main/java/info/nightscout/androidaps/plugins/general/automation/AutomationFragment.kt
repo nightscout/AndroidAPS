@@ -29,7 +29,7 @@ class AutomationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        eventListAdapter = EventListAdapter(AutomationPlugin.automationEvents, fragmentManager)
+        eventListAdapter = EventListAdapter(AutomationPlugin.automationEvents, fragmentManager, activity)
         automation_eventListView.layoutManager = LinearLayoutManager(context)
         automation_eventListView.adapter = eventListAdapter
 

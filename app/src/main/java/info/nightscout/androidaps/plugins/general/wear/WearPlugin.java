@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
@@ -139,7 +139,7 @@ public class WearPlugin extends PluginBase {
                         }, FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
-                .toObservable(EventDismissBolusprogressIfRunning.class)
+                .toObservable(EventDismissBolusProgressIfRunning.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                             if (event.getResult() == null) return;

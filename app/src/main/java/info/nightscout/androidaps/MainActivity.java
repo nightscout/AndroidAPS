@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.os.PowerManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -15,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -46,7 +44,6 @@ import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.activities.SurveyActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -71,8 +68,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    protected PowerManager.WakeLock mWakeLock;
-
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private MenuItem pluginPreferencesMenuItem;
@@ -94,9 +89,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_navigation, R.string.close_navigation);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
-        // initialize screen wake lock
-        processPreferenceChange(new EventPreferenceChange(R.string.key_keep_screen_on));
 
         doMigrations();
 
@@ -155,20 +147,8 @@ public class MainActivity extends NoSplashAppCompatActivity {
                         setupTabs();
                         setupViews();
                     }
-
-                    boolean keepScreenOn = Config.NSCLIENT && SP.getBoolean(R.string.key_keep_screen_on, false);
-                    if (keepScreenOn)
-                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    else
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
-                .toObservable(EventPreferenceChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
-        );
-
         if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
@@ -185,32 +165,9 @@ public class MainActivity extends NoSplashAppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
-        if (mWakeLock != null)
-            if (mWakeLock.isHeld())
-                mWakeLock.release();
-        super.onDestroy();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         disposable.clear();
-    }
-
-    public void processPreferenceChange(final EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_keep_screen_on)) {
-            boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
-            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (keepScreenOn) {
-                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AndroidAPS:MainActivity_onEventPreferenceChange");
-                if (!mWakeLock.isHeld())
-                    mWakeLock.acquire();
-            } else {
-                if (mWakeLock != null && mWakeLock.isHeld())
-                    mWakeLock.release();
-            }
-        }
     }
 
     private void setupViews() {
