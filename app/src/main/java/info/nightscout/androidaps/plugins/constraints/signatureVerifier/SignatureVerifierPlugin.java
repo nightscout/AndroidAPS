@@ -42,23 +42,23 @@ import info.nightscout.androidaps.utils.SP;
  * In case someone decides to leak a ready-to-use APK nonetheless, we can still disable it.
  * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */
-public class SignatureVerifier extends PluginBase implements ConstraintsInterface {
+public class SignatureVerifierPlugin extends PluginBase implements ConstraintsInterface {
 
     private static final String REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt";
     private static final long UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1);
 
-    private static SignatureVerifier plugin = new SignatureVerifier();
+    private static SignatureVerifierPlugin plugin = new SignatureVerifierPlugin();
 
     private Logger log = LoggerFactory.getLogger(L.CORE);
     private final Object $lock = new Object[0];
     private File revokedCertsFile;
     private List<byte[]> revokedCerts;
 
-    public static SignatureVerifier getPlugin() {
+    public static SignatureVerifierPlugin getPlugin() {
         return plugin;
     }
 
-    private SignatureVerifier() {
+    private SignatureVerifierPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
                 .neverVisible(true)
@@ -125,7 +125,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
                 }
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
-            log.error("Error in SignatureVerifier", e);
+            log.error("Error in SignatureVerifierPlugin", e);
         }
         return false;
     }
@@ -145,7 +145,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
                 }
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
-            log.error("Error in SignatureVerifier", e);
+            log.error("Error in SignatureVerifierPlugin", e);
         }
         return hashes;
     }
@@ -190,7 +190,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
                 this.revokedCerts = parseRevokedCertsFile(revokedCerts);
             }
         } catch (IOException e) {
-            log.error("Error in SignatureVerifier", e);
+            log.error("Error in SignatureVerifierPlugin", e);
         }
     }
 

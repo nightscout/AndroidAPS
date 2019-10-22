@@ -52,7 +52,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.AckAlarmRec
 import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessReceiver;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
-import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifier;
+import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
@@ -203,7 +203,7 @@ public class MainApp extends Application {
             if (!Config.NSCLIENT) pluginsList.add(SafetyPlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(VersionCheckerPlugin.INSTANCE);
             if (!Config.NSCLIENT) pluginsList.add(StorageConstraintPlugin.getPlugin());
-            if (!Config.NSCLIENT) pluginsList.add(SignatureVerifier.getPlugin());
+            if (!Config.NSCLIENT) pluginsList.add(SignatureVerifierPlugin.getPlugin());
             if (!Config.APS) pluginsList.add(ObjectivesPlugin.INSTANCE);
             pluginsList.add(SourceXdripPlugin.getPlugin());
             pluginsList.add(SourceNSClientPlugin.getPlugin());
