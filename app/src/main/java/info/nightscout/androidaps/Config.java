@@ -12,13 +12,4 @@ public class Config {
     public static final boolean PUMPCONTROL = BuildConfig.FLAVOR.equals("pumpcontrol");
 
     public static final boolean PUMPDRIVERS = BuildConfig.FLAVOR.equals("full") || BuildConfig.FLAVOR.equals("pumpcontrol");
-
-    public static final boolean ACTION = !NSCLIENT;
-    public static final boolean MDI = !NSCLIENT;
-    public static final boolean OTHERPROFILES = !NSCLIENT;
-    public static final boolean SAFETY = !NSCLIENT;
-
-    public static final boolean SMSCOMMUNICATORENABLED = !NSCLIENT;
-
-
 }

@@ -310,8 +310,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
         switch (splitted[1].toUpperCase()) {
             case "DISABLE":
             case "STOP":
-                LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
-                if (loopPlugin != null && loopPlugin.isEnabled(PluginType.LOOP)) {
+                LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+                if (loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, false);
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                         @Override
@@ -329,8 +329,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 break;
             case "ENABLE":
             case "START":
-                loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
-                if (loopPlugin != null && !loopPlugin.isEnabled(PluginType.LOOP)) {
+                loopPlugin = LoopPlugin.getPlugin();
+                if (!loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, true);
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loophasbeenenabled));
                     RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_START"));
@@ -340,18 +340,16 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 receivedSms.processed = true;
                 break;
             case "STATUS":
-                loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
-                if (loopPlugin != null) {
-                    if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                        if (loopPlugin.isSuspended())
-                            reply = String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend());
-                        else
-                            reply = MainApp.gs(R.string.smscommunicator_loopisenabled);
-                    } else {
-                        reply = MainApp.gs(R.string.smscommunicator_loopisdisabled);
-                    }
-                    sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                loopPlugin = LoopPlugin.getPlugin();
+                if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                    if (loopPlugin.isSuspended())
+                        reply = String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend());
+                    else
+                        reply = MainApp.gs(R.string.smscommunicator_loopisenabled);
+                } else {
+                    reply = MainApp.gs(R.string.smscommunicator_loopisdisabled);
                 }
+                sendSMS(new Sms(receivedSms.phoneNumber, reply));
                 receivedSms.processed = true;
                 break;
             case "RESUME":

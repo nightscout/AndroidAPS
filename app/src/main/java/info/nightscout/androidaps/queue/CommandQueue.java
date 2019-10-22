@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressHelperActivity;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -275,7 +275,7 @@ public class CommandQueue {
 
     public synchronized void cancelAllBoluses() {
         if (!isRunning(Command.CommandType.BOLUS)) {
-            RxBus.INSTANCE.send(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
+            RxBus.INSTANCE.send(new EventDismissBolusProgressIfRunning(new PumpEnactResult().success(true).enacted(false)));
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);

@@ -37,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -232,17 +233,6 @@ public class AAPSMocker {
         } catch (Exception e) {
         }
 
-    }
-
-    public static DanaRPlugin mockDanaRPlugin() {
-        PowerMockito.mockStatic(DanaRPlugin.class);
-        DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
-        DanaRv2Plugin danaRv2Plugin = mock(DanaRv2Plugin.class);
-        DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
-        when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
-        when(MainApp.getSpecificPlugin(DanaRv2Plugin.class)).thenReturn(danaRv2Plugin);
-        when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
-        return danaRPlugin;
     }
 
     public static Profile getValidProfile() {

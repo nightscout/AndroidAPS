@@ -437,11 +437,11 @@ public class ActionStringHandler {
 
     public static boolean isOldData(List<TDD> historyList) {
         Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
-        PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-        PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-        PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-        PumpInterface insight = MainApp.getSpecificPlugin(LocalInsightPlugin.class);
+        PumpInterface dana = DanaRPlugin.getPlugin();
+        PumpInterface danaRS = DanaRSPlugin.getPlugin();
+        PumpInterface danaV2 = DanaRv2Plugin.getPlugin();
+        PumpInterface danaKorean = DanaRKoreanPlugin.getPlugin();
+        PumpInterface insight = LocalInsightPlugin.getPlugin();
 
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 
