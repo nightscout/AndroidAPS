@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.versionChecker
+package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R

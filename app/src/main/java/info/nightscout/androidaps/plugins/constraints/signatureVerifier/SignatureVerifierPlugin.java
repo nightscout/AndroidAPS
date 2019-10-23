@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.signatureVerifier;
+package info.nightscout.androidaps.plugins.constraints.signatureVerifier;
 
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -42,23 +42,23 @@ import info.nightscout.androidaps.utils.SP;
  * In case someone decides to leak a ready-to-use APK nonetheless, we can still disable it.
  * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */
-public class SignatureVerifier extends PluginBase implements ConstraintsInterface {
+public class SignatureVerifierPlugin extends PluginBase implements ConstraintsInterface {
 
     private static final String REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt";
     private static final long UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1);
 
-    private static SignatureVerifier plugin = new SignatureVerifier();
+    private static SignatureVerifierPlugin plugin = new SignatureVerifierPlugin();
 
     private Logger log = LoggerFactory.getLogger(L.CORE);
     private final Object $lock = new Object[0];
     private File revokedCertsFile;
     private List<byte[]> revokedCerts;
 
-    public static SignatureVerifier getPlugin() {
+    public static SignatureVerifierPlugin getPlugin() {
         return plugin;
     }
 
-    private SignatureVerifier() {
+    private SignatureVerifierPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
                 .neverVisible(true)
@@ -124,12 +124,49 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
                     }
                 }
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            log.error("Error in SignatureVerifier", e);
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Error in SignatureVerifier", e);
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            log.error("Error in SignatureVerifierPlugin", e);
         }
         return false;
+    }
+
+    public List<String> shortHashes() {
+        List<String> hashes = new ArrayList<>();
+        try {
+            Signature[] signatures = MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), PackageManager.GET_SIGNATURES).signatures;
+            if (signatures != null) {
+                for (Signature signature : signatures) {
+                    MessageDigest digest = MessageDigest.getInstance("SHA256");
+                    byte[] fingerprint = digest.digest(signature.toByteArray());
+                    String hash = Hex.toHexString(fingerprint);
+                    log.debug("Found signature: " + hash);
+                    log.debug("Found signature (short): " + singleCharMap(fingerprint));
+                    hashes.add(singleCharMap(fingerprint));
+                }
+            }
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            log.error("Error in SignatureVerifierPlugin", e);
+        }
+        return hashes;
+    }
+
+    String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?,.-;:_<>|°^`´\\@€*'#+~{}[]¿¡áéíóúàèìòùöäü`ÁÉÍÓÚÀÈÌÒÙÖÄÜßÆÇÊËÎÏÔŒÛŸæçêëîïôœûÿĆČĐŠŽćđšžñΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ\u03A2ΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρςστυφχψωϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗ";
+
+    private String singleCharMap(byte[] array) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : array) {
+            sb.append(map.charAt(b & 0xFF));
+        }
+        return sb.toString();
+    }
+
+    private String singleCharUnMap(String shortHash) {
+        byte[] array = new byte[shortHash.length()];
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            sb.append(String.format("%02x",(int) map.charAt(map.indexOf(shortHash.charAt(i)))));
+        }
+        return sb.toString();
     }
 
     private boolean shouldDownloadCerts() {
@@ -153,7 +190,7 @@ public class SignatureVerifier extends PluginBase implements ConstraintsInterfac
                 this.revokedCerts = parseRevokedCertsFile(revokedCerts);
             }
         } catch (IOException e) {
-            log.error("Error in SignatureVerifier", e);
+            log.error("Error in SignatureVerifierPlugin", e);
         }
     }
 
