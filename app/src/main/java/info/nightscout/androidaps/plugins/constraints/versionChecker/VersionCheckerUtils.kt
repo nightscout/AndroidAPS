@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.versionChecker
+package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import android.content.Context
 import android.net.ConnectivityManager

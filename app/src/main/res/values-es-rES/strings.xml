@@ -7,7 +7,9 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
+    <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde NS</string>
     <string name="nav_resetdb">Restablecer las bases de datos</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
@@ -1364,4 +1366,9 @@
     <string name="close">Cerrar</string>
     <string name="increasingmaxbasal">Aumentar el valor basal máximo porque el ajuste es inferior a tu base máxima en el perfil</string>
     <string name="smscommunicator_messagebody">El cuerpo del mensaje es inválido</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="boluswizard">Asistente Bolus</string>
+    <string name="unit_minute_short">min</string>
 </resources>

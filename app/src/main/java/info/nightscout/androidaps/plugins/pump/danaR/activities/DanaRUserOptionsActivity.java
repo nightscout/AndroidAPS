@@ -51,9 +51,9 @@ public class DanaRUserOptionsActivity extends NoSplashActivity {
     NumberPicker lowReservoir;
     Button saveToPumpButton;
     // This is for Dana pumps only
-    boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
-    boolean isDanaR = MainApp.getSpecificPlugin(DanaRPlugin.class) != null && MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PUMP);
-    boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
+    boolean isRS = DanaRSPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    boolean isDanaR = DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    boolean isDanaRv2 = DanaRv2Plugin.getPlugin().isEnabled(PluginType.PUMP);
 
     @Override
     protected synchronized void onResume() {

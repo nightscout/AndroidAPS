@@ -116,6 +116,7 @@
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Onderwerp: volgen op afstand</string>
     <string name="nsclient_howcanyou">Hoe kun je AAPS van je kind op afstand volgen?</string>
+    <string name="nsclient_nightscout">Met behulp van een Nightscout site.</string>
     <string name="nsclient_dexcomfollow">Dexcom volgapp als u de originele Dexcom app gebruikt (alleen BG).</string>
     <string name="nsclient_dexcomfollowxdrip">Dexcom Volg-app als u gebruik maakt van de xDrip app.</string>
     <string name="nsclient_xdripfollower">xDrip app in volg-modus.</string>
@@ -130,4 +131,36 @@
     <string name="isf_profile">Het wijzigen van de ISF-waarde in uw profiel is voldoende om de wijziging toe te passen.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/FAQ.html#insuline-gevoeligheids-factor-insulin-sensitivity-factor-ISF-mmol-l-E-of-mg-dl-E</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Profielen.html</string>
+    <string name="ic_label">Onderwerp: De KH ratio</string>
+    <string name="ic_increasingvalue">Hogere KH ratios leiden tot minder insuline afgifte voor een bepaalde hoeveelheid koolhydraten.</string>
+    <string name="ic_decreasingvalue">Lagere KH ratios leiden tot minder insuline afgifte voor een bepaalde hoeveelheid koolhydraten.</string>
+    <string name="ic_noeffect">Als je 0 COB hebt zal het veranderen van KH ratio leiden tot een andere hoeveelheid insuline om jouw BG te corrigeren.</string>
+    <string name="ic_different">KH ratio zal anders zijn als je brood-eenheid telt als 10g of 12g.</string>
+    <string name="ic_meaning">KH ratio betekent: Hoeveel brood-eenheden gebruik je voor 1U insuline.</string>
+    <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/FAQ.html#Koolhydraat-ratio-KH-g-E</string>
+    <string name="profileswitch_label">Onderwerp: Profiel wissels</string>
+    <string name="profileswitch_pctwillchange"> Bij het opgeven van 90% in je profiel wissel…</string>
+    <string name="profileswitch_basalhigher">Basalen zullen 10% hoger zijn.</string>
+    <string name="profileswitch_basallower">Basalen zullen 10% lager zijn.</string>
+    <string name="profileswitch_ichigher">De KH ratio wordt 10% hoger.</string>
+    <string name="profileswitch_iclower">De KH ratio wordt 10% hoger.</string>
+    <string name="profileswitch_isfhigher">ISF-waarde wordt 10% hoger.</string>
+    <string name="profileswitch_isflower">ISF-waarde wordt 10% lager.</string>
+    <string name="profileswitch_overall">In totaal zul je ongeveer 10% minder insuline krijgen.</string>
+    <string name="profileswitch_targethigher">Doel zal 10% hoger zijn.</string>
+    <string name="profileswitch_targetlower">Doel zal 10% lager zijn.</string>
+    <string name="profileswitch_targetbottom">Alleen de onderste target zal 10% lager zijn.</string>
+    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Profiles.html?highlight=profilewitch#profiel-wissel</string>
+    <string name="profileswitchtime_iwant">Als u 1 uur eerder dan normaal wakker wordt, hoe moet u dan AAPS van deze wijziging in uw schema op de hoogte stellen?</string>
+    <string name="profileswitchtime_1">Voer een profielwijziging uit met een tijdverschuiving van 1</string>
+    <string name="profileswitchtime__1">Voer een profiel wissel uit met een tijdverschuiving van -1</string>
+    <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Profiles.html?highlight=profilewitch#tijd-verschuiving</string>
+    <string name="profileswitchtime_60">Voer een profiel wissel uit met een tijdverschuiving van 60</string>
+    <string name="profileswitchtime__60">Voer een profiel wissel uit met een tijdverschuiving van -60</string>
+    <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Module/module.html#goed-individueel-doserings-algoritme-voor-jouw-diabetesbehandeling</string>
+    <string name="basalhelp_label">Onderwerp: Hulp met basaal waarden</string>
+    <string name="basalhelp_where">Waar je terecht kunt voor hulp met basaal waarden etc.</string>
+    <string name="basalhelp_diabetesteam">Jouw behandelaars</string>
+    <string name="basalhelp_google">Google</string>
+    <string name="basalhelp_facebook">Facebook</string>
 </resources>
