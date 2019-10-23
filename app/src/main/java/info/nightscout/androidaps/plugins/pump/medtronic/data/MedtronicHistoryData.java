@@ -77,6 +77,8 @@ public class MedtronicHistoryData {
 
     private long lastIdUsed = 0;
 
+    public static boolean doubleBolusDebug = true;
+
 
     public MedtronicHistoryData() {
         this.allHistory = new ArrayList<>();
@@ -517,18 +519,23 @@ public class MedtronicHistoryData {
 
         long oldestTimestamp = getOldestTimestamp(entryList);
 
+        Gson gson = MedtronicUtil.getGsonInstance();
+
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.Bolus);
 
-//        LOG.debug(processHistoryRecord.getDescription() + " List (before filter): {}, FromDb={}", gsonPretty.toJson(entryList),
-//                gsonPretty.toJson(entriesFromHistory));
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: List (before filter): {}, FromDb={}", gson.toJson(entryList),
+                    gson.toJson(entriesFromHistory));
 
         filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
-        if (entryList.isEmpty())
+        if (entryList.isEmpty()) {
             return;
+        }
 
-//        LOG.debug(processHistoryRecord.getDescription() + " List (after filter): {}, FromDb={}", gsonPretty.toJson(entryList),
-//                gsonPretty.toJson(entriesFromHistory));
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
+                    gson.toJson(entriesFromHistory));
 
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
@@ -681,12 +688,11 @@ public class MedtronicHistoryData {
 
     /**
      * findDbEntry - finds Db entries in database, while theoretically this should have same dateTime they
-     *   don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
-     *   is no treatment at all. For now we look fro tratment that was from 0s - 1m59s within pump entry.
+     * don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
+     * is no treatment at all. For now we look fro tratment that was from 0s - 1m59s within pump entry.
      *
-     * @param treatment Pump Entry
+     * @param treatment          Pump Entry
      * @param entriesFromHistory entries from history
-     *
      * @return DbObject from AAPS (if found)
      */
     private DbObjectBase findDbEntry(PumpHistoryEntry treatment, List<? extends DbObjectBase> entriesFromHistory) {
@@ -784,7 +790,10 @@ public class MedtronicHistoryData {
 
         BolusDTO bolusDTO = (BolusDTO) bolus.getDecodedData().get("Object");
 
+
         if (treatment == null) {
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addBolus(tretament==null): Bolus={}", bolusDTO);
 
             switch (bolusDTO.getBolusType()) {
                 case Normal: {
@@ -796,6 +805,9 @@ public class MedtronicHistoryData {
                     detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
 
                     addCarbsFromEstimate(detailedBolusInfo, bolus);
+
+                    if (doubleBolusDebug)
+                        LOG.debug("DoubleBolusDebug: addBolus(tretament==null): DetailedBolusInfo={}", detailedBolusInfo);
 
                     boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
@@ -861,6 +873,9 @@ public class MedtronicHistoryData {
         if (bolus.containsDecodedData("Estimate")) {
 
             BolusWizardDTO bolusWizard = (BolusWizardDTO) bolus.getDecodedData().get("Estimate");
+
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addCarbsFromEstimate: Bolus={}, BolusWizardDTO={}", bolus, bolusWizard);
 
             detailedBolusInfo.carbs = bolusWizard.carbs;
         }
@@ -1212,21 +1227,25 @@ public class MedtronicHistoryData {
 
         //LocalDateTime oldestEntryTime = null;
 
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: getOldestTimestamp. Oldest entry found: time={}, object={}", dt, currentTreatment);
+
         try {
 
             GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(dt);
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: getOldestTimestamp. oldestEntryTime: {}", DateTimeUtil.toString(oldestEntryTime));
             oldestEntryTime.add(Calendar.MINUTE, -2);
+
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: getOldestTimestamp. oldestEntryTime (-2m): {}, timeInMillis={}", DateTimeUtil.toString(oldestEntryTime), oldestEntryTime.getTimeInMillis());
 
             return oldestEntryTime.getTimeInMillis();
 
-//            if (this.pumpTime.timeDifference < 0) {
-//                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
-//            }
         } catch (Exception ex) {
-            LOG.error("Problem decoding date from last record: {}" + currentTreatment);
+            LOG.error("Problem decoding date from last record: {}", currentTreatment);
             return 8; // default return of 6 minutes
         }
-
 
     }
 
