@@ -249,7 +249,7 @@ public class DanaRSService extends Service {
 
     public PumpEnactResult loadEvents() {
 
-        if (!MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
+        if (!DanaRSPlugin.getPlugin().isInitialized()) {
             PumpEnactResult result = new PumpEnactResult().success(false);
             result.comment = "pump not initialized";
             return result;

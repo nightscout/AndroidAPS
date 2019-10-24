@@ -271,7 +271,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="glucosetype_finger">Doigt</string>
     <string name="glucosetype_sensor">Capteur</string>
     <string name="manual">Manuel</string>
-    <string name="careportal_temporarytarget">Cible temporaire</string>
+    <string name="careportal_temporarytarget">Cible temp.</string>
     <string name="careportal_temporarytargetcancel">Annulation Cible Temporaire</string>
     <string name="danarprofile">Paramètres du profil DanaR</string>
     <string name="danarprofile_dia">Durée d\'Action [h] </string>
@@ -772,13 +772,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_error_bolus_verification_failed">L\'administration de bolus et la vérification de l\'historique de la pompe ont échoué. Vérifiez la pompe manuellement. Si un bolus a été administré, il sera ajouté aux traitements au cours de la prochaine connexion avec la pompe.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Pas assez d\'insuline dans le réservoir pour le bolus</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
-    <string name="insightpump_shortname">Vue</string>
+    <string name="insightpump_shortname">AC-I</string>
     <string name="ago">passé(e)s</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="enablesmbalways">Activer en permanence les SMB</string>
     <string name="enablesmbalways_summary">Activer toujours SMB de manière autonome pour les bolus. Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbaftercarbs">Activer SMB après ingestion de glucides</string>
-    <string name="enablesmbaftercarbs_summary">Activer SMB pendant 6h après ingestion de glucides, même s’il y a 0 GI (Glucides Actifs). Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
+    <string name="enablesmbaftercarbs_summary">Activer SMB pendant 6h après ingestion de glucides, même s’il y a 0 GA (Glucides Actifs). Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbwithcob">Activer SMB avec les glucides</string>
     <string name="enablesmbwithcob_summary">Activer SMB tant que des Glucides sont actifs.</string>
     <string name="enablesmbwithtemptarget">Activer SMB avec les cibles temporaires</string>

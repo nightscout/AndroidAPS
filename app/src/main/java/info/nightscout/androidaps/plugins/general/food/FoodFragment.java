@@ -122,8 +122,7 @@ public class FoodFragment extends Fragment {
             }
         });
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp
-                .getSpecificPlugin(FoodPlugin.class).getService().getFoodData());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(FoodPlugin.getPlugin().getService().getFoodData());
         recyclerView.setAdapter(adapter);
 
         loadData();
@@ -151,7 +150,7 @@ public class FoodFragment extends Fragment {
     }
 
     void loadData() {
-        unfiltered = MainApp.getSpecificPlugin(FoodPlugin.class).getService().getFoodData();
+        unfiltered = FoodPlugin.getPlugin().getService().getFoodData();
     }
 
     void fillCategories() {
@@ -297,7 +296,7 @@ public class FoodFragment extends Fragment {
                                 if (_id != null && !_id.equals("")) {
                                     NSUpload.removeFoodFromNS(_id);
                                 }
-                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().delete(food);
+                                FoodPlugin.getPlugin().getService().delete(food);
                             }
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
