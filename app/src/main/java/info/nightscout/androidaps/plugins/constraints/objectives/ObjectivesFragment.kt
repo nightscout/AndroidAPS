@@ -210,9 +210,9 @@ class ObjectivesFragment : Fragment() {
                 NetworkChangeReceiver.fetch()
                 if (objectives_fake.isChecked) {
                     objective.accomplishedOn = DateUtil.now()
-                    notifyDataSetChanged()
                     scrollToCurrentObjective()
                     startUpdateTimer()
+                    RxBus.send(EventObjectivesUpdateGui())
                 } else
                     SntpClient.ntpTime(object : SntpClient.Callback() {
                         override fun run() {
@@ -224,9 +224,9 @@ class ObjectivesFragment : Fragment() {
                                 } else if (success) {
                                     if (objective.isCompleted(time)) {
                                         objective.accomplishedOn = time
-                                        notifyDataSetChanged()
                                         scrollToCurrentObjective()
                                         startUpdateTimer()
+                                        RxBus.send(EventObjectivesUpdateGui())
                                     } else {
                                         ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
                                     }
@@ -244,9 +244,9 @@ class ObjectivesFragment : Fragment() {
                     override fun run() {
                         if (objectives_fake.isChecked) {
                             objective.startedOn = time
-                            notifyDataSetChanged()
                             scrollToCurrentObjective()
                             startUpdateTimer()
+                            RxBus.send(EventObjectivesUpdateGui())
                         } else
                             activity?.runOnUiThread {
                                 holder.start.visibility = View.VISIBLE
@@ -255,9 +255,9 @@ class ObjectivesFragment : Fragment() {
                                     ToastUtils.showToastInUiThread(context, R.string.notconnected)
                                 } else if (success) {
                                     objective.startedOn = time
-                                    notifyDataSetChanged()
                                     scrollToCurrentObjective()
                                     startUpdateTimer()
+                                    RxBus.send(EventObjectivesUpdateGui())
                                 } else {
                                     ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
                                 }
@@ -272,8 +272,8 @@ class ObjectivesFragment : Fragment() {
                     val prevObj = ObjectivesPlugin.objectives[position - 1]
                     prevObj.accomplishedOn = 0
                 }
-                notifyDataSetChanged()
                 scrollToCurrentObjective()
+                RxBus.send(EventObjectivesUpdateGui())
             }
             if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted) {
                 // generate random request code if none exists
@@ -287,7 +287,7 @@ class ObjectivesFragment : Fragment() {
                 holder.enterButton.setOnClickListener {
                     val input = holder.input.text.toString()
                     objective.specialAction(activity, input)
-                    notifyDataSetChanged()
+                    RxBus.send(EventObjectivesUpdateGui())
                 }
             } else {
                 holder.enterButton.visibility = View.GONE
