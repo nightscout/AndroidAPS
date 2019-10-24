@@ -51,7 +51,6 @@ class ObjectivesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         objectives_recyclerview.layoutManager = LinearLayoutManager(view.context)
         objectives_recyclerview.adapter = objectivesAdapter
         objectives_fake.setOnClickListener { updateGUI() }
@@ -208,15 +207,16 @@ class ObjectivesFragment : Fragment() {
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
                 holder.verify.visibility = View.INVISIBLE
+                NetworkChangeReceiver.fetch()
                 SntpClient.ntpTime(object : SntpClient.Callback() {
                     override fun run() {
                         activity?.runOnUiThread {
                             holder.verify.visibility = View.VISIBLE
                             log.debug("NTP time: $time System time: ${DateUtil.now()}")
-                            if (!networkConnected) {
+                            if (!networkConnected && !objectives_fake.isChecked) {
                                 ToastUtils.showToastInUiThread(context, R.string.notconnected)
                             } else if (success) {
-                                if (objective.isCompleted(time)) {
+                                if (objective.isCompleted(time) || objectives_fake.isChecked) {
                                     objective.accomplishedOn = time
                                     notifyDataSetChanged()
                                     scrollToCurrentObjective()
@@ -233,12 +233,13 @@ class ObjectivesFragment : Fragment() {
             }
             holder.start.setOnClickListener {
                 holder.start.visibility = View.INVISIBLE
+                NetworkChangeReceiver.fetch()
                 SntpClient.ntpTime(object : SntpClient.Callback() {
                     override fun run() {
                         activity?.runOnUiThread {
                             holder.start.visibility = View.VISIBLE
                             log.debug("NTP time: $time System time: ${DateUtil.now()}")
-                            if (!networkConnected) {
+                            if (!networkConnected && !objectives_fake.isChecked) {
                                 ToastUtils.showToastInUiThread(context, R.string.notconnected)
                             } else if (success) {
                                 objective.startedOn = time
