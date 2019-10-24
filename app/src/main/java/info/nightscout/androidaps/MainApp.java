@@ -191,9 +191,9 @@ public class MainApp extends Application {
             pluginsList.add(TreatmentsPlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(SafetyPlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(VersionCheckerPlugin.INSTANCE);
-            if (!Config.NSCLIENT) pluginsList.add(StorageConstraintPlugin.getPlugin());
-            if (!Config.NSCLIENT) pluginsList.add(SignatureVerifierPlugin.getPlugin());
-            if (!Config.APS) pluginsList.add(ObjectivesPlugin.INSTANCE);
+            if (Config.APS) pluginsList.add(StorageConstraintPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(SignatureVerifierPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(ObjectivesPlugin.INSTANCE);
             pluginsList.add(SourceXdripPlugin.getPlugin());
             pluginsList.add(SourceNSClientPlugin.getPlugin());
             pluginsList.add(SourceMM640gPlugin.getPlugin());
