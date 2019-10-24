@@ -208,48 +208,60 @@ class ObjectivesFragment : Fragment() {
             holder.verify.setOnClickListener {
                 holder.verify.visibility = View.INVISIBLE
                 NetworkChangeReceiver.fetch()
-                SntpClient.ntpTime(object : SntpClient.Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread {
-                            holder.verify.visibility = View.VISIBLE
-                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
-                            if (!networkConnected && !objectives_fake.isChecked) {
-                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
-                            } else if (success) {
-                                if (objective.isCompleted(time) || objectives_fake.isChecked) {
-                                    objective.accomplishedOn = time
-                                    notifyDataSetChanged()
-                                    scrollToCurrentObjective()
-                                    startUpdateTimer()
+                if (objectives_fake.isChecked) {
+                    objective.accomplishedOn = DateUtil.now()
+                    notifyDataSetChanged()
+                    scrollToCurrentObjective()
+                    startUpdateTimer()
+                } else
+                    SntpClient.ntpTime(object : SntpClient.Callback() {
+                        override fun run() {
+                            activity?.runOnUiThread {
+                                holder.verify.visibility = View.VISIBLE
+                                log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                if (!networkConnected) {
+                                    ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                                } else if (success) {
+                                    if (objective.isCompleted(time)) {
+                                        objective.accomplishedOn = time
+                                        notifyDataSetChanged()
+                                        scrollToCurrentObjective()
+                                        startUpdateTimer()
+                                    } else {
+                                        ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                    }
                                 } else {
-                                    ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                    ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
                                 }
-                            } else {
-                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
                             }
                         }
-                    }
-                }, NetworkChangeReceiver.isConnected())
+                    }, NetworkChangeReceiver.isConnected())
             }
             holder.start.setOnClickListener {
                 holder.start.visibility = View.INVISIBLE
                 NetworkChangeReceiver.fetch()
                 SntpClient.ntpTime(object : SntpClient.Callback() {
                     override fun run() {
-                        activity?.runOnUiThread {
-                            holder.start.visibility = View.VISIBLE
-                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
-                            if (!networkConnected && !objectives_fake.isChecked) {
-                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
-                            } else if (success) {
-                                objective.startedOn = time
-                                notifyDataSetChanged()
-                                scrollToCurrentObjective()
-                                startUpdateTimer()
-                            } else {
-                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                        if (objectives_fake.isChecked) {
+                            objective.startedOn = time
+                            notifyDataSetChanged()
+                            scrollToCurrentObjective()
+                            startUpdateTimer()
+                        } else
+                            activity?.runOnUiThread {
+                                holder.start.visibility = View.VISIBLE
+                                log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                if (!networkConnected) {
+                                    ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                                } else if (success) {
+                                    objective.startedOn = time
+                                    notifyDataSetChanged()
+                                    scrollToCurrentObjective()
+                                    startUpdateTimer()
+                                } else {
+                                    ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                                }
                             }
-                        }
                     }
                 }, NetworkChangeReceiver.isConnected())
             }
