@@ -121,7 +121,7 @@
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="result">Result</string>
-    <string name="result_insulin_carbs">Result: %1$s $2$s</string>
+    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
