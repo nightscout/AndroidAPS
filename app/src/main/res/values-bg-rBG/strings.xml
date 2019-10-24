@@ -1368,6 +1368,7 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
+    <string name="format_percent">%1$d %%</string>
     <string name="boluswizard">Болус калкулатор</string>
     <string name="unit_minute_short">мин</string>
 </resources>

@@ -1348,6 +1348,7 @@
     <string name="changengetoprofilename">Alterar perfil para %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Última ligação à bomba</string>
     <string name="automation_trigger_pump_last_connection_description">Última ligação à bomba [minutos atrás]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Última ligação à bomba %1$s %2$s min atrás</string>
     <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS para todos os números nas preferências</string>
     <string name="sendsmsactiontext">Enviar SMS com texto</string>
