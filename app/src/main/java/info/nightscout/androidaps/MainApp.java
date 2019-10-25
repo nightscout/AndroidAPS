@@ -35,7 +35,9 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin;
 import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin;
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
@@ -48,9 +50,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.AckAlarmRec
 import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessReceiver;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
-import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
@@ -88,6 +88,7 @@ import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.LocaleHelper;
 import io.fabric.sdk.android.Fabric;
 
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
@@ -124,6 +125,7 @@ public class MainApp extends Application {
         log.debug("onCreate");
         sInstance = this;
         sResources = getResources();
+        LocaleHelper.INSTANCE.update(this);
         sConstraintsChecker = new ConstraintChecker();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 

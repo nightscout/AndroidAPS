@@ -78,7 +78,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Iconify.with(new FontAwesomeModule());
-        LocaleHelper.onCreate(this, "en");
+        LocaleHelper.INSTANCE.update(getApplicationContext());
 
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -117,24 +117,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
             VersionCheckerUtilsKt.triggerCheckVersion();
 
         FabricPrivacy.setUserStats();
-    }
-
-    private void checkPluginPreferences(ViewPager viewPager) {
-        if (pluginPreferencesMenuItem == null) return;
-        if (((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem()).getPreferencesId() != -1)
-            pluginPreferencesMenuItem.setEnabled(true);
-        else pluginPreferencesMenuItem.setEnabled(false);
-    }
-
-    @Override
-    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState, persistentState);
-        actionBarDrawerToggle.syncState();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         setupTabs();
         setupViews();
@@ -143,8 +125,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .toObservable(EventRebuildTabs.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    String lang = SP.getString(R.string.key_language, "en");
-                    LocaleHelper.setLocale(getApplicationContext(), lang);
+                    LocaleHelper.INSTANCE.update(getApplicationContext());
                     if (event.getRecreate()) {
                         recreate();
                     } else {
@@ -175,9 +156,22 @@ public class MainActivity extends NoSplashAppCompatActivity {
         }
     }
 
+    private void checkPluginPreferences(ViewPager viewPager) {
+        if (pluginPreferencesMenuItem == null) return;
+        if (((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem()).getPreferencesId() != -1)
+            pluginPreferencesMenuItem.setEnabled(true);
+        else pluginPreferencesMenuItem.setEnabled(false);
+    }
+
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         disposable.clear();
     }
 

@@ -17,7 +17,7 @@
     <string name="lt_lang" translatable="false">Lithuanian</string>
     <string name="pl_lang" translatable="false">Polish</string>
     <string name="pt_lang" translatable="false">Portuguese</string>
-<!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
+    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
     <string name="ro_lang" translatable="false">Romanian</string>
     <string name="ru_lang" translatable="false">Russian</string>
     <string name="sk_lang" translatable="false">Slovak</string>
