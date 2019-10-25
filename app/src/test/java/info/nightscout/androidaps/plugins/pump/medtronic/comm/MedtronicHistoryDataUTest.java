@@ -3,15 +3,12 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 import android.util.Log;
 
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.util.List;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
@@ -113,7 +110,7 @@ public class MedtronicHistoryDataUTest {
     }
 
 
-    @Test
+    // @Test
     public void testJRoth_2111() throws Exception {
 
         byte[] historyPageData = ByteUtil
@@ -133,7 +130,6 @@ public class MedtronicHistoryDataUTest {
             Log.d("MedtronicHistoryDataUTest", pumpHistoryEntry.toString());
         }
     }
-
 
 
 }
