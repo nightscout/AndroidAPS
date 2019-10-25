@@ -74,14 +74,11 @@ class AutomationFragment : Fragment() {
 
     @Synchronized
     private fun updateGui() {
-        if (eventListAdapter == null) return
         eventListAdapter?.notifyDataSetChanged()
         val sb = StringBuilder()
-        for (l in AutomationPlugin.executionLog.reversed()) {
-            sb.append(l)
-            sb.append("\n")
-        }
-        automation_logView.text = sb.toString()
+        for (l in AutomationPlugin.executionLog.reversed())
+            sb.append(l).append("\n")
+        automation_logView?.text = sb.toString()
     }
 
 }

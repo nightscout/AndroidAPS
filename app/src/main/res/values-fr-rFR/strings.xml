@@ -426,13 +426,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BOUCLE</string>
-    <string name="simpleprofile_shortname">SP</string>
+    <string name="simpleprofile_shortname">P.S.</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">LP</string>
+    <string name="localprofile_shortname">P.L.</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="overview_shortname">ACCUEIL</string>
     <string name="virtualpump_shortname">POMPEV</string>
-    <string name="profileviewer_shortname">PROFIL NS</string>
+    <string name="profileviewer_shortname">P.NS</string>
     <string name="treatments_shortname">TRAIT</string>
     <string name="careportal_shortname">CP</string>
     <string name="objectives_shortname">OBJ</string>
@@ -1370,6 +1370,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Assistant Bolus</string>
     <string name="unit_minute_short">min</string>
 </resources>
