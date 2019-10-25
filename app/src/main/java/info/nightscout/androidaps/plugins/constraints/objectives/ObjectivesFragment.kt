@@ -240,14 +240,14 @@ class ObjectivesFragment : Fragment() {
             holder.start.setOnClickListener {
                 holder.start.visibility = View.INVISIBLE
                 NetworkChangeReceiver.fetch()
-                SntpClient.ntpTime(object : SntpClient.Callback() {
-                    override fun run() {
-                        if (objectives_fake.isChecked) {
-                            objective.startedOn = time
-                            scrollToCurrentObjective()
-                            startUpdateTimer()
-                            RxBus.send(EventObjectivesUpdateGui())
-                        } else
+                if (objectives_fake.isChecked) {
+                    objective.startedOn = DateUtil.now()
+                    scrollToCurrentObjective()
+                    startUpdateTimer()
+                    RxBus.send(EventObjectivesUpdateGui())
+                } else
+                    SntpClient.ntpTime(object : SntpClient.Callback() {
+                        override fun run() {
                             activity?.runOnUiThread {
                                 holder.start.visibility = View.VISIBLE
                                 log.debug("NTP time: $time System time: ${DateUtil.now()}")
@@ -262,8 +262,8 @@ class ObjectivesFragment : Fragment() {
                                     ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
                                 }
                             }
-                    }
-                }, NetworkChangeReceiver.isConnected())
+                        }
+                    }, NetworkChangeReceiver.isConnected())
             }
             holder.revert.setOnClickListener {
                 objective.accomplishedOn = 0
