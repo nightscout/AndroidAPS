@@ -317,6 +317,7 @@ public class MedtronicHistoryData {
                     pumpHistoryEntryType == PumpHistoryEntryType.BasalProfileStart || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Bolus || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Resume || //
+                    pumpHistoryEntryType == PumpHistoryEntryType.BatteryChange || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Prime);
 
             if (isLogEnabled())
@@ -359,6 +360,7 @@ public class MedtronicHistoryData {
                 PumpHistoryEntryType.Resume, //
                 PumpHistoryEntryType.Rewind, //
                 PumpHistoryEntryType.NoDeliveryAlarm, //
+                PumpHistoryEntryType.BatteryChange, //
                 PumpHistoryEntryType.BasalProfileStart);
 
         newAndAll2 = filterPumpSuspend(newAndAll2, 10);
