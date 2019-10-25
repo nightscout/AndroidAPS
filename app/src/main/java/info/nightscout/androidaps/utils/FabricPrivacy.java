@@ -124,7 +124,7 @@ public class FabricPrivacy {
                 .replace(".net/", ":");
 
         MainApp.getFirebaseAnalytics().setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled);
-        MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.getLanguage());
+        MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.INSTANCE.currentLanguage());
         MainApp.getFirebaseAnalytics().setUserProperty("Version", BuildConfig.VERSION);
         MainApp.getFirebaseAnalytics().setUserProperty("HEAD", BuildConfig.HEAD);
         MainApp.getFirebaseAnalytics().setUserProperty("Remote", remote);

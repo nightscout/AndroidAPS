@@ -51,7 +51,6 @@ class ObjectivesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         objectives_recyclerview.layoutManager = LinearLayoutManager(view.context)
         objectives_recyclerview.adapter = objectivesAdapter
         objectives_fake.setOnClickListener { updateGUI() }
@@ -208,47 +207,61 @@ class ObjectivesFragment : Fragment() {
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
                 holder.verify.visibility = View.INVISIBLE
-                SntpClient.ntpTime(object : SntpClient.Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread {
-                            holder.verify.visibility = View.VISIBLE
-                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
-                            if (!networkConnected) {
-                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
-                            } else if (success) {
-                                if (objective.isCompleted(time)) {
-                                    objective.accomplishedOn = time
-                                    notifyDataSetChanged()
-                                    scrollToCurrentObjective()
-                                    startUpdateTimer()
+                NetworkChangeReceiver.fetch()
+                if (objectives_fake.isChecked) {
+                    objective.accomplishedOn = DateUtil.now()
+                    scrollToCurrentObjective()
+                    startUpdateTimer()
+                    RxBus.send(EventObjectivesUpdateGui())
+                } else
+                    SntpClient.ntpTime(object : SntpClient.Callback() {
+                        override fun run() {
+                            activity?.runOnUiThread {
+                                holder.verify.visibility = View.VISIBLE
+                                log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                if (!networkConnected) {
+                                    ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                                } else if (success) {
+                                    if (objective.isCompleted(time)) {
+                                        objective.accomplishedOn = time
+                                        scrollToCurrentObjective()
+                                        startUpdateTimer()
+                                        RxBus.send(EventObjectivesUpdateGui())
+                                    } else {
+                                        ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                    }
                                 } else {
-                                    ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                    ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
                                 }
-                            } else {
-                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
                             }
                         }
-                    }
-                }, NetworkChangeReceiver.isConnected())
+                    }, NetworkChangeReceiver.isConnected())
             }
             holder.start.setOnClickListener {
                 holder.start.visibility = View.INVISIBLE
+                NetworkChangeReceiver.fetch()
                 SntpClient.ntpTime(object : SntpClient.Callback() {
                     override fun run() {
-                        activity?.runOnUiThread {
-                            holder.start.visibility = View.VISIBLE
-                            log.debug("NTP time: $time System time: ${DateUtil.now()}")
-                            if (!networkConnected) {
-                                ToastUtils.showToastInUiThread(context, R.string.notconnected)
-                            } else if (success) {
-                                objective.startedOn = time
-                                notifyDataSetChanged()
-                                scrollToCurrentObjective()
-                                startUpdateTimer()
-                            } else {
-                                ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                        if (objectives_fake.isChecked) {
+                            objective.startedOn = time
+                            scrollToCurrentObjective()
+                            startUpdateTimer()
+                            RxBus.send(EventObjectivesUpdateGui())
+                        } else
+                            activity?.runOnUiThread {
+                                holder.start.visibility = View.VISIBLE
+                                log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                if (!networkConnected) {
+                                    ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                                } else if (success) {
+                                    objective.startedOn = time
+                                    scrollToCurrentObjective()
+                                    startUpdateTimer()
+                                    RxBus.send(EventObjectivesUpdateGui())
+                                } else {
+                                    ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                                }
                             }
-                        }
                     }
                 }, NetworkChangeReceiver.isConnected())
             }
@@ -259,8 +272,8 @@ class ObjectivesFragment : Fragment() {
                     val prevObj = ObjectivesPlugin.objectives[position - 1]
                     prevObj.accomplishedOn = 0
                 }
-                notifyDataSetChanged()
                 scrollToCurrentObjective()
+                RxBus.send(EventObjectivesUpdateGui())
             }
             if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted) {
                 // generate random request code if none exists
@@ -274,7 +287,7 @@ class ObjectivesFragment : Fragment() {
                 holder.enterButton.setOnClickListener {
                     val input = holder.input.text.toString()
                     objective.specialAction(activity, input)
-                    notifyDataSetChanged()
+                    RxBus.send(EventObjectivesUpdateGui())
                 }
             } else {
                 holder.enterButton.visibility = View.GONE

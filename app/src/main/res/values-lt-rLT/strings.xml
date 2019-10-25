@@ -65,7 +65,7 @@
     <string name="nsprofileview_target_label">Tikslas</string>
     <string name="noprofileset">Nenustatytas profilis</string>
     <string name="treatments_insulin_label_string">Insulinas:</string>
-    <string name="treatments_carbs_label_string">Angliavandeniai:</string>
+    <string name="treatments_carbs_label_string">AV:</string>
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="sms_iob">AIO:</string>
     <string name="treatments_iobtotal_label_string">Visas AIO:</string>
@@ -76,10 +76,10 @@
     <string name="tempbasals_iob_label_string">AIO:</string>
     <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulinas</string>
-    <string name="treatments_newtreatment_carbsamount_label">Angliavandeniai</string>
+    <string name="treatments_newtreatment_carbsamount_label">AV</string>
     <string name="treatments_wizard_bg_label">KG</string>
     <string name="treatments_wizard_tt_label">LT</string>
-    <string name="treatments_wizard_carbs_label">Angliavandeniai</string>
+    <string name="treatments_wizard_carbs_label">AV</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
     <string name="insulin_unit_shortname">vv</string>
     <string name="treatments_wizard_bolusiob_label">Bolusų AIO</string>
@@ -158,7 +158,7 @@
     <string name="sms_bolus">Bolusas:</string>
     <string name="basal">Valandinė bazė</string>
     <string name="sms_basal">Valandinė bazė:</string>
-    <string name="carbs">Angliavandeniai</string>
+    <string name="carbs">AV</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="setextendedbolusquestion">Nustatyti naują ištęstą bolusą:</string>
     <string name="configbuilder_bgsource">KG šaltinis</string>
@@ -341,7 +341,7 @@
     <string name="quickwizard">Greitasis patarėjas</string>
     <string name="quickwizardsettings">Greitojo patarėjo nustatymai</string>
     <string name="overview_editquickwizard_buttontext">Mygtuko tekstas:</string>
-    <string name="overview_editquickwizard_carbs">Angliavandeniai:</string>
+    <string name="overview_editquickwizard_carbs">AV:</string>
     <string name="overview_editquickwizard_valid">Galioja:</string>
     <string name="overview_editquickwizardlistactivity_add">Pridėti</string>
     <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
@@ -787,7 +787,7 @@
     <string name="let_temp_basal_run">Paleisti laikinąją bazę</string>
     <string name="mute">Nutildyti</string>
     <string name="overview_insulin_label">Insulinas</string>
-    <string name="overview_carbs_label">Angliavandeniai</string>
+    <string name="overview_carbs_label">AV</string>
     <string name="overview_buttons_selection">Mygtukai</string>
     <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro G5 kalibravimo dialogą</string>
     <string name="show_cgm_button_summary">Atidaro xDrip+, o mygtukas ATGAL gražina į AAPS</string>
@@ -1369,6 +1369,7 @@
     <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Boluso patarėjas</string>
     <string name="unit_minute_short">min.</string>
 </resources>

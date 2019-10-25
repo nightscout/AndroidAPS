@@ -230,7 +230,7 @@ public abstract class Objective {
             return question;
         }
 
-        public List getOptions() {
+        public List<Objective.Option> getOptions() {
             return options;
         }
 

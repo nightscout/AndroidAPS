@@ -42,6 +42,7 @@ public class MedtronicConst {
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
         public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
         public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
+        public static final String LastPrime = StatsPrefix + "last_sent_prime";
     }
 
 }

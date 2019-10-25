@@ -162,5 +162,8 @@
     <string name="basalhelp_diabetesteam">Your diabetes team</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Other Medication</string>
+    <string name="other_medication_text">AAPS reduces BR to raise blood sugar. Drugs from the group of SGLT2 inhibitors (gliflozins) can prevent the expected increase in BG and thus may produce a dangerous insulin deficiency (DKA).
+\nCommon brand names are: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI hereby promise that I will not take such drugs when using AAPS or will deactivate the loop before using these drugs.</string>
 
 </resources>

@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -27,6 +30,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -46,6 +50,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 
@@ -59,6 +64,7 @@ import info.nightscout.androidaps.utils.SP;
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 
+// All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
 public class MedtronicHistoryData {
 
@@ -384,6 +390,22 @@ public class MedtronicHistoryData {
      */
     public void processNewHistoryData() {
 
+        // TODO: Fix db code
+        // Prime (for reseting autosense)
+        List<PumpHistoryEntry> primeRecords = getFilteredItems(PumpHistoryEntryType.Prime);
+
+        if (isLogEnabled())
+            LOG.debug("ProcessHistoryData: Prime [count={}, items={}]", primeRecords.size(), gson.toJson(primeRecords));
+
+        if (isCollectionNotEmpty(primeRecords)) {
+            try {
+                processPrime(primeRecords);
+            } catch (Exception ex) {
+                LOG.error("ProcessHistoryData: Error processing Prime entries: " + ex.getMessage(), ex);
+                throw ex;
+            }
+        }
+
         // TDD
         List<PumpHistoryEntry> tdds = getFilteredItems(PumpHistoryEntryType.EndResultTotals, getTDDType());
 
@@ -452,6 +474,49 @@ public class MedtronicHistoryData {
                 LOG.error("ProcessHistoryData: Error processing Suspends entries: " + ex.getMessage(), ex);
                 throw ex;
             }
+        }
+    }
+
+
+    private void processPrime(List<PumpHistoryEntry> primeRecords) {
+
+        long maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(new GregorianCalendar(), -30);
+
+        long lastPrimeRecord = 0L;
+
+        for (PumpHistoryEntry primeRecord : primeRecords) {
+
+            if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastPrimeRecord < primeRecord.atechDateTime) {
+                    lastPrimeRecord = primeRecord.atechDateTime;
+                }
+            }
+        }
+
+        if (lastPrimeRecord != 0L) {
+            long lastPrimeFromAAPS = SP.getLong(MedtronicConst.Statistics.LastPrime, 0L);
+
+            if (lastPrimeRecord != lastPrimeFromAAPS) {
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), CareportalEvent.SITECHANGE);
+
+                SP.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
+            }
+        }
+    }
+
+
+    private void uploadCareportalEvent(long date, String event) {
+        if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date) != null)
+            return;
+        try {
+            JSONObject data = new JSONObject();
+            String enteredBy = SP.getString("careportal_enteredby", "");
+            if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
+            data.put("created_at", DateUtil.toISOString(date));
+            data.put("eventType", event);
+            NSUpload.uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

@@ -21,8 +21,8 @@ import java.util.*
 object ObjectivesPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
-        .alwaysEnabled(!Config.NSCLIENT)
-        .showInList(!Config.NSCLIENT)
+        .alwaysEnabled(Config.APS)
+        .showInList(Config.APS)
         .pluginName(R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives)), ConstraintsInterface {
