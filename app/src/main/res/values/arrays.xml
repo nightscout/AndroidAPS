@@ -99,7 +99,7 @@
         <item>@string/use_gps_location</item>
     </string-array>
 
-   <string-array name="locationValues" translatable="false">
+    <string-array name="locationValues" translatable="false">
         <item>PASSIVE</item>
         <item>NETWORK</item>
         <item>GPS</item>
@@ -151,7 +151,7 @@
         <item>@string/medtronic_pump_frequency_worldwide</item>
     </string-array>
 
-   <string-array name="medtronicPumpFreqValues">
+    <string-array name="medtronicPumpFreqValues">
         <item>@string/key_medtronic_pump_frequency_us_ca</item>
         <item>@string/key_medtronic_pump_frequency_worldwide</item>
     </string-array>
@@ -165,6 +165,11 @@
     <string-array name="medtronicEncoding">
         <item>@string/medtronic_pump_encoding_4b6b_local</item>
         <item>@string/medtronic_pump_encoding_4b6b_rileylink</item>
+    </string-array>
+
+    <string-array name="onOff">
+        <item>@string/common_on</item>
+        <item>@string/common_off</item>
     </string-array>
 
     <string-array name="medtronicEncodingValues">

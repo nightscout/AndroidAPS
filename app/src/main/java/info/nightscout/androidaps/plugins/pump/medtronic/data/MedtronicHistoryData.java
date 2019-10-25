@@ -83,6 +83,11 @@ public class MedtronicHistoryData {
 
     private long lastIdUsed = 0;
 
+    /**
+     * Double bolus debug. We seem to have small problem with double Boluses (or sometimes also missing boluses
+     * from history. This flag turns on debugging for that (default is off=false)... Debuging is pretty detailed,
+     * so log files will get bigger.
+     */
     public static boolean doubleBolusDebug = true;
 
 
@@ -1289,8 +1294,6 @@ public class MedtronicHistoryData {
                 currentTreatment = treatment;
             }
         }
-
-        //LocalDateTime oldestEntryTime = null;
 
         if (doubleBolusDebug)
             LOG.debug("DoubleBolusDebug: getOldestTimestamp. Oldest entry found: time={}, object={}", dt, currentTreatment);

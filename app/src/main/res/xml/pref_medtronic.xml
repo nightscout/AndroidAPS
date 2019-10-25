@@ -61,6 +61,14 @@
             android:title="@string/medtronic_pump_encoding" />
 
         <ListPreference
+            android:defaultValue="@string/key_medtronic_pump_encoding_4b6b_rileylinkddddd"
+            android:entries="@array/medtronicEncoding"
+            android:entryValues="@array/medtronicEncodingValues"
+            android:key="@string/key_medtronic_encoding"
+            android:selectable="true"
+            android:title="@string/medtronic_bolus_debugging" />
+
+        <ListPreference
             android:defaultValue="@string/key_medtronic_pump_battery_no"
             android:entries="@array/medtronicBatteryType"
             android:entryValues="@array/medtronicBatteryTypeValues"
