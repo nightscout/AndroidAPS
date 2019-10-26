@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
 
-public class IobTotal {
+public class IobTotal implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(IobTotal.class);
 
     public double iob;
@@ -133,4 +135,52 @@ public class IobTotal {
         return json;
     }
 
+    // DataPoint interface
+
+    int color;
+
+    @Override
+    public double getX() {
+        return time;
+    }
+
+    @Override
+    public double getY() {
+        return iob;
+    }
+
+    @Override
+    public void setY(double y) {
+
+    }
+
+    @Override
+    public String getLabel() {
+        return null;
+    }
+
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.IOBPREDICTION;
+    }
+
+    @Override
+    public float getSize() {
+        return 0.5f;
+    }
+
+    @Override
+    public int getColor() {
+        return color;
+    }
+
+    public IobTotal setColor(int color) {
+        this.color = color;
+        return this;
+    }
 }

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.sensitivity;
 
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +134,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         if (L.isEnabled(L.AUTOSENS))
             log.debug("Using most recent " + deviationsArray.size() + " deviations");
         if (deviationsArray.size() < 96) {
-            int pad = Math.round((1 - deviationsArray.size() / 96) * 18);
+            int pad = (int) Math.round((1 - (double) deviationsArray.size() / 96) * 18);
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Adding " + pad + " more zero deviations");
             for (int d = 0; d < pad; d++) {
@@ -156,7 +156,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             log.debug("Records: " + index + "   " + pastSensitivity);
 
         Arrays.sort(deviations);
-
+        /* Not used in calculation
         for (double i = 0.9; i > 0.1; i = i - 0.01) {
             if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.01)) >= 0 && IobCobCalculatorPlugin.percentile(deviations, i) < 0) {
                 if (L.isEnabled(L.AUTOSENS))
@@ -164,9 +164,10 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             }
             if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.01)) > 0 && IobCobCalculatorPlugin.percentile(deviations, i) <= 0) {
                 if (L.isEnabled(L.AUTOSENS))
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (>50% = resistance)");
+                    log.debug(Math.round(100 * i) + "% of non-meal deviations positive (>50% = resistance)");
             }
         }
+        */
         double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
         double pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50);
 

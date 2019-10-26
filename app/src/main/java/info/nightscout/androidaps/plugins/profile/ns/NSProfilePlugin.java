@@ -2,7 +2,8 @@ package info.nightscout.androidaps.plugins.profile.ns;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,16 +12,16 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.utils.SP;
 
@@ -47,7 +48,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
                 .pluginName(R.string.nsprofile)
                 .shortName(R.string.profileviewer_shortname)
                 .alwaysEnabled(Config.NSCLIENT)
-                .alwayVisible(Config.NSCLIENT)
+                .alwaysVisible(Config.NSCLIENT)
                 .showInList(!Config.NSCLIENT)
                 .description(R.string.description_profile_nightscout)
         );
@@ -56,13 +57,12 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
+        super.onStop();
     }
 
     public void handleNewData(Intent intent) {
@@ -75,8 +75,8 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             profile = new ProfileStore(new JSONObject(profileString));
             storeNSProfile();
             if (isEnabled(PluginType.PROFILE)) {
-                MainApp.bus().post(new EventProfileStoreChanged());
-                MainApp.bus().post(new EventNSProfileUpdateGUI());
+                RxBus.INSTANCE.send(new EventProfileStoreChanged());
+                RxBus.INSTANCE.send(new EventNSProfileUpdateGUI());
             }
             if (L.isEnabled(L.PROFILE))
                 log.debug("Received profileStore: " + activeProfile + " " + profile);
@@ -108,8 +108,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             if (L.isEnabled(L.PROFILE))
                 log.debug("Stored profile not found");
             // force restart of nsclient to fetch profile
-            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+            RxBus.INSTANCE.send(new EventNSClientRestart());
         }
     }
 

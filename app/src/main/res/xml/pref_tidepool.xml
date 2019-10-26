@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="tidepool_upload_screen"
+        android:title="@string/tidepool">
+
+        <EditTextPreference
+            android:key="@string/key_tidepool_username"
+            android:summary="@string/summary_tidepool_username"
+            android:title="@string/title_tidepool_username" />
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="@string/key_tidepool_password"
+            android:summary="@string/summary_tidepool_password"
+            android:title="@string/title_tidepool_password" />
+        <Preference
+            android:key="@string/key_tidepool_test_login"
+            android:title="@string/title_tidepool_test_login" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_tidepool_upload_cgm"
+            android:title="@string/tidepool_upload_cgm" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_tidepool_upload_bolus"
+            android:title="@string/tidepool_upload_bolus" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_tidepool_upload_bg"
+            android:title="@string/tidepool_upload_bg" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_tidepool_upload_tbr"
+            android:title="@string/tidepool_upload_tbr" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/key_tidepool_upload_profile"
+            android:title="@string/tidepool_upload_profile" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="@string/key_tidepool_dev_servers"
+            android:summary="@string/summary_tidepool_dev_servers"
+            android:title="@string/title_tidepool_dev_servers" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_tidepool_only_while_charging"
+            android:summary="Upload data only when charging"
+            android:title="Only when charging" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_tidepool_only_while_unmetered"
+            android:summary="Upload data only when connected to an unmetered network like Wifi"
+            android:title="Only on Wifi" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
+

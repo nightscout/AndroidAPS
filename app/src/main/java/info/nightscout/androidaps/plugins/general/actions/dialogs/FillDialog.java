@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.general.actions.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -103,7 +103,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
         double bolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
         editInsulin = view.findViewById(R.id.fill_insulinamount);
-        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, textWatcher);
+        editInsulin.setParams(0d, 0d, maxInsulin, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, view.findViewById(R.id.ok), textWatcher);
 
 
         Button preset1Button = view.findViewById(R.id.fill_preset_button1);
@@ -184,7 +184,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                 confirmMessage.add("");
                 confirmMessage.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.colorCarbsButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + "</font>");
                 if (Math.abs(insulinAfterConstraints - insulin) > 0.01d)
-                    confirmMessage.add("<font color='" + MainApp.gc(R.color.low) + "'>" + MainApp.gs(R.string.bolusconstraintapplied) + "</font>");
+                    confirmMessage.add(MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), insulin, insulinAfterConstraints));
             }
 
             if (pumpSiteChangeCheckbox.isChecked())

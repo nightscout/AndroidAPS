@@ -6,5 +6,5 @@ public enum BasalProfile {
     PROFILE_2,
     PROFILE_3,
     PROFILE_4,
-    PROFILE_5;
+    PROFILE_5
 }

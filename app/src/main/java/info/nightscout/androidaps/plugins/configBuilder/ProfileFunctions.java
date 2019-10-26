@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.configBuilder;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +23,18 @@ import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ProfileFunctions {
     private static Logger log = LoggerFactory.getLogger(L.PROFILE);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static ProfileFunctions profileFunctions = null;
 
@@ -43,29 +48,30 @@ public class ProfileFunctions {
         ProfileFunctions.getInstance(); // register to bus at start
     }
 
-    ProfileFunctions() {
-        MainApp.bus().register(this);
-    }
-
-    @Subscribe
-    public void onProfileSwitch(EventProfileNeedsUpdate ignored) {
-        if (L.isEnabled(L.PROFILE))
-            log.debug("onProfileSwitch");
-        ConfigBuilderPlugin.getPlugin().getCommandQueue().setProfile(getProfile(), new Callback() {
-            @Override
-            public void run() {
-                if (!result.success) {
-                    Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                    i.putExtra("soundid", R.raw.boluserror);
-                    i.putExtra("status", result.comment);
-                    i.putExtra("title", MainApp.gs(R.string.failedupdatebasalprofile));
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    MainApp.instance().startActivity(i);
-                }
-                if (result.enacted)
-                    MainApp.bus().post(new EventNewBasalProfile());
-            }
-        });
+    private ProfileFunctions() {
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PROFILE))
+                        log.debug("onProfileSwitch");
+                    ConfigBuilderPlugin.getPlugin().getCommandQueue().setProfile(getProfile(), new Callback() {
+                        @Override
+                        public void run() {
+                            if (!result.success) {
+                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                                i.putExtra("soundid", R.raw.boluserror);
+                                i.putExtra("status", result.comment);
+                                i.putExtra("title", MainApp.gs(R.string.failedupdatebasalprofile));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                MainApp.instance().startActivity(i);
+                            }
+                            if (result.enacted)
+                                RxBus.INSTANCE.send(new EventNewBasalProfile());
+                        }
+                    });
+                }, FabricPrivacy::logException)
+        );
     }
 
     public String getProfileName() {
@@ -101,7 +107,8 @@ public class ProfileFunctions {
     }
 
     public boolean isProfileValid(String from) {
-        return getProfile() != null && getProfile().isValid(from);
+        Profile profile = getProfile();
+        return profile != null && profile.isValid(from);
     }
 
     @Nullable
@@ -159,6 +166,8 @@ public class ProfileFunctions {
     public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
         ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, System.currentTimeMillis());
         TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
+        if (percentage == 90 && duration == 10)
+            SP.putBoolean(R.string.key_objectiveuseprofileswitch, true);
     }
 
     public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {

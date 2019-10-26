@@ -1,197 +1,194 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".plugins.profile.local.LocalProfileFragment">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/invalidprofile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/invalidprofile"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/holo_red_light"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/linearBlockBackground"
+            android:layout_marginStart="10dp"
+            android:text="@string/units"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/localprofile_mgdl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mgdl" />
+
+            <RadioButton
+                android:id="@+id/localprofile_mmol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mmol" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/linearBlockBackground"
+            android:layout_marginStart="10dp"
+            android:text="@string/dia"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceSmall">
+
+            <!-- dummy to align with TimeListEdits added dynamically -->
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:minWidth="80dp"
+                android:visibility="invisible"/>
+
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/localprofile_dia"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- dummy to align with TimeListEdits added dynamically -->
+            <ImageView
+                android:id="@+id/timelistedit_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/add"
+                android:visibility="invisible"/>
+
+            <!-- dummy to align with TimeListEdits added dynamically -->
+            <ImageView
+                android:id="@+id/timelistedit_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/remove"
+                android:visibility="invisible"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/localprofile_ic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/localprofile_isf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/localprofile_basal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/localprofile_target"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/invalidprofile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/invalidprofile"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/holo_red_light"
-                android:textStyle="bold" />
+        </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/linearBlockBackground"
-                android:layout_marginLeft="10px"
-                android:text="@string/units"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+        <Button
+            android:id="@+id/localprofile_profileswitch"
+            style="?android:attr/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/activate_profile"
+            android:drawableStart="@drawable/icon_local_activate" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/localprofile_mgdl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mgdl" />
-
-                <RadioButton
-                    android:id="@+id/localprofile_mmol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mmol" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/linearBlockBackground"
-                android:layout_marginLeft="10px"
-                android:text="@string/dia"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall">
-
-                <!-- dummy to align with TimeListEdits added dynamically -->
-                <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="10dp"
-                    android:minWidth="80dp"
-                    android:visibility="invisible"/>
-
-                <info.nightscout.androidaps.utils.NumberPicker
-                    android:id="@+id/localprofile_dia"
-                    android:layout_width="130dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="10dp"/>
-
-                <!-- dummy to align with TimeListEdits added dynamically -->
-                <ImageView
-                    android:id="@+id/timelistedit_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/add"
-                    android:visibility="invisible"/>
-
-                <!-- dummy to align with TimeListEdits added dynamically -->
-                <ImageView
-                    android:id="@+id/timelistedit_remove"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/remove"
-                    android:visibility="invisible"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/localprofile_ic"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
-
-            <LinearLayout
-                android:id="@+id/localprofile_isf"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
-
-            <LinearLayout
-                android:id="@+id/localprofile_basal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" />
-
-            <LinearLayout
-                android:id="@+id/localprofile_target"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical">
-
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/localprofile_profileswitch"
+                android:id="@+id/localprofile_reset"
                 style="?android:attr/buttonStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="3dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="3dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
                 android:layout_weight="1"
+                android:drawableStart="@drawable/icon_local_reset"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="@string/activate_profile"
-                android:drawableLeft="@drawable/icon_local_activate" />
+                android:text="@string/reset" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/localprofile_save"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/localprofile_reset"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/reset"
-                    android:drawableLeft="@drawable/icon_local_reset" />
-
-                <Button
-                    android:id="@+id/localprofile_save"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/save"
-                    android:drawableLeft="@drawable/icon_local_save" />
-            </LinearLayout>
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/icon_local_save"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/save" />
         </LinearLayout>
-    </ScrollView>
+
+    </LinearLayout>
+
+</ScrollView>
 
 
-</FrameLayout>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -18,16 +19,10 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, SP.class, L.class, DanaRv2Plugin.class, DanaRPlugin.class})
+@PrepareForTest({MainApp.class, SP.class, L.class})
 public class MsgSetHistoryEntry_v2Test {
     @Test
     public void runTest() {
-        AAPSMocker.mockMainApp();
-        AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockSP();
-        AAPSMocker.mockL();
-        AAPSMocker.mockBus();
-        AAPSMocker.mockDanaRPlugin();
 
         MsgSetHistoryEntry_v2 initializerTest = new MsgSetHistoryEntry_v2((byte) 1, System.currentTimeMillis(), 1, 0);
         MsgSetHistoryEntry_v2 packet = new MsgSetHistoryEntry_v2();
@@ -57,4 +52,11 @@ public class MsgSetHistoryEntry_v2Test {
         return ret;
     }
 
+    @Before
+    public void mock() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+        AAPSMocker.mockL();
+    }
 }

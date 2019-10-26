@@ -13,10 +13,11 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
@@ -68,7 +69,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         if (!MainApp.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 Notification n = new Notification(Notification.TOAST_ALARM, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
-                MainApp.bus().post(new EventNewNotification(n));
+                RxBus.INSTANCE.send(new EventNewNotification(n));
             }
             value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }
@@ -125,6 +126,10 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         if (Config.APS) {
             double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+            if (maxBasal < profile.getMaxDailyBasal()) {
+                maxBasal = profile.getMaxDailyBasal();
+                absoluteRate.addReason(MainApp.gs(R.string.increasingmaxbasal), this);
+            }
             absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
@@ -196,7 +201,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump != null) {
-            double rounded = Round.roundTo(insulin.value(), pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value()));
+            double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
             insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
         }
         return insulin;
@@ -213,7 +218,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
         if (pump != null) {
-            double rounded = Round.roundTo(insulin.value(), pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value()));
+            double rounded = pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value());
             insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
         }
         return insulin;

@@ -1,4 +1,30 @@
-﻿<resources>
+<resources>
+    <string name="en_lang" translatable="false">English</string>
+    <string name="cs_lang" translatable="false">Czech</string>
+    <string name="af_lang" translatable="false">Afrikaans</string>
+    <string name="bg_lang" translatable="false">Bulgarian</string>
+    <string name="nl_lang" translatable="false">Dutch</string>
+    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
+    <string name="fr_lang" translatable="false">French</string>
+    <string name="de_lang" translatable="false">German</string>
+    <string name="el_lang" translatable="false">Greek</string>
+    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
+    <string name="zh_lang" translatable="false">Chinese</string>
+    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
+    <string name="it_lang" translatable="false">Italian</string>
+    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="ko_lang" translatable="false">Korean</string>
+    <string name="lt_lang" translatable="false">Lithuanian</string>
+    <string name="pl_lang" translatable="false">Polish</string>
+    <string name="pt_lang" translatable="false">Portuguese</string>
+    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
+    <string name="ro_lang" translatable="false">Romanian</string>
+    <string name="ru_lang" translatable="false">Russian</string>
+    <string name="sk_lang" translatable="false">Slovak</string>
+    <string name="es_lang" translatable="false">Spanish</string>
+    <string name="sv_lang" translatable="false">Swedish</string>
+    <string name="tr_lang" translatable="false">Turkish</string>
+
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -12,6 +38,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth device</string>
     <string name="ns_sync_use_absolute_title">Always use basal absolute values</string>
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
 
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_careportal">Enter advanced log book entries.</string>
@@ -28,7 +55,7 @@
     <string name="description_smb">Most recent algorithm for advanced users</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
-    <string name="description_profile_local">Define a profile which is offline available.</string>
+    <string name="description_profile_local">Define a profile which is available offline.</string>
     <string name="description_profile_nightscout">Provides the profile you have defined in Nightscout</string>
     <string name="description_profile_simple">Define a profile with only one time block.</string>
     <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed</string>
@@ -36,15 +63,12 @@
     <string name="description_pump_dana_r_korean">Pump integration for domestic DANA Diabecare R pumps</string>
     <string name="description_pump_dana_r_v2">Pump integration for DANA Diabecare R pumps with upgraded firmware</string>
     <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS pumps</string>
-    <string name="description_pump_insight">Pump integration for Accu-Chek Insight pumps, requires having SightRemote installed</string>
     <string name="description_pump_mdi">Pump integration for people who do multiple daily injections for their diabetes therapy</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
     <string name="description_sensitivity_oref0">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences.</string>
     <string name="description_sensitivity_oref1">Sensitivity is calculated from 8h data in the past and carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
-    <string name="description_source_dexcom_g5">Receive BG values from the patched Dexcom G5 app.</string>
-    <string name="description_source_dexcom_g6">Receive BG values from the patched Dexcom G6 app.</string>
     <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
     <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
@@ -55,9 +79,6 @@
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
 
-    <string name="objectives_button_back">Back</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Verify</string>
     <string name="nsprofileview_units_label">Units</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -69,7 +90,6 @@
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="treatments_activity_string">Activity:</string>
     <string name="treatments_iobtotal_label_string">Total IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Total IOB activity:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
@@ -101,6 +121,7 @@
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="result">Result</string>
+    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
@@ -182,13 +203,7 @@
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
-    <string name="objectives_bgavailableinns">BG available in NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
-    <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
-    <string name="af_lang" translatable="false">Afrikaans</string>
-    <string name="cs_lang" translatable="false">Czech</string>
-    <string name="en_lang" translatable="false">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
@@ -231,7 +246,7 @@
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="missing">Missing</string>
+    <string name="missing_carbs">Missing %1$dg</string>
     <string name="exported">Preferences exported</string>
     <string name="export_to">Export settings to</string>
     <string name="import_from">Import settings from</string>
@@ -239,25 +254,10 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
-    <string name="nl_lang" translatable="false">Dutch</string>
-    <string name="de_lang" translatable="false">German</string>
-    <string name="es_lang" translatable="false">Spanish</string>
-    <string name="el_lang" translatable="false">Greek</string>
-    <string name="it_lang" translatable="false">Italian</string>
-    <string name="ro_lang" translatable="false">Romanian</string>
-    <string name="pt_lang" translatable="false">Portuguese</string>
-    <string name="ru_lang" translatable="false">Russian</string>
-    <string name="sk_lang" translatable="false">Slovak</string>
-    <string name="sv_lang" translatable="false">Swedish</string>
-    <string name="fr_lang" translatable="false">French</string>
-    <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="tr_lang" translatable="false">Turkish</string>
-    <string name="pl_lang" translatable="false">Polish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
     <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
-    <string name="bg_lang" translatable="false">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language" translatable="false">Language</string>
 
@@ -343,21 +343,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="overview_bolusprogress_goingtodeliver">Going to deliver %1$.2fU</string>
-    <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
-    <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
-    <string name="objectives_1_objective">Starting on an open loop</string>
-    <string name="objectives_1_gate">Run in Open Loop mode for a few days and manually enact lots of temp basals. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
-    <string name="objectives_2_objective">Understanding your open loop, including its temp basal recommendations</string>
-    <string name="objectives_2_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences</string>
-    <string name="objectives_3_objective">Starting to close the loop with Low Glucose Suspend</string>
-    <string name="objectives_3_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events</string>
-    <string name="objectives_4_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
-    <string name="objectives_4_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
-    <string name="objectives_5_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
-    <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
-    <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
-    <string name="objectives_7_objective">Enabling additional features for daytime use, such as SMB</string>
-    <string name="objectives_7_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -396,7 +381,6 @@
     <string name="overview_quickwizard_item_remove_button">Remove</string>
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
-    <string name="ko_lang" translatable="false">Korean</string>
     <string name="actions">Actions</string>
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
@@ -586,10 +570,12 @@
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="loopsuperbolusfor">Superbolus (%1$d m)</string>
+    <string name="suspendloop">Suspend loop</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
     <string name="suspendloopfor10h">Suspend loop for 10 h</string>
+    <string name="suspendloopforXmin">Suspend loop for %1$d min</string>
     <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
     <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
     <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
@@ -617,16 +603,18 @@
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
     <string name="key_show_statuslights" translatable="false">key_show_statuslights</string>
+    <string name="key_show_statuslights_extended" translatable="false">key_show_statuslights_extended</string>
     <string name="show_statuslights">Show status lights on home screen</string>
-    <string name="show_statuslights_summary">Enable status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
+    <string name="show_statuslights_extended">Show extended status lights on home screen</string>
+    <string name="show_statuslights_extended_summary">Enable extended status lights for cage, iage, sage, reservoir and battery level on home screen.</string>
     <string name="key_statuslights_res_warning" translatable="false">key_statuslights_res_warning</string>
     <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
     <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
     <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
-    <string name="statuslights_bat_warning">Threshold warning battery level [%%]</string>
+    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
-    <string name="statuslights_bat_critical">Threshold critical battery level [%%]</string>
+    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -714,7 +702,7 @@
     <string name="valuesnotstored">Values not stored!</string>
     <string name="combopump" translatable="false">Accu-Chek Combo</string>
     <string name="combopump_shortname" translatable="false">COMBO</string>
-    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
@@ -820,8 +808,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
-    <string name="DexcomG5">DexcomG5 App (patched)</string>
-    <string name="DexcomG6">DexcomG6 App (patched)</string>
     <string name="eversense">Eversense App (patched)</string>
     <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
     <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
@@ -895,49 +881,8 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="insightpump">Insight Pump</string>
-    <string name="status_no_colon">Status</string>
-    <string name="changed">Changed</string>
-    <string name="pump_stopped_uppercase">PUMP STOPPED</string>
-    <string name="status_updated">Status Updated</string>
     <string name="ago">ago</string>
-    <string name="with">with</string>
-    <string name="insight_active_tbr">Active TBR</string>
-    <string name="insight_min_left">min left</string>
-    <string name="log_book">Log book</string>
-    <string name="insight_last_completed_action">Last Completed Action</string>
-    <string name="insight_min">min</string>
-    <string name="insight_remaining_over">remaining over</string>
-    <string name="insight_total_with">total with</string>
-    <string name="insight_upfront_with">upfront with</string>
-    <string name="insight_stay_always_connected">Stay always connected</string>
-    <string name="insight_history_idle">IDLE</string>
-    <string name="insight_history_syncing">SYNCING</string>
-    <string name="insight_history_busy">BUSY</string>
-    <string name="insight_history_synced">SYNCED</string>
-    <string name="insight_startup_uppercase">STARTUP</string>
-    <string name="insight_needs">needs</string>
-    <string name="insight_not_connected_to_companion_app">Not connected to companion app!</string>
-    <string name="insight_companion_app_not_installed">Companion app does not appear to be installed!</string>
-    <string name="insight_incompatible_compantion_app_we_need_version">Incompatible companion app, we need version</string>
-    <string name="insight_unknown">Unknown</string>
-    <string name="insight_waiting_for_code">Waiting for code confirmation</string>
-    <string name="insight_code_rejected">Code rejected</string>
-    <string name="insight_app_binding">App binding</string>
-    <string name="insight_not_authorized">Not authorized</string>
-    <string name="insight_incompatible">Incompatible</string>
-    <string name="second">second</string>
-    <string name="minute">minute</string>
-    <string name="hour">hour</string>
-    <string name="day">day</string>
-    <string name="week">week</string>
-    <string name="time_plural">s</string>
-    <string name="insight_keepalive_format_string">%1$ds expires %2$s</string>
-    <string name="insight_keep_alive_status">Keep-alive status</string>
-    <string name="statistics">Statistics</string>
-    <string name="connect_preemptively">Connect preemptively</string>
-    <string name="automatically_connect_when">Automatically connect when AndroidAPS screens are opened, before any pump command is requested, to reduce connection delay</string>
-    <string name="not_recommended_due_to_battery_drain">Not recommended due to battery drain</string>
+    <string name="format_hours">%1$.2f h</string>
     <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
     <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
@@ -982,8 +927,6 @@
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
-    <string name="dexcomG5_shortname" translatable="false">G5</string>
-    <string name="dexcomG6_shortname" translatable="false">G6</string>
     <string name="eversense_shortname" translatable="false">EVR</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>
@@ -991,6 +934,7 @@
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
+    <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="temptargetshort">TT</string>
@@ -1001,6 +945,7 @@
     <string name="ns_autobackfill_summary">Autobackfill missig BGs from NS</string>
     <string name="key_ns_autobackfill" translatable="false">ns_autobackfill</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
+    <string name="overview_show_activity">Activity</string>
     <string name="overview_show_sensitivity">Sensitivity</string>
     <string name="overview_show_deviations">Deviations</string>
     <string name="overview_show_cob">Carbs On Board</string>
@@ -1012,7 +957,7 @@
     <string name="key_fromNSAreCommingFakedExtendedBoluses" translatable="false">fromNSAreCommingFakedExtendedBoluses</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="not_eng_mode_or_release">Engineering mode not enabled and not on release branch</string>
-    <string name="pump_basebasalrate">%.2f U/h</string>
+    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed.</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
@@ -1028,8 +973,6 @@
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="combo_bolus_count">Bolus count</string>
     <string name="combo_tbr_count">TBR count</string>
-    <string name="objectivenotstarted">Objective %1$d not started</string>
-    <string name="objectivenotfinished">Objective %1$d not finished</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="novalidbasalrate">No valid basal rate read from pump</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
@@ -1070,8 +1013,6 @@
     <string name="reset">reset</string>
     <string name="waitingfortimesynchronization">Waiting for time synchronization (%1$d sec)</string>
     <string name="loopdisconnectedfor">Disconnected (%1$d m)</string>
-    <string name="automatic_careportal_events">Automatic careportal events</string>
-    <string name="automatically_upload_insulin_cannula_and_battery_changes_to_nightscout">Automatically upload insulin, cannula and battery changes and pump alarms to Nightscout</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
@@ -1122,7 +1063,6 @@
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
     <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
     <string name="ns_autobackfill_title">Autobackfill BG</string>
-    <string name="ga_lang" translatable="false">Irish</string>
     <string name="wear_wizard_settings">Wizard Settings</string>
     <string translatable="false" name="key_wearwizard_bg">wearwizard_bg</string>
     <string translatable="false" name="key_wearwizard_tt">wearwizard_tt</string>
@@ -1140,14 +1080,12 @@
     <string name="adjustprofileinns">Changes must be done in NS</string>
     <string name="exitwizard">Skip setup wizard</string>
     <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
-    <string name="setupwizard_objectives_description">Press the button below to enable Objectives. Look in the Objectives tab, after you finish this wizard, to make AndroidAPS completely functional.\n</string>
-    <string name="enableobjectives">Enable Objectives</string>
     <string name="apssetup">Configure APS plugin</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="sensitivitysetup">Configure Sensitivity plugin</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
-    <string name="nsclientinfotext">NSClient handles connection to Nightscout. You can skip this part now but you will not be able to pass objectives until you setup it.</string>
+    <string name="nsclientinfotext">NSClient handles connection to Nightscout. You can skip this part now but you will not be able to pass objectives until you set it up.</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="bgsourcesetup">Configure BG source</string>
     <string name="setupwizard_profile_description">Please select source of profile. If patient is a child you should use NS profile. If there is nobody following you on Nightscout you will probably prefer Local profile. Please remember that you are only selecting the profile source. To use it you must activate it by executing \"Profile switch\"</string>
@@ -1182,7 +1120,6 @@
     <string name="completed_well_done">Completed, well done!</string>
     <string name="not_completed_yet">Not completed yet</string>
     <string name="time_elapsed">Time elapsed</string>
-    <string name="nth_objective">%1$d. Objective</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
@@ -1204,7 +1141,6 @@
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email</string>
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
-    <string name="invalid_email_message">Invalid Email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
     <string name="maintenance_amount">No of Logs to send</string>
@@ -1235,7 +1171,7 @@
     <string name="insulinlimitviolation">Insulin limit violation</string>
     <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
-    <string name="loop_openmode_min_change_summary">Loop will popup new change request only if change is bigger than this value. Default value is 20%</string>
+    <string name="loop_openmode_min_change_summary">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
     <string name="searching_for_devices">Searching for devices…</string>
@@ -1272,7 +1208,6 @@
     <string name="manufacturing_date">Manufacturing date</string>
     <string name="delete_pairing">Delete pairing</string>
     <string name="pairing_information">Pairing information</string>
-    <string name="refreh_status">Refresh status</string>
     <string name="start_pump">Start pump</string>
     <string name="stop_pump">Stop pump</string>
     <string name="operating_mode">Operating mode</string>
@@ -1305,9 +1240,50 @@
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="recovery_duration">Recovery duration</string>
     <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
+    <string name="weekday_sunday_short">Sun</string>
+    <string name="weekday_saturday_short">Sat</string>
+    <string name="weekday_friday_short">Fri</string>
+    <string name="weekday_thursday_short">Thu</string>
+    <string name="weekday_wednesday_short">Wed</string>
+    <string name="weekday_tuesday_short">Tue</string>
+    <string name="weekday_monday_short">Mon</string>
+    <string name="automation_description">User defined automation tasks</string>
+    <string name="automation_missing_task_name">Please enter a task name.</string>
+    <string name="automation_missing_trigger">Please specify at least one trigger.</string>
+    <string name="automation_missing_action">Please specify at least one action.</string>
+    <string name="alreadyenabled">Already enabled</string>
+    <string name="alreadydisabled">Already disabled</string>
+    <string name="alreadysuspended">Already suspended</string>
+    <string name="resumeloop">Resume loop</string>
+    <string name="notsuspended">Not suspended</string>
+    <string name="starttemptarget">Start temp target</string>
+    <string name="stoptemptarget">Stop temp target</string>
+    <string name="islesser">is lesser than</string>
+    <string name="isequalorlesser">is equal or lesser than</string>
+    <string name="isequal">is equal to</string>
+    <string name="isequalorgreater">is equal or greater than</string>
+    <string name="isgreater">is greater than</string>
+    <string name="isnotavailable">is not available</string>
+    <string name="unknown">unknown</string>
+    <string name="glucoseisnotavailable">Glucose is not available</string>
+    <string name="glucosecomparedmgdl">Glucose %1$s %2$.0f %3$s</string>
+    <string name="glucosecomparedmmol">Glucose %1$s %2$.1f %3$s</string>
+    <string name="percentagecompared">Profile pct %1$s %2$d</string>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
+    <string name="and">And</string>
+    <string name="or">Or</string>
+    <string name="xor">Exclusive or</string>
+    <string name="atspecifiedtime">At %1$s</string>
+    <string name="use_network_location">Use network location</string>
+    <string name="use_gps_location">Use GPS location</string>
+    <string name="use_passive_location">Use passive location</string>
+    <string name="locationservice">Location service</string>
+    <string name="key_location" translatable="false">location</string>
+    <string name="automation_short">Auto</string>
+    <string name="automation">Automation</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="profile_ins_units_per_hout">U/h</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
     <string name="profile_carbs_per_unit">g/U</string>
     <string name="profile_per_unit">/U</string>
     <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
@@ -1315,6 +1291,44 @@
     <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automaticaly on sensor start</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
+
+    <string name="unit_second">second</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconds</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
+    <string name="key_tidepool_username" translatable="false">tidepool_username</string>
+    <string name="key_tidepool_password" translatable="false">tidepool_password</string>
+    <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
+    <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
+    <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
+    <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
+    <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
+    <string name="title_tidepool_username">Login User Name</string>
+    <string name="summary_tidepool_password">Your Tidepool login password</string>
+    <string name="title_tidepool_password">Login Password</string>
+    <string name="title_tidepool_test_login">Test Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">If enabled, uploads will go to https://int-app.tidepool.org instead of the regular https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploads data to Tidepool</string>
+    <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
+    <string name="tidepool_upload_cgm">Upload CGM data</string>
+    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
+    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
+    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
+    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
+    <string name="tidepool_upload_tbr">Upload temporary basals</string>
+    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
+    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
+    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
+    <string name="tidepool_upload_bg">Upload BG tests</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
@@ -1326,25 +1340,279 @@
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
+    <string name="recurringTime">Recurring time</string>
+    <string name="every">Every</string>
+    <string name="never">Never</string>
+    <string name="mins">%1$dmins</string>
+    <string name="condition">Condition:</string>
+    <string name="action">Action:</string>
+    <string name="iob_u">IOB [U]:</string>
+    <string name="glucose_u">Glucose [%1$s]:</string>
+    <string name="delete_short">DEL</string>
+    <string name="add_short">ADD</string>
+    <string name="copy_short">COPY</string>
+    <string name="addnew">Add new</string>
     <string name="versionChecker">Version Checker</string>
     <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
     <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+    <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
+    <string name="signature_verifier">Signature verifier</string>
+    <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
 
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
+    <string name="twohours">2h</string>
+    <string name="formatinsulinunits">%1$.2fU</string>
 
-    <plurals name="objective_days">
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d hours</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d minutes</item>
-    </plurals>
+    <string name="dexcom_app_patched">Dexcom App (patched)</string>
+    <string name="dexcom_short">DXCM</string>
+    <string name="description_source_dexcom">Receive BG values from the patched Dexcom app.</string>
+
+    <string name="notification">Notification</string>
+    <string name="notification_message">Notification: %1$s</string>
+    <string name="message_short">Msg:</string>
+    <string name="profilepercentage">Profile percentage</string>
+    <string name="percent_u">Percent [%]:</string>
+    <string name="startprofile">Start profile %1$d%% for %2$d min</string>
+    <string name="startprofileforever">Start profile %1$d%%</string>
+    <string name="exists">exists</string>
+    <string name="notexists">not exists</string>
+    <string name="temptargetcompared">Temp target %1$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
+    <string name="deltalabel">BG difference</string>
+    <string name="deltalabel_u">BG difference [%1$s]</string>
+    <string name="currentlocation">Current Location</string>
+    <string name="location">Location</string>
+    <string name="latitude_short">Lat:</string>
+    <string name="longitude_short">Lon:</string>
+    <string name="distance_short">Dist [m]:</string>
+    <string name="name_short">Name:</string>
+    <string name="locationis">Location is %1$s</string>
+    <string name="lastboluslabel">Last bolus ago</string>
+    <string name="lastboluscompared">Last bolus time %1$s %2$s min ago</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="taskname">Task name</string>
+    <string name="edit_short">EDIT</string>
+    <string name="please_choose_an_action_type">Please choose an action type:</string>
+    <string name="please_choose_a_trigger_type">Please choose a trigger type:</string>
+    <string name="triggers">Triggers:</string>
+    <string name="remove_label">REMOVE</string>
+    <string name="preconditions">Preconditions:</string>
+
+
+    <!-- Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operation not supported by pump and/or driver.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operation not YET supported by pump.</string>
+
+    <!-- Medtronic (MDT) - Base -->
+    <string name="medtronic_name" translatable="false">Medtronic</string>
+    <string name="medtronic_name_short" translatable="false">MDT</string>
+    <string name="description_pump_medtronic">Pump integration for Medtronic, requires RileyLink device and specific Pump Model</string>
+
+    <!-- MDT Configuration -->
+    <string name="key_medtronic_serial" translatable="false">pref_medtronic_serial</string>
+    <string name="key_medtronic_pump_type" translatable="false">pref_medtronic_pump_type</string>
+    <string name="key_medtronic_frequency" translatable="false">pref_medtronic_frequency</string>
+    <string name="key_medtronic_max_bolus" translatable="false">pref_medtronic_max_bolus</string>
+    <string name="key_medtronic_max_basal" translatable="false">pref_medtronic_max_basal</string>
+    <string name="key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
+    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+    <string name="key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
+    <string name="key_medtronic_bolus_debug" translatable="false">pref_medtronic_bolus_debug</string>
+    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_medtronic_pump_frequency_us_ca" translatable="false">medtronic_pump_frequency_us_ca</string>
+    <string name="key_medtronic_pump_frequency_worldwide" translatable="false">medtronic_pump_frequency_worldwide</string>
+    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
+    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
+    <string name="key_medtronic_pump_battery_no" translatable="false">medtronic_pump_battery_no</string>
+    <string name="key_medtronic_pump_battery_alkaline" translatable="false">medtronic_pump_battery_alkaline</string>
+    <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
+    <string name="key_medtronic_pump_battery_nizn" translatable="false">medtronic_pump_battery_nizn</string>
+
+    <string name="medtronic_serial_number">Pump Serial Number</string>
+    <string name="medtronic_pump_type">Pump Type</string>
+    <string name="medtronic_pump_frequency">Pump Frequency</string>
+    <string name="medtronic_pump_bolus_delay">Delay before Bolus is started (s)</string>
+    <string name="medtronic_pump_max_bolus">Max Bolus on Pump (U)</string>
+    <string name="medtronic_pump_max_basal">Max Basal on Pump (U/h)</string>
+    <string name="medtronic_pump_encoding">Medtronic Encoding</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b Encoding</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b Encoding</string>
+    <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Clear Bolus Block</string>
+    <string name="medtronic_custom_action_reset_rileylink">Reset RileyLink Config</string>
+    <string name="medtronic_pump_battery_select">Battery Type (Power View)</string>
+    <string name="medtronic_pump_battery_no">Not selected (Simple view)</string>
+    <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
+    <string name="medtronic_pump_battery_lithium">Lithium (Extended view)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Treatments Debugging</string>
+
+    <!-- RL BLE Scanning -->
+    <string name="rileylink_scanner_scan_scan">SCAN</string>
+    <string name="rileylink_scanner_scan_stop">STOP</string>
+    <string name="rileylink_scanner_selected_device">Selected</string>
+    <string name="rileylink_scanner_title">RileyLink Scan</string>
+    <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="rileylink_scanner_ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="location_not_found_title">Location Is Not Enabled</string>
+    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
+    <string name="location_yes">Enable</string>
+    <string name="location_no">No</string>
+    <string name="rileylink_scanner_scanning">Scanning</string>
+    <string name="rileylink_scanner_scanning_finished">Scanning finished</string>
+    <string name="rileylink_scanner_scanning_error">Scanning error: %1$d</string>
+
+
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Settings</string>
+    <string name="rileylink_settings_tab2">History</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pump Status</string>
+    <string name="title_activity_rileylink_settings">RileyLink Settings</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_configured_address">Configured Address</string>
+    <string name="rileylink_connected_device">Connected Device</string>
+    <string name="rileylink_connection_status">Connection Status</string>
+    <string name="rileylink_connection_error">Connection Error</string>
+    <string name="rileylink_device">Device</string>
+    <string name="rileylink_device_type">Device Type</string>
+    <string name="rileylink_device_model">Device Model</string>
+    <string name="rileylink_last_used_frequency">Last used frequency</string>
+    <string name="rileylink_last_device_contact">Last device contact</string>
+    <string name="rileylink_firmware_version">RL Firmware</string>
+
+
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth Initializing…</string>
+    <string name="rileylink_state_bt_error">Bluetooth Error</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Ready</string>
+    <string name="rileylink_state_not_started">Not Started</string>
+    <string name="rileylink_state_rl_init">RileyLink Initialization…</string>
+    <string name="rileylink_state_rl_error">RileyLink Error</string>
+    <string name="rileylink_state_pc_tune_up">Tuning up RileyLink and Pump</string>
+    <string name="rileylink_state_pc_error">Problem connecting to Pump</string>
+    <string name="rileylink_state_connected">Connected</string>
+
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Device is not RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink unreachable</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth disabled</string>
+    <string name="rileylink_error_no_bt_adapter">No Bluetooth Adapter</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp Failed</string>
+    <string name="rileylink_error_pump_unreachable">Pump unreachable</string>
+    <string name="rileylink_error_pod_unreachable">Pod unreachable</string>
+    <string name="rileylink_error_address_not_set_short">Not set</string>
+
+    <!-- RL Target Device -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
+    <string name="rileylink_target_device_omnipod">Omnipod</string>
+
+
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Errors</string>
+    <string name="medtronic_error_serial_not_set">Serial # not set.</string>
+    <string name="medtronic_error_serial_invalid">Serial # invalid.</string>
+    <string name="medtronic_error_pump_type_not_set">Pump Type not set.</string>
+    <string name="medtronic_error_pump_type_invalid">Pump Type unsupported.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pump Frequency not set.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pump Frequency unsupported.</string>
+    <string name="medtronic_error_rileylink_address_invalid">RileyLink Address invalid.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Pump type detected is not the same as configured type.</string>
+
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal profiles are not enabled on pump.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basal profile set on pump is incorrect (must be STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Wrong TBR type set on pump (must be Absolute).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Wrong Max Bolus set on Pump (must be %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Wrong Max Basal set on Pump (must be %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Medtronic Pump first, before you can use this operation.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Over 24h Time change was requested.</string>
+
+    <!-- MDT History -->
+    <string name="medtronic_history_group_basal">Basals</string>
+    <string name="medtronic_history_group_configuration">Configurations</string>
+    <string name="medtronic_history_group_notification">Notifications</string>
+    <string name="medtronic_history_group_statistic">Statistics</string>
+    <string name="medtronic_history_group_unknown">Unknowns</string>
+    <string name="medtronic_history_group_all">All</string>
+    <string name="medtronic_pump_history">Medtronic Pump History</string>
+
+
+    <!-- MDT Pump Status -->
+    <string name="medtronic_pump_status_never_contacted">Never contacted</string>
+    <string name="medtronic_pump_status_waking_up">Waking up</string>
+    <string name="medtronic_pump_status_error_comm">Error with communication</string>
+    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>
+    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>
+    <string name="medtronic_pump_status_active">Active</string>
+    <string name="medtronic_pump_status_sleeping">Sleeping</string>
+
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">You cancelled Bolus, after it was already set on Pump. Since Medtronic Pump doesn\'t support cancel, you will need to manually cancel it. Put the Pump into Suspend mode and then do Resume (if you still want to cancel). Application will pick up changes, on next update (in less than 5 minutes).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Could not read current TBR.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Could not cancel current TBR. Stopping operation.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Profile set failed, because following patterns, have too big basal rate: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus could not be delivered.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus could not be delivered, because available insulin amount (%1$.2f) is less than bolus required (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR could not be set.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Could not cancel current TBR.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Basal profile could not be set.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basal profile is the same, so it will not be set again.</string>
+
+    <string name="medtronic_cmd_desc_get_history">Get History - Page %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Get History - Page %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Get Pump Time</string>
+    <string name="medtronic_cmd_desc_get_settings">Get Settings</string>
+    <string name="medtronic_cmd_desc_get_model">Get Pump Model</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Get Basal Profile</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Set Basal Profile</string>
+    <string name="medtronic_cmd_desc_get_tbr">Get Temporary Basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Set Temporary Basal</string>
+    <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
+    <string name="profilename">Change profile to</string>
+    <string name="changengetoprofilename">Change profile to %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Last connection to pump</string>
+    <string name="automation_trigger_pump_last_connection_description">Last connection to pump [minutes ago]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
+    <string name="sendsmsactionlabel">Send SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
+    <string name="sendsmsactiontext">Send SMS with text</string>
+
+
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
+    <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
+    <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
+    <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
+    <string name="loading">Loading ...</string>
+    <string name="snooze">Snooze</string>
+    <string name="time_range">Time range</string>
+    <string name="timerange_value">Time is between %1$s and %2$s</string>
+    <string name="between">Between </string>
+
+    <string name="close">Close</string>
+    <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
+    <string name="smscommunicator_messagebody">Invalid message body</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolus wizard</string>
+    <string name="unit_minute_short">min</string>
+    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
+
 </resources>

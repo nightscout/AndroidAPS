@@ -17,10 +17,9 @@ import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.logging.BundleLogger;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
@@ -108,8 +107,7 @@ public class NSDeviceStatus {
                 setData(devicestatusJson);
                 if (devicestatusJson.has("pump")) {
                     // Objectives 0
-                    ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS = true;
-                    ObjectivesPlugin.getPlugin().saveProgress();
+                    SP.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, true);
                 }
             }
             if (bundle.containsKey("devicestatuses")) {
@@ -120,8 +118,7 @@ public class NSDeviceStatus {
                     setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
-                        ObjectivesPlugin.getPlugin().pumpStatusIsAvailableInNS = true;
-                        ObjectivesPlugin.getPlugin().saveProgress();
+                        SP.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, true);
                     }
                 }
             }
@@ -194,7 +191,7 @@ public class NSDeviceStatus {
             level = Levels.URGENT;
         else if (!deviceStatusPumpData.isPercent && deviceStatusPumpData.voltage < NSSettingsStatus.getInstance().extendedPumpSettings("urgentBattV"))
             level = Levels.URGENT;
-        else if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("warnClock") < now)
+        else if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("warnClock") * 60 * 1000L < now)
             level = Levels.WARN;
         else if (deviceStatusPumpData.reservoir < NSSettingsStatus.getInstance().extendedPumpSettings("warnRes"))
             level = Levels.WARN;

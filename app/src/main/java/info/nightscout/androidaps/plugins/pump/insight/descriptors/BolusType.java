@@ -4,5 +4,5 @@ public enum BolusType {
 
     STANDARD,
     EXTENDED,
-    MULTIWAVE;
+    MULTIWAVE
 }

@@ -3,7 +3,8 @@ package info.nightscout.androidaps.plugins.general.food;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseService;
@@ -11,7 +12,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +34,10 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 24.09.2017.
@@ -41,6 +45,7 @@ import info.nightscout.androidaps.logging.L;
 
 public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     private Logger log = LoggerFactory.getLogger(L.DATAFOOD);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledFoodEventPost = null;
@@ -48,7 +53,34 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public FoodService() {
         onCreate();
         dbInitialize();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNsFood.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    int mode = event.getMode();
+                    Bundle payload = event.getPayload();
+
+                    try {
+                        if (payload.containsKey("food")) {
+                            JSONObject json = new JSONObject(payload.getString("food"));
+                            if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
+                                this.createFoodFromJsonIfNotExists(json);
+                            else
+                                this.deleteNS(json);
+                        }
+
+                        if (payload.containsKey("foods")) {
+                            JSONArray array = new JSONArray(payload.getString("foods"));
+                            if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
+                                this.createFoodFromJsonIfNotExists(array);
+                            else
+                                this.deleteNS(array);
+                        }
+                    } catch (JSONException e) {
+                        log.error("Unhandled Exception", e);
+                    }
+                }, FabricPrivacy::logException)
+        );
     }
 
     /**
@@ -77,34 +109,6 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
         }
 
         return null;
-    }
-
-    @Subscribe
-    public void handleNsEvent(EventNsFood event) {
-        int mode = event.getMode();
-        Bundle payload = event.getPayload();
-
-        try {
-            if (payload.containsKey("food")) {
-                JSONObject json = new JSONObject(payload.getString("food"));
-                if (mode == EventNsFood.ADD || mode == EventNsFood.UPDATE) {
-                    this.createFoodFromJsonIfNotExists(json);
-                } else {
-                    this.deleteNS(json);
-                }
-            }
-
-            if (payload.containsKey("foods")) {
-                JSONArray array = new JSONArray(payload.getString("foods"));
-                if (mode == EventNsFood.ADD || mode == EventNsFood.UPDATE) {
-                    this.createFoodFromJsonIfNotExists(array);
-                } else {
-                    this.deleteNS(array);
-                }
-            }
-        } catch (JSONException e) {
-            log.error("Unhandled Exception", e);
-        }
     }
 
     @Override
@@ -162,7 +166,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
             public void run() {
                 if (L.isEnabled(L.DATAFOOD))
                     log.debug("Firing EventFoodChange");
-                MainApp.bus().post(event);
+                RxBus.INSTANCE.send(event);
                 callback.setPost(null);
             }
         }

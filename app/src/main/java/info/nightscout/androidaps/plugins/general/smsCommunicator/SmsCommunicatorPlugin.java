@@ -1,12 +1,9 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator;
 
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
-
-import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,7 +17,6 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -37,28 +33,34 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.XdripCalibrations;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SmsCommunicatorPlugin extends PluginBase {
     private static Logger log = LoggerFactory.getLogger(L.SMS);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static SmsCommunicatorPlugin smsCommunicatorPlugin;
 
@@ -92,23 +94,28 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    processSettings(event);
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
+        disposable.clear();
+        super.onStop();
     }
 
-    @Subscribe
-    public void processSettings(final EventPreferenceChange ev) {
+    private void processSettings(final EventPreferenceChange ev) {
         if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
             String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 
-            String pattern = ";";
-
-            String[] substrings = settings.split(pattern);
+            allowedNumbers.clear();
+            String[] substrings = settings.split(";");
             for (String number : substrings) {
                 String cleaned = number.replaceAll("\\s+", "");
                 allowedNumbers.add(cleaned);
@@ -166,7 +173,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             log.debug("Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed");
             receivedSms.ignored = true;
             messages.add(receivedSms);
-            MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+            RxBus.INSTANCE.send(new EventSmsCommunicatorUpdateGui());
             return;
         }
 
@@ -258,7 +265,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
             }
         }
 
-        MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+        RxBus.INSTANCE.send(new EventSmsCommunicatorUpdateGui());
     }
 
     @SuppressWarnings("unused")
@@ -303,13 +310,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
         switch (splitted[1].toUpperCase()) {
             case "DISABLE":
             case "STOP":
-                LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
-                if (loopPlugin != null && loopPlugin.isEnabled(PluginType.LOOP)) {
+                LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+                if (loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, false);
                     ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                         @Override
                         public void run() {
-                            MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
+                            RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_STOP"));
                             String reply = MainApp.gs(R.string.smscommunicator_loophasbeendisabled) + " " +
                                     MainApp.gs(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply));
@@ -322,34 +329,32 @@ public class SmsCommunicatorPlugin extends PluginBase {
                 break;
             case "ENABLE":
             case "START":
-                loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
-                if (loopPlugin != null && !loopPlugin.isEnabled(PluginType.LOOP)) {
+                loopPlugin = LoopPlugin.getPlugin();
+                if (!loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, true);
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loophasbeenenabled));
-                    MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_START"));
+                    RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_START"));
                 } else {
                     sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopisenabled));
                 }
                 receivedSms.processed = true;
                 break;
             case "STATUS":
-                loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
-                if (loopPlugin != null) {
-                    if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                        if (loopPlugin.isSuspended())
-                            reply = String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend());
-                        else
-                            reply = MainApp.gs(R.string.smscommunicator_loopisenabled);
-                    } else {
-                        reply = MainApp.gs(R.string.smscommunicator_loopisdisabled);
-                    }
-                    sendSMS(new Sms(receivedSms.phoneNumber, reply));
+                loopPlugin = LoopPlugin.getPlugin();
+                if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                    if (loopPlugin.isSuspended())
+                        reply = String.format(MainApp.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend());
+                    else
+                        reply = MainApp.gs(R.string.smscommunicator_loopisenabled);
+                } else {
+                    reply = MainApp.gs(R.string.smscommunicator_loopisdisabled);
                 }
+                sendSMS(new Sms(receivedSms.phoneNumber, reply));
                 receivedSms.processed = true;
                 break;
             case "RESUME":
                 LoopPlugin.getPlugin().suspendTo(0);
-                MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_RESUME"));
+                RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_RESUME"));
                 NSUpload.uploadOpenAPSOffline(0);
                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopresumed));
                 break;
@@ -376,7 +381,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                     if (result.success) {
                                         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger * 60L * 1000);
                                         NSUpload.uploadOpenAPSOffline(anInteger * 60);
-                                        MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
+                                        RxBus.INSTANCE.send(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                                         String reply = MainApp.gs(R.string.smscommunicator_loopsuspended) + " " +
                                                 MainApp.gs(result.success ? R.string.smscommunicator_tempbasalcanceled : R.string.smscommunicator_tempbasalcancelfailed);
                                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
@@ -400,12 +405,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processTREATMENTS(String[] splitted, Sms receivedSms) {
         if (splitted[1].toUpperCase().equals("REFRESH")) {
-            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
             TreatmentsPlugin.getPlugin().getService().resetTreatments();
-            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-            String reply = "TREATMENTS REFRESH " + q.size() + " receivers";
-            sendSMS(new Sms(receivedSms.phoneNumber, reply));
+            RxBus.INSTANCE.send(new EventNSClientRestart());
+            sendSMS(new Sms(receivedSms.phoneNumber, "TREATMENTS REFRESH SENT"));
             receivedSms.processed = true;
         } else
             sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
@@ -413,11 +415,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processNSCLIENT(String[] splitted, Sms receivedSms) {
         if (splitted[1].toUpperCase().equals("RESTART")) {
-            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-            String reply = "NSCLIENT RESTART " + q.size() + " receivers";
-            sendSMS(new Sms(receivedSms.phoneNumber, reply));
+            RxBus.INSTANCE.send(new EventNSClientRestart());
+            sendSMS(new Sms(receivedSms.phoneNumber, "NSCLIENT RESTART SENT"));
             receivedSms.processed = true;
         } else
             sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
@@ -743,11 +742,13 @@ public class SmsCommunicatorPlugin extends PluginBase {
             sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
     }
 
-    public void sendNotificationToAllNumbers(String text) {
+    public boolean sendNotificationToAllNumbers(String text) {
+        boolean result = true;
         for (int i = 0; i < allowedNumbers.size(); i++) {
             Sms sms = new Sms(allowedNumbers.get(i), text);
-            sendSMS(sms);
+            result = result && sendSMS(sms);
         }
+        return result;
     }
 
     private void sendSMSToAllNumbers(Sms sms) {
@@ -757,7 +758,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         }
     }
 
-    void sendSMS(Sms sms) {
+    boolean sendSMS(Sms sms) {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
 
@@ -774,13 +775,22 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
             messages.add(sms);
         } catch (IllegalArgumentException e) {
-            Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.gs(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            if (e.getMessage().equals("Invalid message body")) {
+                Notification notification = new Notification(Notification.INVALID_MESSAGE_BODY, MainApp.gs(R.string.smscommunicator_messagebody), Notification.NORMAL);
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                return false;
+            } else {
+                Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.gs(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                return false;
+            }
         } catch (java.lang.SecurityException e) {
             Notification notification = new Notification(Notification.MISSING_SMS_PERMISSION, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.NORMAL);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            return false;
         }
-        MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
+        RxBus.INSTANCE.send(new EventSmsCommunicatorUpdateGui());
+        return true;
     }
 
     private String generatePasscode() {
@@ -790,7 +800,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
         passCode += Character.toString((char) (startChar2 + Math.random() * ('z' - 'a' + 1)));
         int startChar3 = Math.random() > 0.5 ? 'a' : 'A';
         passCode += Character.toString((char) (startChar3 + Math.random() * ('z' - 'a' + 1)));
-        passCode.replace('l', 'k').replace('I', 'J');
+        passCode = passCode.replace('l', 'k').replace('I', 'J');
         return passCode;
     }
 

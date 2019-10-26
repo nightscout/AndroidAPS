@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.activities;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -18,7 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +37,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
@@ -49,11 +48,15 @@ import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class TDDStatsActivity extends Activity {
+public class TDDStatsActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
@@ -74,13 +77,25 @@ public class TDDStatsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSyncStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    log.debug("EventDanaRSyncStatus: " + event.getMessage());
+                    statusView.setText(event.getMessage());
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
@@ -99,7 +114,7 @@ public class TDDStatsActivity extends Activity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_statsactivity);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -239,7 +254,7 @@ public class TDDStatsActivity extends Activity {
                         statsMessage.setText(MainApp.gs(R.string.danar_stats_warning_Message));
                     }
                 });
-                ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs( new Callback() {
+                ConfigBuilderPlugin.getPlugin().getCommandQueue().loadTDDs(new Callback() {
                     @Override
                     public void run() {
                         loadDataFromDB();
@@ -399,7 +414,7 @@ public class TDDStatsActivity extends Activity {
 
                 //cumulative TDDs
                 for (TDD record : historyList) {
-                    if(!historyList.isEmpty() && df.format(new Date(record.date)).equals(df.format(new Date()))) {
+                    if (!historyList.isEmpty() && df.format(new Date(record.date)).equals(df.format(new Date()))) {
                         //Today should not be included
                         continue;
                     }
@@ -448,7 +463,7 @@ public class TDDStatsActivity extends Activity {
                     tl.setBackgroundColor(Color.TRANSPARENT);
                 }
 
-                if(!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
+                if (!historyList.isEmpty() && df.format(new Date(historyList.get(0).date)).equals(df.format(new Date()))) {
                     //Today should not be included
                     historyList.remove(0);
                 }
@@ -519,42 +534,17 @@ public class TDDStatsActivity extends Activity {
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSyncStatus s) {
-        log.debug("EventDanaRSyncStatus: " + s.message);
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(s.message);
-                    }
-                });
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged c) {
-        runOnUiThread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        statusView.setText(c.textStatus());
-                    }
-                }
-        );
-    }
-
-
     public static boolean isOldData(List<TDD> historyList) {
         Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
-        PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-        PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-        PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-        PumpInterface insight = MainApp.getSpecificPlugin(LocalInsightPlugin.class);
+        PumpInterface dana = DanaRPlugin.getPlugin();
+        PumpInterface danaRS = DanaRSPlugin.getPlugin();
+        PumpInterface danaV2 = DanaRv2Plugin.getPlugin();
+        PumpInterface danaKorean = DanaRKoreanPlugin.getPlugin();
+        PumpInterface insight = LocalInsightPlugin.getPlugin();
 
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday?1000 * 60 * 60 * 24:0))))));
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday ? 1000 * 60 * 60 * 24 : 0))))));
     }
 }

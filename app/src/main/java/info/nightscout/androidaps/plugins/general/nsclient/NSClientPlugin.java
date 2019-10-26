@@ -10,8 +10,6 @@ import android.os.IBinder;
 import android.text.Html;
 import android.text.Spanned;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +28,20 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class NSClientPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     static NSClientPlugin nsClientPlugin;
 
@@ -86,7 +89,7 @@ public class NSClientPlugin extends PluginBase {
         }
 
         nsClientReceiverDelegate =
-                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext(), MainApp.bus());
+                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext());
     }
 
     public boolean isAllowed() {
@@ -96,39 +99,63 @@ public class NSClientPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
 
         nsClientReceiverDelegate.registerReceivers();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNSClientStatus.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    status = event.getStatus();
+                    RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNetworkChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (nsClientService != null) {
+                        MainApp.instance().getApplicationContext().unbindService(mConnection);
+                        nsClientReceiverDelegate.unregisterReceivers();
+                    }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNSClientNewLog.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    addToLog(event);
+                    if (L.isEnabled(L.NSCLIENT))
+                        log.debug(event.getAction() + " " + event.getLogText());
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventChargingState.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
-        Context context = MainApp.instance().getApplicationContext();
-        context.unbindService(mConnection);
-
+        MainApp.instance().getApplicationContext().unbindService(mConnection);
         nsClientReceiverDelegate.unregisterReceivers();
+        disposable.clear();
+        super.onStop();
     }
-
-    @Subscribe
-    public void onStatusEvent(EventPreferenceChange ev) {
-        nsClientReceiverDelegate.onStatusEvent(ev);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventChargingState ev) {
-        nsClientReceiverDelegate.onStatusEvent(ev);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNetworkChange ev) {
-        nsClientReceiverDelegate.onStatusEvent(ev);
-    }
-
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -147,33 +174,12 @@ public class NSClientPlugin extends PluginBase {
         }
     };
 
-    @Subscribe
-    public void onStatusEvent(final EventAppExit ignored) {
-        if (nsClientService != null) {
-            MainApp.instance().getApplicationContext().unbindService(mConnection);
-            nsClientReceiverDelegate.unregisterReceivers();
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNSClientNewLog ev) {
-        addToLog(ev);
-        if (L.isEnabled(L.NSCLIENT))
-            log.debug(ev.action + " " + ev.logText);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNSClientStatus ev) {
-        status = ev.status;
-        MainApp.bus().post(new EventNSClientUpdateGUI());
-    }
-
     synchronized void clearLog() {
         handler.post(() -> {
             synchronized (listLog) {
                 listLog.clear();
             }
-            MainApp.bus().post(new EventNSClientUpdateGUI());
+            RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -186,7 +192,7 @@ public class NSClientPlugin extends PluginBase {
                     listLog.remove(0);
                 }
             }
-            MainApp.bus().post(new EventNSClientUpdateGUI());
+            RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -212,7 +218,7 @@ public class NSClientPlugin extends PluginBase {
     public void pause(boolean newState) {
         SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
-        MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+        RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
     }
 
     public UploadQueue queue() {

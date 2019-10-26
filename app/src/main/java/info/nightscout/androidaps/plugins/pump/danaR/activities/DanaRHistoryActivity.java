@@ -1,12 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +10,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +24,13 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
@@ -41,19 +40,20 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class DanaRHistoryActivity extends Activity {
+public class DanaRHistoryActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
-
-    private Handler mHandler;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     static Profile profile = null;
 
     Spinner historyTypeSpinner;
     TextView statusView;
     Button reloadButton;
-    Button syncButton;
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -69,6 +69,7 @@ public class DanaRHistoryActivity extends Activity {
             this.name = name;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return name;
@@ -77,34 +78,43 @@ public class DanaRHistoryActivity extends Activity {
 
     public DanaRHistoryActivity() {
         super();
-        HandlerThread mHandlerThread = new HandlerThread(DanaRHistoryActivity.class.getSimpleName());
-        mHandlerThread.start();
-        this.mHandler = new Handler(mHandlerThread.getLooper());
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSyncStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("EventDanaRSyncStatus: " + event.getMessage());
+                    statusView.setText(event.getMessage());
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_historyactivity);
 
-        historyTypeSpinner = (Spinner) findViewById(R.id.danar_historytype);
-        statusView = (TextView) findViewById(R.id.danar_historystatus);
-        reloadButton = (Button) findViewById(R.id.danar_historyreload);
-        syncButton = (Button) findViewById(R.id.danar_historysync);
-        recyclerView = (RecyclerView) findViewById(R.id.danar_history_recyclerview);
+        historyTypeSpinner = findViewById(R.id.danar_historytype);
+        statusView = findViewById(R.id.danar_historystatus);
+        reloadButton = findViewById(R.id.danar_historyreload);
+        recyclerView = findViewById(R.id.danar_history_recyclerview);
 
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
@@ -144,7 +154,6 @@ public class DanaRHistoryActivity extends Activity {
             final TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
             runOnUiThread(() -> {
                 reloadButton.setVisibility(View.GONE);
-                syncButton.setVisibility(View.GONE);
                 statusView.setVisibility(View.VISIBLE);
             });
             clearCardView();
@@ -154,36 +163,11 @@ public class DanaRHistoryActivity extends Activity {
                     loadDataFromDB(selected.type);
                     runOnUiThread(() -> {
                         reloadButton.setVisibility(View.VISIBLE);
-                        syncButton.setVisibility(View.VISIBLE);
                         statusView.setVisibility(View.GONE);
                     });
                 }
             });
         });
-
-        syncButton.setOnClickListener(v -> mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reloadButton.setVisibility(View.GONE);
-                        syncButton.setVisibility(View.GONE);
-                        statusView.setVisibility(View.VISIBLE);
-                    }
-                });
-                DanaRNSHistorySync sync = new DanaRNSHistorySync(historyList);
-                sync.sync(DanaRNSHistorySync.SYNC_ALL);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reloadButton.setVisibility(View.VISIBLE);
-                        syncButton.setVisibility(View.VISIBLE);
-                        statusView.setVisibility(View.GONE);
-                    }
-                });
-            }
-        }));
 
         historyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -213,14 +197,15 @@ public class DanaRHistoryActivity extends Activity {
             this.historyList = historyList;
         }
 
+        @NonNull
         @Override
-        public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.danar_history_item, viewGroup, false);
             return new HistoryViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(HistoryViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
             DanaRHistoryRecord record = historyList.get(position);
             holder.time.setText(DateUtil.dateAndTimeString(record.recordDate));
             holder.value.setText(DecimalFormatter.to2Decimal(record.recordValue));
@@ -305,7 +290,7 @@ public class DanaRHistoryActivity extends Activity {
         }
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
@@ -323,16 +308,16 @@ public class DanaRHistoryActivity extends Activity {
 
             HistoryViewHolder(View itemView) {
                 super(itemView);
-                cv = (CardView) itemView.findViewById(R.id.danar_history_cardview);
-                time = (TextView) itemView.findViewById(R.id.danar_history_time);
-                value = (TextView) itemView.findViewById(R.id.danar_history_value);
-                bolustype = (TextView) itemView.findViewById(R.id.danar_history_bolustype);
-                stringvalue = (TextView) itemView.findViewById(R.id.danar_history_stringvalue);
-                duration = (TextView) itemView.findViewById(R.id.danar_history_duration);
-                dailybasal = (TextView) itemView.findViewById(R.id.danar_history_dailybasal);
-                dailybolus = (TextView) itemView.findViewById(R.id.danar_history_dailybolus);
-                dailytotal = (TextView) itemView.findViewById(R.id.danar_history_dailytotal);
-                alarm = (TextView) itemView.findViewById(R.id.danar_history_alarm);
+                cv = itemView.findViewById(R.id.danar_history_cardview);
+                time = itemView.findViewById(R.id.danar_history_time);
+                value = itemView.findViewById(R.id.danar_history_value);
+                bolustype = itemView.findViewById(R.id.danar_history_bolustype);
+                stringvalue = itemView.findViewById(R.id.danar_history_stringvalue);
+                duration = itemView.findViewById(R.id.danar_history_duration);
+                dailybasal = itemView.findViewById(R.id.danar_history_dailybasal);
+                dailybolus = itemView.findViewById(R.id.danar_history_dailybolus);
+                dailytotal = itemView.findViewById(R.id.danar_history_dailytotal);
+                alarm = itemView.findViewById(R.id.danar_history_alarm);
             }
         }
     }
@@ -347,21 +332,4 @@ public class DanaRHistoryActivity extends Activity {
         historyList = new ArrayList<>();
         runOnUiThread(() -> recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false));
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSyncStatus s) {
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventDanaRSyncStatus: " + s.message);
-        runOnUiThread(
-                () -> statusView.setText(s.message));
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged s) {
-        runOnUiThread(
-                () -> statusView.setText(s.textStatus())
-        );
-    }
-
-
 }

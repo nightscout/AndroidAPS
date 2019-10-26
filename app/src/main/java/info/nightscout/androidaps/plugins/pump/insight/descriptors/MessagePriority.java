@@ -4,5 +4,5 @@ public enum MessagePriority {
 
     NORMAL,
     HIGHER,
-    HIGHEST;
+    HIGHEST
 }

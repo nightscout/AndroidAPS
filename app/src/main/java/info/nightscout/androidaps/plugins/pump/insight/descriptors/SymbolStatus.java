@@ -4,5 +4,5 @@ public enum SymbolStatus {
 
     FULL,
     LOW,
-    EMPTY;
+    EMPTY
 }

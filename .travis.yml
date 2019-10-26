@@ -1,24 +1,25 @@
 language: android
 jdk: oraclejdk8
+dist: trusty
 env:
   matrix:
-    - ANDROID_TARGET=android-23 ANDROID_ABI=x86 org.gradle.jvmargs=-XX:-OmitStackTraceInFastThrow
+    - ANDROID_TARGET=android-28 ANDROID_ABI=x86 org.gradle.jvmargs=-XX:-OmitStackTraceInFastThrow
 android:
   components:
   - platform-tools
   - tools
-  - build-tools-27.0.2
-  - android-23
+  - build-tools-28.0.3
+  - android-28
   - extra-google-m2repository
   - extra-android-m2repository
   - extra-google-google_play_services
   
 before_install:
-- yes | sdkmanager "platforms;android-27"
+#- yes | sdkmanager "platforms;android-28"
 
 script:
   # Unit Test
-  - ./gradlew -Pcoverage testFullDebugUnitTest jacocoTestFullDebugUnitTestReport
+  - ./gradlew -Pcoverage -PfirebaseDisable testFullDebugUnitTest jacocoTestFullDebugUnitTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

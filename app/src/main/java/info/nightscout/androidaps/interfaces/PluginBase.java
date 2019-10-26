@@ -1,16 +1,23 @@
 package info.nightscout.androidaps.interfaces;
 
 import android.os.SystemClock;
-import android.support.v4.app.FragmentActivity;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
+import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.EventConfigBuilderUpdateGui;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 09.06.2016.
@@ -38,17 +45,46 @@ public abstract class PluginBase {
 
     // Default always calls invoke
     // Plugins that have special constraints if they get switched to may override this method
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity activity) {
-        pluginSwitcher.invoke();
+    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
+        performPluginSwitch(newState, type);
     }
 
-//    public PluginType getType() {
-//        return mainType;
-//    }
+    protected void confirmPumpPluginActivation(boolean newState, FragmentActivity activity, PluginType type) {
+        if (type == PluginType.PUMP) {
+            boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
+            if (allowHardwarePump || activity == null) {
+                performPluginSwitch(newState, type);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(R.string.allow_hardware_pump_text)
+                        .setPositiveButton(R.string.yes, (dialog, id) -> {
+                            performPluginSwitch(newState, type);
+                            SP.putBoolean("allow_hardware_pump", true);
+                            if (L.isEnabled(L.PUMP))
+                                log.debug("First time HW pump allowed!");
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                            RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
+                            if (L.isEnabled(L.PUMP))
+                                log.debug("User does not allow switching to HW pump!");
+                        });
+                builder.create().show();
+            }
+        } else {
+            performPluginSwitch(newState, type);
+        }
+    }
 
-//    public String getFragmentClass() {
-//        return fragmentClass;
-//    }
+    private void performPluginSwitch(boolean enabled, PluginType type) {
+        setPluginEnabled(type, enabled);
+        setFragmentVisible(type, enabled);
+        ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(this, getType());
+        ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled");
+        RxBus.INSTANCE.send(new EventRebuildTabs());
+        RxBus.INSTANCE.send(new EventConfigBuilderChange());
+        RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
+        ConfigBuilderPlugin.getPlugin().logPluginStatus();
+    }
 
     public String getName() {
         if (pluginDescription.pluginName == -1)
@@ -78,10 +114,6 @@ public abstract class PluginBase {
 
     public int getPreferencesId() {
         return pluginDescription.preferencesId;
-    }
-
-    public int getAdvancedPreferencesId() {
-        return pluginDescription.advancedPreferencesId;
     }
 
     public boolean isEnabled(PluginType type) {
@@ -143,7 +175,7 @@ public abstract class PluginBase {
     }
 
     public boolean isFragmentVisible() {
-        if (pluginDescription.alwayVisible)
+        if (pluginDescription.alwaysVisible)
             return true;
         if (pluginDescription.neverVisible)
             return false;

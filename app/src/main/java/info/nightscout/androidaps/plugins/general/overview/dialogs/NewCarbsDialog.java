@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
 import android.os.HandlerThread;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -75,8 +75,6 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
     private boolean okClicked;
 
     public NewCarbsDialog() {
-        HandlerThread mHandlerThread = new HandlerThread(NewCarbsDialog.class.getSimpleName());
-        mHandlerThread.start();
     }
 
     final private TextWatcher textWatcher = new TextWatcher() {
@@ -130,15 +128,15 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
         startHypoTTCheckbox = view.findViewById(R.id.newcarbs_hypo_tt);
 
         editTime = view.findViewById(R.id.newcarbs_time);
-        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, textWatcher);
+        editTime.setParams(0d, -12 * 60d, 12 * 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         editDuration = view.findViewById(R.id.new_carbs_duration);
-        editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, textWatcher);
+        editDuration.setParams(0d, 0d, 10d, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
 
         editCarbs = view.findViewById(R.id.newcarb_carbsamount);
-        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
+        editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), textWatcher);
 
         Button fav1Button = view.findViewById(R.id.newcarbs_plus1);
         fav1Button.setOnClickListener(this);

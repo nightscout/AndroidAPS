@@ -8,10 +8,13 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin;
 
 /**
  * Created by jamorham on 21/02/2018.
@@ -112,19 +115,23 @@ public class FabricPrivacy {
 
         String closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed().value() ? "CLOSED_LOOP_ENABLED" : "CLOSED_LOOP_DISABLED";
         // Size is limited to 36 chars
-        String remote = BuildConfig.REMOTE
-                .replace("https://","")
-                .replace("http://","")
+        String remote = BuildConfig.REMOTE.toLowerCase()
+                .replace("https://", "")
+                .replace("http://", "")
                 .replace(".git", "")
                 .replace(".com/", ":")
                 .replace(".org/", ":")
                 .replace(".net/", ":");
 
         MainApp.getFirebaseAnalytics().setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled);
-        MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.getLanguage(MainApp.instance()));
+        MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.INSTANCE.currentLanguage());
         MainApp.getFirebaseAnalytics().setUserProperty("Version", BuildConfig.VERSION);
         MainApp.getFirebaseAnalytics().setUserProperty("HEAD", BuildConfig.HEAD);
         MainApp.getFirebaseAnalytics().setUserProperty("Remote", remote);
+        List<String> hashes = SignatureVerifierPlugin.getPlugin().shortHashes();
+        if (hashes.size() >= 1)
+            MainApp.getFirebaseAnalytics().setUserProperty("Hash", hashes.get(0));
+
         if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
             MainApp.getFirebaseAnalytics().setUserProperty("Pump", ConfigBuilderPlugin.getPlugin().getActivePump().getClass().getSimpleName());
         if (ConfigBuilderPlugin.getPlugin().getActiveAPS() != null)
@@ -137,7 +144,6 @@ public class FabricPrivacy {
             MainApp.getFirebaseAnalytics().setUserProperty("Sensitivity", ConfigBuilderPlugin.getPlugin().getActiveSensitivity().getClass().getSimpleName());
         if (ConfigBuilderPlugin.getPlugin().getActiveInsulin() != null)
             MainApp.getFirebaseAnalytics().setUserProperty("Insulin", ConfigBuilderPlugin.getPlugin().getActiveInsulin().getClass().getSimpleName());
-
     }
 
 }

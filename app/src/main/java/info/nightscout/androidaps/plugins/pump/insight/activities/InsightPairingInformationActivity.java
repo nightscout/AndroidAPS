@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 
-public class InsightPairingInformationActivity extends AppCompatActivity {
+public class InsightPairingInformationActivity extends NoSplashAppCompatActivity {
 
     private InsightConnectionService connectionService;
 
@@ -57,7 +58,7 @@ public class InsightPairingInformationActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insight_pairing_information);
         serialNumber = findViewById(R.id.serial_number);

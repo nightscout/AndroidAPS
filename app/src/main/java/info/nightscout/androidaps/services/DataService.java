@@ -16,17 +16,18 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.source.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.source.SourceDexcomG6Plugin;
+import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.source.SourceMM640gPlugin;
@@ -35,7 +36,6 @@ import info.nightscout.androidaps.plugins.source.SourcePoctechPlugin;
 import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
-import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
 
@@ -45,7 +45,6 @@ public class DataService extends IntentService {
 
     public DataService() {
         super("DataService");
-        registerBus();
     }
 
     @Override
@@ -69,12 +68,8 @@ public class DataService extends IntentService {
             SourceMM640gPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.GLIMP_BG.equals(action)) {
             SourceGlimpPlugin.getPlugin().handleNewData(intent);
-        } else if (Intents.DEXCOMG5_BG.equals(action)) {
-            SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
-        } else if (Intents.DEXCOMG5_BG_NEW.equals(action)) {
-            SourceDexcomG5Plugin.getPlugin().handleNewData(intent);
-        } else if (Intents.DEXCOMG6_BG.equals(action)) {
-            SourceDexcomG6Plugin.getPlugin().handleNewData(intent);
+        } else if (Intents.DEXCOM_BG.equals(action)) {
+            SourceDexcomPlugin.INSTANCE.handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
             SourcePoctechPlugin.getPlugin().handleNewData(intent);
         } else if (Intents.TOMATO_BG.equals(action)) {
@@ -91,21 +86,21 @@ public class DataService extends IntentService {
         } else if (Intents.ACTION_NEW_STATUS.equals(action)) {
             NSSettingsStatus.getInstance().handleNewData(intent);
         } else if (Intents.ACTION_NEW_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.ADD, bundles);
-            MainApp.bus().post(evt);
+            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), bundles);
+            RxBus.INSTANCE.send(evt);
         } else if (Intents.ACTION_CHANGED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.UPDATE, bundles);
-            MainApp.bus().post(evt);
+            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), bundles);
+            RxBus.INSTANCE.send(evt);
         } else if (Intents.ACTION_REMOVED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
-            MainApp.bus().post(evt);
+            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), bundles);
+            RxBus.INSTANCE.send(evt);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
                         Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
                         Intents.ACTION_NEW_CAL.equals(action) ||
                         Intents.ACTION_NEW_MBG.equals(action))
-                ) {
+        ) {
             handleNewDataFromNSClient(intent);
         } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
             SmsCommunicatorPlugin.getPlugin().handleNewData(intent);
@@ -119,16 +114,6 @@ public class DataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainApp.bus().unregister(this);
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     private void handleNewDataFromNSClient(Intent intent) {
@@ -202,8 +187,8 @@ public class DataService extends IntentService {
 
     private void handleRemovedTreatmentFromNS(JSONObject json) {
         // new DB model
-        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.REMOVE, json);
-        MainApp.bus().post(evtTreatment);
+        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
+        RxBus.INSTANCE.send(evtTreatment);
         // old DB model
         String _id = JsonHelper.safeGetString(json, "_id");
         MainApp.getDbHelper().deleteTempTargetById(_id);
@@ -215,7 +200,7 @@ public class DataService extends IntentService {
 
     private void handleTreatmentFromNS(JSONObject json, Intent intent) {
         // new DB model
-        int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
+        int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.Companion.getADD() : EventNsTreatment.Companion.getUPDATE();
         double insulin = JsonHelper.safeGetDouble(json, "insulin");
         double carbs = JsonHelper.safeGetDouble(json, "carbs");
         String eventType = JsonHelper.safeGetString(json, "eventType");
@@ -225,7 +210,7 @@ public class DataService extends IntentService {
         }
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
-            MainApp.bus().post(evtTreatment);
+            RxBus.INSTANCE.send(evtTreatment);
         } else if (json.has(DanaRNSHistorySync.DANARSIGNATURE)) {
             // old DB model
             MainApp.getDbHelper().updateDanaRHistoryRecordId(json);
@@ -259,7 +244,7 @@ public class DataService extends IntentService {
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
                     && !enteredBy.equals(SP.getString("careportal_enteredby", "AndroidAPS"))) {
                 Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
-                MainApp.bus().post(new EventNewNotification(announcement));
+                RxBus.INSTANCE.send(new EventNewNotification(announcement));
             }
         }
     }

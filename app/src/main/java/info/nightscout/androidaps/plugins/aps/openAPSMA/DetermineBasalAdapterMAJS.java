@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+
+import javax.annotation.Nullable;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
@@ -47,6 +50,7 @@ public class DetermineBasalAdapterMAJS {
         mScriptReader = scriptReader;
     }
 
+    @Nullable
     public DetermineBasalResultMA invoke() {
         DetermineBasalResultMA determineBasalResultMA = null;
 
@@ -207,7 +211,7 @@ public class DetermineBasalAdapterMAJS {
 
     private String readFile(String filename) throws IOException {
         byte[] bytes = mScriptReader.readFile(filename);
-        String string = new String(bytes, "UTF-8");
+        String string = new String(bytes, StandardCharsets.UTF_8);
         if (string.startsWith("#!/usr/bin/env node")) {
             string = string.substring(20);
         }

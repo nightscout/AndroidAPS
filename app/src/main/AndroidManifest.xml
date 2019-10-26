@@ -17,10 +17,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="sugar.free.sightremote.HISTORY_BROADCASTS" />
+    <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -34,13 +36,15 @@
         android:label="@string/app_name"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.Launcher"
+        android:fullBackupContent="true">
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -85,10 +89,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
                 <!-- Receiver from glimp -->
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
-                <!-- Receiver from DexcomG5 -->
-                <action android:name="com.dexcom.cgm.DATA"/>
-                <action android:name="com.dexcom.cgm.AndroidAPSEVGCallback.BROADCAST"/>
-                <action android:name="com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST"/>
+                <!-- Receiver from Dexcom -->
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST"/>
                 <!-- Receiver from Poctech -->
                 <action android:name="com.china.poctech.data"/>
                 <!-- Receiver from Tomato -->
@@ -121,15 +123,7 @@
         </receiver>
 
         <!-- NSClient -->
-        <receiver
-            android:name=".plugins.general.nsclient.receivers.RestartReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.RESTART" />
-            </intent-filter>
-        </receiver>
-        <receiver
+         <receiver
             android:name=".plugins.general.nsclient.receivers.DBAccessReceiver"
             android:enabled="true"
             android:exported="true">
@@ -147,7 +141,7 @@
         </receiver>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -159,6 +153,9 @@
         <!-- Service processing incomming data -->
         <service
             android:name=".services.DataService"
+            android:exported="false" />
+        <service
+            android:name=".services.LocationService"
             android:exported="false" />
         <service
             android:name=".plugins.pump.danaR.services.DanaRExecutionService"
@@ -281,6 +278,27 @@
             android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
             android:label="@string/pairing_information"
             android:theme="@style/AppTheme" />
+        <activity android:name=".activities.RequestDexcomPermissionActivity" />
+
+        <!-- Medtronic service and activities -->
+        <service
+            android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
+            android:enabled="true"
+            android:exported="true" />
+        <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
+            android:label="@string/title_activity_rileylink_settings"
+            android:theme="@style/Theme.AppCompat.NoTitle" />
+        <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
     </application>
 
 </manifest>

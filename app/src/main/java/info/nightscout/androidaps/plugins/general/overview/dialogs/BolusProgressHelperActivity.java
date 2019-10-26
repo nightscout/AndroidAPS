@@ -1,24 +1,20 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-/**
- * Created by adrian on 09/02/17.
- */
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 
-public class BolusProgressHelperActivity extends AppCompatActivity {
+public class BolusProgressHelperActivity extends NoSplashAppCompatActivity {
     public BolusProgressHelperActivity() {
         super();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            this.getIntent().getDoubleExtra("insulin", 0d);
-            BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setHelperActivity(this);
-            bolusProgressDialog.setInsulin(this.getIntent().getDoubleExtra("insulin", 0d));
-            bolusProgressDialog.show(this.getSupportFragmentManager(), "BolusProgress");
+        super.onCreate(savedInstanceState);
+        BolusProgressDialog bolusProgressDialog = new BolusProgressDialog();
+        bolusProgressDialog.setHelperActivity(this);
+        bolusProgressDialog.setInsulin(getIntent().getDoubleExtra("insulin", 0d));
+        bolusProgressDialog.show(getSupportFragmentManager(), "BolusProgress");
     }
 }

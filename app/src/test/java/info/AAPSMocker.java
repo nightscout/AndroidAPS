@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
-import com.squareup.otto.Bus;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.util.Locale;
@@ -27,14 +24,12 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.SP;
 
@@ -42,7 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,9 +51,10 @@ public class AAPSMocker {
     private static ProfileStore profileStore;
     public static final String TESTPROFILENAME = "someProfile";
 
-    public static Intent intentSent = null;
-
     public static CommandQueue queue;
+    public static ConfigBuilderPlugin configBuilderPlugin;
+    public static ProfileFunctions profileFunctions;
+    public static ConstraintChecker constraintChecker;
 
     public static void mockStrings() {
         Locale.setDefault(new Locale("en", "US"));
@@ -112,7 +108,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
         when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
         when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
-        when(MainApp.gs(R.string.profile_ins_units_per_hout)).thenReturn("U/h");
+        when(MainApp.gs(R.string.profile_ins_units_per_hour)).thenReturn("U/h");
         when(MainApp.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.");
         when(MainApp.gs(R.string.sms_iob)).thenReturn("IOB:");
         when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
@@ -150,9 +146,19 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpsuspended)).thenReturn("Pump suspended");
         when(MainApp.gs(R.string.cob)).thenReturn("COB");
         when(MainApp.gs(R.string.value_unavailable_short)).thenReturn("n/a");
+        when(MainApp.gs(R.string.starttemptarget)).thenReturn("Start temp target");
+        when(MainApp.gs(R.string.stoptemptarget)).thenReturn("Stop temp target");
+        when(MainApp.gs(R.string.disableloop)).thenReturn("Disable loop");
+        when(MainApp.gs(R.string.enableloop)).thenReturn("Enable loop");
+        when(MainApp.gs(R.string.resumeloop)).thenReturn("Resume loop");
+        when(MainApp.gs(R.string.suspendloop)).thenReturn("Suspend loop");
+        when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
+        when(MainApp.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile");
+        when(MainApp.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered");
     }
 
     public static MainApp mockMainApp() {
+        System.setProperty("disableFirebase", "true");
         PowerMockito.mockStatic(MainApp.class);
         MainApp mainApp = mock(MainApp.class);
         when(MainApp.instance()).thenReturn(mainApp);
@@ -162,19 +168,14 @@ public class AAPSMocker {
 
     public static void mockConfigBuilder() {
         PowerMockito.mockStatic(ConfigBuilderPlugin.class);
-        ConfigBuilderPlugin configBuilderPlugin = mock(ConfigBuilderPlugin.class);
+        configBuilderPlugin = mock(ConfigBuilderPlugin.class);
         when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
     public static ConstraintChecker mockConstraintsChecker() {
-        ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
+        constraintChecker = mock(ConstraintChecker.class);
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         return constraintChecker;
-    }
-
-    public static void mockBus() {
-        Bus bus = PowerMockito.mock(Bus.class);
-        when(MainApp.bus()).thenReturn(bus);
     }
 
     public static void mockSP() {
@@ -234,17 +235,6 @@ public class AAPSMocker {
 
     }
 
-    public static DanaRPlugin mockDanaRPlugin() {
-        PowerMockito.mockStatic(DanaRPlugin.class);
-        DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
-        DanaRv2Plugin danaRv2Plugin = mock(DanaRv2Plugin.class);
-        DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
-        when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
-        when(MainApp.getSpecificPlugin(DanaRv2Plugin.class)).thenReturn(danaRv2Plugin);
-        when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
-        return danaRPlugin;
-    }
-
     public static Profile getValidProfile() {
         try {
             if (profile == null)
@@ -274,7 +264,7 @@ public class AAPSMocker {
 
     public static void mockProfileFunctions() {
         PowerMockito.mockStatic(ProfileFunctions.class);
-        ProfileFunctions profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        profileFunctions = PowerMockito.mock(ProfileFunctions.class);
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
@@ -289,32 +279,6 @@ public class AAPSMocker {
         Object dataLock = new Object();
         PowerMockito.when(iobCobCalculatorPlugin.getDataLock()).thenReturn(dataLock);
         return iobCobCalculatorPlugin;
-    }
-
-    private static MockedBus bus = new MockedBus();
-
-    public static void prepareMockedBus() {
-        when(MainApp.bus()).thenReturn(bus);
-    }
-
-    public static class MockedBus extends Bus {
-        public boolean registered = false;
-        public boolean notificationSent = false;
-
-        @Override
-        public void register(Object event) {
-            registered = true;
-        }
-
-        @Override
-        public void unregister(Object event) {
-            registered = false;
-        }
-
-        @Override
-        public void post(Object event) {
-            notificationSent = true;
-        }
     }
 
 }

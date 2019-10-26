@@ -1,12 +1,8 @@
 package info.nightscout.androidaps.plugins.general.food;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,7 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +30,20 @@ import java.util.Set;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
-import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SpinnerHelper;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by mike on 16.10.2017.
  */
 
-public class FoodFragment extends SubscriberFragment {
+public class FoodFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(FoodFragment.class);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     EditText filter;
     ImageView clearFilter;
@@ -59,93 +61,96 @@ public class FoodFragment extends SubscriberFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
-            View view = inflater.inflate(R.layout.food_fragment, container, false);
-            filter = (EditText) view.findViewById(R.id.food_filter);
-            clearFilter = (ImageView) view.findViewById(R.id.food_clearfilter);
-            category = new SpinnerHelper(view.findViewById(R.id.food_category));
-            subcategory = new SpinnerHelper(view.findViewById(R.id.food_subcategory));
-            recyclerView = (RecyclerView) view.findViewById(R.id.food_recyclerview);
-            recyclerView.setHasFixedSize(true);
-            LinearLayoutManager llm = new LinearLayoutManager(view.getContext());
-            recyclerView.setLayoutManager(llm);
+        View view = inflater.inflate(R.layout.food_fragment, container, false);
+        filter = (EditText) view.findViewById(R.id.food_filter);
+        clearFilter = (ImageView) view.findViewById(R.id.food_clearfilter);
+        category = new SpinnerHelper(view.findViewById(R.id.food_category));
+        subcategory = new SpinnerHelper(view.findViewById(R.id.food_subcategory));
+        recyclerView = (RecyclerView) view.findViewById(R.id.food_recyclerview);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(view.getContext());
+        recyclerView.setLayoutManager(llm);
 
-            clearFilter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    filter.setText("");
-                    category.setSelection(0);
-                    subcategory.setSelection(0);
-                    filterData();
-                }
-            });
+        clearFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter.setText("");
+                category.setSelection(0);
+                subcategory.setSelection(0);
+                filterData();
+            }
+        });
 
-            category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    fillSubcategories();
-                    filterData();
-                }
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                fillSubcategories();
+                filterData();
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    fillSubcategories();
-                    filterData();
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                fillSubcategories();
+                filterData();
+            }
+        });
 
-            subcategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    filterData();
-                }
+        subcategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterData();
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    filterData();
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                filterData();
+            }
+        });
 
-            filter.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+        filter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    filterData();
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterData();
+            }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp
-                    .getSpecificPlugin(FoodPlugin.class).getService().getFoodData());
-            recyclerView.setAdapter(adapter);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(FoodPlugin.getPlugin().getService().getFoodData());
+        recyclerView.setAdapter(adapter);
 
-            loadData();
-            fillCategories();
-            fillSubcategories();
-            filterData();
-            return view;
-        } catch (Exception e) {
-            FabricPrivacy.logException(e);
-        }
-
-        return null;
+        loadData();
+        fillCategories();
+        fillSubcategories();
+        filterData();
+        return view;
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onStatusEvent(final EventFoodDatabaseChanged ev) {
-        loadData();
-        filterData();
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventFoodDatabaseChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+        );
+        updateGui();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     void loadData() {
-        unfiltered = MainApp.getSpecificPlugin(FoodPlugin.class).getService().getFoodData();
+        unfiltered = FoodPlugin.getPlugin().getService().getFoodData();
     }
 
     void fillCategories() {
@@ -207,19 +212,11 @@ public class FoodFragment extends SubscriberFragment {
             filtered.add(f);
         }
 
-        updateGUI();
+        updateGui();
     }
 
-    @Override
-    protected void updateGUI() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.swapAdapter(new FoodFragment.RecyclerViewAdapter(filtered), true);
-                }
-            });
+    protected void updateGui() {
+        recyclerView.swapAdapter(new FoodFragment.RecyclerViewAdapter(filtered), true);
     }
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.FoodsViewHolder> {
@@ -299,7 +296,7 @@ public class FoodFragment extends SubscriberFragment {
                                 if (_id != null && !_id.equals("")) {
                                     NSUpload.removeFoodFromNS(_id);
                                 }
-                                MainApp.getSpecificPlugin(FoodPlugin.class).getService().delete(food);
+                                FoodPlugin.getPlugin().getService().delete(food);
                             }
                         });
                         builder.setNegativeButton(MainApp.gs(R.string.cancel), null);

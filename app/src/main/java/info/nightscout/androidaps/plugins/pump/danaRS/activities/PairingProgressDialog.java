@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +12,19 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.fragment.app.DialogFragment;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class PairingProgressDialog extends DialogFragment implements View.OnClickListener {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView statusView;
     ProgressBar progressBar;
@@ -101,7 +105,11 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
     @Override
     public void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSPairingSuccess.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> pairingEnded = true, FabricPrivacy::logException)
+        );
         running = true;
         if (pairingEnded) dismiss();
     }
@@ -117,13 +125,8 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
     @Override
     public void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
+        disposable.clear();
         running = false;
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSPairingSuccess ev) {
-        pairingEnded = true;
     }
 
     public void setHelperActivity(PairingHelperActivity activity) {

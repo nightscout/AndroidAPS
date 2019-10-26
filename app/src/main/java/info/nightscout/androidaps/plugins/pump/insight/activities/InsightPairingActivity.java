@@ -10,11 +10,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +17,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 
-public class InsightPairingActivity extends AppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
+public class InsightPairingActivity extends NoSplashAppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
 
     private boolean scanning;
     private LinearLayout deviceSearchSection;
@@ -66,7 +67,7 @@ public class InsightPairingActivity extends AppCompatActivity implements Insight
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insight_pairing);
 
@@ -160,20 +161,25 @@ public class InsightPairingActivity extends AppCompatActivity implements Insight
     private void startBLScan() {
         if (!scanning) {
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-            intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(broadcastReceiver, intentFilter);
-            bluetoothAdapter.startDiscovery();
-            scanning = true;
+            if (bluetoothAdapter != null) {
+                if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+                intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(broadcastReceiver, intentFilter);
+                bluetoothAdapter.startDiscovery();
+                scanning = true;
+            }
         }
     }
 
     private void stopBLScan() {
         if (scanning) {
             unregisterReceiver(broadcastReceiver);
-            BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter != null) {
+                bluetoothAdapter.cancelDiscovery();
+            }
             scanning = false;
         }
     }

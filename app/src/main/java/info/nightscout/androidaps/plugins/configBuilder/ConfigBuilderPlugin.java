@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.configBuilder;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,9 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.CommandQueue;
@@ -57,7 +59,7 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .fragmentClass(ConfigBuilderFragment.class.getName())
                 .showInList(true)
                 .alwaysEnabled(true)
-                .alwayVisible(false)
+                .alwaysVisible(false)
                 .pluginName(R.string.configbuilder)
                 .shortName(R.string.configbuilder_shortname)
                 .description(R.string.description_config_builder)
@@ -66,14 +68,12 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        MainApp.bus().unregister(this);
     }
 
 
@@ -82,7 +82,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         upgradeSettings();
         loadSettings();
         setAlwaysEnabledPluginsEnabled();
-        MainApp.bus().post(new EventAppInitialized());
+        RxBus.INSTANCE.send(new EventAppInitialized());
     }
 
     private void setAlwaysEnabledPluginsEnabled() {
@@ -102,7 +102,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
             for (PluginBase p : pluginList) {
                 PluginType type = p.getType();
-                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwayVisible)
+                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible)
                     continue;
                 if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible)
                     continue;
@@ -232,31 +232,37 @@ public class ConfigBuilderPlugin extends PluginBase {
         return commandQueue;
     }
 
+    @Nullable
     public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
+    @Nullable
     public ProfileInterface getActiveProfileInterface() {
         return activeProfile;
     }
 
+    @Nullable
     public InsulinInterface getActiveInsulin() {
         return activeInsulin;
     }
 
+    @Nullable
     public APSInterface getActiveAPS() {
         return activeAPS;
     }
 
+    @Nullable
     public PumpInterface getActivePump() {
         return activePump;
     }
 
+    @Nullable
     public SensitivityInterface getActiveSensitivity() {
         return activeSensitivity;
     }
 
-    void logPluginStatus() {
+    public void logPluginStatus() {
         if (L.isEnabled(L.CONFIGBUILDER))
             for (PluginBase p : pluginList) {
                 log.debug(p.getName() + ":" +
@@ -399,4 +405,58 @@ public class ConfigBuilderPlugin extends PluginBase {
         return found;
     }
 
+    public void processOnEnabledCategoryChanged(PluginBase changedPlugin, PluginType type) {
+        ArrayList<PluginBase> pluginsInCategory = null;
+        switch (type) {
+            // Multiple selection allowed
+            case GENERAL:
+            case CONSTRAINTS:
+            case LOOP:
+                break;
+            // Single selection allowed
+            case INSULIN:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
+                break;
+            case SENSITIVITY:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
+                break;
+            case APS:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
+                break;
+            case PROFILE:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
+                break;
+            case BGSOURCE:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
+                break;
+            case TREATMENT:
+            case PUMP:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(PumpInterface.class);
+                break;
+        }
+        if (pluginsInCategory != null) {
+            boolean newSelection = changedPlugin.isEnabled(type);
+            if (newSelection) { // new plugin selected -> disable others
+                for (PluginBase p : pluginsInCategory) {
+                    if (p.getName().equals(changedPlugin.getName())) {
+                        // this is new selected
+                    } else {
+                        p.setPluginEnabled(type, false);
+                        p.setFragmentVisible(type, false);
+                    }
+                }
+            } else { // enable first plugin in list
+                if (type == PluginType.PUMP)
+                    VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
+                else if (type == PluginType.INSULIN)
+                    InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(type, true);
+                else if (type == PluginType.SENSITIVITY)
+                    SensitivityOref0Plugin.getPlugin().setPluginEnabled(type, true);
+                else if (type == PluginType.PROFILE)
+                    NSProfilePlugin.getPlugin().setPluginEnabled(type, true);
+                else
+                    pluginsInCategory.get(0).setPluginEnabled(type, true);
+            }
+        }
+    }
 }

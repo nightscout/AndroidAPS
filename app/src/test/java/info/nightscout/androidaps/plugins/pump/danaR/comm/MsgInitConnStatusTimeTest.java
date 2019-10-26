@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -11,7 +12,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.utils.SP;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Rumen Georgiev on 8/30/2018.
@@ -22,14 +23,6 @@ import static org.junit.Assert.*;
 public class MsgInitConnStatusTimeTest {
     @Test
     public void runTest() {
-        AAPSMocker.mockMainApp();
-        AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockSP();
-        AAPSMocker.mockL();
-        AAPSMocker.mockBus();
-        AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockCommandQueue();
-        AAPSMocker.mockDanaRPlugin();
         MsgInitConnStatusTime packet = new MsgInitConnStatusTime();
 
         // test message decoding
@@ -57,4 +50,13 @@ public class MsgInitConnStatusTimeTest {
         return ret;
     }
 
+    @Before
+    public void mock() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+        AAPSMocker.mockL();
+        AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockCommandQueue();
+    }
 }

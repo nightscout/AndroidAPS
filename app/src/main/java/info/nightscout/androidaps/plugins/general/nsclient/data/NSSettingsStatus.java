@@ -3,7 +3,8 @@ package info.nightscout.androidaps.plugins.general.nsclient.data;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,12 +17,13 @@ import java.util.Objects;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.logging.BundleLogger;
 
 /*
  {
@@ -154,22 +156,22 @@ public class NSSettingsStatus {
             try {
                 if (nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
                     Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
+                    RxBus.INSTANCE.send(new EventNewNotification(notification));
                 } else {
-                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                    RxBus.INSTANCE.send(new EventDismissNotification(Notification.OLD_NSCLIENT));
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 log.error("Unhandled exception", e);
             }
             if (nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
                 Notification notification = new Notification(Notification.OLD_NS, MainApp.gs(R.string.unsupportednsversion), Notification.NORMAL);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else {
-                MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.OLD_NS));
             }
         } else {
             Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         }
         if (bundle.containsKey("status")) {
             try {
@@ -180,9 +182,9 @@ public class NSSettingsStatus {
                 Double targetHigh = getThreshold("bgTargetTop");
                 Double targetlow = getThreshold("bgTargetBottom");
                 if (targetHigh != null)
-                    OverviewPlugin.bgTargetHigh = targetHigh;
+                    OverviewPlugin.INSTANCE.setBgTargetHigh(targetHigh);
                 if (targetlow != null)
-                    OverviewPlugin.bgTargetLow = targetlow;
+                    OverviewPlugin.INSTANCE.setBgTargetLow(targetlow);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

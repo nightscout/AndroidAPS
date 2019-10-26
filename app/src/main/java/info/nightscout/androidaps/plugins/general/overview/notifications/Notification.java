@@ -1,4 +1,3 @@
-
 package info.nightscout.androidaps.plugins.general.overview.notifications;
 
 import java.util.Date;
@@ -34,11 +33,12 @@ public class Notification {
     public static final int OLD_NSCLIENT = 8;
     public static final int OLD_NS = 9;
     public static final int INVALID_PHONE_NUMBER = 10;
-    public static final int APPROACHING_DAILY_LIMIT = 11;
-    public static final int NSCLIENT_NO_WRITE_PERMISSION = 12;
-    public static final int MISSING_SMS_PERMISSION = 13;
-    public static final int PUMPERROR = 14;
-    public static final int WRONGSERIALNUMBER = 15;
+    public static final int INVALID_MESSAGE_BODY = 11;
+    public static final int APPROACHING_DAILY_LIMIT = 12;
+    public static final int NSCLIENT_NO_WRITE_PERMISSION = 13;
+    public static final int MISSING_SMS_PERMISSION = 14;
+    public static final int PUMPERROR = 15;
+    public static final int WRONGSERIALNUMBER = 16;
 
     public static final int NSANNOUNCEMENT = 18;
     public static final int NSALARM = 19;
@@ -75,6 +75,9 @@ public class Notification {
     public static final int DST_IN_24H = 50;
     public static final int DISKFULL = 51;
     public static final int OLDVERSION = 52;
+    public static final int USERMESSAGE = 53;
+    public static final int OVER_24H_TIME_CHANGE_REQUESTED = 54;
+    public static final int INVALID_VERSION = 55;
 
 
     public int id;
@@ -85,6 +88,7 @@ public class Notification {
 
     public NSAlarm nsAlarm = null;
     public Integer soundId = null;
+
     public Notification() {
     }
 
@@ -198,10 +202,10 @@ public class Notification {
         return false;
     }
 
-    public static boolean isAlarmForStaleData(){
+    public static boolean isAlarmForStaleData() {
         long snoozedTo = SP.getLong("snoozedTo", 0L);
-        if(snoozedTo != 0L){
-            if(System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
+        if (snoozedTo != 0L) {
+            if (System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
                 //log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
                 return false;
             }
@@ -217,12 +221,12 @@ public class Notification {
         //log.debug("bgReadingAgoMin value is:"+bgReadingAgoMin);
         //log.debug("Stale alarm snoozed to: "+(System.currentTimeMillis() - snoozedTo)/60000L);
         Double threshold = NSSettingsStatus.getInstance().getThreshold("alarmTimeagoWarnMins");
-	//log.debug("OpenAPS Alerts enabled: "+openAPSEnabledAlerts);
-	// if no thresshold from Ns get it loccally
-        if(threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue,15D);
-	// No threshold of OpenAPS Alarm so using the one for BG
-	// Added OpenAPSEnabledAlerts to alarm check
-        if((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false))||(bgReadingAgoMin > threshold && openAPSEnabledAlerts)){
+        //log.debug("OpenAPS Alerts enabled: "+openAPSEnabledAlerts);
+        // if no thresshold from Ns get it loccally
+        if (threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue, 15D);
+        // No threshold of OpenAPS Alarm so using the one for BG
+        // Added OpenAPSEnabledAlerts to alarm check
+        if ((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false)) || (bgReadingAgoMin > threshold && openAPSEnabledAlerts)) {
             return true;
         }
         //snoozing for threshold

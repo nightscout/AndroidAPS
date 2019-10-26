@@ -3,9 +3,10 @@ package info.nightscout.androidaps.queue;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,12 @@ import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressHelperActivity;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -99,16 +101,20 @@ public class CommandQueue {
     }
 
     private synchronized void removeAll(Command.CommandType type) {
-        for (int i = queue.size() - 1; i >= 0; i--) {
-            if (queue.get(i).commandType == type) {
-                queue.remove(i);
+        synchronized (queue) {
+            for (int i = queue.size() - 1; i >= 0; i--) {
+                if (queue.get(i).commandType == type) {
+                    queue.remove(i);
+                }
             }
         }
     }
 
     private synchronized boolean isLastScheduled(Command.CommandType type) {
-        if (queue.size() > 0 && queue.get(queue.size() - 1).commandType == type) {
-            return true;
+        synchronized (queue) {
+            if (queue.size() > 0 && queue.get(queue.size() - 1).commandType == type) {
+                return true;
+            }
         }
         return false;
     }
@@ -117,37 +123,44 @@ public class CommandQueue {
         // inject as a first command
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Adding as first: " + command.getClass().getSimpleName() + " - " + command.status());
-        queue.addFirst(command);
+        synchronized (queue) {
+            queue.addFirst(command);
+        }
     }
 
     private synchronized void add(Command command) {
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Adding: " + command.getClass().getSimpleName() + " - " + command.status());
-        queue.add(command);
+        synchronized (queue) {
+            queue.add(command);
+        }
     }
 
     synchronized void pickup() {
-        performing = queue.poll();
+        synchronized (queue) {
+            performing = queue.poll();
+        }
     }
 
     synchronized void clear() {
         performing = null;
-        for (int i = 0; i < queue.size(); i++) {
-            queue.get(i).cancel();
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                queue.get(i).cancel();
+            }
+            queue.clear();
         }
-
-        queue.clear();
     }
 
     public int size() {
         return queue.size();
     }
 
-    public Command performing() {
+    Command performing() {
         return performing;
     }
 
-    public void resetPerforming() {
+    void resetPerforming() {
         performing = null;
     }
 
@@ -179,9 +192,11 @@ public class CommandQueue {
 
     public synchronized boolean bolusInQueue() {
         if (isRunning(Command.CommandType.BOLUS)) return true;
-        for (int i = 0; i < queue.size(); i++) {
-            if (queue.get(i).commandType == Command.CommandType.BOLUS) {
-                return true;
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                if (queue.get(i).commandType == Command.CommandType.BOLUS) {
+                    return true;
+                }
             }
         }
         return false;
@@ -192,7 +207,7 @@ public class CommandQueue {
         Command.CommandType type = detailedBolusInfo.isSMB ? Command.CommandType.SMB_BOLUS : Command.CommandType.BOLUS;
 
         if (type == Command.CommandType.SMB_BOLUS) {
-            if (isRunning(Command.CommandType.BOLUS) || bolusInQueue()) {
+            if (isRunning(Command.CommandType.BOLUS) || isRunning(Command.CommandType.SMB_BOLUS) || bolusInQueue()) {
                 if (L.isEnabled(L.PUMPQUEUE))
                     log.debug("Rejecting SMB since a bolus is queue/running");
                 return false;
@@ -202,6 +217,7 @@ public class CommandQueue {
                     log.debug("Rejecting bolus, another bolus was issued since request time");
                 return false;
             }
+            removeAll(Command.CommandType.SMB_BOLUS);
         }
 
 
@@ -233,7 +249,7 @@ public class CommandQueue {
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
                 // Notify Wear about upcoming bolus
-                MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+                RxBus.INSTANCE.send(new EventBolusRequested(detailedBolusInfo.insulin));
             }
         }
 
@@ -259,7 +275,7 @@ public class CommandQueue {
 
     public synchronized void cancelAllBoluses() {
         if (!isRunning(Command.CommandType.BOLUS)) {
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(new PumpEnactResult().success(true).enacted(false)));
+            RxBus.INSTANCE.send(new EventDismissBolusProgressIfRunning(new PumpEnactResult().success(true).enacted(false)));
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);
@@ -379,27 +395,27 @@ public class CommandQueue {
 
         if (!MainApp.isEngineeringModeOrRelease()) {
             Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.gs(R.string.not_eng_mode_or_release), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
             return false;
         }
 
         // Compare with pump limits
-        Profile.BasalValue[] basalValues = profile.getBasalValues();
+        Profile.ProfileValue[] basalValues = profile.getBasalValues();
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
-        for (Profile.BasalValue basalValue : basalValues) {
+        for (Profile.ProfileValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
-                MainApp.bus().post(new EventNewNotification(notification));
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
                 if (callback != null)
                     callback.result(new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
                 return false;
             }
         }
 
-        MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
+        RxBus.INSTANCE.send(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
 
         // remove all unfinished
         removeAll(Command.CommandType.BASALPROFILE);
@@ -432,6 +448,21 @@ public class CommandQueue {
 
         return true;
     }
+
+
+    public synchronized boolean statusInQueue() {
+        if (isRunning(Command.CommandType.READSTATUS))
+            return true;
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                if (queue.get(i).commandType == Command.CommandType.READSTATUS) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     // returns true if command is queued
     public boolean loadHistory(byte type, Callback callback) {
@@ -512,15 +543,18 @@ public class CommandQueue {
     public Spanned spannedStatus() {
         String s = "";
         int line = 0;
-        if (performing != null) {
-            s += "<b>" + performing.status() + "</b>";
+        Command perf = performing;
+        if (perf != null) {
+            s += "<b>" + perf.status() + "</b>";
             line++;
         }
-        for (int i = 0; i < queue.size(); i++) {
-            if (line != 0)
-                s += "<br>";
-            s += queue.get(i).status();
-            line++;
+        synchronized (queue) {
+            for (int i = 0; i < queue.size(); i++) {
+                if (line != 0)
+                    s += "<br>";
+                s += queue.get(i).status();
+                line++;
+            }
         }
         return Html.fromHtml(s);
     }

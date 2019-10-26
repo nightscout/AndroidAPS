@@ -30,8 +30,8 @@ public class PluginDescriptionTest {
 
     @Test
     public void alwayVisibleTest() {
-        PluginDescription pluginDescription = new PluginDescription().alwayVisible(true);
-        Assert.assertEquals(true, pluginDescription.alwayVisible);
+        PluginDescription pluginDescription = new PluginDescription().alwaysVisible(true);
+        Assert.assertEquals(true, pluginDescription.alwaysVisible);
     }
 
     @Test
@@ -62,12 +62,6 @@ public class PluginDescriptionTest {
     public void preferencesIdTest() {
         PluginDescription pluginDescription = new PluginDescription().preferencesId(10);
         Assert.assertEquals(10, pluginDescription.preferencesId);
-    }
-
-    @Test
-    public void advancedPreferencesIdTest() {
-        PluginDescription pluginDescription = new PluginDescription().advancedPreferencesId(10);
-        Assert.assertEquals(10, pluginDescription.advancedPreferencesId);
     }
 
     @Test

@@ -1,24 +1,22 @@
 package info.nightscout.androidaps.plugins.treatments.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,26 +25,30 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by mike on 13/01/17.
  */
 
-public class TreatmentsProfileSwitchFragment extends SubscriberFragment implements View.OnClickListener {
+public class TreatmentsProfileSwitchFragment extends Fragment implements View.OnClickListener {
     private Logger log = LoggerFactory.getLogger(L.UI);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -159,10 +161,14 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                         break;
                     case R.id.profileswitch_date:
                     case R.id.profileswitch_name:
-                        long time = ((ProfileSwitch) v.getTag()).date;
-                        ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(time);
+                        Bundle args = new Bundle();
+                        args.putLong("time", ((ProfileSwitch) v.getTag()).date);
+                        args.putLong("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal());
+                        ProfileViewerDialog pvd = new ProfileViewerDialog();
+                        pvd.setArguments(args);
                         FragmentManager manager = getFragmentManager();
-                        pvd.show(manager, "ProfileViewDialog");
+                        if (manager != null)
+                            pvd.show(manager, "ProfileViewDialog");
                         break;
                 }
             }
@@ -191,8 +197,24 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
 
-        updateGUI();
         return view;
+    }
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGUI(), FabricPrivacy::logException)
+        );
+        updateGUI();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     @Override
@@ -205,8 +227,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
                 builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetProfileSwitch();
-                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                        RxBus.INSTANCE.send(new EventNSClientRestart());
                     }
                 });
                 builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
@@ -215,20 +236,7 @@ public class TreatmentsProfileSwitchFragment extends SubscriberFragment implemen
         }
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventProfileNeedsUpdate ev) {
-        updateGUI();
-    }
-
-    @Override
     protected void updateGUI() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
-                }
-            });
+        recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false);
     }
 }

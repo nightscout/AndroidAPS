@@ -50,7 +50,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/danar_history_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -71,12 +71,6 @@
             android:layout_weight="1"
             android:text="@string/danar_historyreload" />
 
-        <Button
-            android:id="@+id/danar_historysync"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sync to NS" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/automation">
+
+        <ListPreference
+            android:defaultValue="PASSIVE"
+            android:entries="@array/location"
+            android:entryValues="@array/locationValues"
+            android:key="@string/key_location"
+            android:title="@string/locationservice" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

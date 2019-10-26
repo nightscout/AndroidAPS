@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.utils;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+
 /**
  * class contains useful String functions
  */
@@ -16,5 +19,13 @@ public class StringUtils {
         }
 
         return string;
+    }
+
+    public static boolean emptyString(final String str) {
+        return str == null || str.length() == 0;
+    }
+
+    public static String formatInsulin(double insulin) {
+        return String.format(MainApp.gs(R.string.formatinsulinunits), insulin);
     }
 }

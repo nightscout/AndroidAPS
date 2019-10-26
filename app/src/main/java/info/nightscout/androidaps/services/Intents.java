@@ -23,8 +23,6 @@ public interface Intents {
 
     // App -> NSClient
     String ACTION_DATABASE = "info.nightscout.client.DBACCESS";
-    String ACTION_RESTART = "info.nightscout.client.RESTART";
-    String ACTION_RESEND = "info.nightscout.client.RESEND";
     String ACTION_ACK_ALARM = "info.nightscout.client.ACK_ALARM";
 
     // xDrip -> App
@@ -48,9 +46,7 @@ public interface Intents {
 
     String GLIMP_BG = "it.ct.glicemia.ACTION_GLUCOSE_MEASURED";
 
-    String DEXCOMG5_BG = "com.dexcom.cgm.DATA";
-    String DEXCOMG5_BG_NEW = "com.dexcom.cgm.g5.AndroidAPSEVGCallback.BROADCAST";
-    String DEXCOMG6_BG = "com.dexcom.cgm.AndroidAPSEVGCallback.BROADCAST";
+    String DEXCOM_BG = "com.dexcom.cgm.EXTERNAL_BROADCAST";
     String EVERSENSE_BG = "com.senseonics.AndroidAPSEventSubscriber.BROADCAST";
 
     String POCTECH_BG = "com.china.poctech.data";

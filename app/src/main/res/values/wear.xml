@@ -11,8 +11,4 @@
   limitations under the License.
   -->
 
-<resources>
-    <string-array name="android_wear_capabilities">
-        <item>phone_app_sync_bgs</item>
-    </string-array>
-</resources>
+<resources></resources>

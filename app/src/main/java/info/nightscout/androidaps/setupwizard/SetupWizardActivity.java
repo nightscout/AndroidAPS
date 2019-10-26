@@ -3,15 +3,14 @@ package info.nightscout.androidaps.setupwizard;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +20,26 @@ import java.util.List;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventProfileStoreChanged;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
+import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesSaved;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.AndroidPermission;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class SetupWizardActivity extends AppCompatActivity {
+public class SetupWizardActivity extends NoSplashAppCompatActivity {
     //logging
     private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     ScrollView scrollView;
 
@@ -45,9 +49,9 @@ public class SetupWizardActivity extends AppCompatActivity {
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocaleHelper.onCreate(this, "en");
+        LocaleHelper.INSTANCE.update(getApplicationContext());
         setContentView(R.layout.activity_setupwizard);
 
         scrollView = (ScrollView) findViewById(R.id.sw_scrollview);
@@ -70,7 +74,8 @@ public class SetupWizardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (currentWizardPage == 0) OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        if (currentWizardPage == 0)
+            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
         else showPreviousPage(null);
     }
 
@@ -82,46 +87,41 @@ public class SetupWizardActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
         swDefinition.setActivity(this);
-    }
-
-    @Subscribe
-    public void onContentUpdate(EventSWUpdate ev) {
-        if (ev.redraw)
-            generateLayout();
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventNSClientStatus(EventNSClientStatus ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventPumpStatusChanged(EventPumpStatusChanged ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventProfileStoreChanged(EventProfileStoreChanged ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventProfileSwitchChange(EventProfileNeedsUpdate ignored) {
-        updateButtons();
-    }
-
-    @Subscribe
-    public void onEventObjectivesSaved(EventObjectivesSaved ignored) {
-        updateButtons();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNSClientStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileStoreChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventSWUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (event.getRedraw()) generateLayout();
+                    updateButtons();
+                }, FabricPrivacy::logException)
+        );
     }
 
     private void generateLayout() {
@@ -131,7 +131,7 @@ public class SetupWizardActivity extends AppCompatActivity {
             SWItem currentItem = currentScreen.items.get(i);
             currentItem.generateDialog(layout);
         }
-        scrollView.smoothScrollTo(0,0);
+        scrollView.smoothScrollTo(0, 0);
     }
 
     private void updateButtons() {
@@ -223,4 +223,10 @@ public class SetupWizardActivity extends AppCompatActivity {
         updateButtons();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AndroidPermission.CASE_BATTERY)
+            updateButtons();
+    }
 }

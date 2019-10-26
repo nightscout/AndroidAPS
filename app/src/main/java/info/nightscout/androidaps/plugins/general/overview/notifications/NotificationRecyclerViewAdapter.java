@@ -1,13 +1,15 @@
 package info.nightscout.androidaps.plugins.general.overview.notifications;
 
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import java.util.Objects;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -29,10 +32,11 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
 
     private List<Notification> notificationsList;
 
-    public NotificationRecyclerViewAdapter(List<Notification> notificationsList) {
+    NotificationRecyclerViewAdapter(List<Notification> notificationsList) {
         this.notificationsList = notificationsList;
     }
 
+    @NonNull
     @Override
     public NotificationsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.overview_notification_item, viewGroup, false);
@@ -46,10 +50,9 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         if (notification instanceof NotificationWithAction)
             holder.dismiss.setText(((NotificationWithAction) notification).buttonText);
         else if (Objects.equals(notification.text, MainApp.gs(R.string.nsalarm_staledata)))
-            holder.dismiss.setText("snooze");
+            holder.dismiss.setText(R.string.snooze);
 
-        holder.text.setText(notification.text + '\n');
-        holder.time.setText(DateUtil.timeString(notification.date));
+        holder.text.setText(DateUtil.timeString(notification.date) + " " + notification.text);
         if (notification.level == Notification.URGENT)
             holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationUrgent));
         else if (notification.level == Notification.NORMAL)
@@ -68,48 +71,42 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     static class NotificationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CardView cv;
-        TextView time;
         TextView text;
         Button dismiss;
 
         NotificationsViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView) itemView.findViewById(R.id.notification_cardview);
-            time = (TextView) itemView.findViewById(R.id.notification_time);
-            text = (TextView) itemView.findViewById(R.id.notification_text);
-            dismiss = (Button) itemView.findViewById(R.id.notification_dismiss);
+            cv = itemView.findViewById(R.id.notification_cardview);
+            text = itemView.findViewById(R.id.notification_text);
+            dismiss = itemView.findViewById(R.id.notification_dismiss);
             dismiss.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Notification notification = (Notification) v.getTag();
-            switch (v.getId()) {
-                case R.id.notification_dismiss:
-                    MainApp.bus().post(new EventDismissNotification(notification.id));
-                    if (notification.nsAlarm != null) {
-                        BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
-                    }
-                    // Adding current time to snooze if we got staleData
-                    if (L.isEnabled(L.NOTIFICATION))
-                        log.debug("Notification text is: " + notification.text);
-                    if (notification.text.equals(MainApp.gs(R.string.nsalarm_staledata))) {
-                        NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
-                        long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
-                        if (L.isEnabled(L.NOTIFICATION))
-                            log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
-                        nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
-                    }
-                    if (notification instanceof NotificationWithAction) {
-                        ((NotificationWithAction) notification).action.run();
-                    }
-                    break;
+            RxBus.INSTANCE.send(new EventDismissNotification(notification.id));
+            if (notification.nsAlarm != null) {
+                BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
+            }
+            // Adding current time to snooze if we got staleData
+            if (L.isEnabled(L.NOTIFICATION))
+                log.debug("Notification text is: " + notification.text);
+            if (notification.text.equals(MainApp.gs(R.string.nsalarm_staledata))) {
+                NotificationStore nstore = OverviewPlugin.INSTANCE.getNotificationStore();
+                long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
+                if (L.isEnabled(L.NOTIFICATION))
+                    log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
+                nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
+            }
+            if (notification instanceof NotificationWithAction) {
+                ((NotificationWithAction) notification).action.run();
             }
         }
     }

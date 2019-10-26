@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.insight;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +10,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
@@ -28,11 +28,16 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveTBR;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStatus;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
+import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class LocalInsightFragment extends SubscriberFragment implements View.OnClickListener {
+public class LocalInsightFragment extends Fragment implements View.OnClickListener {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final boolean ENABLE_OPERATING_MODE_BUTTON = false;
 
@@ -59,6 +64,23 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
         refresh.setOnClickListener(this);
         viewsCreated = true;
         return view;
+    }
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventLocalInsightUpdateGUI.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGUI(), FabricPrivacy::logException)
+        );
+        updateGUI();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     @Override
@@ -121,12 +143,6 @@ public class LocalInsightFragment extends SubscriberFragment implements View.OnC
         }
     }
 
-    @Subscribe
-    public void onUpdateGUIEvent(EventLocalInsightUpdateGUI event) {
-        updateGUI();
-    }
-
-    @Override
     protected void updateGUI() {
         if (!viewsCreated) return;
         statusItemContainer.removeAllViews();

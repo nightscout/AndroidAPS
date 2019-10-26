@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,14 +12,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
 
-public class InsightAlertActivity extends AppCompatActivity {
+public class InsightAlertActivity extends NoSplashAppCompatActivity {
 
     private Alert alert;
     private InsightAlertService alertService;
@@ -40,7 +41,7 @@ public class InsightAlertActivity extends AppCompatActivity {
             alertService.setAlertActivity(InsightAlertActivity.this);
             alert = alertService.getAlert();
             if (alert == null) finish();
-            update(alert);
+            else update(alert);
         }
 
         @Override
@@ -50,7 +51,7 @@ public class InsightAlertActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insight_alert);
 

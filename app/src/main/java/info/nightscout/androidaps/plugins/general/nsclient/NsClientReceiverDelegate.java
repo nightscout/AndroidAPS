@@ -6,13 +6,12 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
-import com.squareup.otto.Bus;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.receivers.ChargingStateReceiver;
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.utils.SP;
@@ -20,18 +19,16 @@ import info.nightscout.androidaps.utils.SP;
 class NsClientReceiverDelegate {
 
     private final Context context;
-    private final Bus bus;
 
-    private NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
+    private NetworkChangeReceiver networkChangeReceiver = NetworkChangeReceiver.instance;
     private ChargingStateReceiver chargingStateReceiver = new ChargingStateReceiver();
 
     private boolean allowedChargingState = true;
     private boolean allowedNetworkState = true;
     boolean allowed = true;
 
-    NsClientReceiverDelegate(Context context, Bus bus) {
+    NsClientReceiverDelegate(Context context) {
         this.context = context;
-        this.bus = bus;
     }
 
     void registerReceivers() {
@@ -45,14 +42,14 @@ class NsClientReceiverDelegate {
 
         EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(context);
         if (event != null)
-            bus.post(event);
+            RxBus.INSTANCE.send(event);
 
         context.registerReceiver(chargingStateReceiver,
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         EventChargingState eventChargingState = chargingStateReceiver.grabChargingState(context);
         if (eventChargingState != null)
-            bus.post(eventChargingState);
+            RxBus.INSTANCE.send(eventChargingState);
 
     }
 
@@ -65,14 +62,14 @@ class NsClientReceiverDelegate {
         if (ev.isChanged(R.string.key_ns_wifionly) ||
                 ev.isChanged(R.string.key_ns_wifi_ssids) ||
                 ev.isChanged(R.string.key_ns_allowroaming)
-                ) {
+        ) {
             EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
             if (event != null)
-                bus.post(event);
+                RxBus.INSTANCE.send(event);
         } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
             EventChargingState event = chargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
             if (event != null)
-                bus.post(event);
+                RxBus.INSTANCE.send(event);
         }
     }
 
@@ -98,7 +95,7 @@ class NsClientReceiverDelegate {
         boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
-            bus.post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+            RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
         }
     }
 
@@ -107,7 +104,7 @@ class NsClientReceiverDelegate {
 
         boolean newAllowedState = true;
 
-        if (!ev.isCharging && chargingOnly) {
+        if (!ev.isCharging() && chargingOnly) {
             newAllowedState = false;
         }
 
@@ -121,13 +118,13 @@ class NsClientReceiverDelegate {
 
         boolean newAllowedState = true;
 
-        if (ev.wifiConnected) {
+        if (ev.getWifiConnected()) {
             if (!allowedSSIDs.trim().isEmpty() &&
-                    (!allowedSSIDs.contains(ev.getSsid()) && !allowedSSIDs.contains(ev.ssid))) {
+                    (!allowedSSIDs.contains(ev.connectedSsid()) && !allowedSSIDs.contains(ev.getSsid()))) {
                 newAllowedState = false;
             }
         } else {
-            if ((!allowRoaming && ev.roaming) || wifiOnly) {
+            if ((!allowRoaming && ev.getRoaming()) || wifiOnly) {
                 newAllowedState = false;
             }
         }

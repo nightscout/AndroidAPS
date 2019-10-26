@@ -1,0 +1,343 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneral">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Group - RL -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25pt"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_title"
+                    android:textColor="@android:color/holo_blue_dark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv02"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_configured_address" />
+
+                <TextView
+                    android:id="@+id/rls_t1_configured_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="         " />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv03"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_connected_device" />
+
+                <TextView
+                    android:id="@+id/rls_t1_connected_device"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="         " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv04"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_connection_status" />
+
+                <TextView
+                    android:id="@+id/rls_t1_connection_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="         " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv05"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_connection_error" />
+
+                <TextView
+                    android:id="@+id/rls_t1_connection_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="         " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv13"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_firmware_version" />
+
+                <TextView
+                    android:id="@+id/rls_t1_firmware_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="         " />
+            </LinearLayout>
+
+            <!-- Group - Device -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="25pt"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_device"
+                    android:textColor="@android:color/holo_blue_dark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv07"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_device_type" />
+
+                <TextView
+                    android:id="@+id/rls_t1_device_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="        " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv08"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_device_model" />
+
+                <TextView
+                    android:id="@+id/rls_t1_device_model"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="        " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv09"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/medtronic_serial_number" />
+
+                <TextView
+                    android:id="@+id/rls_t1_serial_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="        " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv10"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/medtronic_pump_frequency" />
+
+                <TextView
+                    android:id="@+id/rls_t1_pump_frequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="        " />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv11"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_last_used_frequency" />
+
+                <TextView
+                    android:id="@+id/rls_t1_last_used_frequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="        " />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16pt"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/rls_t1_tv12"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="35"
+                    android:gravity="center_vertical"
+                    android:text="@string/rileylink_last_device_contact" />
+
+                <TextView
+                    android:id="@+id/rls_t1_last_device_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="65"
+                    android:textAlignment="center"
+                    android:gravity="center_vertical"
+                    android:text="        " />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

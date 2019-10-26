@@ -2,9 +2,6 @@ package info.nightscout.androidaps.plugins.general.wear;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-
-import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -20,11 +17,15 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by adrian on 17/11/16.
@@ -38,6 +39,7 @@ public class WearPlugin extends PluginBase {
     private static WearPlugin wearPlugin;
     private static String TAG = "WearPlugin";
 
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public static WearPlugin getPlugin() {
         return wearPlugin;
@@ -66,16 +68,112 @@ public class WearPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         if (watchUS != null) {
             watchUS.setSettings();
         }
         super.onStart();
+
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventOpenAPSUpdateGui.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventExtendedBolusChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(true, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewBasalProfile.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(false, true, false),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> sendDataToWatch(true, true, true),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            // possibly new high or low mark
+                            resendDataToWatch();
+                            // status may be formated differently
+                            sendDataToWatch(true, false, false);
+                        }, FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
+                                sendDataToWatch(true, false, false);
+                        }, FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventBolusRequested.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            String status = String.format(MainApp.gs(R.string.bolusrequested), event.getAmount());
+                            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+                            intent.putExtra("progresspercent", 0);
+                            intent.putExtra("progressstatus", status);
+                            ctx.startService(intent);
+                        }, FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDismissBolusProgressIfRunning.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (event.getResult() == null) return;
+                            String status;
+                            if (event.getResult().success) {
+                                status = MainApp.gs(R.string.success);
+                            } else {
+                                status = MainApp.gs(R.string.nosuccess);
+                            }
+                            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+                            intent.putExtra("progresspercent", 100);
+                            intent.putExtra("progressstatus", status);
+                            ctx.startService(intent);
+                        }, FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventOverviewBolusProgress.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                            if (!event.isSMB() || SP.getBoolean("wear_notifySMB", true)) {
+                                Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+                                intent.putExtra("progresspercent", event.getPercent());
+                                intent.putExtra("progressstatus", event.getStatus());
+                                ctx.startService(intent);
+                            }
+                        }, FabricPrivacy::logException
+                ));
     }
+
 
     @Override
     protected void onStop() {
-        MainApp.bus().unregister(this);
+        disposable.clear();
+        super.onStop();
     }
 
     private void sendDataToWatch(boolean status, boolean basals, boolean bgValue) {
@@ -112,91 +210,8 @@ public class WearPlugin extends PluginBase {
         //Log.d(TAG, "WR: WearPlugin:requestNotificationCancel");
 
         Intent intent = new Intent(ctx, WatchUpdaterService.class)
-            .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
+                .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION);
         intent.putExtra("actionstring", actionstring);
-        ctx.startService(intent);
-    }
-
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-        // possibly new high or low mark
-        resendDataToWatch();
-        // status may be formated differently
-        sendDataToWatch(true, false, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventOpenAPSUpdateGui ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
-        sendDataToWatch(true, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        sendDataToWatch(true, true, true);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewBasalProfile ev) {
-        sendDataToWatch(false, true, false);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventRefreshOverview ev) {
-        if (WatchUpdaterService.shouldReportLoopStatus(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))) {
-            sendDataToWatch(true, false, false);
-        }
-    }
-
-
-    @Subscribe
-    public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        if (!ev.isSMB() || SP.getBoolean("wear_notifySMB", true)) {
-            Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-            intent.putExtra("progresspercent", ev.percent);
-            intent.putExtra("progressstatus", ev.status);
-            ctx.startService(intent);
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventBolusRequested ev) {
-        String status = String.format(MainApp.gs(R.string.bolusrequested), ev.getAmount());
-        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-        intent.putExtra("progresspercent", 0);
-        intent.putExtra("progressstatus", status);
-        ctx.startService(intent);
-
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
-        if (ev.result == null) return;
-
-        String status;
-        if (ev.result.success) {
-            status = MainApp.gs(R.string.success);
-        } else {
-            status = MainApp.gs(R.string.nosuccess);
-        }
-        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
-        intent.putExtra("progresspercent", 100);
-        intent.putExtra("progressstatus", status);
         ctx.startService(intent);
     }
 

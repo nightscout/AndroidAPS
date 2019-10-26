@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +17,7 @@ public class JsonHelper {
 
     private static final Logger log = LoggerFactory.getLogger(JsonHelper.class);
 
-    private JsonHelper() {};
+    private JsonHelper() {}
 
     public static Object safeGetObject(JSONObject json, String fieldName, Object defaultValue) {
         Object result = defaultValue;
@@ -61,6 +61,19 @@ public class JsonHelper {
 
     public static double safeGetDouble(JSONObject json, String fieldName) {
         double result = 0d;
+
+        if (json != null && json.has(fieldName)) {
+            try {
+                result = json.getDouble(fieldName);
+            } catch (JSONException ignored) {
+            }
+        }
+
+        return result;
+    }
+
+    public static double safeGetDouble(JSONObject json, String fieldName, double defaultValue) {
+        double result = defaultValue;
 
         if (json != null && json.has(fieldName)) {
             try {

@@ -16,7 +16,6 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/foodSearchImage"
                 android:layout_width="wrap_content"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -78,12 +77,12 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/food_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 

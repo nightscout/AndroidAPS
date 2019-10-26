@@ -12,14 +12,12 @@
         android:layout_height="match_parent">
 
         <ScrollView
-            android:id="@+id/danar_user_options_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/danar_buttons"
             android:fillViewport="true">
 
             <LinearLayout
-                android:id="@+id/danar_user_options_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

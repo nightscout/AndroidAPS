@@ -76,7 +76,7 @@
                 android:id="@+id/overview_editquickwizard_usebg_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseBGArray" />
+                android:entries="@array/quickWizardYesNo"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                 android:id="@+id/overview_editquickwizard_usebolusiob_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseBolusIOBArray" />
+                android:entries="@array/quickWizardYesNo"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                 android:id="@+id/overview_editquickwizard_usebasaliob_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseBasalOBArray" />
+                android:entries="@array/quickWizardYesNoPosNeg"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                 android:id="@+id/overview_editquickwizard_usecob_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseCOBArray" />
+                android:entries="@array/quickWizardYesNo"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -124,10 +124,9 @@
                 android:id="@+id/overview_editquickwizard_usetrend_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseTrendArray" />
+                android:entries="@array/quickWizardYesNoPosNeg"/>
 
             <TextView
-                android:id="@+id/overview_editquickwizard_usesuperbolus_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/overview_editquickwizard_usesuperbolus"
@@ -137,7 +136,7 @@
                 android:id="@+id/overview_editquickwizard_usesuperbolus_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseSuperBolusArray" />
+                android:entries="@array/quickWizardYesNo"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -149,7 +148,7 @@
                 android:id="@+id/overview_editquickwizard_usetemptarget_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/quickWizardUseTempTargetArray" />
+                android:entries="@array/quickWizardYesNo"/>
 
             <include layout="@layout/mdtp_done_button" />
 

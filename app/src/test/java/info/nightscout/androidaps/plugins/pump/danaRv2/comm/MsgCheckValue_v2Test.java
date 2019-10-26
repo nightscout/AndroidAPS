@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -20,18 +21,10 @@ import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, SP.class, L.class, DanaRv2Plugin.class, DanaRPlugin.class, ConfigBuilderPlugin.class, CommandQueue.class})
+@PrepareForTest({MainApp.class, SP.class, L.class, ConfigBuilderPlugin.class, CommandQueue.class})
 public class MsgCheckValue_v2Test {
     @Test
     public void runTest() {
-        AAPSMocker.mockMainApp();
-        AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockSP();
-        AAPSMocker.mockL();
-        AAPSMocker.mockBus();
-        AAPSMocker.mockDanaRPlugin();
-        AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockCommandQueue();
         Treatment t = new Treatment();
         MsgCheckValue_v2 packet = new MsgCheckValue_v2();
         // test message decoding
@@ -56,4 +49,13 @@ public class MsgCheckValue_v2Test {
         return ret;
     }
 
+    @Before
+    public void mock() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+        AAPSMocker.mockL();
+        AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockCommandQueue();
+    }
 }

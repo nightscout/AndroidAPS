@@ -4,14 +4,14 @@ package info.nightscout.androidaps.plugins.general.careportal;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +22,18 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
+public class CareportalFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CareportalFragment.class);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView iage;
     TextView cage;
@@ -67,59 +70,69 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
-            View view = inflater.inflate(R.layout.careportal_fragment, container, false);
+        View view = inflater.inflate(R.layout.careportal_fragment, container, false);
 
-            view.findViewById(R.id.careportal_bgcheck).setOnClickListener(this);
-            view.findViewById(R.id.careportal_announcement).setOnClickListener(this);
-            view.findViewById(R.id.careportal_cgmsensorinsert).setOnClickListener(this);
-            view.findViewById(R.id.careportal_cgmsensorstart).setOnClickListener(this);
-            view.findViewById(R.id.careportal_combobolus).setOnClickListener(this);
-            view.findViewById(R.id.careportal_correctionbolus).setOnClickListener(this);
-            view.findViewById(R.id.careportal_carbscorrection).setOnClickListener(this);
-            view.findViewById(R.id.careportal_exercise).setOnClickListener(this);
-            view.findViewById(R.id.careportal_insulincartridgechange).setOnClickListener(this);
-            view.findViewById(R.id.careportal_pumpbatterychange).setOnClickListener(this);
-            view.findViewById(R.id.careportal_mealbolus).setOnClickListener(this);
-            view.findViewById(R.id.careportal_note).setOnClickListener(this);
-            view.findViewById(R.id.careportal_profileswitch).setOnClickListener(this);
-            view.findViewById(R.id.careportal_pumpsitechange).setOnClickListener(this);
-            view.findViewById(R.id.careportal_question).setOnClickListener(this);
-            view.findViewById(R.id.careportal_snackbolus).setOnClickListener(this);
-            view.findViewById(R.id.careportal_tempbasalend).setOnClickListener(this);
-            view.findViewById(R.id.careportal_tempbasalstart).setOnClickListener(this);
-            view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
-            view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
+        view.findViewById(R.id.careportal_bgcheck).setOnClickListener(this);
+        view.findViewById(R.id.careportal_announcement).setOnClickListener(this);
+        view.findViewById(R.id.careportal_cgmsensorinsert).setOnClickListener(this);
+        view.findViewById(R.id.careportal_cgmsensorstart).setOnClickListener(this);
+        view.findViewById(R.id.careportal_combobolus).setOnClickListener(this);
+        view.findViewById(R.id.careportal_correctionbolus).setOnClickListener(this);
+        view.findViewById(R.id.careportal_carbscorrection).setOnClickListener(this);
+        view.findViewById(R.id.careportal_exercise).setOnClickListener(this);
+        view.findViewById(R.id.careportal_insulincartridgechange).setOnClickListener(this);
+        view.findViewById(R.id.careportal_pumpbatterychange).setOnClickListener(this);
+        view.findViewById(R.id.careportal_mealbolus).setOnClickListener(this);
+        view.findViewById(R.id.careportal_note).setOnClickListener(this);
+        view.findViewById(R.id.careportal_profileswitch).setOnClickListener(this);
+        view.findViewById(R.id.careportal_pumpsitechange).setOnClickListener(this);
+        view.findViewById(R.id.careportal_question).setOnClickListener(this);
+        view.findViewById(R.id.careportal_snackbolus).setOnClickListener(this);
+        view.findViewById(R.id.careportal_tempbasalend).setOnClickListener(this);
+        view.findViewById(R.id.careportal_tempbasalstart).setOnClickListener(this);
+        view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
+        view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
 
-            iage = (TextView) view.findViewById(R.id.careportal_insulinage);
-            cage = (TextView) view.findViewById(R.id.careportal_canulaage);
-            sage = (TextView) view.findViewById(R.id.careportal_sensorage);
-            pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+        iage = view.findViewById(R.id.careportal_insulinage);
+        cage = view.findViewById(R.id.careportal_canulaage);
+        sage = view.findViewById(R.id.careportal_sensorage);
+        pbage = view.findViewById(R.id.careportal_pbage);
 
-            statsLayout = view.findViewById(R.id.careportal_stats);
+        statsLayout = view.findViewById(R.id.careportal_stats);
 
-            noProfileView = view.findViewById(R.id.profileview_noprofile);
-            butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
+        noProfileView = view.findViewById(R.id.profileview_noprofile);
+        butonsLayout = view.findViewById(R.id.careportal_buttons);
 
-            ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null ? ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() : null;
-            if (profileStore == null) {
-                noProfileView.setVisibility(View.VISIBLE);
-                butonsLayout.setVisibility(View.GONE);
-            } else {
-                noProfileView.setVisibility(View.GONE);
-                butonsLayout.setVisibility(View.VISIBLE);
-            }
-
-            if (Config.NSCLIENT)
-                statsLayout.setVisibility(View.GONE); // visible on overview
-
-            updateGUI();
-            return view;
-        } catch (Exception e) {
-            FabricPrivacy.logException(e);
+        ProfileStore profileStore = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null ? ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() : null;
+        if (profileStore == null) {
+            noProfileView.setVisibility(View.VISIBLE);
+            butonsLayout.setVisibility(View.GONE);
+        } else {
+            noProfileView.setVisibility(View.GONE);
+            butonsLayout.setVisibility(View.VISIBLE);
         }
 
-        return null;
+        if (Config.NSCLIENT)
+            statsLayout.setVisibility(View.GONE); // visible on overview
+
+        return view;
+    }
+
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventCareportalEventChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGUI(), FabricPrivacy::logException)
+        );
+        updateGUI();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
     }
 
     @Override
@@ -199,12 +212,6 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
             newDialog.show(manager, "NewNSTreatmentDialog");
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventCareportalEventChange c) {
-        updateGUI();
-    }
-
-    @Override
     protected void updateGUI() {
         Activity activity = getActivity();
         updateAge(activity, sage, iage, cage, pbage);
@@ -249,13 +256,17 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     }
 
     private static TextView handleAge(final TextView age, String eventType, double warnThreshold, double urgentThreshold) {
-        String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.gs(R.string.notavailable);
+        return handleAge(age, "", eventType, warnThreshold, urgentThreshold, OverviewFragment.shorttextmode);
+    }
+
+    public static TextView handleAge(final TextView age, String prefix, String eventType, double warnThreshold, double urgentThreshold, boolean useShortText) {
+        String notavailable = useShortText ? "-" : MainApp.gs(R.string.notavailable);
 
         if (age != null) {
             CareportalEvent careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(eventType);
             if (careportalEvent != null) {
                 age.setTextColor(CareportalFragment.determineTextColor(careportalEvent, warnThreshold, urgentThreshold));
-                age.setText(careportalEvent.age());
+                age.setText(prefix + careportalEvent.age(useShortText));
             } else {
                 age.setText(notavailable);
             }

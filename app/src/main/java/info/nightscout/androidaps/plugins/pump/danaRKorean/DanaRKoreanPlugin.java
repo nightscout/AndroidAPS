@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-
-import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -22,7 +18,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -30,13 +26,17 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static DanaRKoreanPlugin plugin = null;
 
@@ -54,35 +54,31 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     @Override
-    public void switchAllowed(ConfigBuilderFragment.PluginViewHolder.PluginSwitcher pluginSwitcher, FragmentActivity context) {
-        boolean allowHardwarePump = SP.getBoolean("allow_hardware_pump", false);
-        if (allowHardwarePump || context == null) {
-            pluginSwitcher.invoke();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.allow_hardware_pump_text)
-                    .setPositiveButton(R.string.yes, (dialog, id) -> {
-                        pluginSwitcher.invoke();
-                        SP.putBoolean("allow_hardware_pump", true);
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("First time HW pump allowed!");
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                        pluginSwitcher.cancel();
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("User does not allow switching to HW pump!");
-                    });
-            builder.create().show();
-        }
-    }
-
-
-    @Override
     protected void onStart() {
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (isEnabled(PluginType.PUMP)) {
+                        boolean previousValue = useExtendedBoluses;
+                        useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
+
+                        if (useExtendedBoluses != previousValue && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
+                            sExecutionService.extendedBolusStop();
+                        }
+                    }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(mConnection);
+                }, FabricPrivacy::logException)
+        );
         super.onStart();
     }
 
@@ -91,7 +87,8 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
 
-        MainApp.bus().unregister(this);
+        disposable.clear();
+        super.onStop();
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -109,24 +106,6 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             sExecutionService = mLocalBinder.getServiceInstance();
         }
     };
-
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange s) {
-        if (isEnabled(PluginType.PUMP)) {
-            boolean previousValue = useExtendedBoluses;
-            useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-
-            if (useExtendedBoluses != previousValue && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
-                sExecutionService.extendedBolusStop();
-            }
-        }
-    }
 
     // Plugin base interface
     @Override
@@ -266,7 +245,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                 // Correct basal already set ?
                 if (L.isEnabled(L.PUMP))
                     log.debug("setTempBasalAbsolute: currently running: " + activeTemp.toString());
-                if (activeTemp.percentRate == percentRate) {
+                if (activeTemp.percentRate == percentRate && activeTemp.getPlannedRemainingMinutes() > 4) {
                     if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
@@ -362,6 +341,11 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         result.comment = MainApp.gs(R.string.virtualpump_resultok);
         result.isTempCancel = true;
         return result;
+    }
+
+    @Override
+    public PumpType model() {
+        return PumpType.DanaRKorean;
     }
 
     private PumpEnactResult cancelRealTempBasal() {

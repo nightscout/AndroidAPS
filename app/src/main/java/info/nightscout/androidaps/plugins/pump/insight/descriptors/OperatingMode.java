@@ -4,5 +4,5 @@ public enum OperatingMode {
 
     STARTED,
     STOPPED,
-    PAUSED;
+    PAUSED
 }

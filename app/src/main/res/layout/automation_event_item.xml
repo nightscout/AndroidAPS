@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@color/ribbonDefault"
+    android:padding="8dp">
+
+    <CheckBox
+        android:id="@+id/automation_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/viewEventTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/automation_enabled"
+        android:layout_alignBottom="@+id/automation_enabled"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="6dp"
+        android:layout_toStartOf="@+id/iconTrash"
+        android:layout_toEndOf="@id/automation_enabled"
+        android:text="Title"
+        android:textAlignment="viewStart"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iconTrash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/remove_label"
+        android:orientation="horizontal"
+        android:src="@drawable/ic_trash_outline" />
+
+    <LinearLayout
+        android:id="@+id/iconLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/automation_enabled"
+        android:orientation="horizontal" />
+
+
+</RelativeLayout>
