@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Mahlzeiten-Daten</string>
     <string name="result">Ergebnis</string>
+    <string name="result_insulin_carbs">Ergebnis: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Keine BZ-Werte verfügbar</string>
     <string name="nochangerequested">Keine Anpassung benötigt</string>
     <string name="openapsma_request_label">Anfrage</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="missing">Fehlend</string>
+    <string name="missing_carbs">Fehlend %1$dg</string>
     <string name="exported">Einstellungen exportiert</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="import_from">Importiere Einstellungen von</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Erweiterte Statusanzeige für CAGE, IAGE, SAGE, Reservoir- und Batteriestand auf dem Homescreen.</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
-    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%%]</string>
-    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%%]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1373,4 +1373,5 @@ Unerwartetes Verhalten.</string>
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus-Rechner</string>
     <string name="unit_minute_short">Min.</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <string name="treatmentssafety_maxbolus_title">Maximálny povolený bolus [JI]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximálne povolené množstvo sacharidov [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Dáta o jedle</string>
     <string name="result">Výsledok</string>
+    <string name="result_insulin_carbs">Výsledok: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nedostupné dáta o glykémiách</string>
     <string name="nochangerequested">Nepožadovaná žiadna zmena</string>
     <string name="openapsma_request_label">Požiadavka</string>
@@ -115,12 +115,12 @@
     <string name="nsprofile">NS Profil</string>
     <string name="simpleprofile">Jednoduchý profil</string>
     <string name="tempbasal">DočasnýBazál</string>
-    <string name="treatments">Ošetrenie</string>
+    <string name="treatments">Ošetrenia</string>
     <string name="virtualpump">Virtuálna pumpa</string>
     <string name="careportal">Starostlivosť</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
-    <string name="configbuilder_treatments">Ošetrenie</string>
+    <string name="configbuilder_treatments">Ošetrenia</string>
     <string name="configbuilder_treatments_description">Aký modul chcete používať pre spracovanie ošetrení?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Aký profil má používať AndroidAPS?</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Predĺžený bolus</string>
     <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
-    <string name="missing">Chýba</string>
+    <string name="missing_carbs">Chýba %1$dg</string>
     <string name="exported">Nastavenie exportované</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="import_from">Importovať nastavenia z</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Povoliť rozšírené indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [JI]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
-    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%%]</string>
-    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%%]</string>
+    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
+    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1369,6 +1369,8 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

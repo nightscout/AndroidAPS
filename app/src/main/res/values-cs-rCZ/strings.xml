@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximální počet sacharidů [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Data o jídle</string>
     <string name="result">Výsledek</string>
+    <string name="result_insulin_carbs">Výsledek: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nedostupná data o glykémiích</string>
     <string name="nochangerequested">Změna nepožadována</string>
     <string name="openapsma_request_label">Požadavek</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Prodloužený bolus</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
-    <string name="missing">Chybí</string>
+    <string name="missing_carbs">Chybí %1$dg</string>
     <string name="exported">Nastavení exportováno</string>
     <string name="export_to">Exportovat nastavení do</string>
     <string name="import_from">Importovat nastavení z</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Povolí rozšířené stavové indikátory pro stáří kanyly, inzulínu, senzoru, zásobníku a baterie na domovské obrazovce.</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
-    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%%]</string>
-    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%%]</string>
+    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
+    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -988,7 +988,7 @@
     <string name="send_all_logs">Poslat logy e-mailem</string>
     <string name="delete_logs">Smazat logy</string>
     <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), start: %3$d m</string>
+    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), zpoždění: %3$d m</string>
     <string name="openaps_noasdata">Nedostupná data o glykémiích</string>
     <string name="nav_logsettings">Nastavení logování</string>
     <string name="resettodefaults">Obnovit výchozí</string>
@@ -1372,4 +1372,5 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

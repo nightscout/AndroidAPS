@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Setări siguranță tratament</string>
     <string name="treatmentssafety_maxbolus_title">Bolus maxim admis [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Carbohidrați admiși maxim [g]</string>
@@ -216,7 +215,7 @@
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
-    <string name="missing">Lipsă</string>
+    <string name="missing_carbs">Lipsă %1$dg</string>
     <string name="exported">Am exportat preferințele</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Importă setările din</string>
@@ -548,8 +547,6 @@
     <string name="show_statuslights_extended_summary">Activați indicatori pentru CAGE, IAGE, SAGE, nivel baterie și rezervor pe ecranul principal.</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
-    <string name="statuslights_bat_warning">Pragul de avertizare nivel baterie [%%]</string>
-    <string name="statuslights_bat_critical">Pragul critic al nivelului baterie [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1346,6 +1343,12 @@
     <string name="medtronic_cmd_desc_set_bolus">Setează bolusul</string>
     <string name="profilename">Schimbă profilul în</string>
     <string name="changengetoprofilename">Schimbă profilul la %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Ultima conexiune la pompă</string>
+    <string name="automation_trigger_pump_last_connection_description">Ultima conexiune la pompă [minute în urmă]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Ultima conexiune la pompă %1$s %2$s minute în urmă</string>
+    <string name="sendsmsactionlabel">Trimite SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Trimite SMS la toate numerele prestabilite</string>
+    <string name="sendsmsactiontext">Trimite SMS cu text</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricție de bolus aplicată: %2$.2fU la %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
@@ -1359,4 +1362,12 @@
     <string name="between">Între </string>
     <string name="close">Închide</string>
     <string name="increasingmaxbasal">Se mărește valoarea bazalei maxime deoarece setarea este mai joasă decât bazala maximă din profil</string>
+    <string name="smscommunicator_messagebody">Conținutul mesajului nu este valid</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Asistent bolusare</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

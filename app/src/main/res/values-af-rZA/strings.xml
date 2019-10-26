@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Behandelings veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Maks toelaatbare Bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks Toelaatbare karbs [g]</string>
@@ -215,7 +214,6 @@
     <string name="overview_tempbasal_button">TydelikeBasaal</string>
     <string name="overview_extendedbolus_button">Verlengde Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
-    <string name="missing">Ontbreek</string>
     <string name="exported">Voorkeure uitgevoer</string>
     <string name="export_to">Uitvoer instellings na</string>
     <string name="import_from">Voer instellings in vanaf</string>
@@ -545,8 +543,6 @@
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
-    <string name="statuslights_bat_warning">Drempel waarskuwing battery vlak [%%]</string>
-    <string name="statuslights_bat_critical">Drempel kritieke battery vlak [%%]</string>
     <string name="iob">IAB</string>
     <string name="cob">KOB</string>
     <string name="virtualpump_firmware_label">Firmware</string>

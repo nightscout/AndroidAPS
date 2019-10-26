@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">관리 안전설정</string>
     <string name="treatmentssafety_maxbolus_title">최대 허용 Bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">최대 허용 탄수화물 [g]</string>
@@ -216,7 +215,6 @@
     <string name="overview_tempbasal_button">임시Basal</string>
     <string name="overview_extendedbolus_button">확장 Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
-    <string name="missing">누락</string>
     <string name="exported">설정이 저장되었습니다</string>
     <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
     <string name="import_from">다음 위치에서 설정을 불러오시겠습니까</string>
@@ -546,8 +544,6 @@
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
-    <string name="statuslights_bat_warning">배터리량 경고 기준값[%%]</string>
-    <string name="statuslights_bat_critical">배터리량 위험 기준값[%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">펌웨어</string>

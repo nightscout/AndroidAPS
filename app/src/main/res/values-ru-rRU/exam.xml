@@ -165,4 +165,7 @@ Context | Edit Context</string>
     <string name="basalhelp_diabetesteam">Ваши эндокринологи</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Другие препараты</string>
+    <string name="other_medication_text">ААPS понижает базал, чтобы повысить уровень сахара в крови. Препараты из группы ингибиторов SGLT2 (глифлозинов) могут предотвратить ожидаемый рост ГК и, следовательно, привести к опасной недостаточности инсулина (диабетическому кетоацитозу DKA).
+\nНаиболее распространенные коммерческие наименования:® Invokana, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\n Настоящим подтверждаю, что не буду принимать такие препараты при использовании AAPS или буду отключать AAPS перед их употреблением.</string>
 </resources>

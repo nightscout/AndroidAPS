@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">Į Jūsų endokrinologą ir diabetologą</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Kiti vaistai</string>
+    <string name="other_medication_text">AAPS sumažina valandinę bazę, siekiant padidinti glikemiją. Dėl vaistų iš SGLT2 inhibitorių grupės (Gliflozinas) naudojimo, numatomas glikemijos padidėjimas gali būti neteisingai parodytas ir tokiu būdu gali sukelti pavojingą insulino trūkumą (DKA - ketoacidozę).
+ \n Prekių ženklų pavadinimai apima: „Invokana®“, „Forxiga®“, „Jardiance®“, „Steglatro®“, „Suglat®“, „Apleway®“, „Deberza®“, „Synjardy®“, „Vokanamet®“, „Xigduo®“. \n\n Pažadu nenaudoti tokių vaistų, naudojant AAPS, arba prieš vartodamas juos, atjungsiu ciklą.</string>
 </resources>

@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Säkerhetsbegränsningar för behandlingar</string>
     <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH [g]</string>
@@ -100,6 +99,7 @@ Eversense-appen.</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Måltidsdata</string>
     <string name="result">Resultat</string>
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Ingen BG-data tillänglig</string>
     <string name="nochangerequested">Ingen ändring behövs</string>
     <string name="openapsma_request_label">Beräknat behov</string>
@@ -217,7 +217,7 @@ Eversense-appen.</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Förlängd bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
-    <string name="missing">Saknas:</string>
+    <string name="missing_carbs">Saknar %1$dg</string>
     <string name="exported">Inställningar exporterade</string>
     <string name="export_to">Exportera inställningar till</string>
     <string name="import_from">Importera inställningar från</string>
@@ -549,8 +549,8 @@ Eversense-appen.</string>
     <string name="show_statuslights_extended_summary">Aktivera statusindikatorerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
-    <string name="statuslights_bat_warning">Varningsnivå för batteri [%%]</string>
-    <string name="statuslights_bat_critical">Akut varningsnivå för batteri [%%]</string>
+    <string name="statuslights_bat_warning">Varningsnivå för batteri [%]</string>
+    <string name="statuslights_bat_critical">Akut varningsnivå för batteri [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmwareversion</string>
@@ -1370,6 +1370,8 @@ Eversense-appen.</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Kalkylator</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

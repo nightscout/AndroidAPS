@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <string name="treatmentssafety_maxbolus_title">Max bolo consentito [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max carboidrati consentiti [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profilo</string>
     <string name="openapsma_mealdata_label">Dati pasto</string>
     <string name="result">Esito</string>
+    <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Dati glicemia non disponibili</string>
     <string name="nochangerequested">Nessun cambiamento richiesto</string>
     <string name="openapsma_request_label">Richiesta</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Basale temporanea</string>
     <string name="overview_extendedbolus_button">Bolo esteso</string>
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout:</string>
-    <string name="missing">Mancante</string>
+    <string name="missing_carbs">Mancanti %1$dg</string>
     <string name="exported">Preferenze esportate</string>
     <string name="export_to">Esporta impostazioni su</string>
     <string name="import_from">Importa impostazioni da</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Abilita indicatori di stato estesi per \"età\" cannula, insulina, sensore, serbatoio e livello batteria sulla schermata iniziale.</string>
     <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
     <string name="statuslights_res_critical">Soglia critica livello serbatoio [U]</string>
-    <string name="statuslights_bat_warning">Soglia di avviso livello batteria [%%]</string>
-    <string name="statuslights_bat_critical">Soglia critica livello batteria [%%]</string>
+    <string name="statuslights_bat_warning">Soglia livello batteria a cui prestare attenzione [%]</string>
+    <string name="statuslights_bat_critical">Soglia livello batteria critico [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1369,6 +1369,8 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

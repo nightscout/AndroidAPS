@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
@@ -216,7 +215,6 @@
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
-    <string name="missing">Липсва</string>
     <string name="exported">Настройките са експортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
@@ -548,8 +546,6 @@
     <string name="show_statuslights_extended_summary">Показвай подробни статус светлини за канула, инсулин, сензор, резервоар и батерията на началния екран.</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Критично ниво на останал инсулин в резервоар [Е]</string>
-    <string name="statuslights_bat_warning">Ниско ниво на батерията под [%%]</string>
-    <string name="statuslights_bat_critical">Критично ниво на батерията под [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">СОВ</string>
     <string name="virtualpump_firmware_label">Фърмуер</string>

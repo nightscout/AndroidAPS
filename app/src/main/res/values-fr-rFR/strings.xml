@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Sécurités des traitements</string>
     <string name="treatmentssafety_maxbolus_title">Maximum Bolus autorisé [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximum de Glucides autorisé [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Données repas</string>
     <string name="result">Résultats</string>
+    <string name="result_insulin_carbs">Résultat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Pas de données glycémiques disponibles</string>
     <string name="nochangerequested">Pas de changement demandé</string>
     <string name="openapsma_request_label">Requête</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Basal Temporaire</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
-    <string name="missing">Manque</string>
+    <string name="missing_carbs">Manquant %1$dg</string>
     <string name="exported">Préférences exportées</string>
     <string name="export_to">Exporter les paramètres au</string>
     <string name="import_from">Importer les paramètres depuis</string>
@@ -549,8 +549,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_statuslights_extended_summary">Activer les lumières d\'état prolongées pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
     <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
-    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%%]</string>
-    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%%]</string>
+    <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
+    <string name="statuslights_bat_critical">Seuil critique du niveau de la batterie [%]</string>
     <string name="iob">IA</string>
     <string name="cob">GA</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1373,4 +1373,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Assistant Bolus</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

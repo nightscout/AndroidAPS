@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">Twój zespół cukrzycowy</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Inne leki</string>
+    <string name="other_medication_text">AAPS zmniejsza BR w celu podniesienia poziomu cukru we krwi. Leki z grupy inhibitorów SGLT2 (gliflozyny) mogą zapobiegać spodziewanemu wzrostowi stężenia glukozy we krwi, a zatem mogą powodować niebezpieczny niedobór insuliny (DKA).
+\nWspólne nazwy marek to: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®. \n\n Obiecuję, że nie będę brać takich leków podczas używania AAPS lub dezaktywuję pętlę przed użyciem tych leków.</string>
 </resources>

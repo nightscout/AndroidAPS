@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Terapijos saugumas</string>
     <string name="treatmentssafety_maxbolus_title">Maksimalus leistinas bolusas [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks. leistini angliavandeniai [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profilis</string>
     <string name="openapsma_mealdata_label">Maisto duomenys</string>
     <string name="result">Rezultatas</string>
+    <string name="result_insulin_carbs">Rezultatas: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nėra gliukozės duomenų</string>
     <string name="nochangerequested">Pakeitimai nereikalingi</string>
     <string name="openapsma_request_label">Užklausa</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Laikina bazė</string>
     <string name="overview_extendedbolus_button">Ištęstas bolusas</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
-    <string name="missing">Trūksta</string>
+    <string name="missing_carbs">Trūksta %1$dg</string>
     <string name="exported">Nustatymai eksportuoti</string>
     <string name="export_to">Eksportuoti nustatymus</string>
     <string name="import_from">Importuoti nustatymus iš</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Pradžios ekrane rodyti papildomus šviesos indikatorius adatos, insulino, sensoriaus naudojimo trukmei bei baterijos įkrovimo lygiui.</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
-    <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%%]</string>
-    <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%%]</string>
+    <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%]</string>
+    <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%]</string>
     <string name="iob">AIO</string>
     <string name="cob">AAO</string>
     <string name="virtualpump_firmware_label">Programinė įranga</string>
@@ -1372,4 +1372,5 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Boluso patarėjas</string>
     <string name="unit_minute_short">min.</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">Jouw behandelaars</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Andere medicatie</string>
+    <string name="other_medication_text">AAPS vermindert BR om bloedsuiker te verhogen. Geneesmiddelen van de groep SGLT2-remmers (gliflozins) kunnen de verwachte toename in BG voorkomen en kunnen dus een gevaarlijk insulinekort (DKA) veroorzaken.
+\nGemeenschappelijke merknamen zijn: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nIk beloof hierbij dat ik dergelijke geneesmiddelen niet zal nemen wanneer ik AAPS gebruik of de lus zal deactiveren voordat ik deze medicijnen gebruik.</string>
 </resources>

@@ -41,7 +41,7 @@
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
     <string name="objectives_exam_gate">Estude e responda as perguntas correctamente</string>
-    <string name="answerdisabledto">A resposta está desactivada para: %1$s</string>
+    <string name="answerdisabledto">Responder desactivado até: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Próximo inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>

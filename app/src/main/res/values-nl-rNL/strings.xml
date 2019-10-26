@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profiel</string>
     <string name="openapsma_mealdata_label">Maaltijd gegevens</string>
     <string name="result">Resultaat</string>
+    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Geen BG gegevens beschikbaar</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <string name="openapsma_request_label">Voorstel</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
-    <string name="missing">Te weinig</string>
+    <string name="missing_carbs">Ontbrekend %1$dg</string>
     <string name="exported">Voorkeuren geëxporteerd</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="import_from">Importeer instellingen van</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het overzicht scherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
-    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%%]</string>
-    <string name="statuslights_bat_critical">Drempel alarm voor batterij niveau [%%]</string>
+    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
+    <string name="statuslights_bat_critical">Drempel alarm batterij niveau [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1369,6 +1369,8 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg KH ratio: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg KH ratio: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
     <string name="alert_dialog_storage_permission_text">בבקשה אתחל את הסמרטפון שלך או תרענן את אפלקצית AndroidAPS בהגדרות המערכת
 אחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב אחר ולוודא כי האלגוריתמים פועלים כראוי)!</string>
