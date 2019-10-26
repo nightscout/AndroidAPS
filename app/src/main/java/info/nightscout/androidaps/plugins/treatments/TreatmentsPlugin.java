@@ -357,7 +357,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
 
             if (MedtronicHistoryData.doubleBolusDebug)
-                log.debug("DoubleBolusDebug: FilteredTreatments: After={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstance().toJson(in5minback));
+                log.debug("DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstance().toJson(in5minback));
 
             return in5minback;
         }

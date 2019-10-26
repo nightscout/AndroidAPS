@@ -181,12 +181,17 @@
         <item>@string/medtronic_pump_battery_no</item>
         <item>@string/medtronic_pump_battery_alkaline</item>
         <item>@string/medtronic_pump_battery_lithium</item>
+        <item>@string/medtronic_pump_battery_nizn</item>
     </string-array>
 
     <string-array name="medtronicBatteryTypeValues">
         <item>@string/key_medtronic_pump_battery_no</item>
         <item>@string/key_medtronic_pump_battery_alkaline</item>
         <item>@string/key_medtronic_pump_battery_lithium</item>
+        <item>@string/key_medtronic_pump_battery_nizn</item>
     </string-array>
+
+
+    key_medtronic_bolus_debug
 
 </resources>

@@ -1424,6 +1424,7 @@
     <string name="key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
     <string name="key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
+    <string name="key_medtronic_bolus_debug" translatable="false">pref_medtronic_bolus_debug</string>
     <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
     <string name="key_medtronic_pump_frequency_us_ca" translatable="false">medtronic_pump_frequency_us_ca</string>
     <string name="key_medtronic_pump_frequency_worldwide" translatable="false">medtronic_pump_frequency_worldwide</string>
@@ -1432,6 +1433,7 @@
     <string name="key_medtronic_pump_battery_no" translatable="false">medtronic_pump_battery_no</string>
     <string name="key_medtronic_pump_battery_alkaline" translatable="false">medtronic_pump_battery_alkaline</string>
     <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
+    <string name="key_medtronic_pump_battery_nizn" translatable="false">medtronic_pump_battery_nizn</string>
 
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
@@ -1451,6 +1453,7 @@
     <string name="medtronic_pump_battery_no">Not selected (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (Extended view)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
     <string name="medtronic_bolus_debugging">Bolus/Treatments Debugging</string>
 
     <!-- RL BLE Scanning -->

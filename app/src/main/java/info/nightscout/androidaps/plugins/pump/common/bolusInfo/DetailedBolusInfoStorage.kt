@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
 import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -19,6 +20,10 @@ object DetailedBolusInfoStorage {
 
     @Synchronized
     fun findDetailedBolusInfo(bolusTime: Long, bolus: Double): DetailedBolusInfo? {
+
+        if (MedtronicHistoryData.doubleBolusDebug)
+            log.debug("DoubleBolusDebug: findDetailedBolusInfo::bolusTime={}, bolus={}", bolusTime, bolus)
+
         // Look for info with bolus
         for (i in store.indices) {
             val d = store[i]
@@ -28,6 +33,9 @@ object DetailedBolusInfoStorage {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Using & removing bolus info: " + store[i])
                 store.removeAt(i)
+                if (MedtronicHistoryData.doubleBolusDebug)
+                    log.debug("DoubleBolusDebug: findDetailedBolusInfo::selectedBolus[DetailedBolusInfo={}]", d)
+
                 return d
             }
         }
@@ -38,6 +46,8 @@ object DetailedBolusInfoStorage {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Using & removing bolus info: " + store[i])
                 store.removeAt(i)
+                if (MedtronicHistoryData.doubleBolusDebug)
+                    log.debug("DoubleBolusDebug: findDetailedBolusInfo::selectedBolus[DetailedBolusInfo={}]", d)
                 return d
             }
         }

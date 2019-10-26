@@ -61,20 +61,20 @@
             android:title="@string/medtronic_pump_encoding" />
 
         <ListPreference
-            android:defaultValue="@string/key_medtronic_pump_encoding_4b6b_rileylinkddddd"
-            android:entries="@array/medtronicEncoding"
-            android:entryValues="@array/medtronicEncodingValues"
-            android:key="@string/key_medtronic_encoding"
-            android:selectable="true"
-            android:title="@string/medtronic_bolus_debugging" />
-
-        <ListPreference
             android:defaultValue="@string/key_medtronic_pump_battery_no"
             android:entries="@array/medtronicBatteryType"
             android:entryValues="@array/medtronicBatteryTypeValues"
             android:key="@string/key_medtronic_battery_type"
             android:selectable="true"
             android:title="@string/medtronic_pump_battery_select" />
+
+        <ListPreference
+            android:defaultValue="@string/common_off"
+            android:entries="@array/onOff"
+            android:entryValues="@array/onOff"
+            android:key="@string/key_medtronic_bolus_debug"
+            android:selectable="true"
+            android:title="@string/medtronic_bolus_debugging" />
 
         <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
             android:enabled="true"
