@@ -47,7 +47,7 @@ object ProtectionCheck {
             ProtectionType.NONE ->
                 ok?.run()
             ProtectionType.BIOMETRIC ->
-                BiometricCheck.biometricPrompt(activity, ok, cancel, fail)
+                BiometricCheck.biometricPrompt(activity, titleResourceIDs[protection.ordinal], ok, cancel, fail)
             ProtectionType.PASSWORD ->
                 PasswordCheck.queryPassword(activity, titleResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], ok, cancel, fail)
         }
