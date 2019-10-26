@@ -1236,6 +1236,7 @@
     <string name="medtronic_pump_battery_no">Nevybrané (jednoduché zobrazenie)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalické (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_lithium">Líthiové (rozšírené zobrazenie)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Rozšírené)</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">VYHĽADAŤ</string>
     <string name="rileylink_scanner_scan_stop">ZASTAVIŤ</string>

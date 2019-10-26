@@ -1236,6 +1236,8 @@
     <string name="medtronic_pump_battery_no">Non selezionato (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Litio (Extended view)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
+    <string name="medtronic_bolus_debugging">Debug Bolo/Trattamenti</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1373,4 +1375,6 @@
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
 </resources>

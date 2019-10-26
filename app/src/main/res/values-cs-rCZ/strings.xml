@@ -1236,6 +1236,8 @@
     <string name="medtronic_pump_battery_no">Nevybráno (Jednoduché)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalické (Rozšířené)</string>
     <string name="medtronic_pump_battery_lithium">Lithiové (Rozšířené)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Rozšířené)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Ošetření ladění</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">VYHLEDAT</string>
     <string name="rileylink_scanner_scan_stop">ZASTAVIT</string>
@@ -1373,4 +1375,6 @@
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">ZAP</string>
+    <string name="common_off">VYP</string>
 </resources>

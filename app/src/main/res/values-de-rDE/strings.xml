@@ -1237,6 +1237,8 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_pump_battery_no">Nicht ausgewählt (Einfache Ansicht)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline Batterie (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_lithium">Lithium Batterie (erweiterte Ansicht)</string>
+    <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
+    <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCANNEN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1374,4 +1376,6 @@ Unerwartetes Verhalten.</string>
     <string name="boluswizard">Bolus-Rechner</string>
     <string name="unit_minute_short">Min.</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Ein</string>
+    <string name="common_off">Aus</string>
 </resources>
