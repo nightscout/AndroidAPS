@@ -60,8 +60,8 @@ import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
-import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -333,11 +333,11 @@ public class MainActivity extends NoSplashAppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_preferences:
-                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
+                ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
                     Intent i = new Intent(this, PreferencesActivity.class);
                     i.putExtra("id", -1);
                     startActivity(i);
-                }, null);
+                });
                 return true;
             case R.id.nav_historybrowser:
                 startActivity(new Intent(this, HistoryBrowseActivity.class));
@@ -375,11 +375,11 @@ public class MainActivity extends NoSplashAppCompatActivity {
             case R.id.nav_plugin_preferences:
                 ViewPager viewPager = findViewById(R.id.pager);
                 final PluginBase plugin = ((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem());
-                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
+                ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
                     Intent i = new Intent(this, PreferencesActivity.class);
                     i.putExtra("id", plugin.getPreferencesId());
                     startActivity(i);
-                }, null);
+                });
                 return true;
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item);

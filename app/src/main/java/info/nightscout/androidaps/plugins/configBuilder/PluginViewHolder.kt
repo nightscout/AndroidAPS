@@ -9,7 +9,7 @@ import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.PasswordProtection
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 
 class PluginViewHolder internal constructor(private val fragment: ConfigBuilderFragment,
                                             private val pluginType: PluginType,
@@ -46,11 +46,13 @@ class PluginViewHolder internal constructor(private val fragment: ConfigBuilderF
         }
 
         pluginPreferences.setOnClickListener {
-            PasswordProtection.QueryPassword(fragment.context, R.string.settings_password, "settings_password", {
-                val i = Intent(fragment.context, PreferencesActivity::class.java)
-                i.putExtra("id", plugin.preferencesId)
-                fragment.startActivity(i)
-            }, null)
+            fragment.activity?.let { activity ->
+                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    val i = Intent(fragment.context, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    fragment.startActivity(i)
+                })
+            }
         }
         update()
     }

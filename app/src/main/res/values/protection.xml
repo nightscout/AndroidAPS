@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Authentication required</string>
+    <string name="biometric_description">Place your finger on the fingerprint reader to verify your identity</string>
+    <string name="settings_protection">Settings protection</string>
+    <string name="application_protection">Application protection</string>
+    <string name="bolus_protection">Bolus protection</string>
+    <string name="settings_password">Settings password</string>
+    <string name="application_password">Application password</string>
+    <string name="bolus_password">Bolus password</string>
+    <string name="unlock_settings">Unlock settings</string>
+    <string name="biometric">Biometric</string>
+    <string name="password">Password</string>
+    <string name="noprotection">No protection</string>
+    <string name="protection">Protection</string>
+
+    <string name="key_settings_password" translatable="false">settings_password</string>
+    <string name="key_application_password" translatable="false">application_password</string>
+    <string name="key_bolus_password">translatable="false"bolus_password</string>
+    <string name="key_settings_protection" translatable="false">settings_protection</string>
+    <string name="key_application_protection" translatable="false">application_protection</string>
+    <string name="key_bolus_protection" translatable="false">bolus_protection</string>
+
+    <string-array name="protectiontype">
+        <item>@string/noprotection</item>
+        <item>@string/biometric</item>
+        <item>@string/password</item>
+    </string-array>
+
+    <string-array name="protectiontypeValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+</resources>

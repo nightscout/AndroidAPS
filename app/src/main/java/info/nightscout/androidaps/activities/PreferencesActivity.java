@@ -15,21 +15,25 @@ import android.text.TextUtils;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
+import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
@@ -42,14 +46,10 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
-import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -87,6 +87,30 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (pref instanceof ListPreference) {
             ListPreference listPref = (ListPreference) pref;
             pref.setSummary(listPref.getEntry());
+            // Preferences
+            if (pref.getKey().equals(MainApp.gs(R.string.key_settings_protection))) {
+                Preference pass = pref.getPreferenceManager().findPreference(MainApp.gs(R.string.key_settings_password));
+                if (pass != null)
+                    if (((ListPreference) pref).getValue().equals(Integer.toString(ProtectionCheck.ProtectionType.PASSWORD.ordinal())))
+                        pass.setEnabled(true);
+                    else pass.setEnabled(false);
+            }
+            // Application
+            if (pref.getKey().equals(MainApp.gs(R.string.key_application_protection))) {
+                Preference pass = pref.getPreferenceManager().findPreference(MainApp.gs(R.string.key_application_password));
+                if (pass != null)
+                    if (((ListPreference) pref).getValue().equals(Integer.toString(ProtectionCheck.ProtectionType.PASSWORD.ordinal())))
+                        pass.setEnabled(true);
+                    else pass.setEnabled(false);
+            }
+            // Bolus
+            if (pref.getKey().equals(MainApp.gs(R.string.key_bolus_protection))) {
+                Preference pass = pref.getPreferenceManager().findPreference(MainApp.gs(R.string.key_bolus_password));
+                if (pass != null)
+                    if (((ListPreference) pref).getValue().equals(Integer.toString(ProtectionCheck.ProtectionType.PASSWORD.ordinal())))
+                        pass.setEnabled(true);
+                    else pass.setEnabled(false);
+            }
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
@@ -97,7 +121,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             } else if (editTextPref.getText() != null) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
+            } else if (pref.getKey().contains(SP.getString(R.string.key_smscommunicator_allowednumbers, "")) && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
                 pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }

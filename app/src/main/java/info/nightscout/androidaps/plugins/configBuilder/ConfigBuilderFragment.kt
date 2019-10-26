@@ -14,7 +14,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.PasswordProtection
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.configbuilder_fragment.*
@@ -33,16 +33,20 @@ class ConfigBuilderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (PasswordProtection.isLocked("settings_password"))
+        if (ProtectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES))
             configbuilder_main_layout.visibility = View.GONE
         else
             unlock.visibility = View.GONE
 
         unlock.setOnClickListener {
-            PasswordProtection.QueryPassword(context, R.string.settings_password, "settings_password", {
-                configbuilder_main_layout.visibility = View.VISIBLE
-                unlock.visibility = View.GONE
-            }, null)
+            activity?.let { activity ->
+                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    activity.runOnUiThread {
+                        configbuilder_main_layout.visibility = View.VISIBLE
+                        unlock.visibility = View.GONE
+                    }
+                })
+            }
         }
     }
 

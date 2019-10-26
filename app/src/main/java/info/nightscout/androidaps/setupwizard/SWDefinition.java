@@ -47,8 +47,8 @@ import info.nightscout.androidaps.setupwizard.elements.SWRadioButton;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.LocaleHelper;
-import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 
 public class SWDefinition {
     private AppCompatActivity activity;
@@ -216,11 +216,11 @@ public class SWDefinition {
                     .action(() -> {
                         final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveInsulin();
                         if (plugin != null) {
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                            ProtectionCheck.INSTANCE.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
-                            }, null);
+                            });
                         }
                     })
                     .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveInsulin() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveInsulin()).getPreferencesId() > 0))
@@ -237,11 +237,11 @@ public class SWDefinition {
                     .action(() -> {
                         final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveBgSource();
                         if (plugin != null) {
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                            ProtectionCheck.INSTANCE.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
-                            }, null);
+                            });
                         }
                     })
                     .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveBgSource() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveBgSource()).getPreferencesId() > 0))
@@ -307,11 +307,11 @@ public class SWDefinition {
                     .action(() -> {
                         final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActivePump();
                         if (plugin != null) {
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                            ProtectionCheck.INSTANCE.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
-                            }, null);
+                            });
                         }
                     })
                     .visibility(() -> (ConfigBuilderPlugin.getPlugin().getActivePump() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActivePump()).getPreferencesId() > 0)))
@@ -338,11 +338,11 @@ public class SWDefinition {
                     .action(() -> {
                         final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveAPS();
                         if (plugin != null) {
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                            ProtectionCheck.INSTANCE.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
-                            }, null);
+                            });
                         }
                     })
                     .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveAPS() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveAPS()).getPreferencesId() > 0))
@@ -392,11 +392,11 @@ public class SWDefinition {
                     .action(() -> {
                         final PluginBase plugin = (PluginBase) ConfigBuilderPlugin.getPlugin().getActiveSensitivity();
                         if (plugin != null) {
-                            PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", () -> {
+                            ProtectionCheck.INSTANCE.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, () -> {
                                 Intent i = new Intent(activity, PreferencesActivity.class);
                                 i.putExtra("id", plugin.getPreferencesId());
                                 activity.startActivity(i);
-                            }, null);
+                            });
                         }
                     })
                     .visibility(() -> ConfigBuilderPlugin.getPlugin().getActiveSensitivity() != null && ((PluginBase) ConfigBuilderPlugin.getPlugin().getActiveSensitivity()).getPreferencesId() > 0))

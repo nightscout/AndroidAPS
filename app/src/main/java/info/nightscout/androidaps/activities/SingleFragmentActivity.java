@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.utils.PasswordProtection;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 
 public class SingleFragmentActivity extends AppCompatActivity {
 
@@ -39,13 +39,12 @@ public class SingleFragmentActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
-        }
-        else if (item.getItemId() == R.id.nav_plugin_preferences) {
-            PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
+        } else if (item.getItemId() == R.id.nav_plugin_preferences) {
+            ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
                 Intent i = new Intent(this, PreferencesActivity.class);
                 i.putExtra("id", plugin.getPreferencesId());
                 startActivity(i);
-            }, null);
+            });
             return true;
         }
         return false;
