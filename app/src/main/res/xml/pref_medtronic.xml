@@ -68,6 +68,14 @@
             android:selectable="true"
             android:title="@string/medtronic_pump_battery_select" />
 
+        <ListPreference
+            android:defaultValue="@string/common_off"
+            android:entries="@array/onOff"
+            android:entryValues="@array/onOff"
+            android:key="@string/key_medtronic_bolus_debug"
+            android:selectable="true"
+            android:title="@string/medtronic_bolus_debugging" />
+
         <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
             android:enabled="true"
             android:summary=""

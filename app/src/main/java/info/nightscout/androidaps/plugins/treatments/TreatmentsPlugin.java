@@ -51,6 +51,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
@@ -344,12 +345,20 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
         List<Treatment> in5minback = new ArrayList<>();
+
         long time = System.currentTimeMillis();
         synchronized (treatments) {
+            if (MedtronicHistoryData.doubleBolusDebug)
+                log.debug("DoubleBolusDebug: AllTreatmentsInDb: {}", MedtronicUtil.getGsonInstance().toJson(treatments));
+
             for (Treatment t : treatments) {
                 if (t.date <= time && t.date >= fromTimestamp)
                     in5minback.add(t);
             }
+
+            if (MedtronicHistoryData.doubleBolusDebug)
+                log.debug("DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstance().toJson(in5minback));
+
             return in5minback;
         }
     }
@@ -623,6 +632,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
         boolean medtronicPump = MedtronicUtil.isMedtronicPump();
 
+        if (MedtronicHistoryData.doubleBolusDebug)
+            log.debug("DoubleBolusDebug: addToHistoryTreatment::isMedtronicPump={}", medtronicPump);
+
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
         treatment.source = detailedBolusInfo.source;
@@ -637,6 +649,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
         TreatmentService.UpdateReturn creatOrUpdateResult;
 
+        if (medtronicPump && MedtronicHistoryData.doubleBolusDebug)
+            log.debug("DoubleBolusDebug: addToHistoryTreatment::treatment={}", treatment);
+
         if (!medtronicPump)
             creatOrUpdateResult = getService().createOrUpdate(treatment);
         else
@@ -645,12 +660,17 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         boolean newRecordCreated = creatOrUpdateResult.newRecord;
         //log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
+
             Treatment carbsTreatment = new Treatment();
             carbsTreatment.source = detailedBolusInfo.source;
             carbsTreatment.pumpId = detailedBolusInfo.pumpId; // but this should never happen
             carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
             carbsTreatment.source = detailedBolusInfo.source;
+
+            if (medtronicPump && MedtronicHistoryData.doubleBolusDebug)
+                log.debug("DoubleBolusDebug: carbTime!=0, creating second treatment. CarbsTreatment={}", carbsTreatment);
+
             if (!medtronicPump)
                 getService().createOrUpdate(carbsTreatment);
             else
