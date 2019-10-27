@@ -104,17 +104,14 @@ class ObjectivesFragment : Fragment() {
         for (i in 0 until ObjectivesPlugin.objectives.size) {
             val objective = ObjectivesPlugin.objectives[i]
             if (!objective.isStarted || !objective.isAccomplished) {
-                val smoothScroller = object : LinearSmoothScroller(context!!) {
-                    override fun getVerticalSnapPreference(): Int {
-                        return SNAP_TO_START
+                context?.let {
+                    val smoothScroller = object : LinearSmoothScroller(it) {
+                        override fun getVerticalSnapPreference(): Int = SNAP_TO_START
+                        override fun calculateTimeForScrolling(dx: Int): Int = super.calculateTimeForScrolling(dx) * 4
                     }
-
-                    override fun calculateTimeForScrolling(dx: Int): Int {
-                        return super.calculateTimeForScrolling(dx) * 4
-                    }
+                    smoothScroller.targetPosition = i
+                    objectives_recyclerview.layoutManager?.startSmoothScroll(smoothScroller)
                 }
-                smoothScroller.targetPosition = i
-                objectives_recyclerview.layoutManager?.startSmoothScroll(smoothScroller)
                 break
             }
         }
