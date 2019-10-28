@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
@@ -34,6 +33,7 @@
     <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
+    <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
     <string name="description_profile_nightscout">Работа с профила, които сте дефинирали в Nightscout</string>
     <string name="description_profile_simple">Работа с профил със само една стойност за всички часове.</string>
     <string name="description_pump_combo">Поддръжка за Accu-Chek Combo помпи, изискваща инсталиран ruffy</string>
@@ -56,9 +56,6 @@
     <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
     <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
     <string name="description_sms_communicator">Дистанционно управление AndroidAPS чрез използване на SMS команди.</string>
-    <string name="objectives_button_back">Назад</string>
-    <string name="objectives_button_start">Стартирай</string>
-    <string name="objectives_button_verify">Провери</string>
     <string name="nsprofileview_units_label">Единици</string>
     <string name="nsprofileview_dia_label">DIA (Време на действие на инсулина):</string>
     <string name="nsprofileview_ic_label">IC (Инсулин/въглехидр.):</string>
@@ -176,9 +173,6 @@
     <string name="unsupportedclientver">Несъвместима версия на NSClient</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="nsclientnotinstalled">NSClient не е открит. Записът е загубен!</string>
-    <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
-    <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
-    <string name="objectives_manualenacts">Ръчно приложени</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
     <string name="bolusconstraintapplied">Приложено ограничение на болус</string>
@@ -221,7 +215,6 @@
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
-    <string name="missing">Липсва</string>
     <string name="exported">Настройките са експортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
@@ -316,8 +309,6 @@
     <string name="overview_bolusprogress_stoppressed">Натиснат е СТОП!</string>
     <string name="waitingforpump">Очаква помпата</string>
     <string name="overview_bolusprogress_goingtodeliver">Ще стартира %1$.2fЕ болус</string>
-    <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
-    <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
     <string name="youareonallowedlimit">Достигнахте лимита</string>
     <string name="noprofileselected">Няма избран профил</string>
     <string name="smscommunicator_loophasbeendisabled">APS е деактивиран</string>
@@ -551,14 +542,10 @@
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
-    <string name="show_statuslights_easy">Показвай статус светлини на началния екран</string>
-    <string name="show_statuslights_easy_summary">Показвай статус светлини за канула, инсулин, сензор, резервоар и батерията на началния екран.</string>
     <string name="show_statuslights_extended">Покажи статус светлини с подробности на началния екран</string>
     <string name="show_statuslights_extended_summary">Показвай подробни статус светлини за канула, инсулин, сензор, резервоар и батерията на началния екран.</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Критично ниво на останал инсулин в резервоар [Е]</string>
-    <string name="statuslights_bat_warning">Ниско ниво на батерията под [%%]</string>
-    <string name="statuslights_bat_critical">Критично ниво на батерията под [%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">СОВ</string>
     <string name="virtualpump_firmware_label">Фърмуер</string>
@@ -628,7 +615,7 @@
     <string name="mdtp_cancel">Откажи</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
-    <string name="ns_localbroadcasts">Разреши предаване към други приложения (напр. xDrip)</string>
+    <string name="ns_localbroadcasts">Включете излъчване към други приложения (като xDrip). Не включвайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="careportal_activity_label">АКТИВНОСТ И ОБРАТНА ВРЪЗКА</string>
     <string name="careportal_carbsandbolus_label">ХРАНА И БОЛУС</string>
@@ -852,8 +839,6 @@
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="combo_bolus_count">Брой болуси</string>
     <string name="combo_tbr_count">Брой TBR</string>
-    <string name="objectivenotstarted">ЦЕЛ %1$d не е стартирана</string>
-    <string name="objectivenotfinished">ЦЕЛ %1$d не е завършена</string>
     <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
     <string name="novalidbasalrate">Няма валиден базал в помпата</string>
     <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
@@ -940,6 +925,7 @@
     <string name="sensitivitysetup">Конфигуриране на модул за чувствителност</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
+    <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато не го настроите.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="bgsourcesetup">Конфигуриране на източник на КЗ</string>
     <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
@@ -974,7 +960,6 @@
     <string name="completed_well_done">Приключихме, Браво!</string>
     <string name="not_completed_yet">Все още не сме неприключили</string>
     <string name="time_elapsed">Изминало време</string>
-    <string name="nth_objective">%1$d. Цел</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
     <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
@@ -1113,7 +1098,7 @@
     <string name="glucoseisnotavailable">КЗ не е достъпна</string>
     <string name="glucosecomparedmgdl">КЗ %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">КЗ %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Профил проц %1$s %2$d</string>
+    <string name="percentagecompared">Профил процент %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="and">И</string>
     <string name="or">или</string>
@@ -1203,8 +1188,8 @@
     <string name="autosenscompared">Аутосенс %1$s %2$s %%</string>
     <string name="autosenslabel">Аутосенс %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">Разлика в кръвната захар</string>
-    <string name="deltalabel_u">Разлика в кръвната захар [%1$s]</string>
+    <string name="deltalabel">Изменение в кръвната захар</string>
+    <string name="deltalabel_u">Изменение в кръвната захар [%1$s]</string>
     <string name="currentlocation">Текущото местоположение</string>
     <string name="location">Местоположение</string>
     <string name="latitude_short">Ширина:</string>
@@ -1222,7 +1207,7 @@
     <string name="please_choose_a_trigger_type">Моля изберете условие:</string>
     <string name="triggers">Активиращи условия:</string>
     <string name="remove_label">ИЗТРИИ</string>
-    <string name="preconditions">Предварителни:</string>
+    <string name="preconditions">Предварителни условия:</string>
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Неподдържана операция.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Операцията не се поддържа от помпата (ВСЕ ОЩЕ).</string>
@@ -1355,24 +1340,31 @@
     <string name="medtronic_cmd_desc_get_tbr">Получи временния базал</string>
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
-    <string name="insulinFromCob"><![CDATA[Инсулин за въгл: <font color=\'%1$s\'>%2$.1fг %3$.2fЕ</font>]]></string>
+    <string name="profilename">Смени профила на</string>
+    <string name="changengetoprofilename">Смени профила на %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Последно свързване към помпа</string>
+    <string name="automation_trigger_pump_last_connection_compared">Последна връзка с помпата е %1$s %2$s минути преди</string>
+    <string name="sendsmsactionlabel">Изпращане на SMS с текст %1$s</string>
+    <string name="sendsmsactiondescription">Изпрати SMS до всички телефони от настройките</string>
+    <string name="sendsmsactiontext">Изпрати SMS с текст</string>
+    <string name="insulinFromCob"><![CDATA[Въгл срещу АИ: <font color=\'%1$s\'>%2$+.2fг Е</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Ограничение на болуса: %2$.2fЕ на %3$.2fЕ</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
     <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
     <string name="loading">Зареждане ...</string>
-    <string name="objectives_exam_gate">Отговорете правилно на въпросите</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d дeн</item>
-        <item quantity="other">%1$d дни</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d часа</item>
-        <item quantity="other">%1$d часа</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d минута</item>
-        <item quantity="other">%1$d минутa</item>
-    </plurals>
+    <string name="snooze">Отложи</string>
+    <string name="time_range">Времеви диапазон</string>
+    <string name="timerange_value">Часът е между %1$s и %2$s</string>
+    <string name="between">Между </string>
+    <string name="close">Затвори</string>
+    <string name="increasingmaxbasal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
+    <string name="smscommunicator_messagebody">Невалиден текст на съобщение</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
+    <string name="format_percent">%1$d %%</string>
+    <string name="boluswizard">Болус калкулатор</string>
+    <string name="unit_minute_short">мин</string>
 </resources>

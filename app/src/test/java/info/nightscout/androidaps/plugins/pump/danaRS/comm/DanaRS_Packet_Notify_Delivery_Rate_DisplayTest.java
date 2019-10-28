@@ -30,7 +30,6 @@ public class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         DanaRS_Packet_Notify_Delivery_Rate_Display packet = new DanaRS_Packet_Notify_Delivery_Rate_Display(1, new Treatment());
 
         // test params

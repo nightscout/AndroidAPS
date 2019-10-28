@@ -28,7 +28,6 @@ public class DanaRS_Packet_Bolus_Get_Bolus_OptionTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
 
         DanaRS_Packet_Bolus_Get_Bolus_Option packet = new DanaRS_Packet_Bolus_Get_Bolus_Option();
 

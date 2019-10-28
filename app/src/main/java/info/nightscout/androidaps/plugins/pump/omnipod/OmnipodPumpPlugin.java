@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
@@ -660,7 +661,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     protected void finishAction(String overviewKey) {
         if (overviewKey != null)
-            MainApp.bus().post(new EventRefreshOverview(overviewKey));
+            RxBus.INSTANCE.send(new EventRefreshOverview(overviewKey));
 
         triggerUIChange();
 

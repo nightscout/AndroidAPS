@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +23,7 @@ import info.nightscout.androidaps.utils.T;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, DateUtil.class, GregorianCalendar.class})
+@PrepareForTest({MainApp.class, DateUtil.class, GregorianCalendar.class})
 public class TriggerTimeTest {
 
     long now = 1514766900000L;
@@ -90,7 +89,6 @@ public class TriggerTimeTest {
     @Before
     public void mock() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(now);

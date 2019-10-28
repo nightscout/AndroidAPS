@@ -257,7 +257,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     protected void triggerUIChange() {
-        MainApp.bus().post(new EventOmnipodPumpValuesChanged());
+        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
     }
 
 

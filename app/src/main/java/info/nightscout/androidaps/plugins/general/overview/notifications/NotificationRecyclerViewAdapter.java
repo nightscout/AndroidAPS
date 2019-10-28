@@ -20,6 +20,7 @@ import java.util.Objects;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -90,7 +91,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         @Override
         public void onClick(View v) {
             Notification notification = (Notification) v.getTag();
-            MainApp.bus().post(new EventDismissNotification(notification.id));
+            RxBus.INSTANCE.send(new EventDismissNotification(notification.id));
             if (notification.nsAlarm != null) {
                 BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
             }
@@ -98,7 +99,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             if (L.isEnabled(L.NOTIFICATION))
                 log.debug("Notification text is: " + notification.text);
             if (notification.text.equals(MainApp.gs(R.string.nsalarm_staledata))) {
-                NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
+                NotificationStore nstore = OverviewPlugin.INSTANCE.getNotificationStore();
                 long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
                 if (L.isEnabled(L.NOTIFICATION))
                     log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());

@@ -14,8 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +21,18 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class BolusProgressDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(L.UI);
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     Button stopButton;
     TextView statusView;
     TextView stopPressedView;
@@ -91,11 +95,34 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             if (L.isEnabled(L.UI))
                 log.debug("onResume running");
         }
-        try {
-            MainApp.bus().register(this);
-        } catch (IllegalArgumentException e) {
-            log.error("Already registered");
-        }
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDismissBolusProgressIfRunning.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.UI)) log.debug("EventDismissBolusProgressIfRunning");
+                    if (BolusProgressDialog.running) dismiss();
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventOverviewBolusProgress.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.UI))
+                        log.debug("Status: " + event.getStatus() + " Percent: " + event.getPercent());
+                    statusView.setText(event.getStatus());
+                    progressBar.setProgress(event.getPercent());
+                    if (event.getPercent() == 100) {
+                        stopButton.setVisibility(View.INVISIBLE);
+                        scheduleDismiss();
+                    }
+                    state = event.getStatus();
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
@@ -121,11 +148,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
             log.debug("onPause");
         running = false;
         super.onPause();
-        try {
-            MainApp.bus().unregister(this);
-        } catch (IllegalArgumentException e) {
-            log.error("Already unregistered");
-        }
+        disposable.clear();
     }
 
     @Override
@@ -146,43 +169,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 stopButton.setVisibility(View.INVISIBLE);
                 ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelAllBoluses();
                 break;
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventOverviewBolusProgress ev) {
-        Activity activity = getActivity();
-        if (activity != null) {
-            activity.runOnUiThread(() -> {
-                if (L.isEnabled(L.UI))
-                    log.debug("Status: " + ev.status + " Percent: " + ev.percent);
-                statusView.setText(ev.status);
-                progressBar.setProgress(ev.percent);
-                if (ev.percent == 100) {
-                    stopButton.setVisibility(View.INVISIBLE);
-                    scheduleDismiss();
-                }
-            });
-        }
-        state = ev.status;
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
-        if (L.isEnabled(L.UI))
-            log.debug("EventDismissBolusprogressIfRunning");
-        if (BolusProgressDialog.running) {
-            dismiss();
-        }
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged c) {
-        if (L.isEnabled(L.UI))
-            log.debug("EventPumpStatusChanged");
-        Activity activity = getActivity();
-        if (activity != null) {
-            activity.runOnUiThread(() -> statusView.setText(c.textStatus()));
         }
     }
 

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.squareup.otto.Subscribe
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
@@ -121,7 +120,6 @@ class OmnipodFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        MainApp.bus().register(this)
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += RxBus
                 .toObservable(EventOmnipodRefreshButtonState::class.java)
@@ -145,29 +143,28 @@ class OmnipodFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        MainApp.bus().unregister(this)
         loopHandler.removeCallbacks(refreshLoop)
     }
 
-    @Subscribe
-    fun onStatusEvent(c: EventPumpStatusChanged) {
-        activity?.runOnUiThread { updateGUI() }
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventTempBasalChange) {
-        activity?.runOnUiThread { updateGUI() }
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventExtendedBolusChange) {
-        activity?.runOnUiThread { updateGUI() }
-    }
-
-    @Subscribe
-    fun onStatusEvent(s: EventQueueChanged) {
-        activity?.runOnUiThread { updateGUI() }
-    }
+//    @Subscribe
+//    fun onStatusEvent(c: EventPumpStatusChanged) {
+//        activity?.runOnUiThread { updateGUI() }
+//    }
+//
+//    @Subscribe
+//    fun onStatusEvent(s: EventTempBasalChange) {
+//        activity?.runOnUiThread { updateGUI() }
+//    }
+//
+//    @Subscribe
+//    fun onStatusEvent(s: EventExtendedBolusChange) {
+//        activity?.runOnUiThread { updateGUI() }
+//    }
+//
+//    @Subscribe
+//    fun onStatusEvent(s: EventQueueChanged) {
+//        activity?.runOnUiThread { updateGUI() }
+//    }
 
     @Synchronized
     private fun setDeviceStatus() {

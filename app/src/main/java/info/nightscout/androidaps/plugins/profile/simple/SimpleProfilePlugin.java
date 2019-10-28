@@ -19,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -75,7 +76,7 @@ public class SimpleProfilePlugin extends PluginBase implements ProfileInterface 
         createConvertedProfile();
         if (L.isEnabled(L.PROFILE))
             log.debug("Storing settings: " + getRawProfile().getData().toString());
-        MainApp.bus().post(new EventProfileStoreChanged());
+        RxBus.INSTANCE.send(new EventProfileStoreChanged());
     }
 
     private void loadSettings() {

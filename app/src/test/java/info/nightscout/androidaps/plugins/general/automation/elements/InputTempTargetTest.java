@@ -31,7 +31,6 @@ public class InputTempTargetTest {
     @Before
     public void prepare() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
         AAPSMocker.mockProfileFunctions();
     }

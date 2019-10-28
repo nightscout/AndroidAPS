@@ -9,8 +9,6 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -38,8 +36,8 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -47,6 +45,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -58,9 +57,12 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 03.09.2017.
@@ -68,6 +70,8 @@ import info.nightscout.androidaps.utils.T;
 
 public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     private static DanaRSPlugin plugin = null;
 
     public static DanaRSPlugin getPlugin() {
@@ -112,8 +116,21 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         Intent intent = new Intent(context, DanaRSService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-        MainApp.bus().register(this);
-        onStatusEvent(new EventDanaRSDeviceChange()); // load device name
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(mConnection);
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSDeviceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    loadAddress();
+                }, FabricPrivacy::logException)
+        );
+        loadAddress(); // load device name
         super.onStart();
     }
 
@@ -122,7 +139,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
 
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -147,14 +164,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         }
     };
 
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSDeviceChange e) {
+    private void loadAddress() {
         mDeviceAddress = SP.getString(R.string.key_danars_address, "");
         mDeviceName = SP.getString(R.string.key_danars_name, "");
     }
@@ -305,22 +315,22 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.pumpNotInitializedProfileNotSet);
             return result;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!danaRSService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.comment = MainApp.gs(R.string.failedupdatebasalprofile);
             return result;
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
@@ -361,10 +371,14 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public double getReservoirLevel() { return DanaRPump.getInstance().reservoirRemainingUnits; }
+    public double getReservoirLevel() {
+        return DanaRPump.getInstance().reservoirRemainingUnits;
+    }
 
     @Override
-    public int getBatteryLevel() { return DanaRPump.getInstance().batteryRemaining; }
+    public int getBatteryLevel() {
+        return DanaRPump.getInstance().batteryRemaining;
+    }
 
     @Override
     public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
@@ -394,7 +408,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             if (carbTime == 0) carbTime--; // better set 1 min back to prevents clash with insulin
             detailedBolusInfo.carbTime = 0;
 
-            DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
+            DetailedBolusInfoStorage.INSTANCE.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;

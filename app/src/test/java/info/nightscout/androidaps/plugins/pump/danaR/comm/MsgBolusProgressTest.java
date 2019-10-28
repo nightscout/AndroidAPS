@@ -11,7 +11,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.SP;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Rumen Georgiev on 8/28/2018.
@@ -27,7 +27,6 @@ public class MsgBolusProgressTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         Treatment t = new Treatment();
         MsgBolusProgress packet = new MsgBolusProgress(3D, t);
 

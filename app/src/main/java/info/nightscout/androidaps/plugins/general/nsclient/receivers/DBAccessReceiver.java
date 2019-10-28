@@ -118,7 +118,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
     }
 
     public boolean shouldUpload() {
-        NSClientPlugin nsClientPlugin = MainApp.getSpecificPlugin(NSClientPlugin.class);
+        NSClientPlugin nsClientPlugin = NSClientPlugin.getPlugin();
         return nsClientPlugin.isEnabled(PluginType.GENERAL) && !SP.getBoolean(R.string.key_ns_noupload, false);
     }
 

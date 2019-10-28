@@ -58,6 +58,11 @@ class ChooseTriggerDialog : DialogFragment() {
         cancel.setOnClickListener { dismiss() }
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
     fun setOnClickListener(clickListener: OnClickListener) {
         this.clickListener = clickListener
     }

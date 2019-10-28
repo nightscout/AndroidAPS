@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.configBuilder
 import android.content.Intent
 import android.view.View
 import android.widget.*
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.events.EventRefreshGui
+import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.PasswordProtection
 
 class PluginViewHolder internal constructor(private val fragment: ConfigBuilderFragment,
@@ -34,7 +34,7 @@ class PluginViewHolder internal constructor(private val fragment: ConfigBuilderF
         pluginVisibility.setOnClickListener {
             plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked)
             ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible")
-            MainApp.bus().post(EventRefreshGui())
+            RxBus.send(EventRebuildTabs())
             ConfigBuilderPlugin.getPlugin().logPluginStatus()
         }
 

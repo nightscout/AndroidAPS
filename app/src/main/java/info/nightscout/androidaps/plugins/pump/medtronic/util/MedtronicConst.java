@@ -11,17 +11,6 @@ public class MedtronicConst {
     static final String Prefix = "AAPS.Medtronic.";
 
     public class Prefs {
-
-//        public static final String PrefPrefix = "pref_medtronic_";
-//        public static final String PumpSerial = PrefPrefix + "serial";
-//        public static final String PumpType = PrefPrefix + "pump_type";
-//        public static final String PumpFrequency = PrefPrefix + "frequency";
-//        public static final String MaxBolus = PrefPrefix + "max_bolus";
-//        public static final String MaxBasal = PrefPrefix + "max_basal";
-//        public static final String BolusDelay = PrefPrefix + "bolus_delay";
-//        public static final String Encoding = PrefPrefix + "encoding";
-//        public static final String BatteryType = PrefPrefix + "battery_type";
-
         public static final int PumpSerial = R.string.key_medtronic_serial;
         public static final int PumpType = R.string.key_medtronic_pump_type;
         public static final int PumpFrequency = R.string.key_medtronic_frequency;
@@ -30,6 +19,7 @@ public class MedtronicConst {
         public static final int BolusDelay = R.string.key_medtronic_bolus_delay;
         public static final int Encoding = R.string.key_medtronic_encoding;
         public static final int BatteryType = R.string.key_medtronic_battery_type;
+        public static final int BolusDebugEnabled = R.string.key_medtronic_bolus_debug;
     }
 
     public class Statistics {
@@ -42,6 +32,7 @@ public class MedtronicConst {
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
         public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
         public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
+        public static final String LastPrime = StatsPrefix + "last_sent_prime";
     }
 
 }

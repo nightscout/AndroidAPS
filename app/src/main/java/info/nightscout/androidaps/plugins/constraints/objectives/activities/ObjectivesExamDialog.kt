@@ -57,12 +57,11 @@ class ObjectivesExamDialog : DialogFragment() {
             objectives_exam_question.setText(task.question)
             // Options
             objectives_exam_options.removeAllViews()
-            for (o in task.options) {
-                val option: Option = o as Option;
-                val cb = option.generate(context)
+            task.options.forEach {
+                val cb = it.generate(context)
                 if (task.answered) {
                     cb.isEnabled = false
-                    if (option.isCorrect)
+                    if (it.isCorrect)
                         cb.isChecked = true
                 }
                 objectives_exam_options.addView(cb)
@@ -70,8 +69,7 @@ class ObjectivesExamDialog : DialogFragment() {
             // Hints
             objectives_exam_hints.removeAllViews()
             for (h in task.hints) {
-                val hint: Hint = h as Hint;
-                objectives_exam_hints.addView(hint.generate(context))
+                objectives_exam_hints.addView(h.generate(context))
             }
             // Disabled to
             objectives_exam_disabledto.text = MainApp.gs(R.string.answerdisabledto, DateUtil.timeString(task.disabledTo))

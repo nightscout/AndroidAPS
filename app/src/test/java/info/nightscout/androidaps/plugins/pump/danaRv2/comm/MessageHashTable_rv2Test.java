@@ -25,7 +25,6 @@ public class MessageHashTable_rv2Test {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
 
         MessageHashTableRv2 hashTableRv2 = MessageHashTableRv2.INSTANCE;
 

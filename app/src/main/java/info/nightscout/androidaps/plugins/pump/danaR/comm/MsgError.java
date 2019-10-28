@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
@@ -44,10 +45,10 @@ public class MsgError extends MessageBase {
         }
 
         if (errorCode < 8) { // bolus delivering stopped
-            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
             MsgBolusStop.stopped = true;
-            bolusingEvent.status = errorString;
-            MainApp.bus().post(bolusingEvent);
+            bolusingEvent.setStatus(errorString);
+            RxBus.INSTANCE.send(bolusingEvent);
             failed=true;
         }
         if (L.isEnabled(L.PUMPCOMM))

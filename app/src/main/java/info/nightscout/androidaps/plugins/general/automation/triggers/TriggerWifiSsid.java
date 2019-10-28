@@ -59,13 +59,13 @@ public class TriggerWifiSsid extends Trigger {
         if (lastRun > DateUtil.now() - T.mins(5).msecs())
             return false;
 
-        if (!eventNetworkChange.wifiConnected && comparator.getValue() == Comparator.Compare.IS_NOT_AVAILABLE) {
+        if (!eventNetworkChange.getWifiConnected() && comparator.getValue() == Comparator.Compare.IS_NOT_AVAILABLE) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
             return true;
         }
 
-        boolean doRun = eventNetworkChange.wifiConnected && comparator.getValue().check(eventNetworkChange.getSsid(), getValue());
+        boolean doRun = eventNetworkChange.getWifiConnected() && comparator.getValue().check(eventNetworkChange.connectedSsid(), getValue());
         if (doRun) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());

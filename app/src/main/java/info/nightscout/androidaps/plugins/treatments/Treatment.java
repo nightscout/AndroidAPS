@@ -224,7 +224,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     @Override
     public double getY() {
-        return isSMB ? OverviewPlugin.getPlugin().determineLowLine() : yValue;
+        return isSMB ? OverviewPlugin.INSTANCE.determineLowLine() : yValue;
     }
 
     @Override
