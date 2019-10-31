@@ -20,7 +20,7 @@ class NsClientReceiverDelegate {
 
     private final Context context;
 
-    private NetworkChangeReceiver networkChangeReceiver = NetworkChangeReceiver.instance;
+    private NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
     private ChargingStateReceiver chargingStateReceiver = new ChargingStateReceiver();
 
     private boolean allowedChargingState = true;

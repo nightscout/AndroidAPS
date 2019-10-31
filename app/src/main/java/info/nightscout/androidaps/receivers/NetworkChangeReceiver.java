@@ -28,11 +28,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     // TODO: Split NSClient into network state component that can be used by several plugins and logic for plugin
     public static void fetch() {
-            NetworkChangeReceiver.instance.grabNetworkStatus(MainApp.instance().getApplicationContext());
-    }
-
-    private NetworkChangeReceiver() {
-        super();
+            new NetworkChangeReceiver().grabNetworkStatus(MainApp.instance().getApplicationContext());
     }
 
     @Override
