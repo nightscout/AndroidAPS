@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".plugins.ConstraintsObjectives.ObjectivesFragment">
+    tools:context=".plugins.constraints.objectives.ObjectivesFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:text="Reset" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/objectives_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"

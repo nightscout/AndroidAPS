@@ -1,0 +1,56 @@
+package info.nightscout.androidaps.plugins.pump.danaRKorean.comm
+
+import info.nightscout.androidaps.plugins.pump.danaR.comm.*
+import java.util.*
+
+object MessageHashTableRkorean : MessageHashTableBase {
+    var messages: HashMap<Int, MessageBase> = HashMap()
+
+    init {
+        put(MsgBolusStop())                 // 0x0101 CMD_MEALINS_STOP
+        put(MsgBolusStart())                // 0x0102 CMD_MEALINS_START_DATA
+        put(MsgBolusProgress())             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
+        put(MsgStatusProfile())             // 0x0204 CMD_PUMP_CALCULATION_SETTING
+        put(MsgStatusTempBasal())           // 0x0205 CMD_PUMP_EXERCISE_MODE
+        put(MsgStatusBolusExtended())       // 0x0207 CMD_PUMP_EXPANS_INS_I
+        put(MsgStatusBasic_k())               // 0x020A CMD_PUMP_INITVIEW_I
+        put(MsgStatus_k())                    // 0x020B CMD_PUMP_STATUS
+        put(MsgInitConnStatusTime_k())        // 0x0301 CMD_PUMPINIT_TIME_INFO
+        put(MsgInitConnStatusBolus_k())       // 0x0302 CMD_PUMPINIT_BOLUS_INFO
+        put(MsgInitConnStatusBasic_k())       // 0x0303 CMD_PUMPINIT_INIT_INFO
+        put(MsgSetTempBasalStart())         // 0x0401 CMD_PUMPSET_EXERCISE_S
+        put(MsgSetCarbsEntry())             // 0x0402 CMD_PUMPSET_HIS_S
+        put(MsgSetTempBasalStop())          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
+        put(MsgSetExtendedBolusStop())      // 0x0406 CMD_PUMPSET_EXPANS_INS_STOP
+        put(MsgSetExtendedBolusStart())     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
+        put(MsgError())                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
+        put(MsgPCCommStart())               // 0x3001 CMD_CONNECT
+        put(MsgPCCommStop())                // 0x3002 CMD_DISCONNECT
+        put(MsgHistoryBolus())              // 0x3101 CMD_HISTORY_MEAL_INS
+        put(MsgHistoryDailyInsulin())       // 0x3102 CMD_HISTORY_DAY_INS
+        put(MsgHistoryGlucose())            // 0x3104 CMD_HISTORY_GLUCOSE
+        put(MsgHistoryAlarm())              // 0x3105 CMD_HISTORY_ALARM
+        put(MsgHistoryCarbo())              // 0x3107 CMD_HISTORY_CARBOHY
+        put(MsgSettingBasal_k())              // 0x3202 CMD_SETTING_V_BASAL_INS_I
+        put(MsgSettingMeal())               // 0x3203 CMD_SETTING_V_MEAL_SETTING_I
+        put(MsgSettingProfileRatios())      // 0x3204 CMD_SETTING_V_CCC_I
+        put(MsgSettingMaxValues())          // 0x3205 CMD_SETTING_V_MAX_VALUE_I
+        put(MsgSettingBasalProfileAll_k())    // 0x3206 CMD_SETTING_V_BASAL_PROFILE_ALL
+        put(MsgSettingShippingInfo())       // 0x3207 CMD_SETTING_V_SHIPPING_I
+        put(MsgSettingGlucose())            // 0x3209 CMD_SETTING_V_GLUCOSEandEASY
+        put(MsgSettingPumpTime())           // 0x320A CMD_SETTING_V_TIME_I
+        put(MsgSetSingleBasalProfile())     // 0x3302 CMD_SETTING_BASAL_INS_S
+        put(MsgHistoryAll())                // 0x41F2 CMD_HISTORY_ALL
+        put(MsgHistoryNewDone())            // 0x42F1 CMD_HISTORY_NEW_DONE
+        put(MsgHistoryNew())                // 0x42F2 CMD_HISTORY_NEW
+        put(MsgCheckValue_k())                // 0xF0F1 CMD_PUMP_CHECK_VALUE
+    }
+
+    override fun put(message: MessageBase) {
+        messages[message.command] = message
+    }
+
+    override fun findMessage(command: Int): MessageBase {
+        return messages[command] ?: MessageBase()
+    }
+}

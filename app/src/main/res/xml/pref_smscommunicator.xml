@@ -5,11 +5,9 @@
         android:title="@string/smscommunicator">
 
         <EditTextPreference
-            android:title="@string/smscommunicator_allowednumbers"
-            android:summary="@string/smscommunicator_allowednumbers_summary"
             android:key="@string/key_smscommunicator_allowednumbers"
-            android:defaultValue="">
-        </EditTextPreference>
+            android:summary="@string/smscommunicator_allowednumbers_summary"
+            android:title="@string/smscommunicator_allowednumbers" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_smscommunicator_remotecommandsallowed"

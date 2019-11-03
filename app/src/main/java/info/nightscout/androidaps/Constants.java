@@ -1,6 +1,6 @@
 package info.nightscout.androidaps;
 
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 07.06.2016.
@@ -31,10 +31,12 @@ public class Constants {
     public static final long remoteBolusMinDistance = 15 * 60 * 1000L;
 
     // Circadian Percentage Profile
-    public static final int CPP_MIN_PERCENTAGE = 50;
+    public static final int CPP_MIN_PERCENTAGE = 30;
     public static final int CPP_MAX_PERCENTAGE = 200;
     public static final int CPP_MIN_TIMESHIFT = -6;
     public static final int CPP_MAX_TIMESHIFT = 23;
+
+    public static final double MAX_PROFILE_SWITCH_DURATION = 7 * 24 * 60; // [min] ~ 7 days
 
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
@@ -49,6 +51,11 @@ public class Constants {
     public static final int defaultHypoTTDuration = 30; // min
     public static final double defaultHypoTTmgdl = 120d;
     public static final double defaultHypoTTmmol = 6.5d;
+
+    public static final double MIN_TT_MGDL = 72d;
+    public static final double MAX_TT_MGDL = 180d;
+    public static final double MIN_TT_MMOL = 4d;
+    public static final double MAX_TT_MMOL = 10d;
 
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;
@@ -67,5 +74,8 @@ public class Constants {
 
     //SMS Communicator
     public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
+
+    //Storage [MB]
+    public static final long MINIMUM_FREE_SPACE = 200;
 
 }

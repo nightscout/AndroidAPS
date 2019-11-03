@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.db;
 
-import android.content.res.Resources;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -14,15 +12,13 @@ import java.util.Objects;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
+import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
@@ -220,8 +216,8 @@ public class BgReading implements DataPointWithLabelInterface {
     @Override
     public int getColor() {
         String units = ProfileFunctions.getInstance().getProfileUnits();
-        Double lowLine = OverviewPlugin.getPlugin().determineLowLine(units);
-        Double highLine = OverviewPlugin.getPlugin().determineHighLine(units);
+        Double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
+        Double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
         int color = MainApp.gc(R.color.inrange);
         if (isPrediction())
             return getPredectionColor();

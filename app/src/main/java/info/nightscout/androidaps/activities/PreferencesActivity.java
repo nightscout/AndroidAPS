@@ -9,47 +9,54 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.Careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
-import info.nightscout.androidaps.plugins.PumpCombo.ComboPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.PumpInsight.InsightPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref0Plugin;
-import info.nightscout.androidaps.plugins.Sensitivity.SensitivityOref1Plugin;
-import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.Source.SourceDexcomG5Plugin;
-import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
-import info.nightscout.utils.LocaleHelper;
-import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
+import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         myPreferenceFragment = new MyPreferenceFragment();
         Bundle args = new Bundle();
@@ -61,16 +68,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        MainApp.bus().post(new EventPreferenceChange(key));
+        RxBus.INSTANCE.send(new EventPreferenceChange(key));
         if (key.equals("language")) {
-            String lang = sharedPreferences.getString("language", "en");
-            LocaleHelper.setLocale(getApplicationContext(), lang);
-            MainApp.bus().post(new EventRefreshGui(true));
+            RxBus.INSTANCE.send(new EventRebuildTabs(true));
             //recreate() does not update language so better close settings
             finish();
         }
         if (key.equals("short_tabtitles")) {
-            MainApp.bus().post(new EventRefreshGui());
+            RxBus.INSTANCE.send(new EventRebuildTabs());
         }
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
             OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
@@ -92,7 +97,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             } else if (editTextPref.getText() != null) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().trim())) {
+            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
                 pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
             }
         }
@@ -143,7 +148,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResource(R.xml.pref_overview);
 
-                addPreferencesFromResourceIfEnabled(SourceDexcomG5Plugin.getPlugin(), PluginType.BGSOURCE);
+                addPreferencesFromResourceIfEnabled(SourceDexcomPlugin.INSTANCE, PluginType.BGSOURCE);
                 addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginType.CONSTRAINTS);
                 if (Config.APS) {
@@ -163,8 +168,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResourceIfEnabled(DanaRKoreanPlugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(DanaRv2Plugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(DanaRSPlugin.getPlugin(), PluginType.PUMP);
-                    addPreferencesFromResourceIfEnabled(InsightPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), PluginType.PUMP);
                     addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginType.PUMP);
+                    addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
 
                     if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
                             || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
@@ -181,7 +187,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(InsulinOrefFreePeakPlugin.getPlugin(), PluginType.INSULIN);
 
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(AutomationPlugin.INSTANCE, PluginType.GENERAL);
 
                 addPreferencesFromResource(R.xml.pref_others);
                 addPreferencesFromResource(R.xml.pref_datachoices);
@@ -190,7 +198,26 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
             }
 
+            if (Config.NSCLIENT) {
+                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) findPreference(getString(R.string.key_advancedsettings));
+                if (scrnAdvancedSettings != null) {
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
+                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights_extended)));
+                }
+            }
+
             initSummary(getPreferenceScreen());
+
+            final Preference tidepoolTestLogin = findPreference(MainApp.gs(R.string.key_tidepool_test_login));
+            if (tidepoolTestLogin != null)
+                tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
+                    TidepoolUploader.INSTANCE.testLogin(getActivity());
+                    return false;
+                });
         }
 
         @Override

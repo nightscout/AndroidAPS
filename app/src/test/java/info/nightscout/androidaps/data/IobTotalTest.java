@@ -1,13 +1,12 @@
 package info.nightscout.androidaps.data;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.utils.DateUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 
 /**
  * Created by mike on 27.03.2018.

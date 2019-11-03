@@ -17,13 +17,14 @@
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
         <item>@string/fr_lang</item>
-        <item>@string/ga_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
+        <item>@string/lt_lang</item>
         <item>@string/pt_lang</item>
+        <item>@string/pt_BR_lang</item>
         <item>@string/ro_lang</item>
         <item>@string/ru_lang</item>
         <item>@string/sk_lang</item>
@@ -39,13 +40,14 @@
         <item>cs</item>
         <item>de</item>
         <item>fr</item>
-        <item>ga</item>
         <item>nl</item>
         <item>es</item>
         <item>el</item>
         <item>it</item>
         <item>ko</item>
+        <item>lt</item>
         <item>pt</item>
+        <item>pt_BR</item>
         <item>ro</item>
         <item>ru</item>
         <item>sk</item>
@@ -79,43 +81,28 @@
         <item>2</item>
     </string-array>
 
-    <string-array name="quickWizardUseBGArray">
+    <string-array name="quickWizardYesNo">
         <item>@string/yes</item>
         <item>@string/no</item>
     </string-array>
 
-    <string-array name="quickWizardUseCOBArray">
-        <item>@string/yes</item>
-        <item>@string/no</item>
-    </string-array>
-
-    <string-array name="quickWizardUseBolusIOBArray">
-        <item>@string/yes</item>
-        <item>@string/no</item>
-    </string-array>
-
-    <string-array name="quickWizardUseBasalOBArray">
+    <string-array name="quickWizardYesNoPosNeg">
         <item>@string/yes</item>
         <item>@string/no</item>
         <item>@string/positiveonly</item>
         <item>@string/negativeonly</item>
     </string-array>
 
-    <string-array name="quickWizardUseTrendArray">
-        <item>@string/no</item>
-        <item>@string/yes</item>
-        <item>@string/positiveonly</item>
-        <item>@string/negativeonly</item>
+    <string-array name="location">
+        <item>@string/use_passive_location</item>
+        <item>@string/use_network_location</item>
+        <item>@string/use_gps_location</item>
     </string-array>
 
-    <string-array name="quickWizardUseSuperBolusArray">
-        <item>@string/no</item>
-        <item>@string/yes</item>
-    </string-array>
-
-    <string-array name="quickWizardUseTempTargetArray">
-        <item>@string/no</item>
-        <item>@string/yes</item>
+    <string-array name="locationValues" translatable="false">
+        <item>PASSIVE</item>
+        <item>NETWORK</item>
+        <item>GPS</item>
     </string-array>
 
     <string-array name="virtualPumpTypes">
@@ -142,5 +129,69 @@
         <item>Tandem t:slim G4</item>
         <item>Tandem t:slim X2</item>
     </string-array>
+
+    <string-array name="medtronicPumpTypeArray">
+        <item>Other (unsupported)</item>
+        <item>512</item>
+        <item>712</item>
+        <item>515</item>
+        <item>715</item>
+        <item>522</item>
+        <item>722</item>
+        <item>523 (Fw 2.4A or lower)</item>
+        <item>723 (Fw 2.4A or lower)</item>
+        <item>554 (EU Fw. &lt;= 2.6A)</item>
+        <item>754 (EU Fw. &lt;= 2.6A)</item>
+        <item>554 (CA Fw. &lt;= 2.7A)</item>
+        <item>754 (CA Fw. &lt;= 2.7A)</item>
+    </string-array>
+
+    <string-array name="medtronicPumpFreqArray">
+        <item>@string/medtronic_pump_frequency_us_ca</item>
+        <item>@string/medtronic_pump_frequency_worldwide</item>
+    </string-array>
+
+    <string-array name="medtronicPumpFreqValues">
+        <item>@string/key_medtronic_pump_frequency_us_ca</item>
+        <item>@string/key_medtronic_pump_frequency_worldwide</item>
+    </string-array>
+
+    <string-array name="medtronicBolusDelay">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+
+    <string-array name="medtronicEncoding">
+        <item>@string/medtronic_pump_encoding_4b6b_local</item>
+        <item>@string/medtronic_pump_encoding_4b6b_rileylink</item>
+    </string-array>
+
+    <string-array name="onOff">
+        <item>@string/common_on</item>
+        <item>@string/common_off</item>
+    </string-array>
+
+    <string-array name="medtronicEncodingValues">
+        <item>@string/key_medtronic_pump_encoding_4b6b_local</item>
+        <item>@string/key_medtronic_pump_encoding_4b6b_rileylink</item>
+    </string-array>
+
+    <string-array name="medtronicBatteryType">
+        <item>@string/medtronic_pump_battery_no</item>
+        <item>@string/medtronic_pump_battery_alkaline</item>
+        <item>@string/medtronic_pump_battery_lithium</item>
+        <item>@string/medtronic_pump_battery_nizn</item>
+    </string-array>
+
+    <string-array name="medtronicBatteryTypeValues">
+        <item>@string/key_medtronic_pump_battery_no</item>
+        <item>@string/key_medtronic_pump_battery_alkaline</item>
+        <item>@string/key_medtronic_pump_battery_lithium</item>
+        <item>@string/key_medtronic_pump_battery_nizn</item>
+    </string-array>
+
+
+    key_medtronic_bolus_debug
 
 </resources>

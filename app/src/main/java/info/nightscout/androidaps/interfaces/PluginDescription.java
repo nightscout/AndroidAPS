@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces;
 public class PluginDescription {
     PluginType mainType = PluginType.GENERAL;
     String fragmentClass = null;
-    public boolean alwayVisible = false;
+    public boolean alwaysVisible = false;
     public boolean neverVisible = false;
     public boolean alwaysEnabled = false;
     boolean showInList = true;
@@ -11,7 +11,6 @@ public class PluginDescription {
     int shortName = -1;
     int description = -1;
     int preferencesId = -1;
-    int advancedPreferencesId = -1;
     public boolean enableByDefault = false;
     public boolean visibleByDefault = false;
 
@@ -30,8 +29,8 @@ public class PluginDescription {
         return this;
     }
 
-     public PluginDescription alwayVisible(boolean alwayVisible) {
-        this.alwayVisible = alwayVisible;
+     public PluginDescription alwaysVisible(boolean alwayVisible) {
+        this.alwaysVisible = alwayVisible;
         return this;
     }
 
@@ -57,11 +56,6 @@ public class PluginDescription {
 
     public PluginDescription preferencesId(int preferencesId) {
         this.preferencesId = preferencesId;
-        return this;
-    }
-
-    public PluginDescription advancedPreferencesId(int advancedPreferencesId) {
-        this.advancedPreferencesId = advancedPreferencesId;
         return this;
     }
 

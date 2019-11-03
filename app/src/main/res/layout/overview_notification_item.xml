@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/notification_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,38 +10,31 @@
     card_view:cardBackgroundColor="@color/cardColorBackground"
     card_view:cardCornerRadius="6dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/notification_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="@string/dismiss"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/notification_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:maxLines="4"
+            android:text="Notification text. Notification text. Notification text. Notification text. Notification text. Notification text. "
+            card_view:layout_constraintEnd_toStartOf="@+id/notification_dismiss"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:text="Time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/notification_time"
-                android:layout_weight="0.1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/notification_text"
-                android:layout_weight="1"
-                android:text="Notification text" />
-
-            <Button
-                android:text="@string/dismiss"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:id="@+id/notification_dismiss"
-                android:layout_weight="0.2" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

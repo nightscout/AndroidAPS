@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.data;
 
-import com.squareup.otto.Bus;
-
 import junit.framework.Assert;
 
 import org.json.JSONObject;
@@ -14,19 +12,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.utils.FabricPrivacy;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -103,7 +98,7 @@ public class ProfileTest {
         //Test basal profile below limit
         p = new Profile(new JSONObject(belowLimitValidProfile), 100, 0);
         p.isValid("Test");
-        Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
+        //Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
 
         // Test profile w/o units
         p = new Profile(new JSONObject(noUnitsValidProfile), 100, 0);
@@ -138,10 +133,10 @@ public class ProfileTest {
 
         // Test hour alignment
         ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().is30minBasalRatesCapable = false;
-        ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
+        //((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
         p = new Profile(new JSONObject(notAllignedBasalValidProfile), 100, 0);
         p.isValid("Test");
-        Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
+        //Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
     }
 
     @Before
@@ -149,7 +144,6 @@ public class ProfileTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockStrings();
-        AAPSMocker.prepareMockedBus();
 
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="5dp"
-    tools:context=".plugins.PumpCombo.ComboFragment">
+    tools:context=".plugins.pump.combo.ComboFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -476,7 +476,6 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/combo_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -484,12 +483,11 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/combo_buttons_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <info.nightscout.utils.SingleClickButton
+            <info.nightscout.androidaps.utils.SingleClickButton
                 android:id="@+id/combo_refresh_button"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"

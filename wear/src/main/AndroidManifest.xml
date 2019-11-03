@@ -168,9 +168,66 @@
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
+
         <service android:name=".data.ListenerService">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+                <!-- <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> -->
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_data" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_data_resend" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_cancel_bolus" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_confirmactionstring" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_initiateactionstring" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/openwearsettings" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/sendstatustowear" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/sendpreferencestowear" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_basal" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_bolusprogress" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest" />
+                <data
+                    android:scheme="wear"
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest" />
             </intent-filter>
         </service>
 

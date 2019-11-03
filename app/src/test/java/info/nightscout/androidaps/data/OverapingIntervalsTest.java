@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 26.03.2018.

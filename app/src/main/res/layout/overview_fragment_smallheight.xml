@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Overview.OverviewFragment">
+    tools:context=".plugins.general.overview.OverviewFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,12 +14,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/overview_notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <LinearLayout
                 android:id="@+id/overview_looplayout"
@@ -156,14 +156,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/overview_basallayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/overview_runningtemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -180,6 +178,60 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/overview_statuslights"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/overview_canulaage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_insulinage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_reservoirlevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_sensorage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_batterylevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -206,7 +258,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:id="@+id/iob_group"
                     android:orientation="horizontal">
 
                     <TextView
@@ -234,7 +285,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:id="@+id/cob_group"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
@@ -260,7 +310,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:id="@+id/as_group"
                     android:orientation="horizontal">
 
                     <TextView
@@ -331,7 +380,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_accepttempbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
@@ -349,7 +398,7 @@
                 android:paddingRight="5dp"
                 android:orientation="horizontal">
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -363,7 +412,7 @@
                     android:textColor="@color/colorTreatmentButton"
                     android:textSize="10sp" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_insulinbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -378,7 +427,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_carbsbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -392,7 +441,7 @@
                     android:textColor="@color/colorCarbsButton"
                     android:textSize="10sp" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -407,7 +456,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_calibrationbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -422,7 +471,7 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_cgmbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -436,7 +485,7 @@
                     android:textColor="@color/colorCalibrationButton"
                     android:textSize="10sp"/>
 
-                <info.nightscout.utils.SingleClickButton
+                <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"

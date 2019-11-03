@@ -2,24 +2,22 @@ package info.nightscout.androidaps.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.R;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.SP;
 
-public class AgreementActivity extends Activity {
+public class AgreementActivity extends NoSplashActivity {
     boolean IUnderstand;
     CheckBox agreeCheckBox;
     Button saveButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agreement);
         IUnderstand = SP.getBoolean(R.string.key_i_understand, false);

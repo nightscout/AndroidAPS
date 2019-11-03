@@ -2,9 +2,6 @@ package info.nightscout.androidaps.queue;
 
 import android.content.Context;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
-
 import junit.framework.Assert;
 
 import org.json.JSONException;
@@ -25,13 +22,13 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.androidaps.utils.ToastUtils;
 
-import static info.nightscout.utils.DateUtil.now;
+import static info.nightscout.androidaps.utils.DateUtil.now;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -120,7 +117,7 @@ public class CommandQueueTest extends CommandQueue {
 
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
-        PumpInterface pump = MDIPlugin.getPlugin();
+        PumpInterface pump = VirtualPumpPlugin.getPlugin();
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
@@ -140,9 +137,6 @@ public class CommandQueueTest extends CommandQueue {
         String message = null;
         PowerMockito.doNothing().when(ToastUtils.class, "showToastInUiThread", context, message);
 
-        Bus bus = new Bus(ThreadEnforcer.ANY);
-
-        when(MainApp.bus()).thenReturn(bus);
         when(MainApp.gs(0)).thenReturn("");
 
         PowerMockito.mockStatic(TreatmentsPlugin.class);

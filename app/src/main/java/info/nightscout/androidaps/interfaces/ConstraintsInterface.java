@@ -35,6 +35,10 @@ public interface ConstraintsInterface {
         return value;
     }
 
+    default Constraint<Boolean> isSuperBolusEnabled(Constraint<Boolean> value) {
+        return value;
+    }
+
     default Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
         return absoluteRate;
     }
@@ -57,6 +61,6 @@ public interface ConstraintsInterface {
 
     default Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         return maxIob;
-    };
+    }
 
 }

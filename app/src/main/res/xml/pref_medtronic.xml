@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/medtronic_name">
+
+
+        <EditTextPreference
+            android:defaultValue="000000"
+            android:key="@string/key_medtronic_serial"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:title="@string/medtronic_serial_number" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/medtronicPumpTypeArray"
+            android:entryValues="@array/medtronicPumpTypeArray"
+            android:key="@string/key_medtronic_pump_type"
+            android:title="@string/medtronic_pump_type" />
+
+
+        <ListPreference
+            android:defaultValue="@string/key_medtronic_pump_frequency_us_ca"
+            android:entries="@array/medtronicPumpFreqArray"
+            android:entryValues="@array/medtronicPumpFreqValues"
+            android:key="@string/key_medtronic_frequency"
+            android:selectable="true"
+            android:title="@string/medtronic_pump_frequency" />
+
+        <EditTextPreference
+            android:defaultValue="35"
+            android:key="@string/key_medtronic_max_basal"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="number"
+            android:digits="0123456789."
+            android:title="@string/medtronic_pump_max_basal" />
+
+        <EditTextPreference
+            android:defaultValue="25"
+            android:key="@string/key_medtronic_max_bolus"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="number"
+            android:digits="0123456789."
+            android:title="@string/medtronic_pump_max_bolus" />
+
+        <ListPreference
+            android:defaultValue="10"
+            android:entries="@array/medtronicBolusDelay"
+            android:entryValues="@array/medtronicBolusDelay"
+            android:key="@string/key_medtronic_bolus_delay"
+            android:selectable="true"
+            android:title="@string/medtronic_pump_bolus_delay" />
+
+        <ListPreference
+            android:defaultValue="@string/key_medtronic_pump_encoding_4b6b_rileylink"
+            android:entries="@array/medtronicEncoding"
+            android:entryValues="@array/medtronicEncodingValues"
+            android:key="@string/key_medtronic_encoding"
+            android:selectable="true"
+            android:title="@string/medtronic_pump_encoding" />
+
+        <ListPreference
+            android:defaultValue="@string/key_medtronic_pump_battery_no"
+            android:entries="@array/medtronicBatteryType"
+            android:entryValues="@array/medtronicBatteryTypeValues"
+            android:key="@string/key_medtronic_battery_type"
+            android:selectable="true"
+            android:title="@string/medtronic_pump_battery_select" />
+
+        <ListPreference
+            android:defaultValue="@string/common_off"
+            android:entries="@array/onOff"
+            android:entryValues="@array/onOff"
+            android:key="@string/key_medtronic_bolus_debug"
+            android:selectable="true"
+            android:title="@string/medtronic_bolus_debugging" />
+
+        <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
+            android:enabled="true"
+            android:summary=""
+            android:title="RileyLink Configuration"
+            android:key="@string/key_rileylink_mac_address">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+        </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
+
+    </PreferenceCategory>
+</PreferenceScreen>

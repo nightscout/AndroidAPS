@@ -3,12 +3,15 @@
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
     <color name="iob">#1e88e5</color>
+    <color name="iobPred">#00d2d2</color>
     <color name="bolus">#1ea3e5</color>
+    <color name="iobPredAS">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
     <color name="carbs">#FFFB8C00</color>
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
+    <color name="activity">#d3f166</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="inrange">#00FF00</color>
@@ -16,9 +19,9 @@
     <color name="high">#FFFF00</color>
     <color name="actionsConfirm">#FFFF00</color>
     <color name="listdelimiter">#505050</color>
-    <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
+    <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
     <color name="basebasal">#C83F51B5</color>
     <color name="tempbasal">#C803A9F4</color>
@@ -31,7 +34,6 @@
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
-    <color name="tempTargetDisabledBackground">#303F9F</color>
 
 
     <color name="colorPrimary">#212121</color>
@@ -44,7 +46,6 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
-    <color name="configBuilderSelectedBackground">#262525</color>
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>
@@ -60,10 +61,6 @@
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
 
-    <color name="loopenabled">#47c8ff</color>
-    <color name="loopdisabled">#FFDD7792</color>
-    <color name="looppumpsuspended">#ff0400</color>
-
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
@@ -76,5 +73,12 @@
     <color name="deviationred">#72FF0000</color>
     <color name="deviationblack">#72000000</color>
 
-    <color name="ic_launcher_background">#424242</color>
+    <color name="ribbonDefault">#5a595b</color>
+    <color name="ribbonWarning">#f4d700</color>
+    <color name="ribbonCritical">#ff0400</color>
+    <color name="ribbonTextDefault">#FFFFFF</color>
+    <color name="ribbonTextWarning">#303030</color>
+    <color name="ribbonTextCritical">#FFFFFF</color>
+
+    <color name="splashBackground">#2E2E2E</color>
 </resources>

@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,14 +25,14 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
-import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.T;
-import info.nightscout.utils.Translator;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
+import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.Translator;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
 public class CareportalEvent implements DataPointWithLabelInterface, Interval {
@@ -90,16 +89,26 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return System.currentTimeMillis() - date;
     }
 
-    public long getHoursFromStart() {
-        return (System.currentTimeMillis() - date) / (60 * 60 * 1000);
+    public double getHoursFromStart() {
+        return (System.currentTimeMillis() - date) / (60 * 60 * 1000.0);
+    }
+
+    public String age(boolean useShortText) {
+        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
+
+        String days = " " + MainApp.gs(R.string.days) + " ";
+        String hours = " " + MainApp.gs(R.string.hours) + " ";
+
+        if (useShortText) {
+            days = "d";
+            hours = "h";
+        }
+
+        return diff.get(TimeUnit.DAYS) + days + diff.get(TimeUnit.HOURS) + hours;
     }
 
     public String age() {
-        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
-        if (OverviewFragment.shorttextmode)
-            return diff.get(TimeUnit.DAYS) + "d" + diff.get(TimeUnit.HOURS) + "h";
-        else
-            return diff.get(TimeUnit.DAYS) + " " + MainApp.gs(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.gs(R.string.hours);
+        return age(OverviewFragment.shorttextmode);
     }
 
     public boolean isOlderThan(double hours) {

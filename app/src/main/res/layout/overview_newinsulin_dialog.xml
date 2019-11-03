@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.NewInsulinDialog">
+    tools:context=".plugins.general.overview.dialogs.NewInsulinDialog">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                     android:textStyle="bold"
                     android:text="@string/time" />
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/newinsulin_time"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -109,7 +109,7 @@
                     android:textStyle="bold"
                     android:text="@string/overview_insulin_label" />
 
-                <info.nightscout.utils.NumberPicker
+                <info.nightscout.androidaps.utils.NumberPicker
                     android:id="@+id/newinsulin_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
