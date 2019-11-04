@@ -77,6 +77,7 @@ public class MedtronicHistoryData {
     private boolean isInit = false;
 
     private Gson gson;
+    private Gson gsonCore;
 
     private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
@@ -94,9 +95,14 @@ public class MedtronicHistoryData {
     public MedtronicHistoryData() {
         this.allHistory = new ArrayList<>();
         this.gson = MedtronicUtil.gsonInstance;
+        this.gsonCore = MedtronicUtil.getGsonInstanceCore();
 
         if (this.gson == null) {
             this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        }
+
+        if (this.gsonCore == null) {
+            this.gsonCore = new GsonBuilder().create();
         }
     }
 
@@ -597,7 +603,7 @@ public class MedtronicHistoryData {
 
         if (doubleBolusDebug)
             LOG.debug("DoubleBolusDebug: List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                    gson.toJson(entriesFromHistory));
+                    gsonCore.toJson(entriesFromHistory));
 
         filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
@@ -862,6 +868,7 @@ public class MedtronicHistoryData {
             return;
 
         List<DbObjectBase> removeTreatmentsFromHistory = new ArrayList<>();
+        List<PumpHistoryEntry> removeTreatmentsFromPH = new ArrayList<>();
 
         for (DbObjectBase treatment : treatmentsFromHistory) {
 
@@ -879,10 +886,16 @@ public class MedtronicHistoryData {
                 if (selectedBolus != null) {
                     entryList.remove(selectedBolus);
 
+                    removeTreatmentsFromPH.add(selectedBolus);
                     removeTreatmentsFromHistory.add(treatment);
                 }
             }
         }
+
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: filterOutAlreadyAddedEntries: PumpHistory={}, Treatments={}",
+                    gson.toJson(removeTreatmentsFromPH),
+                    gsonCore.toJson(removeTreatmentsFromHistory));
 
         treatmentsFromHistory.removeAll(removeTreatmentsFromHistory);
     }
