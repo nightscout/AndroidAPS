@@ -615,7 +615,7 @@ public class MedtronicHistoryData {
 
         if (doubleBolusDebug)
             LOG.debug("DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
-                    gson.toJson(entriesFromHistory));
+                    gsonCore.toJson(entriesFromHistory));
 
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
