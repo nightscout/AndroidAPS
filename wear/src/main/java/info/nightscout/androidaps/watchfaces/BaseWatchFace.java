@@ -71,6 +71,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public boolean lowResMode = false;
     public boolean layoutSet = false;
     public boolean bIsRound = false;
+    public boolean dividerMatchesBg = false;
     public int pointSize = 2;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
@@ -533,6 +534,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     public void setColor() {
+        dividerMatchesBg = sharedPrefs.getBoolean("match_divider", false);
         if(lowResMode){
             setColorLowRes();
         } else if (sharedPrefs.getBoolean("dark", true)) {
