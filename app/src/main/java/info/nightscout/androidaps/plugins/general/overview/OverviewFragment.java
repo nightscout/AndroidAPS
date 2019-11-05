@@ -58,7 +58,6 @@ import info.nightscout.androidaps.data.QuickWizardEntry;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -77,7 +76,6 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
@@ -1225,18 +1223,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
 
-        activeProfileView.setText(ProfileFunctions.getInstance().getProfileName());
+        activeProfileView.setText(ProfileFunctions.getInstance().getProfileNameWithDuration());
         if (profile.getPercentage() != 100 || profile.getTimeshift() != 0) {
             activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
             activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));
-
-            TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
-            ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis());
-            if (profileSwitch != null) {
-                if (profileSwitch.profileJson != null && profileSwitch.durationInMinutes != 0) {
-                    activeProfileView.setText(ProfileFunctions.getInstance().getProfileName() + DateUtil.untilString(profileSwitch.originalEnd()));
-                }
-            }
         } else {
             activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonDefault));
             activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextDefault));
