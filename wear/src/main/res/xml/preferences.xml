@@ -209,6 +209,20 @@
         android:title="Wizard Percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+    <ListPreference
+        android:defaultValue="default"
+        android:entries="@array/complication_tap_action"
+        android:entryValues="@array/complication_tap_action_values"
+        android:key="complication_tap_action"
+        android:summary="What dialog to show after tap on complication"
+        android:title="Complication Tap Action" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="complication_unicode"
+        android:summary="Use unicode special characters in complications."
+        android:title="Unicode in Complications"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
     <info.nightscout.androidaps.interaction.utils.VersionPreference
         android:defaultValue="1"
         android:entries="@array/input_design"

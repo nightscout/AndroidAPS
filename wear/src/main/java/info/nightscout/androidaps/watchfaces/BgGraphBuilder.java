@@ -18,6 +18,7 @@ import java.util.TimeZone;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.data.BolusWatchData;
+import info.nightscout.androidaps.data.DisplayRawData;
 import info.nightscout.androidaps.data.TempWatchData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -113,6 +114,42 @@ public class BgGraphBuilder {
         this.end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         this.predictionEndTime = getPredictionEndTime();
         this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
+    }
+
+    public BgGraphBuilder(Context context, DisplayRawData raw, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
+        this(context,
+                raw.bgDataList,
+                raw.predictionList,
+                raw.tempWatchDataList,
+                raw.basalWatchDataList,
+                raw.bolusWatchDataList,
+                aPointSize,
+                aHighColor,
+                aLowColor,
+                aMidColor,
+                gridColour,
+                basalBackgroundColor,
+                basalCenterColor,
+                bolusInvalidColor,
+                carbsColor,
+                timespan);
+    }
+
+    public BgGraphBuilder(Context context, DisplayRawData raw, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
+        this(context,
+                raw.bgDataList,
+                raw.predictionList,
+                raw.tempWatchDataList,
+                raw.basalWatchDataList,
+                raw.bolusWatchDataList,
+                aPointSize,
+                aMidColor,
+                gridColour,
+                basalBackgroundColor,
+                basalCenterColor,
+                bolusInvalidColor,
+                carbsColor,
+                timespan);
     }
 
     public LineChartData lineData() {
