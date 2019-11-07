@@ -13,6 +13,7 @@ import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -50,6 +51,8 @@ import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+
+import com.andreabaccega.widget.ValidatingEditTextPreference;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -218,6 +221,38 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     TidepoolUploader.INSTANCE.testLogin(getActivity());
                     return false;
                 });
+
+            final ValidatingEditTextPreference distance = (ValidatingEditTextPreference)findPreference(getString(R.string.key_smscommunicator_remotebolusmindistance));
+            final EditTextPreference allowedNumbers = (EditTextPreference)findPreference(getString(R.string.key_smscommunicator_allowednumbers));
+            if (distance != null && allowedNumbers != null) {
+                if (!SmsCommunicatorPlugin.areMoreNumbers(allowedNumbers.getText())) {
+                    distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance)
+                            + ".\n"
+                            + getString(R.string.smscommunicator_remotebolusmindistance_caveat));
+                    distance.setEnabled(false);
+                } else {
+                    distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance));
+                    distance.setEnabled(true);
+                }
+
+                allowedNumbers.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (!SmsCommunicatorPlugin.areMoreNumbers(((String)newValue))) {
+                            distance.setText(String.valueOf(Constants.remoteBolusMinDistance/(60 * 1000L)));
+                            distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance)
+                                    + ".\n"
+                                    + getString(R.string.smscommunicator_remotebolusmindistance_caveat));
+                            distance.setEnabled(false);
+                        } else {
+                            distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance));
+                            distance.setEnabled(true);
+                        }
+                        return true;
+                    }
+                });
+            }
+
         }
 
         @Override

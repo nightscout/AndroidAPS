@@ -23,6 +23,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -136,6 +137,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
             case "EXTENDED":
             case "CAL":
             case "PROFILE":
+            case "TARGET":
+            case "SMS":
                 return true;
         }
         if (messageToConfirm != null && messageToConfirm.requester.phoneNumber.equals(number))
@@ -242,7 +245,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotebolusnotallowed));
                     else if (splitted.length == 2 && ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended())
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.pumpsuspended));
-                    else if (splitted.length == 2)
+                    else if (splitted.length == 2 || splitted.length == 3)
                         processBOLUS(splitted, receivedSms);
                     else
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
@@ -252,6 +255,22 @@ public class SmsCommunicatorPlugin extends PluginBase {
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
                     else if (splitted.length == 2)
                         processCAL(splitted, receivedSms);
+                    else
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+                    break;
+                case "TARGET":
+                    if (!remoteCommandsAllowed)
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
+                    else if (splitted.length == 2)
+                        processTARGET(splitted, receivedSms);
+                    else
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+                    break;
+                case "SMS":
+                    if (!remoteCommandsAllowed)
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
+                    else if (splitted.length == 2)
+                        processSMS(splitted, receivedSms);
                     else
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
                     break;
@@ -680,10 +699,19 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processBOLUS(String[] splitted, Sms receivedSms) {
         Double bolus = SafeParse.stringToDouble(splitted[1]);
+        final boolean isMeal = splitted.length > 2 && splitted[2].equalsIgnoreCase("MEAL");
         bolus = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(bolus)).value();
-        if (bolus > 0d) {
+
+        if (splitted.length == 3 && !isMeal) {
+            sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+        } else if (bolus > 0d) {
             String passCode = generatePasscode();
-            String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusreplywithcode), bolus, passCode);
+            String reply = "";
+            if (isMeal) {
+                reply = String.format(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode), bolus, passCode);
+            } else {
+                reply = String.format(MainApp.gs(R.string.smscommunicator_bolusreplywithcode), bolus, passCode);
+            }
             receivedSms.processed = true;
             messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction(bolus) {
                 @Override
@@ -701,10 +729,40 @@ public class SmsCommunicatorPlugin extends PluginBase {
                                 public void run() {
                                     PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
                                     if (resultSuccess) {
-                                        String reply = String.format(MainApp.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered);
+                                        String reply = "";
+                                        if (isMeal) {
+                                            reply = String.format(MainApp.gs(R.string.smscommunicator_mealbolusdelivered), resultBolusDelivered);
+                                        } else {
+                                            reply = String.format(MainApp.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered);
+                                        }
                                         if (pump != null)
                                             reply += "\n" + pump.shortStatus(true);
                                         lastRemoteBolusTime = DateUtil.now();
+                                        if (isMeal) {
+                                            Profile currentProfile = ProfileFunctions.getInstance().getProfile();
+                                            int eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration);
+                                            eatingSoonTTDuration = eatingSoonTTDuration > 0 ? eatingSoonTTDuration : Constants.defaultEatingSoonTTDuration;
+                                            double eatingSoonTT = SP.getDouble(R.string.key_eatingsoon_target, currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultEatingSoonTTmmol : Constants.defaultEatingSoonTTmgdl);
+                                            eatingSoonTT = eatingSoonTT > 0 ? eatingSoonTT : currentProfile.getUnits().equals(Constants.MMOL) ? Constants.defaultEatingSoonTTmmol : Constants.defaultEatingSoonTTmgdl;
+
+                                            TempTarget tempTarget = new TempTarget()
+                                                    .date(System.currentTimeMillis())
+                                                    .duration(eatingSoonTTDuration)
+                                                    .reason(MainApp.gs(R.string.eatingsoon))
+                                                    .source(Source.USER)
+                                                    .low(Profile.toMgdl(eatingSoonTT, currentProfile.getUnits()))
+                                                    .high(Profile.toMgdl(eatingSoonTT, currentProfile.getUnits()));
+                                            TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                                            String tt = "";
+                                            if (currentProfile.getUnits().equals(Constants.MMOL)) {
+                                                tt = DecimalFormatter.to1Decimal(eatingSoonTT);
+                                            } else
+                                                tt = DecimalFormatter.to0Decimal(eatingSoonTT);
+
+                                            reply += String.format(MainApp.gs(R.string.smscommunicator_mealbolusdelivered_tt), tt, eatingSoonTTDuration);
+
+
+                                        }
                                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
                                     } else {
                                         String reply = MainApp.gs(R.string.smscommunicator_bolusfailed);
@@ -716,6 +774,105 @@ public class SmsCommunicatorPlugin extends PluginBase {
                             });
                         }
                     });
+                }
+            });
+        } else
+            sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+    }
+
+    private void processTARGET(String[] splitted, Sms receivedSms) {
+        boolean isMeal = splitted[1].equalsIgnoreCase("MEAL");
+        boolean isActivity = splitted[1].equalsIgnoreCase("ACTIVITY");
+        boolean isHypo = splitted[1].equalsIgnoreCase("HYPO");
+
+        if (isMeal || isActivity || isHypo) {
+            String passCode = generatePasscode();
+            String reply = String.format(MainApp.gs(R.string.smscommunicator_temptargetwithcode), splitted[1].toUpperCase(), passCode);
+            receivedSms.processed = true;
+            messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction() {
+                @Override
+                public void run() {
+                    try {
+                        Profile currentProfile = ProfileFunctions.getInstance().getProfile();
+
+                        int keyDuration = 0;
+                        Integer defaultTargetDuration = 0;
+                        int keyTarget = 0;
+                        double defaultTargetMMOL = 0d;
+                        double defaultTargetMGDL = 0d;
+
+                        if (isMeal) {
+                            keyDuration = R.string.key_eatingsoon_duration;
+                            defaultTargetDuration = Constants.defaultEatingSoonTTDuration;
+                            keyTarget = R.string.key_eatingsoon_target;
+                            defaultTargetMMOL = Constants.defaultEatingSoonTTmmol;
+                            defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl;
+                        } else if (isActivity) {
+                            keyDuration = R.string.key_activity_duration;
+                            defaultTargetDuration = Constants.defaultActivityTTDuration;
+                            keyTarget = R.string.key_activity_target;
+                            defaultTargetMMOL = Constants.defaultActivityTTmmol;
+                            defaultTargetMGDL = Constants.defaultActivityTTmgdl;
+
+                        } else if (isHypo) {
+                            keyDuration = R.string.key_hypo_duration;
+                            defaultTargetDuration = Constants.defaultHypoTTDuration;
+                            keyTarget = R.string.key_hypo_target;
+                            defaultTargetMMOL = Constants.defaultHypoTTmmol;
+                            defaultTargetMGDL = Constants.defaultHypoTTmgdl;
+                        }
+
+                        int ttDuration = SP.getInt(keyDuration, defaultTargetDuration);
+                        ttDuration = ttDuration > 0 ? ttDuration : defaultTargetDuration;
+                        double tt = SP.getDouble(keyTarget, currentProfile.getUnits().equals(Constants.MMOL) ? defaultTargetMMOL : defaultTargetMGDL);
+                        tt = tt > 0 ? tt : currentProfile.getUnits().equals(Constants.MMOL) ? defaultTargetMMOL : defaultTargetMGDL;
+
+                        TempTarget tempTarget = new TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(ttDuration)
+                                .reason(MainApp.gs(R.string.eatingsoon))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(tt, currentProfile.getUnits()))
+                                .high(Profile.toMgdl(tt, currentProfile.getUnits()));
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
+                        String ttString = "";
+                        if (currentProfile.getUnits().equals(Constants.MMOL))
+                            ttString = DecimalFormatter.to1Decimal(tt);
+                        else
+                            ttString = DecimalFormatter.to0Decimal(tt);
+
+                        String reply = String.format(MainApp.gs(R.string.smscommunicator_tt_set), ttString, ttDuration);
+                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                    } catch (Exception e) {
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand));
+                        return;
+                    }
+                }
+            });
+        } else
+            sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
+    }
+
+    private void processSMS(String[] splitted, Sms receivedSms) {
+        boolean isStop = splitted[1].equalsIgnoreCase("STOP")
+                    || splitted[1].equalsIgnoreCase("DISABLE");
+
+        if (isStop) {
+            String passCode = generatePasscode();
+            String reply = String.format(MainApp.gs(R.string.smscommunicator_stopsmswithcode), passCode);
+            receivedSms.processed = true;
+            messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction() {
+                @Override
+                public void run() {
+                    try {
+                        SP.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
+                        String reply = String.format(MainApp.gs(R.string.smscommunicator_stoppedsms));
+                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand));
+                        return;
+                    }
                 }
             });
         } else
@@ -808,5 +965,20 @@ public class SmsCommunicatorPlugin extends PluginBase {
         s = Normalizer.normalize(s, Normalizer.Form.NFD);
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return s;
+    }
+
+    public static boolean areMoreNumbers(String allowednumbers) {
+        int countNumbers = 0;
+        String[] substrings = allowednumbers.split(";");
+
+        for (String number : substrings) {
+            String cleaned = number.replaceAll("\\s+", "");
+            if (cleaned.length()<4) continue;
+            if (cleaned.substring(0,1).compareTo("+")!=0) continue;
+            cleaned = cleaned.replace("+","");
+            if (!cleaned.matches("[0-9]+")) continue;
+            countNumbers++;
+        }
+        return countNumbers > 1;
     }
 }
