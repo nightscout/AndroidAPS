@@ -15,20 +15,13 @@ import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
-
 // check network connection
 fun isConnected(): Boolean {
     val connMgr = MainApp.instance().applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return connMgr.activeNetworkInfo?.isConnected ?: false
 }
 
-fun findVersion(file :String?): String? {
-    val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
-    return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
-}
-
 private val log = LoggerFactory.getLogger(L.CORE)
-
 
 fun triggerCheckVersion() {
 
@@ -56,13 +49,34 @@ private fun checkVersion() = if (isConnected()) {
     log.debug("Github master version no checked. No connectivity")
 
 fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
-    val comparison: Int? = newVersion?.versionStrip()?.compareTo(currentVersion.versionStrip())
-    when {
-        comparison == null -> onVersionNotDetectable()
-        comparison == 0 -> onSameVersionDetected()
-        comparison > 0 -> onNewVersionDetected(currentVersion = currentVersion, newVersion = newVersion)
-        else -> onOlderVersionDetected()
+
+    val newVersionElements = newVersion.toNumberList()
+    val currentVersionElements = currentVersion.toNumberList()
+
+    if (newVersionElements == null || newVersionElements.isEmpty()) {
+        onVersionNotDetectable()
+        return
     }
+
+    if (currentVersionElements == null || currentVersionElements.isEmpty()) {
+        // current version scrambled?!
+        onNewVersionDetected(currentVersion, newVersion)
+        return
+    }
+
+    newVersionElements.take(3).forEachIndexed { i, newElem ->
+        val currElem: Int = currentVersionElements.getOrNull(i)
+            ?: return onNewVersionDetected(currentVersion, newVersion)
+
+        (newElem - currElem).let {
+            when {
+                it > 0  -> return onNewVersionDetected(currentVersion, newVersion)
+                it < 0  -> return onOlderVersionDetected()
+                it == 0 -> Unit
+            }
+        }
+    }
+    onSameVersionDetected()
 }
 
 private fun onOlderVersionDetected() {
@@ -75,7 +89,7 @@ fun onSameVersionDetected() {
 }
 
 fun onVersionNotDetectable() {
-    log.debug("fetch failed, ignore and smartcast to non-null")
+    log.debug("fetch failed")
 }
 
 fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
@@ -88,14 +102,25 @@ fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
     }
 }
 
+@Deprecated(replaceWith = ReplaceWith("numericVersionPart()"), message = "Will not work if RCs have another index number in it.")
 fun String.versionStrip() = this.mapNotNull {
     when (it) {
         in '0'..'9' -> it
-        '.' -> it
-        else -> null
+        '.'         -> it
+        else        -> null
     }
 }.joinToString(separator = "")
 
+fun String.numericVersionPart(): String =
+    "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1) ?: ""
+
+fun String?.toNumberList() =
+    this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
+
+fun findVersion(file: String?): String? {
+    val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
+    return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
+}
 
 val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
 val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
