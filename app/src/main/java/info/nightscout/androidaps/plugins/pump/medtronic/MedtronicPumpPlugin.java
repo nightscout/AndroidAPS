@@ -1602,10 +1602,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.hasTimeDateOrTimeZoneChanged = true;
     }
 
-    private void refreshCustomActionsList() {
-        RxBus.INSTANCE.send(new EventCustomActionsChanged());
-    }
-
 
     public void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {
 
