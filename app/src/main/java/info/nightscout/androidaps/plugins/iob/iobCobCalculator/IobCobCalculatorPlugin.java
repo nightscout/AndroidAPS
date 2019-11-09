@@ -1,11 +1,10 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 
 import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.LongSparseArray;
-
-import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -31,16 +30,20 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
@@ -50,6 +53,7 @@ import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class IobCobCalculatorPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.AUTOSENS);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static IobCobCalculatorPlugin plugin = null;
 
@@ -83,14 +87,123 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        MainApp.bus().register(this);
         super.onStart();
+        // EventConfigBuilderChange
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventConfigBuilderChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    stopCalculation("onEventConfigBuilderChange");
+                    synchronized (dataLock) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                        iobTable = new LongSparseArray<>();
+                        autosensDataTable = new LongSparseArray<>();
+                    }
+                    runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, event);
+                }, FabricPrivacy::logException)
+        );
+        // EventNewBasalProfile
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewBasalProfile.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    if (ConfigBuilderPlugin.getPlugin() == null)
+                        return; // app still initializing
+                    if (event == null) { // on init no need of reset
+                        return;
+                    }
+                    stopCalculation("onNewProfile");
+                    synchronized (dataLock) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                        iobTable = new LongSparseArray<>();
+                        autosensDataTable = new LongSparseArray<>();
+                        basalDataTable = new LongSparseArray<>();
+                    }
+                    runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
+                }, FabricPrivacy::logException)
+        );
+        // EventNewBG
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewBG.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    stopCalculation("onEventNewBG");
+                    runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
+                }, FabricPrivacy::logException)
+        );
+        // EventPreferenceChange
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    if (event.isChanged(R.string.key_openapsama_autosens_period) ||
+                            event.isChanged(R.string.key_age) ||
+                            event.isChanged(R.string.key_absorption_maxtime) ||
+                            event.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
+                            event.isChanged(R.string.key_absorption_cutoff) ||
+                            event.isChanged(R.string.key_openapsama_autosens_max) ||
+                            event.isChanged(R.string.key_openapsama_autosens_min) ||
+                            event.isChanged(R.string.key_insulin_oref_peak)
+                    ) {
+                        stopCalculation("onEventPreferenceChange");
+                        synchronized (dataLock) {
+                            if (L.isEnabled(L.AUTOSENS))
+                                log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records" + " BasalData: " + basalDataTable.size() + " records");
+                            iobTable = new LongSparseArray<>();
+                            autosensDataTable = new LongSparseArray<>();
+                            basalDataTable = new LongSparseArray<>();
+                        }
+                        runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, event);
+                    }
+                }, FabricPrivacy::logException)
+        );
+        // EventAppInitialized
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppInitialized.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (this != getPlugin()) {
+                        if (L.isEnabled(L.AUTOSENS))
+                            log.debug("Ignoring event for non default instance");
+                        return;
+                    }
+                    runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event);
+                }, FabricPrivacy::logException)
+        );
+        // EventNewHistoryData
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewHistoryData.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> newHistoryData(event), FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onStop() {
+        disposable.clear();
         super.onStop();
-        MainApp.bus().unregister(this);
     }
 
     public LongSparseArray<AutosensData> getAutosensDataTable() {
@@ -529,7 +642,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 count++;
             }
         }
-        return sum /count;
+        return sum / count;
     }
 
     @Nullable
@@ -627,29 +740,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return array;
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onEventAppInitialized(EventAppInitialized ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, ev);
-    }
-
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void onEventNewBG(EventNewBG ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        stopCalculation("onEventNewBG");
-        runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, ev);
-    }
-
     public void stopCalculation(String from) {
         if (thread != null && thread.getState() != Thread.State.TERMINATED) {
             stopCalculationTrigger = true;
@@ -675,76 +765,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
         }
     }
 
-    @Subscribe
-    public void onNewProfile(EventNewBasalProfile ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        if (ConfigBuilderPlugin.getPlugin() == null)
-            return; // app still initializing
-        if (ev == null) { // on init no need of reset
-            return;
-        }
-        stopCalculation("onNewProfile");
-        synchronized (dataLock) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
-            iobTable = new LongSparseArray<>();
-            autosensDataTable = new LongSparseArray<>();
-            basalDataTable = new LongSparseArray<>();
-        }
-        runCalculation("onNewProfile", System.currentTimeMillis(), false, true, ev);
-    }
-
-    @Subscribe
-    public void onEventPreferenceChange(EventPreferenceChange ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
-                ev.isChanged(R.string.key_age) ||
-                ev.isChanged(R.string.key_absorption_maxtime) ||
-                ev.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
-                ev.isChanged(R.string.key_absorption_cutoff) ||
-                ev.isChanged(R.string.key_openapsama_autosens_max) ||
-                ev.isChanged(R.string.key_openapsama_autosens_min)
-                ) {
-            stopCalculation("onEventPreferenceChange");
-            synchronized (dataLock) {
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records" + " BasalData: " + basalDataTable.size() + " records");
-                iobTable = new LongSparseArray<>();
-                autosensDataTable = new LongSparseArray<>();
-                basalDataTable = new LongSparseArray<>();
-            }
-            runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, ev);
-        }
-    }
-
-    @Subscribe
-    public void onEventConfigBuilderChange(EventConfigBuilderChange ev) {
-        if (this != getPlugin()) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Ignoring event for non default instance");
-            return;
-        }
-        stopCalculation("onEventConfigBuilderChange");
-        synchronized (dataLock) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
-            iobTable = new LongSparseArray<>();
-            autosensDataTable = new LongSparseArray<>();
-        }
-        runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, ev);
-    }
-
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
-    @Subscribe
-    public void onEventNewHistoryData(EventNewHistoryData ev) {
+    public void newHistoryData(EventNewHistoryData ev) {
         if (this != getPlugin()) {
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Ignoring event for non default instance");
@@ -754,7 +776,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         stopCalculation("onEventNewHistoryData");
         synchronized (dataLock) {
             // clear up 5 min back for proper COB calculation
-            long time = ev.time - 5 * 60 * 1000L;
+            long time = ev.getTime() - 5 * 60 * 1000L;
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Invalidating cached data to: " + DateUtil.dateAndTimeFullString(time));
             for (int index = iobTable.size() - 1; index >= 0; index--) {

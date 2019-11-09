@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Date;
-
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -82,7 +80,6 @@ public class ObjectivesPluginTest {
     public void prepareMock() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
 

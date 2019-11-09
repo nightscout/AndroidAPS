@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -62,6 +61,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
     override fun handleNewData(intent: Intent) {
         if (!isEnabled(PluginType.BGSOURCE)) return
         try {
+            val sensorType = intent.getStringExtra("sensorType") ?: ""
             val glucoseValues = intent.getBundleExtra("glucoseValues")
             for (i in 0 until glucoseValues.size()) {
                 val glucoseValue = glucoseValues.getBundle(i.toString())
@@ -70,9 +70,9 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                 bgReading.direction = glucoseValue.getString("trendArrow")
                 bgReading.date = glucoseValue.getLong("timestamp") * 1000
                 bgReading.raw = 0.0
-                if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom")) {
+                if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
                     if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                        NSUpload.uploadBg(bgReading, "AndroidAPS-DexcomG6")
+                        NSUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
                     }
                     if (SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
                         NSUpload.sendToXdrip(bgReading)
@@ -85,7 +85,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                 val timestamp = meter!!.getLong("timestamp") * 1000
                 if (MainApp.getDbHelper().getCareportalEventFromTimestamp(timestamp) != null) continue
                 val jsonObject = JSONObject()
-                jsonObject.put("enteredBy", "AndroidAPS-Dexcom")
+                jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
                 jsonObject.put("created_at", DateUtil.toISOString(timestamp))
                 jsonObject.put("eventType", CareportalEvent.BGCHECK)
                 jsonObject.put("glucoseType", "Finger")
@@ -97,7 +97,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                 val sensorInsertionTime = intent.extras!!.getLong("sensorInsertionTime") * 1000
                 if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
                     val jsonObject = JSONObject()
-                    jsonObject.put("enteredBy", "AndroidAPS-Dexcom")
+                    jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
                     jsonObject.put("created_at", DateUtil.toISOString(sensorInsertionTime))
                     jsonObject.put("eventType", CareportalEvent.SENSORCHANGE)
                     NSUpload.uploadCareportalEntryToNS(jsonObject)

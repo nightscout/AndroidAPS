@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -45,13 +46,13 @@ public class MsgInitConnStatusOption extends MessageBase {
 
         if (!DanaRPump.getInstance().isPasswordOK()) {
             Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
         }
 
         // This is last message of initial sequence
-        if (ConfigBuilderPlugin.getPlugin().getActivePump() != null )
+        if (ConfigBuilderPlugin.getPlugin().getActivePump() != null)
             ConfigBuilderPlugin.getPlugin().getActivePump().finishHandshaking();
     }
 

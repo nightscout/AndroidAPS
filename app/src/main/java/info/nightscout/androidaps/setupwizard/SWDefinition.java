@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +17,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment;
@@ -45,7 +44,6 @@ import info.nightscout.androidaps.setupwizard.elements.SWHtmlLink;
 import info.nightscout.androidaps.setupwizard.elements.SWInfotext;
 import info.nightscout.androidaps.setupwizard.elements.SWPlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton;
-import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.LocaleHelper;
@@ -93,8 +91,7 @@ public class SWDefinition {
                     .preferenceId(R.string.key_language).label(R.string.language)
                     .comment(R.string.setupwizard_language_prompt))
             .validator(() -> {
-                String lang = SP.getString("language", "en");
-                LocaleHelper.setLocale(MainApp.instance().getApplicationContext(), lang);
+                LocaleHelper.INSTANCE.update(MainApp.instance().getApplicationContext());
                 return SP.contains(R.string.key_language);
             });
 
@@ -108,7 +105,7 @@ public class SWDefinition {
                     .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
                     .action(() -> {
                         SP.putBoolean(R.string.key_i_understand, true);
-                        MainApp.bus().post(new EventSWUpdate(false));
+                        RxBus.INSTANCE.send(new EventSWUpdate(false));
                     }))
             .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
             .validator(() -> SP.getBoolean(R.string.key_i_understand, false));
@@ -170,8 +167,8 @@ public class SWDefinition {
                         NSClientPlugin.getPlugin().setFragmentVisible(PluginType.GENERAL, true);
                         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-                        MainApp.bus().post(new EventConfigBuilderChange());
-                        MainApp.bus().post(new EventSWUpdate(true));
+                        RxBus.INSTANCE.send(new EventConfigBuilderChange());
+                        RxBus.INSTANCE.send(new EventSWUpdate(true));
                     })
                     .visibility(() -> !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)))
             .add(new SWEditUrl()
@@ -186,15 +183,9 @@ public class SWDefinition {
                     .label(R.string.nsclientinternal_secret_dialogtitle)
                     .comment(R.string.nsclientinternal_secret_dialogmessage))
             .add(new SWBreak())
-            .add(new SWEventListener(this)
+            .add(new SWEventListener(this, EventNSClientStatus.class)
                     .label(R.string.status)
                     .initialStatus(NSClientPlugin.getPlugin().status)
-                    .listener(new Object() {
-                        @Subscribe
-                        public void onEventNSClientStatus(EventNSClientStatus event) {
-                            MainApp.bus().post(new EventSWLabel(event.status));
-                        }
-                    })
             )
             .add(new SWBreak())
             .validator(() -> NSClientPlugin.getPlugin().nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth)
@@ -328,14 +319,7 @@ public class SWDefinition {
                     .text(R.string.readstatus)
                     .action(() -> ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Clicked connect to pump", null))
                     .visibility(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null))
-            .add(new SWEventListener(this)
-                    .listener(new Object() {
-                        @Subscribe
-                        public void onEventPumpStatusChanged(EventPumpStatusChanged event) {
-                            MainApp.bus().post(new EventSWLabel(event.textStatus()));
-                        }
-                    })
-            )
+            .add(new SWEventListener(this, EventPumpStatusChanged.class))
             .validator(() -> ConfigBuilderPlugin.getPlugin().getActivePump() != null && ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized());
 
     private SWScreen screenAps = new SWScreen(R.string.configbuilder_aps)
@@ -385,8 +369,8 @@ public class SWDefinition {
                         LoopPlugin.getPlugin().setFragmentVisible(PluginType.LOOP, true);
                         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP);
                         ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-                        MainApp.bus().post(new EventConfigBuilderChange());
-                        MainApp.bus().post(new EventSWUpdate(true));
+                        RxBus.INSTANCE.send(new EventConfigBuilderChange());
+                        RxBus.INSTANCE.send(new EventSWUpdate(true));
                     })
                     .visibility(() -> !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)))
             .validator(() -> LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))

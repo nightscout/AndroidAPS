@@ -12,7 +12,7 @@
         android:layout_above="@+id/automation_logView"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="-100dp" />
+        android:layout_marginBottom="15dp" />
 
     <TextView
         android:id="@+id/automation_logView"

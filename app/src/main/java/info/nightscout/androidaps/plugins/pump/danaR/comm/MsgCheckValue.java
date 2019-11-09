@@ -32,7 +32,7 @@ public class MsgCheckValue extends MessageBase {
         pump.protocol = intFromBuff(bytes, 1, 1);
         pump.productCode = intFromBuff(bytes, 2, 1);
         if (pump.model != DanaRPump.EXPORT_MODEL) {
-            MainApp.getSpecificPlugin(DanaRPlugin.class).disconnect("Wrong Model");
+            DanaRPlugin.getPlugin().disconnect("Wrong Model");
             log.debug("Wrong model selected");
         }
 

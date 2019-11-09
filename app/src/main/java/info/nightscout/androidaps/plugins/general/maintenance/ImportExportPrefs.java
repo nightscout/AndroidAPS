@@ -28,6 +28,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.ToastUtils;
 
@@ -136,7 +137,7 @@ public class ImportExportPrefs {
                         OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
                             log.debug("Exiting");
                             MainApp.instance().stopKeepAliveService();
-                            MainApp.bus().post(new EventAppExit());
+                            RxBus.INSTANCE.send(new EventAppExit());
                             MainApp.closeDbHelper();
                             if (context instanceof Activity) {
                                 ((Activity)context).finish();

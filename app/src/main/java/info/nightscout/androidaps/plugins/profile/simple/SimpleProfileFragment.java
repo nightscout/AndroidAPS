@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.profile.simple;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,19 +12,24 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
+import androidx.fragment.app.Fragment;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SafeParse;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
-public class SimpleProfileFragment extends SubscriberFragment {
+public class SimpleProfileFragment extends Fragment {
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     EditText diaView;
     RadioButton mgdlView;
     RadioButton mmolView;
@@ -122,27 +126,34 @@ public class SimpleProfileFragment extends SubscriberFragment {
         return layout;
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventInitializationChanged e) {
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventInitializationChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGUI(), FabricPrivacy::logException)
+        );
         updateGUI();
     }
 
     @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
+    }
+
     protected void updateGUI() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> {
-                boolean isValid = SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile));
-                if (!ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized() || ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !isValid) {
-                    profileswitchButton.setVisibility(View.GONE);
-                } else {
-                    profileswitchButton.setVisibility(View.VISIBLE);
-                }
-                if (isValid)
-                    invalidProfile.setVisibility(View.GONE);
-                else
-                    invalidProfile.setVisibility(View.VISIBLE);
-            });
+        boolean isValid = SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid(MainApp.gs(R.string.simpleprofile));
+        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized() || ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !isValid) {
+            profileswitchButton.setVisibility(View.GONE);
+        } else {
+            profileswitchButton.setVisibility(View.VISIBLE);
+        }
+        if (isValid)
+            invalidProfile.setVisibility(View.GONE);
+        else
+            invalidProfile.setVisibility(View.VISIBLE);
     }
 
 }

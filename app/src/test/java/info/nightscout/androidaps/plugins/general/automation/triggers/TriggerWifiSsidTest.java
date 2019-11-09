@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +23,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, NetworkChangeReceiver.class, DateUtil.class})
+@PrepareForTest({MainApp.class, NetworkChangeReceiver.class, DateUtil.class})
 public class TriggerWifiSsidTest {
 
     long now = 1514766900000L;
@@ -36,22 +35,22 @@ public class TriggerWifiSsidTest {
 
         TriggerWifiSsid t = new TriggerWifiSsid().setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL);
 
-        e.wifiConnected = false;
+        e.setWifiConnected(false);
         Assert.assertFalse(t.shouldRun());
 
-        e.wifiConnected = true;
-        e.ssid = "otherSSID";
+        e.setWifiConnected(true);
+        e.setSsid("otherSSID");
         Assert.assertFalse(t.shouldRun());
 
-        e.wifiConnected = true;
-        e.ssid = "aSSID";
+        e.setWifiConnected(true);
+        e.setSsid("aSSID");
         Assert.assertTrue(t.shouldRun());
 
         t.lastRun(now - 1);
         Assert.assertFalse(t.shouldRun());
 
         t = new TriggerWifiSsid().setValue("aSSID").comparator(Comparator.Compare.IS_NOT_AVAILABLE);
-        e.wifiConnected = false;
+        e.setWifiConnected(false);
         Assert.assertTrue(t.shouldRun());
 
         // no network data
@@ -102,7 +101,6 @@ public class TriggerWifiSsidTest {
     @Before
     public void mock() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
 
         PowerMockito.mockStatic(NetworkChangeReceiver.class);
 

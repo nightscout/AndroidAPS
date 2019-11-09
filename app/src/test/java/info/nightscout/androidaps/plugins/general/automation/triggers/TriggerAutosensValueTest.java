@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +27,7 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, IobCobCalculatorPlugin.class, SP.class})
+@PrepareForTest({MainApp.class, ProfileFunctions.class, DateUtil.class, IobCobCalculatorPlugin.class, SP.class})
 public class TriggerAutosensValueTest {
 
     long now = 1514766900000L;
@@ -115,7 +114,6 @@ public class TriggerAutosensValueTest {
     @Before
     public void mock() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
         AAPSMocker.mockIobCobCalculatorPlugin();
         AAPSMocker.mockProfileFunctions();
         AAPSMocker.mockSP();

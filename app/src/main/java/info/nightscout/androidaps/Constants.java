@@ -36,6 +36,8 @@ public class Constants {
     public static final int CPP_MIN_TIMESHIFT = -6;
     public static final int CPP_MAX_TIMESHIFT = 23;
 
+    public static final double MAX_PROFILE_SWITCH_DURATION = 7 * 24 * 60; // [min] ~ 7 days
+
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
 

@@ -13,8 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
-import com.squareup.otto.Subscribe;
+import androidx.fragment.app.Fragment;
 
 import java.text.DecimalFormat;
 
@@ -23,19 +22,24 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.NumberPicker;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.TimeListEdit;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.MIN_DIA;
 
-public class LocalProfileFragment extends SubscriberFragment {
+public class LocalProfileFragment extends Fragment {
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     private NumberPicker diaView;
     private RadioButton mgdlView;
     private RadioButton mmolView;
@@ -143,6 +147,23 @@ public class LocalProfileFragment extends SubscriberFragment {
         return layout;
     }
 
+    @Override
+    public synchronized void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventInitializationChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updateGUI(), FabricPrivacy::logException)
+        );
+        updateGUI();
+    }
+
+    @Override
+    public synchronized void onPause() {
+        super.onPause();
+        disposable.clear();
+    }
+
     public void doEdit() {
         LocalProfilePlugin.getPlugin().setEdited(true);
         updateGUI();
@@ -157,12 +178,6 @@ public class LocalProfileFragment extends SubscriberFragment {
             return MainApp.gs(R.string.localprofile);
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventInitializationChanged e) {
-        updateGUI();
-    }
-
-    @Override
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)

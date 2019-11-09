@@ -1,13 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.danaR.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-
-import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +18,16 @@ import info.nightscout.androidaps.activities.NoSplashActivity;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.NumberPicker;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by Rumen Georgiev on 5/31/2018.
@@ -34,6 +35,7 @@ import info.nightscout.androidaps.utils.NumberPicker;
 
 public class DanaRUserOptionsActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     Switch timeFormat;
     Switch buttonScroll;
@@ -49,20 +51,24 @@ public class DanaRUserOptionsActivity extends NoSplashActivity {
     NumberPicker lowReservoir;
     Button saveToPumpButton;
     // This is for Dana pumps only
-    boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
-    boolean isDanaR = MainApp.getSpecificPlugin(DanaRPlugin.class) != null && MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PUMP);
-    boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
+    boolean isRS = DanaRSPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    boolean isDanaR = DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    boolean isDanaRv2 = DanaRv2Plugin.getPlugin().isEnabled(PluginType.PUMP);
 
     @Override
-    protected void onResume() {
+    protected synchronized void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventInitializationChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> setData(), FabricPrivacy::logException)
+        );
     }
 
     @Override
-    protected void onPause() {
+    protected synchronized void onPause() {
+        disposable.clear();
         super.onPause();
-        MainApp.bus().unregister(this);
     }
 
     @Override
@@ -142,11 +148,6 @@ public class DanaRUserOptionsActivity extends NoSplashActivity {
         pumpUnits.setChecked(pump.getUnits() != null && pump.getUnits().equals(Constants.MMOL));
         shutdown.setValue((double) pump.shutdownHour);
         lowReservoir.setValue((double) pump.lowReservoirRate);
-    }
-
-    @Subscribe
-    public void onEventInitializationChanged(EventInitializationChanged ignored) {
-        runOnUiThread(this::setData);
     }
 
     public void onSaveClick() {

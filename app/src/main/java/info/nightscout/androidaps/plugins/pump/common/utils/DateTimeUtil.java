@@ -250,4 +250,29 @@ public class DateTimeUtil {
 
         return minutes.getMinutes();
     }
+
+
+    public static long getMillisFromATDWithAddedMinutes(long atd, int minutesDiff) {
+        GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(atd);
+        oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
+
+        return oldestEntryTime.getTimeInMillis();
+    }
+
+
+    public static long getATDWithAddedMinutes(long atd, int minutesDiff) {
+        GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(atd);
+        oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
+
+        return oldestEntryTime.getTimeInMillis();
+    }
+
+
+    public static long getATDWithAddedMinutes(GregorianCalendar oldestEntryTime, int minutesDiff) {
+        oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
+
+        return toATechDate(oldestEntryTime);
+    }
+
+
 }
