@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Behandelings veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Maks toelaatbare Bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks Toelaatbare karbs [g]</string>
@@ -33,6 +32,7 @@
     <string name="description_smb">Mees onlangse algoritme vir gevorderde gebruikers</string>
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
+    <string name="description_profile_local">Definieer\'n profiel wat beskikbaar is aflyn.</string>
     <string name="description_profile_nightscout">Bied die profiel wat jy het beskryf het in Nightscout</string>
     <string name="description_profile_simple">Definieer \'n profiel met net een tydblok.</string>
     <string name="description_pump_combo">Pomp Integrasie met Accu-Chek Combo pompe, vereis dat ruffy geïnstalleer is</string>
@@ -55,9 +55,6 @@
     <string name="description_wear">Monitor en beheer AndroidAPS met jou WearOS horlosie.</string>
     <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
     <string name="description_sms_communicator">Afstandbeheer AndroidAPS met SMS kodes.</string>
-    <string name="objectives_button_back">Terug</string>
-    <string name="objectives_button_start">Begin</string>
-    <string name="objectives_button_verify">Verifieer</string>
     <string name="nsprofileview_units_label">Eenhede</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -175,9 +172,6 @@
     <string name="unsupportedclientver">Weergawe van NSClient nie ondersteun</string>
     <string name="unsupportednsversion">Weergawe van Nightscout nie ondersteun</string>
     <string name="nsclientnotinstalled">NSClient nie gevind. Rekord verlore!</string>
-    <string name="objectives_bgavailableinns">BG beskikbaar in NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pompstatus beskikbaar in NS</string>
-    <string name="objectives_manualenacts">Per hand aksies</string>
     <string name="loopdisabled">LOOP UIT AKSIE GESTEL DEUR BEPERKINGS</string>
     <string name="treatments_wizard_basaliob_label">Basale IAB</string>
     <string name="bolusconstraintapplied">Bolus beperking toegepas</string>
@@ -220,7 +214,6 @@
     <string name="overview_tempbasal_button">TydelikeBasaal</string>
     <string name="overview_extendedbolus_button">Verlengde Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
-    <string name="missing">Ontbreek</string>
     <string name="exported">Voorkeure uitgevoer</string>
     <string name="export_to">Uitvoer instellings na</string>
     <string name="import_from">Voer instellings in vanaf</string>
@@ -315,8 +308,6 @@
     <string name="overview_bolusprogress_stoppressed">STAAK GEDRUK</string>
     <string name="waitingforpump">Wag vir pomp</string>
     <string name="overview_bolusprogress_goingtodeliver">Gaan %1$.2fU lewer</string>
-    <string name="objectives_0_objective">Opstel van visualisering en monitering, en ontleed basale en verhoudings</string>
-    <string name="objectives_0_gate">Verifieer dat BG beskikbaar is in Nightscout, en dat pomp insulien data opgelaai word</string>
     <string name="youareonallowedlimit">Die toegelate limiet is bereik</string>
     <string name="noprofileselected">Geen profiel gekies</string>
     <string name="smscommunicator_loophasbeendisabled">Loop is gedeaktiveer</string>
@@ -552,8 +543,6 @@
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
-    <string name="statuslights_bat_warning">Drempel waarskuwing battery vlak [%%]</string>
-    <string name="statuslights_bat_critical">Drempel kritieke battery vlak [%%]</string>
     <string name="iob">IAB</string>
     <string name="cob">KOB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -846,8 +835,6 @@
     <string name="profileswitch_ismissing">ProfileSwitch ontbreek. Doen \'n profiel skakelaar of druk \"Aktiveer profiel\" in die LokaleProfiel.</string>
     <string name="combo_bolus_count">Bolus telling</string>
     <string name="combo_tbr_count">TBR telling</string>
-    <string name="objectivenotstarted">Objektief %1$d mie begin nie</string>
-    <string name="objectivenotfinished">Objektief %1$d nie klaar</string>
     <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
     <string name="novalidbasalrate">Geen geldige basale tempo gelees van pomp</string>
     <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
@@ -968,7 +955,6 @@
     <string name="completed_well_done">Voltooi, baie mooi gedoen!</string>
     <string name="not_completed_yet">Nog nie voltooi nie</string>
     <string name="time_elapsed">Tydsverloop</string>
-    <string name="nth_objective">%1$d. Doelwit</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
     <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
@@ -1347,18 +1333,27 @@
     <string name="medtronic_cmd_desc_get_tbr">Verkry Tydelike Basale</string>
     <string name="medtronic_cmd_desc_set_tbr">Stel Tydelike Basale</string>
     <string name="medtronic_cmd_desc_set_bolus">Stel Bolus</string>
+    <string name="profilename">Verander profiel na</string>
+    <string name="changengetoprofilename">Verander profiel na %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Laaste konneksie na pomp</string>
+    <string name="automation_trigger_pump_last_connection_description">Laaste konneksie na pomp [minute gelede]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Vorige konneksie na pomp %1$s %2$s min terug</string>
+    <string name="sendsmsactionlabel">Stuur\'n SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Stuur SMS na alle fone in voorkeure</string>
+    <string name="sendsmsactiontext">Stuur\'n SMS met die teks</string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus beperking aangewend: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dae</item>
-        <item quantity="other">%1$d dae</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d ure</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuut</item>
-        <item quantity="other">%1$d minute</item>
-    </plurals>
+    <string name="loading">Laai tans...</string>
+    <string name="snooze">Sluimer</string>
+    <string name="time_range">Tyd reeks</string>
+    <string name="timerange_value">Tyd is tussen %1$s en %2$s</string>
+    <string name="between">Tussen </string>
+    <string name="close">Maak toe</string>
+    <string name="smscommunicator_messagebody">Ongeldig boodskap teks</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolus slimjan</string>
+    <string name="unit_minute_short">min</string>
 </resources>

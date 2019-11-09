@@ -17,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
@@ -28,6 +29,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import java.util.*
+import kotlin.math.abs
 
 class BolusWizard @JvmOverloads constructor(val profile: Profile,
                                             val profileName: String,
@@ -60,14 +62,11 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     var glucoseStatus: GlucoseStatus? = null
         private set
 
-    var targetBGLow = 0.0
-        private set
+    private var targetBGLow = 0.0
 
-    var targetBGHigh = 0.0
-        private set
+    private var targetBGHigh = 0.0
 
-    var bgDiff = 0.0
-        private set
+    private var bgDiff = 0.0
 
     var insulinFromBG = 0.0
         private set
@@ -96,8 +95,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     var trend = 0.0
         private set
 
-    var accepted = false
-        private set
+    private var accepted = false
 
     // Result
     var calculatedTotalInsulin: Double = 0.0
@@ -127,12 +125,10 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, profile.units)
         }
         if (useBg && bg > 0) {
-            if (bg >= targetBGLow && bg <= targetBGHigh) {
-                bgDiff = 0.0
-            } else if (bg <= targetBGLow) {
-                bgDiff = bg - targetBGLow
-            } else {
-                bgDiff = bg - targetBGHigh
+            bgDiff = when {
+                bg in targetBGLow..targetBGHigh -> 0.0
+                bg <= targetBGLow -> bg - targetBGLow
+                else -> bg - targetBGHigh
             }
             insulinFromBG = bgDiff / sens
         }
@@ -147,7 +143,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         }
 
 
-        // Insuling from carbs
+        // Insulin from carbs
         ic = profile.ic
         insulinFromCarbs = carbs / ic
         insulinFromCOB = if (useCob) (cob / ic) else 0.0
@@ -197,7 +193,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         log.debug(this.toString())
     }
 
-    fun nsJSON(): JSONObject {
+    private fun nsJSON(): JSONObject {
         val boluscalcJSON = JSONObject()
         try {
             boluscalcJSON.put("profile", profileName)
@@ -260,7 +256,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             if (absorptionRate > .25)
                 confirmMessage += "<br/>" + MainApp.gs(R.string.slowabsorptiondetected, MainApp.gc(R.color.cobAlert), (absorptionRate * 100).toInt())
         }
-        if (Math.abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
+        if (abs(insulinAfterConstraints - calculatedTotalInsulin) > pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)) {
             confirmMessage += "<br/>" + MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), calculatedTotalInsulin, insulinAfterConstraints)
         }
 
@@ -268,10 +264,10 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     }
 
     fun confirmAndExecute(context: Context) {
-        val profile = ProfileFunctions.getInstance().profile
-        val pump = ConfigBuilderPlugin.getPlugin().activePump
+        val profile = ProfileFunctions.getInstance().profile ?: return
+        val pump = ConfigBuilderPlugin.getPlugin().activePump ?: return
 
-        if (pump != null && profile != null && (calculatedTotalInsulin > 0.0 || carbs > 0.0)) {
+        if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             val confirmMessage = confirmMessageAfterConstraints(pump)
 
             val builder = AlertDialog.Builder(context)
@@ -289,7 +285,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
                             val loopPlugin = LoopPlugin.getPlugin()
                             if (loopPlugin.isEnabled(PluginType.LOOP)) {
                                 loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
-                                MainApp.bus().post(EventRefreshOverview("WizardDialog"))
+                                RxBus.send(EventRefreshOverview("WizardDialog"))
                             }
 
                             val pump1 = ConfigBuilderPlugin.getPlugin().activePump

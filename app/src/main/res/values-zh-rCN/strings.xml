@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">治疗安全</string>
     <string name="treatmentssafety_maxbolus_title">允许的最大大剂量值[U]</string>
     <string name="treatmentssafety_maxcarbs_title">最大允许碳水化合物 [g]</string>
@@ -55,9 +54,6 @@
     <string name="description_wear">使用您的 WearOS 手表监视和控制 AndroidAPS。</string>
     <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
     <string name="description_sms_communicator">远程控制 AndroidAPS 使用 SMS 短信命令。</string>
-    <string name="objectives_button_back">返回</string>
-    <string name="objectives_button_start">开始</string>
-    <string name="objectives_button_verify">校验</string>
     <string name="nsprofileview_units_label">单位</string>
     <string name="nsprofileview_dia_label">DIA胰岛素作用持续时间</string>
     <string name="nsprofileview_ic_label">IC碳水系数</string>
@@ -175,9 +171,6 @@
     <string name="unsupportedclientver">不支持的 NSClient 版本</string>
     <string name="unsupportednsversion">不支持的 Nightscout 版本</string>
     <string name="nsclientnotinstalled">未安装 NSClient。记录丢失!</string>
-    <string name="objectives_bgavailableinns">血糖在NS中可用</string>
-    <string name="objectives_pumpstatusavailableinns">泵状态在 NS 中可用</string>
-    <string name="objectives_manualenacts">手动制定</string>
     <string name="loopdisabled">按约束条件禁用循环</string>
     <string name="treatments_wizard_basaliob_label">基础 IOB</string>
     <string name="bolusconstraintapplied">大剂量约束条件应用了</string>
@@ -220,7 +213,6 @@
     <string name="overview_tempbasal_button">临时基础</string>
     <string name="overview_extendedbolus_button">扩展大剂量</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
-    <string name="missing">缺少</string>
     <string name="exported">参数选项导出了</string>
     <string name="export_to">导出配置</string>
     <string name="import_from">导入配置</string>
@@ -315,8 +307,6 @@
     <string name="overview_bolusprogress_stoppressed">停止键按下了</string>
     <string name="waitingforpump">正在等待泵</string>
     <string name="overview_bolusprogress_goingtodeliver">将要输注 %1$.2fU</string>
-    <string name="objectives_0_objective">设置可视化和监视, 并分析基础率和比率</string>
-    <string name="objectives_0_gate">验证 Nightscout 中的血糖是否可用, 并且正在上传泵的胰岛素数据</string>
     <string name="youareonallowedlimit">你达到了允许的极限</string>
     <string name="noprofileselected">没有选定配置文件</string>
     <string name="smscommunicator_loophasbeendisabled">闭环已经被禁用</string>
@@ -550,8 +540,6 @@
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
     <string name="statuslights_res_warning">储药器药量低于阈值[U] 警告</string>
     <string name="statuslights_res_critical">储药器药量低于阈值[U] 严重警告</string>
-    <string name="statuslights_bat_warning">电池电量低于阈值[%%] 警告</string>
-    <string name="statuslights_bat_critical">电池电量低于阈值[%%] 严重警告</string>
     <string name="iob">IOB活性胰岛素</string>
     <string name="cob">COB活性碳水</string>
     <string name="virtualpump_firmware_label">固件</string>
@@ -842,8 +830,6 @@
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="combo_bolus_count">大剂量 计数</string>
     <string name="combo_tbr_count">临时基础率 计数</string>
-    <string name="objectivenotstarted">目标 %1$d 未开始</string>
-    <string name="objectivenotfinished">目标 %1$d 未完成</string>
     <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
     <string name="novalidbasalrate">从泵中无法读取有效的基础率</string>
     <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
@@ -964,7 +950,6 @@
     <string name="completed_well_done">完成了，做的好</string>
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已用时间</string>
-    <string name="nth_objective">%1$d．目标</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
@@ -1135,13 +1120,4 @@
     <!-- MDT History -->
     <!-- MDT Pump Status -->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <plurals name="objective_days">
-        <item quantity="other">%1$d　天</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="other">%1$d 小时</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="other">%1$d 分钟</item>
-    </plurals>
 </resources>

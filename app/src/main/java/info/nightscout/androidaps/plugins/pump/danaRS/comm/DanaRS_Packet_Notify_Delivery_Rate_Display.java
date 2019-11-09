@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 
@@ -40,12 +41,12 @@ public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
         if (t != null) {
             lastReceive = System.currentTimeMillis();
             t.insulin = deliveredInsulin;
-            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-            bolusingEvent.status = String.format(MainApp.gs(R.string.bolusdelivering), deliveredInsulin);
-            bolusingEvent.t = t;
-            bolusingEvent.percent = Math.min((int) (deliveredInsulin / amount * 100), 100);
-            failed = bolusingEvent.percent < 100? true: false;
-            MainApp.bus().post(bolusingEvent);
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+            bolusingEvent.setStatus(String.format(MainApp.gs(R.string.bolusdelivering), deliveredInsulin));
+            bolusingEvent.setT(t);
+            bolusingEvent.setPercent(Math.min((int) (deliveredInsulin / amount * 100), 100));
+            failed = bolusingEvent.getPercent() < 100? true: false;
+            RxBus.INSTANCE.send(bolusingEvent);
         }
 
         if (L.isEnabled(L.PUMPCOMM))

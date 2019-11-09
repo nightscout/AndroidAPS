@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
@@ -57,9 +56,6 @@
     <string name="description_wear">AndroidAPS controleren en bedienen met behulp van uw WearOS-horloge.</string>
     <string name="description_xdrip_status_line">Toon informatie over de Loop op jouw xDrip+ wijzerplaat.</string>
     <string name="description_sms_communicator">Bedien AndroidAPS op afstand met SMS commando\'s.</string>
-    <string name="objectives_button_back">Terug</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Controleer</string>
     <string name="nsprofileview_units_label">Eénheden</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">KH ratio</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Profiel</string>
     <string name="openapsma_mealdata_label">Maaltijd gegevens</string>
     <string name="result">Resultaat</string>
+    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Geen BG gegevens beschikbaar</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <string name="openapsma_request_label">Voorstel</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Niet ondersteunde versie van NSClient</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
     <string name="nsclientnotinstalled">NSClient niet geïnstalleerd. Gegevens verloren!</string>
-    <string name="objectives_bgavailableinns">BG beschikbaar op NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar op NS</string>
-    <string name="objectives_manualenacts">Manuele correcties</string>
     <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
-    <string name="missing">Te weinig</string>
+    <string name="missing_carbs">Ontbrekend %1$dg</string>
     <string name="exported">Voorkeuren geëxporteerd</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="import_from">Importeer instellingen van</string>
@@ -317,8 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP INGEDRUKT</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="overview_bolusprogress_goingtodeliver">Er worden %1$.2fE toegediend</string>
-    <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyzeren van basaal en ratio\'s</string>
-    <string name="objectives_0_gate">Controleren van beschikbaarheid BG en insuline pomp data op Nightscout</string>
     <string name="youareonallowedlimit">Limiet bereikt</string>
     <string name="noprofileselected">Geen profiel geselecteerd</string>
     <string name="smscommunicator_loophasbeendisabled">Loop was uitgeschakeld</string>
@@ -552,10 +544,12 @@
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSIS IS MOGELIJK BIJ BLINDELINGS GEBRUIK!</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
+    <string name="show_statuslights_extended">Toon uitgebreide statusindicatoren op overzicht scherm</string>
+    <string name="show_statuslights_extended_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het overzicht scherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
-    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%%]</string>
-    <string name="statuslights_bat_critical">Drempel alarm voor batterij niveau [%%]</string>
+    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
+    <string name="statuslights_bat_critical">Drempel alarm batterij niveau [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -625,6 +619,7 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="ns_localbroadcasts">Schakel broadcasts in naar andere apps (zoals xDrip). Schakel niet in als je NSClient of meer dan één installatie van AAPS hebt geïnstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="careportal_activity_label">ACTIVITEIT &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
@@ -848,8 +843,6 @@
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="combo_bolus_count">Aantal bolussen</string>
     <string name="combo_tbr_count">Aantal TBR</string>
-    <string name="objectivenotstarted">Doel %1$d niet gestart</string>
-    <string name="objectivenotfinished">Doel %1$d niet gereed</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="novalidbasalrate">Geen correcte basale snelheid van pomp kunnen lezen</string>
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de voorkeuren</string>
@@ -971,7 +964,6 @@
     <string name="completed_well_done">Voltooid, goed gedaan!</string>
     <string name="not_completed_yet">Nog niet voltooid</string>
     <string name="time_elapsed">Verstreken tijd</string>
-    <string name="nth_objective">%1$d. Doel</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
     <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
@@ -1282,6 +1274,7 @@
     <string name="rileylink_state_not_started">Niet gestart</string>
     <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
     <string name="rileylink_state_rl_error">RileyLink fout</string>
+    <string name="rileylink_state_pc_tune_up">Tuning van RileyLink en Pomp</string>
     <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
     <string name="rileylink_state_connected">Verbonden</string>
     <!-- RL Errors -->
@@ -1351,6 +1344,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Ophalen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_tbr">Instellen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
+    <string name="profilename">Wijzig profiel naar</string>
+    <string name="changengetoprofilename">Wijzig profiel in %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Laatste verbinding met pomp</string>
+    <string name="automation_trigger_pump_last_connection_description">Laatste verbinding met pomp [minuten geleden]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Laatste verbinding met pomp %1$s %2$s min geleden</string>
+    <string name="sendsmsactionlabel">Stuur SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Stuur SMS naar alle nummers in voorkeuren</string>
+    <string name="sendsmsactiontext">Stuur SMS met tekst</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus limiet bereikt: %2$.2fU naar %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -1358,16 +1360,17 @@
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="loading">Bezig met laden...</string>
     <string name="snooze">Sluimeren</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dag</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uur</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuut</item>
-        <item quantity="other">%1$d minuut</item>
-    </plurals>
+    <string name="time_range">Tijdsinterval</string>
+    <string name="timerange_value">Tijd ligt tussen %1$s en %2$s</string>
+    <string name="between">Tussen </string>
+    <string name="close">Sluiten</string>
+    <string name="increasingmaxbasal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
+    <string name="smscommunicator_messagebody">Ongeldige inhoud van het bericht</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg KH ratio: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg KH ratio: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolus wizard</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

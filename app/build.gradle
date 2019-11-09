@@ -109,7 +109,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.4-dev-g"
+        version "2.6-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -240,8 +240,6 @@ dependencies {
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "com.wdullaer:materialdatetimepicker:2.3.0"
 
-    // Otto bus will be replaced by rx
-    implementation "com.squareup:otto:1.3.7"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
     implementation "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
@@ -284,9 +282,6 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:2.9.9"
     testImplementation("com.google.truth:truth:0.39") {
-        exclude group: "com.google.guava", module: "guava"
-    }
-    testImplementation("org.robolectric:robolectric:4.2.1") {
         exclude group: "com.google.guava", module: "guava"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"

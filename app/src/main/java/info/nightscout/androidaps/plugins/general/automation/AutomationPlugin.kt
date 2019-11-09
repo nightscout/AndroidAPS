@@ -13,6 +13,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
@@ -160,11 +161,16 @@ object AutomationPlugin : PluginBase(PluginDescription()
     private fun processActions() {
         if (!isEnabled(PluginType.GENERAL))
             return
+        if (LoopPlugin.getPlugin().isSuspended) {
+            if (L.isEnabled(L.AUTOMATION))
+                log.debug("Loop deactivated")
+            return
+        }
 
         if (L.isEnabled(L.AUTOMATION))
             log.debug("processActions")
         for (event in automationEvents) {
-            if (event.isEnabled() && event.trigger.shouldRun() && event.preconditions.shouldRun()) {
+            if (event.isEnabled && event.trigger.shouldRun() && event.preconditions.shouldRun()) {
                 val actions = event.actions
                 for (action in actions) {
                     action.doAction(object : Callback() {
@@ -202,7 +208,8 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 ActionStopTempTarget(),
                 ActionNotification(),
                 ActionProfileSwitchPercent(),
-                ActionProfileSwitch()
+                ActionProfileSwitch(),
+                ActionSendSMS()
         )
     }
 
@@ -220,7 +227,8 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 TriggerWifiSsid(),
                 TriggerLocation(),
                 TriggerAutosensValue(),
-                TriggerBolusAgo()
+                TriggerBolusAgo(),
+                TriggerPumpLastConnection()
         )
     }
 

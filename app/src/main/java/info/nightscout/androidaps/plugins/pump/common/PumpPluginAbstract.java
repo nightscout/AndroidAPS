@@ -6,8 +6,6 @@ import android.content.ServiceConnection;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -32,15 +30,20 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by andy on 23.04.18.
@@ -49,6 +52,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
 public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
@@ -82,30 +86,32 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     @Override
     protected void onStart() {
-        if (getServiceClass()!=null) {
-            Context context = MainApp.instance().getApplicationContext();
-            Intent intent = new Intent(context, getServiceClass());
-            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        }
+        super.onStart();
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, getServiceClass());
+        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         serviceRunning = true;
 
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(serviceConnection);
+                }, FabricPrivacy::logException)
+        );
         onStartCustomActions();
-        super.onStart();
     }
 
 
     @Override
     protected void onStop() {
-        if (serviceConnection!=null) {
-            Context context = MainApp.instance().getApplicationContext();
-            context.unbindService(serviceConnection);
-        }
+        Context context = MainApp.instance().getApplicationContext();
+        context.unbindService(serviceConnection);
 
         serviceRunning = false;
 
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -126,14 +132,6 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
      * @return
      */
     public abstract Class getServiceClass();
-
-
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(serviceConnection);
-    }
-
 
     public PumpStatus getPumpStatusData() {
         return pumpStatus;
@@ -308,8 +306,8 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // Short info for SMS, Wear etc
 
     public boolean isFakingTempsByExtendedBoluses() {
-        //if (isLoggingEnabled())
-        //    LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
+        if (isLoggingEnabled())
+            LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
         return false;
     }
 
@@ -420,14 +418,17 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
             } else {
+                if (MedtronicHistoryData.doubleBolusDebug)
+                    LOG.debug("DoubleBolusDebug: deliverTreatment::(carb only entry)");
+
                 // no bolus required, carb only treatment
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                bolusingEvent.t = new Treatment();
-                bolusingEvent.t.isSMB = detailedBolusInfo.isSMB;
-                bolusingEvent.percent = 100;
-                MainApp.bus().post(bolusingEvent);
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
+                bolusingEvent.setT(new Treatment());
+                bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
+                bolusingEvent.setPercent(100);
+                RxBus.INSTANCE.send(bolusingEvent);
 
                 if (isLoggingEnabled())
                     LOG.debug("deliverTreatment: Carb only treatment.");
@@ -459,15 +460,16 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     @Override
-    public boolean canHandleDST() {
-        return false;
+    public ManufacturerType manufacturer() {
+        return pumpStatus.pumpType.getManufacturer();
     }
 
 
     @Override
-    public ManufacturerType manufacturer() {
-        return pumpStatus.pumpType.getManufacturer();
+    public boolean canHandleDST() {
+        return false;
     }
+
 
     @Override
     public PumpType model() {
@@ -475,14 +477,20 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    @Override
-    public void timeDateOrTimeZoneChanged() {
-    }
-
-
     public void refreshCustomActionsList() {
-        MainApp.bus().post(new EventCustomActionsChanged());
+        RxBus.INSTANCE.send(new EventCustomActionsChanged());
     }
+
+
+//		// FIXME 5
+
+//
+//
+//    @Override
+//    public void timeDateOrTimeZoneChanged() {
+//    }
+//
+
 
 
 }

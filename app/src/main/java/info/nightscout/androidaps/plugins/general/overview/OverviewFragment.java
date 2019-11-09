@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +11,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
@@ -36,8 +25,16 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jjoe64.graphview.GraphView;
-import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +80,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
@@ -113,17 +111,22 @@ import info.nightscout.androidaps.utils.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SingleClickButton;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView timeView;
     TextView bgView;
@@ -340,6 +343,117 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        disposable.clear();
+        sLoopHandler.removeCallbacksAndMessages(null);
+        unregisterForContextMenu(apsModeView);
+        unregisterForContextMenu(activeProfileView);
+        unregisterForContextMenu(tempTargetView);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eventOpenAPSUpdateGui -> scheduleUpdateGUI(eventOpenAPSUpdateGui.getFrom()),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventExtendedBolusChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventExtendedBolusChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempBasalChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventTempBasalChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTreatmentChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventTreatmentChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventTempTargetChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventTempTargetChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAcceptOpenLoopChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventAcceptOpenLoopChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventCareportalEventChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventCareportalEventChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventInitializationChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventInitializationChanged"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAutosensCalculationFinished.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventAutosensCalculationFinished"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventProfileNeedsUpdate.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventProfileNeedsUpdate"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventPreferenceChange"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventNewOpenLoopNotification.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> scheduleUpdateGUI("EventNewOpenLoopNotification"),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> updatePumpStatus(event.getStatus()),
+                        FabricPrivacy::logException
+                ));
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventIobCalculationProgress.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                            if (iobCalculationProgressView != null)
+                                iobCalculationProgressView.setText(event.getProgress());
+                        },
+                        FabricPrivacy::logException
+                ));
+        sRefreshLoop = () -> {
+            scheduleUpdateGUI("refreshLoop");
+            sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
+        };
+        sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
+        registerForContextMenu(apsModeView);
+        registerForContextMenu(activeProfileView);
+        registerForContextMenu(tempTargetView);
+        updateGUI("onResume");
+    }
+
     private void setupChartMenu(View view) {
         chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
         chartButton.setOnClickListener(v -> {
@@ -539,8 +653,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    private void showSuspendtPump(ContextMenu menu,
-                                  PumpDescription pumpDescription) {
+    private void showSuspendtPump(ContextMenu menu, PumpDescription pumpDescription) {
         if (pumpDescription.tempDurationStep15mAllowed)
             menu.add(MainApp.gs(R.string.disconnectpumpfor15m));
         if (pumpDescription.tempDurationStep30mAllowed)
@@ -846,108 +959,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-        sLoopHandler.removeCallbacksAndMessages(null);
-        unregisterForContextMenu(apsModeView);
-        unregisterForContextMenu(activeProfileView);
-        unregisterForContextMenu(tempTargetView);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        sRefreshLoop = () -> {
-            scheduleUpdateGUI("refreshLoop");
-            sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-        };
-        sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-        registerForContextMenu(apsModeView);
-        registerForContextMenu(activeProfileView);
-        registerForContextMenu(tempTargetView);
-        updateGUI("onResume");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventInitializationChanged ev) {
-        scheduleUpdateGUI("EventInitializationChanged");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-        scheduleUpdateGUI("EventPreferenceChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventRefreshOverview ev) {
-        scheduleUpdateGUI(ev.from);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        scheduleUpdateGUI("EventAutosensCalculationFinished");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        scheduleUpdateGUI("EventTreatmentChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventCareportalEventChange ev) {
-        scheduleUpdateGUI("EventCareportalEventChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        scheduleUpdateGUI("EventTempBasalChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
-        scheduleUpdateGUI("EventExtendedBolusChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewOpenLoopNotification ev) {
-        scheduleUpdateGUI("EventNewOpenLoopNotification");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventAcceptOpenLoopChange ev) {
-        scheduleUpdateGUI("EventAcceptOpenLoopChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempTargetChange ev) {
-        scheduleUpdateGUI("EventTempTargetChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventProfileNeedsUpdate ev) {
-        scheduleUpdateGUI("EventProfileNeedsUpdate");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged s) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> updatePumpStatus(s.textStatus()));
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventIobCalculationProgress e) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(() -> {
-                if (iobCalculationProgressView != null)
-                    iobCalculationProgressView.setText(e.progress);
-            });
-    }
-
     private void hideTempRecommendation() {
         Activity activity = getActivity();
         if (activity != null)
@@ -1135,7 +1146,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** Calibration & CGM buttons ****
-        boolean xDripIsBgSource = MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginType.BGSOURCE);
+        boolean xDripIsBgSource = SourceXdripPlugin.getPlugin().isEnabled(PluginType.BGSOURCE);
         boolean dexcomIsSource = SourceDexcomPlugin.INSTANCE.isEnabled(PluginType.BGSOURCE);
         boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {

@@ -33,6 +33,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -1079,7 +1080,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private void finishAction(String overviewKey) {
 
         if (overviewKey != null)
-            MainApp.bus().post(new EventRefreshOverview(overviewKey));
+            RxBus.INSTANCE.send(new EventRefreshOverview(overviewKey));
 
         triggerUIChange();
 
@@ -1600,6 +1601,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         this.hasTimeDateOrTimeZoneChanged = true;
     }
+
 
     public void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {
 

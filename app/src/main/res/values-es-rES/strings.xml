@@ -5,8 +5,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
-    <string name="treatmentssafety_title">Seguridad de tratamientos</string>
+    <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
     <string name="nav_preferences">Preferencias</string>
@@ -57,9 +56,6 @@
     <string name="description_wear">Usar tu reloj WearOS para observar y controlar AndroidAPS.</string>
     <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+.</string>
     <string name="description_sms_communicator">Control remoto de AndroidAPS mediante comandos SMS.</string>
-    <string name="objectives_button_back">Atrás</string>
-    <string name="objectives_button_start">Inicio</string>
-    <string name="objectives_button_verify">Verificar</string>
     <string name="nsprofileview_units_label">Unidades</string>
     <string name="nsprofileview_dia_label">DIA (Duración Insulina Activa)</string>
     <string name="nsprofileview_ic_label">IC (Ratio Insulina/Carbohidratos)</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Datos de comidas</string>
     <string name="result">Resultado</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
     <string name="openapsma_noglucosedata">No hay disponibles datos de glucosa</string>
     <string name="nochangerequested">Ninguna acción requerida</string>
     <string name="openapsma_request_label">Solicitud</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Versión de NSClient no soportada</string>
     <string name="unsupportednsversion">Versión no aceptada de Nightscout</string>
     <string name="nsclientnotinstalled">NSClient no instalado. ¡Registro perdido!</string>
-    <string name="objectives_bgavailableinns">BG disponible en NS</string>
-    <string name="objectives_pumpstatusavailableinns">Estado de la bomba disponible en NS</string>
-    <string name="objectives_manualenacts">Aprobación Manual</string>
     <string name="loopdisabled">LOOP DESACTIVADO POR RESTRICCIONES</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Restricción aplicada en bolo</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
-    <string name="missing">Faltan</string>
+    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferencias exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
@@ -317,21 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">DETENER PULSADO</string>
     <string name="waitingforpump">Esperando bomba</string>
     <string name="overview_bolusprogress_goingtodeliver">Se van a infundir %1$.2fU</string>
-    <string name="objectives_0_objective">Configuración de visualización y monitorización, y análisis de basales y ratios</string>
-    <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
-    <string name="objectives_openloop_objective">Comenzando en lazo abierto</string>
-    <string name="objectives_openloop_gate">Ejecutar en modo de lazo abierto durante unos días, y aceptar manualmente las basales temporales. Configure y use objetivos temporales y predeterminados (por ejemplo, para actividad o carbohidratos para hipoglucemia)</string>
-    <string name="objectives_maxbasal_objective">Entender el lazo abierto, incluidas las recomendaciones de basales temporales</string>
-    <string name="objectives_maxbasal_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
-    <string name="objectives_maxiobzero_objective">Iniciando el lazo cerrado con suspensión con baja glucosa</string>
-    <string name="objectives_maxiobzero_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
-    <string name="objectives_maxiob_objective">Ajuste del lazo cerrado, aumentando máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
-    <string name="objectives_maxiob_gate">Usar unos cuantos días, y al menos una noche sin alarmas de glucosa baja, antes de bajar valor de glucosa</string>
-    <string name="objectives_autosens_objective">Ajustar las basales y ratios, si es necesario, y luego activar auto-sens</string>
-    <string name="objectives_autosens_gate">Una semana con éxito en lazo cerrado durante el día con entrada de carbohidratos</string>
-    <string name="objectives_ama_objective">Habilitar funciones adicionales para su uso durante el día, como asistente de comida avanzado</string>
-    <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
-    <string name="objectives_smb_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>
     <string name="youareonallowedlimit">Alcanzado el límite permitido</string>
     <string name="noprofileselected">Sin perfil seleccionado</string>
     <string name="smscommunicator_loophasbeendisabled">Lazo se ha desactivado</string>
@@ -569,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Habilita luces de estado extendidas para tiempo de cánula, tiempo de insulina, tiempo del sensor, reservorio y nivel de batería en pantalla de inicio.</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de batería [%%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%%]</string>
+    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
+    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -640,6 +619,7 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>
+    <string name="ns_localbroadcasts">Habilite las transmisiones a otras aplicaciones (como xDrip). ¡ No habilite si tiene más de una instancia de AAPS o NSClient instalada!</string>
     <string name="ns_localbroadcasts_title">Permitir emisión de mensajes localmente.</string>
     <string name="careportal_activity_label">ACTIVIDAD Y FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">CARBS Y BOLUS</string>
@@ -863,8 +843,6 @@
     <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
     <string name="combo_bolus_count">Contador Bolos</string>
     <string name="combo_tbr_count">Contador TBR</string>
-    <string name="objectivenotstarted">Objetivo %1$d no iniciado</string>
-    <string name="objectivenotfinished">Objetivo %1$d no finalizado</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
     <string name="novalidbasalrate">Tasa Basal no valida en la bomba</string>
     <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
@@ -986,7 +964,6 @@
     <string name="completed_well_done">¡Logrado, bien hecho!</string>
     <string name="not_completed_yet">No logrado</string>
     <string name="time_elapsed">Tiempo agotado</string>
-    <string name="nth_objective">%1$d. Objetivo</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Recibir valores de glucosa de Poctech</string>
     <string name="description_source_tomato">Recibir valores de glucosa de Tomato app (MiaoMiao)</string>
@@ -1297,6 +1274,7 @@
     <string name="rileylink_state_not_started">No iniciado</string>
     <string name="rileylink_state_rl_init">Inicialización de RileyLink…</string>
     <string name="rileylink_state_rl_error">Error de RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Configurando RileyLink y la bomba</string>
     <string name="rileylink_state_pc_error">Problema al conectar con la infusora</string>
     <string name="rileylink_state_connected">Conectado</string>
     <!-- RL Errors -->
@@ -1366,45 +1344,33 @@
     <string name="medtronic_cmd_desc_get_tbr">Obtener la basal temporal</string>
     <string name="medtronic_cmd_desc_set_tbr">Establecer la basal temporal</string>
     <string name="medtronic_cmd_desc_set_bolus">Fijar Bolo</string>
+    <string name="profilename">Cambiar perfil a</string>
+    <string name="changengetoprofilename">Cambiar perfil a %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Última conexión con la bomba</string>
+    <string name="automation_trigger_pump_last_connection_description">Última conexión con la bomba [ minutos atrás]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Última conexión con la bomba hace %1$s %2$s min</string>
+    <string name="sendsmsactionlabel">Enviar a %1$s</string>
+    <string name="sendsmsactiondescription">Enviar SMS a todos los números en las preferencias</string>
+    <string name="sendsmsactiontext">Mandar mensaje SMS</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricción de bolo aplicada: %2$.2fU a %3$.2fU</font>]]></string>
-    <string name="slowabsorptiondetected"><![CDATA[¡<font color=\'%1$s\'>! Se ha detectado una absorción lenta de hidratos de carbono: %2$d% de tiempo. Compruebe de nuevo su calculo. Los COB se pueden sobrestimar, por lo que ¡se podría administrar más insulina de la cuenta!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>! Se ha detectado una absorción lenta de hidratos de carbono: %2$d%% de tiempo. Compruebe de nuevo su calculo. Los COB se pueden sobrestimar, por lo que ¡se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="reservoirvalue">%1$.0f/%2$dU</string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
     <string name="loading">Cargando...</string>
     <string name="snooze">Silenciar</string>
-    <string name="accomplished">Completado: %1$s</string>
-    <string name="objectives_usage_objective">Aprende a controlar AndroidAPS</string>
-    <string name="objectives_usage_gate">Realice diferentes acciones en AndroidAPS</string>
-    <string name="objectives_useprofileswitch">Establecer perfil 90% durante 10 min (Pulsación larga en nombre del perfil en Resumen)</string>
-    <string name="objectives_usedisconnectpump">Simular ducha. Desconectar bomba durante 1h (Pulsación larga en el bucle abierto)</string>
-    <string name="objectives_usereconnectpump">... y volver a conectar de la misma manera</string>
-    <string name="objectives_usetemptarget">Crear un objetivo temporal personalizado con 10 min de duración (Pulsación larga en tu objetivo actual)</string>
-    <string name="objectives_useactions">En Config Builder habilitar el plugin Acciones, hágalo visible y muestre su contenido desde el menú superior</string>
-    <string name="objectives_useloop">Mostrar contenido del plugin Loop</string>
-    <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
-    <string name="objectives_button_enter">Intro</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Introduzca el código obtenido de los desarrolladores para eludir el resto de objetivos</string>
-    <string name="codeaccepted">Código aceptado</string>
-    <string name="codeinvalid">Código no válido</string>
-    <string name="objectives_exam_objective">Compruebe su conocimiento</string>
-    <string name="objectives_exam_gate">Responder correctamente</string>
-    <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
-    <string name="wronganswer">Respuesta incorrecta!</string>
-    <string name="unfinshed_button">Siguien&amp;te sin terminar</string>
+    <string name="time_range">Intervalo de tiempo</string>
+    <string name="timerange_value">El tiempo está entre %1$s y %2$s</string>
+    <string name="between">Entre </string>
     <string name="close">Cerrar</string>
-    <string name="requestcode">Solicitad código: %1$s</string>
-    <string name="objectives_hint">(compruebe todas las respuestas correctas)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d día</item>
-        <item quantity="other">%1$d días</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hora</item>
-        <item quantity="other">%1$d horas</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minutos</item>
-    </plurals>
+    <string name="increasingmaxbasal">Aumentar el valor basal máximo porque el ajuste es inferior a tu base máxima en el perfil</string>
+    <string name="smscommunicator_messagebody">El cuerpo del mensaje es inválido</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Asistente Bolus</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

@@ -80,7 +80,6 @@ public class ActionLoopSuspendTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         AAPSMocker.mockSP();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockNSUpload();

@@ -27,7 +27,7 @@ public abstract class PumpStatus {
 
     // other pump settings
     public String activeProfileName = "0";
-    public double reservoirRemainingUnits = 0d;
+    public double reservoirRemainingUnits = 0.0d;
     public int reservoirFullUnits = 0;
     public int batteryRemaining = 0; // percent, so 0-100
     public Double batteryVoltage = null; 

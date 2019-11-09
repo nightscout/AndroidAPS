@@ -29,7 +29,7 @@ class AutomationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        eventListAdapter = EventListAdapter(AutomationPlugin.automationEvents, fragmentManager)
+        eventListAdapter = EventListAdapter(AutomationPlugin.automationEvents, fragmentManager, activity)
         automation_eventListView.layoutManager = LinearLayoutManager(context)
         automation_eventListView.adapter = eventListAdapter
 
@@ -74,14 +74,11 @@ class AutomationFragment : Fragment() {
 
     @Synchronized
     private fun updateGui() {
-        if (eventListAdapter == null) return
         eventListAdapter?.notifyDataSetChanged()
         val sb = StringBuilder()
-        for (l in AutomationPlugin.executionLog.reversed()) {
-            sb.append(l)
-            sb.append("\n")
-        }
-        automation_logView.text = sb.toString()
+        for (l in AutomationPlugin.executionLog.reversed())
+            sb.append(l).append("\n")
+        automation_logView?.text = sb.toString()
     }
 
 }

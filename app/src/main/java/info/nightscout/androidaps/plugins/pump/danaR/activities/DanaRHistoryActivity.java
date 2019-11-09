@@ -15,8 +15,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +30,7 @@ import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
@@ -41,10 +40,14 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class DanaRHistoryActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     static Profile profile = null;
 
@@ -81,13 +84,26 @@ public class DanaRHistoryActivity extends NoSplashActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPumpStatusChanged.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventDanaRSyncStatus.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event -> {
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("EventDanaRSyncStatus: " + event.getMessage());
+                    statusView.setText(event.getMessage());
+                }, FabricPrivacy::logException)
+        );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MainApp.bus().unregister(this);
+        disposable.clear();
     }
 
     @Override
@@ -316,21 +332,4 @@ public class DanaRHistoryActivity extends NoSplashActivity {
         historyList = new ArrayList<>();
         runOnUiThread(() -> recyclerView.swapAdapter(new RecyclerViewAdapter(historyList), false));
     }
-
-    @Subscribe
-    public void onStatusEvent(final EventDanaRSyncStatus s) {
-        if (L.isEnabled(L.PUMP))
-            log.debug("EventDanaRSyncStatus: " + s.message);
-        runOnUiThread(
-                () -> statusView.setText(s.message));
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPumpStatusChanged s) {
-        runOnUiThread(
-                () -> statusView.setText(s.textStatus())
-        );
-    }
-
-
 }

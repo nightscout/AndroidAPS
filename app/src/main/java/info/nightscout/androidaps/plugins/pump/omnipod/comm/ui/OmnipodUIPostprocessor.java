@@ -21,9 +21,11 @@ public class OmnipodUIPostprocessor {
     OmnipodPumpPlugin omnipodPumpPlugin;
 
 
-    public OmnipodUIPostprocessor() {
-        pumpStatus = OmnipodUtil.getPumpStatus();
-        omnipodPumpPlugin = OmnipodPumpPlugin.getPlugin();
+    public OmnipodUIPostprocessor(OmnipodPumpPlugin plugin, OmnipodPumpStatus pumpStatus) {
+//        pumpStatus = OmnipodUtil.getPumpStatus();
+//        omnipodPumpPlugin = OmnipodPumpPlugin.getPlugin();
+        this.pumpStatus = pumpStatus;
+        this.omnipodPumpPlugin = plugin;
     }
 
 

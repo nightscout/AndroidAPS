@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers;
 import android.location.Location;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +25,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, Bus.class, ProfileFunctions.class, DateUtil.class, LocationService.class})
+@PrepareForTest({MainApp.class, ProfileFunctions.class, DateUtil.class, LocationService.class})
 
 public class TriggerLocationTest {
 
@@ -35,7 +34,6 @@ public class TriggerLocationTest {
     @Before
     public void mock() {
         AAPSMocker.mockMainApp();
-        AAPSMocker.mockBus();
         AAPSMocker.mockApplicationContext();
 
         PowerMockito.mockStatic(DateUtil.class);

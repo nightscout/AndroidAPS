@@ -45,7 +45,7 @@ object OverviewPlugin : PluginBase(PluginDescription()
                 .observeOn(Schedulers.io())
                 .subscribe({ n ->
                     if (notificationStore.add(n.notification))
-                        MainApp.bus().post(EventRefreshOverview("EventNewNotification"))
+                        RxBus.send(EventRefreshOverview("EventNewNotification"))
                 }, {
                     FabricPrivacy.logException(it)
                 })
@@ -54,7 +54,7 @@ object OverviewPlugin : PluginBase(PluginDescription()
                 .observeOn(Schedulers.io())
                 .subscribe({ n ->
                     if (notificationStore.remove(n.id))
-                        MainApp.bus().post(EventRefreshOverview("EventDismissNotification"))
+                        RxBus.send(EventRefreshOverview("EventDismissNotification"))
                 }, {
                     FabricPrivacy.logException(it)
                 })

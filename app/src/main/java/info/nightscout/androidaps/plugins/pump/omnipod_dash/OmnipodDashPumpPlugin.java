@@ -61,7 +61,6 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     private OmnipodDashPumpPlugin() {
-
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodFragment.class.getName()) //
@@ -80,7 +79,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
             omnipodCommunicationManager = OmnipodDashCommunicationManager.getInstance();
         }
 
-        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);
+        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, this, this.pumpStatusLocal);
 
         OmnipodUtil.setPlugin(this);
 
@@ -257,7 +256,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     protected void triggerUIChange() {
-        MainApp.bus().post(new EventOmnipodPumpValuesChanged());
+        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
     }
 
 

@@ -787,7 +787,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 return false;
             }
 
-            if (responseRaw.length == 1) {
+            if (responseRaw.length < 2) {
                 return false;
             }
 

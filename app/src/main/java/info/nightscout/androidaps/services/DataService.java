@@ -45,7 +45,6 @@ public class DataService extends IntentService {
 
     public DataService() {
         super("DataService");
-        registerBus();
     }
 
     @Override
@@ -87,14 +86,14 @@ public class DataService extends IntentService {
         } else if (Intents.ACTION_NEW_STATUS.equals(action)) {
             NSSettingsStatus.getInstance().handleNewData(intent);
         } else if (Intents.ACTION_NEW_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.ADD, bundles);
-            MainApp.bus().post(evt);
+            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), bundles);
+            RxBus.INSTANCE.send(evt);
         } else if (Intents.ACTION_CHANGED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.UPDATE, bundles);
-            MainApp.bus().post(evt);
+            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), bundles);
+            RxBus.INSTANCE.send(evt);
         } else if (Intents.ACTION_REMOVED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.REMOVE, bundles);
-            MainApp.bus().post(evt);
+            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), bundles);
+            RxBus.INSTANCE.send(evt);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
@@ -115,16 +114,6 @@ public class DataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        MainApp.bus().unregister(this);
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     private void handleNewDataFromNSClient(Intent intent) {
@@ -198,8 +187,8 @@ public class DataService extends IntentService {
 
     private void handleRemovedTreatmentFromNS(JSONObject json) {
         // new DB model
-        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.REMOVE, json);
-        MainApp.bus().post(evtTreatment);
+        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
+        RxBus.INSTANCE.send(evtTreatment);
         // old DB model
         String _id = JsonHelper.safeGetString(json, "_id");
         MainApp.getDbHelper().deleteTempTargetById(_id);
@@ -211,7 +200,7 @@ public class DataService extends IntentService {
 
     private void handleTreatmentFromNS(JSONObject json, Intent intent) {
         // new DB model
-        int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.ADD : EventNsTreatment.UPDATE;
+        int mode = Intents.ACTION_NEW_TREATMENT.equals(intent.getAction()) ? EventNsTreatment.Companion.getADD() : EventNsTreatment.Companion.getUPDATE();
         double insulin = JsonHelper.safeGetDouble(json, "insulin");
         double carbs = JsonHelper.safeGetDouble(json, "carbs");
         String eventType = JsonHelper.safeGetString(json, "eventType");
@@ -221,7 +210,7 @@ public class DataService extends IntentService {
         }
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
-            MainApp.bus().post(evtTreatment);
+            RxBus.INSTANCE.send(evtTreatment);
         } else if (json.has(DanaRNSHistorySync.DANARSIGNATURE)) {
             // old DB model
             MainApp.getDbHelper().updateDanaRHistoryRecordId(json);

@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Segurança de tratamentos</string>
     <string name="treatmentssafety_maxbolus_title">Max bolus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max hidratos permitidos [g]</string>
@@ -32,7 +31,7 @@
     <string name="description_ma">Estado do algoritmo em 2016</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
-    <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
+    <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
     <string name="description_profile_nightscout">Fornece o perfil definido no Nightscout</string>
@@ -57,13 +56,10 @@
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
     <string name="description_sms_communicator">Controlar remotamente o AndroidAPS usando comandos SMS.</string>
-    <string name="objectives_button_back">Anterior</string>
-    <string name="objectives_button_start">Iniciar</string>
-    <string name="objectives_button_verify">Verificar</string>
     <string name="nsprofileview_units_label">Unidades</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
-    <string name="nsprofileview_isf_label">ISF</string>
+    <string name="nsprofileview_isf_label">FSI</string>
     <string name="nsprofileview_basal_label">Basal</string>
     <string name="nsprofileview_target_label">Alvo</string>
     <string name="noprofileset">SEM PERFIL DEFINIDO</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Dados de refeição</string>
     <string name="result">Resultado</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
     <string name="openapsma_noglucosedata">Sem dados de glucose disponíveis</string>
     <string name="nochangerequested">Nenhuma alteração solicitada</string>
     <string name="openapsma_request_label">Pedido</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Versão não suportada do NSCliente</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
     <string name="nsclientnotinstalled">NSCliente em falta. Perdido registo!</string>
-    <string name="objectives_bgavailableinns">Glic disponível no NS</string>
-    <string name="objectives_pumpstatusavailableinns">Status da Bomba está disponível no NS</string>
-    <string name="objectives_manualenacts">Execução manual</string>
     <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Restrição de bólus aplicada</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bólus estendido</string>
     <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
-    <string name="missing">Em falta</string>
+    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferências exportadas</string>
     <string name="export_to">Exportar configurações para</string>
     <string name="import_from">Importar configurações de</string>
@@ -302,7 +296,7 @@
     <string name="danar_history_dailyinsulin">Insulina diária</string>
     <string name="danar_history_errors">Erros</string>
     <string name="danar_history_glucose">Glicose</string>
-    <string name="danar_history_refill">Reabastecimento</string>
+    <string name="danar_history_refill">Recarregar</string>
     <string name="danar_history_syspend">Suspender</string>
     <string name="danar_history_connectingfor">A ligar durante %1$d s</string>
     <string name="danar_password_title">Senha da bomba</string>
@@ -317,9 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">STOP PRESSIONADO</string>
     <string name="waitingforpump">À espera da bomba</string>
     <string name="overview_bolusprogress_goingtodeliver">Vão ser administradas %1$.2fU</string>
-    <string name="objectives_0_objective">Configuração da visualização e monitoramento, e análise de rácios e basals</string>
-    <string name="objectives_0_gate">Verificar se a BG está disponível no Nightscout, e se os dados de insulina da bomba estão a ser carregados</string>
-    <string name="objectives_openloop_objective">A iniciar em Open Loop</string>
     <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="noprofileselected">Nenhum perfil seleccionado</string>
     <string name="smscommunicator_loophasbeendisabled">Loop foi desactivado</string>
@@ -553,10 +544,12 @@
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
     <string name="enablesuperbolus_summary">Habilite a funcionalidade de superbolus no assistente. Não habilite até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE USAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
+    <string name="show_statuslights_extended">Mostrar luzes de estado no ecrã principal</string>
+    <string name="show_statuslights_extended_summary">Activar as luzes de estado para idade da cânula, idade da insulina, idade do sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
-    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%%]</string>
+    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
+    <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -626,6 +619,7 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
+    <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip). Não habilite se tiver mais de uma instância de AAPS ou NSClient instalado!</string>
     <string name="ns_localbroadcasts_title">Activar partilha local.</string>
     <string name="careportal_activity_label">ACTIVIDADE &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">HIDRATOS &amp; BÓLUS</string>
@@ -849,8 +843,6 @@
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em PerfilLocal.</string>
     <string name="combo_bolus_count">Contagem Bólus</string>
     <string name="combo_tbr_count">Contagem TBR</string>
-    <string name="objectivenotstarted">Objetivo %1$d não iniciado</string>
-    <string name="objectivenotfinished">Objetivo %1$d não concluido</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
     <string name="novalidbasalrate">Nenhum valor de basal temporaria valido foi lido da bomba</string>
     <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
@@ -972,7 +964,6 @@
     <string name="completed_well_done">Terminado, parabéns!</string>
     <string name="not_completed_yet">Incompleto</string>
     <string name="time_elapsed">Tempo decorrido</string>
-    <string name="nth_objective">%1$d. Objectivo</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
     <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
@@ -1245,6 +1236,8 @@
     <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
+    <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">PROCURAR</string>
     <string name="rileylink_scanner_scan_stop">PARAR</string>
@@ -1353,6 +1346,14 @@
     <string name="medtronic_cmd_desc_get_tbr">Obter Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_tbr">Definir Basal Temporária</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="profilename">Alterar perfil para</string>
+    <string name="changengetoprofilename">Alterar perfil para %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Última ligação à bomba</string>
+    <string name="automation_trigger_pump_last_connection_description">Última ligação à bomba [minutos atrás]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Última ligação à bomba %1$s %2$s min atrás</string>
+    <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Enviar SMS para todos os números nas preferências</string>
+    <string name="sendsmsactiontext">Enviar SMS com texto</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restrição de Bolus aplicada: %2$.2fU para %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
@@ -1361,31 +1362,19 @@
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
     <string name="loading">A carregar ...</string>
     <string name="snooze">Silenciar</string>
-    <string name="accomplished">Concluído: %1$s</string>
-    <string name="objectives_usage_objective">Aprenda a controlar o AndroidAPS</string>
-    <string name="objectives_usage_gate">Executar diferentes acções no AndroidAPS</string>
-    <string name="objectives_useloop">Exibir conteúdo do plugin do Loop</string>
-    <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Digite o código obtido dos programadores para ignorar o resto dos objectivos</string>
-    <string name="codeaccepted">Código aceite</string>
-    <string name="codeinvalid">Código inválido</string>
-    <string name="objectives_exam_objective">Prove seu conhecimento</string>
-    <string name="answerdisabledto">Resposta desactivada para: %1$s</string>
-    <string name="wronganswer">Resposta errada!</string>
-    <string name="unfinshed_button">Próximo não concluído</string>
+    <string name="time_range">Intervalo de tempo</string>
+    <string name="timerange_value">O tempo está entre %1$s e %2$s</string>
+    <string name="between">Entre </string>
     <string name="close">Fechar</string>
-    <string name="requestcode">Pedir código: %1$s</string>
-    <string name="objectives_hint">(seleccione todas as respostas correctas)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dia</item>
-        <item quantity="other">%1$d dias</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hora</item>
-        <item quantity="other">%1$d hora</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minutos</item>
-    </plurals>
+    <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
+    <string name="smscommunicator_messagebody">Corpo da mensagem inválido</string>
+    <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Assistente de Bólus</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Ligado</string>
+    <string name="common_off">Desligado</string>
 </resources>

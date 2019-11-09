@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Bezpieczeństwo leczenia</string>
     <string name="treatmentssafety_maxbolus_title">Maks. dopuszczalny bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks. dopuszczalne węglowodany [g]</string>
@@ -57,9 +56,6 @@
     <string name="description_wear">Monitoruj i kontroluj AndroidAPS, korzystając z SmartWatch WearOS.</string>
     <string name="description_xdrip_status_line">Pokaż informacje o swojej pętli na watchface xDrip+.</string>
     <string name="description_sms_communicator">Zdalne sterowanie AndroidAPS za pomocą poleceń SMS.</string>
-    <string name="objectives_button_back">Cofnij</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Sprawdź</string>
     <string name="nsprofileview_units_label">Jednostki</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Dane posiłku</string>
     <string name="result">Rezultat</string>
+    <string name="result_insulin_carbs">Wynik: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Brak danych o glukozie</string>
     <string name="nochangerequested">Zmiana nie wymagana</string>
     <string name="openapsma_request_label">Żądanie</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Niewspierana wersja NSClient</string>
     <string name="unsupportednsversion">Niewspierana wersja Nightscout</string>
     <string name="nsclientnotinstalled">NSClient nie zainstalowany. Zapis stracony!</string>
-    <string name="objectives_bgavailableinns">BG dostępne w NS</string>
-    <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS</string>
-    <string name="objectives_manualenacts">Zmiany wykonane</string>
     <string name="loopdisabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>
     <string name="treatments_wizard_basaliob_label">Bazowa IOB</string>
     <string name="bolusconstraintapplied">Ograniczenia bolusa wprowadzone</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">BazaTymczasowa</string>
     <string name="overview_extendedbolus_button">Bolus Przedłużony</string>
     <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
-    <string name="missing">Brakujące</string>
+    <string name="missing_carbs">Brakuje %1$dg</string>
     <string name="exported">Właściwości wyeksportowane</string>
     <string name="export_to">Eksportuj ustawienia do</string>
     <string name="import_from">Importuj ustawienia z</string>
@@ -317,21 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">NACIŚNIĘTY STOP</string>
     <string name="waitingforpump">Czekam na pompę</string>
     <string name="overview_bolusprogress_goingtodeliver">Zamierzam dostarczyć %1$.2fU</string>
-    <string name="objectives_0_objective">Konfiguracja wizualizacji i monitorowania, analiza dawek i wartości bazowych</string>
-    <string name="objectives_0_gate">Sprawdź czy BG (pomiary cukru) są dostępne w Nightscout, i dane pompy insulinowej są ładowane</string>
-    <string name="objectives_openloop_objective">Rozpoczęcie na trybie otwartej pętli (open loop)</string>
-    <string name="objectives_openloop_gate">Działaj w trybie Otwartej Pętli przez kilka dni i ręcznie wprowadzaj wiele ustawień bazy tymczasowej. Ustaw i używaj tymczasowych i domyślnych tymczasowych celów (np. do aktywności fizycznej lub węglowodanów w leczeniu hipoglikemii)</string>
-    <string name="objectives_maxbasal_objective">Zrozumienie działania otwartej pętli, wraz z jej rekomendacjami dawek tymczasowych</string>
-    <string name="objectives_maxbasal_gate">Na podstawie tych doświadczeń zdecyduj jaka maksymalna baza powinna być ustawiona, i wprowadź ją w pompie i w ustawieniach AAPS</string>
-    <string name="objectives_maxiobzero_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>
-    <string name="objectives_maxiobzero_gate">Używaj zamkniętej pętli (Closed Loop) z max IOB (maksymalną dawką aktywnej insuliny) = 0 bez zbyt wielu incydentów niedocukrzeń</string>
-    <string name="objectives_maxiob_objective">Dostrajanie zamkniętej pętli, podniesienie wartości max IOB powyżej 0 i stopniowe obniżanie docelowego poziomu cukru (BG target)</string>
-    <string name="objectives_maxiob_gate">Używaj pętli przez kilka dni i przynajmniej jedną noc bez żadnego alarmu niskiego poziomu, przed obniżeniem docelowego poziomu cukru</string>
-    <string name="objectives_autosens_objective">Dostosuj bazę i wartości parametrów, i wtedy uruchom funkcję autosens</string>
-    <string name="objectives_autosens_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów (węglow.)</string>
-    <string name="objectives_ama_objective">Uruchomienie do użytku dziennego dodatkowych funkcji, jak AMA (zaawansowany asystent posiłku)</string>
-    <string name="objectives_smb_objective">Uruchomienie do użytku dziennego dodatkowych funkcji, jak SMB (Super Mikro Bolusy)</string>
-    <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus + 3 x maks. dzienna dawka bazowa</string>
     <string name="youareonallowedlimit">Osiągnąłeś dozwolony limit</string>
     <string name="noprofileselected">Nie wybrano profilu</string>
     <string name="smscommunicator_loophasbeendisabled">Pętla (Loop) została wyłączona</string>
@@ -569,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Włącz diody stanu dla cage, iage, sage, rezerwuar i poziom baterii na ekranie głównym.</string>
     <string name="statuslights_res_warning">Próg ostrzeżenia o poziomie zbiornika [U]</string>
     <string name="statuslights_res_critical">Próg ostrzeżenia o krytycznym poziomie zbiornika [U]</string>
-    <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii [%%]</string>
-    <string name="statuslights_bat_critical">Próg ostrzeżenia o krytycznym poziomie baterii [%%]</string>
+    <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii [%]</string>
+    <string name="statuslights_bat_critical">Próg ostrzeżenia o krytycznym poziomie baterii [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -641,6 +620,7 @@
     <string name="mdtp_cancel">Anuluj</string>
     <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
     <string name="valuesnotstored">Wartości nie są przechowywane!</string>
+    <string name="ns_localbroadcasts">Włącz rozgłaszanie do innych aplikacji (takich jak xDrip). Nie należy włączać, jeśli zainstalowana jest więcej niż jedna instancja AAPS lub NSClient!</string>
     <string name="ns_localbroadcasts_title">Włącz transmisję lokalnie.</string>
     <string name="careportal_activity_label">AKTYWNOŚĆ &amp; REAKCJA</string>
     <string name="careportal_carbsandbolus_label">WĘGLOW. &amp; BOLUS</string>
@@ -864,8 +844,6 @@
     <string name="profileswitch_ismissing">Brakuje ZmianyProfilu. Proszę wykonać ZmianęProfilu lub nacisnąć \"Aktywuj Profil\" w ProfiluLokalnym</string>
     <string name="combo_bolus_count">Obliczenia Bolusa</string>
     <string name="combo_tbr_count">Obliczenia TBR</string>
-    <string name="objectivenotstarted">Zadanie %1$d nierozpoczęte</string>
-    <string name="objectivenotfinished">Zadanie %1$d nieukończone</string>
     <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
     <string name="novalidbasalrate">Brak prawidłowej dawki bazowej odczytanej z pompy</string>
     <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
@@ -987,7 +965,6 @@
     <string name="completed_well_done">Ukończone, wspaniale!</string>
     <string name="not_completed_yet">Nie ukończono</string>
     <string name="time_elapsed">Czas jaki upłynął</string>
-    <string name="nth_objective">%1$d. Zadanie</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Odczytuj wartości BG z aplikacji Poctech</string>
     <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
@@ -1298,6 +1275,7 @@
     <string name="rileylink_state_not_started">Nie rozpoczęto</string>
     <string name="rileylink_state_rl_init">Uruchamianie RileyLink…</string>
     <string name="rileylink_state_rl_error">Błąd RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Dostrojenie RileyLink i pompy</string>
     <string name="rileylink_state_pc_error">Problem z połączeniem z pompą</string>
     <string name="rileylink_state_connected">Połączono</string>
     <!-- RL Errors -->
@@ -1367,6 +1345,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Pobierz tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_tbr">Ustaw tymczasową dawkę bazową</string>
     <string name="medtronic_cmd_desc_set_bolus">Ustaw bolus</string>
+    <string name="profilename">Zmień profil na</string>
+    <string name="changengetoprofilename">Zmień profil na %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Ostatnie połączenie z pompą</string>
+    <string name="automation_trigger_pump_last_connection_description">Ostatnie połączenie z pompą [minut temu]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Ostatnie połączenie z pompą %1$s %2$s min temu</string>
+    <string name="sendsmsactionlabel">Wyślij SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Wyślij SMS do wszystkich numerów w preferencjach</string>
+    <string name="sendsmsactiontext">Wyślij SMS z tekstem</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Wprowadzono ograniczenie bolusa: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -1374,44 +1361,17 @@
     <string name="deliverpartofboluswizard">Kreator bolusa wykonuje obliczenia, ale tylko ta część obliczonej dawki insuliny jest dostarczana. Pomocne z algorytmem SMB.</string>
     <string name="loading">Wczytuję...</string>
     <string name="snooze">Wycisz</string>
-    <string name="accomplished">Wykonane: %1$s</string>
-    <string name="objectives_usage_objective">Naucz się jak zarządzać AndroidAPS</string>
-    <string name="objectives_usage_gate">Przeprowadź różne działania w AndroidAPS</string>
-    <string name="objectives_useprofileswitch">Ustaw profil 90% na 10 min (naciśnij dłużej nazwę profilu na ekranie głównym)</string>
-    <string name="objectives_usedisconnectpump">Symuluj prysznic. Rozłącz pompę na 1 godzinę (naciśnij dłużej przycisk Otwarta Pętla na ekranie głównym)</string>
-    <string name="objectives_usereconnectpump">... i połącz się ponownie w ten sam sposób</string>
-    <string name="objectives_usetemptarget">Utwórz własny cel tymczasowy z czasem trwania 10 min (przyciśnij dłużej przycisk z Twoją nazwą profilu)</string>
-    <string name="objectives_useactions">W menu konfiguracji uruchom wtyczkę Akcje, zrób ją widoczną i wyświetl jej zawartość w górnym menu</string>
-    <string name="objectives_useloop">Wyświetl zawartość wtyczki Pętla (Loop)</string>
-    <string name="objectives_usescale">Użyj funkcji skalowania przez dłuższe dotknięcie wykresu glikemii</string>
-    <string name="objectives_button_enter">Wprowadź</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Wprowadź kod otrzymany od programistów by pominąć resztę zadań</string>
-    <string name="codeaccepted">Kod przyjęty</string>
-    <string name="codeinvalid">Kod nieprawidłowy</string>
-    <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>
-    <string name="objectives_exam_gate">Ucz się i odpowiedz poprawnie na pytania</string>
-    <string name="answerdisabledto">Odpowiadanie wyłączone na: %1$s</string>
-    <string name="wronganswer">Nieprawidłowa odpowiedź!</string>
-    <string name="unfinshed_button">Następne nieukończone</string>
+    <string name="time_range">Zakres czasu</string>
+    <string name="timerange_value">Czas mieści się w zakresie od %1$s do %2$s</string>
+    <string name="between">Pomiędzy </string>
     <string name="close">Zamknij</string>
-    <string name="requestcode">Kod żadania: %1$s</string>
-    <string name="objectives_hint">(sprawdź wszystkie poprawne odpowiedzi)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dzień</item>
-        <item quantity="few">%1$d dni</item>
-        <item quantity="many">%1$d dni</item>
-        <item quantity="other">%1$d dni</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d godzina</item>
-        <item quantity="few">%1$d godzin</item>
-        <item quantity="many">%1$d godzin</item>
-        <item quantity="other">%1$d godziny</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuta</item>
-        <item quantity="few">%1$d minut</item>
-        <item quantity="many">%1$d minut</item>
-        <item quantity="other">%1$d minut</item>
-    </plurals>
+    <string name="increasingmaxbasal">Zwiększanie maksymalnej wartości bazowej ponieważ ustawienia są poniżej maxymalnej wartości bazy w profilu</string>
+    <string name="smscommunicator_messagebody">Błędny tekst wiadomości</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Kalkulator bolusa</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

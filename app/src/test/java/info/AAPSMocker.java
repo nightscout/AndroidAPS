@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
-import com.squareup.otto.Bus;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -39,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,8 +50,6 @@ public class AAPSMocker {
     private static Profile profile;
     private static ProfileStore profileStore;
     public static final String TESTPROFILENAME = "someProfile";
-
-    public static Intent intentSent = null;
 
     public static CommandQueue queue;
     public static ConfigBuilderPlugin configBuilderPlugin;
@@ -157,6 +154,7 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.suspendloop)).thenReturn("Suspend loop");
         when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
         when(MainApp.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile");
+        when(MainApp.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered");
     }
 
     public static MainApp mockMainApp() {
@@ -178,11 +176,6 @@ public class AAPSMocker {
         constraintChecker = mock(ConstraintChecker.class);
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         return constraintChecker;
-    }
-
-    public static void mockBus() {
-        Bus bus = PowerMockito.mock(Bus.class);
-        when(MainApp.bus()).thenReturn(bus);
     }
 
     public static void mockSP() {
@@ -242,17 +235,6 @@ public class AAPSMocker {
 
     }
 
-    public static DanaRPlugin mockDanaRPlugin() {
-        PowerMockito.mockStatic(DanaRPlugin.class);
-        DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
-        DanaRv2Plugin danaRv2Plugin = mock(DanaRv2Plugin.class);
-        DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
-        when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
-        when(MainApp.getSpecificPlugin(DanaRv2Plugin.class)).thenReturn(danaRv2Plugin);
-        when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
-        return danaRPlugin;
-    }
-
     public static Profile getValidProfile() {
         try {
             if (profile == null)
@@ -297,32 +279,6 @@ public class AAPSMocker {
         Object dataLock = new Object();
         PowerMockito.when(iobCobCalculatorPlugin.getDataLock()).thenReturn(dataLock);
         return iobCobCalculatorPlugin;
-    }
-
-    private static MockedBus bus = new MockedBus();
-
-    public static void prepareMockedBus() {
-        when(MainApp.bus()).thenReturn(bus);
-    }
-
-    public static class MockedBus extends Bus {
-        public boolean registered = false;
-        public boolean notificationSent = false;
-
-        @Override
-        public void register(Object event) {
-            registered = true;
-        }
-
-        @Override
-        public void unregister(Object event) {
-            registered = false;
-        }
-
-        @Override
-        public void post(Object event) {
-            notificationSent = true;
-        }
     }
 
 }

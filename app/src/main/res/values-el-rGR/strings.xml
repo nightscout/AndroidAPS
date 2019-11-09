@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <string name="treatmentssafety_maxbolus_title">Μέγιστο Επιτρεπτό bolus[U]</string>
     <string name="treatmentssafety_maxcarbs_title">Μέγιστο Επιτρεπτό υδατανθράκων [g]</string>
@@ -57,9 +56,6 @@
     <string name="description_wear">Παρακολουθεί και ελέγχει το AndroidAPS χρησιμοποιώντας το ρολόι σας WearOS.</string>
     <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
     <string name="description_sms_communicator">Ελεγξτε απομακρυσμένα το AndroidAPS χρησιμοποιώντας τις εντολές SMS.</string>
-    <string name="objectives_button_back">Πίσω</string>
-    <string name="objectives_button_start">Έναρξη</string>
-    <string name="objectives_button_verify">Επικύρωση</string>
     <string name="nsprofileview_units_label">Μονάδες</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Προφίλ</string>
     <string name="openapsma_mealdata_label">Δεδομένα Γεύματος</string>
     <string name="result">Αποτέλεσμα</string>
+    <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Μη διαθέσιμα δεδομένα γλυκόζης</string>
     <string name="nochangerequested">Δεν απαιτείται αλλαγή</string>
     <string name="openapsma_request_label">Αίτημα</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Μη υποστηριζόμενη έκδοση NSClient</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="nsclientnotinstalled">NSClient δεν εγκαταστάθηκε. Τα δεδομένα χάθηκαν!</string>
-    <string name="objectives_bgavailableinns">BG διαθέσιμες στο NS</string>
-    <string name="objectives_pumpstatusavailableinns">Η κατάσταση της αντλίας διαθέσιμη στο NS</string>
-    <string name="objectives_manualenacts">Ξεκινήστε χειροκίνητα</string>
     <string name="loopdisabled">ΤΟ ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΘΗΚΕ ΑΠΟ ΠΕΡΙΟΡΙΣΜΟΥΣ</string>
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
     <string name="bolusconstraintapplied">Ενεργός Περιορισμός Bolus</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
-    <string name="missing">Χαμένες</string>
+    <string name="missing_carbs">Λείπει %1$dg</string>
     <string name="exported">Επιλογές εξήχθησαν</string>
     <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
     <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
@@ -317,21 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">Πιέστε STOP</string>
     <string name="waitingforpump">Αναμονή για αντλία</string>
     <string name="overview_bolusprogress_goingtodeliver">Προς έγχυση %1$.2fU</string>
-    <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
-    <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της αντλίας φορτώθηκαν</string>
-    <string name="objectives_openloop_objective">Ξεκινώντας ανοιχτό κύκλωμα</string>
-    <string name="objectives_openloop_gate">Τρέξτε σε ανοιχτό κύκλωμα μερικές ημέρες και χειροκίνητα κάντε πολλούς προσωρινούς ρυθμούς. Φτιάξτε και χρησιμοποιήστε προσωρινούς και στανταρντ προσωρινούς στόχους (π.χ. για άσκηση ή θεραπεία υπογλυκαιμίας)</string>
-    <string name="objectives_maxbasal_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσωρινό ρυθμό</string>
-    <string name="objectives_maxbasal_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
-    <string name="objectives_maxiobzero_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend)</string>
-    <string name="objectives_maxiobzero_gate">Εκτελέστε σε κλειστό κύκλωμα με μέγιστο IOB = 0 για μερικές ημέρες χωρίς πολλά LGS - υπογλυκαιμίες</string>
-    <string name="objectives_maxiob_objective">Ρυθμίζοντας το κλειστό κύκλωμα, αυξήστε το μέγιστο IOB πάνω από 0 και σταδιακά μειώστε τους στόχους BG</string>
-    <string name="objectives_maxiob_gate">Τρέξτε το για λίγες ημέρες, και τουλάχιστον μία νύχτα χωρίς χαμηλό συναγερμό BG, πριν χαμηλώσετε τα όρια</string>
-    <string name="objectives_autosens_objective">Ρυθμίστε τον βασικό ρυθμό και τις αναλογίες αν χρειάζεται, και μετά ενεργοποιήστε το auto-sens</string>
-    <string name="objectives_autosens_gate">1 επιτυχής εβδομάδα ημερήσιου κυκλώματος με κανονική εισαγωγή υδατανθράκων</string>
-    <string name="objectives_ama_objective">Ενεργοποιώντας επιπρόσθετα χαρακτηριστικά για χρήση κατά την ημέρα, όπως τον Προχωρημένο Βοηθό Γεύματος</string>
-    <string name="objectives_smb_objective">Ενεργοποιήστε άλλες λειτουργίες για χρήση κατά την ημέρα, όπως SMB</string>
-    <string name="objectives_smb_gate">Πρέπει να διαβάσετε τον οδηγό wiki και να αυξήσετε το ανώτατο όριο του IOB για να μπορέσει να λειτουργήσει σωστά η SMB! Μια καλή αρχή είναι μέγιστο IOB= μέσο bolus γεύματος + 3 x το μέγιστο ημερήσιο βασικού ρυθμού</string>
     <string name="youareonallowedlimit">Φτάσατε το επιτρεπτό όριο</string>
     <string name="noprofileselected">Δεν επηλέχθηκε προφίλ</string>
     <string name="smscommunicator_loophasbeendisabled">Το κύκλωμα απενεργοποιήθηκε</string>
@@ -569,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%%]</string>
+    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
+    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Έκδοση</string>
@@ -640,6 +619,7 @@
     <string name="mdtp_cancel">Ακύρωση</string>
     <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ!</string>
     <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
+    <string name="ns_localbroadcasts">Ενεργοποιήστε εκπομπές σε άλλες εφαρμογές (όπως το xDrip). Μην το ενεργοποιήσετε εάν έχετε περισσότερες από μία εγκατεστημένες εφαρμογές του AAPS ή NSClient!</string>
     <string name="ns_localbroadcasts_title">Ενεργοποιήστε τις τοπικές αποστολές.</string>
     <string name="careportal_activity_label">ΔΡΑΣΤΗΡΙΟΤΗΤΑ &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">ΥΔΑΤΑΝΘΡΑΚΕΣ &amp; BOLUS</string>
@@ -863,8 +843,6 @@
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="combo_bolus_count">Αριθμός bolus</string>
     <string name="combo_tbr_count">Αριθμός TBR</string>
-    <string name="objectivenotstarted">Ο στόχος %1$d δεν ξεκίνησε</string>
-    <string name="objectivenotfinished">Ο στόχος %1$d δεν ολοκληρώθηκε</string>
     <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
     <string name="novalidbasalrate">Διαβάζεται από την αντλία μη έγκυρος βασικός ρυθμός</string>
     <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
@@ -986,7 +964,6 @@
     <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
     <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
     <string name="time_elapsed">Ο χρόνος που πέρασε</string>
-    <string name="nth_objective">%1$d. Στόχος</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
     <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
@@ -1297,6 +1274,7 @@
     <string name="rileylink_state_not_started">Δεν ξεκίνησε</string>
     <string name="rileylink_state_rl_init">Αρχικοποίηση του RileyLink…</string>
     <string name="rileylink_state_rl_error">RileyLink Σφάλμα</string>
+    <string name="rileylink_state_pc_tune_up">Συντονισμός RileyLink και Αντλίας</string>
     <string name="rileylink_state_pc_error">Πρόβλημα σύνδεσης με την Αντλία</string>
     <string name="rileylink_state_connected">Συνδέθηκε</string>
     <!-- RL Errors -->
@@ -1366,6 +1344,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
+    <string name="profilename">Αλλαγή προφίλ σε</string>
+    <string name="changengetoprofilename">Αλλαγή προφίλ σε %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Τελευταία σύνδεση με αντλία</string>
+    <string name="automation_trigger_pump_last_connection_description">Τελευταία σύνδεση με αντλία [λεπτά πριν]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Τελευταία σύνδεση με αντλία %1$s %2$s λεπτά πριν</string>
+    <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Στείλτε SMS προς όλους τους αριθμούς στις Επιλογές</string>
+    <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -1373,38 +1360,17 @@
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
     <string name="loading">Φόρτωση ...</string>
     <string name="snooze">Αναβολή</string>
-    <string name="accomplished">Επιτεύχθηκε: %1$s</string>
-    <string name="objectives_usage_objective">Μάθε πως να ελέγχεις το AndroidAPS</string>
-    <string name="objectives_usage_gate">Κάντε διαφορετικές ενέργειες στο AndroidAPS</string>
-    <string name="objectives_useprofileswitch">Θέστε το προφίλ στο 90% για 10 λεπτά (Παρατεταμένο πάτημα του προφίλ στην Επισκόπηση)</string>
-    <string name="objectives_usedisconnectpump">Προσομοίωση ένδειξης. Αποσυνδέστε την αντλία για 1 ώρα (Παρατεταμένο στο Ανοιχτό Κύκλωμα)</string>
-    <string name="objectives_usereconnectpump">... και επανασυνδέστε με τον ίδιο τρόπο</string>
-    <string name="objectives_usetemptarget">Φτιάξτε προσωρινούς στόχους με διάρκεια 10 λεπτά (Παρατεταμένο πάτημα στον στόχο σας)</string>
-    <string name="objectives_useactions">Στην Διαμόρφωση ενεργοποιήστε την προσθήκη Ενέργειες, κάντε την ορατή ώστε να την βλέπετε από το δικό της tab</string>
-    <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
-    <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
-    <string name="objectives_button_enter">Εισαγωγή</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Εισαγάγετε τον κωδικό που λαμβάνετε από τους προγραμματιστές για να παρακάμψετε τους υπόλοιπους στόχους</string>
-    <string name="codeaccepted">Κωδικός αποδεκτός</string>
-    <string name="codeinvalid">Μη έγκυρος κωδικός</string>
-    <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
-    <string name="objectives_exam_gate">Διαβάστε και απαντήστε τις ερωτήσεις σωστά</string>
-    <string name="answerdisabledto">Οι απαντήσεις εμφανίζονται στο: %1$s</string>
-    <string name="wronganswer">Λάθος απάντηση!</string>
-    <string name="unfinshed_button">Επόμενο ημιτελές</string>
+    <string name="time_range">Εύρος χρόνου</string>
+    <string name="timerange_value">Ο χρόνος είναι μεταξύ %1$s και %2$s</string>
+    <string name="between">Ανάμεσα </string>
     <string name="close">Κλείσιμο</string>
-    <string name="requestcode">Κωδικός αιτήματος: %1$s</string>
-    <string name="objectives_hint">(ελέγξτε όλες τις σωστές απαντήσεις)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d ημέρα</item>
-        <item quantity="other">%1$d ημέρες</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d ώρα</item>
-        <item quantity="other">%1$d ώρες</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d λεπτό</item>
-        <item quantity="other">%1$d λεπτά</item>
-    </plurals>
+    <string name="increasingmaxbasal">Αυξείστε την μέγιστη βασική τιμή, επειδή η ρύθμιση είναι χαμηλότερη από τη μέγιστη βασική στο προφίλ σας</string>
+    <string name="smscommunicator_messagebody">Μη έγκυρο μήνυμα</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Οδηγός Bolus</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

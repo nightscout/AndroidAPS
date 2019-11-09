@@ -25,7 +25,6 @@ public class MsgSetBasalProfileTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
         MsgSetBasalProfile packet = new MsgSetBasalProfile((byte) 1, createArray(24,1));
 
         // test message decoding

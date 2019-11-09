@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
     <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
@@ -57,9 +56,6 @@
     <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
     <string name="description_sms_communicator">Steuere AndroiAPS fern mittels SMS-Anweisungen.</string>
-    <string name="objectives_button_back">Zurück</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Bestätigen</string>
     <string name="nsprofileview_units_label">Einheiten</string>
     <string name="nsprofileview_dia_label">DIA</string>
     <string name="nsprofileview_ic_label">IC</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Mahlzeiten-Daten</string>
     <string name="result">Ergebnis</string>
+    <string name="result_insulin_carbs">Ergebnis: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Keine BZ-Werte verfügbar</string>
     <string name="nochangerequested">Keine Anpassung benötigt</string>
     <string name="openapsma_request_label">Anfrage</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Nicht unterstützte Version des Nightscout-Clients</string>
     <string name="unsupportednsversion">Nicht unterstütze Nightscout-Version</string>
     <string name="nsclientnotinstalled">Nightscout-Client ist nicht installiert. Eintrag verloren!</string>
-    <string name="objectives_bgavailableinns">BZ verfügbar in Nightscout</string>
-    <string name="objectives_pumpstatusavailableinns">Pumpen-Status verfügbar in Nightscout</string>
-    <string name="objectives_manualenacts">Manuelle Aktionen</string>
     <string name="loopdisabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
     <string name="bolusconstraintapplied">Bolus-Beschränkung angewendet</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">TBR</string>
     <string name="overview_extendedbolus_button">Verzögerter Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
-    <string name="missing">Fehlend</string>
+    <string name="missing_carbs">Fehlend %1$dg</string>
     <string name="exported">Einstellungen exportiert</string>
     <string name="export_to">Einstellungen exportieren nach</string>
     <string name="import_from">Importiere Einstellungen von</string>
@@ -317,22 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">STOPP GEDRÜCKT</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
     <string name="overview_bolusprogress_goingtodeliver">Werde %1$.2fIE abgeben</string>
-    <string name="objectives_0_objective">Konfiguriere die Anzeige und das Monitoring (Nightscout) und analysiere Basal-Raten und Faktoren</string>
-    <string name="objectives_0_gate">Verifiziere, dass BZ- und Pumpen-Insulin-Daten erfolgreich zu Nightscout hochgeladen werden.</string>
-    <string name="objectives_openloop_objective">Den Open Loop starten.</string>
-    <string name="objectives_openloop_gate">Erprobe den Open Loop Modus für ein paar Tage und setze manuell temporäre Basal-Raten. Richte temporäre Ziele ein und nutze sie (z.B. für Bewegung, unterstützend zur Hypobehandlung).</string>
-    <string name="objectives_maxbasal_objective">Verstehe den Open Loop und die TBR-Empfehlungen</string>
-    <string name="objectives_maxbasal_gate">Entscheide anhand von dieser Erfahrung, wie hoch max Basal sein sollte, und übernehme den Wert in die Pumpen- und AAPS-Einstellungen.</string>
-    <string name="objectives_maxiobzero_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
-    <string name="objectives_maxiobzero_gate">Erprobe den Closed Loop Modus mit max IOB = 0 für ein paar Tage, ohne zu viele Unterzuckerungen zu haben.</string>
-    <string name="objectives_maxiob_objective">Stelle den Closed Loop feiner ein, erhöhe max IOB über 0 und setze den Zielwert langsam herunter.</string>
-    <string name="objectives_maxiob_gate">Bevor Du den Zielwert runter setzt, musst Du einige Tage Erfahrung sammeln und mind. eine Nacht ohne Alarm wegen niedriger BZ-Werte absolvieren.</string>
-    <string name="objectives_autosens_objective">Passe, falls notwendig, Basal und Faktoren an und aktiviere dann die Autosens-Funktion.</string>
-    <string name="objectives_autosens_gate">Loope eine Woche erfolgreich tagsüber mit regelmäßiger Kohlenhydrat-Eingabe.</string>
-    <string name="objectives_ama_objective">Aktiviere zusätzliche Funktionen wie z. B. den erweiterten Mahlzeitenassistenten (AMA).</string>
-    <string name="objectives_smb_objective">Aktiviere zusätzliche Funktionen wie z. B. SMB</string>
-    <string name="objectives_smb_gate">Lies das Wiki und hebe maxIOB an, damit SMB funktioniert. Ein guter Startwert ist
-maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="noprofileselected">Kein Profil ausgewählt</string>
     <string name="smscommunicator_loophasbeendisabled">Loop wurde deaktiviert.</string>
@@ -500,7 +478,7 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="settings_password">Passwort für die Einstellungen</string>
     <string name="unlock_settings">Einstellungen freischalten</string>
     <string name="approachingdailylimit">Tagesinsulin-Limit wird bald erreicht</string>
-    <string name="nsclientinternal">Nighscout-Client</string>
+    <string name="nsclientinternal">Nightscout-Client</string>
     <string name="nsclientinternal_shortname">NSCl</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Auto-Scrollen</string>
@@ -570,8 +548,8 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="show_statuslights_extended_summary">Erweiterte Statusanzeige für CAGE, IAGE, SAGE, Reservoir- und Batteriestand auf dem Homescreen.</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
-    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%%]</string>
-    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%%]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -865,8 +843,6 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="combo_bolus_count">Anzahl Boli</string>
     <string name="combo_tbr_count">Anzahl TBR</string>
-    <string name="objectivenotstarted">Zielsetzung %1$d nicht gestartet</string>
-    <string name="objectivenotfinished">Zielsetzung %1$d nicht abgeschlossen</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
     <string name="novalidbasalrate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
     <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
@@ -988,7 +964,6 @@ maxIOB = durchschnittlicher Essensbolus + 3 x maximale Basalrate</string>
     <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
     <string name="not_completed_yet">Noch nicht abgeschlossen</string>
     <string name="time_elapsed">Verstrichene Zeit</string>
-    <string name="nth_objective">%1$d. Ziel</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
@@ -1237,7 +1212,7 @@ Unerwartetes Verhalten.</string>
     <string name="please_choose_a_trigger_type">Bitte wähle einen Auslöser:</string>
     <string name="triggers">Auslöser:</string>
     <string name="remove_label">ENTFERNEN</string>
-    <string name="preconditions">Vorbedingung:</string>
+    <string name="preconditions">Voraussetzung:</string>
     <!-- Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operation nicht durch Pumpe und/oder Treiber unterstützt.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Operation NOCH NICHT von Pumpe unterstützt.</string>
@@ -1262,6 +1237,8 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_pump_battery_no">Nicht ausgewählt (Einfache Ansicht)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline Batterie (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_lithium">Lithium Batterie (erweiterte Ansicht)</string>
+    <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
+    <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCANNEN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1370,6 +1347,14 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_cmd_desc_get_tbr">Hole Temporäre Basalraten</string>
     <string name="medtronic_cmd_desc_set_tbr">Setze Temporäre Basalrate</string>
     <string name="medtronic_cmd_desc_set_bolus">Setze Bolus</string>
+    <string name="profilename">Profil wechseln zu</string>
+    <string name="changengetoprofilename">Profil wechseln zu %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Letzte Verbindung zur Pumpe</string>
+    <string name="automation_trigger_pump_last_connection_description">Letzte Verbindung zur Pumpe [vor X Minuten]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Letzte Verbindung zur Pumpe vor %1$s %2$s Minuten</string>
+    <string name="sendsmsactionlabel">SMS senden: %1$s</string>
+    <string name="sendsmsactiondescription">SMS an alle vorgegebenen Nummern senden</string>
+    <string name="sendsmsactiontext">SMS mit Text senden</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus-Einschränkung angewendet: %2$.2fIE zu %3$.2fIE</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
@@ -1378,38 +1363,19 @@ Unerwartetes Verhalten.</string>
     <string name="deliverpartofboluswizard">Der Bolus-Assistent führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
     <string name="loading">Lädt ...</string>
     <string name="snooze">Schlummern</string>
-    <string name="accomplished">Erfüllt: %1$s</string>
-    <string name="objectives_usage_objective">Lerne, AndroidAPS zu bedienen.</string>
-    <string name="objectives_usage_gate">Führe verschiedene Aktionen in AndroidAPS aus.</string>
-    <string name="objectives_useprofileswitch">Setzte das Profil für 10 min. auf 90% (Drücke dazu lange auf den Profilnamen auf der Startseite)</string>
-    <string name="objectives_usedisconnectpump">Simuliere duschen. Trenne die Pumpe für 1 Std. (Drücke lang auf Open Loop)</string>
-    <string name="objectives_usereconnectpump">...und verbinde die Pumpe auf dem selben Weg wieder.</string>
-    <string name="objectives_usetemptarget">Erstelle ein benutzerdefiniertes temporäres Ziel mit 10 min. Dauer (Drücke lange auf Deinen aktuellen Zielwert)</string>
-    <string name="objectives_useactions">Aktiviere das Plugin Aktionen im Konfigurations-Generator, zeige es an und rufe es vom Startbildschirm aus auf.</string>
-    <string name="objectives_useloop">Zeige den Inhalt des Loop-Plugins ein.</string>
-    <string name="objectives_usescale">Nutze die Skalierfunktion. Drücke dazu lange auf das Diagramm.</string>
-    <string name="objectives_button_enter">Eingabe</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Gib den Code ein, den Du von den Entwicklern erhalten hast, um die restlichen Objectives zu überspringen.</string>
-    <string name="codeaccepted">Code akzeptiert</string>
-    <string name="codeinvalid">Code ungültig</string>
-    <string name="objectives_exam_objective">Belege Dein Wissen</string>
-    <string name="objectives_exam_gate">Beantworte die Fragen richtig.</string>
-    <string name="answerdisabledto">Beantwortung deaktiviert bis: %1$s</string>
-    <string name="wronganswer">Falsche Antwort!</string>
-    <string name="unfinshed_button">Nächte unbeantwortete</string>
+    <string name="time_range">Zeitraum</string>
+    <string name="timerange_value">Für die Zeit zwischen %1$s und %2$s</string>
+    <string name="between">Zwischen </string>
     <string name="close">Schließen</string>
-    <string name="requestcode">Erfrage Code:: %1$s</string>
-    <string name="objectives_hint">(kreuze alle richtigen Antworten an)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d Tag</item>
-        <item quantity="other">%1$d Tage</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d Stunde</item>
-        <item quantity="other">%1$d Stunden</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d Minute</item>
-        <item quantity="other">%1$d Minuten</item>
-    </plurals>
+    <string name="increasingmaxbasal">Der Wert max basal wird erhöht, weil Du ihn niedriger eingestellt hast als die höchste Basalrate in Deinem Profil.</string>
+    <string name="smscommunicator_messagebody">Ungültiger Inhalt</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolus-Rechner</string>
+    <string name="unit_minute_short">Min.</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Ein</string>
+    <string name="common_off">Aus</string>
 </resources>

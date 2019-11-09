@@ -17,7 +17,7 @@ class EventTidepoolStatus(val status: String) : Event() {
             log.debug("New status: $status")
     }
 
-    private var timeFormat = SimpleDateFormat("HH:mm:ss", LocaleHelper.getLocale())
+    private var timeFormat = SimpleDateFormat("HH:mm:ss", LocaleHelper.currentLocale())
 
     fun toPreparedHtml(): StringBuilder {
         val stringBuilder = StringBuilder()

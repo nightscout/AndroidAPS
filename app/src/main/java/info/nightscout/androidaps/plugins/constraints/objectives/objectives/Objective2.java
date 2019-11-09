@@ -37,6 +37,7 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.pumpdisconnect_label, R.string.pumpdisconnect_label,"pumpdisconnect")
                 .option(new Option(R.string.pumpdisconnect_letknow, true))
+                .option(new Option(R.string.pumpdisconnect_suspend, false))
                 .option(new Option(R.string.pumpdisconnect_dontchnage, false))
                 .hint(new Hint(R.string.pumpdisconnect_hint1))
         );
@@ -45,6 +46,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.objectives_storeelsewhere, true))
                 .option(new Option(R.string.objectives_doexportonstart, false))
                 .option(new Option(R.string.objectives_doexportafterchange, true))
+                .option(new Option(R.string.objectives_doexportafterobjective, true))
                 .option(new Option(R.string.objectives_doexportafterfirtssettings, true))
                 .hint(new Hint(R.string.objectives_hint1))
                 .hint(new Hint(R.string.objectives_hint2))
@@ -65,6 +67,7 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.exercise_switchprofileabove100, false))
                 .option(new Option(R.string.exercise_stoploop, false))
                 .option(new Option(R.string.exercise_doitbeforestart, true))
+                .option(new Option(R.string.exercise_afterstart, true))
                 .hint(new Hint(R.string.exercise_hint1))
         );
        tasks.add(new ExamTask(R.string.suspendloop_label, R.string.suspendloop_doigetinsulin,"suspendloop")
@@ -194,6 +197,11 @@ public class Objective2 extends Objective {
                 .option(new Option(R.string.profileswitchtime_60, false))
                 .option(new Option(R.string.profileswitchtime__60, false))
                 .hint(new Hint(R.string.profileswitchtime_hint1))
+        );
+
+        tasks.add(new ExamTask(R.string.other_medication_label, R.string.other_medication_text,"otherMedicationWarning")
+                .option(new Option(R.string.yes, true))
+                .option(new Option(R.string.no, false))
         );
 
         for (Task task : tasks)

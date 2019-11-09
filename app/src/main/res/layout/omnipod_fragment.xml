@@ -206,8 +206,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:text="{fa-bluetooth-b}"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text=""
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
 

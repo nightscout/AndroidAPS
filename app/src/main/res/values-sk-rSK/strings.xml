@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <string name="treatmentssafety_maxbolus_title">Maximálny povolený bolus [JI]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximálne povolené množstvo sacharidov [g]</string>
@@ -57,9 +56,6 @@
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
     <string name="description_sms_communicator">Ovládaj na diaľku AndroidAPS použitím SMS príkazov.</string>
-    <string name="objectives_button_back">Naspäť</string>
-    <string name="objectives_button_start">Začiatok</string>
-    <string name="objectives_button_verify">Overenie</string>
     <string name="nsprofileview_units_label">Jednotky</string>
     <string name="nsprofileview_dia_label">Doba pôsobenia inzulínu</string>
     <string name="nsprofileview_ic_label">Inzulínovo-sacharidový pomer</string>
@@ -102,6 +98,7 @@
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_mealdata_label">Dáta o jedle</string>
     <string name="result">Výsledok</string>
+    <string name="result_insulin_carbs">Výsledok: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nedostupné dáta o glykémiách</string>
     <string name="nochangerequested">Nepožadovaná žiadna zmena</string>
     <string name="openapsma_request_label">Požiadavka</string>
@@ -118,12 +115,12 @@
     <string name="nsprofile">NS Profil</string>
     <string name="simpleprofile">Jednoduchý profil</string>
     <string name="tempbasal">DočasnýBazál</string>
-    <string name="treatments">Ošetrenie</string>
+    <string name="treatments">Ošetrenia</string>
     <string name="virtualpump">Virtuálna pumpa</string>
     <string name="careportal">Starostlivosť</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
-    <string name="configbuilder_treatments">Ošetrenie</string>
+    <string name="configbuilder_treatments">Ošetrenia</string>
     <string name="configbuilder_treatments_description">Aký modul chcete používať pre spracovanie ošetrení?</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_profile_description">Aký profil má používať AndroidAPS?</string>
@@ -177,9 +174,6 @@
     <string name="unsupportedclientver">Nepodporovaná verzia NS klienta</string>
     <string name="unsupportednsversion">Nepodporovaná verzia Nighscoutu</string>
     <string name="nsclientnotinstalled">NS klient nie je nainštalovaný. Záznam je stratený!</string>
-    <string name="objectives_bgavailableinns">Glykémia dostupná v NS</string>
-    <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
-    <string name="objectives_manualenacts">Spustené manuálne</string>
     <string name="loopdisabled">Uzavretý okruh deaktivovaný obmedzením</string>
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
     <string name="bolusconstraintapplied">Aplikované obmedzenie bolusu</string>
@@ -222,7 +216,7 @@
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Predĺžený bolus</string>
     <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
-    <string name="missing">Chýba</string>
+    <string name="missing_carbs">Chýba %1$dg</string>
     <string name="exported">Nastavenie exportované</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="import_from">Importovať nastavenia z</string>
@@ -317,21 +311,6 @@
     <string name="overview_bolusprogress_stoppressed">STLAČENÝ STOP</string>
     <string name="waitingforpump">Čakám na pumpu</string>
     <string name="overview_bolusprogress_goingtodeliver">Podávanie %1$.2fJ inzulínu</string>
-    <string name="objectives_0_objective">Nastavenie vizualizácie a monitoringu (Nightscout), analyzovať bazály a prevody</string>
-    <string name="objectives_0_gate">Skontrolovať, či sú glykémie a údaje z pumpy viditeľné v Nightscoute</string>
-    <string name="objectives_openloop_objective">Začať s otvoreným okruhom</string>
-    <string name="objectives_openloop_gate">Niekoľko dní prevádzkovať otvorený okruh a ručne potvrdzovať doporučené dočasné bazály. Nastavovať a používať dočasné ciele (napr. pre šport, alebo hypo)</string>
-    <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu, vrátane doporučeniam ohľadne dočasných bazálov</string>
-    <string name="objectives_maxbasal_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký vysoký má byť maximálny bazál a nastaviť ho v pumpe a v aplikácii</string>
-    <string name="objectives_maxiobzero_objective">Začať s uzavretým okruhom iba s vypínaním pri nízkej glykémii</string>
-    <string name="objectives_maxiobzero_gate">Spustiť uzavretý okruh s max IOB = 0 na niekoľko dní s minimom nutných korekcií na nízku glykémiu</string>
-    <string name="objectives_maxiob_objective">Ladenie uzavretého okruhu, zvyšovať max IOB nad 0 a postupne znižovať cieľovú glykémiu</string>
-    <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu, predtým ako znížiš cieľovú glykémiu</string>
-    <string name="objectives_autosens_objective">Ak je to potrebné, uprav bazály a prevody a potom aktivuj automatickú detekciu citlivosti</string>
-    <string name="objectives_autosens_gate">Jeden týždeň úspešne používaj uzavretý okruh so zadávaním bežného príjmu sacharidov cez deň</string>
-    <string name="objectives_ama_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. AMA (pokročilý asistent jedál)</string>
-    <string name="objectives_smb_objective">Aktivuj ďalšie prídavné funkcie pre bežné používanie, ako napr. SMB</string>
-    <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
     <string name="youareonallowedlimit">Dosiahnutý limit</string>
     <string name="noprofileselected">Nebol vybraný žiadny profil</string>
     <string name="smscommunicator_loophasbeendisabled">Uzavretý okruh bol deaktivovaný</string>
@@ -569,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Povoliť rozšírené indikátory stavu pre CAGE, IAGE, SAGE, Reservoir a Battery Level na domovskej obrazovke.</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [JI]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
-    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%%]</string>
-    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%%]</string>
+    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
+    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -864,8 +843,6 @@
     <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
     <string name="combo_bolus_count">Počet bolusov</string>
     <string name="combo_tbr_count">Počet dočasných bazálov</string>
-    <string name="objectivenotstarted">Výukový cieľ %1$d nespustený</string>
-    <string name="objectivenotfinished">Výukový cieľ %1$d nedokončený</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="novalidbasalrate">Nenačítaný žiadny platný bazál z pumpy</string>
     <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
@@ -987,7 +964,6 @@
     <string name="completed_well_done">Hotovo, gratulujeme!</string>
     <string name="not_completed_yet">Nedokončené</string>
     <string name="time_elapsed">Uplynutý čas</string>
-    <string name="nth_objective">%1$d. Cieľ</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
     <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
@@ -1260,6 +1236,7 @@
     <string name="medtronic_pump_battery_no">Nevybrané (jednoduché zobrazenie)</string>
     <string name="medtronic_pump_battery_alkaline">Alkalické (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_lithium">Líthiové (rozšírené zobrazenie)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Rozšírené)</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">VYHĽADAŤ</string>
     <string name="rileylink_scanner_scan_stop">ZASTAVIŤ</string>
@@ -1368,6 +1345,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Načítanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_tbr">Nastavovanie dočasného bazálu</string>
     <string name="medtronic_cmd_desc_set_bolus">Nastavovanie bolusu</string>
+    <string name="profilename">Zmeniť profil na</string>
+    <string name="changengetoprofilename">Zmena profilu na %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Posledné spojenie s pumpou</string>
+    <string name="automation_trigger_pump_last_connection_description">Posledné spojenie s pumpou [pred X minútami]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Posledné spojenie s pumpou pred %1$s %2$s minútami</string>
+    <string name="sendsmsactionlabel">Poslať SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Odoslať SMS na všetky predvolené čísla</string>
+    <string name="sendsmsactiontext">Odoslať SMS s textom</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Aplikované obmedzenie bolusu: %2$.2fJI na %3$.2fJI</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d JI</string>
@@ -1375,44 +1361,17 @@
     <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
     <string name="loading">Načítavanie...</string>
     <string name="snooze">Stíšiť</string>
-    <string name="accomplished">Splnené: %1$s</string>
-    <string name="objectives_usage_objective">Naučte sa, ako ovládať AndroidAPS</string>
-    <string name="objectives_usage_gate">Vykonávajte v AndroidAPS rôzne akcie</string>
-    <string name="objectives_useprofileswitch">Nastavte profil na 90 % na 10 min (Dlhé stlačenie názvu profilu na obrazovke Prehľad)</string>
-    <string name="objectives_usedisconnectpump">Predstierajte, že se idete sprchovať. Odpojte pumpu na 1 h (Dlhšie pridržte tlačítko Otvorený okruh)</string>
-    <string name="objectives_usereconnectpump">...a rovnakým spôsobom ju znovu pripojte</string>
-    <string name="objectives_usetemptarget">Vytvorte vlastný dočasný cieľ s trvaním 10 min (Dlhšie pridržte aktuálny cieľ)</string>
-    <string name="objectives_useactions">V Konfigurácii povoľte modul Akcie, aktivujte jeho zobrazenie a zobrazte jeho obsah z hornej ponuky</string>
-    <string name="objectives_useloop">Zobrazte obsah modulu uzavretý okruh</string>
-    <string name="objectives_usescale">Prepnite režim zobrazenia dlhým stlačením grafu glykémie</string>
-    <string name="objectives_button_enter">Zadať</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Zadajte kód, ktorý ste získali od vývojárov, aby ste obišli zostávajúce ciele</string>
-    <string name="codeaccepted">Kód akceptovaný</string>
-    <string name="codeinvalid">Neplatný kód</string>
-    <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
-    <string name="objectives_exam_gate">Preštudujte a správne odpovedajte na otázky</string>
-    <string name="answerdisabledto">Odpovedanie zakázané do: %1$s</string>
-    <string name="wronganswer">Nesprávna odpoveď!</string>
-    <string name="unfinshed_button">Ďalšia nedokončená</string>
+    <string name="time_range">Časový rozsah</string>
+    <string name="timerange_value">Čas je medzi %1$s a %2$s</string>
+    <string name="between">Medzi</string>
     <string name="close">Zavrieť</string>
-    <string name="requestcode">Kód žiadosti: %1$s</string>
-    <string name="objectives_hint">(zaškrtnite všetky správne odpovede)</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d deň</item>
-        <item quantity="few">%1$d dní</item>
-        <item quantity="many">%1$d dní</item>
-        <item quantity="other">%1$d dní</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hodina</item>
-        <item quantity="few">%1$d hodín</item>
-        <item quantity="many">%1$d hodín</item>
-        <item quantity="other">%1$d hodín</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minúta</item>
-        <item quantity="few">%1$d minút</item>
-        <item quantity="many">%1$d minút</item>
-        <item quantity="other">%1$d minút</item>
-    </plurals>
+    <string name="increasingmaxbasal">Zvýšenie maximálnej hodnoty bazálu, pretože nastavenie je nižšie, než je vaša maximálna hodnota bazálu v profile</string>
+    <string name="smscommunicator_messagebody">Neplatný obsah správy</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolusová kalkulačka</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>
