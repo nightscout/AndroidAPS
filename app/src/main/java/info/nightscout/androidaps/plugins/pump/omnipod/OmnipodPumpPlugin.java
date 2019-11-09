@@ -113,10 +113,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
 
         if (omnipodCommunicationManager == null) {
-            omnipodCommunicationManager = AapsOmnipodManager.getInstance();
+            //omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }
 
-        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);
+        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, this, this.pumpStatusLocal);
 
         OmnipodUtil.setPlugin(this);
 
@@ -255,7 +255,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (isServiceSet()) {
 
-            if (isBusy)
+            if (isBusy || !pumpStatusLocal.podAvailable)
                 return true;
 
             if (busyTimestamps.size() > 0) {
@@ -312,6 +312,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return !isServiceSet() || !omnipodService.isInitialized();
     }
 
+
+    @Override
+    public boolean isSuspended() {
+        return (pumpStatusLocal!=null && !pumpStatusLocal.podAvailable);
+    }
 
     @Override
     public void getPumpStatus() {
@@ -484,6 +489,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     protected void triggerUIChange() {
         RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+    }
+
+
+    @Override
+    public boolean isFakingTempsByExtendedBoluses() {
+        return false;
     }
 
 

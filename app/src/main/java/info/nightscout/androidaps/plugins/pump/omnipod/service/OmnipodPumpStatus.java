@@ -48,6 +48,8 @@ public class OmnipodPumpStatus extends PumpStatus {
 
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
+    public boolean podAvailable = false;
+    public boolean ackAlertsAvailable = false;
 
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {
@@ -63,6 +65,7 @@ public class OmnipodPumpStatus extends PumpStatus {
         this.lastConnection = SP.getLong(OmnipodConst.Statistics.LastGoodPumpCommunicationTime, 0L);
         this.lastDataTime = new LocalDateTime(this.lastConnection);
         this.pumpType = PumpType.Insulet_Omnipod;
+        this.podAvailable = false;
     }
 
 

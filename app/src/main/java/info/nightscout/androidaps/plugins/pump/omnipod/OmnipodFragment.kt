@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory
 class OmnipodFragment : Fragment() {
     private val log = LoggerFactory.getLogger(L.PUMP)
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var podAvailable = false
 
     operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
         add(disposable)
@@ -68,7 +69,7 @@ class OmnipodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_pod_status.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder))
+        //omnipod_pod_status.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder))
 
         omnipod_rl_status.text = MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(RileyLinkTargetDevice.Omnipod))
 
@@ -199,9 +200,11 @@ class OmnipodFragment : Fragment() {
         if (pumpStatus.podSessionState == null) {
             omnipod_pod_address.text = MainApp.gs(R.string.omnipod_pod_name_no_info)
             omnipod_pod_expiry.text = "-"
-            omnipod_pod_status.text = "{fa-bed}   "
+            omnipod_pod_status.text = MainApp.gs(R.string.omnipod_pod_no_pod_connected)
+            pumpStatus.podAvailable = false
         } else {
-
+            podAvailable = true
+            pumpStatus.podAvailable = true
             omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
             omnipod_pod_expiry.text = pumpStatus.podSessionState.expiryDateAsString
 
@@ -307,70 +310,86 @@ class OmnipodFragment : Fragment() {
 
         setDeviceStatus()
 
+        if (podAvailable) {
         // last connection
-        if (pumpStatus.lastConnection != 0L) {
-            val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
-            val min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60
-            if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
-                omnipod_lastconnection.setText(R.string.combo_pump_connected_now)
-                omnipod_lastconnection.setTextColor(Color.WHITE)
-            } else if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
+            if (pumpStatus.lastConnection != 0L) {
+                val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
+                val min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60
+                if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
+                    omnipod_lastconnection.setText(R.string.combo_pump_connected_now)
+                    omnipod_lastconnection.setTextColor(Color.WHITE)
+                } else if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
-                if (min < 60) {
-                    omnipod_lastconnection.text = MainApp.gs(R.string.minago, min)
-                } else if (min < 1440) {
-                    val h = (min / 60).toInt()
-                    omnipod_lastconnection.text = (MainApp.gq(R.plurals.objective_hours, h, h) + " "
-                            + MainApp.gs(R.string.ago))
+                    if (min < 60) {
+                        omnipod_lastconnection.text = MainApp.gs(R.string.minago, min)
+                    } else if (min < 1440) {
+                        val h = (min / 60).toInt()
+                        omnipod_lastconnection.text = (MainApp.gq(R.plurals.objective_hours, h, h) + " "
+                                + MainApp.gs(R.string.ago))
+                    } else {
+                        val h = (min / 60).toInt()
+                        val d = h / 24
+                        // h = h - (d * 24);
+                        omnipod_lastconnection.text = (MainApp.gq(R.plurals.objective_days, d, d) + " "
+                                + MainApp.gs(R.string.ago))
+                    }
+                    omnipod_lastconnection.setTextColor(Color.RED)
                 } else {
-                    val h = (min / 60).toInt()
-                    val d = h / 24
-                    // h = h - (d * 24);
-                    omnipod_lastconnection.text = (MainApp.gq(R.plurals.objective_days, d, d) + " "
-                            + MainApp.gs(R.string.ago))
+                    omnipod_lastconnection.text = minAgo
+                    omnipod_lastconnection.setTextColor(Color.WHITE)
                 }
-                omnipod_lastconnection.setTextColor(Color.RED)
-            } else {
-                omnipod_lastconnection.text = minAgo
-                omnipod_lastconnection.setTextColor(Color.WHITE)
             }
-        }
 
-        // last bolus
-        val bolus = pumpStatus.lastBolusAmount
-        val bolusTime = pumpStatus.lastBolusTime
-        if (bolus != null && bolusTime != null) {
-            val agoMsc = System.currentTimeMillis() - pumpStatus.lastBolusTime.time
-            val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
-            val unit = MainApp.gs(R.string.insulin_unit_shortname)
-            val ago: String
-            if (agoMsc < 60 * 1000) {
-                ago = MainApp.gs(R.string.combo_pump_connected_now)
-            } else if (bolusMinAgo < 60) {
-                ago = DateUtil.minAgo(pumpStatus.lastBolusTime.time)
+            // last bolus
+            val bolus = pumpStatus.lastBolusAmount
+            val bolusTime = pumpStatus.lastBolusTime
+            if (bolus != null && bolusTime != null && podAvailable) {
+                val agoMsc = System.currentTimeMillis() - pumpStatus.lastBolusTime.time
+                val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
+                val unit = MainApp.gs(R.string.insulin_unit_shortname)
+                val ago: String
+                if (agoMsc < 60 * 1000) {
+                    ago = MainApp.gs(R.string.combo_pump_connected_now)
+                } else if (bolusMinAgo < 60) {
+                    ago = DateUtil.minAgo(pumpStatus.lastBolusTime.time)
+                } else {
+                    ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.time)
+                }
+                omnipod_lastbolus.text = MainApp.gs(R.string.combo_last_bolus, bolus, unit, ago)
             } else {
-                ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.time)
+                omnipod_lastbolus.text = ""
             }
-            omnipod_lastbolus.text = MainApp.gs(R.string.combo_last_bolus, bolus, unit, ago)
+
+            // base basal rate
+
+            omnipod_basabasalrate.text = MainApp.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
+
+            omnipod_tempbasal.text = TreatmentsPlugin.getPlugin()
+                    .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
+
+            // reservoir
+            if (RileyLinkUtil.isSame(pumpStatus.reservoirRemainingUnits, 75.0)) {
+                omnipod_reservoir.text = MainApp.gs(R.string.omnipod_reservoir_over50)
+            } else {
+                omnipod_reservoir.text = MainApp.gs(R.string.omnipod_reservoir_left, pumpStatus.reservoirRemainingUnits)
+            }
+            SetWarnColor.setColorInverse(omnipod_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+
         } else {
+            omnipod_basabasalrate.text = ""
+            omnipod_reservoir.text = ""
+            omnipod_tempbasal.text = ""
             omnipod_lastbolus.text = ""
+            omnipod_lastconnection.text = ""
+            omnipod_lastconnection.setTextColor(Color.WHITE)
+
         }
-
-        // base basal rate
-        omnipod_basabasalrate.text = ("(" + pumpStatus.activeProfileName + ")  "
-                + MainApp.gs(R.string.pump_basebasalrate, plugin.baseBasalRate))
-
-        omnipod_tempbasal.text = TreatmentsPlugin.getPlugin()
-                .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
-
-        // reservoir
-        if (RileyLinkUtil.isSame(pumpStatus.reservoirRemainingUnits, 0.0)) {
-            omnipod_reservoir.text = MainApp.gs(R.string.omnipod_reservoir_over50)
-        } else {
-            omnipod_reservoir.text = MainApp.gs(R.string.omnipod_reservoir_left, pumpStatus.reservoirRemainingUnits)
-        }
-        SetWarnColor.setColorInverse(omnipod_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
         omnipod_errors.text = pumpStatus.errorInfo
+
+        omnipod_pod_active_alerts_ack.isEnabled = pumpStatus.ackAlertsAvailable
+
+        omnipod_refresh.isEnabled = pumpStatus.podAvailable
+
     }
 }
