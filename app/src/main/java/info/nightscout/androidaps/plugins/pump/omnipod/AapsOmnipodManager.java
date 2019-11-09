@@ -28,18 +28,18 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     @Override
-    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver) {
+    public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             PumpEnactResult result = delegate.pairAndPrime();
             podInitReceiver.returnInitTaskStatus(podInitActionType, result.success, (result.success ? null : result.comment));
             return result;
-        } else if(PodInitActionType.FillCannulaWizardStep.equals(podInitActionType)) {
+        } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
             // FIXME we need a basal profile here
-            PumpEnactResult result = delegate.insertCannula(null);
+            PumpEnactResult result = delegate.insertCannula(profile);
             podInitReceiver.returnInitTaskStatus(podInitActionType, result.success, (result.success ? null : result.comment));
             return result;
         }
-        return new PumpEnactResult().success(false).enacted(false).comment("Illegal PodInitActionType: "+ podInitActionType.name());
+        return new PumpEnactResult().success(false).enacted(false).comment("Illegal PodInitActionType: " + podInitActionType.name());
     }
 
     @Override

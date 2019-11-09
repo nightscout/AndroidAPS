@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 /**
@@ -16,15 +18,16 @@ public class OmnipodUIComm {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     OmnipodCommunicationManagerInterface ocmInstance = null;
-    OmnipodUIPostprocessor uiPostprocessor = new OmnipodUIPostprocessor();
+    OmnipodUIPostprocessor uiPostprocessor; // = new OmnipodUIPostprocessor();
 
 
     private OmnipodCommunicationManagerInterface getCommunicationManager() {
         return ocmInstance;
     }
 
-    public OmnipodUIComm(OmnipodCommunicationManagerInterface communicationManager) {
+    public OmnipodUIComm(OmnipodCommunicationManagerInterface communicationManager, OmnipodPumpPlugin plugin, OmnipodPumpStatus status) {
         ocmInstance = communicationManager;
+        uiPostprocessor = new OmnipodUIPostprocessor(plugin, status);
     }
 
 

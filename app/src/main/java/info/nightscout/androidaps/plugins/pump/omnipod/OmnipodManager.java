@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.DeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetStatusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.InsertCannulaAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PairAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PrimeAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalScheduleAction;
@@ -345,4 +346,9 @@ public class OmnipodManager {
         // TODO use string resource
         return new PumpEnactResult().success(false).enacted(false).comment("Pod should be initialized first");
     }
+
+    private void addToHistory(long requestTime, OmnipodAction omnipodAction, long responseTime) {
+        // TODO andy
+    }
+
 }

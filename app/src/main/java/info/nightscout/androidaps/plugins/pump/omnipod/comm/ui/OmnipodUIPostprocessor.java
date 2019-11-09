@@ -21,9 +21,11 @@ public class OmnipodUIPostprocessor {
     OmnipodPumpPlugin omnipodPumpPlugin;
 
 
-    public OmnipodUIPostprocessor() {
-        pumpStatus = OmnipodUtil.getPumpStatus();
-        omnipodPumpPlugin = OmnipodPumpPlugin.getPlugin();
+    public OmnipodUIPostprocessor(OmnipodPumpPlugin plugin, OmnipodPumpStatus pumpStatus) {
+//        pumpStatus = OmnipodUtil.getPumpStatus();
+//        omnipodPumpPlugin = OmnipodPumpPlugin.getPlugin();
+        this.pumpStatus = pumpStatus;
+        this.omnipodPumpPlugin = plugin;
     }
 
 
@@ -33,15 +35,26 @@ public class OmnipodUIPostprocessor {
 
         switch (uiTask.commandType) {
 
-            case InitPod: {
-                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.InitPod, false);
+            case PairAndPrimePod: {
+                if (uiTask.returnData.success) {
+                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.PairAndPrime, false);
+                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.FillCanulaSetBasalProfile, true);
+                }
+                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.DeactivatePod, true);
+            }
+            break;
+
+            case FillCanulaAndSetBasalProfile: {
+                if (uiTask.returnData.success) {
+                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
+                }
                 omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.DeactivatePod, true);
             }
             break;
 
             case DeactivatePod:
             case ResetPodStatus: {
-                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.InitPod, true);
+                omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.PairAndPrime, true);
                 omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.DeactivatePod, false);
             }
             break;

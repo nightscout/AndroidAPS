@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
@@ -51,14 +52,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionT
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.LogReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -109,10 +113,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
 
         if (omnipodCommunicationManager == null) {
-            omnipodCommunicationManager = AapsOmnipodManager.getInstance();
+            //omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }
 
-        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager);
+        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, this, this.pumpStatusLocal);
 
         OmnipodUtil.setPlugin(this);
 
@@ -251,7 +255,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (isServiceSet()) {
 
-            if (isBusy)
+            if (isBusy || !pumpStatusLocal.podAvailable)
                 return true;
 
             if (busyTimestamps.size() > 0) {
@@ -308,6 +312,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return !isServiceSet() || !omnipodService.isInitialized();
     }
 
+
+    @Override
+    public boolean isSuspended() {
+        return (pumpStatusLocal!=null && !pumpStatusLocal.podAvailable);
+    }
 
     @Override
     public void getPumpStatus() {
@@ -419,7 +428,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isThisProfileSet(Profile profile) {
 
         // TODO status was not yet read from pod
+        // TODO maybe not possible, need to see how we will handle that
         if (currentProfile == null) {
+            this.currentProfile = profile;
             return true;
         }
 
@@ -478,6 +489,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     protected void triggerUIChange() {
         RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+    }
+
+
+    @Override
+    public boolean isFakingTempsByExtendedBoluses() {
+        return false;
     }
 
 
@@ -655,7 +672,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     protected void finishAction(String overviewKey) {
         if (overviewKey != null)
-            MainApp.bus().post(new EventRefreshOverview(overviewKey));
+            RxBus.INSTANCE.send(new EventRefreshOverview(overviewKey));
 
         triggerUIChange();
 
@@ -763,8 +780,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private CustomAction customActionResetRLConfig = new CustomAction(
             R.string.medtronic_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
 
-    protected CustomAction customActionInitPod = new CustomAction(
-            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.InitPod, true);
+    protected CustomAction customActionPairAndPrime = new CustomAction(
+            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.PairAndPrime, true);
+
+    protected CustomAction customActionFillCanullaSetBasalProfile = new CustomAction(
+            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
 
     protected CustomAction customActionDeactivatePod = new CustomAction(
             R.string.omnipod_cmd_deactivate_pod, OmnipodCustomActionType.DeactivatePod, false);
@@ -779,13 +799,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (customActions == null) {
             this.customActions = Arrays.asList(
                     customActionResetRLConfig, //
-                    customActionInitPod, //
+                    customActionPairAndPrime, //
+                    customActionFillCanullaSetBasalProfile, //
                     customActionDeactivatePod, //
                     customActionResetPod);
         }
 
         return this.customActions;
     }
+
+
+    LogReceiver logReceiver = new LogReceiver();
 
     // TODO we need to brainstorm how we want to do this -- Andy
     @Override
@@ -800,8 +824,18 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             }
             break;
 
-            case InitPod: {
-                omnipodUIComm.executeCommand(OmnipodCommandType.InitPod);
+            case PairAndPrime: {
+                omnipodUIComm.executeCommand(OmnipodCommandType.PairAndPrimePod, PodInitActionType.PairAndPrimeWizardStep, logReceiver);
+            }
+            break;
+
+            case FillCanulaSetBasalProfile: {
+                if (this.currentProfile != null) {
+                    omnipodUIComm.executeCommand(OmnipodCommandType.FillCanulaAndSetBasalProfile, PodInitActionType.FillCannulaSetBasalProfileWizardStep, logReceiver, this.currentProfile);
+                } else {
+                    OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.combo_warning),
+                            MainApp.gs(R.string.omnipod_error_operation_not_possible_no_profile), null);
+                }
             }
             break;
 
@@ -835,10 +869,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         switch (customAction) {
 
-            case InitPod: {
-                this.customActionInitPod.setEnabled(isEnabled);
+            case PairAndPrime: {
+                this.customActionPairAndPrime.setEnabled(isEnabled);
             }
             break;
+
+            case FillCanulaSetBasalProfile: {
+                this.customActionFillCanullaSetBasalProfile.setEnabled(isEnabled);
+            }
+            break;
+
 
             case DeactivatePod: {
                 this.customActionDeactivatePod.setEnabled(isEnabled);

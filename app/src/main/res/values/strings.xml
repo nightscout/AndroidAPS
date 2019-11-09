@@ -1470,6 +1470,7 @@
     <string name="rileylink_scanner_scanning">Scanning</string>
     <string name="rileylink_scanner_scanning_finished">Scanning finished</string>
     <string name="rileylink_scanner_scanning_error">Scanning error: %1$d</string>
+    <string name="common_never">Never</string>
 
 
     <!-- RL Status Page -->
@@ -1615,6 +1616,7 @@
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
 
+
     <!-- Omnipod -->
 
     <!-- Omnipod - Base -->
@@ -1630,12 +1632,17 @@
     <string name="omnipod_pod_address">Pod Address</string>
     <string name="omnipod_pod_expiry">Pod Expires</string>
     <string name="omnipod_pod_name_no_info">No info</string>
+    <string name="omnipod_pod_no_pod_connected">No Pod connected</string>
     <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_ack_short">Ack Alerts</string>
+
+    <!-- Omnipod - Dialogs -->
+    <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>
 
 
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>
+    <string name="omnipod_error_operation_not_possible_no_profile">Operation is not possible.\n\n You need to wait few minutes, until AAPS tries to set profile for first time.</string>
 
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_cmd_init_pod">Init Pod</string>
@@ -1669,4 +1676,5 @@
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
     </plurals>
+
 </resources>

@@ -56,8 +56,13 @@ public class OmnipodUITask {
 //            }
 //            break;
 
-            case InitPod:
-                returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1]);
+            case PairAndPrimePod:
+                returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1], null);
+// TODO                returnData = communicationManager.pairAndPrime();
+                break;
+
+            case FillCanulaAndSetBasalProfile:
+                returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1], (Profile) parameters[2]);
 // TODO                returnData = communicationManager.pairAndPrime();
                 break;
 

@@ -5,7 +5,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs;
  */
 public enum OmnipodCommandType {
 
-    InitPod, //
+    PairAndPrimePod, //
+    FillCanulaAndSetBasalProfile, //
+    //InitPod, //
     DeactivatePod, //
     SetBasalProfile, //
     SetBolus, //
