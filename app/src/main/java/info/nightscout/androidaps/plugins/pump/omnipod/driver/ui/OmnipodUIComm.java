@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.comm.ui;
+package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

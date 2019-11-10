@@ -89,7 +89,7 @@ class OmnipodFragment : Fragment() {
                 OmnipodUtil.displayNotConfiguredDialog(context)
             } else {
                 omnipod_refresh.isEnabled = false
-                OmnipodUtil.getPlugin().addPodStatusRequest(OmnipodStatusRequest.ResetState);
+                OmnipodUtil.getPlugin().addPodStatusRequest(OmnipodStatusRequest.GetPodState);
                 ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked Refresh", object : Callback() {
                     override fun run() {
                         activity?.runOnUiThread { omnipod_refresh.isEnabled = true }

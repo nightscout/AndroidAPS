@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.comm.ui;
+package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,6 @@ public class OmnipodUITask {
 
             case FillCanulaAndSetBasalProfile:
                 returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1], (Profile) parameters[2]);
-// TODO                returnData = communicationManager.pairAndPrime();
                 break;
 
             case DeactivatePod:
@@ -87,6 +86,10 @@ public class OmnipodUITask {
 // TODO                    returnData = communicationManager.bolus(amount);
             }
             break;
+
+            case GetPodStatus:
+                returnData = communicationManager.getPodStatus();
+                break;
 
             case CancelBolus:
                 returnData = communicationManager.cancelBolus();

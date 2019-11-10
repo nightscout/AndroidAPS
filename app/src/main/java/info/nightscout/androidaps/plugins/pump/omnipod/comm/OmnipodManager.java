@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod;
+package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;

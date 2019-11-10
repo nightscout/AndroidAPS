@@ -43,9 +43,9 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUITask;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
@@ -90,8 +90,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public static boolean isBusy = false;
     protected List<Long> busyTimestamps = new ArrayList<>();
     protected boolean sentIdToFirebase = false;
-
-    private boolean hasTimeDateOrTimeZoneChanged = false;
+    protected boolean hasTimeDateOrTimeZoneChanged = false;
 
     private Profile currentProfile;
 
@@ -111,13 +110,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         displayConnectionMessages = false;
 
         OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-
-        if (omnipodCommunicationManager == null) {
-            //omnipodCommunicationManager = AapsOmnipodManager.getInstance();
-        }
-
-        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, this, this.pumpStatusLocal);
-
         OmnipodUtil.setPlugin(this);
 
         serviceConnection = new ServiceConnection() {
@@ -139,15 +131,22 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 new Thread(() -> {
 
                     for (int i = 0; i < 20; i++) {
-                        SystemClock.sleep(5000);
 
                         if (OmnipodUtil.getPumpStatus() != null) {
                             if (isLoggingEnabled())
                                 LOG.debug("Starting OmniPod-RileyLink service");
                             if (OmnipodUtil.getPumpStatus().setNotInPreInit()) {
+                                if (omnipodCommunicationManager == null) {
+                                    omnipodCommunicationManager = AapsOmnipodManager.getInstance();
+                                    omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
+                                }
+
+                                omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, plugin, pumpStatusLocal);
                                 break;
                             }
                         }
+
+                        SystemClock.sleep(5000);
                     }
                 }).start();
             }
@@ -330,10 +329,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
             for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
                 // TODO when we get more commands this needs to be extended
-                omnipodUIComm.executeCommand(OmnipodCommandType.AcknowledgeAlerts);
+                omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
                 removeList.add(omnipodStatusRequest);
             }
 
+            omnipodStatusRequestList.removeAll(removeList);
 
             //getPodPumpStatus();
         }
@@ -341,8 +341,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
 
-    public void setIsBusy(boolean isBusy) {
-        this.isBusy = isBusy;
+    public void setIsBusy(boolean isBusy_) {
+        isBusy = isBusy_;
     }
 
 
@@ -798,14 +798,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (customActions == null) {
             this.customActions = Arrays.asList(
-                    customActionResetRLConfig, //
-                    customActionPairAndPrime, //
-                    customActionFillCanullaSetBasalProfile, //
-                    customActionDeactivatePod, //
-                    customActionResetPod);
+                    customActionResetRLConfig //,
+                    //customActionPairAndPrime, //
+                    //customActionFillCanullaSetBasalProfile, //
+                    //customActionDeactivatePod, //
+                    //customActionResetPod
+            );
         }
 
         return this.customActions;
+
     }
 
 

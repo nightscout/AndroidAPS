@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
 
@@ -26,7 +27,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static OmnipodDashCommunicationManager omnipodCommunicationManager;
-    String errorMessage;
+    private String errorMessage;
 
 
     public OmnipodDashCommunicationManager(Context context, RFSpy rfspy) {
@@ -37,8 +38,6 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
 
     private PodSessionState getPodSessionState() {
-
-
         return null;
     }
 
@@ -105,6 +104,11 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     @Override
     public PumpEnactResult acknowledgeAlerts() {
         return null;
+    }
+
+    @Override
+    public void setPumpStatus(OmnipodPumpStatus pumpStatusLocal) {
+
     }
 
 }

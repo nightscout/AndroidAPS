@@ -1645,10 +1645,16 @@
     <string name="omnipod_error_operation_not_possible_no_profile">Operation is not possible.\n\n You need to wait few minutes, until AAPS tries to set profile for first time.</string>
 
     <!-- Omnipod - Pod Mgmt -->
+    <string name="omnipod_pod_mgmt_title">Pod Management</string>
     <string name="omnipod_cmd_init_pod">Init Pod</string>
     <string name="omnipod_cmd_deactivate_pod">Deactivate Pod</string>
     <string name="omnipod_cmd_reset_pod">Reset Pod</string>
+    <string name="omnipod_cmd_pod_history">Pod History</string>
 
+    <string name="omnipod_cmd_init_pod_na">Init Pod not available at the moment.</string>
+    <string name="omnipod_cmd_deactivate_pod_na">Deactivate Pod not available at the moment.</string>
+    <string name="omnipod_cmd_reset_pod_na">Reset Pod not available at the moment.</string>
+    <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
 
     <string name="omnipod_namex" translatable="false">Omnipod</string>
     <string name="omnipod_namex2" translatable="false">Omnipod</string>

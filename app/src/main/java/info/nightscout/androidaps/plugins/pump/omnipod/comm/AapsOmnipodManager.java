@@ -1,21 +1,22 @@
-package info.nightscout.androidaps.plugins.pump.omnipod;
+package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
 import org.joda.time.DateTime;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
     private final OmnipodManager delegate;
 
     private static AapsOmnipodManager instance;
+    private OmnipodPumpStatus pumpStatus;
 
     // FIXME this is dirty
     public static AapsOmnipodManager getInstance() {
@@ -26,6 +27,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         delegate = new OmnipodManager(communicationService, podState);
         instance = this;
     }
+
 
     @Override
     public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
@@ -59,6 +61,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult resetPodStatus() {
+        pumpStatus.podDeviceState = null;
         return delegate.resetPodState();
     }
 
@@ -85,6 +88,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult acknowledgeAlerts() {
         return delegate.acknowledgeAlerts();
+    }
+
+    @Override
+    public void setPumpStatus(OmnipodPumpStatus pumpStatus) {
+        this.pumpStatus = pumpStatus;
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?

@@ -12,9 +12,11 @@ public enum OmnipodCommandType {
     SetBasalProfile, //
     SetBolus, //
     CancelBolus, //
-    SetTemporaryBasal,
-    CancelTemporaryBasal,
-    ResetPodStatus, AcknowledgeAlerts;
+    SetTemporaryBasal, //
+    CancelTemporaryBasal, //
+    ResetPodStatus, //
+    GetPodStatus, //
+    AcknowledgeAlerts;
 
 
 }

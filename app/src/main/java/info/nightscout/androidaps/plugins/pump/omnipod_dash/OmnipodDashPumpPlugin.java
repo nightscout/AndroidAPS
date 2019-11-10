@@ -5,7 +5,6 @@ import android.os.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,12 +21,11 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.ui.OmnipodUIComm;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.comm.OmnipodDashCommunicationManager;
@@ -42,8 +40,8 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected static OmnipodDashPumpPlugin plugin = null;
-    private RileyLinkOmnipodService omnipodService;
-    private OmnipodPumpStatus pumpStatusLocal = null;
+    //private RileyLinkOmnipodService omnipodService;
+    //private OmnipodPumpStatus pumpStatusLocal = null;
 
     // variables for handling statuses and history
     private boolean firstRun = true;
@@ -53,9 +51,9 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     private boolean isInitialized = false;
 
     public static boolean isBusy = false;
-    private List<Long> busyTimestamps = new ArrayList<>();
-    private boolean sentIdToFirebase = false;
-    private boolean hasTimeDateOrTimeZoneChanged = false;
+    //private List<Long> busyTimestamps = new ArrayList<>();
+    //private boolean sentIdToFirebase = false;
+    //private boolean hasTimeDateOrTimeZoneChanged = false;
 
     private Profile currentProfile;
 
@@ -144,7 +142,11 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     // Pump Plugin
 
     private boolean isServiceSet() {
-        return omnipodService != null;
+        return true; //omnipodService != null;
+    }
+
+    private boolean isServiceInitialized() {
+        return true;
     }
 
 
@@ -160,7 +162,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     public boolean isConnected() {
         if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isConnected");
-        return isServiceSet() && omnipodService.isInitialized();
+        return isServiceSet() && isServiceInitialized();
     }
 
 
@@ -168,7 +170,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     public boolean isConnecting() {
         if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isConnecting");
-        return !isServiceSet() || !omnipodService.isInitialized();
+        return !isServiceSet() || !isServiceInitialized();
     }
 
 
