@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
@@ -947,36 +948,50 @@ public class MedtronicHistoryData {
 
         } else {
 
-            DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(treatment.date, bolusDTO.getDeliveredAmount());
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addBolus(OldTreatment={}): Bolus={}", treatment, bolusDTO);
+
+            treatment.source = Source.PUMP;
+            treatment.pumpId = bolus.getPumpId();
+            treatment.insulin = bolusDTO.getDeliveredAmount();
+
+            TreatmentService.UpdateReturn updateReturn = TreatmentsPlugin.getPlugin().getService().createOrUpdateMedtronic(treatment, false);
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(tretament={}): Bolus={}, DetailedBolusInfo={}", treatment, bolusDTO, detailedBolusInfo);
-
-            if (detailedBolusInfo == null) {
-                detailedBolusInfo = new DetailedBolusInfo();
-
-                if (doubleBolusDebug)
-                    LOG.debug("DoubleBolusDebug: detailedBolusInfoCouldNotBeRetrived !");
-            }
-
-            detailedBolusInfo.date = treatment.date;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolus.getPumpId();
-            detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
-            detailedBolusInfo.carbs = treatment.carbs;
-
-            addCarbsFromEstimate(detailedBolusInfo, bolus);
-
-            if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): DetailedBolusInfo(New)={}", detailedBolusInfo);
-
-            boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
-
-            bolus.setLinkedObject(detailedBolusInfo);
+                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): NewTreatment={}, UpdateReturn={}", treatment, updateReturn);
 
             if (isLogEnabled())
-                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
-                        detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
+                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", treatment.date,
+                        treatment.pumpId, treatment.insulin, updateReturn.toString());
+
+            bolus.setLinkedObject(treatment);
+
+//            DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(treatment.date, bolusDTO.getDeliveredAmount());
+//
+//            if (doubleBolusDebug)
+//                LOG.debug("DoubleBolusDebug: addBolus(tretament={}): Bolus={}, DetailedBolusInfo={}", treatment, bolusDTO, detailedBolusInfo);
+//
+//            if (detailedBolusInfo == null) {
+//                detailedBolusInfo = new DetailedBolusInfo();
+//
+//                if (doubleBolusDebug)
+//                    LOG.debug("DoubleBolusDebug: detailedBolusInfoCouldNotBeRetrived !");
+//            }
+//
+//            detailedBolusInfo.date = treatment.date;
+//            detailedBolusInfo.source = Source.PUMP;
+//            detailedBolusInfo.pumpId = bolus.getPumpId();
+//            detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
+//            detailedBolusInfo.carbs = treatment.carbs;
+//
+//            addCarbsFromEstimate(detailedBolusInfo, bolus);
+//
+//            if (doubleBolusDebug)
+//                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): DetailedBolusInfo(New)={}", detailedBolusInfo);
+//
+//            boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+//
+//            bolus.setLinkedObject(detailedBolusInfo);
 
         }
     }
