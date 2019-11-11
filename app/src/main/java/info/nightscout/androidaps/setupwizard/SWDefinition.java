@@ -33,8 +33,6 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfileFragment;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWBreak;
 import info.nightscout.androidaps.setupwizard.elements.SWButton;
 import info.nightscout.androidaps.setupwizard.elements.SWEditString;
@@ -273,13 +271,6 @@ public class SWDefinition {
             .validator(() -> LocalProfilePlugin.INSTANCE.getProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile().isValid("StartupWizard"))
             .visibility(() -> LocalProfilePlugin.INSTANCE.isEnabled(PluginType.PROFILE));
 
-    private SWScreen screenSimpleProfile = new SWScreen(R.string.simpleprofile)
-            .skippable(false)
-            .add(new SWFragment(this)
-                    .add(new SimpleProfileFragment()))
-            .validator(() -> SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
-            .visibility(() -> SimpleProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE));
-
     private SWScreen screenProfileSwitch = new SWScreen(R.string.profileswitch)
             .skippable(false)
             .add(new SWInfotext()
@@ -428,7 +419,6 @@ public class SWDefinition {
                 .add(screenProfile)
                 .add(screenNsProfile)
                 .add(screenLocalProfile)
-                .add(screenSimpleProfile)
                 .add(screenProfileSwitch)
                 .add(screenPump)
                 .add(screenAps)
@@ -455,7 +445,6 @@ public class SWDefinition {
                 .add(screenProfile)
                 .add(screenNsProfile)
                 .add(screenLocalProfile)
-                .add(screenSimpleProfile)
                 .add(screenProfileSwitch)
                 .add(screenPump)
                 .add(screenSensitivity)
