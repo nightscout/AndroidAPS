@@ -41,7 +41,6 @@
     <string name="codeinvalid">Cod invalid</string>
     <string name="objectives_exam_objective">Dovediți-vă cunoștințele</string>
     <string name="objectives_exam_gate">Studiați și răspundeți corect la întrebări</string>
-    <string name="answerdisabledto">Răspunsul este dezactivat pentru: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>

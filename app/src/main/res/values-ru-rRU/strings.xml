@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
     <string name="treatmentssafety_maxcarbs_title">макс разрешенные углеводы (г)</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">профиль</string>
     <string name="openapsma_mealdata_label">данные приема пищи</string>
     <string name="result">результат</string>
+    <string name="result_insulin_carbs">Результат: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">данные гликемии недоступны</string>
     <string name="nochangerequested">изменения не запрошены</string>
     <string name="openapsma_request_label">запрос</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">ВремБазал</string>
     <string name="overview_extendedbolus_button">расширенный болюс</string>
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
-    <string name="missing">отсутствует</string>
+    <string name="missing_carbs">Отсутствует %1$dg</string>
     <string name="exported">настройки экспортированы</string>
     <string name="export_to">экспортировать настройки в</string>
     <string name="import_from">импортировать настройки из</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Включить на главном экране подробные индикаторы отработанного времени для канюли помпы, инсулина, сенсора, резервуара, а также уровня заряда батареи.</string>
     <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
     <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
-    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%%]</string>
-    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%%]</string>
+    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
+    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="iob">IOB акт инс</string>
     <string name="cob">акт углев</string>
     <string name="virtualpump_firmware_label">прошивка</string>
@@ -1371,6 +1371,8 @@ Context | Edit Context</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Мастер Болюса</string>
     <string name="unit_minute_short">мин</string>
+    <string name="format_carbs">%1$d гр</string>
 </resources>

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.os.PowerManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -53,8 +52,8 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.general.versionChecker.VersionCheckerUtilsKt;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
@@ -70,8 +69,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    protected PowerManager.WakeLock mWakeLock;
-
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private MenuItem pluginPreferencesMenuItem;
@@ -81,7 +78,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Iconify.with(new FontAwesomeModule());
-        LocaleHelper.onCreate(this, "en");
+        LocaleHelper.INSTANCE.update(getApplicationContext());
 
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -120,24 +117,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
             VersionCheckerUtilsKt.triggerCheckVersion();
 
         FabricPrivacy.setUserStats();
-    }
-
-    private void checkPluginPreferences(ViewPager viewPager) {
-        if (pluginPreferencesMenuItem == null) return;
-        if (((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem()).getPreferencesId() != -1)
-            pluginPreferencesMenuItem.setEnabled(true);
-        else pluginPreferencesMenuItem.setEnabled(false);
-    }
-
-    @Override
-    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState, persistentState);
-        actionBarDrawerToggle.syncState();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         setupTabs();
         setupViews();
@@ -146,20 +125,14 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .toObservable(EventRebuildTabs.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    String lang = SP.getString(R.string.key_language, "en");
-                    LocaleHelper.setLocale(getApplicationContext(), lang);
+                    LocaleHelper.INSTANCE.update(getApplicationContext());
                     if (event.getRecreate()) {
                         recreate();
                     } else {
                         setupTabs();
                         setupViews();
                     }
-
-                    boolean keepScreenOn = Config.NSCLIENT && SP.getBoolean(R.string.key_keep_screen_on, false);
-                    if (keepScreenOn)
-                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    else
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    setWakeLock();
                 }, FabricPrivacy::logException)
         );
         disposable.add(RxBus.INSTANCE
@@ -183,33 +156,36 @@ public class MainActivity extends NoSplashAppCompatActivity {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        if (mWakeLock != null)
-            if (mWakeLock.isHeld())
-                mWakeLock.release();
-        super.onDestroy();
+    private void checkPluginPreferences(ViewPager viewPager) {
+        if (pluginPreferencesMenuItem == null) return;
+        if (((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem()).getPreferencesId() != -1)
+            pluginPreferencesMenuItem.setEnabled(true);
+        else pluginPreferencesMenuItem.setEnabled(false);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         disposable.clear();
     }
 
+    private void setWakeLock() {
+        boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
+        if (keepScreenOn)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
     public void processPreferenceChange(final EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_keep_screen_on)) {
-            boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
-            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (keepScreenOn) {
-                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AndroidAPS:MainActivity_onEventPreferenceChange");
-                if (!mWakeLock.isHeld())
-                    mWakeLock.acquire();
-            } else {
-                if (mWakeLock != null && mWakeLock.isHeld())
-                    mWakeLock.release();
-            }
-        }
+        if (ev.isChanged(R.string.key_keep_screen_on))
+            setWakeLock();
     }
 
     private void setupViews() {

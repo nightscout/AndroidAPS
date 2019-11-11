@@ -41,7 +41,7 @@
     <string name="codeinvalid">Неверный код</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
     <string name="objectives_exam_gate">Изучите вопросы и дайте точные ответы</string>
-    <string name="answerdisabledto">Рассмотрение ответов приостановлено на: %1$s</string>
+    <string name="answerdisabledto">Ответы отключены до: %1$s</string>
     <string name="wronganswer">Неверный ответ!</string>
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>

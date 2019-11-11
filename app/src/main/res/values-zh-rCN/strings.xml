@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">治疗安全</string>
     <string name="treatmentssafety_maxbolus_title">允许的最大大剂量值[U]</string>
     <string name="treatmentssafety_maxcarbs_title">最大允许碳水化合物 [g]</string>
@@ -214,7 +213,6 @@
     <string name="overview_tempbasal_button">临时基础</string>
     <string name="overview_extendedbolus_button">扩展大剂量</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
-    <string name="missing">缺少</string>
     <string name="exported">参数选项导出了</string>
     <string name="export_to">导出配置</string>
     <string name="import_from">导入配置</string>
@@ -542,8 +540,6 @@
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
     <string name="statuslights_res_warning">储药器药量低于阈值[U] 警告</string>
     <string name="statuslights_res_critical">储药器药量低于阈值[U] 严重警告</string>
-    <string name="statuslights_bat_warning">电池电量低于阈值[%%] 警告</string>
-    <string name="statuslights_bat_critical">电池电量低于阈值[%%] 严重警告</string>
     <string name="iob">IOB活性胰岛素</string>
     <string name="cob">COB活性碳水</string>
     <string name="virtualpump_firmware_label">固件</string>

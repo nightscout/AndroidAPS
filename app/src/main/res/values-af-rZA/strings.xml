@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Behandelings veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Maks toelaatbare Bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks Toelaatbare karbs [g]</string>
@@ -33,6 +32,7 @@
     <string name="description_smb">Mees onlangse algoritme vir gevorderde gebruikers</string>
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
+    <string name="description_profile_local">Definieer\'n profiel wat beskikbaar is aflyn.</string>
     <string name="description_profile_nightscout">Bied die profiel wat jy het beskryf het in Nightscout</string>
     <string name="description_profile_simple">Definieer \'n profiel met net een tydblok.</string>
     <string name="description_pump_combo">Pomp Integrasie met Accu-Chek Combo pompe, vereis dat ruffy geïnstalleer is</string>
@@ -214,7 +214,6 @@
     <string name="overview_tempbasal_button">TydelikeBasaal</string>
     <string name="overview_extendedbolus_button">Verlengde Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
-    <string name="missing">Ontbreek</string>
     <string name="exported">Voorkeure uitgevoer</string>
     <string name="export_to">Uitvoer instellings na</string>
     <string name="import_from">Voer instellings in vanaf</string>
@@ -544,8 +543,6 @@
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
-    <string name="statuslights_bat_warning">Drempel waarskuwing battery vlak [%%]</string>
-    <string name="statuslights_bat_critical">Drempel kritieke battery vlak [%%]</string>
     <string name="iob">IAB</string>
     <string name="cob">KOB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1336,6 +1333,27 @@
     <string name="medtronic_cmd_desc_get_tbr">Verkry Tydelike Basale</string>
     <string name="medtronic_cmd_desc_set_tbr">Stel Tydelike Basale</string>
     <string name="medtronic_cmd_desc_set_bolus">Stel Bolus</string>
+    <string name="profilename">Verander profiel na</string>
+    <string name="changengetoprofilename">Verander profiel na %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Laaste konneksie na pomp</string>
+    <string name="automation_trigger_pump_last_connection_description">Laaste konneksie na pomp [minute gelede]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Vorige konneksie na pomp %1$s %2$s min terug</string>
+    <string name="sendsmsactionlabel">Stuur\'n SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Stuur SMS na alle fone in voorkeure</string>
+    <string name="sendsmsactiontext">Stuur\'n SMS met die teks</string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus beperking aangewend: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
+    <string name="loading">Laai tans...</string>
+    <string name="snooze">Sluimer</string>
+    <string name="time_range">Tyd reeks</string>
+    <string name="timerange_value">Tyd is tussen %1$s en %2$s</string>
+    <string name="between">Tussen </string>
+    <string name="close">Maak toe</string>
+    <string name="smscommunicator_messagebody">Ongeldig boodskap teks</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolus slimjan</string>
+    <string name="unit_minute_short">min</string>
 </resources>

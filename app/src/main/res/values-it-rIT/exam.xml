@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">Il tuo team diabetologico</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Altri Medicinali</string>
+    <string name="other_medication_text">AAPS riduce la velocità basale per aumentare la glicemia. Farmaci appartenenti al gruppo degli inibitori dell\'SGLT2 (gliflozine) possono ostacolare l\'aumento previsto della glicemia e, quindi, provocare una pericolosa carenza di insulina (DKA).
+\nI marchi più comuni sono: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nCon ciò prometto che non prenderò tali farmaci durante l\'utilizzo di AAPS o disattiverò il loop prima di usare questi farmaci.</string>
 </resources>

@@ -4,20 +4,20 @@
     <string name="af_lang" translatable="false">Afrikaans</string>
     <string name="bg_lang" translatable="false">Bulgarian</string>
     <string name="nl_lang" translatable="false">Dutch</string>
-<!--    <string name="fi_lang" translatable="false">Finnish</string> -->
+    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <string name="fr_lang" translatable="false">French</string>
     <string name="de_lang" translatable="false">German</string>
     <string name="el_lang" translatable="false">Greek</string>
-<!--   <string name="he_lang" translatable="false">Hebrew</string> -->
+    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <string name="zh_lang" translatable="false">Chinese</string>
-<!--    <string name="ga_lang" translatable="false">Irish</string> -->
+    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <string name="it_lang" translatable="false">Italian</string>
-<!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="ko_lang" translatable="false">Korean</string>
     <string name="lt_lang" translatable="false">Lithuanian</string>
     <string name="pl_lang" translatable="false">Polish</string>
     <string name="pt_lang" translatable="false">Portuguese</string>
-<!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
+    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
     <string name="ro_lang" translatable="false">Romanian</string>
     <string name="ru_lang" translatable="false">Russian</string>
     <string name="sk_lang" translatable="false">Slovak</string>
@@ -121,6 +121,7 @@
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="result">Result</string>
+    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
@@ -245,7 +246,7 @@
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="missing">Missing</string>
+    <string name="missing_carbs">Missing %1$dg</string>
     <string name="exported">Preferences exported</string>
     <string name="export_to">Export settings to</string>
     <string name="import_from">Import settings from</string>
@@ -611,9 +612,9 @@
     <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
     <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
-    <string name="statuslights_bat_warning">Threshold warning battery level [%%]</string>
+    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
-    <string name="statuslights_bat_critical">Threshold critical battery level [%%]</string>
+    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -813,7 +814,7 @@
     <string name="bgsource_upload">BG upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
-    <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
+    <string name="smbmaxminutes">SMB max minutes</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
@@ -1330,9 +1331,9 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
-    <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
-    <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
-    <string name="dst_loop_disabled_warning">Daylight saving time change less than 3 hours ago - Closed loop disabled</string>
+    <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
+    <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
+    <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
     <string name="storage">internal storage constraint</string>
     <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
     <string name="wrongformat">Wrong format</string>
@@ -1423,6 +1424,7 @@
     <string name="key_medtronic_bolus_delay" translatable="false">pref_medtronic_bolus_delay</string>
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
     <string name="key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
+    <string name="key_medtronic_bolus_debug" translatable="false">pref_medtronic_bolus_debug</string>
     <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
     <string name="key_medtronic_pump_frequency_us_ca" translatable="false">medtronic_pump_frequency_us_ca</string>
     <string name="key_medtronic_pump_frequency_worldwide" translatable="false">medtronic_pump_frequency_worldwide</string>
@@ -1431,6 +1433,7 @@
     <string name="key_medtronic_pump_battery_no" translatable="false">medtronic_pump_battery_no</string>
     <string name="key_medtronic_pump_battery_alkaline" translatable="false">medtronic_pump_battery_alkaline</string>
     <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
+    <string name="key_medtronic_pump_battery_nizn" translatable="false">medtronic_pump_battery_nizn</string>
 
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
@@ -1450,6 +1453,8 @@
     <string name="medtronic_pump_battery_no">Not selected (Simple view)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (Extended view)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Treatments Debugging</string>
 
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
@@ -1602,6 +1607,7 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Profile name:</string>
@@ -1609,5 +1615,9 @@
     <string name="unitsnosemicolon">Units</string>
     <string name="key_units" translatable="false">units</string>
     <string name="doyouwantswitchprofile">Do you want to switch profile and discard changes made to current profile?</string>
+    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
 
 </resources>

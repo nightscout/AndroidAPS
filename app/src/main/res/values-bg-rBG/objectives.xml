@@ -41,7 +41,6 @@
     <string name="codeinvalid">Неправилен код</string>
     <string name="objectives_exam_objective">Докажете знанията си</string>
     <string name="objectives_exam_gate">Отговорете правилно на въпросите</string>
-    <string name="answerdisabledto">Изключено до: %1$s</string>
     <string name="wronganswer">Грешен отговор!</string>
     <string name="unfinshed_button">Следващия неотговорен</string>
     <string name="requestcode">Код (request code): %1$s</string>

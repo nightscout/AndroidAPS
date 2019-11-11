@@ -91,8 +91,7 @@ public class SWDefinition {
                     .preferenceId(R.string.key_language).label(R.string.language)
                     .comment(R.string.setupwizard_language_prompt))
             .validator(() -> {
-                String lang = SP.getString("language", "en");
-                LocaleHelper.setLocale(MainApp.instance().getApplicationContext(), lang);
+                LocaleHelper.INSTANCE.update(MainApp.instance().getApplicationContext());
                 return SP.contains(R.string.key_language);
             });
 

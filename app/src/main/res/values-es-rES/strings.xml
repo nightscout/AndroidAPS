@@ -5,9 +5,10 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
+    <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="nav_preferences">Preferencias</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde NS</string>
     <string name="nav_resetdb">Restablecer las bases de datos</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
@@ -97,6 +98,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Datos de comidas</string>
     <string name="result">Resultado</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
     <string name="openapsma_noglucosedata">No hay disponibles datos de glucosa</string>
     <string name="nochangerequested">Ninguna acción requerida</string>
     <string name="openapsma_request_label">Solicitud</string>
@@ -214,7 +216,7 @@
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
-    <string name="missing">Faltan</string>
+    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferencias exportadas</string>
     <string name="export_to">Exportar ajustes a</string>
     <string name="import_from">Importar configuración de</string>
@@ -546,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Habilita luces de estado extendidas para tiempo de cánula, tiempo de insulina, tiempo del sensor, reservorio y nivel de batería en pantalla de inicio.</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
-    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de batería [%%]</string>
-    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%%]</string>
+    <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
+    <string name="statuslights_bat_critical">Umbral crítico de nivel de batería [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1364,4 +1366,11 @@
     <string name="close">Cerrar</string>
     <string name="increasingmaxbasal">Aumentar el valor basal máximo porque el ajuste es inferior a tu base máxima en el perfil</string>
     <string name="smscommunicator_messagebody">El cuerpo del mensaje es inválido</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Asistente Bolus</string>
+    <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">Dein Diabetes-Team</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Andere Medikamente</string>
+    <string name="other_medication_text">AAPS reduziert die Basalrate zur Erhöhung des Blutzuckers. Medikamente aus der Gruppe der SGLT2-Hemmer (Gliflozine) können zu erwartende Blutzuckersteigungen verhindern und damit einen gefährlichen Insulinmangel (DKA) produzieren.
+\nÜbliche Handelsnamen sind: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nIch verspreche, dass ich solche Medikamente bei der Anwendung von AAPS nicht einnehmen werde oder den Loop vor der Verwendung dieser Medikamente deaktivieren werde.</string>
 </resources>

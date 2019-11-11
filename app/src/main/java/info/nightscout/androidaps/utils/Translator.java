@@ -33,6 +33,8 @@ public class Translator {
                 return MainApp.gs(R.string.careportal_exercise);
             case "Site Change":
                 return MainApp.gs(R.string.careportal_pumpsitechange);
+            case "Pump Battery Change":
+                return MainApp.gs(R.string.careportal_pumpbatterychange);
             case "Sensor Start":
                 return MainApp.gs(R.string.careportal_cgmsensorstart);
             case "Sensor Change":

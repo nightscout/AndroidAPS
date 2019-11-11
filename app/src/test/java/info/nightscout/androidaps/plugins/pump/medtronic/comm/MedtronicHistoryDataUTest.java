@@ -3,22 +3,24 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 import android.util.Log;
 
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import java.util.List;
 
+import info.AAPSMocker;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
+import info.nightscout.androidaps.utils.SP;
+
+import static org.mockito.Mockito.when;
 //import uk.org.lidalia.slf4jtest.TestLogger;
 //import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 /**
  * Created by andy on 3/10/19.
  */
-@Ignore
 public class MedtronicHistoryDataUTest {
 
     //TestLogger LOGGER = TestLoggerFactory.getTestLogger(MedtronicHistoryDataUTest.class);
@@ -31,7 +33,7 @@ public class MedtronicHistoryDataUTest {
 
     // Logger LOGGER = LoggerFactory.getLogger(MedtronicHistoryDataUTest.class);
 
-    @Before
+    //@Before
     public void setup() {
 
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
@@ -44,10 +46,30 @@ public class MedtronicHistoryDataUTest {
         // } finally {
         // logger.removeAppender(appender);
         // }
+
+
+        AAPSMocker.mockMainApp();
     }
 
 
-    @Test
+    @Before
+    public void prepareMocks() throws Exception {
+
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockConfigBuilder();
+        AAPSMocker.mockStrings();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+        AAPSMocker.mockCommandQueue();
+
+        when(SP.getString(R.string.key_danars_address, "")).thenReturn("");
+
+        //danaRPlugin = DanaRPlugin.getPlugin();
+    }
+
+
+    //@Test
     public void testTBR() throws Exception {
 
         RawHistoryPage historyPage = new RawHistoryPage();
@@ -86,5 +108,28 @@ public class MedtronicHistoryDataUTest {
         }
 
     }
+
+
+    // @Test
+    public void testJRoth_2111() throws Exception {
+
+        byte[] historyPageData = ByteUtil
+                .createByteArrayFromString("01 03 03 00 8E 85 52 48 13 33 00 AB 89 12 48 13 00 16 00 AB 89 12 48 13 33 34 AD 89 12 48 13 00 16 01 AD 89 12 48 13 01 01 01 00 B8 8A 52 48 13 01 08 08 00 9F 8C 52 48 13 33 00 91 8F 12 48 13 00 16 00 91 8F 12 48 13 33 00 92 8F 12 48 13 00 16 03 92 8F 12 48 13 33 00 BA A7 12 48 13 00 16 04 BA A7 12 48 13 01 19 19 00 AF B0 52 48 13 33 00 8C 8A 13 48 13 00 16 04 8C 8A 13 48 13 33 00 9D A8 13 48 13 00 16 04 9D A8 13 48 13 33 00 AA 85 14 48 13 00 16 04 AA 85 14 48 13 33 00 8D A1 14 48 13 00 16 04 8D A1 14 48 13 33 10 89 BA 14 48 13 00 16 01 89 BA 14 48 13 33 00 AD 88 15 48 13 00 16 00 AD 88 15 48 13 33 00 AF 88 15 48 13 00 16 01 AF 88 15 48 13 01 1D 1D 00 95 8D 55 48 13 33 00 95 92 15 48 13 00 16 04 95 92 15 48 13 33 1E B7 9C 15 48 13 00 16 01 B7 9C 15 48 13 33 00 AA A6 15 48 13 00 16 00 AA A6 15 48 13 33 00 AC A6 15 48 13 00 16 04 AC A6 15 48 13 01 02 02 00 B7 A6 55 48 13 01 01 01 00 A6 AC 55 48 13 33 00 B3 8D 16 48 13 00 16 04 B3 8D 16 48 13 33 00 B7 97 16 48 13 00 16 04 B7 97 16 48 13 33 18 A7 B2 16 48 13 00 16 01 A7 B2 16 48 13 33 00 8B B8 16 48 13 00 16 00 8B B8 16 48 13 33 00 8D B8 16 48 13 00 16 03 8D B8 16 48 13 33 18 AE 85 17 48 13 00 16 01 AE 85 17 48 13 33 00 92 8A 17 48 13 00 16 00 92 8A 17 48 13 33 00 94 8A 17 48 13 00 16 01 94 8A 17 48 13 01 02 02 00 9F 8A 57 48 13 33 06 AC 8F 17 48 13 00 16 01 AC 8F 17 48 13 01 02 02 00 B8 8F 57 48 13 33 00 98 94 17 48 13 00 16 00 98 94 17 48 13 33 0C 9A 94 17 48 13 00 16 01 9A 94 17 48 13 01 02 02 00 A5 94 57 48 13 33 00 9C 99 17 48 13 00 16 00 9C 99 17 48 13 33 00 9E 99 17 48 13 00 16 01 9E 99 17 48 13 01 02 02 00 A9 99 57 48 13 01 02 02 00 84 9F 57 48 13 01 02 02 00 A7 A6 57 48 13 33 00 A4 AB 17 48 13 00 16 00 A4 AB 17 48 13 01 02 02 00 B0 AB 57 48 13 33 00 A7 B0 17 48 13 00 16 02 A7 B0 17 48 13 01 01 01 00 B2 B0 57 48 13 33 00 AD BA 17 48 13 00 16 04 AD BA 17 48 13 07 00 00 05 3A A8 13 6D A8 13 05 0C 00 E8 00 00 00 00 05 3A 00 F6 12 04 44 52 00 00 04 44 52 00 00 00 00 00 00 04 44 64 35 00 00 00 35 0C 00 E8 00 00 00 06 0A 1D 66 80 81 60 09 13 0C 0A 8D 82 00 09 13 1A 00 9A 82 00 09 13 1A 01 AF 82 00 09 13 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 05 28");
+
+        RawHistoryPage historyPage = new RawHistoryPage();
+        historyPage.appendData(historyPageData);
+
+        List<PumpHistoryEntry> pumpHistoryEntries = decoder.processPageAndCreateRecords(historyPage);
+
+        System.out.println("PumpHistoryEntries: " + pumpHistoryEntries.size());
+
+        Log.d("Test", "Log.d");
+        //LOGGER.debug("Logger.debug");
+
+        for (PumpHistoryEntry pumpHistoryEntry : pumpHistoryEntries) {
+            Log.d("MedtronicHistoryDataUTest", pumpHistoryEntry.toString());
+        }
+    }
+
 
 }

@@ -51,7 +51,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocaleHelper.onCreate(this, "en");
+        LocaleHelper.INSTANCE.update(getApplicationContext());
         setContentView(R.layout.activity_setupwizard);
 
         scrollView = (ScrollView) findViewById(R.id.sw_scrollview);

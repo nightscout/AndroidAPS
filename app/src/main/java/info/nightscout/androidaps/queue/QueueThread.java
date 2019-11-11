@@ -16,7 +16,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
@@ -68,7 +68,7 @@ public class QueueThread extends Thread {
                 long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
-                    RxBus.INSTANCE.send(new EventDismissBolusprogressIfRunning(null));
+                    RxBus.INSTANCE.send(new EventDismissBolusProgressIfRunning(null));
                     RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.connectiontimedout)));
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("timed out");

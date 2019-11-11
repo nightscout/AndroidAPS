@@ -70,8 +70,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         RxBus.INSTANCE.send(new EventPreferenceChange(key));
         if (key.equals("language")) {
-            String lang = sharedPreferences.getString("language", "en");
-            LocaleHelper.setLocale(getApplicationContext(), lang);
             RxBus.INSTANCE.send(new EventRebuildTabs(true));
             //recreate() does not update language so better close settings
             finish();

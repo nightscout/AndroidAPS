@@ -199,6 +199,11 @@ public class Objective2 extends Objective {
                 .hint(new Hint(R.string.profileswitchtime_hint1))
         );
 
+        tasks.add(new ExamTask(R.string.other_medication_label, R.string.other_medication_text,"otherMedicationWarning")
+                .option(new Option(R.string.yes, true))
+                .option(new Option(R.string.no, false))
+        );
+
         for (Task task : tasks)
             Collections.shuffle(((ExamTask)task).options);
     }

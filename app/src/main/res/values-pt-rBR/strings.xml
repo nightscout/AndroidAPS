@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Segurança do Tratamento</string>
     <string name="treatmentssafety_maxbolus_title">Máximo bolus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximo de carbs permitidos [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Dados de refeição</string>
     <string name="result">Resultado</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
     <string name="openapsma_noglucosedata">Sem dados de glicose disponíveis</string>
     <string name="nochangerequested">Nenhuma alteração solicitada</string>
     <string name="openapsma_request_label">Solicitar</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus estendido</string>
     <string name="configbuilder_nightscoutversion_label">Versão do Nightscout:</string>
-    <string name="missing">Faltando</string>
+    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferências exportadas</string>
     <string name="export_to">Exportar configurações para</string>
     <string name="import_from">Importar configurações de</string>
@@ -548,8 +548,8 @@
     <string name="show_statuslights_extended_summary">Ativar as luzes de status estendida para idade da cânula, insulina, sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
-    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%%]</string>
+    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
+    <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -1348,6 +1348,7 @@
     <string name="changengetoprofilename">Alterar perfil para %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Última ligação à bomba</string>
     <string name="automation_trigger_pump_last_connection_description">Última ligação à bomba [minutos atrás]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Última ligação à bomba %1$s %2$s min atrás</string>
     <string name="sendsmsactionlabel">Enviar SMS: %1$s</string>
     <string name="sendsmsactiondescription">Enviar SMS para todos os números nas preferências</string>
     <string name="sendsmsactiontext">Enviar SMS com texto</string>
@@ -1368,6 +1369,8 @@
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Assistente de Bólus</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>
