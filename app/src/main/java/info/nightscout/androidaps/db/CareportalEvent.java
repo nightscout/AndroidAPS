@@ -167,7 +167,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public double getY() {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
+        String units = ProfileFunctions.getSystemUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {

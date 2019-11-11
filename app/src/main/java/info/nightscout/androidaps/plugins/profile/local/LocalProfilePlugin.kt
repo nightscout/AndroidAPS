@@ -345,10 +345,6 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         return rawProfile
     }
 
-    override fun getUnits(): String {
-        return if (currentProfile().mgdl) Constants.MGDL else Constants.MMOL
-    }
-
     override fun getProfileName(): String {
         return DecimalFormatter.to2Decimal(rawProfile?.defaultProfile?.percentageBasalSum()
                 ?: 0.0) + "U "

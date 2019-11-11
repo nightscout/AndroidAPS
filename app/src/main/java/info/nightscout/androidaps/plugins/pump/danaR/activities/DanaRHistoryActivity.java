@@ -41,15 +41,12 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.ToastUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class DanaRHistoryActivity extends NoSplashActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
     private CompositeDisposable disposable = new CompositeDisposable();
-
-    static Profile profile = null;
 
     Spinner historyTypeSpinner;
     TextView statusView;
@@ -182,11 +179,6 @@ public class DanaRHistoryActivity extends NoSplashActivity {
                 clearCardView();
             }
         });
-        profile = ProfileFunctions.getInstance().getProfile();
-        if (profile == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.noprofile));
-            finish();
-        }
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
@@ -252,7 +244,7 @@ public class DanaRHistoryActivity extends NoSplashActivity {
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_GLUCOSE:
-                    holder.value.setText(Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+                    holder.value.setText(Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, ProfileFunctions.getSystemUnits()));
                     // rest is the same
                 case RecordTypes.RECORD_TYPE_CARBO:
                 case RecordTypes.RECORD_TYPE_BASALHOUR:

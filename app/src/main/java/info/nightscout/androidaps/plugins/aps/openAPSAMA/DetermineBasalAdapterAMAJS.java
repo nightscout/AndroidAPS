@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -194,8 +195,6 @@ public class DetermineBasalAdapterAMAJS {
                         double autosensDataRatio,
                         boolean tempTargetSet) throws JSONException {
 
-        String units = profile.getUnits();
-
         mProfile = new JSONObject();
         mProfile.put("max_iob", maxIob);
         mProfile.put("dia", Math.min(profile.getDia(), 3d));
@@ -206,7 +205,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.put("max_bg", maxBg);
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
-        mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
+        mProfile.put("sens", profile.getIsfMgdl());
         mProfile.put("max_daily_safety_multiplier", SP.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3));
         mProfile.put("current_basal_safety_multiplier", SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d));
         mProfile.put("skip_neutral_temps", true);
@@ -220,7 +219,7 @@ public class DetermineBasalAdapterAMAJS {
             mProfile.put("min_5m_carbimpact", SP.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
         }
 
-        if (units.equals(Constants.MMOL)) {
+        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 

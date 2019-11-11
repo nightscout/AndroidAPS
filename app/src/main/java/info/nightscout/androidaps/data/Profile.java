@@ -149,7 +149,7 @@ public class Profile {
         return units;
     }
 
-    public TimeZone getTimeZone() {
+    TimeZone getTimeZone() {
         return timeZone;
     }
 
@@ -162,7 +162,7 @@ public class Profile {
         double multiplier = getMultiplier(array);
 
         LongSparseArray<Double> sparse = new LongSparseArray<>();
-        for (Integer index = 0; index < array.length(); index++) {
+        for (int index = 0; index < array.length(); index++) {
             try {
                 final JSONObject o = array.getJSONObject(index);
                 long tas = 0;
@@ -385,12 +385,12 @@ public class Profile {
         return retValue;
     }
 
-    public double getIsf() {
-        return getIsfTimeFromMidnight(secondsFromMidnight());
+    public double getIsfMgdl() {
+        return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight()), units);
     }
 
-    public double getIsf(long time) {
-        return getIsfTimeFromMidnight(secondsFromMidnight(time));
+    public double getIsfMgdl(long time) {
+        return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight(time)), units);
     }
 
     double getIsfTimeFromMidnight(int timeAsSeconds) {
@@ -405,15 +405,15 @@ public class Profile {
         return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + MainApp.gs(R.string.profile_per_unit));
     }
 
-    public ProfileValue[] getIsfs() {
+    public ProfileValue[] getIsfsMgdl() {
         if (isf_v == null)
             isf_v = convertToSparseArray(ic);
         ProfileValue[] ret = new ProfileValue[isf_v.size()];
 
-        for (Integer index = 0; index < isf_v.size(); index++) {
-            Integer tas = (int) isf_v.keyAt(index);
+        for (int index = 0; index < isf_v.size(); index++) {
+            int tas = (int) isf_v.keyAt(index);
             double value = isf_v.valueAt(index);
-            ret[index] = new ProfileValue(tas, value);
+            ret[index] = new ProfileValue(tas, toMgdl(value, units));
         }
         return ret;
     }
@@ -495,44 +495,44 @@ public class Profile {
         return ret;
     }
 
-    public double getTarget() {
-        return getTarget(secondsFromMidnight());
+    public double getTargetMgdl() {
+        return getTargetMgdl(secondsFromMidnight());
     }
 
-    protected double getTarget(int timeAsSeconds) {
-        return (getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2;
+    public double getTargetMgdl(int timeAsSeconds) {
+        return toMgdl((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, units);
     }
 
-    public double getTargetLow() {
-        return getTargetLowTimeFromMidnight(secondsFromMidnight());
+    public double getTargetLowMgdl() {
+        return toMgdl(getTargetLowTimeFromMidnight(secondsFromMidnight()), units);
     }
 
-    public double getTargetLow(long time) {
-        return getTargetLowTimeFromMidnight(secondsFromMidnight(time));
+    public double getTargetLowMgdl(long time) {
+        return toMgdl(getTargetLowTimeFromMidnight(secondsFromMidnight(time)), units);
     }
 
-    public double getTargetLowTimeFromMidnight(int timeAsSeconds) {
+    double getTargetLowTimeFromMidnight(int timeAsSeconds) {
         if (targetLow_v == null)
             targetLow_v = convertToSparseArray(targetLow);
         return getValueToTime(targetLow_v, timeAsSeconds);
     }
 
-    public double getTargetHigh() {
-        return getTargetHighTimeFromMidnight(secondsFromMidnight());
+    public double getTargetHighMgdl() {
+        return toMgdl(getTargetHighTimeFromMidnight(secondsFromMidnight()), units);
     }
 
-    public double getTargetHigh(long time) {
-        return getTargetHighTimeFromMidnight(secondsFromMidnight(time));
+    public double getTargetHighMgdl(long time) {
+        return toMgdl(getTargetHighTimeFromMidnight(secondsFromMidnight(time)), units);
     }
 
-    public double getTargetHighTimeFromMidnight(int timeAsSeconds) {
+    double getTargetHighTimeFromMidnight(int timeAsSeconds) {
         if (targetHigh_v == null)
             targetHigh_v = convertToSparseArray(targetHigh);
         return getValueToTime(targetHigh_v, timeAsSeconds);
     }
 
     public class TargetValue {
-        public TargetValue(int timeAsSeconds, double low, double high) {
+        TargetValue(int timeAsSeconds, double low, double high) {
             this.timeAsSeconds = timeAsSeconds;
             this.low = low;
             this.high = high;
@@ -559,17 +559,17 @@ public class Profile {
         return ret;
     }
 
-    public ProfileValue[] getSingleTargets() {
+    public ProfileValue[] getSingleTargetsMgdl() {
         if (targetLow_v == null)
             targetLow_v = convertToSparseArray(targetLow);
         if (targetHigh_v == null)
             targetHigh_v = convertToSparseArray(targetHigh);
         ProfileValue[] ret = new ProfileValue[targetLow_v.size()];
 
-        for (Integer index = 0; index < targetLow_v.size(); index++) {
-            Integer tas = (int) targetLow_v.keyAt(index);
+        for (int index = 0; index < targetLow_v.size(); index++) {
+            int tas = (int) targetLow_v.keyAt(index);
             double target = (targetLow_v.valueAt(index) + targetHigh_v.valueAt(index)) / 2;
-            ret[index] = new ProfileValue(tas, target);
+            ret[index] = new ProfileValue(tas, toMgdl(target, units));
         }
         return ret;
     }

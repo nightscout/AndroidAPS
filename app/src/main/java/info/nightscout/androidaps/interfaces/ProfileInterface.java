@@ -10,6 +10,5 @@ import info.nightscout.androidaps.data.ProfileStore;
 public interface ProfileInterface {
     @Nullable
     ProfileStore getProfile();
-    String getUnits();
     String getProfileName();
 }

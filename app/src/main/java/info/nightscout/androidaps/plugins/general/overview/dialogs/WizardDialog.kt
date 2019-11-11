@@ -222,7 +222,7 @@ class WizardDialog : DialogFragment() {
         } ?: return
 
 
-        val units = profile.units
+        val units = ProfileFunctions.getSystemUnits()
         treatments_wizard_bgunits.text = units
         if (units == Constants.MGDL)
             treatments_wizard_bg_input.setStep(1.0)
@@ -302,7 +302,7 @@ class WizardDialog : DialogFragment() {
                 treatment_wizard_notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, specificProfile.units)).valueToUnitsToString(specificProfile.units), wizard.sens)
+            treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, ProfileFunctions.getSystemUnits())).valueToUnitsToString(ProfileFunctions.getSystemUnits()), wizard.sens)
             treatments_wizard_bginsulin.text = StringUtils.formatInsulin(wizard.insulinFromBG)
 
             treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
@@ -320,8 +320,8 @@ class WizardDialog : DialogFragment() {
             // Trend
             if (treatments_wizard_bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
                 treatments_wizard_bgtrend.text = ((if (wizard.trend > 0) "+" else "")
-                        + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, specificProfile.units)
-                        + " " + specificProfile.units)
+                        + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, ProfileFunctions.getSystemUnits())
+                        + " " + ProfileFunctions.getSystemUnits())
             } else {
                 treatments_wizard_bgtrend.text = ""
             }

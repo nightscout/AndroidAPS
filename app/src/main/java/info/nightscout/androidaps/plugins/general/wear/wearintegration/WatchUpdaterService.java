@@ -303,7 +303,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
+        String units = ProfileFunctions.getSystemUnits();
 
         Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(mPrefs.getString("high_mark", "0"));
@@ -323,7 +323,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             highLine = OverviewPlugin.INSTANCE.getBgTargetHigh();
         }
 
-        long sgvLevel = 0l;
+        long sgvLevel = 0L;
         if (lastBG.value > highLine) {
             sgvLevel = 1;
         } else if (lastBG.value < lowLine) {
@@ -721,7 +721,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 //bgi
 
 
-                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
+                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), ProfileFunctions.getSystemUnits());
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
 
                 status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString);

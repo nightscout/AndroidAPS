@@ -181,8 +181,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
-        return valueToUnits(units);
+        return valueToUnits(ProfileFunctions.getSystemUnits());
     }
 
     @Override
@@ -215,9 +214,9 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
-        Double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
-        Double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
+        String units = ProfileFunctions.getSystemUnits();
+        Double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
+        Double highLine = OverviewPlugin.INSTANCE.determineHighLine();
         int color = MainApp.gc(R.color.inrange);
         if (isPrediction())
             return getPredectionColor();

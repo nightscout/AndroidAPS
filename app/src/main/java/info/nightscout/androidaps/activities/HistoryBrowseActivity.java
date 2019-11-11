@@ -231,9 +231,8 @@ public class HistoryBrowseActivity extends NoSplashActivity {
             noProfile.setVisibility(View.GONE);
         }
 
-        final String units = profile.getUnits();
-        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
-        final double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
+        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
+        final double highLine = OverviewPlugin.INSTANCE.determineHighLine();
 
         buttonDate.setText(DateUtil.dateAndTimeString(start));
         buttonZoom.setText(String.valueOf(rangeToDisplay));

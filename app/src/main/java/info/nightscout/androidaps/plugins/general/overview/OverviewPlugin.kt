@@ -65,19 +65,16 @@ object OverviewPlugin : PluginBase(PluginDescription()
         super.onStop()
     }
 
-    fun determineHighLine(units: String): Double {
+    @JvmOverloads
+    fun determineHighLine(units: String = ProfileFunctions.getSystemUnits()): Double {
         var highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(bgTargetHigh, units))!!
         if (highLineSetting < 1)
             highLineSetting = Profile.fromMgdlToUnits(180.0, units)
         return highLineSetting
     }
 
-    fun determineLowLine(): Double {
-        val profile = ProfileFunctions.getInstance().profile ?: return bgTargetLow
-        return determineLowLine(profile.units)
-    }
-
-    fun determineLowLine(units: String): Double {
+    @JvmOverloads
+    fun determineLowLine(units: String = ProfileFunctions.getSystemUnits()): Double {
         var lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(bgTargetLow, units))!!
         if (lowLineSetting < 1)
             lowLineSetting = Profile.fromMgdlToUnits(76.0, units)

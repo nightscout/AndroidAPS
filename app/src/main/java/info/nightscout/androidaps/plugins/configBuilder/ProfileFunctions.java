@@ -120,11 +120,6 @@ public class ProfileFunctions {
         return SP.getString(R.string.key_units, Constants.MGDL);
     }
 
-    public String getProfileUnits() {
-        Profile profile = getProfile();
-        return profile != null ? profile.getUnits() : Constants.MGDL;
-    }
-
     @Nullable
     public Profile getProfile(long time) {
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();

@@ -11,22 +11,19 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import info.nightscout.androidaps.Constants;
-
 /**
  * Created by mike on 01.06.2017.
  */
 
 public class ProfileStore {
     private static Logger log = LoggerFactory.getLogger(ProfileStore.class);
-    private JSONObject json = null;
-    private String units = Constants.MGDL;
+    private JSONObject json;
 
-    ArrayMap<String, Profile> cachedObjects = new ArrayMap<>();
+    private ArrayMap<String, Profile> cachedObjects = new ArrayMap<>();
 
     public ProfileStore(JSONObject json) {
         this.json = json;
-        getDefaultProfile(); // initialize units
+        getDefaultProfile();
     }
 
     public JSONObject getData() {
@@ -42,11 +39,11 @@ public class ProfileStore {
             if (store.has(defaultProfileName)) {
                 profile = cachedObjects.get(defaultProfileName);
                 if (profile == null) {
-                    if (store.has("units"))
-                        units = store.getString("units");
-                    profile = new Profile(store.getJSONObject(defaultProfileName), units);
-                    units = profile.getUnits();
-                    cachedObjects.put(defaultProfileName, profile);
+                    if (store.has("units")) {
+                        String units = store.getString("units");
+                        profile = new Profile(store.getJSONObject(defaultProfileName), units);
+                        cachedObjects.put(defaultProfileName, profile);
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -70,10 +67,6 @@ public class ProfileStore {
         return defaultProfileName;
     }
 
-    public String getUnits() {
-        return units;
-    }
-
     @Nullable
     public Profile getSpecificProfile(String profileName) {
         Profile profile = null;
@@ -82,11 +75,11 @@ public class ProfileStore {
             if (store.has(profileName)) {
                 profile = cachedObjects.get(profileName);
                 if (profile == null) {
-                    if (store.has("units"))
-                        units = store.getString("units");
-                    profile = new Profile(store.getJSONObject(profileName), units);
-                    units = profile.getUnits();
-                    cachedObjects.put(profileName, profile);
+                    if (store.has("units")) {
+                        String units = store.getString("units");
+                        profile = new Profile(store.getJSONObject(profileName), units);
+                        cachedObjects.put(profileName, profile);
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -96,7 +89,7 @@ public class ProfileStore {
     }
 
     public ArrayList<CharSequence> getProfileList() {
-        ArrayList<CharSequence> ret = new ArrayList<CharSequence>();
+        ArrayList<CharSequence> ret = new ArrayList<>();
 
         JSONObject store;
         try {
@@ -110,9 +103,6 @@ public class ProfileStore {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
-
         return ret;
     }
-
-
 }

@@ -45,7 +45,7 @@ public class TriggerDelta extends Trigger {
 
     public TriggerDelta() {
         super();
-        this.units = ProfileFunctions.getInstance().getProfileUnits();
+        this.units = ProfileFunctions.getSystemUnits();
         initializer();
     }
 

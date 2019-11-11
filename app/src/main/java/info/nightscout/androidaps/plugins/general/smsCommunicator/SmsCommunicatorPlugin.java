@@ -275,7 +275,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
         String reply = "";
 
-        String units = ProfileFunctions.getInstance().getProfileUnits();
+        String units = ProfileFunctions.getSystemUnits();
 
         if (actualBG != null) {
             reply = MainApp.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";

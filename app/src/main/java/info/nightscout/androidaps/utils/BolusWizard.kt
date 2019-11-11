@@ -117,12 +117,12 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     private fun doCalc() {
 
         // Insulin from BG
-        sens = profile.isf
-        targetBGLow = profile.targetLow
-        targetBGHigh = profile.targetHigh
+        sens = Profile.fromMgdlToUnits(profile.isfMgdl, ProfileFunctions.getSystemUnits())
+        targetBGLow = Profile.fromMgdlToUnits(profile.targetLowMgdl, ProfileFunctions.getSystemUnits())
+        targetBGHigh = Profile.fromMgdlToUnits(profile.targetHighMgdl, ProfileFunctions.getSystemUnits())
         if (useTT && tempTarget != null) {
-            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, profile.units)
-            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, profile.units)
+            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits())
+            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits())
         }
         if (useBg && bg > 0) {
             bgDiff = when {
@@ -138,7 +138,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         glucoseStatus?.let {
             if (useTrend) {
                 trend = it.short_avgdelta
-                insulinFromTrend = Profile.fromMgdlToUnits(trend, profile.units) * 3 / sens
+                insulinFromTrend = Profile.fromMgdlToUnits(trend, ProfileFunctions.getSystemUnits()) * 3 / sens
             }
         }
 
