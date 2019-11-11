@@ -792,9 +792,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
             messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction() {
                 @Override
                 public void run() {
-                    try {
-                        Profile currentProfile = ProfileFunctions.getInstance().getProfile();
-
+                    Profile currentProfile = ProfileFunctions.getInstance().getProfile();
+                    if (currentProfile != null) {
                         int keyDuration = 0;
                         Integer defaultTargetDuration = 0;
                         int keyTarget = 0;
@@ -843,9 +842,8 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
                         String reply = String.format(MainApp.gs(R.string.smscommunicator_tt_set), ttString, ttDuration);
                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
-                    } catch (Exception e) {
+                    } else {
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand));
-                        return;
                     }
                 }
             });
@@ -864,15 +862,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
             messageToConfirm = new AuthRequest(this, receivedSms, reply, passCode, new SmsAction() {
                 @Override
                 public void run() {
-                    try {
-                        SP.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
-                        String reply = String.format(MainApp.gs(R.string.smscommunicator_stoppedsms));
-                        sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand));
-                        return;
-                    }
+                    SP.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
+                    String reply = String.format(MainApp.gs(R.string.smscommunicator_stoppedsms));
+                    sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply));
                 }
             });
         } else
