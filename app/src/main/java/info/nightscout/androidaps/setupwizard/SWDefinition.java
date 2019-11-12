@@ -108,6 +108,14 @@ public class SWDefinition {
             .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
             .validator(() -> SP.getBoolean(R.string.key_i_understand, false));
 
+    private SWScreen screenUnits = new SWScreen(R.string.units)
+            .skippable(false)
+            .add(new SWRadioButton()
+                    .option(R.array.unitsArray, R.array.unitsValues)
+                    .preferenceId(R.string.key_units).label(R.string.units)
+                    .comment(R.string.setupwizard_units_prompt))
+            .validator(() -> SP.contains(R.string.key_units));
+
     private SWScreen screenPermissionBattery = new SWScreen(R.string.permission)
             .skippable(false)
             .add(new SWInfotext()
@@ -412,6 +420,7 @@ public class SWDefinition {
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -438,6 +447,7 @@ public class SWDefinition {
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -459,6 +469,7 @@ public class SWDefinition {
                 .add(screenPermissionBattery)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
                 .add(screenNsClient)
                 .add(screenBgSource)
                 .add(screenAge)
