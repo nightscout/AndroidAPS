@@ -132,12 +132,8 @@ public class TriggerDeltaTest {
 
     @Test
     public void initializerTest(){
-        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MMOL);
         TriggerDelta t = new TriggerDelta();
-        Assert.assertTrue(t.getUnits().equals(Constants.MMOL));
-        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
-        t = new TriggerDelta();
-        Assert.assertEquals(Constants.MGDL, t.getUnits());
+        Assert.assertTrue(t.getUnits().equals(Constants.MGDL));
     }
 
     List<BgReading> generateValidBgData() {

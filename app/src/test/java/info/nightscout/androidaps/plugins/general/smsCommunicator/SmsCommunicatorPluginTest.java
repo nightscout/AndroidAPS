@@ -33,7 +33,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -57,7 +57,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
         L.class, SP.class, MainApp.class, DateUtil.class, ProfileFunctions.class,
         TreatmentsPlugin.class, SmsManager.class, IobCobCalculatorPlugin.class,
         CommandQueue.class, ConfigBuilderPlugin.class, NSUpload.class, ProfileInterface.class,
-        SimpleProfilePlugin.class, XdripCalibrations.class, VirtualPumpPlugin.class, LoopPlugin.class
+        LocalProfilePlugin.class, XdripCalibrations.class, VirtualPumpPlugin.class, LoopPlugin.class
 })
 
 public class SmsCommunicatorPluginTest {
@@ -375,7 +375,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("PROFILE LIST", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertEquals("Not configured", smsCommunicatorPlugin.messages.get(1).text);
 
-        ProfileInterface profileInterface = mock(SimpleProfilePlugin.class);
+        ProfileInterface profileInterface = mock(LocalProfilePlugin.class);
         when(ConfigBuilderPlugin.getPlugin().getActiveProfileInterface()).thenReturn(profileInterface);
 
         //PROFILE LIST (no profile defined)

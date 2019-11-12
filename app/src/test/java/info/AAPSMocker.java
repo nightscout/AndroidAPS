@@ -37,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -183,6 +184,7 @@ public class AAPSMocker {
         when(SP.getLong(anyInt(), anyLong())).thenReturn(0L);
         when(SP.getBoolean(anyInt(), anyBoolean())).thenReturn(false);
         when(SP.getInt(anyInt(), anyInt())).thenReturn(0);
+        when(SP.getString(anyInt(), anyString())).thenReturn("");
     }
 
     public static void mockL() {
@@ -265,10 +267,10 @@ public class AAPSMocker {
     public static void mockProfileFunctions() {
         PowerMockito.mockStatic(ProfileFunctions.class);
         profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        PowerMockito.when(ProfileFunctions.getSystemUnits()).thenReturn(Constants.MGDL);
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
-        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
         PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
     }
 

@@ -75,5 +75,8 @@ public class NewNSTreatmentDialogTest {
                 .thenReturn(profilePlugin);
 
         dialog = new NewNSTreatmentDialog();
+
+        PowerMockito.spy(System.class);
+        when(System.currentTimeMillis()).thenReturn(1000L);
     }
 }

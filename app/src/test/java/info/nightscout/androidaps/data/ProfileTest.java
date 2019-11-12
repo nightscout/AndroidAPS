@@ -58,9 +58,9 @@ public class ProfileTest {
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        Assert.assertEquals(100d, p.getIsf(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(1800d, p.getIsfMgdl(c.getTimeInMillis()), 0.01d);
         c.set(Calendar.HOUR_OF_DAY, 2);
-        Assert.assertEquals(110d, p.getIsf(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(1980d, p.getIsfMgdl(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(110d, p.getIsfTimeFromMidnight(2 * 60 * 60), 0.01d);
         Assert.assertEquals("00:00    100,0 mmol/U\n" + "02:00    110,0 mmol/U", p.getIsfList().replace(".", ","));
         Assert.assertEquals(30d, p.getIc(c.getTimeInMillis()), 0.01d);
@@ -73,10 +73,10 @@ public class ProfileTest {
         Assert.assertEquals(0.1d, p.getMaxDailyBasal());
         Assert.assertEquals(2.4d, p.percentageBasalSum(), 0.01d);
         Assert.assertEquals(2.4d, p.baseBasalSum(), 0.01d);
-        Assert.assertEquals(4.5d, p.getTarget(2 * 60 * 60), 0.01d);
-        Assert.assertEquals(4d, p.getTargetLow(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(81d, p.getTargetMgdl(2 * 60 * 60), 0.01d);
+        Assert.assertEquals(72d, p.getTargetLowMgdl(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(4d, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01d);
-        Assert.assertEquals(5d, p.getTargetHigh(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(90d, p.getTargetHighMgdl(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(5d, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01d);
         Assert.assertEquals("00:00    4,0 - 5,0 mmol", p.getTargetList().replace(".", ","));
         Assert.assertEquals(100, p.getPercentage());
@@ -122,7 +122,7 @@ public class ProfileTest {
         Assert.assertEquals(0.05d, p.getBasal(c.getTimeInMillis()), 0.01d);
         Assert.assertEquals(1.2d, p.percentageBasalSum(), 0.01d);
         Assert.assertEquals(60d, p.getIc(c.getTimeInMillis()), 0.01d);
-        Assert.assertEquals(220d, p.getIsf(c.getTimeInMillis()), 0.01d);
+        Assert.assertEquals(3960d, p.getIsfMgdl(c.getTimeInMillis()), 0.01d);
 
         // Test timeshift functionality
         p = new Profile(new JSONObject(validProfile), 100, 1);
@@ -140,7 +140,7 @@ public class ProfileTest {
     }
 
     @Before
-    public void prepareMock() throws Exception {
+    public void prepareMock() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockStrings();
@@ -148,8 +148,5 @@ public class ProfileTest {
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
         PowerMockito.mockStatic(FabricPrivacy.class);
-//        PowerMockito.doNothing().when(FabricPrivacy.log(""));
-
     }
-
  }

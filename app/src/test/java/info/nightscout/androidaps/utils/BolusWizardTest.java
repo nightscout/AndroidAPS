@@ -12,6 +12,7 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.when;
  * Created by kuchjir on 12/12/2017.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, GlucoseStatus.class, ConfigBuilderPlugin.class, TreatmentsPlugin.class, ConstraintChecker.class})
+@PrepareForTest({MainApp.class, GlucoseStatus.class, ConfigBuilderPlugin.class, TreatmentsPlugin.class, ConstraintChecker.class, ProfileFunctions.class})
 public class BolusWizardTest {
     private static final double PUMP_BOLUS_STEP = 0.1;
 
@@ -68,9 +69,9 @@ public class BolusWizardTest {
 
     private Profile setupProfile(Double targetLow, Double targetHigh, Double insulinSensitivityFactor, Double insulinToCarbRatio) {
         Profile profile = mock(Profile.class);
-        when(profile.getTargetLow()).thenReturn(targetLow);
-        when(profile.getTargetHigh()).thenReturn(targetHigh);
-        when(profile.getIsf()).thenReturn(insulinSensitivityFactor);
+        when(profile.getTargetLowMgdl()).thenReturn(targetLow);
+        when(profile.getTargetHighMgdl()).thenReturn(targetHigh);
+        when(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor);
         when(profile.getIc()).thenReturn(insulinToCarbRatio);
 
         PowerMockito.mockStatic(GlucoseStatus.class);
@@ -95,6 +96,7 @@ public class BolusWizardTest {
             return constraint;
         }).when(AAPSMocker.constraintChecker).applyBolusConstraints(any(Constraint.class));
 
+        AAPSMocker.mockProfileFunctions();
         return profile;
     }
 }
