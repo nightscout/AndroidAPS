@@ -13,12 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputButton;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDouble;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputOption;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputSelect;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
@@ -31,9 +35,17 @@ import info.nightscout.androidaps.utils.T;
 public class TriggerLocation extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
+    private static final String modeEntered = "entered";
+    private static final String modeLeft = "left";
+    private static final ArrayList<InputOption> modes = new ArrayList<>(Arrays.asList(
+            new InputOption(R.string.location_entered, modeEntered),
+            new InputOption(R.string.location_left, modeLeft)
+    ));
+
     InputDouble latitude = new InputDouble(0d, -90d, +90d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble longitude = new InputDouble(0d, -180d, +180d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
+    InputSelect mode = new InputSelect(modes);
     InputString name = new InputString();
 
     private Runnable buttonAction = () -> {
@@ -54,6 +66,7 @@ public class TriggerLocation extends Trigger {
         latitude = new InputDouble(triggerLocation.latitude);
         longitude = new InputDouble(triggerLocation.longitude);
         distance = new InputDouble(triggerLocation.distance);
+        mode = new InputSelect(triggerLocation.mode);
         lastRun = triggerLocation.lastRun;
         name = triggerLocation.name;
     }
@@ -72,7 +85,8 @@ public class TriggerLocation extends Trigger {
         a.setLongitude(longitude.getValue());
         double calculatedDistance = location.distanceTo(a);
 
-        if (calculatedDistance < distance.getValue()) {
+        if ((mode.equals(modeEntered) && calculatedDistance < distance.getValue()) ||
+                (mode.equals(modeLeft) && calculatedDistance > distance.getValue())) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
             return true;
@@ -90,6 +104,7 @@ public class TriggerLocation extends Trigger {
             data.put("longitude", longitude.getValue());
             data.put("distance", distance.getValue());
             data.put("name", name.getValue());
+            data.put("mode", mode.getValue());
             data.put("lastRun", lastRun);
             o.put("data", data);
         } catch (JSONException e) {
@@ -106,6 +121,7 @@ public class TriggerLocation extends Trigger {
             longitude.setValue(JsonHelper.safeGetDouble(d, "longitude"));
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
+            mode.setValue(JsonHelper.safeGetString(d, "mode"));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,6 +170,11 @@ public class TriggerLocation extends Trigger {
         return this;
     }
 
+    TriggerLocation setMode(String value) {
+        mode.setValue(value);
+        return this;
+    }
+
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         new LayoutBuilder()
@@ -162,6 +183,7 @@ public class TriggerLocation extends Trigger {
                 .add(new LabelWithElement(MainApp.gs(R.string.latitude_short), "", latitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.longitude_short), "", longitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.distance_short), "", distance))
+                .add(new LabelWithElement(MainApp.gs(R.string.location_mode), "", mode))
                 .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), LocationService.getLastLocation() != null)
                 .build(root);
     }
