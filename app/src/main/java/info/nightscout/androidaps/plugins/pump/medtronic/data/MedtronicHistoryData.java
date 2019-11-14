@@ -67,7 +67,6 @@ import info.nightscout.androidaps.utils.SP;
 // All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
 public class MedtronicHistoryData {
-
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     private List<PumpHistoryEntry> allHistory = null;
@@ -523,7 +522,7 @@ public class MedtronicHistoryData {
             data.put("eventType", event);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOG.error("Unhandled exception", e);
         }
     }
 

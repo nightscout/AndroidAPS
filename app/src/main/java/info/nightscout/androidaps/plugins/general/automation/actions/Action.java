@@ -11,6 +11,8 @@ import javax.annotation.Nullable;
 
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.queue.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
     Action ideas:
@@ -44,6 +46,7 @@ import info.nightscout.androidaps.queue.Callback;
 
 
 public abstract class Action {
+    private static final Logger log = LoggerFactory.getLogger(Action.class);
 
     public Trigger precondition = null;
 
@@ -65,7 +68,7 @@ public abstract class Action {
         try {
             o.put("type", this.getClass().getName());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -84,7 +87,7 @@ public abstract class Action {
             Class clazz = Class.forName(type);
             return ((Action) clazz.newInstance()).fromJSON(data != null ? data.toString() : "");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }
@@ -98,7 +101,7 @@ public abstract class Action {
                 fromJSON(data.toString());
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 }
