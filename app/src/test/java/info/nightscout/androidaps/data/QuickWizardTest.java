@@ -30,7 +30,7 @@ public class QuickWizardTest {
         try {
             array = new JSONArray("[" + data1 + "," + data2 + "]");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            throw new RuntimeException(e);
         }
     }
 
