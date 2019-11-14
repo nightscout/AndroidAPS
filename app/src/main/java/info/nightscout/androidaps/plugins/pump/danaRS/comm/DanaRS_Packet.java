@@ -77,7 +77,7 @@ public class DanaRS_Packet {
 
             return ret;
         } catch (Exception e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return null;
     }

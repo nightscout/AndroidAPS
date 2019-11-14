@@ -551,7 +551,7 @@ public class BLEComm {
                             break;
                     }
                 } catch (Exception e) {
-                    log.debug("Unhandled exception", e);
+                    log.error("Unhandled exception", e);
                 }
                 startSignatureFound = false;
                 packetIsValid = false;
@@ -635,7 +635,7 @@ public class BLEComm {
                 message.wait(5000);
             } catch (InterruptedException e) {
                 log.error("sendMessage InterruptedException", e);
-                log.debug("Unhandled exception", e);
+                log.error("Unhandled exception", e);
             }
         }
 

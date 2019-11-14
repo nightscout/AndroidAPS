@@ -383,7 +383,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     try {
                         o.wait();
                     } catch (InterruptedException e) {
-                        log.debug("Unhandled exception", e);
+                        log.error("Unhandled exception", e);
                     }
                 }
             } else {

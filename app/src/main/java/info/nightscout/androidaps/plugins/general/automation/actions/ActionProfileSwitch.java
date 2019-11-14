@@ -92,7 +92,7 @@ public class ActionProfileSwitch extends Action {
             data.put("profileToSwitchTo", inputProfileName.getValue());
             o.put("data", data);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -105,7 +105,7 @@ public class ActionProfileSwitch extends Action {
             profileName = JsonHelper.safeGetString(d, "profileToSwitchTo");
             inputProfileName.setValue(profileName);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

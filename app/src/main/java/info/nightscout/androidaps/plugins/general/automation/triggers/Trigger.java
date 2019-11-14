@@ -59,7 +59,7 @@ public abstract class Trigger {
         try {
             return instantiate(new JSONObject(json));
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return null;
     }
@@ -72,7 +72,7 @@ public abstract class Trigger {
             Class clazz = Class.forName(type);
             return ((Trigger) clazz.newInstance()).fromJSON(data.toString());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return null;
     }

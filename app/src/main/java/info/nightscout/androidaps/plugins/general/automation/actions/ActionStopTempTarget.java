@@ -58,7 +58,7 @@ public class ActionStopTempTarget extends Action {
             data.put("reason", reason);
             o.put("data", data);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -69,7 +69,7 @@ public class ActionStopTempTarget extends Action {
             JSONObject d = new JSONObject(data);
             reason = JsonHelper.safeGetString(d, "reason");
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

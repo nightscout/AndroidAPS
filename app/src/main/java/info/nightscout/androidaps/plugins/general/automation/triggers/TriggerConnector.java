@@ -162,7 +162,7 @@ public class TriggerConnector extends Trigger {
             data.put("triggerList", array);
             o.put("data", data);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -179,7 +179,7 @@ public class TriggerConnector extends Trigger {
                 add(newItem);
             }
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

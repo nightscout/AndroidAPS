@@ -68,7 +68,7 @@ public abstract class Action {
         try {
             o.put("type", this.getClass().getName());
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -87,7 +87,7 @@ public abstract class Action {
             Class clazz = Class.forName(type);
             return ((Action) clazz.newInstance()).fromJSON(data != null ? data.toString() : "");
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return null;
     }
@@ -101,7 +101,7 @@ public abstract class Action {
                 fromJSON(data.toString());
             }
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
     }
 }

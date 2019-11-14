@@ -77,7 +77,7 @@ public class AutomationEvent {
             }
             o.put("actions", array);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -94,7 +94,7 @@ public class AutomationEvent {
                 actions.add(Action.instantiate(new JSONObject(array.getString(i))));
             }
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

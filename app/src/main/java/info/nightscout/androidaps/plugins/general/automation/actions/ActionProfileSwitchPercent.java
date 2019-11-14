@@ -75,7 +75,7 @@ public class ActionProfileSwitchPercent extends Action {
             data.put("durationInMinutes", duration.getMinutes());
             o.put("data", data);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -87,7 +87,7 @@ public class ActionProfileSwitchPercent extends Action {
             pct.setValue(JsonHelper.safeGetInt(d, "percentage"));
             duration.setMinutes(JsonHelper.safeGetInt(d, "durationInMinutes"));
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

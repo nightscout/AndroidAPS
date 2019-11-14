@@ -110,7 +110,7 @@ public class Encoding4b6bLoop extends Encoding4b6bAbstract {
                     hiNibble = codesRev.get((bitAccumulator >> (availBits - 6)));
                     loNibble = codesRev.get(((bitAccumulator >> (availBits - 12)) & 0b111111));
                 } catch (Exception e) {
-                    log.debug("Unhandled exception", e);
+                    log.error("Unhandled exception", e);
                     return null;
                 }
 

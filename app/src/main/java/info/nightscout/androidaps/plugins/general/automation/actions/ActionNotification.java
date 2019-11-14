@@ -63,7 +63,7 @@ public class ActionNotification extends Action {
             o.put("type", this.getClass().getName());
             o.put("data", data);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -74,7 +74,7 @@ public class ActionNotification extends Action {
             JSONObject o = new JSONObject(data);
             text.setValue(JsonHelper.safeGetString(o, "text"));
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

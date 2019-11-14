@@ -97,7 +97,7 @@ public class ActionStartTempTarget extends Action {
             data.put("durationInMinutes", duration.getMinutes());
             o.put("data", data);
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -111,7 +111,7 @@ public class ActionStartTempTarget extends Action {
             value.setValue(JsonHelper.safeGetDouble(d, "value"));
             duration.setMinutes(JsonHelper.safeGetInt(d, "durationInMinutes"));
         } catch (JSONException e) {
-            log.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
         return this;
     }

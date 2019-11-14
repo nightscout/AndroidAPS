@@ -522,7 +522,7 @@ public class MedtronicHistoryData {
             data.put("eventType", event);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            LOG.debug("Unhandled exception", e);
+            log.error("Unhandled exception", e);
         }
     }
 
