@@ -121,7 +121,7 @@ public class TriggerLocation extends Trigger {
             longitude.setValue(JsonHelper.safeGetDouble(d, "longitude"));
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
-            mode.setValue(JsonHelper.safeGetString(d, "mode"));
+            mode.setValue(JsonHelper.safeGetString(d, "mode", modeEntered));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
         } catch (Exception e) {
             e.printStackTrace();
