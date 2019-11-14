@@ -979,33 +979,6 @@ public class MedtronicHistoryData {
 
             bolus.setLinkedObject(treatment);
 
-//            DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(treatment.date, bolusDTO.getDeliveredAmount());
-//
-//            if (doubleBolusDebug)
-//                LOG.debug("DoubleBolusDebug: addBolus(tretament={}): Bolus={}, DetailedBolusInfo={}", treatment, bolusDTO, detailedBolusInfo);
-//
-//            if (detailedBolusInfo == null) {
-//                detailedBolusInfo = new DetailedBolusInfo();
-//
-//                if (doubleBolusDebug)
-//                    LOG.debug("DoubleBolusDebug: detailedBolusInfoCouldNotBeRetrived !");
-//            }
-//
-//            detailedBolusInfo.date = treatment.date;
-//            detailedBolusInfo.source = Source.PUMP;
-//            detailedBolusInfo.pumpId = bolus.getPumpId();
-//            detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
-//            detailedBolusInfo.carbs = treatment.carbs;
-//
-//            addCarbsFromEstimate(detailedBolusInfo, bolus);
-//
-//            if (doubleBolusDebug)
-//                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): DetailedBolusInfo(New)={}", detailedBolusInfo);
-//
-//            boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
-//
-//            bolus.setLinkedObject(detailedBolusInfo);
-
         }
     }
 

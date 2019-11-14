@@ -873,7 +873,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 detailedBolusInfo.deliverAt = now; // not sure about that one
 
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
-                DetailedBolusInfoStorage.INSTANCE.add(detailedBolusInfo);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 getMDTPumpStatus().reservoirRemainingUnits -= detailedBolusInfo.insulin;
