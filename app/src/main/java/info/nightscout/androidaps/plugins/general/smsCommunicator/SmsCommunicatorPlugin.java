@@ -2,10 +2,17 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
+
+import com.andreabaccega.widget.ValidatingEditTextPreference;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,6 +116,51 @@ public class SmsCommunicatorPlugin extends PluginBase {
     protected void onStop() {
         disposable.clear();
         super.onStop();
+    }
+
+    @Override
+    public void preprocessPreferences(@NotNull final PreferenceFragment preferenceFragment) {
+        super.preprocessPreferences(preferenceFragment);
+
+        final ValidatingEditTextPreference distance = (ValidatingEditTextPreference) preferenceFragment.findPreference(MainApp.gs(R.string.key_smscommunicator_remotebolusmindistance));
+        final EditTextPreference allowedNumbers = (EditTextPreference) preferenceFragment.findPreference(MainApp.gs(R.string.key_smscommunicator_allowednumbers));
+        if (distance != null && allowedNumbers != null) {
+            if (!areMoreNumbers(allowedNumbers.getText())) {
+                distance.setTitle(MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
+                        + ".\n"
+                        + MainApp.gs(R.string.smscommunicator_remotebolusmindistance_caveat));
+                distance.setEnabled(false);
+            } else {
+                distance.setTitle(MainApp.gs(R.string.smscommunicator_remotebolusmindistance));
+                distance.setEnabled(true);
+            }
+
+            allowedNumbers.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (!areMoreNumbers(((String) newValue))) {
+                    distance.setText(String.valueOf(Constants.remoteBolusMinDistance / (60 * 1000L)));
+                    distance.setTitle(MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
+                            + ".\n"
+                            + MainApp.gs(R.string.smscommunicator_remotebolusmindistance_caveat));
+                    distance.setEnabled(false);
+                } else {
+                    distance.setTitle(MainApp.gs(R.string.smscommunicator_remotebolusmindistance));
+                    distance.setEnabled(true);
+                }
+                return true;
+            });
+        }
+    }
+
+    @Override
+    public void updatePreferenceSummary(@NotNull final Preference pref) {
+        super.updatePreferenceSummary(pref);
+
+        if (pref instanceof EditTextPreference) {
+            EditTextPreference editTextPref = (EditTextPreference) pref;
+            if (pref.getKey().contains("smscommunicator_allowednumbers") && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
+                pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
+            }
+        }
     }
 
     private void processSettings(final EventPreferenceChange ev) {
@@ -853,7 +905,7 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
     private void processSMS(String[] splitted, Sms receivedSms) {
         boolean isStop = splitted[1].equalsIgnoreCase("STOP")
-                    || splitted[1].equalsIgnoreCase("DISABLE");
+                || splitted[1].equalsIgnoreCase("DISABLE");
 
         if (isStop) {
             String passCode = generatePasscode();
@@ -965,9 +1017,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
 
         for (String number : substrings) {
             String cleaned = number.replaceAll("\\s+", "");
-            if (cleaned.length()<4) continue;
-            if (cleaned.substring(0,1).compareTo("+")!=0) continue;
-            cleaned = cleaned.replace("+","");
+            if (cleaned.length() < 4) continue;
+            if (cleaned.substring(0, 1).compareTo("+") != 0) continue;
+            cleaned = cleaned.replace("+", "");
             if (!cleaned.matches("[0-9]+")) continue;
             countNumbers++;
         }
