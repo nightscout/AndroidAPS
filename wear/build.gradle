@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 ext {
     wearableVersion = "2.4.0"
     playServicesWearable = "17.0.0"
+    powermockVersion = "1.7.3"
 }
 
 def generateGitBuild = { ->
@@ -101,4 +102,18 @@ dependencies {
     implementation 'androidx.wear:wear:1.0.0'
     implementation('me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
+    
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.json:json:20140107"
+    testImplementation "org.mockito:mockito-core:2.8.47"
+    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
+    testImplementation "joda-time:joda-time:2.9.9"
+    testImplementation("com.google.truth:truth:0.39") {
+        exclude group: "com.google.guava", module: "guava"
+    }
+    testImplementation "org.skyscreamer:jsonassert:1.5.0"
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
 }
