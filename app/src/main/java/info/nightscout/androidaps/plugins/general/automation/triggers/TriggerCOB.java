@@ -87,7 +87,7 @@ public class TriggerCOB extends Trigger {
             data.put("comparator", comparator.getValue().toString());
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -100,7 +100,7 @@ public class TriggerCOB extends Trigger {
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

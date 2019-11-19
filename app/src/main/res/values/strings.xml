@@ -814,7 +814,7 @@
     <string name="bgsource_upload">BG upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
-    <string name="smbmaxminutes" translatable="false">45 60 75 90 105 120</string>
+    <string name="smbmaxminutes">SMB max minutes</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
@@ -1331,9 +1331,9 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
-    <string name="dst_plugin_name" translatable="false">Dayligh Saving time</string>
-    <string name="dst_in_24h_warning">Dayligh Saving time change in 24h or less</string>
-    <string name="dst_loop_disabled_warning">Daylight saving time change less than 3 hours ago - Closed loop disabled</string>
+    <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
+    <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
+    <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
     <string name="storage">internal storage constraint</string>
     <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
     <string name="wrongformat">Wrong format</string>
